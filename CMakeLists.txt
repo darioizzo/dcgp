@@ -38,20 +38,20 @@ INCLUDE(cmake_scripts/set_compiler_flags.cmake)
 OPTION(BUILD_MAIN "Build 'main.cpp'." ON)
 
 # Finding the boost libraries needed for the keplerian_toolbox
-SET(REQUIRED_BOOST_LIBS serialization)
-MESSAGE(STATUS "Required Boost libraries: ${REQUIRED_BOOST_LIBS}")
-FIND_PACKAGE(Boost 1.46.0 REQUIRED COMPONENTS "${REQUIRED_BOOST_LIBS}")
-MESSAGE(STATUS "Detected Boost version: ${Boost_VERSION}")
-MESSAGE(STATUS "Boost include dirs: ${Boost_INCLUDE_DIRS}")
-MESSAGE(STATUS "Boost libraries: ${Boost_LIBRARIES}")
-INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
+# SET(REQUIRED_BOOST_LIBS serialization)
+# MESSAGE(STATUS "Required Boost libraries: ${REQUIRED_BOOST_LIBS}")
+# FIND_PACKAGE(Boost 1.46.0 REQUIRED COMPONENTS "${REQUIRED_BOOST_LIBS}")
+# MESSAGE(STATUS "Detected Boost version: ${Boost_VERSION}")
+# MESSAGE(STATUS "Boost include dirs: ${Boost_INCLUDE_DIRS}")
+# MESSAGE(STATUS "Boost libraries: ${Boost_LIBRARIES}")
+# INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
 
 # Initialise (empty) list of libraries to link against.
 SET(LIBRARIES_4_STATIC "")
 SET(LIBRARIES_4_DYNAMIC "")
 
 # Define the libraries to link against.
-SET(LIBRARIES_4_STATIC ${LIBRARIES_4_STATIC} ${Boost_SERIALIZATION_LIBRARY})
+SET(LIBRARIES_4_STATIC ${LIBRARIES_4_STATIC})
 SET(LIBRARIES_4_DYNAMIC ${LIBRARIES_4_DYNAMIC} ${LIBRARIES_4_STATIC})
 
 # Here we define the file list and make the static and dynamic library
@@ -60,7 +60,7 @@ ADD_SUBDIRECTORY("${CMAKE_SOURCE_DIR}/src")
 # Build main and link it to static library.
 IF(BUILD_MAIN)
 	ADD_EXECUTABLE(main main.cpp)
-	TARGET_LINK_LIBRARIES(main dcgp ${LIBRARIES_4_STATIC})
+	TARGET_LINK_LIBRARIES(main dcgp_s ${LIBRARIES_4_STATIC})
 ENDIF(BUILD_MAIN)
 
 
