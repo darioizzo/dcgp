@@ -21,6 +21,10 @@ struct basis_function
     {
             return m_f(x,y);
     }
+    std::string operator()(std::string x, std::string y) const
+    {
+            return m_pf(x,y);
+    }
     my_fun_type m_f;
     my_d_fun_type m_df;
 	my_print_fun_type m_pf;

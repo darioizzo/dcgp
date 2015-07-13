@@ -16,13 +16,12 @@ int main() {
     
     dcgp::encoding simple(2,4,2,3,4,f);
 
-    std::vector<unsigned int> x({1,0,1,2,0,0,2,3,1,3,2,1,0,3,4,2,4,4,6,5,6,4});
+    std::vector<unsigned int> x({0, 0, 1, 1, 0, 0, 1, 3, 1, 2, 0, 1, 0, 4, 4, 2, 5, 4, 2, 5, 7, 3});
     simple.is_valid(x);
-    std::cout << simple.nodes_to_evaluate(x) << std::endl;
     std::cout << simple << std::endl;
-    std::cout << simple.compute_f({2.,3.}, x) << std::endl;
-
-    std::cout << simple.pretty({"x0","x1"}, x) << std::endl;
+    std::cout << simple.compute_f(std::vector<double>({2.,3.}), x) << std::endl;
+    std::cout << simple.compute_f(std::vector<std::string>({"x0","x1"}), x) << std::endl;
 
     return 0;
 }
+

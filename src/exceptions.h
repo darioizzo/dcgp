@@ -15,6 +15,18 @@ public:
 private:
     std::string m_message;
 };
+
+class input_error : public std::exception {
+public:
+    input_error(std::string message) : m_message(message) {}
+    ~input_error() throw() {}
+    const char* what() const throw() {  
+        return m_message.c_str();
+    }
+private:
+    std::string m_message;
+};
+
 } // end of namespace dcgp
 
 #endif // DCGP_DCGP_H

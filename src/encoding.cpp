@@ -4,6 +4,7 @@
 #include<map>
 
 #include "encoding.h"
+#include "exceptions.h"
 #include "std_overloads.h"
 
 
@@ -27,6 +28,14 @@ encoding::encoding(unsigned int n,                  // n. inputs
                    std::vector<basis_function> f    // functions
                    ) : m_n(n), m_m(m), m_c(c), m_r(r), m_l(l), m_f(f), m_lb((3 * m_r * m_c) + m_m, 0), m_ub((3 * m_r * m_c) + m_m, 0)
 {
+
+    if (n == 0) throw input_error("Number of inputs is 0");
+    if (m == 0) throw input_error("Number of outputs is 0");
+    if (c == 0) throw input_error("Number of columns is 0");
+    if (r == 0) throw input_error("Number of rows is 0");
+    if (l == 0) throw input_error("Number of level-backs is 0");
+    if (f.size()==0) throw input_error("Number of basis functions is 0");
+
     // Bounds for the function genes
     for (auto i = 0u; i < (3 * m_r * m_c); i+=3) {
         m_ub[i] = f.size() - 1;
@@ -75,46 +84,22 @@ bool encoding::is_valid(const std::vector<unsigned int>& x) const
     return true;
 }
 
-/// Computes the encoded expression
-std::vector<double> encoding::compute_f(const std::vector<double>& in, const std::vector<unsigned int>& x) const
-{
-    assert(is_valid(x));
-    std::vector<unsigned int> to_evaluate(nodes_to_evaluate(x));
-    std::vector<double> retval(m_m);
-    std::map<unsigned int, double> node;
-    for (auto i : to_evaluate) {
-        if (i < m_n) 
-        {
-            node[i] = in[i];
-        } else {
-            unsigned int idx = (i - 2) * 3;
-            node[i] = m_f[x[idx]](node[x[idx + 1]], node[x[idx + 2]]);
-        }
-    }
-    for (auto i = 0u; i<m_m; ++i)
-    {
-        retval[i] = node[x[(m_r * m_c) * 3 + i]];
-    }
-    return retval;
-}
+
 
 /// Computes the encoded expression
-std::vector<std::string> encoding::pretty(const std::vector<std::string>& in, const std::vector<unsigned int>& x) const
+/*std::vector<std::string> encoding::pretty(const std::vector<std::string>& in, const std::vector<unsigned int>& x) const
 {
-    assert(is_valid(x));
+    if !is_valid(x) throw input_error("Invalid length for the chromosome");
     std::vector<unsigned int> to_evaluate(nodes_to_evaluate(x));
     std::vector<std::string> retval(m_m);
     std::map<unsigned int, std::string> node;
-std::cout << to_evaluate << std::endl;
     for (auto i : to_evaluate) {
         if (i < m_n) 
         {
             node[i] = in[i];
-std::cout << node[i] << std::endl;
         } else {
             unsigned int idx = (i - 2) * 3;
             node[i] = m_f[x[idx]].m_pf(node[x[idx + 1]], node[x[idx + 2]]);
-std::cout << node[i] << std::endl;
         }
     }
     for (auto i = 0u; i<m_m; ++i)
@@ -122,7 +107,7 @@ std::cout << node[i] << std::endl;
         retval[i] = node[x[(m_r * m_c) * 3 + i]];
     }
     return retval;
-}
+}**/
 
 /// Computes which nodes actually need evaluation
 std::vector<unsigned int> encoding::nodes_to_evaluate(const std::vector<unsigned int>& x) const

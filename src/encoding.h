@@ -1,9 +1,13 @@
 #ifndef DCGP_DCGP_H
 #define DCGP_DCGP_H
 
-#include "basis_function.h"
 #include <vector>
 #include <string>
+#include <map>
+
+#include "basis_function.h"
+#include "exceptions.h"
+
 
 namespace dcgp {
 
@@ -11,11 +15,33 @@ class encoding {
 public:
     encoding(unsigned int n, unsigned int m, unsigned int c, unsigned int r, unsigned int l, std::vector<basis_function> f);
     bool is_valid(const std::vector<unsigned int>& x) const;
-    std::vector<double> compute_f(const std::vector<double>& in, const std::vector<unsigned int>& x) const;
-    std::vector<std::string>  pretty(const std::vector<std::string>& in, const std::vector<unsigned int>& x) const;
+    
+    template <class T>
+    std::vector<T> compute_f(const std::vector<T>& in, const std::vector<unsigned int>& x) const
+    {  
+        //if (!is_valid(x)) throw input_error("Invalid chromosome");
+        std::vector<unsigned int> to_evaluate(nodes_to_evaluate(x));
+        std::vector<T> retval(m_m);
+        std::map<unsigned int, T> node;
+        for (auto i : to_evaluate) {
+            if (i < m_n) 
+            {
+                node[i] = in[i];
+            } else {
+                unsigned int idx = (i - 2) * 3;
+                node[i] = m_f[x[idx]](node[x[idx + 1]], node[x[idx + 2]]);
+            }
+        }
+        for (auto i = 0u; i<m_m; ++i)
+        {
+            retval[i] = node[x[(m_r * m_c) * 3 + i]];
+        }
+        return retval;
+    }
+    //std::vector<std::string>  pretty(const std::vector<std::string>& in, const std::vector<unsigned int>& x) const;
     std::string human_readable() const;
 
-public: //TODO change to protected
+private: 
     std::vector<unsigned int> nodes_to_evaluate(const std::vector<unsigned int>& x) const;
 
 private:
