@@ -1,10 +1,8 @@
 
 #include <iostream>
 #include <sstream>
-#include<map>
 
 #include "encoding.h"
-#include "exceptions.h"
 #include "std_overloads.h"
 
 
@@ -15,18 +13,18 @@ namespace dcgp {
  *
  * \param[in] n number of inputs (independent variables)
  * \param[in] m number of outputs (dependent variables)
- * \param[in] c number of columns of the cartesian cgp
  * \param[in] r number of rows of the cartesian cgp
+ * \param[in] c number of columns of the cartesian cgp
  * \param[in] l number of levels-back allowed for the cartesian cgp
  * \param[in] f functions allowed. They are of type dcgp::basis_function
  */
 encoding::encoding(unsigned int n,                  // n. inputs
                    unsigned int m,                  // n. outputs
-                   unsigned int c,                  // n. columns
                    unsigned int r,                  // n. rows
+                   unsigned int c,                  // n. columns
                    unsigned int l,                  // n. levels-back
                    std::vector<basis_function> f    // functions
-                   ) : m_n(n), m_m(m), m_c(c), m_r(r), m_l(l), m_f(f), m_lb((3 * m_r * m_c) + m_m, 0), m_ub((3 * m_r * m_c) + m_m, 0)
+                   ) : m_n(n), m_m(m), m_r(r), m_c(c), m_l(l), m_f(f), m_lb((3 * m_r * m_c) + m_m, 0), m_ub((3 * m_r * m_c) + m_m, 0)
 {
 
     if (n == 0) throw input_error("Number of inputs is 0");
@@ -142,8 +140,8 @@ std::string encoding::human_readable() const
     s << "CGP Encoding:\n";
     s << "\tNumber of inputs:\t\t" << m_n << '\n';
     s << "\tNumber of outputs:\t\t" << m_m << '\n';
-    s << "\tNumber of columns:\t\t" << m_c << '\n';
     s << "\tNumber of rows:\t\t\t" << m_r << '\n';
+    s << "\tNumber of columns:\t\t" << m_c << '\n';
     s << "\tNumber of levels-back allowed:\t" << m_l << '\n';
     s << "\n\tResulting lower bounds:\t" << m_lb;
     s << "\n\tResulting upper bounds:\t" << m_ub << '\n';

@@ -13,7 +13,7 @@ namespace dcgp {
 
 class encoding {
 public:
-    encoding(unsigned int n, unsigned int m, unsigned int c, unsigned int r, unsigned int l, std::vector<basis_function> f);
+    encoding(unsigned int n, unsigned int m, unsigned int r, unsigned int c, unsigned int l, std::vector<basis_function> f);
     bool is_valid(const std::vector<unsigned int>& x) const;
     
     template <class T>
@@ -49,10 +49,10 @@ private:
     unsigned int m_n;
     // number of outputs
     unsigned int m_m;
-    // number of columns
-    unsigned int m_c;
     // number of rows
     unsigned int m_r;
+    // number of columns
+    unsigned int m_c;
     // number of levels_back allowed
     unsigned int m_l;
     // the functions allowed
