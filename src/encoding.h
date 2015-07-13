@@ -38,7 +38,6 @@ public:
         }
         return retval;
     }
-    //std::vector<std::string>  pretty(const std::vector<std::string>& in, const std::vector<unsigned int>& x) const;
     std::string human_readable() const;
 
 private: 
