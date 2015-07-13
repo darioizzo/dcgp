@@ -19,7 +19,7 @@ public:
     template <class T>
     std::vector<T> compute_f(const std::vector<T>& in, const std::vector<unsigned int>& x) const
     {  
-        //if (!is_valid(x)) throw input_error("Invalid chromosome");
+        if (!is_valid(x)) throw input_error("Invalid chromosome");
         std::vector<unsigned int> to_evaluate(nodes_to_evaluate(x));
         std::vector<T> retval(m_m);
         std::map<unsigned int, T> node;
