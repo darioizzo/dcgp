@@ -10,12 +10,13 @@ namespace dcgp {
 class encoding {
 public:
     encoding(unsigned int n, unsigned int m, unsigned int c, unsigned int r, unsigned int l, std::vector<basis_function> f);
-    bool is_valid(const std::vector<unsigned int>& x);
-    std::vector<double> compute_f(const std::vector<double>& in, const std::vector<unsigned int>& x);
+    bool is_valid(const std::vector<unsigned int>& x) const;
+    std::vector<double> compute_f(const std::vector<double>& in, const std::vector<unsigned int>& x) const;
+    std::vector<std::string>  pretty(const std::vector<std::string>& in, const std::vector<unsigned int>& x) const;
     std::string human_readable() const;
 
 public: //TODO change to protected
-    std::vector<unsigned int> nodes_to_evaluate(const std::vector<unsigned int>& x);
+    std::vector<unsigned int> nodes_to_evaluate(const std::vector<unsigned int>& x) const;
 
 private:
     // number of inputs

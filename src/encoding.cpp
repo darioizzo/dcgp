@@ -59,7 +59,7 @@ encoding::encoding(unsigned int n,                  // n. inputs
  *
  * \param[in] x chromosome 
  */
-bool encoding::is_valid(const std::vector<unsigned int>& x)
+bool encoding::is_valid(const std::vector<unsigned int>& x) const
 {
     // Checking for length
     if (x.size() != m_lb.size()) {
@@ -76,7 +76,7 @@ bool encoding::is_valid(const std::vector<unsigned int>& x)
 }
 
 /// Computes the encoded expression
-std::vector<double> encoding::compute_f(const std::vector<double>& in, const std::vector<unsigned int>& x)
+std::vector<double> encoding::compute_f(const std::vector<double>& in, const std::vector<unsigned int>& x) const
 {
     assert(is_valid(x));
     std::vector<unsigned int> to_evaluate(nodes_to_evaluate(x));
@@ -98,8 +98,34 @@ std::vector<double> encoding::compute_f(const std::vector<double>& in, const std
     return retval;
 }
 
+/// Computes the encoded expression
+std::vector<std::string> encoding::pretty(const std::vector<std::string>& in, const std::vector<unsigned int>& x) const
+{
+    assert(is_valid(x));
+    std::vector<unsigned int> to_evaluate(nodes_to_evaluate(x));
+    std::vector<std::string> retval(m_m);
+    std::map<unsigned int, std::string> node;
+std::cout << to_evaluate << std::endl;
+    for (auto i : to_evaluate) {
+        if (i < m_n) 
+        {
+            node[i] = in[i];
+std::cout << node[i] << std::endl;
+        } else {
+            unsigned int idx = (i - 2) * 3;
+            node[i] = m_f[x[idx]].m_pf(node[x[idx + 1]], node[x[idx + 2]]);
+std::cout << node[i] << std::endl;
+        }
+    }
+    for (auto i = 0u; i<m_m; ++i)
+    {
+        retval[i] = node[x[(m_r * m_c) * 3 + i]];
+    }
+    return retval;
+}
+
 /// Computes which nodes actually need evaluation
-std::vector<unsigned int> encoding::nodes_to_evaluate(const std::vector<unsigned int>& x) 
+std::vector<unsigned int> encoding::nodes_to_evaluate(const std::vector<unsigned int>& x) const
 {
     assert(x.size() == m_lb.size());
     std::vector<unsigned int> retval((m_c * m_r) * 2 + m_m);
