@@ -37,6 +37,9 @@ INCLUDE(cmake_scripts/set_compiler_flags.cmake)
 # Build Option: when active the file main.cpp is built and linked to the PaGMO static library
 OPTION(BUILD_MAIN "Build 'main.cpp'." ON)
 
+# Build option: enable test set.
+OPTION(ENABLE_TESTS "Build test set." OFF)
+
 # Finding the boost libraries needed for the keplerian_toolbox
 # SET(REQUIRED_BOOST_LIBS serialization)
 # MESSAGE(STATUS "Required Boost libraries: ${REQUIRED_BOOST_LIBS}")
@@ -62,5 +65,9 @@ IF(BUILD_MAIN)
 	ADD_EXECUTABLE(main main.cpp)
 	TARGET_LINK_LIBRARIES(main dcgp_s ${LIBRARIES_4_STATIC})
 ENDIF(BUILD_MAIN)
+
+IF(ENABLE_TESTS)
+	ADD_SUBDIRECTORY("${CMAKE_SOURCE_DIR}/tests")
+ENDIF(ENABLE_TESTS)
 
 

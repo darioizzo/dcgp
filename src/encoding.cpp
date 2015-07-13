@@ -1,7 +1,10 @@
 
 #include <iostream>
+#include <sstream>
+#include<map>
 
 #include "encoding.h"
+#include "std_overloads.h"
 
 
 namespace dcgp {
@@ -25,12 +28,12 @@ encoding::encoding(unsigned int n,                  // n. inputs
                    ) : m_n(n), m_m(m), m_c(c), m_r(r), m_l(l), m_f(f), m_lb((3 * m_r * m_c) + m_m, 0), m_ub((3 * m_r * m_c) + m_m, 0)
 {
     // Bounds for the function genes
-    for (auto i = 0; i < (3 * m_r * m_c); i+=3) {
+    for (auto i = 0u; i < (3 * m_r * m_c); i+=3) {
         m_ub[i] = f.size() - 1;
     }
 
     // Bounds for the output genes
-    for (auto i = 3 * m_r * m_c; i < m_ub.size(); ++i) {
+    for (auto i = 3u * m_r * m_c; i < m_ub.size(); ++i) {
         m_ub[i] = m_n + m_r * m_c - 1;
         if (m_l <= m_c) {
             m_lb[i] = m_n + m_r * (m_c - m_l);
@@ -38,8 +41,8 @@ encoding::encoding(unsigned int n,                  // n. inputs
     }
 
     // Bounds for the node connection genes 
-    for (auto i = 0; i < m_c; ++i) {
-        for (auto j = 0; j < m_r; ++j) {
+    for (auto i = 0u; i < m_c; ++i) {
+        for (auto j = 0u; j < m_r; ++j) {
             m_ub[((i * m_r) + j) * 3 + 1] = m_n + i * m_r - 1;
             m_ub[((i * m_r) + j) * 3 + 2] = m_n + i * m_r - 1;
             if (i >= m_l) {
@@ -55,38 +58,100 @@ encoding::encoding(unsigned int n,                  // n. inputs
 /** Checks if a chromosome (i.e. a sequence of integers) can be decoded with this encoding
  *
  * \param[in] x chromosome 
- * \param[in] verbose if true prints additinal information in case the chromosome is not valid
  */
-bool encoding::is_valid(std::vector<unsigned int> x, bool verbose)
+bool encoding::is_valid(const std::vector<unsigned int>& x)
 {
     // Checking for length
     if (x.size() != m_lb.size()) {
-        if (verbose) std::cout << "Chromosome dimension is wrong" << std::endl;
         return false;
     }
 
+    // Checking for bounds on all cenes
     for (auto i = 0u; i < x.size(); ++i) {
         if ((x[i] > m_ub[i]) || (x[i] < m_lb[i])) {
-            if (verbose) {
-                std::cout << "Out of bounds: \n";
-                std::cout << "lb = [";
-                for (auto i = 0u; i<m_lb.size(); ++i) {
-                    std::cout << m_lb[i] << " ";
-                }
-                std::cout << "]\nub = [";
-                for (auto i = 0u; i<m_ub.size(); ++i) {
-                    std::cout << m_ub[i] << " ";
-                }
-                std::cout << "]\nx = [";
-                for (auto i = 0u; i<x.size(); ++i) {
-                    std::cout << x[i] << " ";
-                }
-                std::cout << "]\n";
-            }
             return false;
         }
     }
     return true;
+}
+
+/// Computes the encoded expression
+std::vector<double> encoding::compute_f(const std::vector<double>& in, const std::vector<unsigned int>& x)
+{
+    assert(is_valid(x));
+    std::vector<unsigned int> to_evaluate(nodes_to_evaluate(x));
+    std::vector<double> retval(m_m);
+    std::map<unsigned int, double> node;
+    for (auto i : to_evaluate) {
+        if (i < m_n) 
+        {
+            node[i] = in[i];
+        } else {
+            unsigned int idx = (i - 2) * 3;
+            node[i] = m_f[x[idx]](node[x[idx + 1]], node[x[idx + 2]]);
+        }
+    }
+    for (auto i = 0u; i<m_m; ++i)
+    {
+        retval[i] = node[x[(m_r * m_c) * 3 + i]];
+    }
+    return retval;
+}
+
+/// Computes which nodes actually need evaluation
+std::vector<unsigned int> encoding::nodes_to_evaluate(const std::vector<unsigned int>& x) 
+{
+    assert(x.size() == m_lb.size());
+    std::vector<unsigned int> retval((m_c * m_r) * 2 + m_m);
+
+    // We start with the output nodes and their dependencies
+    for (auto i = 0u; i < m_m; ++i) {
+        retval[(m_c * m_r) * 2 + i] = x[(m_c * m_r) * 3 + i];
+    }
+
+    // We start with the output nodes and their dependencies
+    for (auto i = 0u; i < m_c * m_r; ++i) {
+        retval[2*i] = x[3 * i + 1];
+        retval[2*i + 1] = x[3 * i + 2];
+    }
+    std::sort( retval.begin(), retval.end() );
+    retval.erase( std::unique( retval.begin(), retval.end() ), retval.end() );
+    return retval;
+}
+
+/// Return human readable representation of the problem.
+/**
+ * Will return a formatted string containing a human readable representation of the class
+ *
+ * @return std::string containing a human-readable representation of the problem.
+ */
+std::string encoding::human_readable() const
+{
+    std::ostringstream s;
+    s << "CGP Encoding:\n";
+    s << "\tNumber of inputs:\t\t" << m_n << '\n';
+    s << "\tNumber of outputs:\t\t" << m_m << '\n';
+    s << "\tNumber of columns:\t\t" << m_c << '\n';
+    s << "\tNumber of rows:\t\t\t" << m_r << '\n';
+    s << "\tNumber of levels-back allowed:\t" << m_l << '\n';
+    s << "\n\tResulting lower bounds:\t" << m_lb;
+    s << "\n\tResulting upper bounds:\t" << m_ub << '\n';
+    return s.str();
+}
+
+/// Overload stream operator for problem::base.
+/**
+ * Equivalent to printing encoding::human_readable() to stream.
+ *
+ * @param[out] s std::ostream to which the problem will be streamed.
+ * @param[in] p dcgp::encoding to be inserted into the stream.
+ *
+ * @return reference to s.
+ */
+std::ostream &operator<<(std::ostream &s, const encoding &en)
+{
+    s << en.human_readable();
+    return s;
 }
 
 } // end of namespace dcgp
