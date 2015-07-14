@@ -1,15 +1,16 @@
 
 #include <iostream>
 #include <sstream>
+#include <random>
 
-#include "encoding.h"
+#include "program.h"
 #include "std_overloads.h"
 
 
 namespace dcgp {
 
 /// Constructor
-/** Constructs a differential genetic programming encoding
+/** Constructs a d-cgp program
  *
  * \param[in] n number of inputs (independent variables)
  * \param[in] m number of outputs (dependent variables)
@@ -18,13 +19,14 @@ namespace dcgp {
  * \param[in] l number of levels-back allowed for the cartesian cgp
  * \param[in] f functions allowed. They are of type dcgp::basis_function
  */
-encoding::encoding(unsigned int n,                  // n. inputs
+program::program(unsigned int n,                    // n. inputs
                    unsigned int m,                  // n. outputs
                    unsigned int r,                  // n. rows
                    unsigned int c,                  // n. columns
                    unsigned int l,                  // n. levels-back
-                   std::vector<basis_function> f    // functions
-                   ) : m_n(n), m_m(m), m_r(r), m_c(c), m_l(l), m_f(f), m_lb((3 * m_r * m_c) + m_m, 0), m_ub((3 * m_r * m_c) + m_m, 0)
+                   std::vector<basis_function> f,   // functions
+                   unsigned int seed                // seed for the pseudo-random numbers
+                   ) : m_n(n), m_m(m), m_r(r), m_c(c), m_l(l), m_f(f), m_lb((3 * m_r * m_c) + m_m, 0), m_ub((3 * m_r * m_c) + m_m, 0), m_x((3 * m_r * m_c) + m_m, 0), m_e(seed)
 {
 
     if (n == 0) throw input_error("Number of inputs is 0");
@@ -59,14 +61,29 @@ encoding::encoding(unsigned int n,                  // n. inputs
         }
     }
 
+    // We generate a random program
+    for (auto i = 0; i < m_x.size(); ++i)
+    {
+        m_x[i] = std::uniform_int_distribution<unsigned int>(m_lb[i], m_ub[i])(m_e);
+    }
+}
+
+/// Sets the pregram
+void program::set(const std::vector<unsigned int>& x)
+{
+    if(!is_valid(x))
+    {
+        throw input_error("Chromosome is incompatible");
+    }
+    m_x = x;
 }
 
 /// Validity of a chromosome
-/** Checks if a chromosome (i.e. a sequence of integers) can be decoded with this encoding
+/** Checks if a chromosome (i.e. a sequence of integers) is a valid program
  *
  * \param[in] x chromosome 
  */
-bool encoding::is_valid(const std::vector<unsigned int>& x) const
+bool program::is_valid(const std::vector<unsigned int>& x) const
 {
     // Checking for length
     if (x.size() != m_lb.size()) {
@@ -83,32 +100,8 @@ bool encoding::is_valid(const std::vector<unsigned int>& x) const
 }
 
 
-
-/// Computes the encoded expression
-/*std::vector<std::string> encoding::pretty(const std::vector<std::string>& in, const std::vector<unsigned int>& x) const
-{
-    if !is_valid(x) throw input_error("Invalid length for the chromosome");
-    std::vector<unsigned int> to_evaluate(nodes_to_evaluate(x));
-    std::vector<std::string> retval(m_m);
-    std::map<unsigned int, std::string> node;
-    for (auto i : to_evaluate) {
-        if (i < m_n) 
-        {
-            node[i] = in[i];
-        } else {
-            unsigned int idx = (i - 2) * 3;
-            node[i] = m_f[x[idx]].m_pf(node[x[idx + 1]], node[x[idx + 2]]);
-        }
-    }
-    for (auto i = 0u; i<m_m; ++i)
-    {
-        retval[i] = node[x[(m_r * m_c) * 3 + i]];
-    }
-    return retval;
-}**/
-
 /// Computes which nodes actually need evaluation
-std::vector<unsigned int> encoding::nodes_to_evaluate(const std::vector<unsigned int>& x) const
+std::vector<unsigned int> program::nodes_to_evaluate(const std::vector<unsigned int>& x) const
 {
     assert(x.size() == m_lb.size());
     std::vector<unsigned int> retval((m_c * m_r) * 2 + m_m);
@@ -134,7 +127,7 @@ std::vector<unsigned int> encoding::nodes_to_evaluate(const std::vector<unsigned
  *
  * @return std::string containing a human-readable representation of the problem.
  */
-std::string encoding::human_readable() const
+std::string program::human_readable() const
 {
     std::ostringstream s;
     s << "CGP Encoding:\n";
@@ -145,19 +138,20 @@ std::string encoding::human_readable() const
     s << "\tNumber of levels-back allowed:\t" << m_l << '\n';
     s << "\n\tResulting lower bounds:\t" << m_lb;
     s << "\n\tResulting upper bounds:\t" << m_ub << '\n';
+    s << "\n\tCurrent program (encoded):\t" << m_x << '\n';
     return s.str();
 }
 
 /// Overload stream operator for problem::base.
 /**
- * Equivalent to printing encoding::human_readable() to stream.
+ * Equivalent to printing program::human_readable() to stream.
  *
  * @param[out] s std::ostream to which the problem will be streamed.
- * @param[in] p dcgp::encoding to be inserted into the stream.
+ * @param[in] p dcgp::program to be inserted into the stream.
  *
  * @return reference to s.
  */
-std::ostream &operator<<(std::ostream &s, const encoding &en)
+std::ostream &operator<<(std::ostream &s, const program &en)
 {
     s << en.human_readable();
     return s;

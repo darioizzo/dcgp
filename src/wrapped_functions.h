@@ -93,7 +93,7 @@ std::string print_my_mul(const std::string& s1, const std::string& s2)
 
 double my_div(double x, double y)
 {
-        return x * y;
+        return x / y;
 }
 
 double d_my_div(unsigned int i, double x, double y)
@@ -105,6 +105,14 @@ double d_my_div(unsigned int i, double x, double y)
 
 std::string print_my_div(const std::string& s1, const std::string& s2)
 {
+    if (s1 == "0" && s2 != "0")
+    {
+        return "0";
+    }
+    else if (s1 == s2)
+    {
+        return "1";
+    }
     return ("(" + s1 + "/" + s2 + ")");
 }
 

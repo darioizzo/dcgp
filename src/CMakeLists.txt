@@ -1,6 +1,7 @@
 # Keplerian_toolbox lib source files.
 SET(dCGP_LIB_SRC_LIST
-	${CMAKE_CURRENT_SOURCE_DIR}/encoding.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/program.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/rng.cpp
 )
 
 #Build Static Library
