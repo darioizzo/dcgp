@@ -62,7 +62,7 @@ program::program(unsigned int n,                    // n. inputs
     }
 
     // We generate a random program
-    for (auto i = 0; i < m_x.size(); ++i)
+    for (auto i = 0u; i < m_x.size(); ++i)
     {
         m_x[i] = std::uniform_int_distribution<unsigned int>(m_lb[i], m_ub[i])(m_e);
     }
