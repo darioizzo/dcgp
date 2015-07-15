@@ -2,6 +2,7 @@
 #define DCGP_BASIS_FUNCTION_H
 
 #include <functional>
+#include <string>
 
 namespace dcgp {
 

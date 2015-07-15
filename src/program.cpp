@@ -66,6 +66,7 @@ program::program(unsigned int n,                    // n. inputs
     {
         m_x[i] = std::uniform_int_distribution<unsigned int>(m_lb[i], m_ub[i])(m_e);
     }
+    update_active();
 }
 
 /// Sets the pregram
@@ -76,6 +77,7 @@ void program::set(const std::vector<unsigned int>& x)
         throw input_error("Chromosome is incompatible");
     }
     m_x = x;
+    update_active();
 }
 
 /// Validity of a chromosome
@@ -101,24 +103,42 @@ bool program::is_valid(const std::vector<unsigned int>& x) const
 
 
 /// Computes which nodes actually need evaluation
-std::vector<unsigned int> program::nodes_to_evaluate(const std::vector<unsigned int>& x) const
+void program::update_active()
 {
-    assert(x.size() == m_lb.size());
-    std::vector<unsigned int> retval((m_c * m_r) * 2 + m_m);
+    assert(m_x.size() == m_lb.size());
+
+    // First we update the active nodes
+    m_active_nodes.resize((m_c * m_r) * 2 + m_m);
 
     // We start with the output nodes and their dependencies
     for (auto i = 0u; i < m_m; ++i) {
-        retval[(m_c * m_r) * 2 + i] = x[(m_c * m_r) * 3 + i];
+        m_active_nodes[(m_c * m_r) * 2 + i] = m_x[(m_c * m_r) * 3 + i];
     }
 
     // We start with the output nodes and their dependencies
     for (auto i = 0u; i < m_c * m_r; ++i) {
-        retval[2*i] = x[3 * i + 1];
-        retval[2*i + 1] = x[3 * i + 2];
+        m_active_nodes[2*i] = m_x[3 * i + 1];
+        m_active_nodes[2*i + 1] = m_x[3 * i + 2];
     }
-    std::sort( retval.begin(), retval.end() );
-    retval.erase( std::unique( retval.begin(), retval.end() ), retval.end() );
-    return retval;
+    std::sort( m_active_nodes.begin(), m_active_nodes.end() );
+    m_active_nodes.erase( std::unique( m_active_nodes.begin(), m_active_nodes.end() ), m_active_nodes.end() );
+
+    // Then the active genes
+    m_active_genes.clear();
+    for (auto i = 0u; i<m_active_nodes.size(); ++i) 
+    {
+        if (m_active_nodes[i] >= m_n) 
+        {
+            unsigned int idx = (m_active_nodes[i] - m_n) * 3;
+            m_active_genes.push_back(idx);
+            m_active_genes.push_back(idx + 1);
+            m_active_genes.push_back(idx + 2);
+        }
+    }
+    for (auto i = 0u; i<m_m; ++i) 
+    {
+        m_active_genes.push_back(m_r * m_c * 3 + i);
+    }
 }
 
 /// Return human readable representation of the problem.
@@ -139,6 +159,8 @@ std::string program::human_readable() const
     s << "\n\tResulting lower bounds:\t" << m_lb;
     s << "\n\tResulting upper bounds:\t" << m_ub << '\n';
     s << "\n\tCurrent program (encoded):\t" << m_x << '\n';
+    s << "\n\tActive nodes:\t" << m_active_nodes << '\n';
+    s << "\n\tActive genes:\t" << m_active_genes << '\n';
     return s.str();
 }
 

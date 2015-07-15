@@ -32,11 +32,10 @@ public:
         {
             throw input_error("Input size is incompatible");
         }
-        std::vector<unsigned int> to_evaluate(nodes_to_evaluate(m_x));
-//for (auto i : to_evaluate) std::cout << " " << i; std::cout << std::endl;
+//for (auto i : m_active_nodes) std::cout << " " << i; std::cout << std::endl;
         std::vector<T> retval(m_m);
         std::map<unsigned int, T> node;
-        for (auto i : to_evaluate) {
+        for (auto i : m_active_nodes) {
             if (i < m_n) 
             {
                 node[i] = in[i];
@@ -56,7 +55,7 @@ public:
 
 protected: 
     bool is_valid(const std::vector<unsigned int>& x) const;
-    std::vector<unsigned int> nodes_to_evaluate(const std::vector<unsigned int>& x) const;
+    void update_active();
 
 private:
     // number of inputs
@@ -74,6 +73,10 @@ private:
     // lower and upper bounds on all genes
     std::vector<unsigned int> m_lb;
     std::vector<unsigned int> m_ub;
+    // active nodes
+    std::vector<unsigned int> m_active_nodes;
+    // active genes
+    std::vector<unsigned int> m_active_genes;
     // the actual program encoded in a chromosome
     std::vector<unsigned int> m_x;
     // the random engine for the class
