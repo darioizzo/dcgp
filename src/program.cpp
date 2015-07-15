@@ -2,6 +2,7 @@
 #include <iostream>
 #include <sstream>
 #include <random>
+#include <limits>
 
 #include "program.h"
 #include "std_overloads.h"
@@ -77,6 +78,38 @@ void program::set(const std::vector<unsigned int>& x)
         throw input_error("Chromosome is incompatible");
     }
     m_x = x;
+    update_active();
+}
+
+/// Gets the program
+const std::vector<unsigned int>&  program::get() const
+{
+    return m_x;
+}
+
+/// Gets the active genes
+const std::vector<unsigned int>&  program::get_active_genes() const
+{
+    return m_active_genes;
+}
+
+/// Gets the active nodes
+const std::vector<unsigned int>&  program::get_active_nodes() const
+{
+    return m_active_nodes;
+}
+
+void program::mutate()
+{
+    unsigned int idx = std::uniform_int_distribution<unsigned int>(0, m_active_genes.size() - 1)(m_e);
+    idx = m_active_genes[idx];
+    unsigned int new_value = UINT_MAX;
+    do 
+    {
+        new_value = std::uniform_int_distribution<unsigned int>(m_lb[idx], m_ub[idx])(m_e);
+
+    } while (new_value == m_x[idx]);
+    m_x[idx] = new_value;
     update_active();
 }
 

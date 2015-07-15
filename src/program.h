@@ -24,6 +24,13 @@ public:
             unsigned int seed = rng::get_seed());
 
     void set(const std::vector<unsigned int> &x);
+    const std::vector<unsigned int> & get() const;
+
+    const std::vector<unsigned int> & get_active_genes() const;
+    const std::vector<unsigned int> & get_active_nodes() const;
+
+
+    void mutate();
     
     template <class T>
     std::vector<T> compute_f(const std::vector<T>& in) const

@@ -5,13 +5,17 @@
 
 int main() {
     // Instantiate a cgp program with 3 inputs, 2 outputs, 1 row, 5 columns and 6 level-backs using the function set +,-,x,/
-    dcgp::program simple(2,4,3,2,6,dcgp::function_set::minimal);
+    dcgp::program simple(2,4,2,2,6,dcgp::function_set::minimal);
     std::cout << simple << std::endl;
 
     std::vector<double> in_num({2.,3});
     std::vector<std::string> in_sym({"x","y"});
     std::cout << "Numerical value = " << simple.compute_f(in_num) << std::endl;
     std::cout << "Symbolic value = " << simple.compute_f(in_sym) << std::endl;
+    for (auto i = 0u; i < 100; ++i){
+        simple.mutate();
+        std::cout << "Symbolic value = " << simple.compute_f(in_sym) << " " << simple.get() << " " << simple.get_active_genes() << " " << simple.get_active_nodes() << std::endl;
+    }
     return 0;
 }
 
