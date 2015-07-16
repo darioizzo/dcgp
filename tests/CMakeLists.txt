@@ -1,3 +1,7 @@
 ADD_EXECUTABLE(test_compute_f test_compute_f.cpp)
 TARGET_LINK_LIBRARIES(test_compute_f ${MANDATORY_LIBRARIES} dcgp_s)
 ADD_TEST(test_compute_f test_compute_f)
+
+ADD_EXECUTABLE(mutate_torture_test mutate_torture_test.cpp)
+TARGET_LINK_LIBRARIES(mutate_torture_test ${MANDATORY_LIBRARIES} dcgp_s)
+ADD_TEST(mutate_torture_test mutate_torture_test)

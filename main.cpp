@@ -6,11 +6,11 @@
 
 int main() {
     // Instantiate a cgp program with 3 inputs, 2 outputs, 1 row, 5 columns and 6 level-backs using the function set +,-,x,/
-    dcgp::program simple(3,4,1,5,6,dcgp::function_set::minimal,34534);
+    dcgp::program simple(1,1,1,100,101,dcgp::function_set::minimal,34534);
     std::cout << simple << std::endl;
 
-    std::vector<double> in_num({2.,3.,4.});
-    std::vector<std::string> in_sym({"x","y","t"});
+    std::vector<double> in_num({2.});
+    std::vector<std::string> in_sym({"x"});
     std::cout << "Numerical value = " << simple.compute_f(in_num) << std::endl;
     std::cout << "Symbolic value = " << simple.compute_f(in_sym) << std::endl;
 
@@ -21,7 +21,7 @@ int main() {
 
     clock_t end = clock();
     double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-    std::cout << "1000000 mutations took: " << elapsed_secs << " seconds" << std::endl;
+    std::cout << "10000 mutations took: " << elapsed_secs << " seconds" << std::endl;
 
     return 0;
 }

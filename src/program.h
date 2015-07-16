@@ -35,7 +35,9 @@ public:
     const std::vector<unsigned int> & get_active_nodes() const;
 
     void mutate();
-    double fitness(const std::vector<std::vector<double> >& in_des, const std::vector<std::vector<double> >& out_des, fitness_type type = fitness_type::ERROR_BASED) const;
+    double fitness(const std::vector<std::vector<double> >& in_des, 
+                   const std::vector<std::vector<double> >& out_des, 
+                   fitness_type type = fitness_type::ERROR_BASED) const;
     
     template <class T>
     std::vector<T> compute_f(const std::vector<T>& in) const
@@ -85,9 +87,9 @@ private:
     // lower and upper bounds on all genes
     std::vector<unsigned int> m_lb;
     std::vector<unsigned int> m_ub;
-    // active nodes
+    // active nodes idx
     std::vector<unsigned int> m_active_nodes;
-    // active genes
+    // active genes idx
     std::vector<unsigned int> m_active_genes;
     // the actual program encoded in a chromosome
     std::vector<unsigned int> m_x;
