@@ -68,7 +68,6 @@ program::program(unsigned int n,                    // n. inputs
     {
         m_x[i] = std::uniform_int_distribution<unsigned int>(m_lb[i], m_ub[i])(m_e);
     }
-std::cout << "I AM HERE" << std::endl;
     update_active();
 }
 
@@ -183,7 +182,7 @@ void program::update_active()
     do
     {
         m_active_nodes.insert(m_active_nodes.end(), current.begin(), current.end());
-std::cout << "D: " << current.size() << std::endl;
+//std::cout << "D: " << current.size() << std::endl;
         for (auto node_id : current)
         {
             if (node_id >=m_n) // we insert the input nodes connections as they do not have any
