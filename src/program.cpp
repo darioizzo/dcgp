@@ -195,6 +195,8 @@ std::cout << "D: " << current.size() << std::endl;
                 m_active_nodes.push_back(node_id);
             }
         }
+        std::sort( next.begin(), next.end() );
+        next.erase( std::unique( next.begin(), next.end() ), next.end() );
         current = next;
         next.clear();
     } while (current.size() > 0);
