@@ -1,21 +1,28 @@
 #include <iostream>
 #include <iomanip>
+#include <ctime>
 #include "src/dcgp.h"
 
 
 int main() {
     // Instantiate a cgp program with 3 inputs, 2 outputs, 1 row, 5 columns and 6 level-backs using the function set +,-,x,/
-    dcgp::program simple(2,4,2,2,6,dcgp::function_set::minimal,34534);
+    dcgp::program simple(2,4,1,100,6,dcgp::function_set::minimal,34534);
     std::cout << simple << std::endl;
 
     std::vector<double> in_num({2.,3});
     std::vector<std::string> in_sym({"x","y"});
     std::cout << "Numerical value = " << simple.compute_f(in_num) << std::endl;
     std::cout << "Symbolic value = " << simple.compute_f(in_sym) << std::endl;
-    for (auto i = 0u; i < 100; ++i){
+
+    clock_t begin = clock();
+    for (auto i = 0u; i < 10000; ++i){
         simple.mutate();
-        std::cout << "Symbolic value = " << simple.compute_f(in_num) << " " << simple.get() << " " << simple.get_active_genes() << " " << simple.get_active_nodes() << std::endl;
     }
+
+    clock_t end = clock();
+    double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+    std::cout << "1000000 mutation took: " << elapsed_secs << " seconds" << std::endl;
+
     return 0;
 }
 

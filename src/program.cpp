@@ -26,8 +26,9 @@ program::program(unsigned int n,                    // n. inputs
                    unsigned int c,                  // n. columns
                    unsigned int l,                  // n. levels-back
                    std::vector<basis_function> f,   // functions
+                   double tol,                      // tolerance for the fitness (only when hits based)
                    unsigned int seed                // seed for the pseudo-random numbers
-                   ) : m_n(n), m_m(m), m_r(r), m_c(c), m_l(l), m_f(f), m_lb((3 * m_r * m_c) + m_m, 0), m_ub((3 * m_r * m_c) + m_m, 0), m_x((3 * m_r * m_c) + m_m, 0), m_e(seed)
+                   ) : m_n(n), m_m(m), m_r(r), m_c(c), m_l(l), m_f(f), m_lb((3 * m_r * m_c) + m_m, 0), m_ub((3 * m_r * m_c) + m_m, 0), m_x((3 * m_r * m_c) + m_m, 0), m_tol(tol), m_e(seed)
 {
 
     if (n == 0) throw input_error("Number of inputs is 0");
@@ -67,6 +68,7 @@ program::program(unsigned int n,                    // n. inputs
     {
         m_x[i] = std::uniform_int_distribution<unsigned int>(m_lb[i], m_ub[i])(m_e);
     }
+std::cout << "I AM HERE" << std::endl;
     update_active();
 }
 
@@ -97,6 +99,36 @@ const std::vector<unsigned int>&  program::get_active_genes() const
 const std::vector<unsigned int>&  program::get_active_nodes() const
 {
     return m_active_nodes;
+}
+
+/// Computes the error of the program in approximating some given data
+double program::fitness(const std::vector<std::vector<double> >& in_des, const std::vector<std::vector<double> >& out_des, fitness_type type) const
+{
+    double retval = 0.;
+    std::vector<double> out_real;
+
+    if (in_des.size() != out_des.size())
+    {
+        throw input_error("Size of the input vector must be the size of the output vector");
+    }
+
+    for (auto i = 0u; i < in_des.size(); ++i)
+    {
+        out_real = compute_f(in_des[i]);
+        if (type == fitness_type::ERROR_BASED)
+        {
+            for (auto j = 0u; j < out_real.size(); ++j)
+            {
+                retval += 1.0 / (1.0 + fabs(out_des[i][j] - out_real[i]));
+            }
+        } else if (type == fitness_type::HITS_BASED){
+            for (auto j = 0u; j < out_real.size(); ++j)
+            {
+                if (fabs(out_des[i][j] - out_real[i]) < m_tol) retval += 1.0;
+            }
+        }
+    }
+    return retval;
 }
 
 void program::mutate()
@@ -151,7 +183,7 @@ void program::update_active()
     do
     {
         m_active_nodes.insert(m_active_nodes.end(), current.begin(), current.end());
-// std::cout << "D: " << current << std::endl;
+std::cout << "D: " << current.size() << std::endl;
         for (auto node_id : current)
         {
             if (node_id >=m_n) // we insert the input nodes connections as they do not have any

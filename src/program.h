@@ -15,13 +15,18 @@ namespace dcgp {
 
 class program {
 public:
+
+    enum fitness_type { ERROR_BASED, HITS_BASED };
+
     program(unsigned int n, 
             unsigned int m, 
             unsigned int r, 
             unsigned int c, 
             unsigned int l, 
             std::vector<basis_function> f, 
-            unsigned int seed = rng::get_seed());
+            double tol = 1e-12,
+            unsigned int seed = rng::get_seed()
+            );
 
     void set(const std::vector<unsigned int> &x);
     const std::vector<unsigned int> & get() const;
@@ -29,8 +34,8 @@ public:
     const std::vector<unsigned int> & get_active_genes() const;
     const std::vector<unsigned int> & get_active_nodes() const;
 
-
     void mutate();
+    double fitness(const std::vector<std::vector<double> >& in_des, const std::vector<std::vector<double> >& out_des, fitness_type type = fitness_type::ERROR_BASED) const;
     
     template <class T>
     std::vector<T> compute_f(const std::vector<T>& in) const
@@ -86,6 +91,8 @@ private:
     std::vector<unsigned int> m_active_genes;
     // the actual program encoded in a chromosome
     std::vector<unsigned int> m_x;
+    // tolerance for the hits based fitness
+    double m_tol;
     // the random engine for the class
     std::default_random_engine m_e;
 };

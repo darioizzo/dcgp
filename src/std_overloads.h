@@ -1,6 +1,6 @@
 #include <boost/lexical_cast.hpp>
 
-#define DCGP_MAX_OUTPUT_LENGTH 60
+#define DCGP_MAX_OUTPUT_LENGTH 20
 namespace std
 {
 	/// Overload stream insertion operator for std::vector<T>. It will only output the first
