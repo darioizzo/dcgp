@@ -141,18 +141,31 @@ void program::update_active()
     assert(m_x.size() == m_lb.size());
 
     // First we update the active nodes
-    m_active_nodes.resize((m_c * m_r) * 2 + m_m);
-
-    // We start with the output nodes and their dependencies
+    std::vector<unsigned int> current(m_m), next;
+    m_active_nodes.clear();
+    // At the beginning current contains only the output nodes connections
     for (auto i = 0u; i < m_m; ++i) {
-        m_active_nodes[(m_c * m_r) * 2 + i] = m_x[(m_c * m_r) * 3 + i];
+        current[i] = m_x[3 * m_r * m_c + i];
     }
 
-    // We start with the output nodes and their dependencies
-    for (auto i = 0u; i < m_c * m_r; ++i) {
-        m_active_nodes[2*i] = m_x[3 * i + 1];
-        m_active_nodes[2*i + 1] = m_x[3 * i + 2];
-    }
+    do
+    {
+        m_active_nodes.insert(m_active_nodes.end(), current.begin(), current.end());
+// std::cout << "D: " << current << std::endl;
+        for (auto node_id : current)
+        {
+            if (node_id >=m_n) // we insert the input nodes connections as they do not have any
+            {
+                next.push_back(m_x[(node_id - m_n) * 3 + 1]);
+                next.push_back(m_x[(node_id - m_n) * 3 + 2]);
+            }
+            else{
+                m_active_nodes.push_back(node_id);
+            }
+        }
+        current = next;
+        next.clear();
+    } while (current.size() > 0);
     std::sort( m_active_nodes.begin(), m_active_nodes.end() );
     m_active_nodes.erase( std::unique( m_active_nodes.begin(), m_active_nodes.end() ), m_active_nodes.end() );
 

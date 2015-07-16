@@ -18,7 +18,7 @@ std::string print_my_sum(const std::string& s1, const std::string& s2)
 {
     if (s1 == s2) 
     {
-        return "2"+s1;
+        return "(2*"+s1+")";
     }
     else if (s1 == "0")
     {
