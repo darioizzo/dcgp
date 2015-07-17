@@ -9,3 +9,7 @@ ADD_TEST(mutate_torture_test mutate_torture_test)
 ADD_EXECUTABLE(test_program_fitness test_program_fitness.cpp)
 TARGET_LINK_LIBRARIES(test_program_fitness ${MANDATORY_LIBRARIES} dcgp_s)
 ADD_TEST(test_program_fitness test_program_fitness)
+
+ADD_EXECUTABLE(test_evolving_simple_expressions test_evolving_simple_expressions.cpp)
+TARGET_LINK_LIBRARIES(test_evolving_simple_expressions ${MANDATORY_LIBRARIES} dcgp_s)
+ADD_TEST(test_evolving_simple_expressions test_evolving_simple_expressions)
