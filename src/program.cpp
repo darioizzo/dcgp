@@ -3,6 +3,7 @@
 #include <sstream>
 #include <random>
 #include <limits>
+#include <cmath>
 
 #include "program.h"
 #include "std_overloads.h"
@@ -118,7 +119,10 @@ double program::fitness(const std::vector<std::vector<double> >& in_des, const s
         {
             for (auto j = 0u; j < out_real.size(); ++j)
             {
-                retval += 1.0 / (1.0 + fabs(out_des[i][j] - out_real[i]));
+                if (std::isfinite(out_real[j]))
+                {
+                    retval += 1.0 / (1.0 + fabs(out_des[i][j] - out_real[j]));
+                }
             }
         } else if (type == fitness_type::HITS_BASED){
             for (auto j = 0u; j < out_real.size(); ++j)
@@ -126,7 +130,9 @@ double program::fitness(const std::vector<std::vector<double> >& in_des, const s
                 if (fabs(out_des[i][j] - out_real[i]) < m_tol) retval += 1.0;
             }
         }
+//std::cout << in_des[i] << " " << out_des[i] << " " << out_real;
     }
+
     return retval;
 }
 
@@ -237,11 +243,12 @@ std::string program::human_readable() const
     s << "\tNumber of rows:\t\t\t" << m_r << '\n';
     s << "\tNumber of columns:\t\t" << m_c << '\n';
     s << "\tNumber of levels-back allowed:\t" << m_l << '\n';
+    s << "\tTolerance (hit based fitness):\t" << m_tol << '\n';
     s << "\n\tResulting lower bounds:\t" << m_lb;
     s << "\n\tResulting upper bounds:\t" << m_ub << '\n';
     s << "\n\tCurrent program (encoded):\t" << m_x << '\n';
-    s << "\n\tActive nodes:\t" << m_active_nodes << '\n';
-    s << "\n\tActive genes:\t" << m_active_genes << '\n';
+    s << "\tActive nodes:\t\t\t" << m_active_nodes << '\n';
+    s << "\tActive genes:\t\t\t" << m_active_genes << '\n';
     return s.str();
 }
 

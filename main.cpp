@@ -5,23 +5,15 @@
 
 
 int main() {
-    // Instantiate a cgp program with 3 inputs, 2 outputs, 1 row, 5 columns and 6 level-backs using the function set +,-,x,/
-    dcgp::program simple(1,1,1,100,101,dcgp::function_set::minimal,34534);
+    // Instantiate a cgp program with 1 inputs, 1 outputs, 1 row, 100 columns and 101 level-backs using the function set +,-,x,/ 
+    // (1e-9 is the tolerance in case a hit count fitness is used, while 34534 is the seed)
+    dcgp::program simple(3,4,2,3,4,dcgp::function_set::minimal,1e-9, 34534);
     std::cout << simple << std::endl;
 
-    std::vector<double> in_num({2.});
-    std::vector<std::string> in_sym({"x"});
+    std::vector<double> in_num({2.,3.,4.});
+    std::vector<std::string> in_sym({"x","y","z"});
     std::cout << "Numerical value = " << simple.compute_f(in_num) << std::endl;
     std::cout << "Symbolic value = " << simple.compute_f(in_sym) << std::endl;
-
-    clock_t begin = clock();
-    for (auto i = 0u; i < 10000; ++i){
-        simple.mutate();
-    }
-
-    clock_t end = clock();
-    double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-    std::cout << "10000 mutations took: " << elapsed_secs << " seconds" << std::endl;
 
     return 0;
 }
@@ -30,20 +22,20 @@ int main() {
 CGP Encoding:
     Number of inputs:       3
     Number of outputs:      4
-    Number of rows:         1
-    Number of columns:      5
-    Number of levels-back allowed:  6
+    Number of rows:         2
+    Number of columns:      3
+    Number of levels-back allowed:  4
+    Tolerance (hit based fitness):  1e-09
 
-    Resulting lower bounds: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    Resulting upper bounds: [3, 2, 2, 3, 3, 3, 3, 4, 4, 3, 5, 5, 3, 6, 6, 7, 7, 7, 7]
+    Resulting lower bounds: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  ... ]
+    Resulting upper bounds: [3, 2, 2, 3, 2, 2, 3, 4, 4, 3, 4, 4, 3, 6, 6, 3, 6, 6, 8, 8,  ... ]
 
-    Current program (encoded):  [1, 1, 2, 2, 0, 0, 0, 0, 2, 1, 5, 4, 0, 3, 5, 1, 6, 0, 0]
+    Current program (encoded):  [1, 1, 0, 0, 1, 1, 2, 4, 4, 2, 4, 2, 2, 6, 1, 2, 3, 5, 7, 2,  ... ]
+    Active nodes:           [0, 1, 2, 4, 6, 7]
+    Active genes:           [3, 4, 5, 9, 10, 11, 12, 13, 14, 18, 19, 20, 21]
 
-    Active nodes:   [0, 1, 2, 4, 5, 6]
+Numerical value = [72, 4, 6, 2]
+Symbolic value = [(((2*y)*z)*y), z, (2*y), x]
 
-    Active genes:   [3, 4, 5, 6, 7, 8, 9, 10, 11, 15, 16, 17, 18]
 
-Numerical value = [3, 2, 2, 2]
-Symbolic value = [y, ((x+t)-x^2), x, x]
-1000000 mutations took: 0.014231 seconds
 **/

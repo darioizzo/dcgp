@@ -5,3 +5,7 @@ ADD_TEST(test_compute_f test_compute_f)
 ADD_EXECUTABLE(mutate_torture_test mutate_torture_test.cpp)
 TARGET_LINK_LIBRARIES(mutate_torture_test ${MANDATORY_LIBRARIES} dcgp_s)
 ADD_TEST(mutate_torture_test mutate_torture_test)
+
+ADD_EXECUTABLE(test_program_fitness test_program_fitness.cpp)
+TARGET_LINK_LIBRARIES(test_program_fitness ${MANDATORY_LIBRARIES} dcgp_s)
+ADD_TEST(test_program_fitness test_program_fitness)

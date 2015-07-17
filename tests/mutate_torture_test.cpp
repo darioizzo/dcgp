@@ -33,6 +33,8 @@ bool mutate_a_lot(unsigned int in,
     return false;
 }
 
+/// This torture test is passed whenever it completes. It is meant to check for
+/// the code stability when large number of mutations are performed
 int main() {
     std::vector<dcgp::basis_function> function_set = dcgp::function_set::minimal;
     return mutate_a_lot(2,4,2,3,4, function_set) ||

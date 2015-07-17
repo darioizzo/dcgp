@@ -16,6 +16,8 @@ bool f_fails(const dcgp::program& p, const std::vector<double>& in, const std::v
     return false;
 }
 
+/// This test is passed when some predefined expressions encoded in predefined genes compute correctly. The data are hand-written.
+
 int main() {
     /// Testing over Miller's test case from the tutorial
     dcgp::program miller(2,4,2,3,4,dcgp::function_set::minimal);
