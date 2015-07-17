@@ -134,14 +134,17 @@ void program::mutate()
 {
     unsigned int idx = std::uniform_int_distribution<unsigned int>(0, m_active_genes.size() - 1)(m_e);
     idx = m_active_genes[idx];
-    unsigned int new_value = UINT_MAX;
-    do 
-    {
-        new_value = std::uniform_int_distribution<unsigned int>(m_lb[idx], m_ub[idx])(m_e);
 
-    } while (new_value == m_x[idx]);
-    m_x[idx] = new_value;
-    update_active();
+    if (m_lb[idx]<m_ub[idx]) // if only one value is allowed for the gene, then we will not do anything as mutation does not apply
+    {
+        unsigned int new_value = UINT_MAX;
+        do 
+        {
+            new_value = std::uniform_int_distribution<unsigned int>(m_lb[idx], m_ub[idx])(m_e);
+        } while (new_value == m_x[idx]);
+        m_x[idx] = new_value;
+        update_active();
+    }
 }
 
 /// Validity of a chromosome
@@ -178,11 +181,10 @@ void program::update_active()
     for (auto i = 0u; i < m_m; ++i) {
         current[i] = m_x[3 * m_r * m_c + i];
     }
-
     do
     {
         m_active_nodes.insert(m_active_nodes.end(), current.begin(), current.end());
-//std::cout << "D: " << current.size() << std::endl;
+
         for (auto node_id : current)
         {
             if (node_id >=m_n) // we insert the input nodes connections as they do not have any
