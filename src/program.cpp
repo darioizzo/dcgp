@@ -127,7 +127,10 @@ double program::fitness(const std::vector<std::vector<double> >& in_des, const s
         } else if (type == fitness_type::HITS_BASED){
             for (auto j = 0u; j < out_real.size(); ++j)
             {
-                if (fabs(out_des[i][j] - out_real[j]) < m_tol) retval += 1.0;
+                if (std::isfinite(out_real[j]))
+                {
+                    if (fabs(out_des[i][j] - out_real[j]) < m_tol) retval += 1.0;
+                }
             }
         }
 //std::cout << in_des[i] << " " << out_des[i] << " " << out_real;

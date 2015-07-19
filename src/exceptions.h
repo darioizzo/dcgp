@@ -5,6 +5,7 @@
 
 namespace dcgp {
 
+/// An exception originating from derivative computations.
 class derivative_error : public std::exception {
 public:
     derivative_error(std::string message) : m_message(message) {}
@@ -16,6 +17,7 @@ private:
     std::string m_message;
 };
 
+/// An exception originated by detected inconsistent inputs.
 class input_error : public std::exception {
 public:
     input_error(std::string message) : m_message(message) {}

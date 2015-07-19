@@ -6,9 +6,18 @@
 
 namespace dcgp {
 
+/// Function set
+/**
+ * Contains, as static members, several std::vector of dcgp::basis_function containing 
+ * function sets of common use. The user can access each set via the syntax 
+ * dcgp::function_set::SET_NAME
+ *
+ * @author Dario Izzo (dario.izzo@googlemail.com)
+ */
 class function_set
 {
 public:
+	/// The minimal function set, containing only +,-,*,/
     static std::vector<dcgp::basis_function> minimal;
 };
 
