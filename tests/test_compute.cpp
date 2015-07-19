@@ -19,7 +19,7 @@ bool f_fails(const dcgp::expression& p, const std::vector<double>& in, const std
 /// This test is passed when some predefined expressions encoded in predefined genes compute correctly. The data are hand-written.
 
 int main() {
-    /// Testing over Miller's test case from the tutorial
+    /// Testing over Miller's test case from the PPSN 2014 tutorial
     dcgp::expression miller(2,4,2,3,4,dcgp::function_set::minimal);
     std::vector<unsigned int> x1({0, 0, 1, 1, 0, 0, 1, 3, 1, 2, 0, 1, 0, 4, 4, 2, 5, 4, 2, 5, 7, 3});
     miller.set(x1);

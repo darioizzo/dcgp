@@ -32,7 +32,7 @@ bool test_fails(
     /// 2) we use a simple ES(1+4) to evolve an expression that represents our target
     /// note that the problem is a maximization problem
     double best_fit;
-    std::vector<double> newfits(4,0);
+    std::vector<double> newfits(4,0.);
     std::vector<std::vector<unsigned int> > newchromosomes(4);
     std::vector<unsigned int> best_chromosome;
     unsigned int gen = 0;

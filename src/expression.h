@@ -101,7 +101,7 @@ private:
     // lower and upper bounds on all genes
     std::vector<unsigned int> m_lb;
     std::vector<unsigned int> m_ub;
-    // active nodes idx
+    // active nodes idx (guaranteed to be always sorted)
     std::vector<unsigned int> m_active_nodes;
     // active genes idx
     std::vector<unsigned int> m_active_genes;

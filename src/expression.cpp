@@ -92,8 +92,10 @@ void expression::set(const std::vector<unsigned int>& x)
     update_active();
 }
 
+
 /// Gets the chromosome
-/** Gets the chromosome encoding the current expression
+/** 
+ * Gets the chromosome encoding the current expression
  *
  * \return The chromosome
 */
@@ -263,11 +265,14 @@ void expression::update_active()
                 m_active_nodes.push_back(node_id);
             }
         }
+        // We remove duplicates to avoid processng them and thus having a 2^N complexity
         std::sort( next.begin(), next.end() );
         next.erase( std::unique( next.begin(), next.end() ), next.end() );
         current = next;
         next.clear();
     } while (current.size() > 0);
+
+    // We remove duplicates and keep m_active_nodes sorted
     std::sort( m_active_nodes.begin(), m_active_nodes.end() );
     m_active_nodes.erase( std::unique( m_active_nodes.begin(), m_active_nodes.end() ), m_active_nodes.end() );
 
