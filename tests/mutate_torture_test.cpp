@@ -12,8 +12,8 @@ bool mutate_a_lot(unsigned int in,
                   unsigned int levels_back,
                   std::vector<dcgp::basis_function> function_set)
 {
-    // Instatiate the program
-    dcgp::program expression(in, out, rows, columns, levels_back, function_set);
+    // Instatiate the expression
+    dcgp::expression ex(in, out, rows, columns, levels_back, function_set);
     // Pick a radnom input value in [-1, 1)
     std::vector<double> in_num;
     std::default_random_engine re;
@@ -24,7 +24,7 @@ bool mutate_a_lot(unsigned int in,
     clock_t begin = clock();
     double fit;
     for (auto i = 0u; i < 10000; ++i){
-        expression.mutate();
+        ex.mutate();
     }
 
     clock_t end = clock();

@@ -1,7 +1,7 @@
 #ifndef DCGP_H
 #define DCGP_H
 
-#include "program.h"
+#include "expression.h"
 #include "basis_function.h"
 #include "wrapped_functions.h"
 #include "function_set.h"

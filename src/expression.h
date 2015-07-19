@@ -1,5 +1,5 @@
-#ifndef DCGP_PROGRAM_H
-#define DCGP_PROGRAM_H
+#ifndef DCGP_EXPRESSION_H
+#define DCGP_EXPRESSION_H
 
 #include <vector>
 #include <string>
@@ -13,12 +13,24 @@
 
 namespace dcgp {
 
-class program {
+/// A d-CGP expression
+/**
+ * This class represent a mathematical expression as encoded using CGP and contains
+ * algorithms that compute its value (numerical and symbolical) and its derivatives 
+ * its fitness on a given input target set, as well as mutate the expression. 
+ *
+ * @author Dario Izzo (dario.izzo@gmail.com)
+ */
+class expression {
 public:
+    /// The fitness type
+    enum fitness_type { 
+        ERROR_BASED,    // fitness is sum_ij [1 / (1 + err_ij)] 
+        HITS_BASED      // fitness is the number of components in the
+        };              // outputs within m_tol from the desired ones
+                        
 
-    enum fitness_type { ERROR_BASED, HITS_BASED };
-
-    program(unsigned int n, 
+    expression(unsigned int n, 
             unsigned int m, 
             unsigned int r, 
             unsigned int c, 
@@ -40,7 +52,7 @@ public:
                    fitness_type type = fitness_type::ERROR_BASED) const;
     
     template <class T>
-    std::vector<T> compute_f(const std::vector<T>& in) const
+    std::vector<T> compute(const std::vector<T>& in) const
     {  
         if(in.size() != m_n)
         {
@@ -91,7 +103,7 @@ private:
     std::vector<unsigned int> m_active_nodes;
     // active genes idx
     std::vector<unsigned int> m_active_genes;
-    // the actual program encoded in a chromosome
+    // the actual expression encoded in a chromosome
     std::vector<unsigned int> m_x;
     // tolerance for the hits based fitness
     double m_tol;
@@ -99,8 +111,8 @@ private:
     std::default_random_engine m_e;
 };
 
-std::ostream &operator<<(std::ostream &, const program &);
+std::ostream &operator<<(std::ostream &, const expression &);
 
 } // end of namespace dcgp
 
-#endif // DCGP_PROGRAM_H
+#endif // DCGP_EXPRESSION_H

@@ -1,14 +1,14 @@
-ADD_EXECUTABLE(test_compute_f test_compute_f.cpp)
-TARGET_LINK_LIBRARIES(test_compute_f ${MANDATORY_LIBRARIES} dcgp_s)
-ADD_TEST(test_compute_f test_compute_f)
+ADD_EXECUTABLE(test_compute test_compute.cpp)
+TARGET_LINK_LIBRARIES(test_compute ${MANDATORY_LIBRARIES} dcgp_s)
+ADD_TEST(test_compute test_compute)
 
 ADD_EXECUTABLE(mutate_torture_test mutate_torture_test.cpp)
 TARGET_LINK_LIBRARIES(mutate_torture_test ${MANDATORY_LIBRARIES} dcgp_s)
 ADD_TEST(mutate_torture_test mutate_torture_test)
 
-ADD_EXECUTABLE(test_program_fitness test_program_fitness.cpp)
-TARGET_LINK_LIBRARIES(test_program_fitness ${MANDATORY_LIBRARIES} dcgp_s)
-ADD_TEST(test_program_fitness test_program_fitness)
+ADD_EXECUTABLE(test_expression_fitness test_expression_fitness.cpp)
+TARGET_LINK_LIBRARIES(test_expression_fitness ${MANDATORY_LIBRARIES} dcgp_s)
+ADD_TEST(test_expression_fitness test_expression_fitness)
 
 ADD_EXECUTABLE(test_evolving_simple_expressions test_evolving_simple_expressions.cpp)
 TARGET_LINK_LIBRARIES(test_evolving_simple_expressions ${MANDATORY_LIBRARIES} dcgp_s)

@@ -10,7 +10,7 @@ using my_fun_type = std::function<double(double, double)>;
 using my_d_fun_type = std::function<double(unsigned int, double, double)>;
 using my_print_fun_type = std::function<std::string(std::string, std::string)>;
 
-/// Basis functions
+/// Basis function
 /**
  * This struct represent a generic function in d-CGP. It contains the std::function, whose type is
  * defined in my_fun_type, my_d_fun_type, my_print_fun_type, that allow to compute the function
@@ -21,7 +21,7 @@ using my_print_fun_type = std::function<std::string(std::string, std::string)>;
  * available as dcgp::my_fun_type, dcgp::my_d_fun_type and dcgp::my_print_fun_type in order
  * to be able to construct this object
  *
- * @author Dario Izzo (dario.izzo@googlemail.com)
+ * @author Dario Izzo (dario.izzo@gmail.com)
  */
 struct basis_function
 {

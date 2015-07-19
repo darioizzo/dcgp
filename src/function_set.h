@@ -12,7 +12,7 @@ namespace dcgp {
  * function sets of common use. The user can access each set via the syntax 
  * dcgp::function_set::SET_NAME
  *
- * @author Dario Izzo (dario.izzo@googlemail.com)
+ * @author Dario Izzo (dario.izzo@gmail.com)
  */
 class function_set
 {

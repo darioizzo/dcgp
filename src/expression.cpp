@@ -5,23 +5,25 @@
 #include <limits>
 #include <cmath>
 
-#include "program.h"
+#include "expression.h"
 #include "std_overloads.h"
 
 
 namespace dcgp {
 
 /// Constructor
-/** Constructs a d-cgp program
+/** Constructs a d-cgp expression
  *
  * \param[in] n number of inputs (independent variables)
  * \param[in] m number of outputs (dependent variables)
  * \param[in] r number of rows of the cartesian cgp
  * \param[in] c number of columns of the cartesian cgp
  * \param[in] l number of levels-back allowed for the cartesian cgp
- * \param[in] f functions allowed. They are of type dcgp::basis_function
+ * \param[in] f function set. An std::vector of dcgp::basis_function
+ * \param[in] tol tolerance to be used in case dcgp::expression::HITS_BASED is used as fitness evaluation 
+ * \param[in] seed seed for the random number generator (initial expression  and mutations depend on this)
  */
-program::program(unsigned int n,                    // n. inputs
+expression::expression(unsigned int n,              // n. inputs
                    unsigned int m,                  // n. outputs
                    unsigned int r,                  // n. rows
                    unsigned int c,                  // n. columns
@@ -64,7 +66,7 @@ program::program(unsigned int n,                    // n. inputs
         }
     }
 
-    // We generate a random program
+    // We generate a random expression
     for (auto i = 0u; i < m_x.size(); ++i)
     {
         m_x[i] = std::uniform_int_distribution<unsigned int>(m_lb[i], m_ub[i])(m_e);
@@ -72,8 +74,15 @@ program::program(unsigned int n,                    // n. inputs
     update_active();
 }
 
-/// Sets the pregram
-void program::set(const std::vector<unsigned int>& x)
+/// Sets the chromosome
+/** Sets a new chromosome as genotype for the expression and updates
+ * the active nodes, active genes information
+ *
+ * \param[in] x The new cromosome
+ *
+ * @throw dcgp::input_error if the chromosome is incompatible with the expression (n.inputs, n.outputs, levels-back, etc.)
+ */
+void expression::set(const std::vector<unsigned int>& x)
 {
     if(!is_valid(x))
     {
@@ -83,26 +92,35 @@ void program::set(const std::vector<unsigned int>& x)
     update_active();
 }
 
-/// Gets the program
-const std::vector<unsigned int>&  program::get() const
+/// Gets the chromosome
+/** Gets the chromosome encoding the current expression
+ *
+ * \returns The chromosome
+*/
+const std::vector<unsigned int>&  expression::get() const
 {
     return m_x;
 }
 
 /// Gets the active genes
-const std::vector<unsigned int>&  program::get_active_genes() const
+/** 
+ * Gets the idx of the active genes in the current chromosome
+ *
+ * \returns An std::vector containing the active genes in the current chromosome
+*/
+const std::vector<unsigned int>&  expression::get_active_genes() const
 {
     return m_active_genes;
 }
 
 /// Gets the active nodes
-const std::vector<unsigned int>&  program::get_active_nodes() const
+const std::vector<unsigned int>&  expression::get_active_nodes() const
 {
     return m_active_nodes;
 }
 
-/// Computes the error of the program in approximating some given data
-double program::fitness(const std::vector<std::vector<double> >& in_des, const std::vector<std::vector<double> >& out_des, fitness_type type) const
+/// Computes the error of the expression in approximating some given data
+double expression::fitness(const std::vector<std::vector<double> >& in_des, const std::vector<std::vector<double> >& out_des, fitness_type type) const
 {
     double retval = 0.;
     std::vector<double> out_real;
@@ -114,7 +132,7 @@ double program::fitness(const std::vector<std::vector<double> >& in_des, const s
 
     for (auto i = 0u; i < in_des.size(); ++i)
     {
-        out_real = compute_f(in_des[i]);
+        out_real = compute(in_des[i]);
         if (type == fitness_type::ERROR_BASED)
         {
             for (auto j = 0u; j < out_real.size(); ++j)
@@ -139,7 +157,7 @@ double program::fitness(const std::vector<std::vector<double> >& in_des, const s
     return retval;
 }
 
-void program::mutate()
+void expression::mutate()
 {
     unsigned int idx = std::uniform_int_distribution<unsigned int>(0, m_active_genes.size() - 1)(m_e);
     idx = m_active_genes[idx];
@@ -157,11 +175,11 @@ void program::mutate()
 }
 
 /// Validity of a chromosome
-/** Checks if a chromosome (i.e. a sequence of integers) is a valid program
+/** Checks if a chromosome (i.e. a sequence of integers) is a valid expression
  *
  * \param[in] x chromosome 
  */
-bool program::is_valid(const std::vector<unsigned int>& x) const
+bool expression::is_valid(const std::vector<unsigned int>& x) const
 {
     // Checking for length
     if (x.size() != m_lb.size()) {
@@ -179,7 +197,7 @@ bool program::is_valid(const std::vector<unsigned int>& x) const
 
 
 /// Computes which nodes actually need evaluation
-void program::update_active()
+void expression::update_active()
 {
     assert(m_x.size() == m_lb.size());
 
@@ -237,10 +255,10 @@ void program::update_active()
  *
  * @return std::string containing a human-readable representation of the problem.
  */
-std::string program::human_readable() const
+std::string expression::human_readable() const
 {
     std::ostringstream s;
-    s << "CGP Encoding:\n";
+    s << "d-CGP Expression:\n";
     s << "\tNumber of inputs:\t\t" << m_n << '\n';
     s << "\tNumber of outputs:\t\t" << m_m << '\n';
     s << "\tNumber of rows:\t\t\t" << m_r << '\n';
@@ -249,7 +267,7 @@ std::string program::human_readable() const
     s << "\tTolerance (hit based fitness):\t" << m_tol << '\n';
     s << "\n\tResulting lower bounds:\t" << m_lb;
     s << "\n\tResulting upper bounds:\t" << m_ub << '\n';
-    s << "\n\tCurrent program (encoded):\t" << m_x << '\n';
+    s << "\n\tCurrent expression (encoded):\t" << m_x << '\n';
     s << "\tActive nodes:\t\t\t" << m_active_nodes << '\n';
     s << "\tActive genes:\t\t\t" << m_active_genes << '\n';
     return s.str();
@@ -257,14 +275,14 @@ std::string program::human_readable() const
 
 /// Overload stream operator for problem::base.
 /**
- * Equivalent to printing program::human_readable() to stream.
+ * Equivalent to printing expression::human_readable() to stream.
  *
  * @param[out] s std::ostream to which the problem will be streamed.
- * @param[in] p dcgp::program to be inserted into the stream.
+ * @param[in] p dcgp::expression to be inserted into the stream.
  *
  * @return reference to s.
  */
-std::ostream &operator<<(std::ostream &s, const program &en)
+std::ostream &operator<<(std::ostream &s, const expression &en)
 {
     s << en.human_readable();
     return s;

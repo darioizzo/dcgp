@@ -12,7 +12,7 @@ bool test_fails(
         unsigned int l,
         unsigned int N) // number of samples
 {
-   dcgp::program expression(n, m, r, c, l, dcgp::function_set::minimal, 1e-9);
+   dcgp::expression ex(n, m, r, c, l, dcgp::function_set::minimal, 1e-9);
 
     // creates N data points 
     std::default_random_engine re;
@@ -25,7 +25,7 @@ bool test_fails(
     // ... the following loop is not infinite
     do 
     {
-        expression.mutate();
+        ex.mutate();
         all_finite=true;
         in.clear();
         out.clear();
@@ -35,7 +35,7 @@ bool test_fails(
             {
                 in_point[j] = std::uniform_real_distribution<double>(-1, 1)(re);
             }
-            out_point = expression.compute_f(in_point);
+            out_point = ex.compute(in_point);
             for (auto k : out_point) {
                 if (!std::isfinite(k)) {
                     all_finite = false;
@@ -46,10 +46,10 @@ bool test_fails(
         }
     } while (!all_finite);
 
-    if (expression.fitness(in, out, dcgp::program::HITS_BASED) == N * m) {
+    if (ex.fitness(in, out, dcgp::expression::HITS_BASED) == N * m) {
         return false;
     }
-    std::cout << expression.fitness(in, out, dcgp::program::HITS_BASED) << "instead of: " << N * m << std::endl;
+    std::cout << ex.fitness(in, out, dcgp::expression::HITS_BASED) << "instead of: " << N * m << std::endl;
     return true;
 }
 
