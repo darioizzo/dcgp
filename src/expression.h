@@ -77,6 +77,8 @@ public:
         }
         return retval;
     }
+
+    std::vector<double> compute_d(unsigned int wrt, const std::vector<double>& in) const;
     std::string human_readable() const;
 
 protected: 

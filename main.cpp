@@ -12,7 +12,11 @@ int main() {
 
     std::vector<double> in_num({2.,3.,4.});
     std::vector<std::string> in_sym({"x","y","z"});
+    std::cout << "Point is:" << in_num << std::endl;
     std::cout << "Numerical value = " << simple.compute(in_num) << std::endl;
+    std::cout << "Numerical value d/dx = " << simple.compute_d(0,in_num) << std::endl;
+    std::cout << "Numerical value d/dy = " << simple.compute_d(1,in_num) << std::endl;
+    std::cout << "Numerical value d/dz = " << simple.compute_d(2,in_num) << std::endl;
     std::cout << "Symbolic value = " << simple.compute(in_sym) << std::endl;
 
     return 0;

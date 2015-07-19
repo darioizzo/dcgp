@@ -95,7 +95,7 @@ void expression::set(const std::vector<unsigned int>& x)
 /// Gets the chromosome
 /** Gets the chromosome encoding the current expression
  *
- * \returns The chromosome
+ * \return The chromosome
 */
 const std::vector<unsigned int>&  expression::get() const
 {
@@ -104,9 +104,9 @@ const std::vector<unsigned int>&  expression::get() const
 
 /// Gets the active genes
 /** 
- * Gets the idx of the active genes in the current chromosome
+ * Gets the idx of the active genes in the current chromosome (numbering is from 0)
  *
- * \returns An std::vector containing the active genes in the current chromosome
+ * \return An std::vector containing the idx of the active genes in the current chromosome
 */
 const std::vector<unsigned int>&  expression::get_active_genes() const
 {
@@ -114,6 +114,12 @@ const std::vector<unsigned int>&  expression::get_active_genes() const
 }
 
 /// Gets the active nodes
+/** 
+ * Gets the idx of the active nodes in the current chromosome.
+ * The numbering starts from 0 at the first input node to then follow PPSN tutorial from Miller
+ *
+ * \return An std::vector containing the idx of the active nodes
+*/
 const std::vector<unsigned int>&  expression::get_active_nodes() const
 {
     return m_active_nodes;
@@ -156,6 +162,40 @@ double expression::fitness(const std::vector<std::vector<double> >& in_des, cons
 
     return retval;
 }
+
+std::vector<double> expression::compute_d(unsigned int wrt, const std::vector<double>& in) const
+    {  
+        if(in.size() != m_n)
+        {
+            throw input_error("Input size is incompatible");
+        }
+        if(wrt >= m_n)
+        {
+            throw input_error("Derivative id is larger than the independent variable number");
+        }
+//for (auto i : m_active_nodes) std::cout << " " << i; std::cout << std::endl;
+        std::vector<double> retval(m_m);
+        std::map<unsigned int, double> node;
+        std::map<unsigned int, double> node_d;
+        for (auto i : m_active_nodes) {
+            if (i < m_n) 
+            {
+                node[i] = in[i];
+                node_d[i] = (wrt == i) ? 1 : 0;
+            } else {
+                unsigned int idx = (i - m_n) * 3;
+                node[i] = m_f[m_x[idx]].m_f(node[m_x[idx + 1]], node[m_x[idx + 2]]);
+                node_d[i] = m_f[m_x[idx]].m_df(0, node[m_x[idx + 1]], node[m_x[idx + 2]]) * node_d[m_x[idx + 1]] + 
+                            m_f[m_x[idx]].m_df(1, node[m_x[idx + 1]], node[m_x[idx + 2]]) * node_d[m_x[idx + 2]];
+            }
+//std::cout << i << ", " << node[i] << std::endl;
+        }
+        for (auto i = 0u; i<m_m; ++i)
+        {
+            retval[i] = node_d[m_x[(m_r * m_c) * 3 + i]];
+        }
+        return retval;
+    }
 
 void expression::mutate()
 {
