@@ -170,7 +170,7 @@ unsigned int factorial(unsigned int n)
     return ret;
 }
 
-std::vector<double> expression::compute_d2(unsigned int wrt, unsigned int degree, const std::vector<double>& in) const
+std::vector<std::vector<double> > expression::compute_d2(unsigned int wrt, unsigned int degree, const std::vector<double>& in) const
     {  
         if(in.size() != m_n)
         {
@@ -181,7 +181,8 @@ std::vector<double> expression::compute_d2(unsigned int wrt, unsigned int degree
             throw input_error("Derivative id is larger than the independent variable number");
         }
 //for (auto i : m_active_nodes) std::cout << " " << i; std::cout << std::endl;
-        std::vector<double> retval(m_m);
+        std::vector<double> dumb(m_m);
+        std::vector<std::vector<double> > retval(degree+1,dumb);
         std::map<unsigned int, std::vector<double> > node_jet;
         for (auto j =0u; j<=degree; ++j)
         {
@@ -202,9 +203,11 @@ std::vector<double> expression::compute_d2(unsigned int wrt, unsigned int degree
         }
     //std::cout << i << ", " << node_jet[i] << std::endl;
     
-        for (auto i = 0u; i<m_m; ++i)
-        {
-            retval[i] = node_jet[m_x[(m_r * m_c) * 3 + i]][degree] * factorial(degree);
+        for (auto j = 0u; j<=degree; ++j) {
+            for (auto i = 0u; i<m_m; ++i)
+            {
+                retval[j][i] = node_jet[m_x[(m_r * m_c) * 3 + i]][j] * factorial(j);
+            }
         }
         return retval;
     }
