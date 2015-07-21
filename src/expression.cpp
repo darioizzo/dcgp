@@ -29,9 +29,8 @@ expression::expression(unsigned int n,              // n. inputs
                    unsigned int c,                  // n. columns
                    unsigned int l,                  // n. levels-back
                    std::vector<basis_function> f,   // functions
-                   double tol,                      // tolerance for the fitness (only when hits based)
                    unsigned int seed                // seed for the pseudo-random numbers
-                   ) : m_n(n), m_m(m), m_r(r), m_c(c), m_l(l), m_f(f), m_lb((3 * m_r * m_c) + m_m, 0), m_ub((3 * m_r * m_c) + m_m, 0), m_x((3 * m_r * m_c) + m_m, 0), m_tol(tol), m_e(seed)
+                   ) : m_n(n), m_m(m), m_r(r), m_c(c), m_l(l), m_f(f), m_lb((3 * m_r * m_c) + m_m, 0), m_ub((3 * m_r * m_c) + m_m, 0), m_x((3 * m_r * m_c) + m_m, 0), m_e(seed)
 {
 
     if (n == 0) throw input_error("Number of inputs is 0");
@@ -127,43 +126,6 @@ const std::vector<unsigned int>&  expression::get_active_nodes() const
     return m_active_nodes;
 }
 
-/// Computes the error of the expression in approximating some given data
-double expression::fitness(const std::vector<std::vector<double> >& in_des, const std::vector<std::vector<double> >& out_des, fitness_type type) const
-{
-    double retval = 0.;
-    std::vector<double> out_real;
-
-    if (in_des.size() != out_des.size())
-    {
-        throw input_error("Size of the input vector must be the size of the output vector");
-    }
-
-    for (auto i = 0u; i < in_des.size(); ++i)
-    {
-        out_real = compute(in_des[i]);
-        if (type == fitness_type::ERROR_BASED)
-        {
-            for (auto j = 0u; j < out_real.size(); ++j)
-            {
-                if (std::isfinite(out_real[j]))
-                {
-                    retval += 1.0 / (1.0 + fabs(out_des[i][j] - out_real[j]));
-                }
-            }
-        } else if (type == fitness_type::HITS_BASED){
-            for (auto j = 0u; j < out_real.size(); ++j)
-            {
-                if (std::isfinite(out_real[j]))
-                {
-                    if (fabs(out_des[i][j] - out_real[j]) < m_tol) retval += 1.0;
-                }
-            }
-        }
-//std::cout << in_des[i] << " " << out_des[i] << " " << out_real;
-    }
-
-    return retval;
-}
 
 std::vector<double> expression::compute_d(unsigned int wrt, const std::vector<double>& in) const
     {  
@@ -195,6 +157,54 @@ std::vector<double> expression::compute_d(unsigned int wrt, const std::vector<do
         for (auto i = 0u; i<m_m; ++i)
         {
             retval[i] = node_d[m_x[(m_r * m_c) * 3 + i]];
+        }
+        return retval;
+    }
+
+unsigned int factorial(unsigned int n)
+{
+    if (n==0) return 1;
+    unsigned int ret = 1;
+    for(auto i = 1u; i <= n; ++i)
+        ret *= i;
+    return ret;
+}
+
+std::vector<double> expression::compute_d2(unsigned int wrt, unsigned int degree, const std::vector<double>& in) const
+    {  
+        if(in.size() != m_n)
+        {
+            throw input_error("Input size is incompatible");
+        }
+        if(wrt >= m_n)
+        {
+            throw input_error("Derivative id is larger than the independent variable number");
+        }
+//for (auto i : m_active_nodes) std::cout << " " << i; std::cout << std::endl;
+        std::vector<double> retval(m_m);
+        std::map<unsigned int, std::vector<double> > node_jet;
+        for (auto j =0u; j<=degree; ++j)
+        {
+            for (auto i : m_active_nodes)
+            {
+                if (i < m_n) 
+                {
+                    //if (j==0) node_jet[i] = std::vector<double>({in[i]});
+                    if (j==0) node_jet[i].push_back(in[i]);
+                    else if (j==1) node_jet[i].push_back((i==wrt) ? 1. : 0.);
+                    else node_jet[i].push_back(0.);
+                } else {
+                    unsigned int idx = (i - m_n) * 3;
+                    if (j==0) node_jet[i] = std::vector<double>({m_f[m_x[idx]].m_df2(node_jet[m_x[idx + 1]], node_jet[m_x[idx + 2]])});
+                    else node_jet[i].push_back(m_f[m_x[idx]].m_df2(node_jet[m_x[idx + 1]], node_jet[m_x[idx + 2]]));
+                }
+            }
+        }
+    //std::cout << i << ", " << node_jet[i] << std::endl;
+    
+        for (auto i = 0u; i<m_m; ++i)
+        {
+            retval[i] = node_jet[m_x[(m_r * m_c) * 3 + i]][degree] * factorial(degree);
         }
         return retval;
     }
@@ -309,7 +319,6 @@ std::string expression::human_readable() const
     s << "\tNumber of rows:\t\t\t" << m_r << '\n';
     s << "\tNumber of columns:\t\t" << m_c << '\n';
     s << "\tNumber of levels-back allowed:\t" << m_l << '\n';
-    s << "\tTolerance (hit based fitness):\t" << m_tol << '\n';
     s << "\n\tResulting lower bounds:\t" << m_lb;
     s << "\n\tResulting upper bounds:\t" << m_ub << '\n';
     s << "\n\tCurrent expression (encoded):\t" << m_x << '\n';

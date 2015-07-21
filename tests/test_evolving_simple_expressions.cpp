@@ -2,6 +2,7 @@
 #include <iomanip>
 #include <random>
 #include <cmath>
+
 #include "../src/dcgp.h"
 
 bool test_fails(
@@ -10,7 +11,7 @@ bool test_fails(
         unsigned int l,
         unsigned int N) // number of samples
 {
-   dcgp::expression ex(1, 1, r, c, l, dcgp::function_set::minimal, 1e-14, 12);
+   dcgp::expression ex(1, 1, r, c, l, dcgp::function_set::minimal, 11);
 
     // 1) we create N data points 
     std::default_random_engine re(12);
@@ -31,7 +32,7 @@ bool test_fails(
 
     /// 2) we use a simple ES(1+4) to evolve an expression that represents our target
     /// note that the problem is a maximization problem
-    double best_fit;
+    double best_fit = 0;
     std::vector<double> newfits(4,0.);
     std::vector<std::vector<unsigned int> > newchromosomes(4);
     std::vector<unsigned int> best_chromosome;
@@ -41,7 +42,7 @@ bool test_fails(
         gen++;
         for (auto i = 0u; i < newfits.size(); ++i) {
             ex.mutate();
-            newfits[i] = ex.fitness(in, out); //, dcgp::program::HITS_BASED);
+            newfits[i] = simple_data_fit(ex, in, out); //, dcgp::program::HITS_BASED);
             newchromosomes[i] = ex.get();
         }
         for (auto i = 0u; i < newfits.size(); ++i) {
@@ -65,3 +66,4 @@ int main() {
     return test_fails(1,15,16, 10);
 }
 
+#undef TOL

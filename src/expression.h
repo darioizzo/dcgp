@@ -22,21 +22,13 @@ namespace dcgp {
  * @author Dario Izzo (dario.izzo@gmail.com)
  */
 class expression {
-public:
-    /// The fitness type
-    enum fitness_type { 
-        ERROR_BASED,    // fitness is sum_ij [1 / (1 + err_ij)] 
-        HITS_BASED      // fitness is the number of components in the
-        };              // outputs within m_tol from the desired ones
-                        
-
+public:             
     expression(unsigned int n, 
             unsigned int m, 
             unsigned int r, 
             unsigned int c, 
             unsigned int l, 
             std::vector<basis_function> f, 
-            double tol = 1e-12,
             unsigned int seed = rng::get_seed()
             );
 
@@ -47,9 +39,6 @@ public:
     const std::vector<unsigned int> & get_active_nodes() const;
 
     void mutate();
-    double fitness(const std::vector<std::vector<double> >& in_des, 
-                   const std::vector<std::vector<double> >& out_des, 
-                   fitness_type type = fitness_type::ERROR_BASED) const;
     
     template <class T>
     std::vector<T> compute(const std::vector<T>& in) const
@@ -79,6 +68,7 @@ public:
     }
 
     std::vector<double> compute_d(unsigned int wrt, const std::vector<double>& in) const;
+    std::vector<double> compute_d2(unsigned int wrt, unsigned int degree, const std::vector<double>& in) const;
     std::string human_readable() const;
 
 protected: 
@@ -107,8 +97,6 @@ private:
     std::vector<unsigned int> m_active_genes;
     // the actual expression encoded in a chromosome
     std::vector<unsigned int> m_x;
-    // tolerance for the hits based fitness
-    double m_tol;
     // the random engine for the class
     std::default_random_engine m_e;
 };

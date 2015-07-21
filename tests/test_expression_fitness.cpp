@@ -46,10 +46,10 @@ bool test_fails(
         }
     } while (!all_finite);
 
-    if (ex.fitness(in, out, dcgp::expression::HITS_BASED) == N * m) {
+    if (simple_data_fit(ex, in, out, dcgp::fitness_type::HITS_BASED) == N * m) {
         return false;
     }
-    std::cout << ex.fitness(in, out, dcgp::expression::HITS_BASED) << "instead of: " << N * m << std::endl;
+    std::cout << simple_data_fit(ex, in, out, dcgp::fitness_type::HITS_BASED) << "instead of: " << N * m << std::endl;
     return true;
 }
 

@@ -4,6 +4,7 @@
 #include "expression.h"
 #include "basis_function.h"
 #include "wrapped_functions.h"
+#include "fitness_functions.h"
 #include "function_set.h"
 #include "std_overloads.h"
 

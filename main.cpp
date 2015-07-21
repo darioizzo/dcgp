@@ -7,15 +7,15 @@
 int main() {
     // Instantiate a cgp expression with 1 inputs, 1 outputs, 1 row, 100 columns and 101 level-backs using the function set +,-,x,/ 
     // (1e-9 is the tolerance in case a hit count fitness is used, while 34534 is the seed)
-    dcgp::expression simple(3,4,2,3,4,dcgp::function_set::minimal,1e-9, 34534);
+    dcgp::expression simple(3,4,2,3,4,dcgp::function_set::minimal, 34534);
     std::cout << simple << std::endl;
 
     std::vector<double> in_num({2.,3.,4.});
     std::vector<std::string> in_sym({"x","y","z"});
     std::cout << "Point is:" << in_num << std::endl;
     std::cout << "Numerical value = " << simple.compute(in_num) << std::endl;
-    std::cout << "Numerical value d/dx = " << simple.compute_d(0,in_num) << std::endl;
-    std::cout << "Numerical value d/dy = " << simple.compute_d(1,in_num) << std::endl;
+    std::cout << "Numerical value d/dx = " << simple.compute_d2(0,0,in_num) << std::endl;
+    std::cout << "Numerical value d/dy = " << simple.compute_d2(1,2,in_num) << std::endl;
     std::cout << "Numerical value d/dz = " << simple.compute_d(2,in_num) << std::endl;
     std::cout << "Symbolic value = " << simple.compute(in_sym) << std::endl;
 

@@ -22,7 +22,6 @@ bool mutate_a_lot(unsigned int in,
         in_num.push_back(std::uniform_real_distribution<double>(-1, 1)(re));
     }
     clock_t begin = clock();
-    double fit;
     for (auto i = 0u; i < 10000; ++i){
         ex.mutate();
     }

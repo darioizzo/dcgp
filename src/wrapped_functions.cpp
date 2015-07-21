@@ -14,6 +14,12 @@ double d_my_sum(unsigned int i, double x, double y)
     else throw derivative_error("Index is out of bounds");
 }
 
+double d_my_sum2(const std::vector<double>& x, const std::vector<double>& y)
+{
+    unsigned int n = x.size() - 1;
+    return x[n] + y[n];
+}
+
 std::string print_my_sum(const std::string& s1, const std::string& s2)
 {
     if (s1 == s2) 
@@ -45,6 +51,12 @@ double d_my_diff(unsigned int i, double x, double y)
     else throw derivative_error("Index is out of bounds");
 }
 
+double d_my_diff2(const std::vector<double>& x, const std::vector<double>& y)
+{
+    unsigned int n = x.size() - 1;
+    return x[n] - y[n];
+}
+
 std::string print_my_diff(const std::string& s1, const std::string& s2)
 {
     if (s1 == s2) 
@@ -74,6 +86,17 @@ double d_my_mul(unsigned int i, double x, double y)
     else throw derivative_error("Index is out of bounds");
 }
 
+double d_my_mul2(const std::vector<double>& b, const std::vector<double>& c)
+{
+    unsigned int n = b.size() - 1u;
+    double retval = 0.;
+    for (auto j = 0u; j <= n; ++j) 
+    {
+        retval += b[n-j]*c[j];
+    }
+    return retval;
+}
+
 std::string print_my_mul(const std::string& s1, const std::string& s2)
 {
     if (s1 == "0" || s2 == "0")
@@ -97,6 +120,24 @@ double d_my_div(unsigned int i, double x, double y)
     if (i == 0) return 1. / y;
     else if (i==1) return - x / y / y;
     else throw derivative_error("Index is out of bounds");
+}
+
+double d_my_div2(const std::vector<double>& b, const std::vector<double>& c)
+{
+    unsigned int n = b.size() - 1u;
+    std::vector<double> a(b.size());
+    a[0] = b[0] / c[0];
+
+    for (auto i = 1u; i <= n; ++i) 
+    {
+        a[i] = b[i];
+        for (auto j = 1u; j <= i; ++j) 
+        {
+            a[i] -= c[j]*a[i-j];
+        }
+        a[i] /= c[0];
+    }
+    return a[n];
 }
 
 std::string print_my_div(const std::string& s1, const std::string& s2)
