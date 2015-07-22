@@ -15,13 +15,13 @@ int main() {
     std::cout << "Point is:" << in_num << std::endl;
     std::cout << "Numerical value = " << simple(in_num) << std::endl;
 
-    std::vector<std::vector<double> > jet_0 = simple.compute_d2(0,2,in_num);
+    std::vector<std::vector<double> > jet_0 = simple.differentiate(0,2,in_num);
     std::cout << "Numerical values d^n/dx^n = " << jet_0 << std::endl;
 
-    std::vector<std::vector<double> > jet_1 = simple.compute_d2(1,2,in_num);
+    std::vector<std::vector<double> > jet_1 = simple.differentiate(1,2,in_num);
     std::cout << "Numerical values d^n/dy^n = " << jet_1 << std::endl;
 
-    std::vector<std::vector<double> > jet_2 = simple.compute_d2(2,2,in_num);
+    std::vector<std::vector<double> > jet_2 = simple.differentiate(2,2,in_num);
     std::cout << "Numerical values d^n/dz^n = " << jet_2 << std::endl;
 
     std::cout << "Symbolic value = " << simple(in_sym) << std::endl;

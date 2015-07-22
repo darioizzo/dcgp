@@ -27,7 +27,6 @@ double d_my_div(unsigned int i, double x, double y);
 double d_my_div2(const std::vector<double>& x, const std::vector<double>& y);
 std::string print_my_div(const std::string& s1, const std::string& s2);
 
-
 } // dcgp namespace ends
 
 #endif // DCGP_WRAPPED_FUNCTIONS_H

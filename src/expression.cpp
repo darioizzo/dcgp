@@ -149,41 +149,7 @@ unsigned int expression::get_m() const
 }
 
 
-std::vector<double> expression::compute_d(unsigned int wrt, const std::vector<double>& in) const
-    {  
-        if(in.size() != m_n)
-        {
-            throw input_error("Input size is incompatible");
-        }
-        if(wrt >= m_n)
-        {
-            throw input_error("Derivative id is larger than the independent variable number");
-        }
-//for (auto i : m_active_nodes) std::cout << " " << i; std::cout << std::endl;
-        std::vector<double> retval(m_m);
-        std::map<unsigned int, double> node;
-        std::map<unsigned int, double> node_d;
-        for (auto i : m_active_nodes) {
-            if (i < m_n) 
-            {
-                node[i] = in[i];
-                node_d[i] = (wrt == i) ? 1 : 0;
-            } else {
-                unsigned int idx = (i - m_n) * 3;
-                node[i] = m_f[m_x[idx]].m_f(node[m_x[idx + 1]], node[m_x[idx + 2]]);
-                node_d[i] = m_f[m_x[idx]].m_df(0, node[m_x[idx + 1]], node[m_x[idx + 2]]) * node_d[m_x[idx + 1]] + 
-                            m_f[m_x[idx]].m_df(1, node[m_x[idx + 1]], node[m_x[idx + 2]]) * node_d[m_x[idx + 2]];
-            }
-//std::cout << i << ", " << node[i] << std::endl;
-        }
-        for (auto i = 0u; i<m_m; ++i)
-        {
-            retval[i] = node_d[m_x[(m_r * m_c) * 3 + i]];
-        }
-        return retval;
-    }
-
-unsigned int factorial(unsigned int n)
+inline unsigned int factorial(unsigned int n)
 {
     if (n==0) return 1;
     unsigned int ret = 1;
@@ -192,7 +158,7 @@ unsigned int factorial(unsigned int n)
     return ret;
 }
 
-std::vector<std::vector<double> > expression::compute_d2(unsigned int wrt, unsigned int degree, const std::vector<double>& in) const
+std::vector<std::vector<double> > expression::differentiate(unsigned int wrt, unsigned int degree, const std::vector<double>& in) const
     {  
         if(in.size() != m_n)
         {

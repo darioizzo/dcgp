@@ -76,7 +76,7 @@ bool test_fails(
         for (auto i = 0u; i < n; ++i)
         {
             // Compute f, f' and f'' using automated differentiation
-            std::vector<std::vector<double> > jet = ex.compute_d2(i,2,random_in);
+            std::vector<std::vector<double> > jet = ex.differentiate(i,2,random_in);
             // Compute f' anf f'' using numerical differentiation
             std::vector<double> df = numeric_d(ex, i, random_in);
             std::vector<double> ddf = numeric_d2 (ex, i, random_in);

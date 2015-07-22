@@ -69,8 +69,7 @@ public:
         return retval;
     }
 
-    std::vector<double> compute_d(unsigned int wrt, const std::vector<double>& in) const;
-    std::vector<std::vector<double> > compute_d2(unsigned int wrt, unsigned int degree, const std::vector<double>& in) const;
+    std::vector<std::vector<double> > differentiate(unsigned int wrt, unsigned int degree, const std::vector<double>& in) const;
     std::string human_readable() const;
 
 protected: 
