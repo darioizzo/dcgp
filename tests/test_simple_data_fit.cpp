@@ -35,7 +35,7 @@ bool test_fails(
             {
                 in_point[j] = std::uniform_real_distribution<double>(-1, 1)(re);
             }
-            out_point = ex.compute(in_point);
+            out_point = ex(in_point);
             for (auto k : out_point) {
                 if (!std::isfinite(k)) {
                     all_finite = false;

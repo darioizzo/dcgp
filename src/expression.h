@@ -37,11 +37,13 @@ public:
 
     const std::vector<unsigned int> & get_active_genes() const;
     const std::vector<unsigned int> & get_active_nodes() const;
+    unsigned int get_n() const;
+    unsigned int get_m() const;
 
     void mutate();
     
     template <class T>
-    std::vector<T> compute(const std::vector<T>& in) const
+    std::vector<T> operator()(const std::vector<T>& in) const
     {  
         if(in.size() != m_n)
         {

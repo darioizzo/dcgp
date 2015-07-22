@@ -23,7 +23,7 @@ namespace dcgp {
 
         for (auto i = 0u; i < in_des.size(); ++i)
         {
-            out_real = ex.compute(in_des[i]);
+            out_real = ex(in_des[i]);
             if (type == fitness_type::ERROR_BASED)
             {
                 for (auto j = 0u; j < out_real.size(); ++j)

@@ -6,7 +6,7 @@
 
 bool f_fails(const dcgp::expression& p, const std::vector<double>& in, const std::vector<double>& out)
 {
-    std::vector<double> out_computed = p.compute(in);
+    std::vector<double> out_computed = p(in);
     std ::cout << out_computed << std::endl;
     std ::cout << out << std::endl;
     for (auto i = 0u; i<out_computed.size(); ++i)

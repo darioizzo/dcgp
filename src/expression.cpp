@@ -126,6 +126,28 @@ const std::vector<unsigned int>&  expression::get_active_nodes() const
     return m_active_nodes;
 }
 
+/// Gets the number of inputs
+/** 
+ * Gets the number of inputs of the c_CGP expression
+ *
+ * \return the number of inputs
+*/
+unsigned int expression::get_n() const
+{
+    return m_n;
+}
+
+/// Gets the number of outputs
+/** 
+ * Gets the number of outputs of the c_CGP expression
+ *
+ * \return the number of outputs
+*/
+unsigned int expression::get_m() const
+{
+    return m_m;
+}
+
 
 std::vector<double> expression::compute_d(unsigned int wrt, const std::vector<double>& in) const
     {  

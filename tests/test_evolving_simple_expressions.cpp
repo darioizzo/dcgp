@@ -56,7 +56,7 @@ bool test_fails(
     ex.set(best_chromosome);
     std::vector<std::string> in_sym({"x"});
     std::cout << "Number of generations: " << gen << std::endl;
-    std::cout << "Final expression: " << ex.compute(in_sym) << std::endl;
+    std::cout << "Final expression: " << ex(in_sym) << std::endl;
     return false;
 }
 

@@ -13,7 +13,7 @@ int main() {
     std::vector<double> in_num({2.,3.,4.});
     std::vector<std::string> in_sym({"x","y","z"});
     std::cout << "Point is:" << in_num << std::endl;
-    std::cout << "Numerical value = " << simple.compute(in_num) << std::endl;
+    std::cout << "Numerical value = " << simple(in_num) << std::endl;
 
     std::vector<std::vector<double> > jet_0 = simple.compute_d2(0,2,in_num);
     std::cout << "Numerical values d^n/dx^n = " << jet_0 << std::endl;
@@ -24,7 +24,7 @@ int main() {
     std::vector<std::vector<double> > jet_2 = simple.compute_d2(2,2,in_num);
     std::cout << "Numerical values d^n/dz^n = " << jet_2 << std::endl;
 
-    std::cout << "Symbolic value = " << simple.compute(in_sym) << std::endl;
+    std::cout << "Symbolic value = " << simple(in_sym) << std::endl;
 
     return 0;
 }
