@@ -19,6 +19,7 @@ class function_set
 public:
 	/// The minimal function set, containing only +,-,*,/
     static std::vector<dcgp::basis_function> minimal;
+    static std::vector<dcgp::basis_function> extended;
 };
 
 } // end of namespace dcgp

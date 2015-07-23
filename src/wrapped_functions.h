@@ -7,25 +7,37 @@
 
 namespace dcgp {
 
-double my_sum(double x, double y);
-double d_my_sum(unsigned int i, double x, double y);
-double d_my_sum2(const std::vector<double>& x, const std::vector<double>& y);
+/*--------------------------------------------------------------------------
+*                                  BINARY FUNCTIONS
+*------------------------------------------------------------------------**/
+// f = b + c
+double my_sum(double b, double c);
+double d_my_sum(const std::vector<double>& b, const std::vector<double>& c);
 std::string print_my_sum(const std::string& s1, const std::string& s2);
 
-double my_diff(double x, double y);
-double d_my_diff(unsigned int i, double x, double y);
-double d_my_diff2(const std::vector<double>& x, const std::vector<double>& y);
+// f = b - c
+double my_diff(double b, double c);
+double d_my_diff(const std::vector<double>& b, const std::vector<double>& c);
 std::string print_my_diff(const std::string& s1, const std::string& s2);
 
-double my_mul(double x, double y);
-double d_my_mul(unsigned int i, double x, double y);
-double d_my_mul2(const std::vector<double>& x, const std::vector<double>& y);
+// f = b * c
+double my_mul(double b, double c);
+double d_my_mul(const std::vector<double>& b, const std::vector<double>& c);
 std::string print_my_mul(const std::string& s1, const std::string& s2);
 
-double my_div(double x, double y);
-double d_my_div(unsigned int i, double x, double y);
-double d_my_div2(const std::vector<double>& x, const std::vector<double>& y);
+// f = b / c
+double my_div(double b, double c);
+double d_my_div(const std::vector<double>& b, const std::vector<double>& c);
 std::string print_my_div(const std::string& s1, const std::string& s2);
+
+/*--------------------------------------------------------------------------
+*                                  UNARY FUNCTIONS
+*------------------------------------------------------------------------**/
+
+// f = sqrt(|b|)
+double my_sqrt(double b, double c);
+double d_my_sqrt(const std::vector<double>& b, const std::vector<double>& c);
+std::string print_my_sqrt(const std::string& s1, const std::string& s2);
 
 } // dcgp namespace ends
 

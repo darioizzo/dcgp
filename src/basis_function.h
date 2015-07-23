@@ -7,8 +7,7 @@
 namespace dcgp {
 
 using my_fun_type = std::function<double(double, double)>;
-using my_d_fun_type = std::function<double(unsigned int, double, double)>;
-using my_d_fun_type2 = std::function<double(const std::vector<double> &, const std::vector<double> &)>;
+using my_d_fun_type = std::function<double(const std::vector<double> &, const std::vector<double> &)>;
 using my_print_fun_type = std::function<std::string(std::string, std::string)>;
 
 /// Basis function
@@ -27,8 +26,8 @@ using my_print_fun_type = std::function<std::string(std::string, std::string)>;
 struct basis_function
 {
     /// Constructor from std::function construction arguments
-    template <typename T, typename U, typename U2, typename V>
-    basis_function(T &&f, U &&df, U2 &&df2, V&&pf):m_f(std::forward<T>(f)),m_df(std::forward<U>(df)),m_df2(std::forward<U2>(df2)),m_pf(std::forward<V>(pf)) {}
+    template <typename T, typename U, typename V>
+    basis_function(T &&f, U &&df, V&&pf):m_f(std::forward<T>(f)), m_df(std::forward<U>(df)), m_pf(std::forward<V>(pf)) {}
 
     /// Overload of operator(double, double)
     /**
@@ -54,7 +53,6 @@ struct basis_function
     my_fun_type m_f;
     /// Its derivatives
     my_d_fun_type m_df;
-    my_d_fun_type2 m_df2;
     /// Its symbolic representation
     my_print_fun_type m_pf;
 };

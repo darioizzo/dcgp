@@ -11,7 +11,7 @@ bool test_fails(
         unsigned int l,
         unsigned int N) // number of samples
 {
-   dcgp::expression ex(1, 1, r, c, l, dcgp::function_set::minimal, 11);
+   dcgp::expression ex(1, 1, r, c, l, dcgp::function_set::minimal);
 
     // 1) we create N data points 
     std::default_random_engine re(12);

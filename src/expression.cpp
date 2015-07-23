@@ -184,8 +184,8 @@ std::vector<std::vector<double> > expression::differentiate(unsigned int wrt, un
                     else node_jet[i].push_back(0.);
                 } else {
                     unsigned int idx = (i - m_n) * 3;
-                    if (j==0) node_jet[i] = std::vector<double>({m_f[m_x[idx]].m_df2(node_jet[m_x[idx + 1]], node_jet[m_x[idx + 2]])});
-                    else node_jet[i].push_back(m_f[m_x[idx]].m_df2(node_jet[m_x[idx + 1]], node_jet[m_x[idx + 2]]));
+                    if (j==0) node_jet[i] = std::vector<double>({m_f[m_x[idx]].m_df(node_jet[m_x[idx + 1]], node_jet[m_x[idx + 2]])});
+                    else node_jet[i].push_back(m_f[m_x[idx]].m_df(node_jet[m_x[idx + 1]], node_jet[m_x[idx + 2]]));
                 }
             }
         }

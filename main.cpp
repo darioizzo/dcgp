@@ -7,7 +7,7 @@
 int main() {
     // Instantiate a cgp expression with 1 inputs, 1 outputs, 1 row, 100 columns and 101 level-backs using the function set +,-,x,/ 
     // (1e-9 is the tolerance in case a hit count fitness is used, while 34534 is the seed)
-    dcgp::expression simple(3,2,2,7,4,dcgp::function_set::minimal, 34534);
+    dcgp::expression simple(3,2,2,7,4,dcgp::function_set::extended);
     std::cout << simple << std::endl;
 
     std::vector<double> in_num({2.,3.,4.});
