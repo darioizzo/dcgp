@@ -5,13 +5,22 @@
 
 
 int main() {
-    // Instantiate a cgp expression with 1 inputs, 1 outputs, 1 row, 100 columns and 101 level-backs using the function set +,-,x,/ 
-    // (1e-9 is the tolerance in case a hit count fitness is used, while 34534 is the seed)
-    dcgp::expression simple(3,2,2,7,4,dcgp::function_set::extended);
+    // We define the set of functions we want to use
+    dcgp::function_set basic_set({"sum","diff","mul","div"});
+
+    // We instantiate a d-CGP expression
+    unsigned int n_inputs = 3;
+    unsigned int n_outputs = 2;
+    unsigned int n_rows = 3;
+    unsigned int n_columns = 7;
+    unsigned int n_level_backs = 4;
+    dcgp::expression simple(n_inputs,n_outputs,n_rows,n_columns,n_level_backs,basic_set());
+
+    // We inspect it
     std::cout << simple << std::endl;
 
+    // We compute the expression value and its derivatives in a point
     std::vector<double> in_num({2.,3.,4.});
-    std::vector<std::string> in_sym({"x","y","z"});
     std::cout << "Point is:" << in_num << std::endl;
     std::cout << "Numerical value = " << simple(in_num) << std::endl;
 
@@ -24,6 +33,8 @@ int main() {
     std::vector<std::vector<double> > jet_2 = simple.differentiate(2,2,in_num);
     std::cout << "Numerical values d^n/dz^n = " << jet_2 << std::endl;
 
+    // We stream a symbolic representation of the expression
+    std::vector<std::string> in_sym({"x","y","z"});
     std::cout << "Symbolic value = " << simple(in_sym) << std::endl;
 
     return 0;

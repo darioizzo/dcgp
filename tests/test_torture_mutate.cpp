@@ -36,12 +36,12 @@ bool mutate_a_lot(unsigned int in,
 /// This torture test is passed whenever it completes. It is meant to check for
 /// the code stability when large number of mutations are performed
 int main() {
-    std::vector<dcgp::basis_function> function_set = dcgp::function_set::minimal;
-    return mutate_a_lot(2,4,2,3,4, function_set) ||
-           mutate_a_lot(2,4,10,10,11, function_set) ||
-           mutate_a_lot(2,4,20,20,21, function_set) ||
-           mutate_a_lot(1,1,1,100,101, function_set) ||
-           mutate_a_lot(1,1,2,100,101, function_set) ||
-           mutate_a_lot(1,1,3,100,101, function_set);
+    dcgp::function_set basic_set({"sum","diff","mul","div"});
+    return mutate_a_lot(2,4,2,3,4, basic_set()) ||
+           mutate_a_lot(2,4,10,10,11, basic_set()) ||
+           mutate_a_lot(2,4,20,20,21, basic_set()) ||
+           mutate_a_lot(1,1,1,100,101, basic_set()) ||
+           mutate_a_lot(1,1,2,100,101, basic_set()) ||
+           mutate_a_lot(1,1,3,100,101, basic_set());
 }
 

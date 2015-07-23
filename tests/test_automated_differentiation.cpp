@@ -124,12 +124,12 @@ bool test_fails(
 /// Note that the test is very tolerant to differences (fail_count) as numerical (not automated) differentiation
 /// Sucks big time
 int main() {
-    std::vector<dcgp::basis_function> function_set = dcgp::function_set::extended;
-    return test_fails(2,4,2,3,4, function_set, 1000) ||
-           test_fails(2,4,10,10,11, function_set, 1000) ||
-           test_fails(2,4,20,20,21, function_set, 1000) ||
-           test_fails(1,1,1,100,101, function_set, 1000) ||
-           test_fails(1,1,2,100,101, function_set, 1000) ||
-           test_fails(1,1,3,100,101, function_set, 1000);
+    dcgp::function_set test_function_set({"sum","diff","mul","div","sqrt"});
+    return test_fails(2,4,2,3,4, test_function_set(), 1000) ||
+           test_fails(2,4,10,10,11, test_function_set(), 1000) ||
+           test_fails(2,4,20,20,21, test_function_set(), 1000) ||
+           test_fails(1,1,1,100,101, test_function_set(), 1000) ||
+           test_fails(1,1,2,100,101, test_function_set(), 1000) ||
+           test_fails(1,1,3,100,101, test_function_set(), 1000);
 }
 

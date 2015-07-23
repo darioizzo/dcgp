@@ -17,9 +17,12 @@ namespace dcgp {
 class function_set
 {
 public:
-	/// The minimal function set, containing only +,-,*,/
-    static std::vector<dcgp::basis_function> minimal;
-    static std::vector<dcgp::basis_function> extended;
+	function_set();
+	function_set(const std::vector<std::string>&);
+	void push_back(const std::string&);
+	std::vector<dcgp::basis_function> operator()() const;
+private:
+    std::vector<dcgp::basis_function> m_functions;
 };
 
 } // end of namespace dcgp
