@@ -30,6 +30,11 @@ double my_div(double b, double c);
 double d_my_div(const std::vector<double>& b, const std::vector<double>& c);
 std::string print_my_div(const std::string& s1, const std::string& s2);
 
+// f = pow(|b|,c)
+double my_pow(double b, double c);
+double d_my_pow(const std::vector<double>& b, const std::vector<double>& c);
+std::string print_my_pow(const std::string& s1, const std::string& s2);
+
 /*--------------------------------------------------------------------------
 *                                  UNARY FUNCTIONS
 *------------------------------------------------------------------------**/
@@ -38,6 +43,12 @@ std::string print_my_div(const std::string& s1, const std::string& s2);
 double my_sqrt(double b, double c);
 double d_my_sqrt(const std::vector<double>& b, const std::vector<double>& c);
 std::string print_my_sqrt(const std::string& s1, const std::string& s2);
+
+/*--------------------------------------------------------------------------
+*                                  HELPER FUNCTIONS
+*------------------------------------------------------------------------**/
+
+double d_not_implemented(const std::vector<double>& b, const std::vector<double>& c);
 
 } // dcgp namespace ends
 

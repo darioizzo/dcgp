@@ -26,6 +26,8 @@ void function_set::push_back(const std::string& function_name)
         m_functions.emplace_back(my_div,d_my_div,print_my_div, function_name);
     else if (function_name=="sqrt")
         m_functions.emplace_back(my_sqrt,d_my_sqrt,print_my_sqrt, function_name);
+    else if (function_name=="pow")
+        m_functions.emplace_back(my_pow,d_my_pow,print_my_pow, function_name);
     else 
         throw input_error("Unimplemented function " + function_name);
 }

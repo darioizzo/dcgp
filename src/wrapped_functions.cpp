@@ -1,8 +1,10 @@
-#include <math.h>
+#include <cmath>
 #include <string>
 #include <boost/algorithm/string/predicate.hpp>
+#include <iostream>
 
 #include "wrapped_functions.h"
+#include "std_overloads.h"
 
 
 namespace dcgp {
@@ -129,6 +131,85 @@ std::string print_my_div(const std::string& s1, const std::string& s2)
     return ("(" + s1 + "/" + s2 + ")");
 }
 
+double my_pow(double b, double c)
+{
+        return pow(fabs(b),c);
+}
+
+double d_my_pow(const std::vector<double>& b, const std::vector<double>& c)
+{
+    // We derive this by setting a = exp(c * ln(|b|))
+    unsigned int n = b.size() - 1u;
+    std::vector<double> a(b.size());
+    std::vector<double> f(b.size());
+    std::vector<double> g(b.size());
+
+    // We take care of the abs
+    double sign = 1;
+    if (b[0] < 0)
+    {
+        sign = -1;
+    }
+
+    a[0] = pow(sign * b[0], c[0]);
+    f[0] = c[0] * log(sign * b[0]);
+    g[0] = log(sign * b[0]);
+
+    // We start with g = log(b)
+    for (auto i = 1u; i <= n; ++i)
+    {
+        g[i] = 0;
+        for (auto j = 1u; j <= i-1; ++j)
+        {
+            g[i] += (i - j) * sign * b[j] * g[i - j];
+        }    
+        g[i] /= n;
+        g[i] = (sign * b[n] - g[i]) / sign / b[0];
+    }
+    // Then we do f = c * g
+    for (auto i = 1u; i <= n; ++i)
+    {
+        f[i] = 0;
+        for (auto j = 0u; j <= i; ++j) 
+        {
+            f[i] += c[i-j] * g[j];
+        }
+    }
+    // And finally a = exp(f)
+    for (auto i = 1u; i <= n; ++i)
+    {
+        a[i] = 0;
+        for (auto j = 0u; j <= i-1; ++j)
+        {
+            a[i] += (i - j) * a[j] * f[i - j];
+        }
+        a[i] /= n;
+    }
+
+    return a[n];
+}
+
+std::string print_my_pow(const std::string& s1, const std::string& s2)
+{
+    if (s1 == "0" && s2 != "0")
+    {
+        return "0";
+    }
+    else if (s1 == "1")
+    {
+        return "1";
+    }
+    else if (s2 == "0" && s1 != "0")
+    {
+        return "1";
+    }
+    else if (s2 == "1")
+    {
+        return s1;
+    }
+    return ("abs(" + s1 + ")^(" + s2 + ")");
+}
+
 double my_sqrt(double b, double c)
 {
         return sqrt(fabs(b));
@@ -170,6 +251,13 @@ std::string print_my_sqrt(const std::string& s1, const std::string& s2)
         return "|" + s1 + "|";
     }
     return ("sqrt(|" + s1 + "|)");
+}
+
+double d_not_implemented(const std::vector<double>& b, const std::vector<double>& c)
+{
+    (void)b;
+    (void)c;
+    throw derivative_error("Differentiation has not been implemented ... you can use CGP but not d-CGP");
 }
 
 } // dcgp namespace ends
