@@ -315,6 +315,7 @@ std::string expression::human_readable() const
     s << "\n\tCurrent expression (encoded):\t" << m_x << '\n';
     s << "\tActive nodes:\t\t\t" << m_active_nodes << '\n';
     s << "\tActive genes:\t\t\t" << m_active_genes << '\n';
+    s << "\n\tFunction set:\t\t\t" << m_f << '\n';
     return s.str();
 }
 

@@ -3,6 +3,8 @@
 
 #include <functional>
 #include <string>
+#include <iostream>
+#include <vector>
 
 namespace dcgp {
 
@@ -27,7 +29,7 @@ struct basis_function
 {
     /// Constructor from std::function construction arguments
     template <typename T, typename U, typename V>
-    basis_function(T &&f, U &&df, V&&pf):m_f(std::forward<T>(f)), m_df(std::forward<U>(df)), m_pf(std::forward<V>(pf)) {}
+    basis_function(T &&f, U &&df, V&&pf, std::string name):m_f(std::forward<T>(f)), m_df(std::forward<U>(df)), m_pf(std::forward<V>(pf)), m_name(name) {}
 
     /// Overload of operator(double, double)
     /**
@@ -55,7 +57,12 @@ struct basis_function
     my_d_fun_type m_df;
     /// Its symbolic representation
     my_print_fun_type m_pf;
+    /// Its name
+    std::string m_name;
 };
+
+std::ostream& operator<<(std::ostream& os, const basis_function& obj);
+
 
 } // end of namespace dcgp
 
