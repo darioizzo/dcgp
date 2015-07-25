@@ -9,7 +9,7 @@
 namespace dcgp {
 
 using my_fun_type = std::function<double(double, double)>;
-using my_d_fun_type = std::function<double(const std::vector<double> &, const std::vector<double> &)>;
+using d_my_fun_type = std::function<double(const std::vector<double> &, const std::vector<double> &)>;
 using my_print_fun_type = std::function<std::string(std::string, std::string)>;
 
 /// Basis function
@@ -54,7 +54,7 @@ struct basis_function
     /// The function
     my_fun_type m_f;
     /// Its derivatives
-    my_d_fun_type m_df;
+    d_my_fun_type m_df;
     /// Its symbolic representation
     my_print_fun_type m_pf;
     /// Its name

@@ -154,7 +154,7 @@ unsigned int expression::get_m() const
  *
  * \return an std::vector<basis_function>
 */
-std::vector<basis_function> expression::get_f() const
+const std::vector<basis_function>& expression::get_f() const
 {
     return m_f;
 }
