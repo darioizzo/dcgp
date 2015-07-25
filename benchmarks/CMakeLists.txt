@@ -1,0 +1,8 @@
+ADD_EXECUTABLE(profiling_evaluations profiling_evaluations.cpp)
+TARGET_LINK_LIBRARIES(profiling_evaluations ${MANDATORY_LIBRARIES} dcgp_s)
+
+ADD_EXECUTABLE(profiling_function_calls profiling_function_calls.cpp)
+TARGET_LINK_LIBRARIES(profiling_function_calls ${MANDATORY_LIBRARIES} dcgp_s)
+
+ADD_EXECUTABLE(profiling_mutation profiling_mutation.cpp)
+TARGET_LINK_LIBRARIES(profiling_mutation ${MANDATORY_LIBRARIES} dcgp_s)
