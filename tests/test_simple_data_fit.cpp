@@ -26,7 +26,7 @@ bool test_fails(
     // ... the following loop is not infinite
     do 
     {
-        ex.mutate();
+        ex.mutate_active();
         all_finite=true;
         in.clear();
         out.clear();

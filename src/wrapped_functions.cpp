@@ -92,6 +92,14 @@ std::string print_my_mul(const std::string& s1, const std::string& s2)
     {
         return s1 + "^2";
     }
+    else if (s1 == "1")
+    {
+        return s2;
+    }
+    else if (s2 == "1")
+    {
+        return s1;
+    }
     return ("(" + s1 + "*" + s2 + ")");
 }
 
@@ -163,8 +171,8 @@ double d_my_pow(const std::vector<double>& b, const std::vector<double>& c)
         {
             g[i] += (i - j) * sign * b[j] * g[i - j];
         }    
-        g[i] /= n;
-        g[i] = (sign * b[n] - g[i]) / sign / b[0];
+        g[i] /= i;
+        g[i] = (sign * b[i] - g[i]) / sign / b[0];
     }
     // Then we do f = c * g
     for (auto i = 1u; i <= n; ++i)
@@ -183,7 +191,7 @@ double d_my_pow(const std::vector<double>& b, const std::vector<double>& c)
         {
             a[i] += (i - j) * a[j] * f[i - j];
         }
-        a[i] /= n;
+        a[i] /= i;
     }
 
     return a[n];

@@ -32,6 +32,11 @@ void function_set::push_back(const std::string& function_name)
         throw input_error("Unimplemented function " + function_name);
 }
 
+void function_set::clear()
+{
+    m_functions.clear();
+}
+
 std::vector<basis_function> function_set::operator()() const
 {
     return m_functions;

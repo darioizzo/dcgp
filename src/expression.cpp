@@ -148,6 +148,16 @@ unsigned int expression::get_m() const
     return m_m;
 }
 
+/// Gets the functions
+/** 
+ * Gets the functions
+ *
+ * \return an std::vector<basis_function>
+*/
+std::vector<basis_function> expression::get_f() const
+{
+    return m_f;
+}
 
 inline unsigned int factorial(unsigned int n)
 {
@@ -200,7 +210,7 @@ std::vector<std::vector<double> > expression::differentiate(unsigned int wrt, un
         return retval;
     }
 
-void expression::mutate()
+void expression::mutate_active()
 {
     unsigned int idx = std::uniform_int_distribution<unsigned int>(0, m_active_genes.size() - 1)(m_e);
     idx = m_active_genes[idx];

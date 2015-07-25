@@ -40,6 +40,9 @@ OPTION(BUILD_MAIN "Build 'main.cpp'." ON)
 # Build option: enable test set.
 OPTION(ENABLE_TESTS "Build test set." OFF)
 
+# Build option: enable test set.
+OPTION(ENABLE_BENCHMARKING "Builds benchmarks." OFF)
+
 # Finding the boost libraries needed for the keplerian_toolbox
 # SET(REQUIRED_BOOST_LIBS serialization)
 # MESSAGE(STATUS "Required Boost libraries: ${REQUIRED_BOOST_LIBS}")
@@ -69,5 +72,9 @@ ENDIF(BUILD_MAIN)
 IF(ENABLE_TESTS)
 	ADD_SUBDIRECTORY("${CMAKE_SOURCE_DIR}/tests")
 ENDIF(ENABLE_TESTS)
+
+IF(ENABLE_BENCHMARKING)
+	ADD_SUBDIRECTORY("${CMAKE_SOURCE_DIR}/benchmarks")
+ENDIF(ENABLE_BENCHMARKING)
 
 

@@ -20,6 +20,7 @@ public:
 	function_set();
 	function_set(const std::vector<std::string>&);
 	void push_back(const std::string&);
+	void clear();
 	std::vector<dcgp::basis_function> operator()() const;
 private:
     std::vector<dcgp::basis_function> m_functions;

@@ -23,7 +23,7 @@ bool mutate_a_lot(unsigned int in,
     }
     clock_t begin = clock();
     for (auto i = 0u; i < 10000; ++i){
-        ex.mutate();
+        ex.mutate_active();
     }
 
     clock_t end = clock();

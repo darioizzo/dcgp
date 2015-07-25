@@ -42,7 +42,7 @@ bool test_fails(
     {
         gen++;
         for (auto i = 0u; i < newfits.size(); ++i) {
-            ex.mutate();
+            ex.mutate_active();
             newfits[i] = simple_data_fit(ex, in, out); //, dcgp::program::HITS_BASED);
             newchromosomes[i] = ex.get();
         }

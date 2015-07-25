@@ -39,8 +39,9 @@ public:
     const std::vector<unsigned int> & get_active_nodes() const;
     unsigned int get_n() const;
     unsigned int get_m() const;
+    std::vector<basis_function> get_f() const;
 
-    void mutate();
+    void mutate_active();
     
     template <class T>
     std::vector<T> operator()(const std::vector<T>& in) const
