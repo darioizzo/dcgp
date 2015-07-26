@@ -33,13 +33,52 @@ public:
             );
 
     void set(const std::vector<unsigned int> &x);
-    const std::vector<unsigned int> & get() const;
 
-    const std::vector<unsigned int> & get_active_genes() const;
-    const std::vector<unsigned int> & get_active_nodes() const;
-    unsigned int get_n() const;
-    unsigned int get_m() const;
-    const std::vector<basis_function>& get_f() const;
+    /// Gets the chromosome
+    /** 
+     * Gets the chromosome encoding the current expression
+     *
+     * \return The chromosome
+    */
+    const std::vector<unsigned int> & get() const {return m_x;};
+
+    /// Gets the active genes
+    /** 
+     * Gets the idx of the active genes in the current chromosome (numbering is from 0)
+     *
+     * \return An std::vector containing the idx of the active genes in the current chromosome
+    */
+    const std::vector<unsigned int> & get_active_genes() const {return m_active_genes;};
+    /// Gets the active nodes
+    /** 
+     * Gets the idx of the active nodes in the current chromosome.
+     * The numbering starts from 0 at the first input node to then follow PPSN tutorial from Miller
+     *
+     * \return An std::vector containing the idx of the active nodes
+    */
+    const std::vector<unsigned int> & get_active_nodes() const {return m_active_nodes;};
+    /// Gets the number of inputs
+    /** 
+     * Gets the number of inputs of the c_CGP expression
+     *
+     * \return the number of inputs
+    */
+    unsigned int get_n() const {return m_n;};
+    /// Gets the number of outputs
+    /** 
+     * Gets the number of outputs of the c_CGP expression
+     *
+     * \return the number of outputs
+    */
+    unsigned int get_m() const {return m_m;};
+
+    /// Gets the functions
+    /** 
+     * Gets the functions
+     *
+     * \return an std::vector<basis_function>
+    */
+    const std::vector<basis_function>& get_f() const {return m_f;};
 
     void mutate_active();
     
