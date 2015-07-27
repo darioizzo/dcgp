@@ -74,8 +74,7 @@ expression::expression(unsigned int n,              // n. inputs
 }
 
 /// Sets the chromosome
-/** Sets a new chromosome as genotype for the expression and updates
- * the active nodes, active genes information
+/** Sets a new chromosome as genotype for the expression and updates the active nodes and active genes information
  *
  * \param[in] x The new cromosome
  *
@@ -101,48 +100,66 @@ inline unsigned int factorial(unsigned int n)
     return ret;
 }
 
-std::vector<std::vector<double> > expression::differentiate(unsigned int wrt, unsigned int degree, const std::vector<double>& in) const
-    {  
-        if(in.size() != m_n)
-        {
-            throw input_error("Input size is incompatible");
-        }
-        if(wrt >= m_n)
-        {
-            throw input_error("Derivative id is larger than the independent variable number");
-        }
-//for (auto i : m_active_nodes) std::cout << " " << i; std::cout << std::endl;
-        std::vector<double> dumb(m_m);
-        std::vector<std::vector<double> > retval(degree+1,dumb);
-        std::map<unsigned int, std::vector<double> > node_jet;
-        for (auto j =0u; j<=degree; ++j)
-        {
-            for (auto i : m_active_nodes)
-            {
-                if (i < m_n) 
-                {
-                    //if (j==0) node_jet[i] = std::vector<double>({in[i]});
-                    if (j==0) node_jet[i].push_back(in[i]);
-                    else if (j==1) node_jet[i].push_back((i==wrt) ? 1. : 0.);
-                    else node_jet[i].push_back(0.);
-                } else {
-                    unsigned int idx = (i - m_n) * 3;
-                    if (j==0) node_jet[i] = std::vector<double>({m_f[m_x[idx]].m_df(node_jet[m_x[idx + 1]], node_jet[m_x[idx + 2]])});
-                    else node_jet[i].push_back(m_f[m_x[idx]].m_df(node_jet[m_x[idx + 1]], node_jet[m_x[idx + 2]]));
-                }
-            }
-        }
-    //std::cout << i << ", " << node_jet[i] << std::endl;
-    
-        for (auto j = 0u; j<=degree; ++j) {
-            for (auto i = 0u; i<m_m; ++i)
-            {
-                retval[j][i] = node_jet[m_x[(m_r * m_c) * 3 + i]][j] * factorial(j);
-            }
-        }
-        return retval;
-    }
 
+/// Computes the derivatives of the expression
+/** 
+ * Using automated differentiation rules this method returns the derivatives up to a certain order, with respect
+ * to one input variable at a given point.
+ *
+ * \param[in] wrt index of the derivation variable (0,1 ..., m_n)
+ * \param[in] order the derivative order we want to compute
+ * \param[in] in std::vector containing the point coordinates we want the derivatives be computed at
+ *
+ * @returns std::vector<std::vector<double> > containing the value of f,f',f'' ..., at the point in
+ *
+ * @throw dcgp::input_error 
+ */
+std::vector<std::vector<double> > expression::differentiate(unsigned int wrt, unsigned int order, const std::vector<double>& in) const
+{  
+    if(in.size() != m_n)
+    {
+        throw input_error("Input size is incompatible");
+    }
+    if(wrt >= m_n)
+    {
+        throw input_error("Derivative id is larger than the independent variable number");
+    }
+//for (auto i : m_active_nodes) std::cout << " " << i; std::cout << std::endl;
+    std::vector<double> dumb(m_m);
+    std::vector<std::vector<double> > retval(order+1,dumb);
+    std::map<unsigned int, std::vector<double> > node_jet;
+    for (auto j =0u; j<=order; ++j)
+    {
+        for (auto i : m_active_nodes)
+        {
+            if (i < m_n) 
+            {
+                //if (j==0) node_jet[i] = std::vector<double>({in[i]});
+                if (j==0) node_jet[i].push_back(in[i]);
+                else if (j==1) node_jet[i].push_back((i==wrt) ? 1. : 0.);
+                else node_jet[i].push_back(0.);
+            } else {
+                unsigned int idx = (i - m_n) * 3;
+                if (j==0) node_jet[i] = std::vector<double>({m_f[m_x[idx]].m_df(node_jet[m_x[idx + 1]], node_jet[m_x[idx + 2]])});
+                else node_jet[i].push_back(m_f[m_x[idx]].m_df(node_jet[m_x[idx + 1]], node_jet[m_x[idx + 2]]));
+            }
+        }
+    }
+//std::cout << i << ", " << node_jet[i] << std::endl;
+
+    for (auto j = 0u; j<=order; ++j) {
+        for (auto i = 0u; i<m_m; ++i)
+        {
+            retval[j][i] = node_jet[m_x[(m_r * m_c) * 3 + i]][j] * factorial(j);
+        }
+    }
+    return retval;
+}
+
+/// Mutates one of the active genes
+/** 
+ * Mutates exactly one of the active genes
+ */
 void expression::mutate_active()
 {
     unsigned int idx = std::uniform_int_distribution<unsigned int>(0, m_active_genes.size() - 1)(m_e);
@@ -161,7 +178,9 @@ void expression::mutate_active()
 }
 
 /// Validity of a chromosome
-/** Checks if a chromosome (i.e. a sequence of integers) is a valid expression
+/** 
+ * Checks if a chromosome (i.e. a sequence of integers) is a valid expression
+ * by checking its length and the bounds
  *
  * \param[in] x chromosome 
  */
@@ -182,7 +201,7 @@ bool expression::is_valid(const std::vector<unsigned int>& x) const
 }
 
 
-/// Computes which nodes actually need evaluation
+/// Updates the m_active_genes and m_active_nodes data member
 void expression::update_active()
 {
     assert(m_x.size() == m_lb.size());
@@ -262,7 +281,7 @@ std::string expression::human_readable() const
     return s.str();
 }
 
-/// Overload stream operator for problem::base.
+/// Overload stream operator for dcgp::expression
 /**
  * Equivalent to printing expression::human_readable() to stream.
  *
