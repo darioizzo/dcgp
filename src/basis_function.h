@@ -14,7 +14,7 @@ using my_print_fun_type = std::function<std::string(std::string, std::string)>;
 
 /// Basis function
 /**
- * This struct represent a generic function in d-CGP. It contains the std::function, whose type is
+ * This struct represent a generic function (or expression) in d-CGP. It contains the std::function, whose type is
  * defined in my_fun_type, my_d_fun_type, my_print_fun_type, that allow to compute the function
  * value, its derivatives and its symbolic representation
  *
