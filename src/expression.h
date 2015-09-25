@@ -5,6 +5,7 @@
 #include <string>
 #include <map>
 #include <random>
+#include <initializer_list>
 
 #include "basis_function.h"
 #include "exceptions.h"
@@ -33,6 +34,10 @@ public:
             );
 
     void set(const std::vector<unsigned int> &x);
+    void set(const std::initializer_list<unsigned int>& x)
+    {
+        set(std::vector<unsigned int>(x));
+    }
 
     /// Gets the chromosome
     /** 
@@ -107,6 +112,13 @@ public:
             retval[i] = node[m_x[(m_r * m_c) * 3 + i]];
         }
         return retval;
+    }
+
+    template <class T>
+    std::vector<T> operator()(const std::initializer_list<T>& in) const
+    {  
+        std::vector<T> dummy(in);
+        return (*this)(dummy);
     }
 
     std::vector<std::vector<double> > differentiate(unsigned int wrt, unsigned int degree, const std::vector<double>& in) const;

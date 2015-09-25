@@ -1,19 +1,24 @@
-ADD_EXECUTABLE(test_compute test_compute.cpp)
-TARGET_LINK_LIBRARIES(test_compute ${MANDATORY_LIBRARIES} dcgp_s)
-ADD_TEST(test_compute test_compute)
+# Add the unit test library.
+# NOTE: probably we should have a check in the build system to determine
+# whether Boost libraries are static or dynamic.
+ADD_DEFINITIONS(-DBOOST_TEST_DYN_LINK)
 
-ADD_EXECUTABLE(test_torture_mutate test_torture_mutate.cpp)
-TARGET_LINK_LIBRARIES(test_torture_mutate ${MANDATORY_LIBRARIES} dcgp_s)
-ADD_TEST(test_torture_mutate test_torture_mutate)
+MACRO(ADD_DCGP_TESTCASE arg1)
+	IF(CMAKE_BUILD_TYPE STREQUAL "Debug")
+		ADD_EXECUTABLE(${arg1} ${arg1}.cpp)
+		TARGET_LINK_LIBRARIES(${arg1} dcgp_s ${MANDATORY_LIBRARIES} ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
+		ADD_TEST(${arg1} ${arg1})
+	ENDIF(CMAKE_BUILD_TYPE STREQUAL "Debug")
+ENDMACRO(ADD_DCGP_TESTCASE)
 
-ADD_EXECUTABLE(test_simple_data_fit test_simple_data_fit.cpp)
-TARGET_LINK_LIBRARIES(test_simple_data_fit ${MANDATORY_LIBRARIES} dcgp_s)
-ADD_TEST(test_simple_data_fit test_simple_data_fit)
+MACRO(ADD_DCGP_PERFORMANCE_TESTCASE arg1)
+	IF(CMAKE_BUILD_TYPE STREQUAL "Release")
+		ADD_EXECUTABLE("${arg1}_perf" "${arg1}_perf.cpp")
+		TARGET_LINK_LIBRARIES("${arg1}_perf" dcgp_s ${MANDATORY_LIBRARIES} ${Boost_CHRONO_LIBRARY} ${Boost_TIMER_LIBRARY} ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY} ${Boost_SYSTEM_LIBRARY})
+		ADD_TEST("${arg1}_perf" "${arg1}_perf")
+	ENDIF(CMAKE_BUILD_TYPE STREQUAL "Release")
+ENDMACRO(ADD_DCGP_PERFORMANCE_TESTCASE)
 
-ADD_EXECUTABLE(test_evolving_simple_expressions test_evolving_simple_expressions.cpp)
-TARGET_LINK_LIBRARIES(test_evolving_simple_expressions ${MANDATORY_LIBRARIES} dcgp_s)
-ADD_TEST(test_evolving_simple_expressions test_evolving_simple_expressions)
 
-ADD_EXECUTABLE(test_automated_differentiation test_automated_differentiation.cpp)
-TARGET_LINK_LIBRARIES(test_automated_differentiation ${MANDATORY_LIBRARIES} dcgp_s)
-ADD_TEST(test_automated_differentiation test_automated_differentiation)
+ADD_DCGP_TESTCASE(compute)
+
