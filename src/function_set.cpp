@@ -1,6 +1,7 @@
+#include <stdexcept>
+
 #include "function_set.h"
 #include "wrapped_functions.h"
-#include "exceptions.h"
 
 namespace dcgp {
 
@@ -29,7 +30,7 @@ void function_set::push_back(const std::string& function_name)
     else if (function_name=="pow")
         m_functions.emplace_back(my_pow,d_my_pow,print_my_pow, function_name);
     else 
-        throw input_error("Unimplemented function " + function_name);
+        throw std::invalid_argument("Unimplemented function " + function_name);
 }
 
 void function_set::clear()

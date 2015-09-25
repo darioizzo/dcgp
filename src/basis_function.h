@@ -51,6 +51,12 @@ struct basis_function
             return m_pf(x,y);
     }
 
+    friend std::ostream& operator<<(std::ostream& os, const basis_function& d)
+    {
+        os << d.m_name;
+        return os;
+    }
+
     /// The function
     my_fun_type m_f;
     /// Its derivatives
@@ -60,8 +66,6 @@ struct basis_function
     /// Its name
     std::string m_name;
 };
-
-std::ostream& operator<<(std::ostream& os, const basis_function& obj);
 
 
 } // end of namespace dcgp

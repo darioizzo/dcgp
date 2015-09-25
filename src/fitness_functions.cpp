@@ -1,9 +1,10 @@
 #include <cmath>
 #include <vector>
+#include <stdexcept>
 
 #include "fitness_functions.h"
 #include "expression.h"
-#include "exceptions.h"
+
 
 namespace dcgp {
     /// Computes the error of the expression in approximating some given data
@@ -18,7 +19,7 @@ namespace dcgp {
 
         if (in_des.size() != out_des.size())
         {
-            throw input_error("Size of the input vector must be the size of the output vector");
+            throw std::invalid_argument("Size of the input vector must be the size of the output vector");
         }
 
         for (auto i = 0u; i < in_des.size(); ++i)

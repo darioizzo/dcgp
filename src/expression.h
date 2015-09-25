@@ -6,9 +6,9 @@
 #include <map>
 #include <random>
 #include <initializer_list>
+#include <stdexcept>
 
 #include "basis_function.h"
-#include "exceptions.h"
 #include "rng.h"
 
 
@@ -92,7 +92,7 @@ public:
     {  
         if(in.size() != m_n)
         {
-            throw input_error("Input size is incompatible");
+            throw std::invalid_argument("Input size is incompatible");
         }
 //for (auto i : m_active_nodes) std::cout << " " << i; std::cout << std::endl;
         std::vector<T> retval(m_m);

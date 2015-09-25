@@ -4,6 +4,7 @@
 #include <random>
 #include <limits>
 #include <cmath>
+#include <stdexcept>
 
 #include "expression.h"
 #include "std_overloads.h"
@@ -33,12 +34,12 @@ expression::expression(unsigned int n,              // n. inputs
                    ) : m_n(n), m_m(m), m_r(r), m_c(c), m_l(l), m_f(f), m_lb((3 * m_r * m_c) + m_m, 0), m_ub((3 * m_r * m_c) + m_m, 0), m_x((3 * m_r * m_c) + m_m, 0), m_e(seed)
 {
 
-    if (n == 0) throw input_error("Number of inputs is 0");
-    if (m == 0) throw input_error("Number of outputs is 0");
-    if (c == 0) throw input_error("Number of columns is 0");
-    if (r == 0) throw input_error("Number of rows is 0");
-    if (l == 0) throw input_error("Number of level-backs is 0");
-    if (f.size()==0) throw input_error("Number of basis functions is 0");
+    if (n == 0) throw std::invalid_argument("Number of inputs is 0");
+    if (m == 0) throw std::invalid_argument("Number of outputs is 0");
+    if (c == 0) throw std::invalid_argument("Number of columns is 0");
+    if (r == 0) throw std::invalid_argument("Number of rows is 0");
+    if (l == 0) throw std::invalid_argument("Number of level-backs is 0");
+    if (f.size()==0) throw std::invalid_argument("Number of basis functions is 0");
 
     // Bounds for the function genes
     for (auto i = 0u; i < (3 * m_r * m_c); i+=3) {
@@ -84,7 +85,7 @@ void expression::set(const std::vector<unsigned int>& x)
 {
     if(!is_valid(x))
     {
-        throw input_error("Chromosome is incompatible");
+        throw std::invalid_argument("Chromosome is incompatible");
     }
     m_x = x;
     update_active();
@@ -112,17 +113,17 @@ inline unsigned int factorial(unsigned int n)
  *
  * @returns std::vector<std::vector<double> > containing the value of f,f',f'' ..., at the point in
  *
- * @throw dcgp::input_error 
+ * @throw std::invalid_argument
  */
 std::vector<std::vector<double> > expression::differentiate(unsigned int wrt, unsigned int order, const std::vector<double>& in) const
 {  
     if(in.size() != m_n)
     {
-        throw input_error("Input size is incompatible");
+        throw std::invalid_argument("Input size is incompatible");
     }
     if(wrt >= m_n)
     {
-        throw input_error("Derivative id is larger than the independent variable number");
+        throw std::invalid_argument("Derivative id is larger than the independent variable number");
     }
 //for (auto i : m_active_nodes) std::cout << " " << i; std::cout << std::endl;
     std::vector<double> dumb(m_m);

@@ -141,7 +141,7 @@ std::string print_my_div(const std::string& s1, const std::string& s2)
 
 double my_pow(double b, double c)
 {
-        return pow(fabs(b),c);
+        return pow(std::abs(b),c);
 }
 
 double d_my_pow(const std::vector<double>& b, const std::vector<double>& c)
@@ -220,7 +220,7 @@ std::string print_my_pow(const std::string& s1, const std::string& s2)
 
 double my_sqrt(double b, double c)
 {
-        return sqrt(fabs(b));
+        return sqrt(std::abs(b));
 }
 
 double d_my_sqrt(const std::vector<double>& b, const std::vector<double>& c)
@@ -261,11 +261,5 @@ std::string print_my_sqrt(const std::string& s1, const std::string& s2)
     return ("sqrt(|" + s1 + "|)");
 }
 
-double d_not_implemented(const std::vector<double>& b, const std::vector<double>& c)
-{
-    (void)b;
-    (void)c;
-    throw derivative_error("Differentiation has not been implemented ... you can use CGP but not d-CGP");
-}
 
 } // dcgp namespace ends
