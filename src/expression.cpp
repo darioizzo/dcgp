@@ -121,9 +121,11 @@ std::vector<audi::gdual> expression::differentiate(const std::vector<double>& in
     {
         throw std::invalid_argument("Input size is incompatible");
     }
-
-    std::vector<audi::gdual> retval(m_m, audi::gdual(1,"x", order));
-    return retval;
+    std::vector<audi::gdual> in_expansion;
+    for (auto i = 0u; i < in.size(); ++i) {
+        in_expansion.emplace_back(in[i], "x"+std::to_string(i), (int)order);
+    } 
+    return (*this)(in_expansion);
 }
 
 /// Mutates one of the active genes

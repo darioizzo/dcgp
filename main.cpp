@@ -10,7 +10,7 @@ int main() {
 
     // We instantiate a d-CGP expression
     unsigned int n_inputs = 3;
-    unsigned int n_outputs = 2;
+    unsigned int n_outputs = 1;
     unsigned int n_rows = 3;
     unsigned int n_columns = 7;
     unsigned int n_level_backs = 4;
@@ -24,10 +24,12 @@ int main() {
     std::cout << "Point is:" << in_num << std::endl;
     std::cout << "Numerical value = " << simple(in_num) << std::endl;
 
-    /*
-    std::vector<std::vector<double> > jet_0 = simple.differentiate(0,2,in_num);
-    std::cout << "Numerical values d^n/dx^n = " << jet_0 << std::endl;
 
+    std::vector<audi::gdual> jet_0 = simple.differentiate(in_num,1);
+    std::cout << "Numerical values d/dx = " << jet_0[0].get_derivative({1,0,0}) << std::endl;
+    std::cout << "Numerical values d/dy = " << jet_0[0].get_derivative({0,1,0}) << std::endl;
+    std::cout << "Numerical values d/dz = " << jet_0[0].get_derivative({0,0,1}) << std::endl;
+    /*
     std::vector<std::vector<double> > jet_1 = simple.differentiate(1,2,in_num);
     std::cout << "Numerical values d^n/dy^n = " << jet_1 << std::endl;
 
