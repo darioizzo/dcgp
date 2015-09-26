@@ -21,7 +21,6 @@ namespace dcgp {
  * \param[in] c number of columns of the cartesian cgp
  * \param[in] l number of levels-back allowed for the cartesian cgp
  * \param[in] f function set. An std::vector of dcgp::basis_function
- * \param[in] tol tolerance to be used in case dcgp::expression::HITS_BASED is used as fitness evaluation 
  * \param[in] seed seed for the random number generator (initial expression  and mutations depend on this)
  */
 expression::expression(unsigned int n,              // n. inputs
