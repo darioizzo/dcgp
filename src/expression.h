@@ -7,6 +7,7 @@
 #include <random>
 #include <initializer_list>
 #include <stdexcept>
+#include <audi/gdual.hpp>
 
 #include "basis_function.h"
 #include "rng.h"
@@ -121,7 +122,7 @@ public:
         return (*this)(dummy);
     }
 
-    std::vector<std::vector<double> > differentiate(unsigned int wrt, unsigned int degree, const std::vector<double>& in) const;
+    std::vector<audi::gdual> differentiate(const std::vector<double>& in, unsigned int order) const;
     std::string human_readable() const;
 
 protected: 

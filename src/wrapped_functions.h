@@ -4,45 +4,109 @@
 #include <string>
 #include <vector>
 
-
 namespace dcgp {
 
 /*--------------------------------------------------------------------------
 *                                  BINARY FUNCTIONS
 *------------------------------------------------------------------------**/
-// f = b + c
-double my_sum(double b, double c);
-double d_my_sum(const std::vector<double>& b, const std::vector<double>& c);
-std::string print_my_sum(const std::string& s1, const std::string& s2);
+template <typename T>
+T my_sum(const T &x, const T &y)
+{
+        return x + y;
+}
 
-// f = b - c
-double my_diff(double b, double c);
-double d_my_diff(const std::vector<double>& b, const std::vector<double>& c);
-std::string print_my_diff(const std::string& s1, const std::string& s2);
+std::string print_my_sum(const std::string& s1, const std::string& s2)
+{
+    if (s1 == s2) 
+    {
+        return "(2*"+s1+")";
+    }
+    else if (s1 == "0")
+    {
+        return s2;
+    }
+    else if (s2 == "0")
+    {
+        return s1;
+    }
+    return ("(" + s1 + "+" + s2 + ")");
+}
 
-// f = b * c
-double my_mul(double b, double c);
-double d_my_mul(const std::vector<double>& b, const std::vector<double>& c);
-std::string print_my_mul(const std::string& s1, const std::string& s2);
+template <typename T>
+T my_diff(const T &x, const T &y)
+{
+        return x - y;
+}
 
-// f = b / c
-double my_div(double b, double c);
-double d_my_div(const std::vector<double>& b, const std::vector<double>& c);
-std::string print_my_div(const std::string& s1, const std::string& s2);
+std::string print_my_diff(const std::string& s1, const std::string& s2)
+{
+    if (s1 == s2) 
+    {
+        return "0";
+    }
+    else if (s1 == "0")
+    {
+        return "(-" + s2 + ")";
+    }
+    else if (s2 == "0")
+    {
+        return s1;
+    }
+    return ("(" + s1 + "-" + s2 + ")");
+}
 
-// f = pow(|b|,c)
-double my_pow(double b, double c);
-double d_my_pow(const std::vector<double>& b, const std::vector<double>& c);
-std::string print_my_pow(const std::string& s1, const std::string& s2);
+template <typename T>
+T my_mul(const T &x, const T &y)
+{
+        return (x * y);
+}
+
+std::string print_my_mul(const std::string& s1, const std::string& s2)
+{
+    if (s1 == "0" || s2 == "0")
+    {
+        return "0";
+    }
+    else if (s1 == s2)
+    {
+        return s1 + "^2";
+    }
+    else if (s1 == "1")
+    {
+        return s2;
+    }
+    else if (s2 == "1")
+    {
+        return s1;
+    }
+    return ("(" + s1 + "*" + s2 + ")");
+}
+
+template <typename T>
+T my_div(const T &x, const T &y)
+{
+        return x / y;
+}
+
+std::string print_my_div(const std::string& s1, const std::string& s2)
+{
+    if (s1 == "0" && s2 != "0")
+    {
+        return "0";
+    }
+    else if (s1 == s2)
+    {
+        return "1";
+    }
+    return ("(" + s1 + "/" + s2 + ")");
+}
+
+
 
 /*--------------------------------------------------------------------------
 *                                  UNARY FUNCTIONS
 *------------------------------------------------------------------------**/
 
-// f = sqrt(|b|)
-double my_sqrt(double b, double c);
-double d_my_sqrt(const std::vector<double>& b, const std::vector<double>& c);
-std::string print_my_sqrt(const std::string& s1, const std::string& s2);
 
 } // dcgp namespace ends
 

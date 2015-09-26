@@ -24,6 +24,7 @@ int main() {
     std::cout << "Point is:" << in_num << std::endl;
     std::cout << "Numerical value = " << simple(in_num) << std::endl;
 
+    /*
     std::vector<std::vector<double> > jet_0 = simple.differentiate(0,2,in_num);
     std::cout << "Numerical values d^n/dx^n = " << jet_0 << std::endl;
 
@@ -32,6 +33,7 @@ int main() {
 
     std::vector<std::vector<double> > jet_2 = simple.differentiate(2,2,in_num);
     std::cout << "Numerical values d^n/dz^n = " << jet_2 << std::endl;
+    */
 
     // We stream a symbolic representation of the expression
     std::vector<std::string> in_sym({"x","y","z"});

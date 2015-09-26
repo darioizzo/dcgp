@@ -5,6 +5,7 @@
 #include <limits>
 #include <cmath>
 #include <stdexcept>
+#include <audi/gdual.hpp>
 
 #include "expression.h"
 #include "std_overloads.h"
@@ -114,45 +115,14 @@ inline unsigned int factorial(unsigned int n)
  *
  * @throw std::invalid_argument
  */
-std::vector<std::vector<double> > expression::differentiate(unsigned int wrt, unsigned int order, const std::vector<double>& in) const
+std::vector<audi::gdual> expression::differentiate(const std::vector<double>& in, unsigned int order) const
 {  
     if(in.size() != m_n)
     {
         throw std::invalid_argument("Input size is incompatible");
     }
-    if(wrt >= m_n)
-    {
-        throw std::invalid_argument("Derivative id is larger than the independent variable number");
-    }
-//for (auto i : m_active_nodes) std::cout << " " << i; std::cout << std::endl;
-    std::vector<double> dumb(m_m);
-    std::vector<std::vector<double> > retval(order+1,dumb);
-    std::map<unsigned int, std::vector<double> > node_jet;
-    for (auto j =0u; j<=order; ++j)
-    {
-        for (auto i : m_active_nodes)
-        {
-            if (i < m_n) 
-            {
-                //if (j==0) node_jet[i] = std::vector<double>({in[i]});
-                if (j==0) node_jet[i].push_back(in[i]);
-                else if (j==1) node_jet[i].push_back((i==wrt) ? 1. : 0.);
-                else node_jet[i].push_back(0.);
-            } else {
-                unsigned int idx = (i - m_n) * 3;
-                if (j==0) node_jet[i] = std::vector<double>({m_f[m_x[idx]].m_df(node_jet[m_x[idx + 1]], node_jet[m_x[idx + 2]])});
-                else node_jet[i].push_back(m_f[m_x[idx]].m_df(node_jet[m_x[idx + 1]], node_jet[m_x[idx + 2]]));
-            }
-        }
-    }
-//std::cout << i << ", " << node_jet[i] << std::endl;
 
-    for (auto j = 0u; j<=order; ++j) {
-        for (auto i = 0u; i<m_m; ++i)
-        {
-            retval[j][i] = node_jet[m_x[(m_r * m_c) * 3 + i]][j] * factorial(j);
-        }
-    }
+    std::vector<audi::gdual> retval(m_m, audi::gdual(1,"x", order));
     return retval;
 }
 
