@@ -26,6 +26,8 @@ int main() {
 
 
     std::vector<audi::gdual> jet_0 = simple.differentiate(in_num,1);
+    std::cout << jet_0[0] << std::endl;
+    std::cout << jet_0[0].get_symbols() << std::endl;
     std::cout << "Numerical values d/dx = " << jet_0[0].get_derivative({1,0,0}) << std::endl;
     std::cout << "Numerical values d/dy = " << jet_0[0].get_derivative({0,1,0}) << std::endl;
     std::cout << "Numerical values d/dz = " << jet_0[0].get_derivative({0,0,1}) << std::endl;
