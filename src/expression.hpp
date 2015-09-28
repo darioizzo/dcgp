@@ -194,7 +194,7 @@ public:
      *
      * @return The value of the function (an std::vector)
      */
-    template <class T, functor_enabler<T> = 0>
+    template <typename T, functor_enabler<T> = 0>
     std::vector<T> operator()(const std::vector<T>& in) const
     {  
         if(in.size() != m_n)
@@ -232,7 +232,7 @@ public:
      *
      * @return The value of the function (an std::vector)
      */
-    template <class T, functor_enabler<T> = 0>
+    template <typename T, functor_enabler<T> = 0>
     std::vector<T> operator()(const std::initializer_list<T>& in) const
     {  
         std::vector<T> dummy(in);

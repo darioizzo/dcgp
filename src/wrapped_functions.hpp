@@ -3,13 +3,19 @@
 
 #include <string>
 #include <vector>
+#include <audi/gdual.hpp>
 
 namespace dcgp {
+
+// SFINAE dust
+template <typename T>
+using f_enabler = typename std::enable_if<std::is_same<T,double>::value || std::is_same<T,audi::gdual>::value, int>::type;
+
 
 /*--------------------------------------------------------------------------
 *                                  BINARY FUNCTIONS
 *------------------------------------------------------------------------**/
-template <typename T>
+template <typename T, f_enabler<T> = 0>
 T my_sum(const T &x, const T &y)
 {
         return x + y;
@@ -32,7 +38,7 @@ std::string print_my_sum(const std::string& s1, const std::string& s2)
     return ("(" + s1 + "+" + s2 + ")");
 }
 
-template <typename T>
+template <typename T, f_enabler<T> = 0>
 T my_diff(const T &x, const T &y)
 {
         return x - y;
@@ -55,7 +61,7 @@ std::string print_my_diff(const std::string& s1, const std::string& s2)
     return ("(" + s1 + "-" + s2 + ")");
 }
 
-template <typename T>
+template <typename T, f_enabler<T> = 0>
 T my_mul(const T &x, const T &y)
 {
         return (x * y);
@@ -82,7 +88,7 @@ std::string print_my_mul(const std::string& s1, const std::string& s2)
     return ("(" + s1 + "*" + s2 + ")");
 }
 
-template <typename T>
+template <typename T, f_enabler<T> = 0>
 T my_div(const T &x, const T &y)
 {
         return x / y;
