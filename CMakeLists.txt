@@ -117,7 +117,7 @@ ADD_SUBDIRECTORY("${CMAKE_SOURCE_DIR}/src")
 # Build main and link it to static library.
 IF(BUILD_MAIN)
 	ADD_EXECUTABLE(main main.cpp)
-	TARGET_LINK_LIBRARIES(main dcgp_s ${MANDATORY_LIBRARIES})
+	TARGET_LINK_LIBRARIES(main ${MANDATORY_LIBRARIES})
 ENDIF(BUILD_MAIN)
 
 # Built perf test in release and tests in debug

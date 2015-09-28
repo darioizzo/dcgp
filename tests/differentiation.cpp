@@ -3,7 +3,7 @@
 #include <random>
 #include <cmath>
 #include <string>
-#include "../src/dcgp.h"
+#include "../src/dcgp.hpp"
 
 std::vector<double> numeric_d(const dcgp::expression& ex, unsigned int wrt,  const std::vector<double>& in)
 {
