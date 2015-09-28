@@ -10,6 +10,8 @@
 
 namespace dcgp {
 
+using namespace audi;
+
 /// Basic prototype of a kernel function for its simple evaluation
 using my_fun_type = std::function<double(const double&, const double&)>;
 /// Basic prototype of a kernel function for the evaluation of its Taylor expansion
@@ -66,7 +68,7 @@ struct basis_function
     *
     * @return the Taylor representation of \f$f\f$
     */
-    audi::gdual operator()(const audi::gdual & p1, const audi::gdual & p2) const
+    gdual operator()(const gdual & p1, const gdual & p2) const
     {
             return m_df(p1,p2);
     }

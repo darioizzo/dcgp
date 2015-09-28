@@ -21,14 +21,19 @@ namespace dcgp {
 /**
  * This class represent a mathematical expression as encoded using CGP and contains
  * algorithms that compute its value (numerical and symbolical) and its derivatives 
- * its fitness on a given input target set, as well as mutate the expression. 
+ * as well as mutate the expression. 
  *
  * @author Dario Izzo (dario.izzo@gmail.com)
  */
 class expression {
+
+private:
+    // SFINAE dust
+    template <typename T>
+    using functor_enabler = typename std::enable_if<std::is_same<T,double>::value || std::is_same<T,gdual>::value || std::is_same<T,std::string>::value,int>::type;
 public:   
     /// Constructor
-    /** Constructs a d-cgp expression
+    /** Constructs a d-CGP expression
      *
      * \param[in] n number of inputs (independent variables)
      * \param[in] m number of outputs (dependent variables)
@@ -47,7 +52,7 @@ public:
                unsigned int seed                // seed for the pseudo-random numbers
                ) : m_n(n), m_m(m), m_r(r), m_c(c), m_l(l), m_f(f), m_lb((3 * m_r * m_c) + m_m, 0), m_ub((3 * m_r * m_c) + m_m, 0), m_x((3 * m_r * m_c) + m_m, 0), m_e(seed)
     {
-
+        // Sanity checks
         if (n == 0) throw std::invalid_argument("Number of inputs is 0");
         if (m == 0) throw std::invalid_argument("Number of outputs is 0");
         if (c == 0) throw std::invalid_argument("Number of columns is 0");
@@ -89,11 +94,13 @@ public:
     }
 
     /// Sets the chromosome
-    /** Sets a new chromosome as genotype for the expression and updates the active nodes and active genes information
+    /** Sets a new chromosome as genotype for the expression and updates
+     * the active nodes and active genes information
      *
      * \param[in] x The new cromosome
      *
-     * @throw std::invalid_argument if the chromosome is incompatible with the expression (n.inputs, n.outputs, levels-back, etc.)
+     * @throw std::invalid_argument if the chromosome is incompatible with
+     * the expression (n.inputs, n.outputs, levels-back, etc.)
      */
     void set(const std::vector<unsigned int> &x)
     {
@@ -103,62 +110,60 @@ public:
         }
         m_x = x;
         update_active();
-    };
-
-    void set(const std::initializer_list<unsigned int>& x)
-    {
-        set(std::vector<unsigned int>(x));
     }
 
     /// Gets the chromosome
     /** 
      * Gets the chromosome encoding the current expression
      *
-     * \return The chromosome
+     * @return The chromosome
     */
-    const std::vector<unsigned int> & get() const {return m_x;};
+    const std::vector<unsigned int> & get() const {return m_x;}
 
     /// Gets the active genes
     /** 
      * Gets the idx of the active genes in the current chromosome (numbering is from 0)
      *
-     * \return An std::vector containing the idx of the active genes in the current chromosome
+     * @return An std::vector containing the idx of the active genes in the current chromosome
     */
-    const std::vector<unsigned int> & get_active_genes() const {return m_active_genes;};
+    const std::vector<unsigned int> & get_active_genes() const {return m_active_genes;}
+ 
     /// Gets the active nodes
     /** 
      * Gets the idx of the active nodes in the current chromosome.
      * The numbering starts from 0 at the first input node to then follow PPSN tutorial from Miller
      *
-     * \return An std::vector containing the idx of the active nodes
+     * @return An std::vector containing the idx of the active nodes
     */
-    const std::vector<unsigned int> & get_active_nodes() const {return m_active_nodes;};
+    const std::vector<unsigned int> & get_active_nodes() const {return m_active_nodes;}
+    
     /// Gets the number of inputs
     /** 
      * Gets the number of inputs of the c_CGP expression
      *
-     * \return the number of inputs
+     * @return the number of inputs
     */
-    unsigned int get_n() const {return m_n;};
+    unsigned int get_n() const {return m_n;}
     /// Gets the number of outputs
     /** 
      * Gets the number of outputs of the c_CGP expression
      *
-     * \return the number of outputs
+     * @return the number of outputs
     */
-    unsigned int get_m() const {return m_m;};
+    unsigned int get_m() const {return m_m;}
 
     /// Gets the functions
     /** 
      * Gets the functions
      *
-     * \return an std::vector<basis_function>
+     * @return an std::vector<basis_function>
     */
-    const std::vector<basis_function>& get_f() const {return m_f;};
+    const std::vector<basis_function>& get_f() const {return m_f;}
 
     /// Mutates one of the active genes
     /** 
-     * Mutates exactly one of the active genes
+     * Mutates exactly one of the active genes within its allowed bounds. The mutation
+     * can affect a function gene or an input gene or an output gene.
      */
     void mutate_active()
     {
@@ -175,17 +180,27 @@ public:
             m_x[idx] = new_value;
             update_active();
         }
-    };
+    }
 
-    
-    template <class T>
+    /// Evaluates the d-CGP expression
+    /*
+     * This evaluates the d-CGP expression. According to the template parameter
+     * it will compute the value (double) the Taylor expansion (gdual) or a symbolic
+     * representation (std::string). Any other type will result in a compilation-time
+     * error (SFINAE).
+     *
+     * @param[in] in an std::vector containing the values where the d-CGP expression has
+     * to be computed (doubles, gduals or strings)
+     *
+     * @return The value of the function (an std::vector)
+     */
+    template <class T, functor_enabler<T> = 0>
     std::vector<T> operator()(const std::vector<T>& in) const
     {  
         if(in.size() != m_n)
         {
             throw std::invalid_argument("Input size is incompatible");
         }
-//for (auto i : m_active_nodes) std::cout << " " << i; std::cout << std::endl;
         std::vector<T> retval(m_m);
         std::map<unsigned int, T> node;
         for (auto i : m_active_nodes) {
@@ -196,7 +211,6 @@ public:
                 unsigned int idx = (i - m_n) * 3;
                 node[i] = m_f[m_x[idx]](node[m_x[idx + 1]], node[m_x[idx + 2]]);
             }
-//std::cout << i << ", " << node[i] << std::endl;
         }
         for (auto i = 0u; i<m_m; ++i)
         {
@@ -205,7 +219,20 @@ public:
         return retval;
     }
 
-    template <class T>
+    /// Evaluates the d-CGP expression
+    /*
+     * This evaluates the d-CGP expression. According to the template parameter
+     * it will compute the value (double) the Taylor expansion (gdual) or a symbolic
+     * representation (std::string). Any other type will result in a compilation-time
+     * error (SFINAE). This is identical to the other overload and is provided only
+     * for convenience
+     *
+     * @param[in] in an initializer list containing the values where the d-CGP expression has
+     * to be computed (doubles, gduals or strings)
+     *
+     * @return The value of the function (an std::vector)
+     */
+    template <class T, functor_enabler<T> = 0>
     std::vector<T> operator()(const std::initializer_list<T>& in) const
     {  
         std::vector<T> dummy(in);
@@ -215,16 +242,17 @@ public:
 
     /// Computes the derivatives of the expression
     /** 
-     * Using automated differentiation rules this method returns the derivatives up to a certain order, with respect
-     * to one input variable at a given point.
+     * Using audi::gdual, this method returns the Taylor expansion of the 
+     * d-CGP expression arounf the point \p in
      *
-     * \param[in] wrt index of the derivation variable (0,1 ..., m_n)
-     * \param[in] order the derivative order we want to compute
-     * \param[in] in std::vector containing the point coordinates we want the derivatives be computed at
+     * \param[in] in expansion point
+     * \param[in] order maximum order for the Taylor expansion (and hence the derivatives)
      *
-     * @returns std::vector<std::vector<double> > containing the value of f,f',f'' ..., at the point in
+     * @return an std::vector<audi::gdual> containing the Taylor expansion 
+     * derivatives can be extracted with retval.get_derivative({i,j,k, ... })
      *
-     * @throw std::invalid_argument
+     * @throw std::invalid_argument if the size of /p in is inconsistent with
+     * the d-CGP number of inputs.
      */
     std::vector<audi::gdual> differentiate(const std::vector<double>& in, unsigned int order) const
     {  
