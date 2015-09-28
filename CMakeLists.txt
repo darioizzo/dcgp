@@ -40,6 +40,8 @@ OPTION(BUILD_TESTS "Build test set." OFF)
 # Initialise (empty) list of libraries to link against.
 SET(MANDATORY_LIBRARIES "")
 
+
+
 # Some screen output
 MESSAGE(STATUS "CMake additional search path for libraries: ${CMAKE_LIBRARY_PATH}")
 
@@ -48,6 +50,11 @@ INCLUDE(cmake_modules/set_compiler_flags.cmake)
 
 # -----------------------------------------------------------------------------------
 # We start finding third party dependencies
+
+# 0 - Initial thread setup.
+FIND_PACKAGE(Threads REQUIRED)
+MESSAGE(STATUS "Thread library: ${CMAKE_THREAD_LIBS_INIT}")
+SET(MANDATORY_LIBRARIES ${MANDATORY_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
 
 # 1 - Boost Setup.
 IF(BUILD_TESTS)

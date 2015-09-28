@@ -117,22 +117,35 @@ inline unsigned int factorial(unsigned int n)
  */
 std::vector<audi::gdual> expression::differentiate(const std::vector<double>& in, unsigned int order) const
 {  
+    // We perform sanity checks
     if(in.size() != m_n)
     {
         throw std::invalid_argument("Input size is incompatible");
     }
-    std::vector<std::string> symbols;
+    // We define the initial variables as xi = xi + dxi (dxi symbolic)
     std::vector<audi::gdual> in_expansion;
     for (auto i = 0u; i < in.size(); ++i) {
-        in_expansion.emplace_back(in[i], "x"+std::to_string(i), (int)order);
-        symbols.emplace_back("dx"+std::to_string(i));
+        in_expansion.emplace_back(in[i], "x" + std::to_string(i), (int)order);
     } 
+
+    // We compute the CGP expression using gduals
     std::vector<audi::gdual> retval = (*this)(in_expansion);
-    for (auto &el : retval) {
-        el.extend_symbol_set(symbols);
+
+    // If needed, we force the symbol set to contain all dxi
+    // Needed as the CGP expression could be not using one of the inputs
+    std::vector<std::string> symbols;
+    for  (auto &expression : retval) {
+        if (expression.get_symbol_set_size() != m_n) {
+            if (symbols.size() == 0) {
+                for (auto i = 0u; i < in.size(); ++i) {
+                    symbols.emplace_back("dx"+std::to_string(i));
+                } 
+            }
+            expression.extend_symbol_set(symbols);
+        }
     }
-std::cout << symbols << std::endl;
-std::cout << "URCA" << retval[0].get_symbols() << std::endl;
+
+    // We return the result
     return retval;
 }
 

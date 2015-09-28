@@ -11,9 +11,9 @@ int main() {
     // We instantiate a d-CGP expression
     unsigned int n_inputs = 3;
     unsigned int n_outputs = 1;
-    unsigned int n_rows = 3;
-    unsigned int n_columns = 7;
-    unsigned int n_level_backs = 4;
+    unsigned int n_rows = 1;
+    unsigned int n_columns = 50;
+    unsigned int n_level_backs = 51;
     dcgp::expression simple(n_inputs,n_outputs,n_rows,n_columns,n_level_backs,basic_set());
 
     // We inspect it
@@ -24,10 +24,7 @@ int main() {
     std::cout << "Point is:" << in_num << std::endl;
     std::cout << "Numerical value = " << simple(in_num) << std::endl;
 
-
     std::vector<audi::gdual> jet_0 = simple.differentiate(in_num,1);
-    std::cout << jet_0[0] << std::endl;
-    std::cout << jet_0[0].get_symbols() << std::endl;
     std::cout << "Numerical values d/dx = " << jet_0[0].get_derivative({1,0,0}) << std::endl;
     std::cout << "Numerical values d/dy = " << jet_0[0].get_derivative({0,1,0}) << std::endl;
     std::cout << "Numerical values d/dz = " << jet_0[0].get_derivative({0,0,1}) << std::endl;
