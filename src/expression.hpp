@@ -144,6 +144,7 @@ public:
      * @return the number of inputs
     */
     unsigned int get_n() const {return m_n;}
+
     /// Gets the number of outputs
     /** 
      * Gets the number of outputs of the c_CGP expression
@@ -240,10 +241,10 @@ public:
     }
 
 
-    /// Computes the derivatives of the expression
+    /// Computes all derivatives of the expression up to order
     /** 
      * Using audi::gdual, this method returns the Taylor expansion of the 
-     * d-CGP expression arounf the point \p in
+     * d-CGP expression around the point \p in up to order \p order
      *
      * \param[in] in expansion point
      * \param[in] order maximum order for the Taylor expansion (and hence the derivatives)
@@ -254,7 +255,7 @@ public:
      * @throw std::invalid_argument if the size of /p in is inconsistent with
      * the d-CGP number of inputs.
      */
-    std::vector<audi::gdual> differentiate(const std::vector<double>& in, unsigned int order) const
+    std::vector<audi::gdual> derivatives(const std::vector<double>& in, unsigned int order) const
     {  
         // We perform sanity checks
         if(in.size() != m_n)
