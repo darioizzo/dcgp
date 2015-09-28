@@ -6,6 +6,9 @@ ENABLE_TESTING()
 # We set the minimum required cmake version
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8.7)
 
+# Allow CMAKE to find custom FindSOFTWARE.cmake fikes
+SET(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules")
+
 # Set default build type to "Release", change it in the GUI if you need to build with debug.
 IF(NOT CMAKE_BUILD_TYPE)
 	SET(CMAKE_BUILD_TYPE Release CACHE STRING
@@ -37,12 +40,23 @@ OPTION(BUILD_TESTS "Build test set." OFF)
 # Initialise (empty) list of libraries to link against.
 SET(MANDATORY_LIBRARIES "")
 
+
+
 # Some screen output
 MESSAGE(STATUS "CMake additional search path for libraries: ${CMAKE_LIBRARY_PATH}")
 
 # We set compiler specific flags
-INCLUDE(cmake_scripts/set_compiler_flags.cmake)
+INCLUDE(cmake_modules/set_compiler_flags.cmake)
 
+# -----------------------------------------------------------------------------------
+# We start finding third party dependencies
+
+# 0 - Initial thread setup.
+FIND_PACKAGE(Threads REQUIRED)
+MESSAGE(STATUS "Thread library: ${CMAKE_THREAD_LIBS_INIT}")
+SET(MANDATORY_LIBRARIES ${MANDATORY_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
+
+# 1 - Boost Setup.
 IF(BUILD_TESTS)
 	MESSAGE(STATUS "Linking unit tests to Boost.Test.")
 	SET(REQUIRED_BOOST_LIBS ${REQUIRED_BOOST_LIBS} unit_test_framework)
@@ -61,13 +75,49 @@ MESSAGE(STATUS "Boost include dirs: ${Boost_INCLUDE_DIRS}")
 MESSAGE(STATUS "Boost libraries: ${Boost_LIBRARIES}")
 INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
 
+# 2 - Piranha (sparse polynomial multiplication) Header only
+FIND_PACKAGE(Piranha REQUIRED)
+MESSAGE(STATUS "Piranha library found.")
+MESSAGE(STATUS "Piranha include dir is: ${Piranha_INCLUDE_DIR}")
+INCLUDE_DIRECTORIES(${Piranha_INCLUDE_DIR})
+
+# 3 - Audi (automated differentiation) Header only
+FIND_PACKAGE(Audi REQUIRED)
+MESSAGE(STATUS "Audi library found.")
+MESSAGE(STATUS "Audi include dir is: ${Piranha_INCLUDE_DIR}")
+INCLUDE_DIRECTORIES(${Audi_INCLUDE_DIR})
+
+# 2 - GMP setup (used by piranha)
+FIND_PACKAGE(GMP REQUIRED)
+MESSAGE(STATUS "GMP library found.")
+MESSAGE(STATUS "GMP include dir is: ${GMP_INCLUDE_DIR}")
+MESSAGE(STATUS "GMP library is: ${GMP_LIBRARIES}")
+INCLUDE_DIRECTORIES(${GMP_INCLUDE_DIR})
+
+# 3 - MPFR setup (used by piranha)
+FIND_PACKAGE(MPFR REQUIRED)
+MESSAGE(STATUS "MPFR library found.")
+MESSAGE(STATUS "MPFR include dir is: ${MPFR_INCLUDE_DIR}")
+MESSAGE(STATUS "MPFR library is: ${MPFR_LIBRARIES}")
+MESSAGE(STATUS "Checking MPFR version.")
+TRY_COMPILE(MPFR_VERSION_CHECK ${CMAKE_BINARY_DIR} "${CMAKE_SOURCE_DIR}/cmake_modules/mpfr_check_version.cpp"
+	CMAKE_FLAGS "-DINCLUDE_DIRECTORIES:STRING=${MPFR_INCLUDE_DIR};${GMP_INCLUDE_DIR}")
+IF(NOT MPFR_VERSION_CHECK)
+	MESSAGE(FATAL_ERROR "Unsupported MPFR version, please upgrade.")
+ENDIF(NOT MPFR_VERSION_CHECK)
+MESSAGE(STATUS "MPFR version is ok.")
+INCLUDE_DIRECTORIES(${MPFR_INCLUDE_DIR})
+
+# NOTE: MPFR should be linked in before GMP, that's why we link GMP here.
+SET(MANDATORY_LIBRARIES ${MANDATORY_LIBRARIES} ${MPFR_LIBRARIES} ${GMP_LIBRARIES})
+
 # Here we define the file list and make the static and dynamic library
 ADD_SUBDIRECTORY("${CMAKE_SOURCE_DIR}/src")
 
 # Build main and link it to static library.
 IF(BUILD_MAIN)
 	ADD_EXECUTABLE(main main.cpp)
-	TARGET_LINK_LIBRARIES(main dcgp_s ${MANDATORY_LIBRARIES})
+	TARGET_LINK_LIBRARIES(main ${MANDATORY_LIBRARIES})
 ENDIF(BUILD_MAIN)
 
 # Built perf test in release and tests in debug

@@ -1,20 +1,31 @@
 #include <iostream>
 #include <iomanip>
 #include <ctime>
-#include "src/dcgp.h"
+#include <random>
+#include "src/dcgp.hpp"
 
 
 int main() {
+    // Random seed
+    std::random_device rd;
+
     // We define the set of functions we want to use
     dcgp::function_set basic_set({"sum","diff","mul","div"});
 
     // We instantiate a d-CGP expression
     unsigned int n_inputs = 3;
-    unsigned int n_outputs = 2;
-    unsigned int n_rows = 3;
-    unsigned int n_columns = 7;
-    unsigned int n_level_backs = 4;
-    dcgp::expression simple(n_inputs,n_outputs,n_rows,n_columns,n_level_backs,basic_set());
+    unsigned int n_outputs = 1;
+    unsigned int n_rows = 1;
+    unsigned int n_columns = 50;
+    unsigned int n_level_backs = 51;
+    dcgp::expression simple(n_inputs,
+        n_outputs,
+        n_rows,
+        n_columns,
+        n_level_backs,
+        basic_set(),
+        rd()
+    );
 
     // We inspect it
     std::cout << simple << std::endl;
@@ -24,15 +35,17 @@ int main() {
     std::cout << "Point is:" << in_num << std::endl;
     std::cout << "Numerical value = " << simple(in_num) << std::endl;
 
-    std::vector<std::vector<double> > jet_0 = simple.differentiate(0,2,in_num);
-    std::cout << "Numerical values d^n/dx^n = " << jet_0 << std::endl;
+    std::vector<audi::gdual> jet_0 = simple.differentiate(in_num,2);
+    std::cout << "Numerical values d/dx = " << jet_0[0].get_derivative({1,0,0}) << std::endl;
+    std::cout << "Numerical values d/dy = " << jet_0[0].get_derivative({0,1,0}) << std::endl;
+    std::cout << "Numerical values d/dz = " << jet_0[0].get_derivative({0,0,1}) << std::endl;
 
-    std::vector<std::vector<double> > jet_1 = simple.differentiate(1,2,in_num);
-    std::cout << "Numerical values d^n/dy^n = " << jet_1 << std::endl;
-
-    std::vector<std::vector<double> > jet_2 = simple.differentiate(2,2,in_num);
-    std::cout << "Numerical values d^n/dz^n = " << jet_2 << std::endl;
-
+    std::cout << "Numerical values d^2/dx^2 = " << jet_0[0].get_derivative({2,0,0}) << std::endl;
+    std::cout << "Numerical values d^2/dy^2 = " << jet_0[0].get_derivative({0,2,0}) << std::endl;
+    std::cout << "Numerical values d^2/dz^2 = " << jet_0[0].get_derivative({0,0,2}) << std::endl;
+    std::cout << "Numerical values d^2/dxdy = " << jet_0[0].get_derivative({1,1,0}) << std::endl;
+    std::cout << "Numerical values d^2/dydz = " << jet_0[0].get_derivative({0,1,1}) << std::endl;
+    std::cout << "Numerical values d^2/dxdz = " << jet_0[0].get_derivative({1,0,1}) << std::endl;
     // We stream a symbolic representation of the expression
     std::vector<std::string> in_sym({"x","y","z"});
     std::cout << "Symbolic value = " << simple(in_sym) << std::endl;
@@ -44,23 +57,31 @@ int main() {
 
 d-CGP Expression:
     Number of inputs:       3
-    Number of outputs:      2
-    Number of rows:         2
-    Number of columns:      7
-    Number of levels-back allowed:  4
+    Number of outputs:      1
+    Number of rows:         1
+    Number of columns:      50
+    Number of levels-back allowed:  51
 
     Resulting lower bounds: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  ... ]
-    Resulting upper bounds: [3, 2, 2, 3, 2, 2, 3, 4, 4, 3, 4, 4, 3, 6, 6, 3, 6, 6, 3, 8,  ... ]
+    Resulting upper bounds: [3, 2, 2, 3, 3, 3, 3, 4, 4, 3, 5, 5, 3, 6, 6, 3, 7, 7, 3, 8,  ... ]
 
-    Current expression (encoded):   [1, 2, 0, 3, 1, 1, 0, 1, 3, 2, 0, 3, 2, 6, 2, 0, 3, 4, 1, 6,  ... ]
-    Active nodes:           [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 13]
-    Active genes:           [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,  ... ]
+    Current expression (encoded):   [1, 0, 2, 0, 1, 2, 3, 3, 0, 3, 1, 2, 3, 5, 4, 0, 5, 2, 3, 7,  ... ]
+    Active nodes:           [0, 1, 2, 3, 4, 5, 7]
+    Active genes:           [0, 1, 2, 3, 4, 5, 6, 7, 8, 12, 13, 14, 150]
+
+    Function set:           [sum, diff, mul, div]
 
 Point is:[2, 3, 4]
-Numerical value = [0.20000000000000001, 48]
-Numerical values d^n/dx^n = [[0.20000000000000001, 48], [0.23999999999999999, -16], [-0.30399999999999999, -24]]
-Numerical values d^n/dy^n = [[0.20000000000000001, 48], [-0.040000000000000001, 0], [0.016, 0]]
-Numerical values d^n/dz^n = [[0.20000000000000001, 48], [0.16, 52], [-0.064000000000000001, 36]]
-Symbolic value = [(((x*(z-x))-((z-x)+1))/(y+(z-x))), (((x*(z-x))*z)*((z-x)+1))]
+Numerical value = [-0.14285714285714285]
+Numerical values d/dx = 0.142857
+Numerical values d/dy = 0.0204082
+Numerical values d/dz = -0.0510204
+Numerical values d^2/dx^2 = -0.142857
+Numerical values d^2/dy^2 = -0.0058309
+Numerical values d^2/dz^2 = 0.0145773
+Numerical values d^2/dxdy = -0.0204082
+Numerical values d^2/dydz = 0.00437318
+Numerical values d^2/dxdz = 0.0153061
+Symbolic value = [(((x-z)/x)/(y+z))]
 
 **/

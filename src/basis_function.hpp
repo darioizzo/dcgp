@@ -5,12 +5,14 @@
 #include <string>
 #include <iostream>
 #include <vector>
-#include <audi.hpp>
+#include <audi/gdual.hpp>
 
 namespace dcgp {
 
-using my_fun_type = std::function<double(double, double)>;
-using d_my_fun_type = std::function<double(const std::vector<double> &, const std::vector<double> &)>;
+using namespace audi;
+
+using my_fun_type = std::function<double(const double&, const double&)>;
+using d_my_fun_type = std::function<gdual(const gdual&, const gdual&)>;
 using my_print_fun_type = std::function<std::string(std::string, std::string)>;
 
 /// Basis function
@@ -40,6 +42,16 @@ struct basis_function
     double operator()(double x, double y) const
     {
             return m_f(x,y);
+    }
+
+    /// Overload of operator(const gdual &, const gdual &)
+    /**
+    * Allows to call a dcgp::basis_function with the syntax f(const gdual & x, const gdual & y) and get
+    * the function Taylor expansion in x,y in return
+    */
+    gdual operator()(const gdual & x, const gdual & y) const
+    {
+            return m_df(x,y);
     }
 
     /// Overload of operator(std::string, std::string)

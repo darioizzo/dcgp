@@ -2,7 +2,7 @@
 #include <iomanip>
 #include <ctime>
 #include <random>
-#include "../src/dcgp.h"
+#include "../src/dcgp.hpp"
 
 
 bool mutate_a_lot(unsigned int in,

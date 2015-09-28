@@ -1,3 +1,6 @@
+#ifndef DCGP_STD_OVERLOADS_H
+#define DCGP_STD_OVERLOADS_H
+
 #include <boost/lexical_cast.hpp>
 
 #define DCGP_MAX_OUTPUT_LENGTH 20
@@ -31,4 +34,7 @@ namespace std
 
 	
 }
+
 #undef DCGP_MAX_OUTPUT_LENGTH
+
+#endif // DCGP_STD_OVERLOADS_H

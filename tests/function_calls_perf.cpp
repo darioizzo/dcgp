@@ -2,7 +2,7 @@
 #include <iomanip>
 #include <ctime>
 #include <random>
-#include "../src/dcgp.h"
+#include "../src/dcgp.hpp"
 
 
 double my_fun_call(const std::vector<double>& a, const std::vector<double>& b, unsigned int N)

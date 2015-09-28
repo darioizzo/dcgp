@@ -2,7 +2,7 @@
 #include <iomanip>
 #include <random>
 #include <cmath>
-#include "../src/dcgp.h"
+#include "../src/dcgp.hpp"
 
 bool test_fails(
         unsigned int n,

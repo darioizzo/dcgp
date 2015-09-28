@@ -1,12 +1,14 @@
 #include <cmath>
 #include <vector>
-#include <stdexcept>
 
-#include "fitness_functions.h"
-#include "expression.h"
-
+#include "expression.hpp"
 
 namespace dcgp {
+    enum fitness_type { 
+        ERROR_BASED,    // fitness is sum_ij [1 / (1 + err_ij)] 
+        HITS_BASED      // fitness is the number of components across the output data which are within a tolerance
+        };   
+
     /// Computes the error of the expression in approximating some given data
     double simple_data_fit(const expression& ex, 
         const std::vector<std::vector<double> >& in_des, 

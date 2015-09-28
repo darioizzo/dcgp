@@ -2,7 +2,7 @@
 #include <iomanip>
 #include <ctime>
 #include <random>
-#include "../src/dcgp.h"
+#include "../src/dcgp.hpp"
 
 
 double perform_evaluations(unsigned int in,

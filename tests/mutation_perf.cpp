@@ -2,7 +2,7 @@
 #include <iomanip>
 #include <ctime>
 #include <random>
-#include "../src/dcgp.h"
+#include "../src/dcgp.hpp"
 
 
 void perform_active_mutations(unsigned int in,
