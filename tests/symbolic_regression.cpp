@@ -52,49 +52,6 @@ double test_sr(
     return dcgp::symbolic_regression<double>(ex, in, out);
 }
 
-audi::gdual test_sr_gdual(
-        unsigned int n,
-        unsigned int m,
-        unsigned int r,
-        unsigned int c,
-        unsigned int l,
-        unsigned int N) // number of samples
-{
-   dcgp::function_set basic_set({"sum","diff","mul","div"});
-   dcgp::expression ex(n, m, r, c, l, basic_set(), 123);
-
-    // creates N data points 
-    std::default_random_engine re;
-    std::vector<std::vector<audi::gdouble> > in;
-    std::vector<std::vector<audi::gdouble> > out;
-    std::vector<double> in_point(n);
-    std::vector<double> out_point(m);
-    bool all_finite;
-    // assuming that mutating the program will sooner or later produce an expression that is not nan or inf in any of the points ...
-    // ... the following loop is not infinite
-    do 
-    {
-        ex.mutate_active();
-        all_finite=true;
-        in.clear();
-        out.clear();
-        for (auto i = 0u; i < N; ++i) {
-            for (auto j = 0u; j < n; ++j) {
-                in_point[j] = std::uniform_real_distribution<double>(-1, 1)(re);
-            }
-            out_point = ex(in_point);
-            for (auto k : out_point) {
-                if (!std::isfinite(k)) {
-                    all_finite = false;
-                }
-            }
-            in.emplace_back(in_point, "x" + std::to_string(i), 1);
-            out.emplace_back(out_point);
-        }
-    } while (!all_finite);
-    return dcgp::symbolic_regression<double>(ex, in, out);
-}
-
 using namespace dcgp;
 
 BOOST_AUTO_TEST_CASE(symbolic_regression_obj_fun)
