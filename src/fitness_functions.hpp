@@ -8,7 +8,7 @@ namespace dcgp {
 
 /// Computes the error of a d-CGP expression in approximating given data
 template <typename T1, typename T2>
-T1 symbolic_regression(const expression& ex, 
+T1 quadratic_error(const expression& ex, 
     const std::vector<std::vector<T1> >& in_des, 
     const std::vector<std::vector<T2> >& out_des) 
 {

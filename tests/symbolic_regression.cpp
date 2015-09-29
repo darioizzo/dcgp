@@ -49,7 +49,7 @@ double test_qe(
             out.push_back(out_point);
         }
     } while (!all_finite);
-    return dcgp::symbolic_regression<double>(ex, in, out);
+    return dcgp::quadratic_error<double>(ex, in, out);
 }
 
 audi::gdual test_qe2(
@@ -116,6 +116,6 @@ BOOST_AUTO_TEST_CASE(quadratic_error_obj_fun)
     // We test that a d-CGP expression computed on 20 points
     // has a zero quadratic error w.r.t. itself, and that the
     // derivative of the quadratic error is zero w.r.t. one of the inputs (a weight)
-    BOOST_CHECK_EQUAL(test_qe2(3,1,1,20,21,20), 0);
-    BOOST_CHECK_EQUAL(test_qe2(2,2,3,10,11,20), 0);
+    BOOST_CHECK_EQUAL(test_qe2(3,1,1,20,21,20), audi::gdual(0));
+    BOOST_CHECK_EQUAL(test_qe2(2,2,3,10,11,20), audi::gdual(0));
 }
