@@ -4,20 +4,17 @@
 #include "expression.hpp"
 
 namespace dcgp {
-    enum fitness_type { 
-        ERROR_BASED,    // fitness is sum_ij [1 / (1 + err_ij)] 
-        HITS_BASED      // fitness is the number of components across the output data which are within a tolerance
-        };   
 
-    /// Computes the error of the expression in approximating some given data
-    double simple_data_fit(const expression& ex, 
-        const std::vector<std::vector<double> >& in_des, 
-        const std::vector<std::vector<double> >& out_des, 
-        fitness_type type,
-        double tol) 
+    /// Computes the error of a d-CGP expression in approximating given data
+    template <typename T>
+    T symbolic_regression(const expression& ex, 
+        const std::vector<std::vector<T> >& in_des, 
+        const std::vector<std::vector<T> >& out_des) 
     {
-        double retval = 0.;
-        std::vector<double> out_real;
+        using namespace std;
+
+        T retval(0.);
+        std::vector<T> out_real;
 
         if (in_des.size() != out_des.size())
         {
@@ -27,26 +24,11 @@ namespace dcgp {
         for (auto i = 0u; i < in_des.size(); ++i)
         {
             out_real = ex(in_des[i]);
-            if (type == fitness_type::ERROR_BASED)
+            for (auto j = 0u; j < out_real.size(); ++j)
             {
-                for (auto j = 0u; j < out_real.size(); ++j)
-                {
-                    if (std::isfinite(out_real[j]))
-                    {
-                        retval += 1.0 / (1.0 + fabs(out_des[i][j] - out_real[j]));
-                    }
-                }
-            } else if (type == fitness_type::HITS_BASED){
-                for (auto j = 0u; j < out_real.size(); ++j)
-                {
-                    if (std::isfinite(out_real[j]))
-                    {
-                        if (fabs(out_des[i][j] - out_real[j]) < tol) retval += 1.0;
-                    }
-                }
+                retval += abs(out_des[i][j] - out_real[j]);
             }
         }
-
         return retval;
     }
-}
+} // namespace

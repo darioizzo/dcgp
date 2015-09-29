@@ -18,8 +18,8 @@ int main() {
     unsigned int n_inputs = 3;
     unsigned int n_outputs = 1;
     unsigned int n_rows = 1;
-    unsigned int n_columns = 50;
-    unsigned int n_level_backs = 51;
+    unsigned int n_columns = 20;
+    unsigned int n_level_backs = 21;
     dcgp::expression simple(n_inputs,
         n_outputs,
         n_rows,

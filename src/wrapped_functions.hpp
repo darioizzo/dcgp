@@ -7,7 +7,7 @@
 
 namespace dcgp {
 
-// SFINAE dust
+// SFINAE dust (to hide under the carpet)
 template <typename T>
 using f_enabler = typename std::enable_if<std::is_same<T,double>::value || std::is_same<T,audi::gdual>::value, int>::type;
 
