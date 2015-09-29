@@ -7,7 +7,7 @@
 
 #include "../src/dcgp.hpp"
 
-double test_sr(
+double test_qe(
         unsigned int n,
         unsigned int m,
         unsigned int r,
@@ -52,10 +52,70 @@ double test_sr(
     return dcgp::symbolic_regression<double>(ex, in, out);
 }
 
+audi::gdual test_qe2(
+        unsigned int n,
+        unsigned int m,
+        unsigned int r,
+        unsigned int c,
+        unsigned int l,
+        unsigned int N) // number of samples
+{
+   dcgp::function_set basic_set({"sum","diff","mul","div"});
+   dcgp::expression ex(n, m, r, c, l, basic_set(), 123);
+
+    // creates N data points 
+    std::default_random_engine re;
+    std::vector<std::vector<audi::gdual> > in;
+    std::vector<std::vector<audi::gdual> > out;
+    std::vector<audi::gdual> in_point(n);
+    std::vector<audi::gdual> out_point(m);
+    bool all_finite;
+    // assuming that mutating the program will sooner or later produce an expression that is not nan or inf in any of the points ...
+    // ... the following loop is not infinite
+    do 
+    {
+        ex.mutate_active();
+        all_finite=true;
+        in.clear();
+        out.clear();
+        for (auto i = 0u; i < N; ++i)
+        {
+            // We only define the first node as a weight and we compute the derivative of the objfun wrt this.
+            in_point[0] = audi::gdual(3, "w", 1); 
+            for (auto j = 1u; j < n; ++j) 
+            {
+                in_point[j] = audi::gdual(std::uniform_real_distribution<double>(-1, 1)(re));
+            }
+
+            // We then compute the expression
+            out_point = ex(in_point);          
+            //for (auto k : out_point) {
+            //    if (!std::isfinite(k)) {
+            //        all_finite = false;
+            //    }
+            //}
+            for (auto &k : out_point) {
+                k = audi::gdual(k.constant_cf());
+            }
+            in.push_back(in_point);
+            out.push_back(out_point);
+        }
+    } while (!all_finite);
+    return dcgp::quadratic_error<audi::gdual>(ex, in, out);
+}
+
 using namespace dcgp;
 
-BOOST_AUTO_TEST_CASE(symbolic_regression_obj_fun)
+BOOST_AUTO_TEST_CASE(quadratic_error_obj_fun)
 {
-    double res = test_sr(3,1,1,20,21,100);
-    std::cout << res << std::endl;
+    // We test that a d-CGP expression computed on 20 points
+    // has a zero quadratic error w.r.t. itself (its a perfect fit of itself)
+    BOOST_CHECK_EQUAL(test_qe(3,1,1,20,21,20), 0);
+    BOOST_CHECK_EQUAL(test_qe(2,2,3,10,11,20), 0);
+
+    // We test that a d-CGP expression computed on 20 points
+    // has a zero quadratic error w.r.t. itself, and that the
+    // derivative of the quadratic error is zero w.r.t. one of the inputs (a weight)
+    BOOST_CHECK_EQUAL(test_qe2(3,1,1,20,21,20), 0);
+    BOOST_CHECK_EQUAL(test_qe2(2,2,3,10,11,20), 0);
 }

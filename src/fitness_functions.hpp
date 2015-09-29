@@ -7,15 +7,15 @@
 namespace dcgp {
 
 /// Computes the error of a d-CGP expression in approximating given data
-template <typename T>
-T symbolic_regression(const expression& ex, 
-    const std::vector<std::vector<T> >& in_des, 
-    const std::vector<std::vector<T> >& out_des) 
+template <typename T1, typename T2>
+T1 symbolic_regression(const expression& ex, 
+    const std::vector<std::vector<T1> >& in_des, 
+    const std::vector<std::vector<T2> >& out_des) 
 {
     using namespace std;
 
-    T retval(0.);
-    std::vector<T> out_real;
+    T1 retval(0.);
+    std::vector<T1> out_real;
 
     if (in_des.size() != out_des.size())
     {
@@ -27,7 +27,7 @@ T symbolic_regression(const expression& ex,
         out_real = ex(in_des[i]);
         for (auto j = 0u; j < out_real.size(); ++j)
         {
-            retval += abs(out_des[i][j] - out_real[j]);
+            retval += (out_des[i][j] - out_real[j]) * (out_des[i][j] - out_real[j]);
         }
     }
     return retval;
