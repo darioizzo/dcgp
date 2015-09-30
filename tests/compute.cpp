@@ -1,5 +1,3 @@
-#include <iostream>
-#include <iomanip>
 #include <random>
 #define BOOST_TEST_MODULE dcgp_compute_test
 #include <boost/test/unit_test.hpp>
@@ -13,7 +11,6 @@ BOOST_AUTO_TEST_CASE(compute)
 {
     // Random seed
     std::random_device rd;
-
 
     function_set basic_set({"sum","diff","mul","div"});
 

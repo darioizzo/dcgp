@@ -161,19 +161,24 @@ public:
     */
     const std::vector<basis_function>& get_f() const {return m_f;}
 
-    /// Mutates one of the active genes
+    /// Mutates one genes
     /** 
-     * Mutates exactly one of the active genes within its allowed bounds. The mutation
-     * can affect a function gene or an input gene or an output gene.
+     * Mutates exactly one gene within its allowed bounds. 
+     *
+     * @param[in] idx index of the gene to me mutated
+     *
+     * @throw std::invalid_argument if \p idx is outside the chromosome 
      */
-    void mutate_active()
+    void mutate(unsigned int idx)
     {
-        unsigned int idx = std::uniform_int_distribution<unsigned int>(0, m_active_genes.size() - 1)(m_e);
-        idx = m_active_genes[idx];
-
-        if (m_lb[idx]<m_ub[idx]) // if only one value is allowed for the gene, then we will not do anything as mutation does not apply
+        if (idx >= m_x.size()) {
+            throw std::invalid_argument("idx of gene to be mutated is out of bounds");
+        }
+        // If only one value is allowed for the gene, (lb==ub),
+        // then we will not do anything as mutation does not apply
+        if (m_lb[idx]<m_ub[idx]) 
         {
-            unsigned int new_value = UINT_MAX;
+            unsigned int new_value;
             do 
             {
                 new_value = std::uniform_int_distribution<unsigned int>(m_lb[idx], m_ub[idx])(m_e);
@@ -181,6 +186,63 @@ public:
             m_x[idx] = new_value;
             update_active();
         }
+    }
+
+    /// Mutates one of the active genes
+    /** 
+     * Mutates exactly one of the active genes within its allowed bounds. 
+     * The mutation can affect a function gene, an input gene or an output gene.
+     */
+    void mutate_active()
+    {
+        unsigned int idx = std::uniform_int_distribution<unsigned int>(0, m_active_genes.size() - 1)(m_e);
+        idx = m_active_genes[idx];
+        mutate(idx);
+    }
+
+    /// Mutates one of the active function genes
+    /** 
+     * Mutates exactly one of the active function genes within its allowed bounds. 
+     */
+    void mutate_active_fgene()
+    {
+        // If no active function gene exists, do nothing
+        if (m_active_genes.size() > m_m) {
+            unsigned int idx = std::uniform_int_distribution<unsigned int>(0, m_active_genes.size() - 1 - m_m)(m_e);
+            idx = m_active_genes[idx] - (m_active_genes[idx] % 3);
+            mutate(idx);
+        }
+    }
+
+    /// Mutates one of the active connection genes
+    /** 
+     * Mutates exactly one of the active connection genes within its allowed bounds. 
+     */
+    void mutate_active_cgene()
+    {
+        // If no active function gene exists, do nothing
+        if (m_active_genes.size() > m_m) {
+            unsigned int idx = std::uniform_int_distribution<unsigned int>(0, m_active_genes.size() - 1 - m_m)(m_e);
+            idx = m_active_genes[idx] - (m_active_genes[idx] % 3) + std::uniform_int_distribution<unsigned int>(1, 2)(m_e);
+            mutate(idx);
+        }
+    }
+
+    /// Mutates one of the active output genes
+    /** 
+     * Mutates exactly one of the output genes within its allowed bounds. 
+     */
+    void mutate_ogene()
+    {
+        unsigned int idx;
+        if (m_m > 1) {
+            idx = std::uniform_int_distribution<unsigned int>(m_active_genes.size() - m_m, m_active_genes.size() - 1)(m_e);
+
+        } else {
+            idx = m_active_genes.size() - 1;
+        }
+        idx = m_active_genes[idx];
+        mutate(idx);
     }
 
     /// Evaluates the d-CGP expression
@@ -337,6 +399,7 @@ protected:
         return true;
     }
 
+    // Updates the list of active nodes
     void update_active()
     {
         assert(m_x.size() == m_lb.size());
@@ -412,7 +475,7 @@ private:
     std::vector<unsigned int> m_active_nodes;
     // active genes idx
     std::vector<unsigned int> m_active_genes;
-    // the actual expression encoded in a chromosome
+    // the encoded chromosome
     std::vector<unsigned int> m_x;
     // the random engine for the class
     std::default_random_engine m_e;

@@ -1,10 +1,6 @@
-#include <iostream>
-#include <iomanip>
-#include <random>
+#include <vector>
 #define BOOST_TEST_MODULE dcgp_differentiation_test
 #include <boost/test/unit_test.hpp>
-#include <cmath>
-#include <string>
 
 #include "../src/dcgp.hpp"
 
