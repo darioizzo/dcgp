@@ -11,6 +11,9 @@ namespace dcgp {
 template <typename T>
 using f_enabler = typename std::enable_if<std::is_same<T,double>::value || std::is_same<T,audi::gdual>::value, int>::type;
 
+// Allows to overload in templates std functions with audi functions
+using namespace std;
+using namespace audi;
 
 /*--------------------------------------------------------------------------
 *                                  BINARY FUNCTIONS
@@ -107,6 +110,32 @@ std::string print_my_div(const std::string& s1, const std::string& s2)
     return ("(" + s1 + "/" + s2 + ")");
 }
 
+template <typename T, f_enabler<T> = 0>
+T my_pow(const T &x, const T &y)
+{
+        return pow(abs(x), y);
+}
+
+std::string print_my_pow(const std::string& s1, const std::string& s2)
+{
+    if (s1 == "0" && s2 != "0")
+    {
+        return "0";
+    }
+    else if (s1 == "1")
+    {
+        return "1";
+    }
+    else if (s2 == "0" && s1 != "0")
+    {
+        return "1";
+    }
+    else if (s2 == "1")
+    {
+        return s1;
+    }
+    return ("abs(" + s1 + ")^(" + s2 + ")");
+}
 
 
 /*--------------------------------------------------------------------------
