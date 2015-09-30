@@ -137,6 +137,18 @@ std::string print_my_pow(const std::string& s1, const std::string& s2)
     return ("abs(" + s1 + ")^(" + s2 + ")");
 }
 
+// sigmoid function
+template <typename T, f_enabler<T> = 0>
+T my_sig(const T &t, const T &beta)
+{
+        return 1 / (1 + exp(-beta * t));
+}
+
+std::string print_my_sig(const std::string& s1, const std::string& s2)
+{
+    return "sig(" + s1 + "," + s2 + ")";
+}
+
 
 /*--------------------------------------------------------------------------
 *                                  UNARY FUNCTIONS

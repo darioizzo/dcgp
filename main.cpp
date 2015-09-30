@@ -12,7 +12,7 @@ int main() {
     std::random_device rd;
 
     // We define the set of functions we want to use
-    dcgp::function_set basic_set({"sum","diff","mul","div"});
+    dcgp::function_set basic_set({"sum","diff","mul", "sig"});
 
     // We instantiate a d-CGP expression
     unsigned int n_inputs = 3;
@@ -33,7 +33,7 @@ int main() {
     std::cout << simple << std::endl;
 
     // We compute the d-CGP expression in a point
-    std::vector<double> in_num({2.,3.,4.});
+    std::vector<double> in_num({0.3,-0.2,0.1});
     std::cout << "Point is:" << in_num << std::endl;
     std::cout << "Numerical value = " << simple(in_num) << std::endl;
 
