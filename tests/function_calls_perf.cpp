@@ -6,37 +6,13 @@
 
 #include "../src/wrapped_functions.hpp"
 #include "../src/basis_function.hpp" //my_fun_type
+#include "../src/function_set.hpp"
+#include "../src/expression.hpp"
 
-/*
-double my_fun_call(const std::vector<double>& a, const std::vector<double>& b, unsigned int N)
-{
-    clock_t begin = clock();
-    for (auto i = 0u; i < N; ++i)
-    {
-        dcgp::my_sum(a[i],b[i]);
-    }
 
-    clock_t end = clock();
-    double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-    return elapsed_secs;
-}
+// We test the speed of evauating sig(a+b) calling 
+// the function directly, via an std::function or a minimal d-CGP expression 
 
-double my_fun_call_indirect(const std::vector<double>& a, const std::vector<double>& b, unsigned int N)
-{
-    dcgp::function_set sum({"sum"});
-    dcgp::expression ex(1, 1, 3, 3, 3, sum(), 123);
-    clock_t begin = clock();
-    for (auto i = 0u; i < N; ++i)
-    {
-        ex.get_f()[0].m_f(a[i],b[i]);
-    }
-
-    clock_t end = clock();
-    double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-    return elapsed_secs;
-} */
-
-/// We test the speed of evauating sum(a+b) calling my_fun_type and my_d_fun_type 
 BOOST_AUTO_TEST_CASE(function_calls)
 {
     // Number of evaluations to try
@@ -47,14 +23,13 @@ BOOST_AUTO_TEST_CASE(function_calls)
 
     // Generating the data set
     std::vector<double> a(N), b(N);
-    std::vector<std::vector<double> > a_vector(N), b_vector(N);
-
+    std::vector<std::vector<double> > ab_vector(N);
 
     for (auto j = 0u; j < N; ++j)
     {
         a[j] = std::uniform_real_distribution<double>(-1, 1)(re);
         b[j] = std::uniform_real_distribution<double>(-1, 1)(re);
-
+        ab_vector[j] = {a[j], b[j]};
     }
 
     // Starting the test
@@ -63,7 +38,7 @@ BOOST_AUTO_TEST_CASE(function_calls)
         boost::timer::auto_cpu_timer t; // Sets up a timer
         for (auto i = 0u; i < N; ++i)
         {
-            dcgp::my_sig(a[i],b[i]);
+            dcgp::my_sig<double>(a[i],b[i]);
         }
     }
 
@@ -74,6 +49,18 @@ BOOST_AUTO_TEST_CASE(function_calls)
         for (auto i = 0u; i < N; ++i)
         {
             my_sig2(a[i],b[i]);
+        }
+    }
+
+    std::cout << "Testing " << N << " std::function calls to the sigmoid function via dcgp::expression" << std::endl;
+    dcgp::function_set sigmoid_set({"sig"});
+    dcgp::expression ex(2,1,1,1,1,sigmoid_set(),0);
+    ex.set({0,0,1,2});
+    {
+        boost::timer::auto_cpu_timer t; // Sets up a timer
+        for (auto i = 0u; i < N; ++i)
+        {   
+            ex(ab_vector[i]);
         }
     }
 }

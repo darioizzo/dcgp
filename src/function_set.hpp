@@ -2,6 +2,8 @@
 #define DCGP_FUNCTION_SET_H
 
 #include <vector>
+#include <audi/gdual.hpp>
+
 #include "basis_function.hpp"
 #include "wrapped_functions.hpp"
 

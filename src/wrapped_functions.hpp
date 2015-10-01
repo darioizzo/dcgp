@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <audi/gdual.hpp>
+#include <audi/functions.hpp>
 
 namespace dcgp {
 

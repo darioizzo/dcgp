@@ -26,4 +26,5 @@ ADD_DCGP_TESTCASE(differentiation)
 ADD_DCGP_TESTCASE(symbolic_regression)
 
 ADD_DCGP_PERFORMANCE_TESTCASE(function_calls)
+ADD_DCGP_PERFORMANCE_TESTCASE(mutation)
 
