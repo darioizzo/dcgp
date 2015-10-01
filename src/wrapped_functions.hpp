@@ -138,7 +138,7 @@ std::string print_my_pow(const std::string& s1, const std::string& s2)
     return ("abs(" + s1 + ")^(" + s2 + ")");
 }
 
-// sigmoid function
+// sigmoid function: 1 / (1 + exp(- a * b))
 template <typename T, f_enabler<T> = 0>
 T my_sig(const T &t, const T &beta)
 {
@@ -147,7 +147,35 @@ T my_sig(const T &t, const T &beta)
 
 std::string print_my_sig(const std::string& s1, const std::string& s2)
 {
+    if (s1 == "0" || s2 == "0")
+    {
+        return "0.5";
+    }
     return "sig(" + s1 + "," + s2 + ")";
+}
+
+// square root
+template <typename T, f_enabler<T> = 0>
+T my_sqrt(const T &a, const T &b)
+{
+        return sqrt(abs(a + b));
+}
+
+std::string print_my_sqrt(const std::string& s1, const std::string& s2)
+{
+    if (s2 == "0" && s1 != "0")
+    {
+        return "sqrt(" + s1 + ")";
+    }
+    if (s1 == "0" && s2 != "0")
+    {
+        return "sqrt(" + s2 + ")";
+    }
+    if (s1 == "0" && s2 == "0")
+    {
+        return "0";
+    }
+    return "sqrt(" + s1 + " + " + s2 + ")";
 }
 
 

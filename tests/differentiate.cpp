@@ -2,7 +2,7 @@
 #define BOOST_TEST_MODULE dcgp_differentiation_test
 #include <boost/test/unit_test.hpp>
 
-#include "../src/dcgp.hpp"
+#include "../src/exprssion.hpp"
 
 using namespace dcgp;
 

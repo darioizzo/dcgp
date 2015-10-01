@@ -16,7 +16,7 @@
 BOOST_AUTO_TEST_CASE(function_calls)
 {
     // Number of evaluations to try
-    unsigned int N = 10000000;
+    unsigned int N = 100000;
     // Random generators
     std::random_device rd;
     std::default_random_engine re(rd());
