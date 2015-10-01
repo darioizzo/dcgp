@@ -27,6 +27,9 @@ OPTION(BUILD_MAIN "Build 'main.cpp'." ON)
 # Build option: enable test set.
 OPTION(BUILD_TESTS "Build test set." OFF)
 
+# Build option: build examples
+OPTION(BUILD_EXAMPLES "Build examples." OFF)
+
 # Setting OS specific cmake variables
 # 1 - OSX
 #IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
@@ -120,10 +123,15 @@ IF(BUILD_MAIN)
 	TARGET_LINK_LIBRARIES(main ${MANDATORY_LIBRARIES})
 ENDIF(BUILD_MAIN)
 
-# Built perf test in release and tests in debug
+# Build perf test in release and tests in debug
 IF(BUILD_TESTS)
 	ADD_SUBDIRECTORY("${CMAKE_SOURCE_DIR}/tests")
 ENDIF(BUILD_TESTS)
+
+# Build pexamples
+IF(BUILD_EXAMPLES)
+	ADD_SUBDIRECTORY("${CMAKE_SOURCE_DIR}/examples")
+ENDIF(BUILD_EXAMPLES)
 
 
 

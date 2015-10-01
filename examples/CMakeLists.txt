@@ -1,0 +1,2 @@
+ADD_EXECUTABLE(evolve_koza_quintic evolve_koza_quintic.cpp)
+TARGET_LINK_LIBRARIES(evolve_koza_quintic ${MANDATORY_LIBRARIES})

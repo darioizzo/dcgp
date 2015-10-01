@@ -48,7 +48,7 @@ void perform_evaluations(unsigned int in,
 /// the code stability when large number of mutations are performed
 BOOST_AUTO_TEST_CASE(evaluation_speed)
 {
-    unsigned int N = 100000;
+    unsigned int N = 1000;
 
     dcgp::function_set function_set1({"sum","diff","mul","div"});
     std::cout << "Function set " << function_set1() << std::endl;
@@ -58,7 +58,6 @@ BOOST_AUTO_TEST_CASE(evaluation_speed)
     perform_evaluations(1,1,1,100,101, N, function_set1());
     perform_evaluations(1,1,2,100,101, N, function_set1());
     perform_evaluations(1,1,3,100,101, N, function_set1());
-
 
     dcgp::function_set function_set2({"sum","mul","sig"});
     std::cout << std::endl << "Function set " << function_set2() << std::endl;

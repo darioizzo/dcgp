@@ -108,6 +108,10 @@ std::string print_my_div(const std::string& s1, const std::string& s2)
     {
         return "1";
     }
+    else if (s2 == "1")
+    {
+        return "s1";
+    }
     return ("(" + s1 + "/" + s2 + ")");
 }
 
