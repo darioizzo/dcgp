@@ -3,7 +3,10 @@
 #include <random>
 #include <cmath>
 
-#include "../src/dcgp.hpp"
+#include "../src/expression.hpp"
+#include "../src/function_set.hpp"
+#include "../src/expression.hpp"
+#include "../src/fitness_functions.hpp"
 
 bool kq(
         unsigned int r,
