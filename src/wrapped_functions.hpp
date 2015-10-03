@@ -187,6 +187,17 @@ std::string print_my_sqrt(const std::string& s1, const std::string& s2)
 *                                  UNARY FUNCTIONS
 *------------------------------------------------------------------------**/
 
+// sine of the first argument
+template <typename T, f_enabler<T> = 0>
+T my_sin(const T &a, const T &b)
+{
+        return sin(a);
+}
+
+std::string print_my_sin(const std::string& s1, const std::string& s2)
+{
+    return "sin(" + s1 + ")";
+}
 
 } // dcgp namespace ends
 

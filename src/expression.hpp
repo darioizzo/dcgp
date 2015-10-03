@@ -188,16 +188,52 @@ public:
         }
     }
 
+    /// Mutates multiple genes at once
+    /** 
+     * Mutates multiple genes within their allowed bounds. 
+     *
+     * @param[in] idxs vector of index of the gene to me mutated
+     *
+     * @throw std::invalid_argument if \p idx is outside the chromosome 
+     */
+    void mutate(std::vector<unsigned int> idxs)
+    {
+    bool flag = false;
+    for (auto i = 0; i < idxs.size(); ++i) {
+        if (idxs[i] >= m_x.size()) {
+            throw std::invalid_argument("idx of gene to be mutated is out of bounds");
+        }
+        // If only one value is allowed for the gene, (lb==ub),
+        // then we will not do anything as mutation does not apply
+        if (m_lb[idxs[i]]<m_ub[idxs[i]]) 
+        {
+            unsigned int new_value;
+            do 
+            {
+                new_value = std::uniform_int_distribution<unsigned int>(m_lb[idxs[i]], m_ub[idxs[i]])(m_e);
+            } while (new_value == m_x[idxs[i]]);
+            m_x[idxs[i]] = new_value;
+            flag = true;
+        }
+    }
+    if (flag) update_active();
+    }
+
     /// Mutates one of the active genes
     /** 
-     * Mutates exactly one of the active genes within its allowed bounds. 
+     * Mutates \P N active genes within its allowed bounds. 
      * The mutation can affect a function gene, an input gene or an output gene.
+     *
+     * @param[in] N Number of active genes to be mutated
+     *
      */
-    void mutate_active()
+    void mutate_active(unsigned int N = 1)
     {
-        unsigned int idx = std::uniform_int_distribution<unsigned int>(0, m_active_genes.size() - 1)(m_e);
-        idx = m_active_genes[idx];
-        mutate(idx);
+        for (auto i = 0; i < N; ++i) {
+            unsigned int idx = std::uniform_int_distribution<unsigned int>(0, m_active_genes.size() - 1)(m_e);
+            idx = m_active_genes[idx];
+            mutate(idx);
+        }
     }
 
     /// Mutates one of the active function genes

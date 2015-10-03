@@ -1,2 +1,7 @@
-ADD_EXECUTABLE(evolve_koza_quintic evolve_koza_quintic.cpp)
-TARGET_LINK_LIBRARIES(evolve_koza_quintic ${MANDATORY_LIBRARIES})
+MACRO(ADD_EXAMPLE arg1)
+	ADD_EXECUTABLE(${arg1} ${arg1}.cpp)
+	TARGET_LINK_LIBRARIES(${arg1} ${MANDATORY_LIBRARIES})
+ENDMACRO(ADD_EXAMPLE)
+
+ADD_EXAMPLE(supervised_learning_koza_quintic)
+ADD_EXAMPLE(supervised_learning_data_set)

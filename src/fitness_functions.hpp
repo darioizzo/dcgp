@@ -30,7 +30,7 @@ T1 quadratic_error(const expression& ex,
             retval += (out_des[i][j] - out_real[j]) * (out_des[i][j] - out_real[j]);
         }
     }
-    return retval;
+    return retval / out_des.size();
 }
 
 } // namespace

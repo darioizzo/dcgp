@@ -42,6 +42,8 @@ public:
             m_functions.emplace_back(my_sig<double>,my_sig<audi::gdual>,print_my_sig, function_name);
         else if (function_name=="sqrt")
             m_functions.emplace_back(my_sqrt<double>,my_sqrt<audi::gdual>,print_my_sqrt, function_name);
+        else if (function_name=="sin")
+            m_functions.emplace_back(my_sin<double>,my_sin<audi::gdual>,print_my_sin, function_name);
         else 
             throw std::invalid_argument("Unimplemented function " + function_name);
     };
