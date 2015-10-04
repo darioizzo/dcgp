@@ -12,7 +12,7 @@ Several and tested dependencies are necessary to succesfully use d-CGP
  * Piranha, headers only library - (git clone https://github.com/bluescarni/piranha.git)
  * Boost, headers only
 
-### Comparison to the CGP-Library by Andrew Turner
+### Comparison to the CGP-Library
 If all below statements are true:
  * You do not care about knowing derivatives of your encoded function
  * You do not care about run-time capabilities
@@ -20,4 +20,4 @@ If all below statements are true:
  * You do not care about the possibility of defining your kernel functions as complex functors (e.g. CGP expressions.)
  * You do not care about thread-safety
 
-then you should consider using, instead, Andrew Turner's CGP-Library (http://www.cgplibrary.co.uk/files2/About-txt.html) which is 1.5-2.5 times faster.
+then you should consider using, instead, Andrew Turner's CGP-Library (http://www.cgplibrary.co.uk/files2/About-txt.html) which is, roughly, twice as fast to compute a CGP expression.
