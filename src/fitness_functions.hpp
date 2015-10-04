@@ -1,6 +1,7 @@
 #include <cmath>
 #include <vector>
 #include <audi/functions.hpp>
+#include <audi/gdual.hpp>
 
 #include "expression.hpp"
 
@@ -30,7 +31,7 @@ T1 quadratic_error(const expression& ex,
             retval += (out_des[i][j] - out_real[j]) * (out_des[i][j] - out_real[j]);
         }
     }
-    return retval / out_des.size();
+    return retval / (int)out_des.size();
 }
 
 } // namespace
