@@ -19,4 +19,5 @@ If all below statements are true:
  * You do not care about the Python module
  * You do not care about the possibility of defining your kernel functions as complex functors (e.g. CGP expressions.)
  * You do not care about thread-safety
- * then you should consider using, instead, Andrew Turner's CGP-Library which is 1.5-2.5 times faster.
+
+then you should consider using, instead, Andrew Turner's CGP-Library (http://www.cgplibrary.co.uk/files2/About-txt.html) which is 1.5-2.5 times faster.
