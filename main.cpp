@@ -38,7 +38,7 @@ int main() {
     std::cout << "Numerical value = " << simple(in_num) << std::endl;
 
     // We compute the d-CGP jet of derivatives up to order 2
-    std::vector<audi::gdual> jet = simple.derivatives(in_num,2);
+    std::vector<audi::gdual> jet = simple.taylor(in_num,2);
     std::cout << "Numerical values d/dx = " << jet[0].get_derivative({1,0,0}) << std::endl;
     std::cout << "Numerical values d/dy = " << jet[0].get_derivative({0,1,0}) << std::endl;
     std::cout << "Numerical values d/dz = " << jet[0].get_derivative({0,0,1}) << std::endl;

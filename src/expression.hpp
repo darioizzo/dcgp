@@ -339,7 +339,7 @@ public:
     }
 
 
-    /// Computes all derivatives of the expression up to order
+    /// Computes taylor expansion up to order
     /** 
      * Using audi::gdual, this method returns the Taylor expansion of the 
      * d-CGP expression around the point \p in up to order \p order
@@ -353,7 +353,7 @@ public:
      * @throw std::invalid_argument if the size of /p in is inconsistent with
      * the d-CGP number of inputs.
      */
-    std::vector<audi::gdual> derivatives(const std::vector<double>& in, unsigned int order) const
+    std::vector<audi::gdual> taylor(const std::vector<double>& in, unsigned int order) const
     {  
         // We perform sanity checks
         if(in.size() != m_n)

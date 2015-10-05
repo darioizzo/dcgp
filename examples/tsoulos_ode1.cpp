@@ -10,12 +10,12 @@ double fitness(const dcgp::expression& ex, const std::vector<std::vector<double>
 {
     double retval = 0;
     for (auto i = 0u; i < in.size(); ++i) {
-        auto T = ex.derivatives(in[i], 1);      // We compute all the derivatives up to order one
+        auto T = ex.taylor(in[i], 1);                   // We compute all the derivatives up to order one
         double y = T[0].get_derivative({0});
         double dy = T[0].get_derivative({1});
         double x = in[i][0];
         double ode1 = (2 * x - y) / x;          
-        retval += (ode1 - dy) * (ode1 - dy);    // We compute the quadratic error 
+        retval += (ode1 - dy) * (ode1 - dy);            // We compute the quadratic error 
     }
     return retval;
 }

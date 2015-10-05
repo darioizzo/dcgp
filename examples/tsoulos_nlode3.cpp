@@ -10,7 +10,7 @@ double fitness(const dcgp::expression& ex, const std::vector<std::vector<double>
 {
     double retval = 0;
     for (auto i = 0u; i < in.size(); ++i) {
-        auto T = ex.derivatives(in[i], 2);              // We compute all the derivatives up to order two
+        auto T = ex.taylor(in[i], 2);                   // We compute all the derivatives up to order two
         double dy = T[0].get_derivative({1});
         double ddy = T[0].get_derivative({2});
         double x = in[i][0];
