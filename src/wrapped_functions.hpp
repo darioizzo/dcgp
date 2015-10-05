@@ -201,6 +201,24 @@ std::string print_my_sin(const std::string& s1, const std::string& s2)
     return "sin(" + s1 + ")";
 }
 
+// sine of the first argument
+template <typename T, f_enabler<T> = 0>
+T my_log(const T &a, const T &b)
+{
+    (void)b;
+    return log(a);
+}
+
+std::string print_my_log(const std::string& s1, const std::string& s2)
+{
+    (void)s2;
+    if (s1 == "1")
+    {
+        return "0";
+    }
+    return "log(" + s1 + ")";
+}
+
 } // dcgp namespace ends
 
 #endif // DCGP_WRAPPED_FUNCTIONS_H
