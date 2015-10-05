@@ -43,7 +43,7 @@ bool kq(
 
     // 2) we use a simple ES(1+4) to evolve an expression that represents our target. 
     // Mutation only mutates 2 active genes
-    es_params params{4, "active", 2};
+    es_params params{4, "active", 2, 0};
     es(in, out, ex, params);
 
     std::cout << "Final expression: " << ex(in_sym) << std::endl;

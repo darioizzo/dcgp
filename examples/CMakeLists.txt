@@ -5,3 +5,4 @@ ENDMACRO(ADD_EXAMPLE)
 
 ADD_EXAMPLE(supervised_learning_koza_quintic)
 ADD_EXAMPLE(supervised_learning_data_set)
+ADD_EXAMPLE(tsoulos_ode1)

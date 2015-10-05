@@ -1,0 +1,75 @@
+#include <iostream>
+
+#include "../src/expression.hpp"
+#include "../src/function_set.hpp"
+
+// Here we solve the differential equation dy = (2x - y) / x from Tsoulos paper
+// Tsoulos and Lagaris: "Solving Differential equations with genetic programming"
+
+double fitness(const dcgp::expression& ex, const std::vector<std::vector<double> >& in)
+{
+    double retval = 0;
+    for (auto i = 0u; i < in.size(); ++i) {
+        auto T = ex.derivatives(in[i], 1);      // We compute all the derivatives up to order one
+        double y = T[0].get_derivative({0});
+        double dy = T[0].get_derivative({1});
+        double x = in[i][0];
+        double ode1 = (2 * x - y) / x;          
+        retval += (ode1 - dy) * (ode1 - dy);    // We compute the quadratic error 
+    }
+    return retval;
+}
+
+int main () {
+    // Random seed
+    std::random_device rd;
+
+    // Function set
+    dcgp::function_set basic_set({"sum", "diff", "mul", "div"});
+
+    // d-CGP expression
+    dcgp::expression ex(1, 1, 1, 15, 16, basic_set(), rd());
+
+    // Symbols
+    std::vector<std::string> in_sym({"x"});
+
+    // We create the grid over x
+    std::vector<double> dumb(1);
+    std::vector<std::vector<double> > in(10, dumb);
+    for (auto i = 0u; i < in.size(); ++i) {
+        in[i][0] = 0.1 + 0.9 / (in.size() - 1) * i; // 0.1, .., 1
+    }
+
+    // We run the (1-4)-ES
+    double best_fit = 1e32;
+    std::vector<double> newfits(4, 0.);
+    std::vector<std::vector<unsigned int> > newchromosomes(4);
+    std::vector<unsigned int> best_chromosome(ex.get());
+    unsigned int gen = 0;
+
+    do
+    {
+        gen++;
+        for (auto i = 0u; i < newfits.size(); ++i) {
+            ex.set(best_chromosome);
+            ex.mutate_active(2);
+            double fitness_ic = ex(std::vector<double>({1}))[0] - 3;
+            newfits[i] = fitness(ex, in) + fitness_ic * fitness_ic;
+            newchromosomes[i] = ex.get();
+        }
+
+        for (auto i = 0u; i < newfits.size(); ++i) {
+            if (newfits[i] <= best_fit) {
+                if (newfits[i] != best_fit) {
+                    std::cout << "New best found: gen: " << std::setw(7) << gen << "\t value: " << newfits[i] << std::endl;
+                    //std::cout << "Expression: " << ex(in_sym) << std::endl;
+                }
+                best_fit = newfits[i];
+                best_chromosome = newchromosomes[i];
+                ex.set(best_chromosome);
+            }
+        }
+    } while (best_fit > 1e-3 && gen < 10000);
+    std::cout << "Number of generations: " << gen << std::endl;
+    std::cout << "Expression: " << ex(in_sym) << std::endl;
+}

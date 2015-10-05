@@ -33,14 +33,14 @@ bool read_data (std::vector<std::vector<double> >& in, std::vector<std::vector<d
         in.clear(); in.resize(N);
         out.clear(); out.resize(N);
 
-        for (auto i = 0; i < N; ++i) {
-            for (auto j = 0; j < n; ++j) {
+        for (auto i = 0u; i < N; ++i) {
+            for (auto j = 0u; j < n; ++j) {
                 getline (myfile,line,',');
                 istringstream iss(line);
                 vector<string> tokens2{istream_iterator<string>{iss}, istream_iterator<string>{}};
                 in[i].push_back(stod(tokens2[0]));
             }
-            for (auto j = 0; j < m; ++j) {
+            for (auto j = 0u; j < m; ++j) {
                 getline (myfile,line,',');
                 istringstream iss(line);
                 vector<string> tokens2{istream_iterator<string>{iss}, istream_iterator<string>{}};

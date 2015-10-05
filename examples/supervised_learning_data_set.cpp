@@ -33,7 +33,7 @@ int main () {
 
     // We use a simple ES(1+4) to evolve an expression that represents our target. 
     // Mutation only mutates 2 active genes
-    es_params params{4, "active", 2};
+    es_params params{4, "active", 2, 0};
     es(in, out, ex, params);
 
     // We print out the final expression

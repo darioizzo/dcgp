@@ -199,7 +199,7 @@ public:
     void mutate(std::vector<unsigned int> idxs)
     {
     bool flag = false;
-    for (auto i = 0; i < idxs.size(); ++i) {
+    for (auto i = 0u; i < idxs.size(); ++i) {
         if (idxs[i] >= m_x.size()) {
             throw std::invalid_argument("idx of gene to be mutated is out of bounds");
         }
@@ -229,7 +229,7 @@ public:
      */
     void mutate_active(unsigned int N = 1)
     {
-        for (auto i = 0; i < N; ++i) {
+        for (auto i = 0u; i < N; ++i) {
             unsigned int idx = std::uniform_int_distribution<unsigned int>(0, m_active_genes.size() - 1)(m_e);
             idx = m_active_genes[idx];
             mutate(idx);

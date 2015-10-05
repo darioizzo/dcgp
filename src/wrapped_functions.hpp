@@ -110,7 +110,7 @@ std::string print_my_div(const std::string& s1, const std::string& s2)
     }
     else if (s2 == "1")
     {
-        return "s1";
+        return s1;
     }
     return ("(" + s1 + "/" + s2 + ")");
 }
@@ -191,11 +191,13 @@ std::string print_my_sqrt(const std::string& s1, const std::string& s2)
 template <typename T, f_enabler<T> = 0>
 T my_sin(const T &a, const T &b)
 {
-        return sin(a);
+    (void)b;
+    return sin(a);
 }
 
 std::string print_my_sin(const std::string& s1, const std::string& s2)
 {
+    (void)s2;
     return "sin(" + s1 + ")";
 }
 
