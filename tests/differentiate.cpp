@@ -10,7 +10,7 @@ using namespace dcgp;
 BOOST_AUTO_TEST_CASE(differentiation_basic_set)
 {
     function_set basic_set({"sum","diff","mul","div"});
-    expression ex(3, 1, 1, 20, 21, basic_set(), 0);
+    expression ex(3, 1, 1, 20, 21, 2, basic_set(), 0);
 
     std::vector<double> in({1, 1, 1});
     std::vector<double> in2({-1, 1, 1});

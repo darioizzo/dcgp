@@ -12,6 +12,7 @@ bool kq(
         unsigned int r,
         unsigned int c,
         unsigned int l,
+        unsigned int a,
         unsigned int N) // number of samples
 {
     // Random seed
@@ -21,7 +22,7 @@ bool kq(
     dcgp::function_set basic_set({"sum", "diff", "mul", "div"});
 
     // d-CGP expression
-    dcgp::expression ex(1, 1, r, c, l, basic_set(), rd());
+    dcgp::expression ex(1, 1, r, c, l, a, basic_set(), rd());
 
     // Symbols
     std::vector<std::string> in_sym({"x"});
@@ -52,6 +53,6 @@ bool kq(
 
 
 int main() {
-    return kq(1,15,16,10);
+    return kq(1,15,16,2,10);
 }
 

@@ -17,7 +17,7 @@ BOOST_AUTO_TEST_CASE(mutate)
     // Number of random trials
     unsigned int N = 100;
     // A d-CGP expression
-    expression ex(3, 3, 2, 20, 21, basic_set(), rd());
+    expression ex(3, 3, 2, 20, 21, 2, basic_set(), rd());
 
     // We test mutate(idx). Does the idx gene change? Do all other stay the same?
     for (auto i = 0u; i < N; ++i)
@@ -37,7 +37,7 @@ BOOST_AUTO_TEST_CASE(mutate)
 
     // We test mutate_active. Was the mutated gene active?
     {
-        expression ex(3, 3, 2, 20, 21, basic_set(), rd());
+        expression ex(3, 3, 2, 20, 21, 2, basic_set(), rd());
         for (auto i = 0u; i < N; ++i)
         {
             std::vector<unsigned int> x = ex.get();
@@ -51,7 +51,7 @@ BOOST_AUTO_TEST_CASE(mutate)
 
     // We test mutate_active_fgene. Was the mutated gene active? Was it a function gene?
     {
-        expression ex(3, 3, 2, 20, 21, basic_set(), rd());
+        expression ex(3, 3, 2, 20, 21, 2, basic_set(), rd());
         for (auto i = 0u; i < N; ++i)
         {
             std::vector<unsigned int> x = ex.get();
@@ -69,7 +69,7 @@ BOOST_AUTO_TEST_CASE(mutate)
 
     // We test mutate_active_cgene. Was the mutated gene active? Was it a connection gene?
     {
-        expression ex(3, 3, 2, 20, 21, basic_set(), rd());
+        expression ex(3, 3, 2, 20, 21, 2, basic_set(), rd());
         for (auto i = 0u; i < N; ++i)
         {
             std::vector<unsigned int> x = ex.get();
@@ -87,7 +87,7 @@ BOOST_AUTO_TEST_CASE(mutate)
 
     // We test mutate_ogene. Was the mutated gene active? Was it an output gene?
     {
-        expression ex(3, 3, 2, 20, 21, basic_set(), rd());
+        expression ex(3, 3, 2, 20, 21, 2, basic_set(), rd());
         for (auto i = 0u; i < N; ++i)
         {
             std::vector<unsigned int> x = ex.get();

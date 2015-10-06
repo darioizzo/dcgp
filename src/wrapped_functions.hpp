@@ -20,203 +20,126 @@ using namespace audi;
 *                                  BINARY FUNCTIONS
 *------------------------------------------------------------------------**/
 template <typename T, f_enabler<T> = 0>
-T my_sum(const T &x, const T &y)
+T my_sum(const std::vector<T>& in)
 {
-        return x + y;
+    T retval(in[0]);
+    for (auto i = 1u; i < in.size(); ++i) {
+        retval+=in[i];
+    }
+    return retval;
 }
 
-std::string print_my_sum(const std::string& s1, const std::string& s2)
+std::string print_my_sum(const std::vector<std::string>& in)
 {
-    if (s1 == s2) 
-    {
-        return "(2*"+s1+")";
+    std::string retval(in[0]);
+    for (auto i = 1u; i < in.size(); ++i) {
+        retval+= "+" + in[i];
     }
-    else if (s1 == "0")
-    {
-        return s2;
-    }
-    else if (s2 == "0")
-    {
-        return s1;
-    }
-    return ("(" + s1 + "+" + s2 + ")");
+    return retval;
 }
 
 template <typename T, f_enabler<T> = 0>
-T my_diff(const T &x, const T &y)
+T my_diff(const std::vector<T>& in)
 {
-        return x - y;
+    T retval(in[0]);
+    for (auto i = 1u; i < in.size(); ++i) {
+        retval-=in[i];
+    }
+    return retval;
 }
 
-std::string print_my_diff(const std::string& s1, const std::string& s2)
+std::string print_my_diff(const std::vector<std::string>& in)
 {
-    if (s1 == s2) 
-    {
-        return "0";
+    std::string retval(in[0]);
+    for (auto i = 1u; i < in.size(); ++i) {
+        retval+= "-" + in[i];
     }
-    else if (s1 == "0")
-    {
-        return "(-" + s2 + ")";
-    }
-    else if (s2 == "0")
-    {
-        return s1;
-    }
-    return ("(" + s1 + "-" + s2 + ")");
+    return "(" + retval + ")";
 }
 
 template <typename T, f_enabler<T> = 0>
-T my_mul(const T &x, const T &y)
+T my_mul(const std::vector<T>& in)
 {
-        return (x * y);
+    T retval(in[0]);
+    for (auto i = 1u; i < in.size(); ++i) {
+        retval*=in[i];
+    }
+    return retval;
 }
 
-std::string print_my_mul(const std::string& s1, const std::string& s2)
+std::string print_my_mul(const std::vector<std::string>& in)
 {
-    if (s1 == "0" || s2 == "0")
-    {
-        return "0";
+    std::string retval(in[0]);
+    for (auto i = 1u; i < in.size(); ++i) {
+        retval+= "*" + in[i];
     }
-    else if (s1 == s2)
-    {
-        return s1 + "^2";
-    }
-    else if (s1 == "1")
-    {
-        return s2;
-    }
-    else if (s2 == "1")
-    {
-        return s1;
-    }
-    return ("(" + s1 + "*" + s2 + ")");
+    return "(" + retval + ")";
 }
 
 template <typename T, f_enabler<T> = 0>
-T my_div(const T &x, const T &y)
+T my_div(const std::vector<T>& in)
 {
-        return x / y;
+    T retval(in[0]);
+    for (auto i = 1u; i < in.size(); ++i) {
+        retval/=in[i];
+    }
+    return retval;
 }
 
-std::string print_my_div(const std::string& s1, const std::string& s2)
+std::string print_my_div(const std::vector<std::string>& in)
 {
-    if (s1 == "0" && s2 != "0")
-    {
-        return "0";
+    std::string retval(in[0]);
+    for (auto i = 1u; i < in.size(); ++i) {
+        retval+= "/" + in[i];
     }
-    else if (s1 == s2)
-    {
-        return "1";
-    }
-    else if (s2 == "1")
-    {
-        return s1;
-    }
-    return ("(" + s1 + "/" + s2 + ")");
-}
-
-template <typename T, f_enabler<T> = 0>
-T my_pow(const T &x, const T &y)
-{
-        return pow(abs(x), y);
-}
-
-std::string print_my_pow(const std::string& s1, const std::string& s2)
-{
-    if (s1 == "0" && s2 != "0")
-    {
-        return "0";
-    }
-    else if (s1 == "1")
-    {
-        return "1";
-    }
-    else if (s2 == "0" && s1 != "0")
-    {
-        return "1";
-    }
-    else if (s2 == "1")
-    {
-        return s1;
-    }
-    return ("abs(" + s1 + ")^(" + s2 + ")");
+    return "(" + retval + ")";
 }
 
 // sigmoid function: 1 / (1 + exp(- a * b))
 template <typename T, f_enabler<T> = 0>
-T my_sig(const T &t, const T &beta)
+T my_sig(const std::vector<T>& in)
 {
-        return 1 / (1 + exp(-beta * t));
+    T retval(in[0]);
+    for (auto i = 1u; i < in.size(); ++i) {
+        retval+=in[i];
+    }
+    return 1. / (1. + exp(-retval));
 }
 
-std::string print_my_sig(const std::string& s1, const std::string& s2)
+std::string print_my_sig(const std::vector<std::string>& in)
 {
-    if (s1 == "0" || s2 == "0")
-    {
-        return "0.5";
+    std::string retval(in[0]);
+    for (auto i = 1u; i < in.size(); ++i) {
+        retval+= "+" + in[i];
     }
-    return "sig(" + s1 + "," + s2 + ")";
+    return "sig(" + retval + ")";
 }
-
-// square root
-template <typename T, f_enabler<T> = 0>
-T my_sqrt(const T &a, const T &b)
-{
-        return sqrt(abs(a + b));
-}
-
-std::string print_my_sqrt(const std::string& s1, const std::string& s2)
-{
-    if (s2 == "0" && s1 != "0")
-    {
-        return "sqrt(" + s1 + ")";
-    }
-    if (s1 == "0" && s2 != "0")
-    {
-        return "sqrt(" + s2 + ")";
-    }
-    if (s1 == "0" && s2 == "0")
-    {
-        return "0";
-    }
-    return "sqrt(" + s1 + " + " + s2 + ")";
-}
-
 
 /*--------------------------------------------------------------------------
 *                                  UNARY FUNCTIONS
 *------------------------------------------------------------------------**/
-
-// sine of the first argument
+// sine
 template <typename T, f_enabler<T> = 0>
-T my_sin(const T &a, const T &b)
+T my_sin(const std::vector<T>& in)
 {
-    (void)b;
-    return sin(a);
+    return sin(in[0]);
 }
 
-std::string print_my_sin(const std::string& s1, const std::string& s2)
+std::string print_my_sin(const std::vector<std::string>& in)
 {
-    (void)s2;
-    return "sin(" + s1 + ")";
+    return "sin(" + in[0] + ")";
 }
 
-// sine of the first argument
+// logarithm
 template <typename T, f_enabler<T> = 0>
-T my_log(const T &a, const T &b)
+T my_log(const std::vector<T>& in)
 {
-    (void)b;
-    return log(a);
+    return log(in[0]);
 }
 
-std::string print_my_log(const std::string& s1, const std::string& s2)
+std::string print_my_log(const std::vector<std::string>& in)
 {
-    (void)s2;
-    if (s1 == "1")
-    {
-        return "0";
-    }
-    return "log(" + s1 + ")";
+    return "log(" + in[0] + ")";
 }
 
 } // dcgp namespace ends

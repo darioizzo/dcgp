@@ -28,7 +28,7 @@ int main () {
     dcgp::function_set basic_set({"sum", "diff", "mul", "div", "log"});
 
     // d-CGP expression
-    dcgp::expression ex(1, 1, 1, 15, 16, basic_set(), rd());
+    dcgp::expression ex(1, 1, 1, 15, 16, 2, basic_set(), rd());
 
     // Symbols
     std::vector<std::string> in_sym({"x"});

@@ -36,12 +36,8 @@ public:
             m_functions.emplace_back(my_mul<double>,my_mul<audi::gdual>,print_my_mul, function_name);
         else if (function_name=="div")
             m_functions.emplace_back(my_div<double>,my_div<audi::gdual>,print_my_div, function_name);
-        else if (function_name=="pow")
-            m_functions.emplace_back(my_pow<double>,my_pow<audi::gdual>,print_my_pow, function_name);
         else if (function_name=="sig")
             m_functions.emplace_back(my_sig<double>,my_sig<audi::gdual>,print_my_sig, function_name);
-        else if (function_name=="sqrt")
-            m_functions.emplace_back(my_sqrt<double>,my_sqrt<audi::gdual>,print_my_sqrt, function_name);
         else if (function_name=="sin")
             m_functions.emplace_back(my_sin<double>,my_sin<audi::gdual>,print_my_sin, function_name);
         else if (function_name=="log")

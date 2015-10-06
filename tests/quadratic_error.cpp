@@ -13,10 +13,11 @@ double test_qe(
         unsigned int r,
         unsigned int c,
         unsigned int l,
+        unsigned int a,
         unsigned int N) // number of samples
 {
    dcgp::function_set basic_set({"sum","diff","mul","div"});
-   dcgp::expression ex(n, m, r, c, l, basic_set(), 123);
+   dcgp::expression ex(n, m, r, c, l, a, basic_set(), 123);
 
     // creates N data points 
     std::default_random_engine re;
@@ -58,10 +59,11 @@ audi::gdual test_qe2(
         unsigned int r,
         unsigned int c,
         unsigned int l,
+        unsigned int a,
         unsigned int N) // number of samples
 {
    dcgp::function_set basic_set({"sum","diff","mul","div"});
-   dcgp::expression ex(n, m, r, c, l, basic_set(), 123);
+   dcgp::expression ex(n, m, r, c, l, a, basic_set(), 123);
 
     // creates N data points 
     std::default_random_engine re;
@@ -110,12 +112,12 @@ BOOST_AUTO_TEST_CASE(quadratic_error_obj_fun)
 {
     // We test that a d-CGP expression computed on 20 points
     // has a zero quadratic error w.r.t. itself (its a perfect fit of itself)
-    BOOST_CHECK_EQUAL(test_qe(3,1,1,20,21,20), 0);
-    BOOST_CHECK_EQUAL(test_qe(2,2,3,10,11,20), 0);
+    BOOST_CHECK_EQUAL(test_qe(3,1,1,20,21,2,20), 0);
+    BOOST_CHECK_EQUAL(test_qe(2,2,3,10,11,2,20), 0);
 
     // We test that a d-CGP expression computed on 20 points
     // has a zero quadratic error w.r.t. itself, and that the
     // derivative of the quadratic error is zero w.r.t. one of the inputs (a weight)
-    BOOST_CHECK_EQUAL(test_qe2(3,1,1,20,21,20), audi::gdual(0));
-    BOOST_CHECK_EQUAL(test_qe2(2,2,3,10,11,20), audi::gdual(0));
+    BOOST_CHECK_EQUAL(test_qe2(3,1,1,20,21,2,20), audi::gdual(0));
+    BOOST_CHECK_EQUAL(test_qe2(2,2,3,10,11,2,20), audi::gdual(0));
 }

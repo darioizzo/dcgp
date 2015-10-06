@@ -38,7 +38,7 @@ BOOST_AUTO_TEST_CASE(function_calls)
         boost::timer::auto_cpu_timer t; // Sets up a timer
         for (auto i = 0u; i < N; ++i)
         {
-            dcgp::my_sig<double>(a[i],b[i]);
+            dcgp::my_sig<double>({a[i],b[i]});
         }
     }
 
@@ -48,13 +48,13 @@ BOOST_AUTO_TEST_CASE(function_calls)
         boost::timer::auto_cpu_timer t; // Sets up a timer
         for (auto i = 0u; i < N; ++i)
         {
-            my_sig2(a[i],b[i]);
+            my_sig2({a[i],b[i]});
         }
     }
 
     std::cout << "Testing " << N << " std::function calls to the sigmoid function via dcgp::expression" << std::endl;
     dcgp::function_set sigmoid_set({"sig"});
-    dcgp::expression ex(2,1,1,1,1,sigmoid_set(),0);
+    dcgp::expression ex(2,1,1,1,1,2,sigmoid_set(),0);
     ex.set({0,0,1,2});
     {
         boost::timer::auto_cpu_timer t; // Sets up a timer

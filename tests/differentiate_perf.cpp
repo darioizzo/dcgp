@@ -14,13 +14,14 @@ void perform_evaluations(unsigned int in,
                   unsigned int rows,
                   unsigned int columns,
                   unsigned int levels_back,
+                  unsigned int arity,
                   unsigned int N,
                   std::vector<dcgp::basis_function> function_set)
 {
     // Random numbers engine
     std::default_random_engine re(123);
     // Instatiate the expression
-    dcgp::expression ex(in, out, rows, columns, levels_back, function_set, 123);
+    dcgp::expression ex(in, out, rows, columns, levels_back, arity, function_set, 123);
     // We create the input data upfront and we do not time it.
     std::vector<gdual> dumb(in);
     std::vector<std::vector<gdual> > in_num(N, dumb);
@@ -52,20 +53,20 @@ BOOST_AUTO_TEST_CASE(evaluation_speed)
 
     dcgp::function_set function_set1({"sum","diff","mul","div"});
     std::cout << "Function set " << function_set1() << std::endl;
-    perform_evaluations(2,4,2,3,4, N, function_set1());
-    perform_evaluations(2,4,10,10,11, N, function_set1());
-    perform_evaluations(2,4,20,20,21, N, function_set1());
-    perform_evaluations(1,1,1,100,101, N, function_set1());
-    perform_evaluations(1,1,2,100,101, N, function_set1());
-    perform_evaluations(1,1,3,100,101, N, function_set1());
+    perform_evaluations(2,4,2,3,4, 2, N, function_set1());
+    perform_evaluations(2,4,10,10,11, 2, N, function_set1());
+    perform_evaluations(2,4,20,20,21, 2, N, function_set1());
+    perform_evaluations(1,1,1,100,101, 2, N, function_set1());
+    perform_evaluations(1,1,2,100,101, 2, N, function_set1());
+    perform_evaluations(1,1,3,100,101, 2, N, function_set1());
 
     dcgp::function_set function_set2({"sum","mul","sig"});
     std::cout << std::endl << "Function set " << function_set2() << std::endl;
-    perform_evaluations(2,4,2,3,4, N, function_set2());
-    perform_evaluations(2,4,10,10,11, N, function_set2());
-    perform_evaluations(2,4,20,20,21, N, function_set2());
-    perform_evaluations(1,1,1,100,101, N, function_set2());
-    perform_evaluations(1,1,2,100,101, N, function_set2());
-    perform_evaluations(1,1,3,100,101, N, function_set2());
+    perform_evaluations(2,4,2,3,4, 2, N, function_set2());
+    perform_evaluations(2,4,10,10,11, 2, N, function_set2());
+    perform_evaluations(2,4,20,20,21, 2, N, function_set2());
+    perform_evaluations(1,1,1,100,101, 2, N, function_set2());
+    perform_evaluations(1,1,2,100,101, 2, N, function_set2());
+    perform_evaluations(1,1,3,100,101, 2, N, function_set2());
 }
 

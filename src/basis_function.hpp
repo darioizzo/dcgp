@@ -13,11 +13,11 @@ namespace dcgp {
 using namespace audi;
 
 /// Basic prototype of a kernel function for its simple evaluation
-using my_fun_type = std::function<double(const double&, const double&)>;
+using my_fun_type = std::function<double(const std::vector<double>&)>;
 /// Basic prototype of a kernel function for the evaluation of its Taylor expansion
-using d_my_fun_type = std::function<gdual(const gdual&, const gdual&)>;
+using d_my_fun_type = std::function<gdual(const std::vector<gdual>&)>;
 /// Basic prototype of a kernel function for the evaluation of its printable form
-using my_print_fun_type = std::function<std::string(std::string, std::string)>;
+using my_print_fun_type = std::function<std::string(const std::vector<std::string>&)>;
 
 /// Basis function
 /**
@@ -52,9 +52,9 @@ struct basis_function
     *
     * @return the function evaluated in \f$x,y\f$
     */
-    double operator()(double x, double y) const
+    double operator()(const std::vector<double>& in) const
     {
-            return m_f(x,y);
+            return m_f(in);
     }
 
     /// Parenthesis operator overload (audi::gdual)
@@ -68,9 +68,9 @@ struct basis_function
     *
     * @return the Taylor representation of \f$f\f$
     */
-    gdual operator()(const gdual & p1, const gdual & p2) const
+    gdual operator()(const std::vector<gdual>& in) const
     {
-            return m_df(p1,p2);
+            return m_df(in);
     }
 
     /// Parenthesis operator overload (std::string)
@@ -82,9 +82,9 @@ struct basis_function
     *
     * @return the string representation of the operation (ex. "ln(s1+s2)")
     */
-    std::string operator()(std::string s1, std::string s2) const
+    std::string operator()(const std::vector<std::string>& in) const
     {
-            return m_pf(s1,s2);
+            return m_pf(in);
     }
 
     /// Overloaded stream operator
