@@ -12,6 +12,7 @@ struct es_params {
     std::string m_mutation_type;
     unsigned int m_n;
     double m_mut_prob;
+    unsigned int m_gen;
 };
 
 // Evolves the expression ex to fit the in-out supervised data
@@ -55,7 +56,7 @@ void es(const std::vector<std::vector<double> >& in, const std::vector<std::vect
                 ex.set(best_chromosome);
             }
         }
-    } while (best_fit > 1e-3 && gen < 10000);
+    } while (best_fit > 1e-3 && gen < p.m_gen);
     std::cout << "Number of generations: " << gen << std::endl;
 }
 
