@@ -35,7 +35,7 @@ std::string print_my_sum(const std::vector<std::string>& in)
     for (auto i = 1u; i < in.size(); ++i) {
         retval+= "+" + in[i];
     }
-    return retval;
+    return "(" + retval + ")";
 }
 
 template <typename T, f_enabler<T> = 0>

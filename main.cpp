@@ -12,10 +12,10 @@ int main() {
     std::random_device rd;
 
     // We define the set of functions we want to use
-    dcgp::function_set basic_set({"sum","diff","mul", "sig"});
+    dcgp::function_set basic_set({"sum","diff","mul", "div"});
 
     // We instantiate a d-CGP expression
-    unsigned int n_inputs = 3;
+    unsigned int n_inputs = 2;
     unsigned int n_outputs = 1;
     unsigned int n_rows = 1;
     unsigned int n_columns = 15;
@@ -35,25 +35,22 @@ int main() {
     std::cout << simple << std::endl;
 
     // We compute the d-CGP expression in a point
-    std::vector<double> in_num({0.3,-0.2,0.1});
+    std::vector<double> in_num({1,2});
     std::cout << "Point is:" << in_num << std::endl;
     std::cout << "Numerical value = " << simple(in_num) << std::endl;
 
     // We compute the d-CGP jet of derivatives up to order 2
     std::vector<audi::gdual> jet = simple.taylor(in_num,2);
-    std::cout << "Numerical values d/dx = " << jet[0].get_derivative({1,0,0}) << std::endl;
-    std::cout << "Numerical values d/dy = " << jet[0].get_derivative({0,1,0}) << std::endl;
-    std::cout << "Numerical values d/dz = " << jet[0].get_derivative({0,0,1}) << std::endl;
+    std::cout << "Numerical values d/dx = " << jet[0].get_derivative({1,0}) << std::endl;
+    std::cout << "Numerical values d/dy = " << jet[0].get_derivative({0,1}) << std::endl;
 
-    std::cout << "Numerical values d^2/dx^2 = " << jet[0].get_derivative({2,0,0}) << std::endl;
-    std::cout << "Numerical values d^2/dy^2 = " << jet[0].get_derivative({0,2,0}) << std::endl;
-    std::cout << "Numerical values d^2/dz^2 = " << jet[0].get_derivative({0,0,2}) << std::endl;
-    std::cout << "Numerical values d^2/dxdy = " << jet[0].get_derivative({1,1,0}) << std::endl;
-    std::cout << "Numerical values d^2/dydz = " << jet[0].get_derivative({0,1,1}) << std::endl;
-    std::cout << "Numerical values d^2/dxdz = " << jet[0].get_derivative({1,0,1}) << std::endl;
+    std::cout << "Numerical values d^2/dx^2 = " << jet[0].get_derivative({2,0}) << std::endl;
+    std::cout << "Numerical values d^2/dy^2 = " << jet[0].get_derivative({0,2}) << std::endl;
+    std::cout << "Numerical values d^2/dxdy = " << jet[0].get_derivative({1,1}) << std::endl;
+
     
     // We compute the symbolic representation of the d-CGP expression
-    std::vector<std::string> in_sym({"x","y","z"});
+    std::vector<std::string> in_sym({"x","y"});
     std::cout << "Symbolic value = " << simple(in_sym) << std::endl;
 
     return 0;
