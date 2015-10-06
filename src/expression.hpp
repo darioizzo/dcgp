@@ -48,9 +48,10 @@ public:
                unsigned int r,                  // n. rows
                unsigned int c,                  // n. columns
                unsigned int l,                  // n. levels-back
+               unsigned int arity,              // basis functions' arity             
                std::vector<basis_function> f,   // functions
                unsigned int seed                // seed for the pseudo-random numbers
-               ) : m_n(n), m_m(m), m_r(r), m_c(c), m_l(l), m_f(f), m_lb((3 * m_r * m_c) + m_m, 0), m_ub((3 * m_r * m_c) + m_m, 0), m_x((3 * m_r * m_c) + m_m, 0), m_e(seed)
+               ) : m_n(n), m_m(m), m_r(r), m_c(c), m_l(l), m_arity(arity), m_f(f), m_lb((arity + 1) * m_r * m_c + m_m, 0), m_ub((arity + 1) * m_r * m_c + m_m, 0), m_x((arity + 1) * m_r * m_c + m_m, 0), m_e(seed)
     {
         // Sanity checks
         if (n == 0) throw std::invalid_argument("Number of inputs is 0");
@@ -58,15 +59,16 @@ public:
         if (c == 0) throw std::invalid_argument("Number of columns is 0");
         if (r == 0) throw std::invalid_argument("Number of rows is 0");
         if (l == 0) throw std::invalid_argument("Number of level-backs is 0");
+        if (arity < 2) throw std::invalid_argument("Basis functions arity must be at least 2");
         if (f.size()==0) throw std::invalid_argument("Number of basis functions is 0");
 
         // Bounds for the function genes
-        for (auto i = 0u; i < (3 * m_r * m_c); i+=3) {
+        for (auto i = 0u; i < ((arity + 1) * m_r * m_c); i+=(arity + 1)) {
             m_ub[i] = f.size() - 1;
         }
 
         // Bounds for the output genes
-        for (auto i = 3u * m_r * m_c; i < m_ub.size(); ++i) {
+        for (auto i = (arity + 1) * m_r * m_c; i < m_ub.size(); ++i) {
             m_ub[i] = m_n + m_r * m_c - 1;
             if (m_l <= m_c) {
                 m_lb[i] = m_n + m_r * (m_c - m_l);
@@ -76,11 +78,11 @@ public:
         // Bounds for the node connection genes 
         for (auto i = 0u; i < m_c; ++i) {
             for (auto j = 0u; j < m_r; ++j) {
-                m_ub[((i * m_r) + j) * 3 + 1] = m_n + i * m_r - 1;
-                m_ub[((i * m_r) + j) * 3 + 2] = m_n + i * m_r - 1;
+                m_ub[((i * m_r) + j) * (arity + 1) + 1] = m_n + i * m_r - 1;
+                m_ub[((i * m_r) + j) * (arity + 1) + 2] = m_n + i * m_r - 1;
                 if (i >= m_l) {
-                    m_lb[((i * m_r) + j) * 3 + 1] = m_n + m_r * (i - m_l);
-                    m_lb[((i * m_r) + j) * 3 + 2] = m_n + m_r * (i - m_l);
+                    m_lb[((i * m_r) + j) * (arity + 1) + 1] = m_n + m_r * (i - m_l);
+                    m_lb[((i * m_r) + j) * (arity + 1) + 2] = m_n + m_r * (i - m_l);
                 }
             }
         }
@@ -245,7 +247,7 @@ public:
         // If no active function gene exists, do nothing
         if (m_active_genes.size() > m_m) {
             unsigned int idx = std::uniform_int_distribution<unsigned int>(0, m_active_genes.size() - 1 - m_m)(m_e);
-            idx = m_active_genes[idx] - (m_active_genes[idx] % 3);
+            idx = m_active_genes[idx] - (m_active_genes[idx] % (m_arity + 1));
             mutate(idx);
         }
     }
@@ -259,7 +261,7 @@ public:
         // If no active function gene exists, do nothing
         if (m_active_genes.size() > m_m) {
             unsigned int idx = std::uniform_int_distribution<unsigned int>(0, m_active_genes.size() - 1 - m_m)(m_e);
-            idx = m_active_genes[idx] - (m_active_genes[idx] % 3) + std::uniform_int_distribution<unsigned int>(1, 2)(m_e);
+            idx = m_active_genes[idx] - (m_active_genes[idx] % (m_arity + 1)) + std::uniform_int_distribution<unsigned int>(1, m_arity)(m_e);
             mutate(idx);
         }
     }
@@ -302,18 +304,22 @@ public:
         }
         std::vector<T> retval(m_m);
         std::map<unsigned int, T> node;
+        std::vector<T> function_in(m_arity);
         for (auto i : m_active_nodes) {
             if (i < m_n) 
             {
                 node[i] = in[i];
             } else {
-                unsigned int idx = (i - m_n) * 3;
-                node[i] = m_f[m_x[idx]](node[m_x[idx + 1]], node[m_x[idx + 2]]);
+                unsigned int idx = (i - m_n) * (m_arity + 1);
+                for (auto i = 0u; i < m_arity; ++i) {
+                    function_in[i] = node[m_x[idx + i + 1]];
+                }
+                node[i] = m_f[m_x[idx]](function_in);
             }
         }
         for (auto i = 0u; i<m_m; ++i)
         {
-            retval[i] = node[m_x[(m_r * m_c) * 3 + i]];
+            retval[i] = node[m_x[(m_r * m_c) * (m_arity + 1) + i]];
         }
         return retval;
     }
@@ -402,6 +408,7 @@ public:
         s << "\tNumber of rows:\t\t\t" << d.m_r << '\n';
         s << "\tNumber of columns:\t\t" << d.m_c << '\n';
         s << "\tNumber of levels-back allowed:\t" << d.m_l << '\n';
+        s << "\tBasis function arity:\t\t" << d.m_arity << '\n';
         s << "\n\tResulting lower bounds:\t" << d.m_lb;
         s << "\n\tResulting upper bounds:\t" << d.m_ub << '\n';
         s << "\n\tCurrent expression (encoded):\t" << d.m_x << '\n';
@@ -443,9 +450,9 @@ protected:
         // First we update the active nodes
         std::vector<unsigned int> current(m_m), next;
         m_active_nodes.clear();
-        // At the beginning current contains only the output nodes connections
+        // At the beginning, current contains only the output nodes connections
         for (auto i = 0u; i < m_m; ++i) {
-            current[i] = m_x[3 * m_r * m_c + i];
+            current[i] = m_x[(m_arity + 1) * m_r * m_c + i];
         }
         do
         {
@@ -455,14 +462,15 @@ protected:
             {
                 if (node_id >=m_n) // we insert the input nodes connections as they do not have any
                 {
-                    next.push_back(m_x[(node_id - m_n) * 3 + 1]);
-                    next.push_back(m_x[(node_id - m_n) * 3 + 2]);
+                    for (auto i = 1u; i <= m_arity; ++i) {
+                        next.push_back(m_x[(node_id - m_n) * (m_arity + 1) + i]);
+                    }
                 }
                 else{
                     m_active_nodes.push_back(node_id);
                 }
             }
-            // We remove duplicates to avoid processng them and thus having a 2^N complexity
+            // We remove duplicates to avoid processing them and thus having a 2^N complexity
             std::sort( next.begin(), next.end() );
             next.erase( std::unique( next.begin(), next.end() ), next.end() );
             current = next;
@@ -479,15 +487,15 @@ protected:
         {
             if (m_active_nodes[i] >= m_n) 
             {
-                unsigned int idx = (m_active_nodes[i] - m_n) * 3;
-                m_active_genes.push_back(idx);
-                m_active_genes.push_back(idx + 1);
-                m_active_genes.push_back(idx + 2);
+                unsigned int idx = (m_active_nodes[i] - m_n) * (m_arity + 1);
+                for (auto i = 0u; i <= m_arity; ++i) {
+                    m_active_genes.push_back(idx + i);
+                }
             }
         }
         for (auto i = 0u; i<m_m; ++i) 
         {
-            m_active_genes.push_back(m_r * m_c * 3 + i);
+            m_active_genes.push_back(m_r * m_c * (m_arity + 1) + i);
         }
     }
 
@@ -502,6 +510,9 @@ private:
     unsigned int m_c;
     // number of levels_back allowed
     unsigned int m_l;
+    // function arity
+    unsigned int m_arity;
+
     // the functions allowed
     std::vector<basis_function> m_f;
     // lower and upper bounds on all genes
