@@ -3,7 +3,8 @@
 #include "../src/expression.hpp"
 #include "../src/function_set.hpp"
 
-// Here we search for first integrals of the mass spring sistem (one dimension)
+// Here we search for first integrals of a mass spring sistem (one dimension) using Lipson method
+// The hamiltonian is H = p^2 + q^2 and is consistently found by the evolution
 
 double fitness(const dcgp::expression& ex, const std::vector<std::vector<double> >& in)
 {
@@ -14,9 +15,10 @@ double fitness(const dcgp::expression& ex, const std::vector<std::vector<double>
         double dFq = T[0].get_derivative({0, 1});
         double p = in[i][0];
         double q = in[i][1];
-        double err = - dFp * q + dFq * p;          
-        retval += (err) * (err);                        // We compute the quadratic error 
+        double err = dFp / dFq - p / q;                 // Here we set (dp/dt) / (dq/dt) = dp/dq     
+        retval += (err) * (err);  
     }
+
     return retval;
 }
 
@@ -40,7 +42,6 @@ int main () {
         in[i][0] = 0.12 + 0.9 / (in.size() - 1) * i; // 0.1, .., 1
         in[i][1] = 1 - 0.143 / (in.size() - 1) * i; // 1, 0.9, .. , 0.1
     }
-std::cout << in << std::endl;
     // We run the (1-4)-ES
     double best_fit = 1e32;
     std::vector<double> newfits(4, 0.);
@@ -53,11 +54,10 @@ std::cout << in << std::endl;
         gen++;
         for (auto i = 0u; i < newfits.size(); ++i) {
             ex.set(best_chromosome);
-            ex.mutate_active(2);
+            ex.mutate_active(6);
             newfits[i] = fitness(ex, in);   // Total fitness
             newchromosomes[i] = ex.get();
         }
-
         for (auto i = 0u; i < newfits.size(); ++i) {
             if (newfits[i] <= best_fit) {
                 if (newfits[i] != best_fit) {
@@ -69,7 +69,7 @@ std::cout << in << std::endl;
                 ex.set(best_chromosome);
             }
         }
-    } while (best_fit > 1e-3 && gen < 10000);
+    } while (best_fit > 1e-12 && gen < 10000);
 
     std::cout << "Number of generations: " << gen << std::endl;
     std::cout << "Expression: " <<  ex << std::endl;
