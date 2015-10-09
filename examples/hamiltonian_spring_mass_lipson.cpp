@@ -48,7 +48,6 @@ int main () {
     std::vector<std::vector<unsigned int> > newchromosomes(4);
     std::vector<unsigned int> best_chromosome(ex.get());
     unsigned int gen = 0;
-
     do
     {
         gen++;

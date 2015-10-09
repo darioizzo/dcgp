@@ -14,3 +14,4 @@ ADD_EXAMPLE(tsoulos_nlode3)
 # Finding first integrals examples
 ADD_EXAMPLE(hamiltonian_spring_mass)
 ADD_EXAMPLE(hamiltonian_spring_mass_lipson)
+ADD_EXAMPLE(hamiltonian_kepler)
