@@ -20,24 +20,25 @@ int main () {
     std::random_device rd;
     // We read the data from file
     std::vector<std::vector<double> > in, out;
-    read_data(in, out, "../../examples/data/symbolic.data");
+    read_data(in, out, "../../examples/data/pressure.data");
 
     // Function set
-    dcgp::function_set basic_set({"sum", "diff", "mul", "div", "sin"});
+    dcgp::function_set basic_set({"sum", "diff", "mul", "div", "sigmoid"});
 
     // d-CGP expression
-    dcgp::expression ex(1, 1, 1, 15, 16, 2, basic_set(), rd());
+    dcgp::expression ex(2, 1, 2, 100, 101, 2, basic_set(), rd());
 
     // Symbols
-    std::vector<std::string> in_sym({"x"});
+    std::vector<std::string> in_sym({"x","y"});
 
     // We use a simple ES(1+4) to evolve an expression that represents our target. 
     // Mutation only mutates 2 active genes
-    es_params params{4, "active", 2, 0, 10000};
+    es_params params{4, "active", 4, 0.01, 100000};
     es(in, out, ex, params);
 
     // We print out the final expression
     std::cout << "Final expression: " << ex(in_sym) << std::endl;
+    std::cout << "Final value: " << quadratic_error(ex, in, out) << std::endl;
     return false;
     
 }

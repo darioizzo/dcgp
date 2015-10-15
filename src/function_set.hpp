@@ -36,12 +36,14 @@ public:
             m_functions.emplace_back(my_mul<double>,my_mul<audi::gdual>,print_my_mul, function_name);
         else if (function_name=="div")
             m_functions.emplace_back(my_div<double>,my_div<audi::gdual>,print_my_div, function_name);
-        else if (function_name=="sig")
+        else if (function_name=="sigmoid")
             m_functions.emplace_back(my_sig<double>,my_sig<audi::gdual>,print_my_sig, function_name);
         else if (function_name=="sin")
             m_functions.emplace_back(my_sin<double>,my_sin<audi::gdual>,print_my_sin, function_name);
         else if (function_name=="log")
             m_functions.emplace_back(my_log<double>,my_log<audi::gdual>,print_my_log, function_name);
+        else if (function_name=="exp")
+            m_functions.emplace_back(my_exp<double>,my_exp<audi::gdual>,print_my_exp, function_name);
         else 
             throw std::invalid_argument("Unimplemented function " + function_name);
     };

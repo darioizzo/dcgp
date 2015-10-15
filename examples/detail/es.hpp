@@ -57,6 +57,7 @@ void es(const std::vector<std::vector<double> >& in, const std::vector<std::vect
             }
         }
     } while (best_fit > 1e-3 && gen < p.m_gen);
+    ex.set(best_chromosome);
     std::cout << "Number of generations: " << gen << std::endl;
 }
 

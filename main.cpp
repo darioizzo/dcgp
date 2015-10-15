@@ -12,14 +12,14 @@ int main() {
     std::random_device rd;
 
     // We define the set of functions we want to use
-    dcgp::function_set basic_set({"sum","diff","mul", "div"});
+    dcgp::function_set basic_set({"sum","diff","mul", "div", "sigmoid"});
 
     // We instantiate a d-CGP expression
     unsigned int n_inputs = 2;
     unsigned int n_outputs = 1;
     unsigned int n_rows = 1;
-    unsigned int n_columns = 15;
-    unsigned int n_level_backs = 16;
+    unsigned int n_columns = 50;
+    unsigned int n_level_backs = 51;
     unsigned int arity = 2;
     dcgp::expression simple(n_inputs,
         n_outputs,
