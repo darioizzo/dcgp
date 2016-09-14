@@ -11,7 +11,7 @@ namespace dcgp {
 
 /// Function set
 /**
- * Contains, 
+ * Contains,
  * @author Dario Izzo (dario.izzo@gmail.com)
  */
 class function_set
@@ -24,7 +24,7 @@ public:
         {
             push_back(function_name);
         }
-    }; 
+    };
 
     void push_back(const std::string& function_name)
     {
@@ -36,7 +36,7 @@ public:
             m_functions.emplace_back(my_mul<double>,my_mul<audi::gdual>,print_my_mul, function_name);
         else if (function_name=="div")
             m_functions.emplace_back(my_div<double>,my_div<audi::gdual>,print_my_div, function_name);
-        else if (function_name=="sigmoid")
+        else if (function_name=="sig")
             m_functions.emplace_back(my_sig<double>,my_sig<audi::gdual>,print_my_sig, function_name);
         else if (function_name=="sin")
             m_functions.emplace_back(my_sin<double>,my_sin<audi::gdual>,print_my_sin, function_name);
@@ -44,7 +44,7 @@ public:
             m_functions.emplace_back(my_log<double>,my_log<audi::gdual>,print_my_log, function_name);
         else if (function_name=="exp")
             m_functions.emplace_back(my_exp<double>,my_exp<audi::gdual>,print_my_exp, function_name);
-        else 
+        else
             throw std::invalid_argument("Unimplemented function " + function_name);
     };
 
@@ -64,4 +64,3 @@ private:
 } // end of namespace dcgp
 
 #endif // DCGP_FUNCTION_SET_H
- 

@@ -12,7 +12,7 @@ int main() {
     std::random_device rd;
 
     // We define the set of functions we want to use
-    dcgp::function_set basic_set({"sum","diff","mul", "div", "sigmoid"});
+    dcgp::function_set basic_set({"sum","diff","mul", "div", "sig", "sin", "log"});
 
     // We instantiate a d-CGP expression
     unsigned int n_inputs = 2;
@@ -48,7 +48,7 @@ int main() {
     std::cout << "Numerical values d^2/dy^2 = " << jet[0].get_derivative({0,2}) << std::endl;
     std::cout << "Numerical values d^2/dxdy = " << jet[0].get_derivative({1,1}) << std::endl;
 
-    
+
     // We compute the symbolic representation of the d-CGP expression
     std::vector<std::string> in_sym({"x","y"});
     std::cout << "Symbolic value = " << simple(in_sym) << std::endl;
