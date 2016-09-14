@@ -13,7 +13,6 @@ template <typename T>
 using f_enabler = typename std::enable_if<std::is_same<T,double>::value || std::is_same<T,audi::gdual>::value, int>::type;
 
 // Allows to overload in templates std functions with audi functions
-using namespace std;
 using namespace audi;
 
 /*--------------------------------------------------------------------------
