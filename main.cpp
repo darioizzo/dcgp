@@ -20,7 +20,7 @@ int main() {
     unsigned int n_rows = 1;
     unsigned int n_columns = 15;
     unsigned int n_level_backs = 16;
-    unsigned int arity = 2;
+    unsigned int arity = 3;
     dcgp::expression simple(n_inputs,
         n_outputs,
         n_rows,
@@ -51,7 +51,7 @@ int main() {
     std::cout << "Numerical values d^2/dxdy = " << jet[0].get_derivative({1,1,0}) << std::endl;
     std::cout << "Numerical values d^2/dydz = " << jet[0].get_derivative({0,1,1}) << std::endl;
     std::cout << "Numerical values d^2/dxdz = " << jet[0].get_derivative({1,0,1}) << std::endl;
-    
+
     // We compute the symbolic representation of the d-CGP expression
     std::vector<std::string> in_sym({"x","y","z"});
     std::cout << "Symbolic value = " << simple(in_sym) << std::endl;
