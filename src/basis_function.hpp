@@ -104,8 +104,6 @@ struct basis_function
         return os;
     }
 
-basis_function(my_fun_type a, d_my_fun_type b, my_print_fun_type c) : my_fun_type(a), d_my_fun_type(b), my_print_fun_type(c) {};
-
     /// The function
     my_fun_type m_f;
     /// Its derivatives
