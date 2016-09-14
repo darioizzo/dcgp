@@ -1,6 +1,8 @@
 MACRO(ADD_EXAMPLE arg1)
 	ADD_EXECUTABLE(${arg1} ${arg1}.cpp)
 	TARGET_LINK_LIBRARIES(${arg1} ${MANDATORY_LIBRARIES})
+    target_compile_options(${arg1} PUBLIC "$<$<CONFIG:DEBUG>:${YACMA_CXX_FLAGS_DEBUG}>")
+    target_compile_options(${arg1} PUBLIC "$<$<CONFIG:RELEASE>:${YACMA_CXX_FLAGS}>")
 ENDMACRO(ADD_EXAMPLE)
 
 # Supervised learning examples
