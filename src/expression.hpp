@@ -20,8 +20,8 @@ namespace dcgp {
 /// A d-CGP expression
 /**
  * This class represent a mathematical expression as encoded using CGP and contains
- * algorithms that compute its value (numerical and symbolical) and its derivatives 
- * as well as mutate the expression. 
+ * algorithms that compute its value (numerical and symbolical) and its derivatives
+ * as well as mutate the expression.
  *
  * @author Dario Izzo (dario.izzo@gmail.com)
  */
@@ -31,7 +31,7 @@ private:
     // SFINAE dust
     template <typename T>
     using functor_enabler = typename std::enable_if<std::is_same<T,double>::value || std::is_same<T,gdual>::value || std::is_same<T,std::string>::value,int>::type;
-public:   
+public:
     /// Constructor
     /** Constructs a d-CGP expression
      *
@@ -42,13 +42,13 @@ public:
      * \param[in] l number of levels-back allowed for the cartesian cgp
      * \param[in] f function set. An std::vector of dcgp::basis_function
      * \param[in] seed seed for the random number generator (initial expression  and mutations depend on this)
-     */          
+     */
     expression(unsigned int n,                  // n. inputs
                unsigned int m,                  // n. outputs
                unsigned int r,                  // n. rows
                unsigned int c,                  // n. columns
                unsigned int l,                  // n. levels-back
-               unsigned int arity,              // basis functions' arity             
+               unsigned int arity,              // basis functions' arity
                std::vector<basis_function> f,   // functions
                unsigned int seed                // seed for the pseudo-random numbers
                ) : m_n(n), m_m(m), m_r(r), m_c(c), m_l(l), m_arity(arity), m_f(f), m_lb((arity + 1) * m_r * m_c + m_m, 0), m_ub((arity + 1) * m_r * m_c + m_m, 0), m_x((arity + 1) * m_r * m_c + m_m, 0), m_e(seed)
@@ -75,7 +75,7 @@ public:
             }
         }
 
-        // Bounds for the node connection genes 
+        // Bounds for the node connection genes
         for (auto i = 0u; i < m_c; ++i) {
             for (auto j = 0u; j < m_r; ++j) {
                 m_ub[((i * m_r) + j) * (arity + 1) + 1] = m_n + i * m_r - 1;
@@ -115,7 +115,7 @@ public:
     }
 
     /// Gets the chromosome
-    /** 
+    /**
      * Gets the chromosome encoding the current expression
      *
      * @return The chromosome
@@ -123,24 +123,24 @@ public:
     const std::vector<unsigned int> & get() const {return m_x;}
 
     /// Gets the active genes
-    /** 
+    /**
      * Gets the idx of the active genes in the current chromosome (numbering is from 0)
      *
      * @return An std::vector containing the idx of the active genes in the current chromosome
     */
     const std::vector<unsigned int> & get_active_genes() const {return m_active_genes;}
- 
+
     /// Gets the active nodes
-    /** 
+    /**
      * Gets the idx of the active nodes in the current chromosome.
      * The numbering starts from 0 at the first input node to then follow PPSN tutorial from Miller
      *
      * @return An std::vector containing the idx of the active nodes
     */
     const std::vector<unsigned int> & get_active_nodes() const {return m_active_nodes;}
-    
+
     /// Gets the number of inputs
-    /** 
+    /**
      * Gets the number of inputs of the c_CGP expression
      *
      * @return the number of inputs
@@ -148,7 +148,7 @@ public:
     unsigned int get_n() const {return m_n;}
 
     /// Gets the number of outputs
-    /** 
+    /**
      * Gets the number of outputs of the c_CGP expression
      *
      * @return the number of outputs
@@ -156,7 +156,7 @@ public:
     unsigned int get_m() const {return m_m;}
 
     /// Gets the functions
-    /** 
+    /**
      * Gets the functions
      *
      * @return an std::vector<basis_function>
@@ -164,12 +164,12 @@ public:
     const std::vector<basis_function>& get_f() const {return m_f;}
 
     /// Mutates one genes
-    /** 
-     * Mutates exactly one gene within its allowed bounds. 
+    /**
+     * Mutates exactly one gene within its allowed bounds.
      *
      * @param[in] idx index of the gene to me mutated
      *
-     * @throw std::invalid_argument if \p idx is outside the chromosome 
+     * @throw std::invalid_argument if \p idx is outside the chromosome
      */
     void mutate(unsigned int idx)
     {
@@ -178,10 +178,10 @@ public:
         }
         // If only one value is allowed for the gene, (lb==ub),
         // then we will not do anything as mutation does not apply
-        if (m_lb[idx]<m_ub[idx]) 
+        if (m_lb[idx]<m_ub[idx])
         {
             unsigned int new_value;
-            do 
+            do
             {
                 new_value = std::uniform_int_distribution<unsigned int>(m_lb[idx], m_ub[idx])(m_e);
             } while (new_value == m_x[idx]);
@@ -191,12 +191,12 @@ public:
     }
 
     /// Mutates multiple genes at once
-    /** 
-     * Mutates multiple genes within their allowed bounds. 
+    /**
+     * Mutates multiple genes within their allowed bounds.
      *
      * @param[in] idxs vector of index of the gene to me mutated
      *
-     * @throw std::invalid_argument if \p idx is outside the chromosome 
+     * @throw std::invalid_argument if \p idx is outside the chromosome
      */
     void mutate(std::vector<unsigned int> idxs)
     {
@@ -207,10 +207,10 @@ public:
         }
         // If only one value is allowed for the gene, (lb==ub),
         // then we will not do anything as mutation does not apply
-        if (m_lb[idxs[i]]<m_ub[idxs[i]]) 
+        if (m_lb[idxs[i]]<m_ub[idxs[i]])
         {
             unsigned int new_value;
-            do 
+            do
             {
                 new_value = std::uniform_int_distribution<unsigned int>(m_lb[idxs[i]], m_ub[idxs[i]])(m_e);
             } while (new_value == m_x[idxs[i]]);
@@ -222,8 +222,8 @@ public:
     }
 
     /// Mutates one of the active genes
-    /** 
-     * Mutates \P N active genes within its allowed bounds. 
+    /**
+     * Mutates \P N active genes within its allowed bounds.
      * The mutation can affect a function gene, an input gene or an output gene.
      *
      * @param[in] N Number of active genes to be mutated
@@ -239,8 +239,8 @@ public:
     }
 
     /// Mutates one of the active function genes
-    /** 
-     * Mutates exactly one of the active function genes within its allowed bounds. 
+    /**
+     * Mutates exactly one of the active function genes within its allowed bounds.
      */
     void mutate_active_fgene()
     {
@@ -253,8 +253,8 @@ public:
     }
 
     /// Mutates one of the active connection genes
-    /** 
-     * Mutates exactly one of the active connection genes within its allowed bounds. 
+    /**
+     * Mutates exactly one of the active connection genes within its allowed bounds.
      */
     void mutate_active_cgene()
     {
@@ -267,8 +267,8 @@ public:
     }
 
     /// Mutates one of the active output genes
-    /** 
-     * Mutates exactly one of the output genes within its allowed bounds. 
+    /**
+     * Mutates exactly one of the output genes within its allowed bounds.
      */
     void mutate_ogene()
     {
@@ -282,6 +282,7 @@ public:
         idx = m_active_genes[idx];
         mutate(idx);
     }
+
 
     /// Evaluates the d-CGP expression
     /*
@@ -297,7 +298,7 @@ public:
      */
     template <typename T, functor_enabler<T> = 0>
     std::vector<T> operator()(const std::vector<T>& in) const
-    {  
+    {
         if(in.size() != m_n)
         {
             throw std::invalid_argument("Input size is incompatible");
@@ -306,11 +307,11 @@ public:
         std::map<unsigned int, T> node;
         std::vector<T> function_in(m_arity);
         for (auto i : m_active_nodes) {
-            if (i < m_n) 
+            if (i < m_n)
             {
                 node[i] = in[i];
             } else {
-                unsigned int idx = (i - m_n) * (m_arity + 1);
+                unsigned int idx = (i - m_n) * (m_arity + 1); // position in the chromosome of the current node
                 for (auto i = 0u; i < m_arity; ++i) {
                     function_in[i] = node[m_x[idx + i + 1]];
                 }
@@ -339,28 +340,28 @@ public:
      */
     template <typename T, functor_enabler<T> = 0>
     std::vector<T> operator()(const std::initializer_list<T>& in) const
-    {  
+    {
         std::vector<T> dummy(in);
         return (*this)(dummy);
     }
 
 
     /// Computes taylor expansion up to order
-    /** 
-     * Using audi::gdual, this method returns the Taylor expansion of the 
+    /**
+     * Using audi::gdual, this method returns the Taylor expansion of the
      * d-CGP expression around the point \p in up to order \p order
      *
      * \param[in] in expansion point
      * \param[in] order maximum order for the Taylor expansion (and hence the derivatives)
      *
-     * @return an std::vector<audi::gdual> containing the Taylor expansion 
+     * @return an std::vector<audi::gdual> containing the Taylor expansion
      * derivatives can be extracted with retval.get_derivative({i,j,k, ... })
      *
      * @throw std::invalid_argument if the size of /p in is inconsistent with
      * the d-CGP number of inputs.
      */
     std::vector<audi::gdual> taylor(const std::vector<double>& in, unsigned int order) const
-    {  
+    {
         // We perform sanity checks
         if(in.size() != m_n)
         {
@@ -370,7 +371,7 @@ public:
         std::vector<audi::gdual> in_expansion;
         for (auto i = 0u; i < in.size(); ++i) {
             in_expansion.emplace_back(in[i], "x" + std::to_string(i), (int)order);
-        } 
+        }
 
         // We compute the CGP expression using gduals
         std::vector<audi::gdual> retval = (*this)(in_expansion);
@@ -383,7 +384,7 @@ public:
                 if (symbols.size() == 0) {
                     for (auto i = 0u; i < in.size(); ++i) {
                         symbols.emplace_back("dx"+std::to_string(i));
-                    } 
+                    }
                 }
                 expression.extend_symbol_set(symbols);
             }
@@ -420,11 +421,11 @@ public:
 
 protected:
     /// Validity of a chromosome
-    /** 
+    /**
      * Checks if a chromosome (i.e. a sequence of integers) is a valid expression
      * by checking its length and the bounds
      *
-     * \param[in] x chromosome 
+     * \param[in] x chromosome
      */
     bool is_valid(const std::vector<unsigned int>& x) const
     {
@@ -483,9 +484,9 @@ protected:
 
         // Then the active genes
         m_active_genes.clear();
-        for (auto i = 0u; i<m_active_nodes.size(); ++i) 
+        for (auto i = 0u; i<m_active_nodes.size(); ++i)
         {
-            if (m_active_nodes[i] >= m_n) 
+            if (m_active_nodes[i] >= m_n)
             {
                 unsigned int idx = (m_active_nodes[i] - m_n) * (m_arity + 1);
                 for (auto i = 0u; i <= m_arity; ++i) {
@@ -493,7 +494,7 @@ protected:
                 }
             }
         }
-        for (auto i = 0u; i<m_m; ++i) 
+        for (auto i = 0u; i<m_m; ++i)
         {
             m_active_genes.push_back(m_r * m_c * (m_arity + 1) + i);
         }

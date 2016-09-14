@@ -19,9 +19,10 @@ using d_my_fun_type = std::function<gdual(const std::vector<gdual>&)>;
 /// Basic prototype of a kernel function for the evaluation of its printable form
 using my_print_fun_type = std::function<std::string(const std::vector<std::string>&)>;
 
+
 /// Basis function
 /**
- * This struct represent one of the kernel functions to be used in a d-CGP expresion. 
+ * This struct represent one of the kernel functions to be used in a d-CGP expresion.
  * It contains three std::function, whose type are my_fun_type, my_d_fun_type,
  * my_print_fun_type. These allow to compute the function value, its Taylor expansion
  * and its symbolic representation.
@@ -32,12 +33,12 @@ using my_print_fun_type = std::function<std::string(const std::vector<std::strin
 struct basis_function
 {
     /// Constructor from std::function construction arguments
-    /*   
+    /*
      * Construct a function that can be used as a kernel in a d-CGP expression
      *
-     * @param[in] f constructs a dcgp::my_fun_type 
-     * @param[in] df constructs a dcgp::d_my_fun_type 
-     * @param[in] pf constructs a dcgp::my_print_fun_type 
+     * @param[in] f constructs a dcgp::my_fun_type
+     * @param[in] df constructs a dcgp::d_my_fun_type
+     * @param[in] pf constructs a dcgp::my_print_fun_type
      * @param[in] name string containing the function name (ex. "sum")
      */
     template <typename T, typename U, typename V>
@@ -90,18 +91,20 @@ struct basis_function
     /// Overloaded stream operator
     /**
      * Will stream the function name
-     * 
+     *
      * @param[in,out] os target stream.
      * @param[in] d dcgp::basis_function argument.
-     * 
+     *
      * @return reference to \p os.
-     * 
+     *
     */
     friend std::ostream& operator<<(std::ostream& os, const basis_function& d)
     {
         os << d.m_name;
         return os;
     }
+
+basis_function(my_fun_type a, d_my_fun_type b, my_print_fun_type c) : my_fun_type(a), d_my_fun_type(b), my_print_fun_type(c) {};
 
     /// The function
     my_fun_type m_f;
@@ -116,4 +119,3 @@ struct basis_function
 } // end of namespace dcgp
 
 #endif // DCGP_BASIS_FUNCTION_H
- 

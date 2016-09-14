@@ -35,7 +35,7 @@ std::string print_my_sum(const std::vector<std::string>& in)
     for (auto i = 1u; i < in.size(); ++i) {
         retval+= "+" + in[i];
     }
-    return retval;
+    return "(" + retval + ")";
 }
 
 template <typename T, f_enabler<T> = 0>
@@ -95,7 +95,7 @@ std::string print_my_div(const std::vector<std::string>& in)
     return "(" + retval + ")";
 }
 
-// sigmoid function: 1 / (1 + exp(- a * b))
+// sigmoid function: 1 / (1 + exp(- (a + b + c + d+ .. + ))
 template <typename T, f_enabler<T> = 0>
 T my_sig(const std::vector<T>& in)
 {
@@ -112,7 +112,7 @@ std::string print_my_sig(const std::vector<std::string>& in)
     for (auto i = 1u; i < in.size(); ++i) {
         retval+= "+" + in[i];
     }
-    return "sig(" + retval + ")";
+    return "sigmoid(" + retval + ")";
 }
 
 /*--------------------------------------------------------------------------
@@ -140,6 +140,18 @@ T my_log(const std::vector<T>& in)
 std::string print_my_log(const std::vector<std::string>& in)
 {
     return "log(" + in[0] + ")";
+}
+
+// logarithm
+template <typename T, f_enabler<T> = 0>
+T my_exp(const std::vector<T>& in)
+{
+    return exp(in[0]);
+}
+
+std::string print_my_exp(const std::vector<std::string>& in)
+{
+    return "exp(" + in[0] + ")";
 }
 
 } // dcgp namespace ends
