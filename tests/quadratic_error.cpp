@@ -5,7 +5,7 @@
 #define BOOST_TEST_MODULE dcgp_differentiation_test
 #include <boost/test/unit_test.hpp>
 
-#include "../src/dcgp.hpp"
+#include "../include/dcgp.hpp"
 
 double test_qe(
         unsigned int n,
@@ -19,7 +19,7 @@ double test_qe(
    dcgp::function_set basic_set({"sum","diff","mul","div"});
    dcgp::expression ex(n, m, r, c, l, a, basic_set(), 123);
 
-    // creates N data points 
+    // creates N data points
     std::default_random_engine re;
     std::vector<std::vector<double> > in;
     std::vector<std::vector<double> > out;
@@ -28,7 +28,7 @@ double test_qe(
     bool all_finite;
     // assuming that mutating the program will sooner or later produce an expression that is not nan or inf in any of the points ...
     // ... the following loop is not infinite
-    do 
+    do
     {
         ex.mutate_active();
         all_finite=true;
@@ -36,7 +36,7 @@ double test_qe(
         out.clear();
         for (auto i = 0u; i < N; ++i)
         {
-            for (auto j = 0u; j < n; ++j) 
+            for (auto j = 0u; j < n; ++j)
             {
                 in_point[j] = std::uniform_real_distribution<double>(-1, 1)(re);
             }
@@ -65,7 +65,7 @@ audi::gdual test_qe2(
    dcgp::function_set basic_set({"sum","diff","mul","div"});
    dcgp::expression ex(n, m, r, c, l, a, basic_set(), 123);
 
-    // creates N data points 
+    // creates N data points
     std::default_random_engine re;
     std::vector<std::vector<audi::gdual> > in;
     std::vector<std::vector<audi::gdual> > out;
@@ -74,7 +74,7 @@ audi::gdual test_qe2(
     bool all_finite;
     // assuming that mutating the program will sooner or later produce an expression that is not nan or inf in any of the points ...
     // ... the following loop is not infinite
-    do 
+    do
     {
         ex.mutate_active();
         all_finite=true;
@@ -83,14 +83,14 @@ audi::gdual test_qe2(
         for (auto i = 0u; i < N; ++i)
         {
             // We only define the first node as a weight and we compute the derivative of the objfun wrt this.
-            in_point[0] = audi::gdual(3, "w", 1); 
-            for (auto j = 1u; j < n; ++j) 
+            in_point[0] = audi::gdual(3, "w", 1);
+            for (auto j = 1u; j < n; ++j)
             {
                 in_point[j] = audi::gdual(std::uniform_real_distribution<double>(-1, 1)(re));
             }
 
             // We then compute the expression
-            out_point = ex(in_point);          
+            out_point = ex(in_point);
             //for (auto k : out_point) {
             //    if (!std::isfinite(k)) {
             //        all_finite = false;

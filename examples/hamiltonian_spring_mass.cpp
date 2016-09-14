@@ -1,7 +1,7 @@
 #include <iostream>
 
-#include "../src/expression.hpp"
-#include "../src/function_set.hpp"
+#include "../include/expression.hpp"
+#include "../include/function_set.hpp"
 
 // Here we search for first integrals of the mass spring sistem (one dimension) using our "mutation suppression" method
 // The hamiltonian is H = 1/2 p^2 + 1/2 q^2
@@ -16,13 +16,15 @@ double fitness(const dcgp::expression& ex, const std::vector<std::vector<double>
         double dFq = T[0].get_derivative({0, 1});
         double p = in[i][0];
         double q = in[i][1];
-        double err = - dFp * q + dFq * p;                       
-        retval += (err) * (err);  
-        check += dFp*dFp + dFq*dFq;                      // We compute the quadratic error 
+        double err = - dFp * q + dFq * p;
+        retval += (err) * (err);
+        check += dFp*dFp + dFq*dFq;                      // We compute the quadratic error
     }
 
     return retval;
 }
+
+using namespace dcgp;
 
 int main () {
     // Random seed
@@ -75,9 +77,9 @@ int main () {
         }
     } while (best_fit > 1e-12 && gen < 10000);
 
-    std::cout << "Number of generations: " << gen << std::endl;
-    std::cout << "Expression: " <<  ex << std::endl;
-    std::cout << "Expression: " << ex(in_sym) << std::endl;
-    std::cout << "Point: " <<  in[2] << std::endl;
-    std::cout << "Taylor: " <<  ex.taylor(in[2], 1) << std::endl;
+    stream(std::cout, "Number of generations: ", gen, "\n");
+    stream(std::cout, "Expression: ", ex, "\n");
+    stream(std::cout, "Expression: ", ex(in_sym), "\n");
+    stream(std::cout, "Point: ",  in[2], "\n");
+    stream(std::cout, "Taylor: ",  ex.taylor(in[2], 1), "\n");
 }

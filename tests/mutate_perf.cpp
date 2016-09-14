@@ -3,7 +3,7 @@
 #include <boost/timer/timer.hpp>
 #include <iostream>
 
-#include "../src/dcgp.hpp"
+#include "../include/dcgp.hpp"
 
 
 void perform_active_mutations(unsigned int in,
@@ -39,4 +39,3 @@ BOOST_AUTO_TEST_CASE(mutate_active_speed)
     perform_active_mutations(1,1,3,100,101, 2, 100000, basic_set());
     perform_active_mutations(1,1,100,100,101, 2, 100000, basic_set());
 }
-

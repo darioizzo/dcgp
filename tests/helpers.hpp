@@ -3,28 +3,29 @@
 
 #include <vector>
 #include <stdexcept>
+#include <boost/test/unit_test.hpp>
 
 namespace dcgp
 {
 
-template <typename Iterator>
-inline bool EPSILON_COMPARE(Iterator It1first, Iterator It1last, Iterator It2first, double epsilon)
+template <typename T>
+void CHECK_EQUAL_V(const T& in1, const T& in2)
 {
-    return std::equal(It1first, It1last, It2first, [epsilon](double x, double y){return std::abs(x-y) < epsilon;});
+    BOOST_CHECK_EQUAL(in1.size(), in2.size());
+    for (decltype(in1.size()) i = 0u; i < in1.size(); ++i) {
+        BOOST_CHECK_EQUAL(in1[i], in2[i]);
+    }
 }
 
 template <typename T>
-inline bool EPSILON_COMPARE(std::vector<T> first, std::vector<T> second, double epsilon)
+void CHECK_CLOSE_V(const T& in1, const T& in2, double tol)
 {
-    if (first.size()!=second.size()) {
-        throw std::invalid_argument("Vectors must be of equal size");
+    BOOST_CHECK_EQUAL(in1.size(), in2.size());
+    for (decltype(in1.size()) i = 0u; i < in1.size(); ++i) {
+        BOOST_CHECK_CLOSE(in1[i], in2[i], tol);
     }
-
-    return EPSILON_COMPARE(first.begin(), first.end(), second.begin(), epsilon);
 }
 
-
-
-} // end of namespace dcgp 
+} // end of namespace dcgp
 
 #endif

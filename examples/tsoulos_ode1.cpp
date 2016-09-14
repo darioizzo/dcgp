@@ -1,7 +1,7 @@
 #include <iostream>
 
-#include "../src/expression.hpp"
-#include "../src/function_set.hpp"
+#include "../include/expression.hpp"
+#include "../include/function_set.hpp"
 
 // Here we solve the differential equation dy = (2x - y) / x from Tsoulos paper
 // Tsoulos and Lagaris: "Solving Differential equations with genetic programming"
@@ -14,8 +14,8 @@ double fitness(const dcgp::expression& ex, const std::vector<std::vector<double>
         double y = T[0].get_derivative({0});
         double dy = T[0].get_derivative({1});
         double x = in[i][0];
-        double ode1 = (2 * x - y) / x;          
-        retval += (ode1 - dy) * (ode1 - dy);            // We compute the quadratic error 
+        double ode1 = (2 * x - y) / x;
+        retval += (ode1 - dy) * (ode1 - dy);            // We compute the quadratic error
     }
     return retval;
 }
@@ -70,6 +70,6 @@ int main () {
             }
         }
     } while (best_fit > 1e-3 && gen < 10000);
-    std::cout << "Number of generations: " << gen << std::endl;
-    std::cout << "Expression: " << ex(in_sym) << std::endl;
+    dcgp::stream(std::cout, "Number of generations: ", gen, "\n");
+    dcgp::stream(std::cout, "Expression: ", ex(in_sym), "\n");
 }

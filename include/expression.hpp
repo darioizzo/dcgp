@@ -12,7 +12,7 @@
 #include <sstream>
 
 #include "basis_function.hpp"
-#include "std_overloads.hpp"
+#include "io.hpp"
 
 
 namespace dcgp {
@@ -401,22 +401,22 @@ public:
      *
      * @return std::string containing a human-readable representation of the problem.
      */
-    friend std::ostream &operator<<(std::ostream &s, const expression &d)
+    friend std::ostream &operator<<(std::ostream &os, const expression &d)
     {
-        s << "d-CGP Expression:\n";
-        s << "\tNumber of inputs:\t\t" << d.m_n << '\n';
-        s << "\tNumber of outputs:\t\t" << d.m_m << '\n';
-        s << "\tNumber of rows:\t\t\t" << d.m_r << '\n';
-        s << "\tNumber of columns:\t\t" << d.m_c << '\n';
-        s << "\tNumber of levels-back allowed:\t" << d.m_l << '\n';
-        s << "\tBasis function arity:\t\t" << d.m_arity << '\n';
-        s << "\n\tResulting lower bounds:\t" << d.m_lb;
-        s << "\n\tResulting upper bounds:\t" << d.m_ub << '\n';
-        s << "\n\tCurrent expression (encoded):\t" << d.m_x << '\n';
-        s << "\tActive nodes:\t\t\t" << d.m_active_nodes << '\n';
-        s << "\tActive genes:\t\t\t" << d.m_active_genes << '\n';
-        s << "\n\tFunction set:\t\t\t" << d.m_f << '\n';
-        return s;
+        stream(os, "d-CGP Expression:\n");
+        stream(os, "\tNumber of inputs:\t\t", d.m_n, '\n');
+        stream(os,  "\tNumber of outputs:\t\t", d.m_m, '\n');
+        stream(os,  "\tNumber of rows:\t\t\t", d.m_r, '\n');
+        stream(os,  "\tNumber of columns:\t\t", d.m_c, '\n');
+        stream(os,  "\tNumber of levels-back allowed:\t", d.m_l, '\n');
+        stream(os,  "\tBasis function arity:\t\t", d.m_arity, '\n');
+        stream(os,  "\n\tResulting lower bounds:\t", d.m_lb);
+        stream(os,  "\n\tResulting upper bounds:\t", d.m_ub, '\n');
+        stream(os,  "\n\tCurrent expression (encoded):\t", d.m_x, '\n');
+        stream(os,  "\tActive nodes:\t\t\t", d.m_active_nodes, '\n');
+        stream(os,  "\tActive genes:\t\t\t", d.m_active_genes, '\n');
+        stream(os,  "\n\tFunction set:\t\t\t", d.m_f, '\n');
+        return os;
     }
 
 protected:

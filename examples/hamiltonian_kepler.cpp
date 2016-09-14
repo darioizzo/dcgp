@@ -1,7 +1,7 @@
 #include <iostream>
 
-#include "../src/expression.hpp"
-#include "../src/function_set.hpp"
+#include "../include/expression.hpp"
+#include "../include/function_set.hpp"
 
 // Here we search for first integrals of the Kepler's problem) using our "mutation suppression" method
 // The hamiltonian is H = 1/(2m) (pr^2+pt^2 / r^2) + mu / r
@@ -22,13 +22,15 @@ double fitness(const dcgp::expression& ex, const std::vector<std::vector<double>
         double qt = in[i][3];
         double m =  in[i][4];
         double mu = in[i][5];
-        double err = dFpr * (pt*pt/m/qr/qr/qr - mu/qr/qr) + dFqr * (pr/m) + dFqt * (pt/qr/qr/m);                    
-        retval += (err) * (err);                                 // We compute the quadratic error   
+        double err = dFpr * (pt*pt/m/qr/qr/qr - mu/qr/qr) + dFqr * (pr/m) + dFqt * (pt/qr/qr/m);
+        retval += (err) * (err);                                 // We compute the quadratic error
         check += dFpr*dFpr + dFqr*dFqr + dFqt*dFqt; // If check is 0 then ex represent a constant or an ignorable variable
     }
 
     return retval;
 }
+
+using namespace dcgp;
 
 int main () {
     // Random seed
@@ -47,10 +49,10 @@ int main () {
     std::vector<double> dumb(6);
     std::vector<std::vector<double> > in(50, dumb);
     for (auto i = 0u; i < in.size(); ++i) {
-        in[i][0] = 0.12 + 20 / (in.size() - 1) * i; 
-        in[i][1] = 1 + 20 / (in.size() - 1) * i; 
-        in[i][2] = 0.10 + 20 / (in.size() - 1) * i; 
-        in[i][3] = 1 + 20 / (in.size() - 1) * i; 
+        in[i][0] = 0.12 + 20 / (in.size() - 1) * i;
+        in[i][1] = 1 + 20 / (in.size() - 1) * i;
+        in[i][2] = 0.10 + 20 / (in.size() - 1) * i;
+        in[i][3] = 1 + 20 / (in.size() - 1) * i;
         in[i][4] = 0.11 + 0.9 / (in.size() - 1) * i;
         in[i][5] = 1 + 0.143 / (in.size() - 1) * i;
     }
@@ -76,8 +78,8 @@ int main () {
         for (auto i = 0u; i < newfits.size(); ++i) {
             if (newfits[i] <= best_fit) {
                 if (newfits[i] != best_fit) {
-                    std::cout << "New best found: gen: " << std::setw(7) << gen << "\t value: " << newfits[i] << std::endl;
-                    //std::cout << "Expression: " << ex(in_sym) << std::endl;
+                    stream(std::cout, "New best found: gen: ", std::setw(7), gen, "\t value: ", newfits[i], "\n");
+                    //std::cout << "Expression: " << ex(in_sym), "\n");
                 }
                 best_fit = newfits[i];
                 best_chromosome = newchromosomes[i];
@@ -86,9 +88,9 @@ int main () {
         }
     } while (best_fit > 1e-12 && gen < 10000);
 
-    std::cout << "Number of generations: " << gen << std::endl;
-    std::cout << "Expression: " <<  ex << std::endl;
-    std::cout << "Expression: " << ex(in_sym) << std::endl;
-    std::cout << "Point: " <<  in[2] << std::endl;
-    std::cout << "Taylor: " <<  ex.taylor(in[2], 1) << std::endl;
+    stream(std::cout, "Number of generations: ", gen, "\n");
+    stream(std::cout, "Expression: ", ex, "\n");
+    stream(std::cout, "Expression: ", ex(in_sym), "\n");
+    stream(std::cout, "Point: ",  in[2], "\n");
+    stream(std::cout, "Taylor: ",  ex.taylor(in[2], 1), "\n");
 }

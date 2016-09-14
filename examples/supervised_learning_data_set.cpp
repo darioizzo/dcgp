@@ -6,14 +6,14 @@
 #include <vector>
 #include <sstream>
 
-#include "../src/function_set.hpp"
-#include "../src/expression.hpp"
-#include "../src/fitness_functions.hpp"
-#include "../src/std_overloads.hpp"
+#include "../include/function_set.hpp"
+#include "../include/expression.hpp"
+#include "../include/fitness_functions.hpp"
+#include "../include/io.hpp"
 #include "detail/read_data.hpp"
 #include "detail/es.hpp"
 
-using namespace std;
+using namespace dcgp;
 
 int main () {
     // Random seed
@@ -31,15 +31,14 @@ int main () {
     // Symbols
     std::vector<std::string> in_sym({"x","y"});
 
-    // We use a simple ES(1+4) to evolve an expression that represents our target. 
+    // We use a simple ES(1+4) to evolve an expression that represents our target.
     // Mutation only mutates 2 active genes
     es_params params{4, "active", 4, 0.01, 100000};
     es(in, out, ex, params);
 
     // We print out the final expression
-    std::cout << "Final expression: " << ex(in_sym) << std::endl;
-    std::cout << "Final value: " << quadratic_error(ex, in, out) << std::endl;
+    stream(std::cout, "Final expression: ", ex(in_sym), "\n");
+    stream(std::cout, "Final value: ", quadratic_error(ex, in, out), "\n");
     return false;
-    
-}
 
+}

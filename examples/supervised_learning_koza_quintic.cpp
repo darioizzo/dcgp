@@ -3,9 +3,9 @@
 #include <random>
 #include <cmath>
 
-#include "../src/function_set.hpp"
-#include "../src/expression.hpp"
-#include "../src/fitness_functions.hpp"
+#include "../include/function_set.hpp"
+#include "../include/expression.hpp"
+#include "../include/fitness_functions.hpp"
 #include "detail/es.hpp"
 
 bool kq(
@@ -42,12 +42,12 @@ bool kq(
         out.push_back(out_point);
     }
 
-    // 2) we use a simple ES(1+4) to evolve an expression that represents our target. 
+    // 2) we use a simple ES(1+4) to evolve an expression that represents our target.
     // Mutation only mutates 2 active genes
     es_params params{4, "active", 2, 0, 10000};
     es(in, out, ex, params);
 
-    std::cout << "Final expression: " << ex(in_sym) << std::endl;
+    dcgp::stream(std::cout, "Final expression: ", ex(in_sym), "\n");
     return false;
 }
 
@@ -55,4 +55,3 @@ bool kq(
 int main() {
     return kq(1,15,16,2,10);
 }
-

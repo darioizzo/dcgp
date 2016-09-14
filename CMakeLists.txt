@@ -6,6 +6,13 @@ cmake_minimum_required(VERSION 3.2.0)
 # Here we augment the cmake modules path
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" "${CMAKE_CURRENT_SOURCE_DIR}/cmake/yacma")
 
+# Set default build type to "Release".
+if(NOT CMAKE_BUILD_TYPE)
+	set(CMAKE_BUILD_TYPE Release CACHE STRING
+		"Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel."
+	FORCE)
+endif(NOT CMAKE_BUILD_TYPE)
+
 include(YACMACompilerLinkerSettings)
 
 # Provides build options to CMake
@@ -80,8 +87,6 @@ include_directories(${MPFR_INCLUDE_DIR})
 # NOTE: MPFR should be linked in before GMP, that's why we link GMP here.
 set(MANDATORY_LIBRARIES ${MANDATORY_LIBRARIES} ${MPFR_LIBRARIES} ${GMP_LIBRARIES})
 
-# Here we define the file list and make the static and dynamic library
-#add_subdirectory("${CMAKE_SOURCE_DIR}/src")
 
 # Build main and link it to static library.
 IF(BUILD_MAIN)

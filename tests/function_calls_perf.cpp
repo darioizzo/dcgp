@@ -4,14 +4,14 @@
 #include <boost/timer/timer.hpp>
 #include <vector>
 
-#include "../src/wrapped_functions.hpp"
-#include "../src/basis_function.hpp" //my_fun_type
-#include "../src/function_set.hpp"
-#include "../src/expression.hpp"
+#include "../include/wrapped_functions.hpp"
+#include "../include/basis_function.hpp" //my_fun_type
+#include "../include/function_set.hpp"
+#include "../include/expression.hpp"
 
 
-// We test the speed of evauating sig(a+b) calling 
-// the function directly, via an std::function or a minimal d-CGP expression 
+// We test the speed of evauating sig(a+b) calling
+// the function directly, via an std::function or a minimal d-CGP expression
 
 BOOST_AUTO_TEST_CASE(function_calls)
 {
@@ -59,9 +59,8 @@ BOOST_AUTO_TEST_CASE(function_calls)
     {
         boost::timer::auto_cpu_timer t; // Sets up a timer
         for (auto i = 0u; i < N; ++i)
-        {   
+        {
             ex(ab_vector[i]);
         }
     }
 }
-

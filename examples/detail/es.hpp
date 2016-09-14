@@ -2,10 +2,7 @@
 #include <random>
 #include <iostream>
 
-#include "../../src/std_overloads.hpp"
-#include "../../src/expression.hpp"
-
-using namespace std;
+#include "../../include/expression.hpp"
 
 struct es_params {
     unsigned int m_childs;
@@ -49,7 +46,6 @@ void es(const std::vector<std::vector<double> >& in, const std::vector<std::vect
             if (newfits[i] <= best_fit) {
                 if (newfits[i] != best_fit) {
                     std::cout << "New best found: gen: " << std::setw(7) << gen << "\t value: " << newfits[i] << std::endl;
-                    //std::cout << "Expression: " << ex(in_sym) << std::endl;
                 }
                 best_fit = newfits[i];
                 best_chromosome = newchromosomes[i];
@@ -60,4 +56,3 @@ void es(const std::vector<std::vector<double> >& in, const std::vector<std::vect
     ex.set(best_chromosome);
     std::cout << "Number of generations: " << gen << std::endl;
 }
-

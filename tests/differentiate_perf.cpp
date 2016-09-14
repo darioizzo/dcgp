@@ -4,8 +4,8 @@
 #include <iostream>
 #include <audi/gdual.hpp>
 
-#include "../src/expression.hpp"
-#include "../src/function_set.hpp"
+#include "../include/expression.hpp"
+#include "../include/function_set.hpp"
 
 using namespace audi;
 
@@ -52,7 +52,7 @@ BOOST_AUTO_TEST_CASE(evaluation_speed)
     unsigned int N = 1000;
 
     dcgp::function_set function_set1({"sum","diff","mul","div"});
-    std::cout << "Function set " << function_set1() << std::endl;
+    dcgp::stream(std::cout, "Function set ", function_set1(), "\n");
     perform_evaluations(2,4,2,3,4, 2, N, function_set1());
     perform_evaluations(2,4,10,10,11, 2, N, function_set1());
     perform_evaluations(2,4,20,20,21, 2, N, function_set1());
@@ -61,7 +61,7 @@ BOOST_AUTO_TEST_CASE(evaluation_speed)
     perform_evaluations(1,1,3,100,101, 2, N, function_set1());
 
     dcgp::function_set function_set2({"sum","mul","sig"});
-    std::cout << std::endl << "Function set " << function_set2() << std::endl;
+    dcgp::stream(std::cout, "Function set ", function_set2(), "\n");
     perform_evaluations(2,4,2,3,4, 2, N, function_set2());
     perform_evaluations(2,4,10,10,11, 2, N, function_set2());
     perform_evaluations(2,4,20,20,21, 2, N, function_set2());
@@ -69,4 +69,3 @@ BOOST_AUTO_TEST_CASE(evaluation_speed)
     perform_evaluations(1,1,2,100,101, 2, N, function_set2());
     perform_evaluations(1,1,3,100,101, 2, N, function_set2());
 }
-
