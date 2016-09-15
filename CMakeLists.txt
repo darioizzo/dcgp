@@ -94,6 +94,8 @@ IF(BUILD_MAIN)
 	TARGET_LINK_LIBRARIES(main ${MANDATORY_LIBRARIES})
     target_compile_options(main PUBLIC "$<$<CONFIG:DEBUG>:${YACMA_CXX_FLAGS_DEBUG}>")
     target_compile_options(main PUBLIC "$<$<CONFIG:RELEASE>:${YACMA_CXX_FLAGS}>")
+    set_property(TARGET main PROPERTY CXX_STANDARD 11)
+    set_property(TARGET main PROPERTY CXX_STANDARD_REQUIRED YES)
 ENDIF(BUILD_MAIN)
 
 # Build perf test in release and tests in debug

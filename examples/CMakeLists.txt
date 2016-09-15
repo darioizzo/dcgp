@@ -3,6 +3,8 @@ MACRO(ADD_EXAMPLE arg1)
 	TARGET_LINK_LIBRARIES(${arg1} ${MANDATORY_LIBRARIES})
     target_compile_options(${arg1} PUBLIC "$<$<CONFIG:DEBUG>:${YACMA_CXX_FLAGS_DEBUG}>")
     target_compile_options(${arg1} PUBLIC "$<$<CONFIG:RELEASE>:${YACMA_CXX_FLAGS}>")
+    set_property(TARGET ${arg1} PROPERTY CXX_STANDARD 11)
+    set_property(TARGET ${arg1} PROPERTY CXX_STANDARD_REQUIRED YES)
 ENDMACRO(ADD_EXAMPLE)
 
 # Supervised learning examples

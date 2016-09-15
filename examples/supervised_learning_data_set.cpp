@@ -23,7 +23,7 @@ int main () {
     read_data(in, out, "../../examples/data/pressure.data");
 
     // Function set
-    dcgp::function_set basic_set({"sum", "diff", "mul", "div", "sigmoid"});
+    dcgp::function_set basic_set({"sum", "diff", "mul", "div", "sig"});
 
     // d-CGP expression
     dcgp::expression ex(2, 1, 2, 100, 101, 2, basic_set(), rd());
