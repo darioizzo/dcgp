@@ -40,6 +40,7 @@ public:
      * \param[in] r number of rows of the cartesian cgp
      * \param[in] c number of columns of the cartesian cgp
      * \param[in] l number of levels-back allowed for the cartesian cgp
+     * \param[in] arity arity of the basis functions
      * \param[in] f function set. An std::vector of dcgp::basis_function
      * \param[in] seed seed for the random number generator (initial expression  and mutations depend on this)
      */
@@ -78,11 +79,11 @@ public:
         // Bounds for the node connection genes
         for (auto i = 0u; i < m_c; ++i) {
             for (auto j = 0u; j < m_r; ++j) {
-                m_ub[((i * m_r) + j) * (arity + 1) + 1] = m_n + i * m_r - 1;
-                m_ub[((i * m_r) + j) * (arity + 1) + 2] = m_n + i * m_r - 1;
-                if (i >= m_l) {
-                    m_lb[((i * m_r) + j) * (arity + 1) + 1] = m_n + m_r * (i - m_l);
-                    m_lb[((i * m_r) + j) * (arity + 1) + 2] = m_n + m_r * (i - m_l);
+                for (auto k = 0u; k < arity; ++k) {
+                    m_ub[((i * m_r) + j) * (arity + 1) + k + 1] = m_n + i * m_r - 1;
+                    if (i >= m_l) {
+                        m_lb[((i * m_r) + j) * (arity + 1) + k + 1] = m_n + m_r * (i - m_l);
+                    }
                 }
             }
         }
@@ -121,6 +122,22 @@ public:
      * @return The chromosome
     */
     const std::vector<unsigned int> & get() const {return m_x;}
+
+    /// Gets the lower bounds
+    /**
+     * Gets the lower bounds for the genes
+     *
+     * @return An std::vector containing the lower bound for each gene
+    */
+    const std::vector<unsigned int> & get_lb() const {return m_lb;}
+
+    /// Gets the upper bounds
+    /**
+     * Gets the upper bounds for the genes
+     *
+     * @return An std::vector containing the upper bound for each gene
+    */
+    const std::vector<unsigned int> & get_ub() const {return m_ub;}
 
     /// Gets the active genes
     /**
