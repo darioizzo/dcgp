@@ -32,3 +32,17 @@ BOOST_AUTO_TEST_CASE(compute)
     CHECK_CLOSE_V(ex2({2.,3.,4.,-2.}), std::vector<double>({0.055555555555555552}), 1e-8);
     CHECK_EQUAL_V(ex2({-1.,1.,-1.,1.}), std::vector<double>({1}));
 }
+
+BOOST_AUTO_TEST_CASE(check_bounds)
+{
+    // Random seed
+    std::random_device rd;
+
+    function_set basic_set({"sum","diff","mul","div"});
+
+    // Testing an expression with arity 3, levels-back 2
+    expression ex(3,1,2,3,2,3,basic_set(),rd());
+
+    CHECK_EQUAL_V(ex.get_lb(), std::vector<unsigned int>({0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,3,3,0,3,3,3,5}));
+    CHECK_EQUAL_V(ex.get_ub(), std::vector<unsigned int>({3,2,2,2,3,2,2,2,3,4,4,4,3,4,4,4,3,6,6,6,3,6,6,6,8}));
+}
