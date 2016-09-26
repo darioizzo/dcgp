@@ -1,5 +1,5 @@
 # d-CGP
-Implementation of the differential Cartesian Genetic Programming (d-CGP)
+Implementation of differentiable Cartesian Genetic Programming (d-CGP)
 
 The d-CGP is a recent development in the field of Genetic Programming that adds the information about the derivatives of the output nodes (the programs, or expressions encoded) with respect to the input nodes (the input values) and weights. In doing so, it enables a number of new applications currently the subject of active research.
 
