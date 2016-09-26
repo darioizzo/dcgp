@@ -77,7 +77,7 @@ message(STATUS "MPFR include dir is: ${MPFR_INCLUDE_DIR}")
 message(STATUS "MPFR library is: ${MPFR_LIBRARIES}")
 message(STATUS "Checking MPFR version.")
 try_compile(MPFR_VERSION_CHECK ${CMAKE_BINARY_DIR} "${CMAKE_SOURCE_DIR}/cmake/mpfr_check_version.cpp"
-	CMAKE_FLAGS "-Dinclude_directories:STRING=${MPFR_INCLUDE_DIR};${GMP_INCLUDE_DIR}")
+	CMAKE_FLAGS "-DINCLUDE_DIRECTORIES:STRING=${MPFR_INCLUDE_DIR};${GMP_INCLUDE_DIR}")
 IF(NOT MPFR_VERSION_CHECK)
 	message(FATAL_ERROR "Unsupported MPFR version, please upgrade.")
 ENDIF(NOT MPFR_VERSION_CHECK)
@@ -88,12 +88,12 @@ include_directories(${MPFR_INCLUDE_DIR})
 set(MANDATORY_LIBRARIES ${MANDATORY_LIBRARIES} ${MPFR_LIBRARIES} ${GMP_LIBRARIES})
 
 # Add the subdirectory for the library / headers
-ADD_SUBDIRECTORY("${CMAKE_SOURCE_DIR}/include")
+add_subdirectory("${CMAKE_SOURCE_DIR}/include")
 
 # Build main
 IF(BUILD_MAIN)
 	add_executable(main main.cpp)
-	TARGET_LINK_LIBRARIES(main ${MANDATORY_LIBRARIES})
+	target_link_libraries(main ${MANDATORY_LIBRARIES})
     target_compile_options(main PUBLIC "$<$<CONFIG:DEBUG>:${YACMA_CXX_FLAGS_DEBUG}>")
     target_compile_options(main PUBLIC "$<$<CONFIG:RELEASE>:${YACMA_CXX_FLAGS}>")
     set_property(TARGET main PROPERTY CXX_STANDARD 14)
