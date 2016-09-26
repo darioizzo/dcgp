@@ -6,16 +6,17 @@
 #include <string>
 #include <iostream>
 #include <vector>
-#include <audi/gdual.hpp>
-
-namespace dcgp {
+#include <audi/audi.hpp>
 
 using namespace audi;
+using gdual_d = audi::gdual<double>;
+
+namespace dcgp {
 
 /// Basic prototype of a kernel function for its simple evaluation
 using my_fun_type = std::function<double(const std::vector<double>&)>;
 /// Basic prototype of a kernel function for the evaluation of its Taylor expansion
-using d_my_fun_type = std::function<gdual(const std::vector<gdual>&)>;
+using d_my_fun_type = std::function<gdual_d(const std::vector<gdual_d>&)>;
 /// Basic prototype of a kernel function for the evaluation of its printable form
 using my_print_fun_type = std::function<std::string(const std::vector<std::string>&)>;
 
@@ -69,7 +70,7 @@ struct basis_function
     *
     * @return the Taylor representation of \f$f\f$
     */
-    gdual operator()(const std::vector<gdual>& in) const
+    gdual_d operator()(const std::vector<gdual_d>& in) const
     {
             return m_df(in);
     }

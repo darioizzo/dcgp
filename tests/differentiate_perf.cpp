@@ -8,6 +8,7 @@
 #include "../include/function_set.hpp"
 
 using namespace audi;
+using gdual_d = audi::gdual<double>;
 
 void perform_evaluations(unsigned int in,
                   unsigned int out,
@@ -23,15 +24,15 @@ void perform_evaluations(unsigned int in,
     // Instatiate the expression
     dcgp::expression ex(in, out, rows, columns, levels_back, arity, function_set, 123);
     // We create the input data upfront and we do not time it.
-    std::vector<gdual> dumb(in);
-    std::vector<std::vector<gdual> > in_num(N, dumb);
+    std::vector<gdual_d> dumb(in);
+    std::vector<std::vector<gdual_d> > in_num(N, dumb);
 
     for (auto j = 0u; j < N; ++j)
     {
         for (auto i = 0u; i < in; ++i)
         {
             auto value = std::uniform_real_distribution<double>(-1, 1)(re);
-            in_num[j][i] = gdual(value, "x" + std::to_string(i), 1);
+            in_num[j][i] = gdual_d(value, "x" + std::to_string(i), 1);
         }
     }
 

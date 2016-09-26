@@ -1,7 +1,9 @@
+#ifndef DCGP_FITNESS_FUNCTIONS_H
+#define DCGP_FITNESS_FUNCTIONS_H
+
 #include <cmath>
 #include <vector>
 #include <audi/functions.hpp>
-#include <audi/gdual.hpp>
 
 #include "expression.hpp"
 
@@ -9,9 +11,9 @@ namespace dcgp {
 
 /// Computes the error of a d-CGP expression in approximating given data
 template <typename T1, typename T2>
-T1 quadratic_error(const expression& ex, 
-    const std::vector<std::vector<T1> >& in_des, 
-    const std::vector<std::vector<T2> >& out_des) 
+T1 quadratic_error(const expression& ex,
+    const std::vector<std::vector<T1> >& in_des,
+    const std::vector<std::vector<T2> >& out_des)
 {
     using namespace std;
 
@@ -35,3 +37,5 @@ T1 quadratic_error(const expression& ex,
 }
 
 } // namespace
+
+#endif

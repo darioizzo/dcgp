@@ -1,3 +1,4 @@
+#include <audi/audi.hpp>
 #include <iostream>
 #include <iomanip>
 #include <random>
@@ -53,7 +54,7 @@ double test_qe(
     return dcgp::quadratic_error<double>(ex, in, out);
 }
 
-audi::gdual test_qe2(
+audi::gdual_d test_qe2(
         unsigned int n,
         unsigned int m,
         unsigned int r,
@@ -67,10 +68,10 @@ audi::gdual test_qe2(
 
     // creates N data points
     std::default_random_engine re;
-    std::vector<std::vector<audi::gdual> > in;
-    std::vector<std::vector<audi::gdual> > out;
-    std::vector<audi::gdual> in_point(n);
-    std::vector<audi::gdual> out_point(m);
+    std::vector<std::vector<audi::gdual_d> > in;
+    std::vector<std::vector<audi::gdual_d> > out;
+    std::vector<audi::gdual_d> in_point(n);
+    std::vector<audi::gdual_d> out_point(m);
     bool all_finite;
     // assuming that mutating the program will sooner or later produce an expression that is not nan or inf in any of the points ...
     // ... the following loop is not infinite
@@ -83,10 +84,10 @@ audi::gdual test_qe2(
         for (auto i = 0u; i < N; ++i)
         {
             // We only define the first node as a weight and we compute the derivative of the objfun wrt this.
-            in_point[0] = audi::gdual(3, "w", 1);
+            in_point[0] = audi::gdual_d(3, "w", 1);
             for (auto j = 1u; j < n; ++j)
             {
-                in_point[j] = audi::gdual(std::uniform_real_distribution<double>(-1, 1)(re));
+                in_point[j] = audi::gdual_d(std::uniform_real_distribution<double>(-1, 1)(re));
             }
 
             // We then compute the expression
@@ -97,13 +98,13 @@ audi::gdual test_qe2(
             //    }
             //}
             for (auto &k : out_point) {
-                k = audi::gdual(k.constant_cf());
+                k = audi::gdual_d(k.constant_cf());
             }
             in.push_back(in_point);
             out.push_back(out_point);
         }
     } while (!all_finite);
-    return dcgp::quadratic_error<audi::gdual>(ex, in, out);
+    return dcgp::quadratic_error<audi::gdual_d>(ex, in, out);
 }
 
 using namespace dcgp;
@@ -118,6 +119,6 @@ BOOST_AUTO_TEST_CASE(quadratic_error_obj_fun)
     // We test that a d-CGP expression computed on 20 points
     // has a zero quadratic error w.r.t. itself, and that the
     // derivative of the quadratic error is zero w.r.t. one of the inputs (a weight)
-    BOOST_CHECK_EQUAL(test_qe2(3,1,1,20,21,2,20), audi::gdual(0));
-    BOOST_CHECK_EQUAL(test_qe2(2,2,3,10,11,2,20), audi::gdual(0));
+    BOOST_CHECK_EQUAL(test_qe2(3,1,1,20,21,2,20), audi::gdual_d(0));
+    BOOST_CHECK_EQUAL(test_qe2(2,2,3,10,11,2,20), audi::gdual_d(0));
 }

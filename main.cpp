@@ -41,7 +41,7 @@ int main() {
     stream(std::cout,  "Numerical value = ", simple(in_num), "\n");
 
     // We compute the d-CGP jet of derivatives up to order 2
-    std::vector<audi::gdual> jet = simple.taylor(in_num,2);
+    std::vector<audi::gdual<double>> jet = simple.taylor(in_num,2);
     stream(std::cout,  "Numerical values d/dx = ", jet[0].get_derivative({1,0,0}) , "\n");
     stream(std::cout,  "Numerical values d/dy = ", jet[0].get_derivative({0,1,0}) , "\n");
     stream(std::cout,  "Numerical values d/dz = ", jet[0].get_derivative({0,0,1}) , "\n");

@@ -87,14 +87,16 @@ include_directories(${MPFR_INCLUDE_DIR})
 # NOTE: MPFR should be linked in before GMP, that's why we link GMP here.
 set(MANDATORY_LIBRARIES ${MANDATORY_LIBRARIES} ${MPFR_LIBRARIES} ${GMP_LIBRARIES})
 
+# Add the subdirectory for the library / headers
+ADD_SUBDIRECTORY("${CMAKE_SOURCE_DIR}/include")
 
-# Build main and link it to static library.
+# Build main
 IF(BUILD_MAIN)
 	add_executable(main main.cpp)
 	TARGET_LINK_LIBRARIES(main ${MANDATORY_LIBRARIES})
     target_compile_options(main PUBLIC "$<$<CONFIG:DEBUG>:${YACMA_CXX_FLAGS_DEBUG}>")
     target_compile_options(main PUBLIC "$<$<CONFIG:RELEASE>:${YACMA_CXX_FLAGS}>")
-    set_property(TARGET main PROPERTY CXX_STANDARD 11)
+    set_property(TARGET main PROPERTY CXX_STANDARD 14)
     set_property(TARGET main PROPERTY CXX_STANDARD_REQUIRED YES)
 ENDIF(BUILD_MAIN)
 

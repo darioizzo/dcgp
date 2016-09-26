@@ -7,7 +7,7 @@
 #include <random>
 #include <initializer_list>
 #include <stdexcept>
-#include <audi/gdual.hpp>
+#include <audi/audi.hpp>
 #include <iostream>
 #include <sstream>
 
@@ -30,7 +30,7 @@ class expression {
 private:
     // SFINAE dust
     template <typename T>
-    using functor_enabler = typename std::enable_if<std::is_same<T,double>::value || std::is_same<T,gdual>::value || std::is_same<T,std::string>::value,int>::type;
+    using functor_enabler = typename std::enable_if<std::is_same<T,double>::value || std::is_same<T,audi::gdual_d>::value || std::is_same<T,std::string>::value,int>::type;
 public:
     /// Constructor
     /** Constructs a d-CGP expression
@@ -377,7 +377,7 @@ public:
      * @throw std::invalid_argument if the size of /p in is inconsistent with
      * the d-CGP number of inputs.
      */
-    std::vector<audi::gdual> taylor(const std::vector<double>& in, unsigned int order) const
+    std::vector<audi::gdual_d> taylor(const std::vector<double>& in, unsigned int order) const
     {
         // We perform sanity checks
         if(in.size() != m_n)
@@ -385,13 +385,13 @@ public:
             throw std::invalid_argument("Input size is incompatible");
         }
         // We define the initial variables as xi = xi + dxi (dxi symbolic)
-        std::vector<audi::gdual> in_expansion;
+        std::vector<audi::gdual_d> in_expansion;
         for (auto i = 0u; i < in.size(); ++i) {
             in_expansion.emplace_back(in[i], "x" + std::to_string(i), (int)order);
         }
 
         // We compute the CGP expression using gduals
-        std::vector<audi::gdual> retval = (*this)(in_expansion);
+        std::vector<audi::gdual_d> retval = (*this)(in_expansion);
 
         // If needed, we force the symbol set to contain all dxi
         // Needed as the CGP expression could be not using one of the inputs
