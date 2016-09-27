@@ -3,17 +3,16 @@
 
 #include <string>
 #include <vector>
-#include <audi/gdual.hpp>
+#include <audi/audi.hpp>
 #include <audi/functions.hpp>
 
 using namespace audi;
-using gdual_d = audi::gdual<double>;
 
 namespace dcgp {
 
 // SFINAE dust (to hide under the carpet)
 template <typename T>
-using f_enabler = typename std::enable_if<std::is_same<T,double>::value || std::is_same<T,gdual_d>::value, int>::type;
+using f_enabler = typename std::enable_if<std::is_same<T,double>::value || is_gdual<T>::value, int>::type;
 
 // Allows to overload in templates std functions with audi functions
 using namespace audi;

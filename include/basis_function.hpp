@@ -13,26 +13,19 @@ using gdual_d = audi::gdual<double>;
 
 namespace dcgp {
 
-/// Basic prototype of a kernel function for its simple evaluation
-using my_fun_type = std::function<double(const std::vector<double>&)>;
-/// Basic prototype of a kernel function for the evaluation of its Taylor expansion
-using d_my_fun_type = std::function<gdual_d(const std::vector<gdual_d>&)>;
-/// Basic prototype of a kernel function for the evaluation of its printable form
-using my_print_fun_type = std::function<std::string(const std::vector<std::string>&)>;
-
-
 /// Basis function
 /**
- * This struct represent one of the kernel functions to be used in a d-CGP expresion.
- * It contains three std::function, whose type are my_fun_type, my_d_fun_type,
- * my_print_fun_type. These allow to compute the function value, its Taylor expansion
- * and its symbolic representation.
  *
- * @author Dario Izzo (dario.izzo@gmail.com)
- * @author Francesco Biscani (bluescarni@gmail.com)
+ *
  */
+template<typename T>
 struct basis_function
 {
+    /// Basic prototype of a kernel function for its simple evaluation
+    using my_fun_type = std::function<T(const std::vector<T>&)>;
+    /// Basic prototype of a kernel function for the evaluation of its printable form
+    using my_print_fun_type = std::function<std::string(const std::vector<std::string>&)>;
+
     /// Constructor from std::function construction arguments
     /*
      * Construct a function that can be used as a kernel in a d-CGP expression
@@ -42,45 +35,31 @@ struct basis_function
      * @param[in] pf constructs a dcgp::my_print_fun_type
      * @param[in] name string containing the function name (ex. "sum")
      */
-    template <typename T, typename U, typename V>
-    basis_function(T &&f, U &&df, V&&pf, std::string name):m_f(std::forward<T>(f)), m_df(std::forward<U>(df)), m_pf(std::forward<V>(pf)), m_name(name) {}
+    template <typename U, typename V>
+    basis_function(U &&f, V&&pf, std::string name):m_f(std::forward<U>(f)), m_pf(std::forward<V>(pf)), m_name(name) {}
 
-    /// Parenthesis operator overload (double)
+    /// Parenthesis operator overload
     /**
-    * Evaluates \f$f(x, y)\f$, that is the basis_function in a point \p x, \p y
+    * Evaluates the basis_function in the point \p in
     *
-    * @param[in] x first input
-    * @param[in] y second input
+    * @param[in] in evaluation point
     *
-    * @return the function evaluated in \f$x,y\f$
+    * @return the function evaluated
     */
-    double operator()(const std::vector<double>& in) const
+    T operator()(const std::vector<T>& in) const
     {
             return m_f(in);
     }
-
-    /// Parenthesis operator overload (audi::gdual)
-    /**
-    * Computes, in the algebra of truncated polynomial, the function \f$f\f$. The
-    * result will be the Taylor expansion of the function \f$f\f$ composed with
-    * the functions \p p1 and \p p2
-    *
-    * @param[in] p1 first input
-    * @param[in] p2 second input
-    *
-    * @return the Taylor representation of \f$f\f$
-    */
-    gdual_d operator()(const std::vector<gdual_d>& in) const
+    T operator()(const std::initializer_list<T>& in) const
     {
-            return m_df(in);
+            return m_f(in);
     }
 
     /// Parenthesis operator overload (std::string)
     /**
     * Returns a symbolic representation for the operation made by \f$f\f$
     *
-    * @param[in] s1 first input
-    * @param[in] s2 second input
+    * @param[in] in vector of string with the symbolic names to be used
     *
     * @return the string representation of the operation (ex. "ln(s1+s2)")
     */
@@ -107,8 +86,6 @@ struct basis_function
 
     /// The function
     my_fun_type m_f;
-    /// Its derivatives
-    d_my_fun_type m_df;
     /// Its symbolic representation
     my_print_fun_type m_pf;
     /// Its name

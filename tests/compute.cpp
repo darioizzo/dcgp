@@ -12,7 +12,7 @@ BOOST_AUTO_TEST_CASE(compute)
     // Random seed
     std::random_device rd;
 
-    function_set basic_set({"sum","diff","mul","div"});
+    function_set<double> basic_set({"sum","diff","mul","div"});
 
     /// Testing over Miller's test case from the PPSN 2014 tutorial
     expression ex1(2,4,2,3,4,2,basic_set(), rd());

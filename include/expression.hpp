@@ -10,6 +10,7 @@
 #include <audi/audi.hpp>
 #include <iostream>
 #include <sstream>
+#include <audi/audi.hpp>
 
 #include "basis_function.hpp"
 #include "io.hpp"
@@ -25,12 +26,13 @@ namespace dcgp {
  *
  * @author Dario Izzo (dario.izzo@gmail.com)
  */
+template<typename T>
 class expression {
 
 private:
     // SFINAE dust
-    template <typename T>
-    using functor_enabler = typename std::enable_if<std::is_same<T,double>::value || std::is_same<T,audi::gdual_d>::value || std::is_same<T,std::string>::value,int>::type;
+    template <typename U>
+    using functor_enabler = typename std::enable_if<std::is_same<U,double>::value || audi::is_gdual<T>::value || std::is_same<U,std::string>::value,int>::type;
 public:
     /// Constructor
     /** Constructs a d-CGP expression
@@ -44,13 +46,14 @@ public:
      * \param[in] f function set. An std::vector of dcgp::basis_function
      * \param[in] seed seed for the random number generator (initial expression  and mutations depend on this)
      */
+
     expression(unsigned int n,                  // n. inputs
                unsigned int m,                  // n. outputs
                unsigned int r,                  // n. rows
                unsigned int c,                  // n. columns
                unsigned int l,                  // n. levels-back
                unsigned int arity,              // basis functions' arity
-               std::vector<basis_function> f,   // functions
+               std::vector<basis_function<T>> f,   // functions
                unsigned int seed                // seed for the pseudo-random numbers
                ) : m_n(n), m_m(m), m_r(r), m_c(c), m_l(l), m_arity(arity), m_f(f), m_lb((arity + 1) * m_r * m_c + m_m, 0), m_ub((arity + 1) * m_r * m_c + m_m, 0), m_x((arity + 1) * m_r * m_c + m_m, 0), m_e(seed)
     {
@@ -178,7 +181,7 @@ public:
      *
      * @return an std::vector<basis_function>
     */
-    const std::vector<basis_function>& get_f() const {return m_f;}
+    const std::vector<basis_function<T>>& get_f() const {return m_f;}
 
     /// Mutates one genes
     /**
@@ -313,16 +316,16 @@ public:
      *
      * @return The value of the function (an std::vector)
      */
-    template <typename T, functor_enabler<T> = 0>
-    std::vector<T> operator()(const std::vector<T>& in) const
+    template <typename U, functor_enabler<U> = 0>
+    std::vector<U> operator()(const std::vector<U>& in) const
     {
         if(in.size() != m_n)
         {
             throw std::invalid_argument("Input size is incompatible");
         }
-        std::vector<T> retval(m_m);
-        std::map<unsigned int, T> node;
-        std::vector<T> function_in(m_arity);
+        std::vector<U> retval(m_m);
+        std::map<unsigned int, U> node;
+        std::vector<U> function_in(m_arity);
         for (auto i : m_active_nodes) {
             if (i < m_n)
             {
@@ -355,60 +358,11 @@ public:
      *
      * @return The value of the function (an std::vector)
      */
-    template <typename T, functor_enabler<T> = 0>
+    template <typename U, functor_enabler<U> = 0>
     std::vector<T> operator()(const std::initializer_list<T>& in) const
     {
         std::vector<T> dummy(in);
         return (*this)(dummy);
-    }
-
-
-    /// Computes taylor expansion up to order
-    /**
-     * Using audi::gdual, this method returns the Taylor expansion of the
-     * d-CGP expression around the point \p in up to order \p order
-     *
-     * \param[in] in expansion point
-     * \param[in] order maximum order for the Taylor expansion (and hence the derivatives)
-     *
-     * @return an std::vector<audi::gdual> containing the Taylor expansion
-     * derivatives can be extracted with retval.get_derivative({i,j,k, ... })
-     *
-     * @throw std::invalid_argument if the size of /p in is inconsistent with
-     * the d-CGP number of inputs.
-     */
-    std::vector<audi::gdual_d> taylor(const std::vector<double>& in, unsigned int order) const
-    {
-        // We perform sanity checks
-        if(in.size() != m_n)
-        {
-            throw std::invalid_argument("Input size is incompatible");
-        }
-        // We define the initial variables as xi = xi + dxi (dxi symbolic)
-        std::vector<audi::gdual_d> in_expansion;
-        for (auto i = 0u; i < in.size(); ++i) {
-            in_expansion.emplace_back(in[i], "x" + std::to_string(i), (int)order);
-        }
-
-        // We compute the CGP expression using gduals
-        std::vector<audi::gdual_d> retval = (*this)(in_expansion);
-
-        // If needed, we force the symbol set to contain all dxi
-        // Needed as the CGP expression could be not using one of the inputs
-        std::vector<std::string> symbols;
-        for  (auto &expression : retval) {
-            if (expression.get_symbol_set_size() != m_n) {
-                if (symbols.size() == 0) {
-                    for (auto i = 0u; i < in.size(); ++i) {
-                        symbols.emplace_back("dx"+std::to_string(i));
-                    }
-                }
-                expression.extend_symbol_set(symbols);
-            }
-        }
-
-        // We return the result
-        return retval;
     }
 
     /// Overloaded stream operator
@@ -532,7 +486,7 @@ private:
     unsigned int m_arity;
 
     // the functions allowed
-    std::vector<basis_function> m_f;
+    std::vector<basis_function<T>> m_f;
     // lower and upper bounds on all genes
     std::vector<unsigned int> m_lb;
     std::vector<unsigned int> m_ub;
