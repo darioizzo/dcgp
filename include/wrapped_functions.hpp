@@ -10,7 +10,9 @@ using namespace audi;
 
 namespace dcgp {
 
-// SFINAE dust (to hide under the carpet)
+// SFINAE dust (to hide under the carpet). Its used to enable the templated version of the
+// various functions that can construct a basis_function object. Only for double and a gdual type
+// Complex could also be allowed.
 template <typename T>
 using f_enabler = typename std::enable_if<std::is_same<T,double>::value || is_gdual<T>::value, int>::type;
 
@@ -104,7 +106,7 @@ T my_sig(const std::vector<T>& in)
     for (auto i = 1u; i < in.size(); ++i) {
         retval+=in[i];
     }
-    return 1. / (1. + exp(-retval));
+    return 1. / (1. + audi::exp(-retval));
 }
 
 std::string print_my_sig(const std::vector<std::string>& in)
@@ -135,7 +137,7 @@ std::string print_my_sin(const std::vector<std::string>& in)
 template <typename T, f_enabler<T> = 0>
 T my_log(const std::vector<T>& in)
 {
-    return log(in[0]);
+    return audi::log(in[0]);
 }
 
 std::string print_my_log(const std::vector<std::string>& in)
@@ -147,7 +149,7 @@ std::string print_my_log(const std::vector<std::string>& in)
 template <typename T, f_enabler<T> = 0>
 T my_exp(const std::vector<T>& in)
 {
-    return exp(in[0]);
+    return audi::exp(in[0]);
 }
 
 std::string print_my_exp(const std::vector<std::string>& in)

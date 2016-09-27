@@ -11,8 +11,9 @@ namespace dcgp {
 
 /// Function set
 /**
- * Contains,
- * @author Dario Izzo (dario.izzo@gmail.com)
+ * This class is provided as an helper to construct the std::vector<basis_function<T>>
+ * that is requested to form a dcgp::expression<T>. Once constructed, a call to its
+ * parenthesis operator will return the std::vector containing the requested kernels
  */
 template<typename T>
 class function_set

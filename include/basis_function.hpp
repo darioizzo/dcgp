@@ -15,51 +15,68 @@ namespace dcgp {
 
 /// Basis function
 /**
+ * This class represents the function defining the generic CGP node. To be constructed
+ * it accepts two functions having prototype \p T(const std::vector< \p T>&) and std::string(const std::vector<std::string>&)
+ * computing, respectively the function value on generic inputs and the textual representation of the operation.
  *
+ * The intended use would then be something like:
+ * @code
+ * basis_function<double> f(my_sum<double>, print_my_sum, "sum");
+ * basis_function<double> f(my_sum<gdual_d>, print_my_sum, "sum");
+ * @endcode
  *
+ * tparam T The type of the function output (and inputs)
  */
 template<typename T>
-struct basis_function
+class basis_function
 {
-    /// Basic prototype of a kernel function for its simple evaluation
+public:
+    /// Basic prototype of a kernel function returning its evaluation
     using my_fun_type = std::function<T(const std::vector<T>&)>;
-    /// Basic prototype of a kernel function for the evaluation of its printable form
+    /// Basic prototype of a kernel function returning its symbolic representation
     using my_print_fun_type = std::function<std::string(const std::vector<std::string>&)>;
 
-    /// Constructor from std::function construction arguments
+    /// Constructor
     /*
-     * Construct a function that can be used as a kernel in a d-CGP expression
+     * Constructs a basis_function that can be used as kernel in a dCGP expression
      *
-     * @param[in] f constructs a dcgp::my_fun_type
-     * @param[in] df constructs a dcgp::d_my_fun_type
-     * @param[in] pf constructs a dcgp::my_print_fun_type
+     * @param[in] f any callable with prototype T(const std::vector<T>&)
+     * @param[in] pf any callable with prototype std::string(const std::vector<std::string>&)
      * @param[in] name string containing the function name (ex. "sum")
+     *
      */
     template <typename U, typename V>
     basis_function(U &&f, V&&pf, std::string name):m_f(std::forward<U>(f)), m_pf(std::forward<V>(pf)), m_name(name) {}
 
-    /// Parenthesis operator overload
+    /// Parenthesis operator
     /**
     * Evaluates the basis_function in the point \p in
     *
-    * @param[in] in evaluation point
+    * @param[in] in the evaluation point as an std::vector<T>
     *
-    * @return the function evaluated
+    * @return the function value
     */
     T operator()(const std::vector<T>& in) const
     {
             return m_f(in);
     }
+    /// Parenthesis operator
+    /**
+    * Evaluates the basis_function in the point \p in
+    *
+    * @param[in] in the evaluation point as an std::initiaizer_list<T>
+    *
+    * @return the function value
+    */
     T operator()(const std::initializer_list<T>& in) const
     {
             return m_f(in);
     }
-
-    /// Parenthesis operator overload (std::string)
+    /// Parenthesis operator
     /**
-    * Returns a symbolic representation for the operation made by \f$f\f$
+    * Returns a symbolic representation of the operation made by \f$f\f$
     *
-    * @param[in] in vector of string with the symbolic names to be used
+    * @param[in] in std::vector<std::string> with the symbolic names to be used
     *
     * @return the string representation of the operation (ex. "ln(s1+s2)")
     */
@@ -73,7 +90,7 @@ struct basis_function
      * Will stream the function name
      *
      * @param[in,out] os target stream.
-     * @param[in] d dcgp::basis_function argument.
+     * @param[in] d basis_function argument.
      *
      * @return reference to \p os.
      *
@@ -84,6 +101,7 @@ struct basis_function
         return os;
     }
 
+private:
     /// The function
     my_fun_type m_f;
     /// Its symbolic representation
