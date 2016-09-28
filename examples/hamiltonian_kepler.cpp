@@ -6,22 +6,26 @@
 // Here we search for first integrals of the Kepler's problem) using our "mutation suppression" method
 // The hamiltonian is H = 1/(2m) (pr^2+pt^2 / r^2) + mu / r
 
-double fitness(const dcgp::expression& ex, const std::vector<std::vector<double> >& in, double& check)
+double fitness(const dcgp::expression<gdual_d>& ex, const std::vector<std::vector<gdual_d> >& in, double& check)
 {
     double retval = 0;
     check = 0;
     for (auto i = 0u; i < in.size(); ++i) {
-        auto T = ex.taylor(in[i], 1);               // We compute all the derivatives up to order one
+        auto T = ex(in[i]);                // We compute all the derivatives up to order one
+        std::vector<std::string> symbol_list{"pr","pt", "r", "th", "m", "mu"};
+        for (auto sym : symbol_list) {
+            T[0] += gdual_d(0,sym,0);             // We make sure that the symbols are all in the final expression
+        }
         double dFpr= T[0].get_derivative({1, 0, 0, 0, 0, 0});
         double dFpt= T[0].get_derivative({0, 1, 0, 0, 0, 0});
         double dFqr= T[0].get_derivative({0, 0, 1, 0, 0, 0});
         double dFqt= T[0].get_derivative({0, 0, 0, 1, 0, 0});
-        double pr = in[i][0];
-        double pt = in[i][1];
-        double qr = in[i][2];
-        double qt = in[i][3];
-        double m =  in[i][4];
-        double mu = in[i][5];
+        double pr = in[i][0].constant_cf();
+        double pt = in[i][1].constant_cf();
+        double qr = in[i][2].constant_cf();
+        double qt = in[i][3].constant_cf();
+        double m =  in[i][4].constant_cf();
+        double mu = in[i][5].constant_cf();
         double err = dFpr * (pt*pt/m/qr/qr/qr - mu/qr/qr) + dFqr * (pr/m) + dFqt * (pt/qr/qr/m);
         retval += (err) * (err);                                 // We compute the quadratic error
         check += dFpr*dFpr + dFqr*dFqr + dFqt*dFqt; // If check is 0 then ex represent a constant or an ignorable variable
@@ -37,24 +41,24 @@ int main () {
     std::random_device rd;
 
     // Function set
-    dcgp::function_set basic_set({"sum", "diff", "mul", "div"});
+    dcgp::function_set<gdual_d> basic_set({"sum", "diff", "mul", "div"});
 
     // d-CGP expression
-    dcgp::expression ex(6, 1, 1, 100, 50, 2, basic_set(), rd());
+    dcgp::expression<gdual_d> ex(6, 1, 1, 100, 50, 2, basic_set(), rd());
 
     // Symbols
     std::vector<std::string> in_sym({"pr","pt", "r", "th", "m", "mu"});
 
     // We create the grid over x
-    std::vector<double> dumb(6);
-    std::vector<std::vector<double> > in(50, dumb);
+    std::vector<std::vector<gdual_d> > in(50u);
     for (auto i = 0u; i < in.size(); ++i) {
-        in[i][0] = 0.12 + 20 / (in.size() - 1) * i;
-        in[i][1] = 1 + 20 / (in.size() - 1) * i;
-        in[i][2] = 0.10 + 20 / (in.size() - 1) * i;
-        in[i][3] = 1 + 20 / (in.size() - 1) * i;
-        in[i][4] = 0.11 + 0.9 / (in.size() - 1) * i;
-        in[i][5] = 1 + 0.143 / (in.size() - 1) * i;
+        gdual_d pr_var(0.12 + 20 / (in.size() - 1) * i, "pr", 1u);
+        gdual_d pt_var(1 + 20 / (in.size() - 1) * i, "pt", 1u);
+        gdual_d r_var(0.12 + 20 / (in.size() - 1) * i, "r", 1u);
+        gdual_d th_var(1 + 20 / (in.size() - 1) * i, "th", 1u);
+        gdual_d m_var(0.12 + 20 / (in.size() - 1) * i, "m", 1u);
+        gdual_d mu_var(1 + 20 / (in.size() - 1) * i, "mu", 1u);
+        in[i] = std::vector<gdual_d>{pr_var, pt_var, r_var, th_var, m_var, mu_var};
     }
 
     // We run the (1-4)-ES
@@ -92,5 +96,5 @@ int main () {
     stream(std::cout, "Expression: ", ex, "\n");
     stream(std::cout, "Expression: ", ex(in_sym), "\n");
     stream(std::cout, "Point: ",  in[2], "\n");
-    stream(std::cout, "Taylor: ",  ex.taylor(in[2], 1), "\n");
+    stream(std::cout, "Taylor: ",  ex(in[2]), "\n");
 }

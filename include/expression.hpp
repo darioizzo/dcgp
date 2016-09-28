@@ -24,9 +24,11 @@ namespace dcgp {
  * algorithms that compute its value (numerical and symbolical) and its derivatives
  * as well as mutate the expression.
  *
+ * tparam T expression type. Can be double, or a gdual type.
+ *
  * @author Dario Izzo (dario.izzo@gmail.com)
  */
-template<typename T>
+template<typename T, typename std::enable_if<std::is_same<T,double>::value || audi::is_gdual<T>::value,int>::type = 0>
 class expression {
 
 private:
@@ -43,10 +45,9 @@ public:
      * \param[in] c number of columns of the cartesian cgp
      * \param[in] l number of levels-back allowed for the cartesian cgp
      * \param[in] arity arity of the basis functions
-     * \param[in] f function set. An std::vector of dcgp::basis_function
+     * \param[in] f function set. An std::vector of dcgp::basis_function<expression::type>
      * \param[in] seed seed for the random number generator (initial expression  and mutations depend on this)
      */
-
     expression(unsigned int n,                  // n. inputs
                unsigned int m,                  // n. outputs
                unsigned int r,                  // n. rows
@@ -498,6 +499,8 @@ private:
     std::vector<unsigned int> m_x;
     // the random engine for the class
     std::default_random_engine m_e;
+    // The expression type
+    using type = T;
 };
 
 
