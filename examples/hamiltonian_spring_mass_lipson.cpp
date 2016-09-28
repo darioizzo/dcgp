@@ -11,10 +11,8 @@ double fitness(const dcgp::expression<gdual_d>& ex, const std::vector<std::vecto
     double retval = 0;
     for (auto i = 0u; i < in.size(); ++i) {
         auto T = ex(in[i]);                   // We compute all the derivatives up to order one
-        T[0] += gdual_d(0,"p",0);             // We make sure that the symbol "p" is in the final expression
-        T[0] += gdual_d(0,"q",0);             // We make sure that the symbol "q" is in the final expression
-        double dFp = T[0].get_derivative({1, 0});
-        double dFq = T[0].get_derivative({0, 1});
+        double dFp = T[0].get_derivative({{"dp",1}});
+        double dFq = T[0].get_derivative({{"dq",1}});
         double p = in[i][0].constant_cf();
         double q = in[i][1].constant_cf();
         double err = dFp / dFq - p / q;                 // Here we set (dp/dt) / (dq/dt) = dp/dq
