@@ -1,5 +1,5 @@
 YACMA_PYTHON_MODULE(_core SHARED
-	core.cpp
+	core.cpp docstrings.cpp
 	# Python files.
 	__init__.py
 )

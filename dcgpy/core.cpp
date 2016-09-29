@@ -9,9 +9,11 @@
 #include "../include/basis_function.hpp"
 #include "../include/function_set.hpp"
 #include "../include/expression.hpp"
+#include "docstrings.hpp"
 
 namespace py = pybind11;
 using namespace dcgp;
+using namespace dcgpy;
 
 using fun_type = std::function<double(const std::vector<double>&)>;
 using fun_print_type = std::function<std::string(const std::vector<std::string>&)>;
@@ -51,7 +53,10 @@ PYBIND11_PLUGIN(_core) {
 
     py::class_<function_set<double>>(m, "function_set")
     .def(py::init<>())
-    .def(py::init<const std::vector<std::string>&>())
+    .def(py::init<const std::vector<std::string>&>(),
+        function_set_init_doc().c_str(),
+        py::arg("kernels")
+    )
     .def("__call__",
         [](function_set<double> &instance)
         {
@@ -61,25 +66,7 @@ PYBIND11_PLUGIN(_core) {
 
     py::class_<expression<double>>(m, "expression")
     .def(py::init<unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, std::vector<basis_function<double>>, unsigned int>(),
-        R"(A CGP operating on floats
-    Args:
-        in (``int``): number of inputs
-        out (``int``): number of outputs
-        rows (``int``): number of rows in the cartesian program
-        columns (``int``): number of columns in the cartesian program
-        levels-back (``int``): number of levels-back in the cartesian program
-        arity (``int``): arity of the kernels
-        kernels (``List[pycgp.kernel]``): kernel functions
-        seed (``int``): random seed to generate mutations and chromosomes
-
-    Examples:
-    >>> from dcgpy import *
-    >>> cgp = expression(1,1,1,10,11,2,function_set([`sum`,`diff`,`mul`,`div`])(), 32u)
-    >>> print(cgp)
-    ...
-    >>> num_out = cgp([2.1])
-    >>> sym_out = cgp(['x'])
-        )",
+        expression_init_doc().c_str(),
         py::arg("in"),
         py::arg("out"),
         py::arg("rows"),
@@ -109,7 +96,7 @@ PYBIND11_PLUGIN(_core) {
             return instance(in);
         }
     )
-    .def("set", &expression<double>::set, "Sets the expression chromosme")
+    .def("set", &expression<double>::set, "Sets the expression chromosme", py::arg("chromosme"))
     .def("get", &expression<double>::get, "Gets the expression chromosme")
     .def("get_lb_", &expression<double>::get_lb, "Gets the lower bounds of the chromosome")
     .def("get_ub", &expression<double>::get_ub, "Gets the upper bounds of the chromosome")
@@ -118,8 +105,8 @@ PYBIND11_PLUGIN(_core) {
     .def("get_n", &expression<double>::get_n, "Gets the number of inputs of the c_CGP expression")
     .def("get_m", &expression<double>::get_ub, "Gets the number of outputs of the c_CGP expression")
     .def("get_f", &expression<double>::get_f, "Gets the kernel functions")
-    .def("mutate", (void (expression<double>::*)(unsigned int)) &expression<double>::mutate, "Mutates the selected gene within its allowed bounds.")
-    .def("mutate", (void (expression<double>::*)(std::vector<unsigned int>)) &expression<double>::mutate, "Mutates the selected genes within its allowed bounds.")
+    .def("mutate", (void (expression<double>::*)(unsigned int)) &expression<double>::mutate, "Mutates the selected gene within its allowed bounds.", py::arg("idx"))
+    .def("mutate", (void (expression<double>::*)(std::vector<unsigned int>)) &expression<double>::mutate, "Mutates the selected genes within its allowed bounds.", py::arg("idxs"))
     .def("mutate_active", &expression<double>::mutate_active, "Mutates N randomly selected active genes within its allowed bounds.")
     .def("mutate_active_cgene", &expression<double>::mutate_active_cgene, "Mutates exactly one randomly selected active connection genes within its allowed bounds.")
     .def("mutate_ogene", &expression<double>::mutate_ogene, "Mutates exactly one of the output genes within its allowed bounds.")
