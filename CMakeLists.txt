@@ -15,6 +15,15 @@ endif(NOT CMAKE_BUILD_TYPE)
 
 include(YACMACompilerLinkerSettings)
 
+# Setup the C++14 flag.
+if(YACMA_COMPILER_IS_CLANGXX OR YACMA_COMPILER_IS_INTELXX OR YACMA_COMPILER_IS_GNUCXX)
+	message(STATUS "Enabling the '-std=c++14' flag.")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
+endif()
+
+# Setup the CXX flags from YACMA.
+YACMA_SETUP_CXX_FLAGS()
+
 # Provides build options to CMake
 # Build Option: when active the file main.cpp is built and linked to the PaGMO static library
 option(BUILD_MAIN "Build 'main.cpp'." ON)
@@ -118,5 +127,5 @@ ENDIF(BUILD_EXAMPLES)
 
 # Build the python module
 if(BUILD_DCGPY)
-	add_subdirectory("${CMAKE_SOURCE_DIR}/dCGPy")
+	add_subdirectory("${CMAKE_SOURCE_DIR}/dcgpy")
 endif()

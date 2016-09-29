@@ -5,7 +5,7 @@ YACMA_PYTHON_MODULE(_core SHARED
 )
 
 # Setup the installation path.
-set(DCGPY_INSTALL_PATH "${YACMA_PYTHON_MODULES_INSTALL_PATH}/dCGPy")
+set(DCGPY_INSTALL_PATH "${YACMA_PYTHON_MODULES_INSTALL_PATH}/dcgpy")
 
 # Module needs the Python libs, plus the mandatory libraries.
 TARGET_LINK_LIBRARIES(_core ${MANDATORY_LIBRARIES} ${PYTHON_LIBRARIES})
