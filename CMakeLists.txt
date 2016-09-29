@@ -20,6 +20,7 @@ include(YACMACompilerLinkerSettings)
 option(BUILD_MAIN "Build 'main.cpp'." ON)
 option(BUILD_TESTS "Build test set." OFF)
 option(BUILD_EXAMPLES "Build examples." OFF)
+option(BUILD_DCGPY "Build the Python bindings." OFF)
 
 set(MANDATORY_LIBRARIES "")
 
@@ -30,6 +31,11 @@ set(MANDATORY_LIBRARIES "")
 find_package(Threads REQUIRED)
 message(STATUS "Thread library: ${CMAKE_THREAD_LIBS_INIT}")
 set(MANDATORY_LIBRARIES ${MANDATORY_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
+
+# set up the python stuff
+if(BUILD_DCGPY)
+	include(YACMAPythonSetup)
+endif()
 
 # 1 - Boost Setup.
 IF(BUILD_TESTS)
@@ -105,7 +111,12 @@ IF(BUILD_TESTS)
 	add_subdirectory("${CMAKE_SOURCE_DIR}/tests")
 ENDIF(BUILD_TESTS)
 
-# Build pexamples
+# Build examples
 IF(BUILD_EXAMPLES)
 	add_subdirectory("${CMAKE_SOURCE_DIR}/examples")
 ENDIF(BUILD_EXAMPLES)
+
+# Build the python module
+if(BUILD_DCGPY)
+	add_subdirectory("${CMAKE_SOURCE_DIR}/dCGPy")
+endif()
