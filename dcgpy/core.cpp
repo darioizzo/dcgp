@@ -16,9 +16,9 @@ using namespace dcgp;
 using namespace dcgpy;
 
 template <typename T>
-void expose_basis_function(const py::module &m, std::string name)
+void expose_basis_function(const py::module &m, std::string type)
 {
-    std::string class_name = "kernel_" + name;
+    std::string class_name = "kernel_" + type;
     py::class_<basis_function<T>>(m, class_name.c_str())
     .def("__init__",
         [](basis_function<T> &instance, const py::object &obj1, const py::object &obj2, const std::string &name)
@@ -27,7 +27,7 @@ void expose_basis_function(const py::module &m, std::string name)
                 std::function<std::string(const std::vector<std::string>&)> my_print_function = [obj2](const std::vector<std::string>& x) { return obj2(x).cast<std::string>();};
                 new (&instance) basis_function<T>(my_function, my_print_function, name);
             },
-        basis_function_init_doc(name).c_str(),
+        basis_function_init_doc(type).c_str(),
         py::arg("callable_f"),
         py::arg("callable_s"),
         py::arg("name")
@@ -55,13 +55,13 @@ void expose_basis_function(const py::module &m, std::string name)
 }
 
 template <typename T>
-void expose_function_set(const py::module &m, std::string name)
+void expose_function_set(const py::module &m, std::string type)
 {
-    std::string class_name = "function_set_" + name;
+    std::string class_name = "function_set_" + type;
     py::class_<function_set<T>>(m, class_name.c_str())
     .def(py::init<>())
     .def(py::init<const std::vector<std::string>&>(),
-        function_set_init_doc().c_str(),
+        function_set_init_doc(type).c_str(),
         py::arg("kernels")
     )
     .def("__call__",
@@ -73,12 +73,12 @@ void expose_function_set(const py::module &m, std::string name)
 }
 
 template <typename T>
-void expose_expression(const py::module &m, std::string name)
+void expose_expression(const py::module &m, std::string type)
 {
-    std::string class_name = "expression" + name;
+    std::string class_name = "expression_" + type;
     py::class_<expression<T>>(m, class_name.c_str())
     .def(py::init<unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, std::vector<basis_function<T>>, unsigned int>(),
-        expression_init_doc().c_str(),
+        expression_init_doc(type).c_str(),
         py::arg("in"),
         py::arg("out"),
         py::arg("rows"),
@@ -132,8 +132,8 @@ PYBIND11_PLUGIN(_core) {
     expose_basis_function<double>(m, "double");
     expose_function_set<double>(m, "double");
     expose_expression<double>(m, "double");
-    //expose_basis_function<gdual_d>(m, "gdual_d");
-    //expose_function_set<gdual_d>(m, "gdual_d");
+    expose_basis_function<gdual_d>(m, "gdual_d");
+    expose_function_set<gdual_d>(m, "gdual_d");
     expose_expression<gdual_d>(m, "gdual_d");
 
     return m.ptr();

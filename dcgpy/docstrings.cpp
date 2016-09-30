@@ -5,7 +5,7 @@
 namespace dcgpy
 {
 
-std::string basis_function_init_doc(const std::string type)
+std::string basis_function_init_doc(const std::string &type)
 {
     return R"(Construct a kernel function from callables.
 
@@ -25,7 +25,7 @@ Examples:
     )";
 }
 
-std::string expression_init_doc()
+std::string expression_init_doc(const std::string &type)
 {
     return R"(A CGP operating on floats
 Args:
@@ -48,7 +48,7 @@ Examples:
     )";
 }
 
-std::string function_set_init_doc()
+std::string function_set_init_doc(const std::string &type)
 {
     return R"(Constructs a set of common kernel functions from their common name. The kernel
 functions can be then retrieved via the call operator.
