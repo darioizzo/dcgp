@@ -22,13 +22,17 @@ PYBIND11_PLUGIN(_core) {
     py::module m("dcgpy", "d-cgpy's core module");
 
     py::class_<basis_function<double>>(m, "kernel")
-    .def("__init__", 
+    .def("__init__",
         [](basis_function<double> &instance, const py::object &obj1, const py::object &obj2, const std::string &name)
             {
                 fun_type my_function = [obj1](const std::vector<double>& x) { return obj1(x).cast<double>();};
                 fun_print_type my_print_function = [obj2](const std::vector<std::string>& x) { return obj2(x).cast<std::string>();};
                 new (&instance) basis_function<double>(my_function, my_print_function, name);
-            }
+            },
+        basis_function_init_doc().c_str(),
+        py::arg("callable_f"),
+        py::arg("callable_s"),
+        py::arg("name")
         )
     .def("__call__",
         [](basis_function<double> &instance, const std::vector<double> in)
