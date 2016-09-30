@@ -77,7 +77,7 @@ macro(YACMA_SETUP_CXX_FLAGS)
         YACMA_CHECK_ENABLE_DEBUG_CXX_FLAG(-Wnon-virtual-dtor)
         YACMA_CHECK_ENABLE_DEBUG_CXX_FLAG(-Wnoexcept)
         YACMA_CHECK_ENABLE_DEBUG_CXX_FLAG(-Wlogical-op)
-        YACMA_CHECK_ENABLE_DEBUG_CXX_FLAG(-Wconversion)
+        # YACMA_CHECK_ENABLE_DEBUG_CXX_FLAG(-Wconversion)
         YACMA_CHECK_ENABLE_DEBUG_CXX_FLAG(-Wdeprecated)
         # This limit is supposed to be at least 1024 in C++11, but for some reason
         # clang sets this to 256, and gcc to 900.

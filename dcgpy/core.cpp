@@ -22,7 +22,7 @@ PYBIND11_PLUGIN(_core) {
     py::module m("dcgpy", "d-cgpy's core module");
 
     py::class_<basis_function<double>>(m, "kernel")
-    .def("__init__",
+    .def("__init__", 
         [](basis_function<double> &instance, const py::object &obj1, const py::object &obj2, const std::string &name)
             {
                 fun_type my_function = [obj1](const std::vector<double>& x) { return obj1(x).cast<double>();};

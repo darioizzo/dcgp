@@ -17,13 +17,13 @@ double fitness(const dcgp::expression<gdual_d>& ex, const std::vector<std::vecto
             T[0] += gdual_d(0,sym,0);             // We make sure that the symbols are all in the final expression
         }
         double dFpr= T[0].get_derivative({{"dpr", 1}});
-        double dFpt= T[0].get_derivative({{"dpt", 1}});
+        //double dFpt= T[0].get_derivative({{"dpt", 1}});
         double dFqr= T[0].get_derivative({{"dr", 1}});
         double dFqt= T[0].get_derivative({{"dth", 1}});
         double pr = in[i][0].constant_cf();
         double pt = in[i][1].constant_cf();
         double qr = in[i][2].constant_cf();
-        double qt = in[i][3].constant_cf();
+        //double qt = in[i][3].constant_cf();
         double m =  in[i][4].constant_cf();
         double mu = in[i][5].constant_cf();
         double err = dFpr * (pt*pt/m/qr/qr/qr - mu/qr/qr) + dFqr * (pr/m) + dFqt * (pt/qr/qr/m);

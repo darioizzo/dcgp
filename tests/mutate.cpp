@@ -5,7 +5,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include "../include/expression.hpp"
-#include "../include/basic_set.hpp"
+#include "../include/function_set.hpp"
 
 using namespace dcgp;
 
@@ -24,7 +24,7 @@ BOOST_AUTO_TEST_CASE(mutate)
     for (auto i = 0u; i < N; ++i)
     {
         std::vector<unsigned int> x = ex.get();
-        unsigned int idx = rd() % x.size();
+        auto idx = rd() % x.size();
         ex.mutate(idx);
         for (auto i = 0u; i < x.size(); ++i) {
             if (i == idx) {

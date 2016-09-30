@@ -68,13 +68,13 @@ public:
         if (f.size()==0) throw std::invalid_argument("Number of basis functions is 0");
 
         // Bounds for the function genes
-        for (auto i = 0u; i < ((arity + 1) * m_r * m_c); i+=(arity + 1)) {
-            m_ub[i] = f.size() - 1;
+        for (auto i = 0u; i < ((arity + 1u) * m_r * m_c); i+=(arity + 1u)) {
+            m_ub[i] = f.size() - 1u;
         }
 
         // Bounds for the output genes
         for (auto i = (arity + 1) * m_r * m_c; i < m_ub.size(); ++i) {
-            m_ub[i] = m_n + m_r * m_c - 1;
+            m_ub[i] = m_n + m_r * m_c - 1u;
             if (m_l <= m_c) {
                 m_lb[i] = m_n + m_r * (m_c - m_l);
             }
@@ -84,9 +84,9 @@ public:
         for (auto i = 0u; i < m_c; ++i) {
             for (auto j = 0u; j < m_r; ++j) {
                 for (auto k = 0u; k < arity; ++k) {
-                    m_ub[((i * m_r) + j) * (arity + 1) + k + 1] = m_n + i * m_r - 1;
+                    m_ub[((i * m_r) + j) * (arity + 1u) + k + 1u] = m_n + i * m_r - 1u;
                     if (i >= m_l) {
-                        m_lb[((i * m_r) + j) * (arity + 1) + k + 1] = m_n + m_r * (i - m_l);
+                        m_lb[((i * m_r) + j) * (arity + 1u) + k + 1u] = m_n + m_r * (i - m_l);
                     }
                 }
             }
@@ -360,9 +360,9 @@ public:
      * @return The value of the function (an std::vector)
      */
     template <typename U, functor_enabler<U> = 0>
-    std::vector<T> operator()(const std::initializer_list<T>& in) const
+    std::vector<U> operator()(const std::initializer_list<U>& in) const
     {
-        std::vector<T> dummy(in);
+        std::vector<U> dummy(in);
         return (*this)(dummy);
     }
 
