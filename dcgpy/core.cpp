@@ -97,13 +97,13 @@ void expose_expression(const py::module &m, std::string type)
         }
     )
     .def("__call__",
-        [](const expression<T> &instance, const std::vector<T> &in)
+        [](const expression<T> &instance, const std::vector<T> &in) -> std::vector<T>
         {
             return instance(in);
         }
     )
     .def("__call__",
-        [](const expression<T> &instance, const std::vector<std::string> &in)
+        [](const expression<T> &instance, const std::vector<std::string> &in) -> std::vector<std::string>
         {
             return instance(in);
         }
