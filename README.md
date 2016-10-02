@@ -7,10 +7,12 @@ The d-CGP is a recent development in the field of Genetic Programming that adds 
  * The fitness function can be defined in terms of the derivatives, allowing to go beyond simple regression tasks and, instead, solve differential equations, learn differential models, capture conserved quantities in dynamical systems.
 
 ### Dependencies
-Several and tested dependencies are necessary to succesfully use d-CGP
+Several and tested dependencies are necessary to succesfully compile d-CGP
  * Audi, headers only library - (git clone https://github.com/darioizzo/audi.git)
  * Piranha, headers only library - (git clone https://github.com/bluescarni/piranha.git)
  * Boost, headers only
+ 
+If you have all this, after cloning the git repository, go into mit and type ```git submodule init```, ```git submodule update``` and you are good to go! (these last commands clone the pybind11 code necessary to create the python bindings)
 
 ### Comparison to the CGP-Library
 If all below statements are true:
