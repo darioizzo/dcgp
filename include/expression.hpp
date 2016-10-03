@@ -162,7 +162,7 @@ public:
 
     /// Gets the number of inputs
     /**
-     * Gets the number of inputs of the c_CGP expression
+     * Gets the number of inputs of the d_CGP expression
      *
      * @return the number of inputs
     */
@@ -170,11 +170,27 @@ public:
 
     /// Gets the number of outputs
     /**
-     * Gets the number of outputs of the c_CGP expression
+     * Gets the number of outputs of the d_CGP expression
      *
      * @return the number of outputs
     */
     unsigned int get_m() const {return m_m;}
+
+    /// Gets the number of rows
+    /**
+     * Gets the number of rows of the d_CGP expression
+     *
+     * @return the number of rows
+    */
+    unsigned int get_rows() const {return m_r;}
+
+    /// Gets the number of columns
+    /**
+     * Gets the number of columns of the d_CGP expression
+     *
+     * @return the number of columns
+    */
+    unsigned int get_cols() const {return m_c;}
 
     /// Gets the functions
     /**
