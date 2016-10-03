@@ -2,6 +2,7 @@
 #include<string>
 #include<sstream>
 #include <functional> //std::function
+#include <boost/core/demangle.hpp>
 
 #include "pybind11/include/pybind11/pybind11.h"
 #include "pybind11/include/pybind11/stl.h"
@@ -128,21 +129,12 @@ void expose_expression(const py::module &m, std::string type)
 
 }
 
-template<typename T>
-class SomeClass {
-public:
-    SomeClass(T in) : m_in(in) {}
-    ~SomeClass() {}
-    T m_in;
-};
-
-class AnotherClass {
-public:
-    AnotherClass() {}
-    ~AnotherClass() {}
-    void func(SomeClass<double>& sp) {}
-    SomeClass<double> func2() {return SomeClass<double>(2.);}
-};
+void myprint() {
+    auto &instances = pybind11::detail::get_internals().registered_types_cpp;
+    for (const auto &p: instances) {
+        std::cout << boost::core::demangle(p.first.name()) << '\n';
+    }
+}
 
 PYBIND11_PLUGIN(_core) {
     py::module m("_core", "d-cgpy's core module");
@@ -154,10 +146,9 @@ PYBIND11_PLUGIN(_core) {
     expose_function_set<gdual_d>(m, "gdual_d");
     expose_expression<gdual_d>(m, "gdual_d");
 
-    py::class_<AnotherClass>(m,"AnotherClass")
-    .def(py::init<>())
-    .def("func", &AnotherClass::func)
-    .def("func2", &AnotherClass::func2);
+    m.def("myprint", &myprint);
+
+
 
     return m.ptr();
 }

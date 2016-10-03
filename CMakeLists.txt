@@ -31,9 +31,9 @@ set(MANDATORY_LIBRARIES "")
 # We start finding third party dependencies
 
 # 0 - Initial thread setup.
-find_package(Threads REQUIRED)
-message(STATUS "Thread library: ${CMAKE_THREAD_LIBS_INIT}")
+include(YACMAThreadingSetup)
 set(MANDATORY_LIBRARIES ${MANDATORY_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${YACMA_THREADING_CXX_FLAGS}")
 
 # set up the python stuff
 if(BUILD_DCGPY)

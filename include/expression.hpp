@@ -28,10 +28,16 @@ namespace dcgp {
  *
  * @author Dario Izzo (dario.izzo@gmail.com)
  */
-template<typename T, typename std::enable_if<std::is_same<T,double>::value || audi::is_gdual<T>::value,int>::type = 0>
+template<typename T>
 class expression {
 
 private:
+    // Static checks.
+    static_assert(
+        std::is_same<T,double>::value ||
+        audi::is_gdual<T>::value,
+        "A d-CGP expression can only be operating on doubles or gduals"
+    );
     // SFINAE dust
     template <typename U>
     using functor_enabler = typename std::enable_if<std::is_same<U,double>::value || audi::is_gdual<T>::value || std::is_same<U,std::string>::value,int>::type;
