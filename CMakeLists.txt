@@ -38,6 +38,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${YACMA_THREADING_CXX_FLAGS}")
 # set up the python stuff
 if(BUILD_DCGPY)
 	include(YACMAPythonSetup)
+	set(REQUIRED_BOOST_LIBS ${REQUIRED_BOOST_LIBS} serialization)
 endif()
 
 # 1 - Boost Setup.

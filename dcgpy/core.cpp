@@ -1,8 +1,9 @@
-#include<vector>
-#include<string>
-#include<sstream>
+#include <vector>
+#include <string>
+#include <sstream>
 #include <functional> //std::function
 #include <boost/core/demangle.hpp>
+
 
 #include "pybind11/include/pybind11/pybind11.h"
 #include "pybind11/include/pybind11/stl.h"
@@ -11,6 +12,7 @@
 #include "../include/function_set.hpp"
 #include "../include/expression.hpp"
 #include "docstrings.hpp"
+#include "expose_gdual.hpp" // Workaround for pybind11 bug. We expose the gdual from within the project (temporary while moving back to boost)
 
 namespace py = pybind11;
 using namespace dcgp;
@@ -129,7 +131,7 @@ void expose_expression(const py::module &m, std::string type)
 
 }
 
-void myprint() {
+void print_pybind11_registered_classes() {
     auto &instances = pybind11::detail::get_internals().registered_types_cpp;
     for (const auto &p: instances) {
         std::cout << boost::core::demangle(p.first.name()) << '\n';
@@ -139,14 +141,27 @@ void myprint() {
 PYBIND11_PLUGIN(_core) {
     py::module m("_core", "d-cgpy's core module");
 
+    // We expose the gdual<double> using the expose_gdual defined in exposed_gdual.hpp as pyaudi::expose_gdual
+    pyaudi::expose_gdual<double>(m, "double");
+
+    // Similarly, we expose the gdual<vectorized_double> and we add two custom constructors to allow constructing it from lists
+    auto a = pyaudi::expose_gdual<vectorized_double>(m, "vdouble");
+    a.def(py::init<std::vector<double>>())
+    .def(py::init<std::vector<double>, const std::string &, unsigned int>());
+
+    // We expose the dCGP specifics
     expose_basis_function<double>(m, "double");
     expose_function_set<double>(m, "double");
     expose_expression<double>(m, "double");
     expose_basis_function<gdual_d>(m, "gdual_d");
     expose_function_set<gdual_d>(m, "gdual_d");
     expose_expression<gdual_d>(m, "gdual_d");
+    expose_basis_function<gdual_v>(m, "gdual_vd");
+    expose_function_set<gdual_v>(m, "gdual_vd");
+    expose_expression<gdual_v>(m, "gdual_vd");
 
-    m.def("myprint", &myprint);
+    // And a helper function to help debugging the pybind11 madness
+    m.def("print_pybind11_registered_classes", &print_pybind11_registered_classes, "Prints all C++ classes registered by pybind11 to python");
 
 
 
