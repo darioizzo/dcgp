@@ -153,12 +153,12 @@ PYBIND11_PLUGIN(_core) {
     expose_basis_function<double>(m, "double");
     expose_function_set<double>(m, "double");
     expose_expression<double>(m, "double");
-    expose_basis_function<gdual_d>(m, "gdual_d");
-    expose_function_set<gdual_d>(m, "gdual_d");
-    expose_expression<gdual_d>(m, "gdual_d");
-    expose_basis_function<gdual_v>(m, "gdual_vd");
-    expose_function_set<gdual_v>(m, "gdual_vd");
-    expose_expression<gdual_v>(m, "gdual_vd");
+    expose_basis_function<gdual_d>(m, "gdual_double");
+    expose_function_set<gdual_d>(m, "gdual_double");
+    expose_expression<gdual_d>(m, "gdual_double");
+    expose_basis_function<gdual_v>(m, "gdual_vdouble");
+    expose_function_set<gdual_v>(m, "gdual_vdouble");
+    expose_expression<gdual_v>(m, "gdual_vdouble");
 
     // And a helper function to help debugging the pybind11 madness
     m.def("print_pybind11_registered_classes", &print_pybind11_registered_classes, "Prints all C++ classes registered by pybind11 to python");
