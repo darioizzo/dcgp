@@ -1,3 +1,0 @@
-[submodule "dcgpy/pybind11"]
-	path = dcgpy/pybind11
-	url = https://github.com/pybind/pybind11.git
