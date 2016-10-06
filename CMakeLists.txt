@@ -15,11 +15,15 @@ endif(NOT CMAKE_BUILD_TYPE)
 
 include(YACMACompilerLinkerSettings)
 
+# Setup the CXX flags from YACMA and show final result
+YACMA_SETUP_CXX_FLAGS()
+
 # Provides build options to CMake
 # Build Option: when active the file main.cpp is built and linked to the PaGMO static library
 option(BUILD_MAIN "Build 'main.cpp'." ON)
 option(BUILD_TESTS "Build test set." OFF)
 option(BUILD_EXAMPLES "Build examples." OFF)
+option(BUILD_DCGPY "Build the Python bindings." OFF)
 
 set(MANDATORY_LIBRARIES "")
 
@@ -27,9 +31,18 @@ set(MANDATORY_LIBRARIES "")
 # We start finding third party dependencies
 
 # 0 - Initial thread setup.
-find_package(Threads REQUIRED)
-message(STATUS "Thread library: ${CMAKE_THREAD_LIBS_INIT}")
+include(YACMAThreadingSetup)
 set(MANDATORY_LIBRARIES ${MANDATORY_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${YACMA_THREADING_CXX_FLAGS}")
+
+# set up the python stuff
+if(BUILD_DCGPY)
+	include(YACMAPythonSetup)
+    message(STATUS "Linking boost python.")
+	list(APPEND REQUIRED_BOOST_LIBS python)
+    message(STATUS "Linking serialization.")
+	list(APPEND REQUIRED_BOOST_LIBS serialization)
+endif()
 
 # 1 - Boost Setup.
 IF(BUILD_TESTS)
@@ -105,7 +118,12 @@ IF(BUILD_TESTS)
 	add_subdirectory("${CMAKE_SOURCE_DIR}/tests")
 ENDIF(BUILD_TESTS)
 
-# Build pexamples
+# Build examples
 IF(BUILD_EXAMPLES)
 	add_subdirectory("${CMAKE_SOURCE_DIR}/examples")
 ENDIF(BUILD_EXAMPLES)
+
+# Build the python module
+if(BUILD_DCGPY)
+	add_subdirectory("${CMAKE_SOURCE_DIR}/dcgpy")
+endif()

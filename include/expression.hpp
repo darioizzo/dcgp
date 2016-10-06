@@ -10,6 +10,7 @@
 #include <audi/audi.hpp>
 #include <iostream>
 #include <sstream>
+#include <audi/audi.hpp>
 
 #include "basis_function.hpp"
 #include "io.hpp"
@@ -23,14 +24,23 @@ namespace dcgp {
  * algorithms that compute its value (numerical and symbolical) and its derivatives
  * as well as mutate the expression.
  *
+ * tparam T expression type. Can be double, or a gdual type.
+ *
  * @author Dario Izzo (dario.izzo@gmail.com)
  */
+template<typename T>
 class expression {
 
 private:
+    // Static checks.
+    static_assert(
+        std::is_same<T,double>::value ||
+        audi::is_gdual<T>::value,
+        "A d-CGP expression can only be operating on doubles or gduals"
+    );
     // SFINAE dust
-    template <typename T>
-    using functor_enabler = typename std::enable_if<std::is_same<T,double>::value || std::is_same<T,audi::gdual_d>::value || std::is_same<T,std::string>::value,int>::type;
+    template <typename U>
+    using functor_enabler = typename std::enable_if<std::is_same<U,double>::value || audi::is_gdual<T>::value || std::is_same<U,std::string>::value,int>::type;
 public:
     /// Constructor
     /** Constructs a d-CGP expression
@@ -41,7 +51,7 @@ public:
      * \param[in] c number of columns of the cartesian cgp
      * \param[in] l number of levels-back allowed for the cartesian cgp
      * \param[in] arity arity of the basis functions
-     * \param[in] f function set. An std::vector of dcgp::basis_function
+     * \param[in] f function set. An std::vector of dcgp::basis_function<expression::type>
      * \param[in] seed seed for the random number generator (initial expression  and mutations depend on this)
      */
     expression(unsigned int n,                  // n. inputs
@@ -50,7 +60,7 @@ public:
                unsigned int c,                  // n. columns
                unsigned int l,                  // n. levels-back
                unsigned int arity,              // basis functions' arity
-               std::vector<basis_function> f,   // functions
+               std::vector<basis_function<T>> f,   // functions
                unsigned int seed                // seed for the pseudo-random numbers
                ) : m_n(n), m_m(m), m_r(r), m_c(c), m_l(l), m_arity(arity), m_f(f), m_lb((arity + 1) * m_r * m_c + m_m, 0), m_ub((arity + 1) * m_r * m_c + m_m, 0), m_x((arity + 1) * m_r * m_c + m_m, 0), m_e(seed)
     {
@@ -64,13 +74,13 @@ public:
         if (f.size()==0) throw std::invalid_argument("Number of basis functions is 0");
 
         // Bounds for the function genes
-        for (auto i = 0u; i < ((arity + 1) * m_r * m_c); i+=(arity + 1)) {
-            m_ub[i] = f.size() - 1;
+        for (auto i = 0u; i < ((arity + 1u) * m_r * m_c); i+=(arity + 1u)) {
+            m_ub[i] = f.size() - 1u;
         }
 
         // Bounds for the output genes
         for (auto i = (arity + 1) * m_r * m_c; i < m_ub.size(); ++i) {
-            m_ub[i] = m_n + m_r * m_c - 1;
+            m_ub[i] = m_n + m_r * m_c - 1u;
             if (m_l <= m_c) {
                 m_lb[i] = m_n + m_r * (m_c - m_l);
             }
@@ -80,9 +90,9 @@ public:
         for (auto i = 0u; i < m_c; ++i) {
             for (auto j = 0u; j < m_r; ++j) {
                 for (auto k = 0u; k < arity; ++k) {
-                    m_ub[((i * m_r) + j) * (arity + 1) + k + 1] = m_n + i * m_r - 1;
+                    m_ub[((i * m_r) + j) * (arity + 1u) + k + 1u] = m_n + i * m_r - 1u;
                     if (i >= m_l) {
-                        m_lb[((i * m_r) + j) * (arity + 1) + k + 1] = m_n + m_r * (i - m_l);
+                        m_lb[((i * m_r) + j) * (arity + 1u) + k + 1u] = m_n + m_r * (i - m_l);
                     }
                 }
             }
@@ -158,7 +168,7 @@ public:
 
     /// Gets the number of inputs
     /**
-     * Gets the number of inputs of the c_CGP expression
+     * Gets the number of inputs of the d_CGP expression
      *
      * @return the number of inputs
     */
@@ -166,11 +176,27 @@ public:
 
     /// Gets the number of outputs
     /**
-     * Gets the number of outputs of the c_CGP expression
+     * Gets the number of outputs of the d_CGP expression
      *
      * @return the number of outputs
     */
     unsigned int get_m() const {return m_m;}
+
+    /// Gets the number of rows
+    /**
+     * Gets the number of rows of the d_CGP expression
+     *
+     * @return the number of rows
+    */
+    unsigned int get_rows() const {return m_r;}
+
+    /// Gets the number of columns
+    /**
+     * Gets the number of columns of the d_CGP expression
+     *
+     * @return the number of columns
+    */
+    unsigned int get_cols() const {return m_c;}
 
     /// Gets the functions
     /**
@@ -178,7 +204,7 @@ public:
      *
      * @return an std::vector<basis_function>
     */
-    const std::vector<basis_function>& get_f() const {return m_f;}
+    const std::vector<basis_function<T>>& get_f() const {return m_f;}
 
     /// Mutates one genes
     /**
@@ -313,16 +339,16 @@ public:
      *
      * @return The value of the function (an std::vector)
      */
-    template <typename T, functor_enabler<T> = 0>
-    std::vector<T> operator()(const std::vector<T>& in) const
+    template <typename U, functor_enabler<U> = 0>
+    std::vector<U> operator()(const std::vector<U>& in) const
     {
         if(in.size() != m_n)
         {
             throw std::invalid_argument("Input size is incompatible");
         }
-        std::vector<T> retval(m_m);
-        std::map<unsigned int, T> node;
-        std::vector<T> function_in(m_arity);
+        std::vector<U> retval(m_m);
+        std::map<unsigned int, U> node;
+        std::vector<U> function_in(m_arity);
         for (auto i : m_active_nodes) {
             if (i < m_n)
             {
@@ -355,60 +381,11 @@ public:
      *
      * @return The value of the function (an std::vector)
      */
-    template <typename T, functor_enabler<T> = 0>
-    std::vector<T> operator()(const std::initializer_list<T>& in) const
+    template <typename U, functor_enabler<U> = 0>
+    std::vector<U> operator()(const std::initializer_list<U>& in) const
     {
-        std::vector<T> dummy(in);
+        std::vector<U> dummy(in);
         return (*this)(dummy);
-    }
-
-
-    /// Computes taylor expansion up to order
-    /**
-     * Using audi::gdual, this method returns the Taylor expansion of the
-     * d-CGP expression around the point \p in up to order \p order
-     *
-     * \param[in] in expansion point
-     * \param[in] order maximum order for the Taylor expansion (and hence the derivatives)
-     *
-     * @return an std::vector<audi::gdual> containing the Taylor expansion
-     * derivatives can be extracted with retval.get_derivative({i,j,k, ... })
-     *
-     * @throw std::invalid_argument if the size of /p in is inconsistent with
-     * the d-CGP number of inputs.
-     */
-    std::vector<audi::gdual_d> taylor(const std::vector<double>& in, unsigned int order) const
-    {
-        // We perform sanity checks
-        if(in.size() != m_n)
-        {
-            throw std::invalid_argument("Input size is incompatible");
-        }
-        // We define the initial variables as xi = xi + dxi (dxi symbolic)
-        std::vector<audi::gdual_d> in_expansion;
-        for (auto i = 0u; i < in.size(); ++i) {
-            in_expansion.emplace_back(in[i], "x" + std::to_string(i), (int)order);
-        }
-
-        // We compute the CGP expression using gduals
-        std::vector<audi::gdual_d> retval = (*this)(in_expansion);
-
-        // If needed, we force the symbol set to contain all dxi
-        // Needed as the CGP expression could be not using one of the inputs
-        std::vector<std::string> symbols;
-        for  (auto &expression : retval) {
-            if (expression.get_symbol_set_size() != m_n) {
-                if (symbols.size() == 0) {
-                    for (auto i = 0u; i < in.size(); ++i) {
-                        symbols.emplace_back("dx"+std::to_string(i));
-                    }
-                }
-                expression.extend_symbol_set(symbols);
-            }
-        }
-
-        // We return the result
-        return retval;
     }
 
     /// Overloaded stream operator
@@ -532,7 +509,7 @@ private:
     unsigned int m_arity;
 
     // the functions allowed
-    std::vector<basis_function> m_f;
+    std::vector<basis_function<T>> m_f;
     // lower and upper bounds on all genes
     std::vector<unsigned int> m_lb;
     std::vector<unsigned int> m_ub;
@@ -544,6 +521,8 @@ private:
     std::vector<unsigned int> m_x;
     // the random engine for the class
     std::default_random_engine m_e;
+    // The expression type
+    using type = T;
 };
 
 

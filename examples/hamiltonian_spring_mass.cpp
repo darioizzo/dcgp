@@ -2,20 +2,22 @@
 
 #include "../include/expression.hpp"
 #include "../include/function_set.hpp"
+#include "../include/io.hpp"
 
 // Here we search for first integrals of the mass spring sistem (one dimension) using our "mutation suppression" method
 // The hamiltonian is H = 1/2 p^2 + 1/2 q^2
 
-double fitness(const dcgp::expression& ex, const std::vector<std::vector<double> >& in, double& check)
+double fitness(const dcgp::expression<gdual_d>& ex, const std::vector<std::vector<gdual_d> >& in, double& check)
 {
     double retval = 0;
     check = 0;
     for (auto i = 0u; i < in.size(); ++i) {
-        auto T = ex.taylor(in[i], 1);                   // We compute all the derivatives up to order one
-        double dFp = T[0].get_derivative({1, 0});
-        double dFq = T[0].get_derivative({0, 1});
-        double p = in[i][0];
-        double q = in[i][1];
+        auto T = ex(in[i]);                   // We compute all the derivatives up to order one
+        double dFp = T[0].get_derivative({{"dp",1}});
+        double dFq = T[0].get_derivative({{"dq",1}});
+
+        double p = in[i][0].constant_cf();
+        double q = in[i][1].constant_cf();
         double err = - dFp * q + dFq * p;
         retval += (err) * (err);
         check += dFp*dFp + dFq*dFq;                      // We compute the quadratic error
@@ -31,21 +33,22 @@ int main () {
     std::random_device rd;
 
     // Function set
-    dcgp::function_set basic_set({"sum", "diff", "mul", "div"});
+    dcgp::function_set<gdual_d> basic_set({"sum", "diff", "mul", "div"});
 
     // d-CGP expression
-    dcgp::expression ex(2, 1, 1, 15, 16, 2, basic_set(), rd());
+    dcgp::expression<gdual_d> ex(2, 1, 1, 15, 16, 2, basic_set(), rd());
 
     // Symbols
     std::vector<std::string> in_sym({"p","q"});
 
     // We create the grid over x
-    std::vector<double> dumb(2);
-    std::vector<std::vector<double> > in(10, dumb);
+    std::vector<std::vector<gdual_d> > in(10u);
     for (auto i = 0u; i < in.size(); ++i) {
-        in[i][0] = 0.12 + 0.9 / (in.size() - 1) * i; // 0.1, .., 1
-        in[i][1] = 1 - 0.143 / (in.size() - 1) * i; // 1, 0.9, .. , 0.1
+        gdual_d p_var(0.12 + 0.9 / (in.size() - 1u) * i, "p", 1u);
+        gdual_d q_var(1. - 0.143 / (in.size() - 1u) * i, "q", 1u);
+        in[i] = std::vector<gdual_d>{p_var, q_var};
     }
+
     // We run the (1-4)-ES
     double best_fit = 1e32;
     std::vector<double> newfits(4, 0.);
@@ -64,6 +67,7 @@ int main () {
             }
             newchromosomes[i] = ex.get();
         }
+
         for (auto i = 0u; i < newfits.size(); ++i) {
             if (newfits[i] <= best_fit) {
                 if (newfits[i] != best_fit) {
@@ -77,9 +81,11 @@ int main () {
         }
     } while (best_fit > 1e-12 && gen < 10000);
 
+
+
     stream(std::cout, "Number of generations: ", gen, "\n");
     stream(std::cout, "Expression: ", ex, "\n");
     stream(std::cout, "Expression: ", ex(in_sym), "\n");
     stream(std::cout, "Point: ",  in[2], "\n");
-    stream(std::cout, "Taylor: ",  ex.taylor(in[2], 1), "\n");
+    stream(std::cout, "Taylor: ",  ex(in[2]), "\n");
 }

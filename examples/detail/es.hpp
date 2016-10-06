@@ -13,7 +13,7 @@ struct es_params {
 };
 
 // Evolves the expression ex to fit the in-out supervised data
-void es(const std::vector<std::vector<double> >& in, const std::vector<std::vector<double> >& out, dcgp::expression &ex, const es_params& p) {
+void es(const std::vector<std::vector<double> >& in, const std::vector<std::vector<double> >& out, dcgp::expression<double> &ex, const es_params& p) {
     // Random seed
     std::random_device rd;
     std::default_random_engine re(rd());

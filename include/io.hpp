@@ -7,6 +7,9 @@
 
 #define PAGMO_MAX_OUTPUT_LENGTH 5u
 
+// Implementation of a "pythonic" print finction. Use as dcgp::stream(s, a1, a2,....) where s is an std::ostream and
+// a1, a2, variables (also std vectors .... )
+
 namespace dcgp
 {
 

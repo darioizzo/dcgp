@@ -6,15 +6,15 @@
 // Here we solve the differential equation dy = (2x - y) / x from Tsoulos paper
 // Tsoulos and Lagaris: "Solving Differential equations with genetic programming"
 
-double fitness(const dcgp::expression& ex, const std::vector<std::vector<double> >& in)
+double fitness(const dcgp::expression<gdual_d>& ex, const std::vector<std::vector<gdual_d> >& in)
 {
     double retval = 0;
     for (auto i = 0u; i < in.size(); ++i) {
-        auto T = ex.taylor(in[i], 1);                   // We compute all the derivatives up to order one
+        auto T = ex(in[i]);                   // We compute the expression and thus the derivatives
         double y = T[0].get_derivative({0});
         double dy = T[0].get_derivative({1});
-        double x = in[i][0];
-        double ode1 = (2 * x - y) / x;
+        double x = in[i][0].constant_cf();
+        double ode1 = (2. * x - y) / x;
         retval += (ode1 - dy) * (ode1 - dy);            // We compute the quadratic error
     }
     return retval;
@@ -25,19 +25,19 @@ int main () {
     std::random_device rd;
 
     // Function set
-    dcgp::function_set basic_set({"sum", "diff", "mul", "div"});
+    dcgp::function_set<gdual_d> basic_set({"sum", "diff", "mul", "div"});
 
     // d-CGP expression
-    dcgp::expression ex(1, 1, 1, 15, 16, 2, basic_set(), rd());
+    dcgp::expression<gdual_d> ex(1, 1, 1, 15, 16, 2, basic_set(), rd());
 
     // Symbols
     std::vector<std::string> in_sym({"x"});
 
     // We create the grid over x
-    std::vector<double> dumb(1);
-    std::vector<std::vector<double> > in(10, dumb);
+    std::vector<std::vector<gdual_d> > in(10u);
     for (auto i = 0u; i < in.size(); ++i) {
-        in[i][0] = 0.1 + 0.9 / (in.size() - 1) * i; // 0.1, .., 1
+        gdual_d point(0.1 + 0.9 / (in.size() - 1) * i, "x", 1);
+        in[i].push_back(point);   // 1, .., 2
     }
 
     // We run the (1-4)-ES
@@ -53,8 +53,8 @@ int main () {
         for (auto i = 0u; i < newfits.size(); ++i) {
             ex.set(best_chromosome);
             ex.mutate_active(2);
-            double fitness_ic = ex(std::vector<double>({1}))[0] - 3;  // Penalty term to enforce the initial conditions
-            newfits[i] = fitness(ex, in) + fitness_ic * fitness_ic;   // Total fitness
+            auto fitness_ic = ex(std::vector<gdual_d>{gdual_d(1.)})[0] - 3.;  // Penalty term to enforce the initial conditions
+            newfits[i] = fitness(ex, in) + fitness_ic.constant_cf() * fitness_ic.constant_cf();     // Total fitness
             newchromosomes[i] = ex.get();
         }
 

@@ -17,8 +17,8 @@ double test_qe(
         unsigned int a,
         unsigned int N) // number of samples
 {
-   dcgp::function_set basic_set({"sum","diff","mul","div"});
-   dcgp::expression ex(n, m, r, c, l, a, basic_set(), 123);
+   dcgp::function_set<double> basic_set({"sum","diff","mul","div"});
+   dcgp::expression<double> ex(n, m, r, c, l, a, basic_set(), 123);
 
     // creates N data points
     std::default_random_engine re;
@@ -63,8 +63,8 @@ audi::gdual_d test_qe2(
         unsigned int a,
         unsigned int N) // number of samples
 {
-   dcgp::function_set basic_set({"sum","diff","mul","div"});
-   dcgp::expression ex(n, m, r, c, l, a, basic_set(), 123);
+   dcgp::function_set<gdual_d> basic_set({"sum","diff","mul","div"});
+   dcgp::expression<gdual_d> ex(n, m, r, c, l, a, basic_set(), 123);
 
     // creates N data points
     std::default_random_engine re;

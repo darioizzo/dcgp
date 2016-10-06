@@ -19,10 +19,10 @@ bool kq(
     std::random_device rd;
 
     // Function set
-    dcgp::function_set basic_set({"sum","div","mul","diff"});
+    dcgp::function_set<double> basic_set({"sum","div","mul","diff"});
 
     // d-CGP expression
-    dcgp::expression ex(1, 1, r, c, l, a, basic_set(), rd());
+    dcgp::expression<double> ex(1, 1, r, c, l, a, basic_set(), rd());
 
     // Symbols
     std::vector<std::string> in_sym({"x"});
@@ -44,7 +44,7 @@ bool kq(
 
     // 2) we use a simple ES(1+4) to evolve an expression that represents our target.
     // Mutation only mutates 2 active genes
-    es_params params{4, "active", 2, 0, 10000};
+    es_params params{4, "active", 2, 0, 1000};
     es(in, out, ex, params);
 
     dcgp::stream(std::cout, "Final expression: ", ex(in_sym), "\n");
