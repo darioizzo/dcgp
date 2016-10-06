@@ -160,4 +160,7 @@ BOOST_PYTHON_MODULE(_core)
     expose_basis_function<gdual_d>("gdual_double");
     expose_function_set<gdual_d>("gdual_double");
     expose_expression<gdual_d>("gdual_double");
+    expose_basis_function<gdual_v>("gdual_vdouble");
+    expose_function_set<gdual_v>("gdual_vdouble");
+    expose_expression<gdual_v>("gdual_vdouble");
 }
