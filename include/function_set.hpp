@@ -59,6 +59,12 @@ public:
     {
         return m_functions;
     };
+
+    friend std::ostream& operator<<(std::ostream& os, const function_set<T>& d)
+    {
+        stream(os, d());
+        return os;
+    }
 private:
     std::vector<dcgp::basis_function<T>> m_functions;
 };

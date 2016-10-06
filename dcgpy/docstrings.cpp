@@ -33,7 +33,7 @@ Args:
     out (``int``): number of outputs
     rows (``int``): number of rows in the cartesian program
     columns (``int``): number of columns in the cartesian program
-    levels-back (``int``): number of levels-back in the cartesian program
+    levels_back (``int``): number of levels-back in the cartesian program
     arity (``int``): arity of the kernels
     kernels (``List[pycgp.kernel]``): kernel functions
     seed (``int``): random seed to generate mutations and chromosomes

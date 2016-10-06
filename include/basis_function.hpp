@@ -95,7 +95,7 @@ public:
      * @return reference to \p os.
      *
     */
-    friend std::ostream& operator<<(std::ostream& os, const basis_function& d)
+    friend std::ostream& operator<<(std::ostream& os, const basis_function<T>& d)
     {
         os << d.m_name;
         return os;
