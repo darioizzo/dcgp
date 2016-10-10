@@ -33,8 +33,8 @@ void es(const std::vector<std::vector<double> >& in, const std::vector<std::vect
                 ex.mutate_active(p.m_n);
             } else {
                 std::vector<unsigned int> tbm;
-                for (auto i = 0u; i < best_chromosome.size(); ++ i) {
-                    if (std::uniform_real_distribution<double>(0, 1)(re) < p.m_mut_prob) tbm.push_back(i);
+                for (auto j = 0u; j < best_chromosome.size(); ++ j) {
+                    if (std::uniform_real_distribution<double>(0, 1)(re) < p.m_mut_prob) tbm.push_back(j);
                 }
                 ex.mutate(tbm);
             }

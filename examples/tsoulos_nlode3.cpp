@@ -2,7 +2,7 @@
 #include <audi/audi.hpp>
 
 #include "../include/expression.hpp"
-#include "../include/function_set.hpp"
+#include "../include/kernel_set.hpp"
 
 // Here we solve the differential equation d^2y dy  = - 4 / x^3 (NLODE3) from Tsoulos paper
 // Tsoulos and Lagaris: "Solving Differential equations with genetic programming"
@@ -26,7 +26,7 @@ int main () {
     std::random_device rd;
 
     // Function set
-    dcgp::function_set<gdual_d> basic_set({"sum", "diff", "mul", "div", "log"});
+    dcgp::kernel_set<gdual_d> basic_set({"sum", "diff", "mul", "div", "log"});
 
     // d-CGP expression
     dcgp::expression<gdual_d> ex(1, 1, 1, 15, 16, 2, basic_set(), rd());

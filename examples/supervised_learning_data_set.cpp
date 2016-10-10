@@ -6,7 +6,7 @@
 #include <vector>
 #include <sstream>
 
-#include "../include/function_set.hpp"
+#include "../include/kernel_set.hpp"
 #include "../include/expression.hpp"
 #include "../include/fitness_functions.hpp"
 #include "../include/io.hpp"
@@ -23,7 +23,7 @@ int main () {
     read_data(in, out, "../../examples/data/symbolic.data");
 
     // Function set
-    dcgp::function_set<double> basic_set({"sum", "diff", "mul", "div"});
+    dcgp::kernel_set<double> basic_set({"sum", "diff", "mul", "div"});
 
     // d-CGP expression
     dcgp::expression<double> ex(1, 1, 1, 15, 16, 2, basic_set(), rd());

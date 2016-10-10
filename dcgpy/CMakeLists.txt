@@ -2,6 +2,7 @@ YACMA_PYTHON_MODULE(_core SHARED
 	core.cpp docstrings.cpp
 	# Python files.
 	__init__.py
+    test.py
 )
 
 set_property(TARGET _core PROPERTY CXX_STANDARD 14)
@@ -18,4 +19,4 @@ INSTALL(TARGETS _core
 )
 
 # Add the global init file and the additional submodules.
-INSTALL(FILES __init__.py _graphviz_visualize.py DESTINATION ${DCGPY_INSTALL_PATH})
+INSTALL(FILES __init__.py test.py _graphviz_visualize.py DESTINATION ${DCGPY_INSTALL_PATH})

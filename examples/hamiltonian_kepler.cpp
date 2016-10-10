@@ -1,7 +1,7 @@
 #include <iostream>
 
 #include "../include/expression.hpp"
-#include "../include/function_set.hpp"
+#include "../include/kernel_set.hpp"
 
 // Here we search for first integrals of the Kepler's problem) using our "mutation suppression" method
 // The hamiltonian is H = 1/(2m) (pr^2+pt^2 / r^2) + mu / r
@@ -41,7 +41,7 @@ int main () {
     std::random_device rd;
 
     // Function set
-    dcgp::function_set<gdual_d> basic_set({"sum", "diff", "mul", "div"});
+    dcgp::kernel_set<gdual_d> basic_set({"sum", "diff", "mul", "div"});
 
     // d-CGP expression
     dcgp::expression<gdual_d> ex(6, 1, 1, 100, 50, 2, basic_set(), rd());

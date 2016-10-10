@@ -11,7 +11,7 @@ using namespace audi;
 namespace dcgp {
 
 // SFINAE dust (to hide under the carpet). Its used to enable the templated version of the
-// various functions that can construct a basis_function object. Only for double and a gdual type
+// various functions that can construct a kernel object. Only for double and a gdual type
 // Complex could also be allowed.
 template <typename T>
 using f_enabler = typename std::enable_if<std::is_same<T,double>::value || is_gdual<T>::value, int>::type;

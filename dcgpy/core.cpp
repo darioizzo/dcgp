@@ -6,8 +6,8 @@
 #include <functional> //std::function
 
 #include "common_utils.hpp"
-#include "../include/basis_function.hpp"
-#include "../include/function_set.hpp"
+#include "../include/kernel.hpp"
+#include "../include/kernel_set.hpp"
 #include "../include/expression.hpp"
 #include "docstrings.hpp"
 
@@ -17,10 +17,10 @@ using namespace audi;
 namespace bp = boost::python;
 
 template <typename T>
-void expose_basis_function(const std::string &type)
+void expose_kernel(const std::string &type)
 {
     std::string class_name = "kernel_" + type;
-    bp::class_<basis_function<T>>(class_name.c_str(), bp::no_init)
+    bp::class_<kernel<T>>(class_name.c_str(), bp::no_init)
     .def("__init__", bp::make_constructor(
         +[](const bp::object &obj1, const bp::object &obj2, const std::string &name)
             {
@@ -34,15 +34,15 @@ void expose_basis_function(const std::string &type)
                     std::string in = bp::extract<std::string>(obj2(v_to_l(x)));
                     return in;
                 };
-                return ::new basis_function<T>(my_function, my_print_function, name);
+                return ::new kernel<T>(my_function, my_print_function, name);
             },
             bp::default_call_policies(),
             (bp::arg("callable_f"), bp::arg("callable_s"), bp::arg("name"))
             ),
-            basis_function_init_doc(type).c_str()
+            kernel_init_doc(type).c_str()
         )
     .def("__call__",
-        +[](basis_function<T> &instance, const bp::object &in)
+        +[](kernel<T> &instance, const bp::object &in)
         {
             try {
                 auto v = l_to_v<T>(in);
@@ -55,45 +55,55 @@ void expose_basis_function(const std::string &type)
         }
     )
     .def("__repr__",
-        +[](const basis_function<T> &instance) -> std::string
+        +[](const kernel<T> &instance) -> std::string
         {
             std::ostringstream oss;
             oss << instance;
             return oss.str();
         }
     );
+    ;
 }
 
 template <typename T>
-void expose_function_set(std::string type)
+kernel<T> wrap_operator(const kernel_set<T> &ks, typename std::vector<dcgp::kernel<T>>::size_type idx)
 {
-    std::string class_name = "function_set_" + type;
-    bp::class_<function_set<T>>(class_name.c_str(), bp::no_init)
+    return ks[idx];
+}
+
+template <typename T>
+void expose_kernel_set(std::string type)
+{
+    std::string class_name = "kernel_set_" + type;
+    bp::class_<kernel_set<T>>(class_name.c_str(), bp::no_init)
     .def("__init__", bp::make_constructor(
         +[](const bp::object &obj1)
         {
             auto a = l_to_v<std::string>(obj1);
-            return ::new function_set<T>(a);
+            return ::new kernel_set<T>(a);
         },
         bp::default_call_policies(),
         (bp::arg("kernels"))
         ),
-        function_set_init_doc(type).c_str()
+        kernel_set_init_doc(type).c_str()
     )
     .def("__call__",
-        +[](function_set<T> &instance)
+        +[](kernel_set<T> &instance)
         {
             return v_to_l(instance());
         }
     )
     .def("__repr__",
-        +[](const function_set<T> &instance) -> std::string
+        +[](const kernel_set<T> &instance) -> std::string
         {
             std::ostringstream oss;
             oss << instance;
             return oss.str();
         }
-    );
+    )
+    .def("push_back", (void (kernel_set<T>::*)(std::string)) &kernel_set<T>::push_back, "Adds one more kernel to the set by common name")
+    .def("push_back", (void (kernel_set<T>::*)(const kernel<T>&)) &kernel_set<T>::push_back, "Adds one more kernel to the set")
+    .def( "__getitem__", &wrap_operator<T>);
 }
 
 template <typename T>
@@ -104,7 +114,7 @@ void expose_expression(std::string type)
     .def("__init__", bp::make_constructor(
         +[](unsigned int in, unsigned int out, unsigned int rows, unsigned int cols, unsigned int levelsback, unsigned int arity, const bp::object &kernels, unsigned int seed)
         {
-            auto kernels_v = l_to_v<basis_function<T>>(kernels);
+            auto kernels_v = l_to_v<kernel<T>>(kernels);
             return ::new expression<T>(in, out, rows, cols, levelsback, arity, kernels_v, seed);
         },
         bp::default_call_policies(),
@@ -156,13 +166,13 @@ void expose_expression(std::string type)
 
 BOOST_PYTHON_MODULE(_core)
 {
-    expose_basis_function<double>("double");
-    expose_function_set<double>("double");
+    expose_kernel<double>("double");
+    expose_kernel_set<double>("double");
     expose_expression<double>("double");
-    expose_basis_function<gdual_d>("gdual_double");
-    expose_function_set<gdual_d>("gdual_double");
+    expose_kernel<gdual_d>("gdual_double");
+    expose_kernel_set<gdual_d>("gdual_double");
     expose_expression<gdual_d>("gdual_double");
-    expose_basis_function<gdual_v>("gdual_vdouble");
-    expose_function_set<gdual_v>("gdual_vdouble");
+    expose_kernel<gdual_v>("gdual_vdouble");
+    expose_kernel_set<gdual_v>("gdual_vdouble");
     expose_expression<gdual_v>("gdual_vdouble");
 }

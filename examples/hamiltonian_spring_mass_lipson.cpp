@@ -1,7 +1,7 @@
 #include <iostream>
 
 #include "../include/expression.hpp"
-#include "../include/function_set.hpp"
+#include "../include/kernel_set.hpp"
 
 // Here we search for first integrals of a mass spring sistem (one dimension) using Lipson method
 // The hamiltonian is H = p^2 + q^2 and is consistently found by the evolution
@@ -29,7 +29,7 @@ int main () {
     std::random_device rd;
 
     // Function set
-    dcgp::function_set<gdual_d> basic_set({"sum", "diff", "mul", "div"});
+    dcgp::kernel_set<gdual_d> basic_set({"sum", "diff", "mul", "div"});
 
     // d-CGP expression
     dcgp::expression<gdual_d> ex(2, 1, 1, 15, 16, 2, basic_set(), rd());

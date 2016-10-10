@@ -1,3 +1,4 @@
+__all__ = ['test']
 from ._core import *
 
 from ._graphviz_visualize import _graphviz_visualize
