@@ -19,4 +19,4 @@ INSTALL(TARGETS _core
 )
 
 # Add the global init file and the additional submodules.
-INSTALL(FILES __init__.py test.py _graphviz_visualize.py DESTINATION ${DCGPY_INSTALL_PATH})
+INSTALL(FILES __init__.py test.py _graphviz_visualize.py _sympy_simplify.py DESTINATION ${DCGPY_INSTALL_PATH})

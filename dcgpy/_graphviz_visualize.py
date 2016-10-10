@@ -11,7 +11,7 @@ def _graphviz_visualize(self, erc = 0, draw_inactive = True, file_name = 'gp_gra
 
     Args:
         erc (an ``int``): number of ephemeral random consants in input (shows the last erc inputs as c_i rather than x_i)
-        draw_inactive (a ``Boolean``): indicates whether to draw inactive nodes
+        draw_inactive (a ``bool``): indicates whether to draw inactive nodes
         file_name (a ``str``): filename of the output image
 
     Returns:
