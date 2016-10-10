@@ -5,7 +5,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include "../include/expression.hpp"
-#include "../include/function_set.hpp"
+#include "../include/kernel_set.hpp"
 
 using namespace dcgp;
 
@@ -14,7 +14,7 @@ BOOST_AUTO_TEST_CASE(mutate)
     // Random seed
     std::random_device rd;
     // We define a d-CGP expression and get the reference chromosome
-    function_set<double> basic_set({"sum","diff","mul","div"});
+    kernel_set<double> basic_set({"sum","diff","mul","div"});
     // Number of random trials
     unsigned int N = 100;
     // A d-CGP expression

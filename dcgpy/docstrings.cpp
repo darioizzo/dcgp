@@ -40,7 +40,7 @@ Args:
 
 Examples:
 >>> from dcgpy import *
->>> cgp = expression_)" + type + R"((1,1,1,10,11,2,function_set(["sum","diff","mul","div"])(), 32u)
+>>> cgp = expression_)" + type + R"((1,1,1,10,11,2,kernel_set(["sum","diff","mul","div"])(), 32u)
 >>> print(cgp)
 ...
 >>> num_out = cgp([in])
@@ -48,7 +48,7 @@ Examples:
     )";
 }
 
-std::string function_set_init_doc(const std::string &type)
+std::string kernel_set_init_doc(const std::string &type)
 {
     return R"(Constructs a set of common kernel functions from their common name. The kernel
 functions can be then retrieved via the call operator.
@@ -59,7 +59,7 @@ Args:
 
 Examples:
 >>> from dcgpy import *
->>> kernels = function_set_)" + type + R"((["sum", "diff", "mul", "div"])
+>>> kernels = kernel_set_)" + type + R"((["sum", "diff", "mul", "div"])
 >>> kernels()[0](["x", "y"])
     )";
 }

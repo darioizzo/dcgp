@@ -4,13 +4,13 @@
 #include <boost/test/unit_test.hpp>
 
 #include "../include/expression.hpp"
-#include "../include/function_set.hpp"
+#include "../include/kernel_set.hpp"
 
 using namespace dcgp;
 
 BOOST_AUTO_TEST_CASE(differentiation_basic_set)
 {
-    function_set<gdual_d> basic_set({"sum","diff","mul","div"});
+    kernel_set<gdual_d> basic_set({"sum","diff","mul","div"});
     expression<gdual_d> ex(3, 1, 1, 20, 21, 2, basic_set(), 0);
 
     std::vector<gdual_d> in({gdual_d(1., "x", 2), gdual_d(1., "y", 2), gdual_d(1., "z", 2)});

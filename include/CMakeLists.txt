@@ -2,7 +2,7 @@ SET(HEADERS_LIST
 	dcgp.hpp
 	expression.hpp
 	fitness_functions.hpp
-	function_set.hpp
+	kernel_set.hpp
     io.hpp
     wrapped_functions.hpp
     kernel.hpp

@@ -3,7 +3,7 @@
 #include <random>
 #include <cmath>
 
-#include "../include/function_set.hpp"
+#include "../include/kernel_set.hpp"
 #include "../include/expression.hpp"
 #include "../include/fitness_functions.hpp"
 #include "detail/es.hpp"
@@ -19,7 +19,7 @@ bool kq(
     std::random_device rd;
 
     // Function set
-    dcgp::function_set<double> basic_set({"sum","div","mul","diff"});
+    dcgp::kernel_set<double> basic_set({"sum","div","mul","diff"});
 
     // d-CGP expression
     dcgp::expression<double> ex(1, 1, r, c, l, a, basic_set(), rd());

@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "../include/wrapped_functions.hpp"
-#include "../include/function_set.hpp"
+#include "../include/kernel_set.hpp"
 #include "../include/expression.hpp"
 
 
@@ -52,7 +52,7 @@ BOOST_AUTO_TEST_CASE(function_calls)
     }
 
     std::cout << "Testing " << N << " std::function calls to the sigmoid function via dcgp::expression" << std::endl;
-    dcgp::function_set<double> only_one_sigmoid({"sig"});
+    dcgp::kernel_set<double> only_one_sigmoid({"sig"});
     dcgp::expression<double> ex(2,1,1,1,1,2,only_one_sigmoid(),0);
     ex.set({0,0,1,2});
     {

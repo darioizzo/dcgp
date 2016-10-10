@@ -3,8 +3,8 @@
 
 #include <cmath>
 #include <vector>
-#include <audi/functions.hpp>
 
+#include <audi/functions.hpp>
 #include "expression.hpp"
 
 namespace dcgp {

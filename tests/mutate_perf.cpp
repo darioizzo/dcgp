@@ -13,10 +13,10 @@ void perform_active_mutations(unsigned int in,
                   unsigned int levels_back,
                   unsigned int arity,
                   unsigned int N,
-                  std::vector<dcgp::kernel<double>> function_set)
+                  std::vector<dcgp::kernel<double>> kernel_set)
 {
     // Instatiate the expression
-    dcgp::expression<double> ex(in, out, rows, columns, levels_back, arity, function_set, 123);
+    dcgp::expression<double> ex(in, out, rows, columns, levels_back, arity, kernel_set, 123);
     std::cout << "Performing " << N << " mutations, in:" << in << " out:" << out << " rows:" << rows << " columns:" << columns << std::endl;
     {
       boost::timer::auto_cpu_timer t;
@@ -30,7 +30,7 @@ void perform_active_mutations(unsigned int in,
 /// the code stability when large number of mutations are performed
 BOOST_AUTO_TEST_CASE(mutate_active_speed)
 {
-    dcgp::function_set<double> basic_set({"sum","diff","mul","div"});
+    dcgp::kernel_set<double> basic_set({"sum","diff","mul","div"});
     perform_active_mutations(2,4,2,3,4, 2, 100000, basic_set());
     perform_active_mutations(2,4,10,10,11, 2, 100000, basic_set());
     perform_active_mutations(2,4,20,20,21, 2, 100000, basic_set());

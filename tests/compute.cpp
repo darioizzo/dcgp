@@ -12,7 +12,7 @@ BOOST_AUTO_TEST_CASE(compute)
     // Random seed
     std::random_device rd;
 
-    function_set<double> basic_set({"sum","diff","mul","div"});
+    kernel_set<double> basic_set({"sum","diff","mul","div"});
 
     /// Testing over Miller's test case from the PPSN 2014 tutorial
     expression<double> ex1(2,4,2,3,4,2,basic_set(), rd());
@@ -38,7 +38,7 @@ BOOST_AUTO_TEST_CASE(check_bounds)
     // Random seed
     std::random_device rd;
 
-    function_set<double> basic_set({"sum","diff","mul","div"});
+    kernel_set<double> basic_set({"sum","diff","mul","div"});
 
     // Testing an expression with arity 3, levels-back 2
     expression<double> ex(3,1,2,3,2,3,basic_set(),rd());
