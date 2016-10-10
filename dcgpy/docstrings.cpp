@@ -10,7 +10,7 @@ std::string basis_function_init_doc(const std::string &type)
     return R"(Construct a kernel function from callables.
 
 Args:
-    callable_f (``callable: List[float] -> float``): a callable taking a list of floats as inputs and returning a float (the value of the kernel function evaluated on the inputs)
+    callable_f (``callable: List[)" + type + R"(] -> )" + type + R"(``): a callable taking a list of )" + type + R"( as inputs and returning a )" + type + R"( (the value of the kernel function evaluated on the inputs)
     callable_s (``callable: List[string] -> string``): a callable taking a list of string as inputs and returning a string (the symbolic representation of the kernel function evaluated on the input symbols)
     name (``string``): name of the kernel
 
@@ -21,7 +21,7 @@ Examples:
 >>> def print_my_sum(x)
 ...     s = "+"
 ...     return "(" + s.join(x) + ") "
->>> my_kernel = kernel(my_sum, print_my_sum, "my_sum")
+>>> my_kernel = kernel_)" + type + R"((my_sum, print_my_sum, "my_sum")
     )";
 }
 
@@ -40,10 +40,10 @@ Args:
 
 Examples:
 >>> from dcgpy import *
->>> cgp = expression(1,1,1,10,11,2,function_set(["sum","diff","mul","div"])(), 32u)
+>>> cgp = expression_)" + type + R"((1,1,1,10,11,2,function_set(["sum","diff","mul","div"])(), 32u)
 >>> print(cgp)
 ...
->>> num_out = cgp([2.1])
+>>> num_out = cgp([in])
 >>> sym_out = cgp(["x"])
     )";
 }
@@ -59,7 +59,7 @@ Args:
 
 Examples:
 >>> from dcgpy import *
->>> kernels = function_set(["sum", "diff", "mul", "div"])
+>>> kernels = function_set_)" + type + R"((["sum", "diff", "mul", "div"])
 >>> kernels()[0](["x", "y"])
     )";
 }
