@@ -12,7 +12,7 @@
 #include <sstream>
 #include <audi/audi.hpp>
 
-#include "basis_function.hpp"
+#include "kernel.hpp"
 #include "io.hpp"
 
 
@@ -51,7 +51,7 @@ public:
      * \param[in] c number of columns of the cartesian cgp
      * \param[in] l number of levels-back allowed for the cartesian cgp
      * \param[in] arity arity of the basis functions
-     * \param[in] f function set. An std::vector of dcgp::basis_function<expression::type>
+     * \param[in] f function set. An std::vector of dcgp::kernel<expression::type>
      * \param[in] seed seed for the random number generator (initial expression  and mutations depend on this)
      */
     expression(unsigned int n,                  // n. inputs
@@ -60,7 +60,7 @@ public:
                unsigned int c,                  // n. columns
                unsigned int l,                  // n. levels-back
                unsigned int arity,              // basis functions' arity
-               std::vector<basis_function<T>> f,   // functions
+               std::vector<kernel<T>> f,   // functions
                unsigned int seed                // seed for the pseudo-random numbers
                ) : m_n(n), m_m(m), m_r(r), m_c(c), m_l(l), m_arity(arity), m_f(f), m_lb((arity + 1) * m_r * m_c + m_m, 0), m_ub((arity + 1) * m_r * m_c + m_m, 0), m_x((arity + 1) * m_r * m_c + m_m, 0), m_e(seed)
     {
@@ -202,9 +202,9 @@ public:
     /**
      * Gets the functions
      *
-     * @return an std::vector<basis_function>
+     * @return an std::vector<kernel>
     */
-    const std::vector<basis_function<T>>& get_f() const {return m_f;}
+    const std::vector<kernel<T>>& get_f() const {return m_f;}
 
     /// Mutates one genes
     /**
@@ -355,8 +355,8 @@ public:
                 node[i] = in[i];
             } else {
                 unsigned int idx = (i - m_n) * (m_arity + 1); // position in the chromosome of the current node
-                for (auto i = 0u; i < m_arity; ++i) {
-                    function_in[i] = node[m_x[idx + i + 1]];
+                for (auto j = 0u; j < m_arity; ++j) {
+                    function_in[j] = node[m_x[idx + j + 1]];
                 }
                 node[i] = m_f[m_x[idx]](function_in);
             }
@@ -483,8 +483,8 @@ protected:
             if (m_active_nodes[i] >= m_n)
             {
                 unsigned int idx = (m_active_nodes[i] - m_n) * (m_arity + 1);
-                for (auto i = 0u; i <= m_arity; ++i) {
-                    m_active_genes.push_back(idx + i);
+                for (auto j = 0u; j <= m_arity; ++j) {
+                    m_active_genes.push_back(idx + j);
                 }
             }
         }
@@ -509,7 +509,7 @@ private:
     unsigned int m_arity;
 
     // the functions allowed
-    std::vector<basis_function<T>> m_f;
+    std::vector<kernel<T>> m_f;
     // lower and upper bounds on all genes
     std::vector<unsigned int> m_lb;
     std::vector<unsigned int> m_ub;

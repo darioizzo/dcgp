@@ -5,7 +5,6 @@
 #include <vector>
 
 #include "../include/wrapped_functions.hpp"
-#include "../include/basis_function.hpp" //my_fun_type
 #include "../include/function_set.hpp"
 #include "../include/expression.hpp"
 

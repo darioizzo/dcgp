@@ -18,6 +18,7 @@ BOOST_AUTO_TEST_CASE(mutate)
     // Number of random trials
     unsigned int N = 100;
     // A d-CGP expression
+    {
     expression<double> ex(3, 3, 2, 20, 21, 2, basic_set(), rd());
 
     // We test mutate(idx). Does the idx gene change? Do all other stay the same?
@@ -26,16 +27,16 @@ BOOST_AUTO_TEST_CASE(mutate)
         std::vector<unsigned int> x = ex.get();
         auto idx = rd() % x.size();
         ex.mutate(idx);
-        for (auto i = 0u; i < x.size(); ++i) {
-            if (i == idx) {
-                BOOST_CHECK(x[i] != ex.get()[i]);
+        for (auto j = 0u; j < x.size(); ++j) {
+            if (j == idx) {
+                BOOST_CHECK(x[j] != ex.get()[j]);
             }
             else {
-                BOOST_CHECK_EQUAL(x[i], ex.get()[i]);
+                BOOST_CHECK_EQUAL(x[j], ex.get()[j]);
             }
         }
     }
-
+    }
     // We test mutate_active. Was the mutated gene active?
     {
         expression<double> ex(3, 3, 2, 20, 21, 2, basic_set(), rd());

@@ -4,7 +4,7 @@
 #include <random>
 #include <audi/audi.hpp>
 
-#include "include/basis_function.hpp"
+#include "include/kernel.hpp"
 #include "include/expression.hpp"
 #include "include/wrapped_functions.hpp"
 #include "include/function_set.hpp"

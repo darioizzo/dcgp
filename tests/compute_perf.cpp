@@ -13,7 +13,7 @@ void perform_evaluations(unsigned int in,
                          unsigned int levels_back,
                          unsigned int arity,
                          unsigned int N,
-                         std::vector<dcgp::basis_function<double>> function_set)
+                         std::vector<dcgp::kernel<double>> function_set)
 {
     // Random numbers engine
     std::default_random_engine re(123);

@@ -4,14 +4,14 @@
 #include <vector>
 #include <audi/gdual.hpp>
 
-#include "basis_function.hpp"
+#include "kernel.hpp"
 #include "wrapped_functions.hpp"
 
 namespace dcgp {
 
 /// Function set
 /**
- * This class is provided as an helper to construct the std::vector<basis_function<T>>
+ * This class is provided as an helper to construct the std::vector<kernel<T>>
  * that is requested to form a dcgp::expression<T>. Once constructed, a call to its
  * parenthesis operator will return the std::vector containing the requested kernels
  */
@@ -55,7 +55,7 @@ public:
         m_functions.clear();
     };
 
-    std::vector<dcgp::basis_function<T>> operator()() const
+    std::vector<dcgp::kernel<T>> operator()() const
     {
         return m_functions;
     };
@@ -66,7 +66,7 @@ public:
         return os;
     }
 private:
-    std::vector<dcgp::basis_function<T>> m_functions;
+    std::vector<dcgp::kernel<T>> m_functions;
 };
 
 } // end of namespace dcgp

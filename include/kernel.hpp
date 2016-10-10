@@ -1,5 +1,5 @@
-#ifndef DCGP_BASIS_FUNCTION_H
-#define DCGP_BASIS_FUNCTION_H
+#ifndef DCGP_KERNEL_H
+#define DCGP_KERNEL_H
 
 #include <functional> // std::function
 #include <utility>    // std::forward
@@ -21,14 +21,14 @@ namespace dcgp {
  *
  * The intended use would then be something like:
  * @code
- * basis_function<double> f(my_sum<double>, print_my_sum, "sum");
- * basis_function<double> f(my_sum<gdual_d>, print_my_sum, "sum");
+ * kernel<double> f(my_sum<double>, print_my_sum, "sum");
+ * kernel<double> f(my_sum<gdual_d>, print_my_sum, "sum");
  * @endcode
  *
  * tparam T The type of the function output (and inputs)
  */
 template<typename T>
-class basis_function
+class kernel
 {
 public:
     /// Basic prototype of a kernel function returning its evaluation
@@ -38,7 +38,7 @@ public:
 
     /// Constructor
     /*
-     * Constructs a basis_function that can be used as kernel in a dCGP expression
+     * Constructs a kernel that can be used as kernel in a dCGP expression
      *
      * @param[in] f any callable with prototype T(const std::vector<T>&)
      * @param[in] pf any callable with prototype std::string(const std::vector<std::string>&)
@@ -46,11 +46,11 @@ public:
      *
      */
     template <typename U, typename V>
-    basis_function(U &&f, V&&pf, std::string name):m_f(std::forward<U>(f)), m_pf(std::forward<V>(pf)), m_name(name) {}
+    kernel(U &&f, V&&pf, std::string name):m_f(std::forward<U>(f)), m_pf(std::forward<V>(pf)), m_name(name) {}
 
     /// Parenthesis operator
     /**
-    * Evaluates the basis_function in the point \p in
+    * Evaluates the kernel in the point \p in
     *
     * @param[in] in the evaluation point as an std::vector<T>
     *
@@ -62,7 +62,7 @@ public:
     }
     /// Parenthesis operator
     /**
-    * Evaluates the basis_function in the point \p in
+    * Evaluates the kernel in the point \p in
     *
     * @param[in] in the evaluation point as an std::initiaizer_list<T>
     *
@@ -90,12 +90,12 @@ public:
      * Will stream the function name
      *
      * @param[in,out] os target stream.
-     * @param[in] d basis_function argument.
+     * @param[in] d kernel argument.
      *
      * @return reference to \p os.
      *
     */
-    friend std::ostream& operator<<(std::ostream& os, const basis_function<T>& d)
+    friend std::ostream& operator<<(std::ostream& os, const kernel<T>& d)
     {
         os << d.m_name;
         return os;
@@ -112,4 +112,4 @@ private:
 
 } // end of namespace dcgp
 
-#endif // DCGP_BASIS_FUNCTION_H
+#endif // DCGP_kernel_H

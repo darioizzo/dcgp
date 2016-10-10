@@ -13,7 +13,7 @@ void perform_active_mutations(unsigned int in,
                   unsigned int levels_back,
                   unsigned int arity,
                   unsigned int N,
-                  std::vector<dcgp::basis_function<double>> function_set)
+                  std::vector<dcgp::kernel<double>> function_set)
 {
     // Instatiate the expression
     dcgp::expression<double> ex(in, out, rows, columns, levels_back, arity, function_set, 123);

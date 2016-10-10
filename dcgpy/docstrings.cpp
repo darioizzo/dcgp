@@ -5,7 +5,7 @@
 namespace dcgpy
 {
 
-std::string basis_function_init_doc(const std::string &type)
+std::string kernel_init_doc(const std::string &type)
 {
     return R"(Construct a kernel function from callables.
 
