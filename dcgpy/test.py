@@ -102,12 +102,33 @@ class test_kernel_set(_ut.TestCase):
 class test_expression(_ut.TestCase):
 
     def test_double(self):
-         from dcgpy import expression_double as expression
-         from dcgpy import kernel_set_double as kernel_set
+        from dcgpy import expression_double as expression
+        from dcgpy import kernel_set_double as kernel_set
 
-         a = expression(1,1,1,6,6,2,kernel_set(["sum","mul", "div"])(), 32)
+        ex = expression(1,1,1,6,6,2,kernel_set(["sum","mul", "div", "diff"])(), 32)
+        self.assertEqual(ex([1.]), [1])
+        self.assertEqual(ex([2.]), [1])
+        self.assertEqual(ex([-1.]), [1])
+        self.assertEqual(ex([-2.]), [1])
 
+    def test_gdual_double(self):
+        from dcgpy import expression_gdual_double as expression
+        from dcgpy import kernel_set_gdual_double as kernel_set
+        from pyaudi import gdual_double as gdual
 
+        ex = expression(1,1,1,6,6,2,kernel_set(["sum","mul", "div", "diff"])(), 32)
+        self.assertEqual(ex([gdual(1, "x", 2)]), [gdual(1)])
+        self.assertEqual(ex([gdual(2, "x", 2)]), [gdual(1)])
+        self.assertEqual(ex([gdual(-1, "x", 2)]), [gdual(1)])
+        self.assertEqual(ex([gdual(-2, "x", 2)]), [gdual(1)])
+
+    def test_gdual_vdouble(self):
+        from dcgpy import expression_gdual_vdouble as expression
+        from dcgpy import kernel_set_gdual_vdouble as kernel_set
+        from pyaudi import gdual_vdouble as gdual
+
+        ex = expression(1,1,1,6,6,2,kernel_set(["sum","mul", "div", "diff"])(), 32)
+        self.assertEqual(ex([gdual([1, 2, -1, 2], "x", 2)]), [gdual([1, 1, 1, 1])])
 
 
 def run_test_suite():
