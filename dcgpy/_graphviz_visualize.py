@@ -1,17 +1,18 @@
-def _graphviz_visualize(self, erc = 0, draw_inactive = True):
+def _graphviz_visualize(self, erc = 0, draw_inactive = True, file_name = 'gp_graph.png'):
     """
-    ex.visualize(self, erc, draw_inactive)
+    ex.visualize(self, erc, draw_inactive, file_name)
 
     Visualizes the d-CGP expression
 
-    Visualizes the graph of the d-CGP expression, by generating a png image and displaying it on Matplotlib axes
+    Visualizes the graph of the d-CGP expression, by generating a png image in the current directory and displaying it on Matplotlib axes
 
     Note:
         This method requires matplotlib and pygraphviz modules installed in your Python system
 
     Args:
-        erc (an ``int``): number of ephemeral random consants in input
+        erc (an ``int``): number of ephemeral random consants in input (shows the last erc inputs as c_i rather than x_i)
         draw_inactive (a ``Boolean``): indicates whether to draw inactive nodes
+        file_name (a ``str``): filename of the output image
 
     Returns:
         The AxesImage of the displayed graph
@@ -20,8 +21,8 @@ def _graphviz_visualize(self, erc = 0, draw_inactive = True):
         ImportError: if modules matplotlib or pygraphviz are not installed in your Python system
 
     Examples:
-        >>> ex = dcgpy.expression_double(2,1,3,3,2,2,dcgpy.function_set_double(["sum","diff"])(),0)
-        >>> img = ex.visualize(1, True)
+        >>> ex = dcgpy.expression_double(2,1,3,3,2,2,dcgpy.kernel_double(["sum","diff"])(),0)
+        >>> img = ex.visualize(1, True, 'out_img.png')
     """
 
     try:
@@ -90,33 +91,36 @@ def _graphviz_visualize(self, erc = 0, draw_inactive = True):
 
     # function nodes and connections
     for i in range(r * c):
-        if is_active[n + i] or draw_inactive:
-            if is_active[n + i]:
-                nstyle = 'solid'
-                estyle = 'solid'
-                col = 'black'
+        if is_active[n + i]:
+            nstyle = 'solid'
+            estyle = 'solid'
+            col = 'black'
+        elif draw_inactive:
+            nstyle = 'dashed'
+            estyle = 'dotted'
+            col = 'grey70'
+        else:
+            nstyle = 'invis'
+            estyle = 'invis'
+            col = 'black'
+        op = str(f[x[i * (arity + 1)]])
+        if op == 'sum':
+            op = '+'
+        elif op == 'diff':
+            op = '-'
+        elif op == 'mul':
+            op = '*'
+        elif op == 'div':
+            op = '/'
+        G.add_node('n' + str(n + i), label =  op, shape = 'circle', style = nstyle, color = col, fontcolor = col)
+        for j in range(arity):
+            if j == 0:
+                ah = 'lnormal'
+            elif j == 1:
+                ah = 'rnormal'
             else:
-                nstyle = 'dashed'
-                estyle = 'dotted'
-                col = 'grey70'
-            op = str(f[x[i * (arity + 1)]])
-            if op == 'sum':
-                op = '+'
-            elif op == 'diff':
-                op = '-'
-            elif op == 'mul':
-                op = '*'
-            elif op == 'div':
-                op = '/'
-            G.add_node('n' + str(n + i), label =  op, shape = 'circle', style = nstyle, color = col, fontcolor = col)
-            for j in range(arity):
-                if j == 0:
-                    ah = 'lnormal'
-                elif j == 1:
-                    ah = 'rnormal'
-                else:
-                    ah = 'normal'
-                G.add_edge('n' + str(x[i * (arity + 1) + j + 1]), 'n' + str(n + i), arrowhead = ah, style = estyle, color = col)
+                ah = 'normal'
+            G.add_edge('n' + str(x[i * (arity + 1) + j + 1]), 'n' + str(n + i), arrowhead = ah, style = estyle, color = col)
 
     # output nodes
     for i in range(m):
@@ -124,8 +128,8 @@ def _graphviz_visualize(self, erc = 0, draw_inactive = True):
         G.add_edge('n' + str(x[len(x) - m + i]), 'n' + str(n + r * c + i))
 
     # generate the graph and display it
-    G.draw('cgp_graph.png', prog = 'dot')
-    img = plt.imshow(mpimg.imread('cgp_graph.png'))
+    G.draw(file_name, prog = 'dot')
+    img = plt.imshow(mpimg.imread(file_name))
     plt.axis('off')
     plt.show()
 
