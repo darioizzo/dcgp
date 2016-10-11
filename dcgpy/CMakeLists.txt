@@ -3,6 +3,8 @@ YACMA_PYTHON_MODULE(_core SHARED
 	# Python files.
 	__init__.py
     test.py
+    _graphviz_visualize.py
+    _sympy_simplify.py
 )
 
 set_property(TARGET _core PROPERTY CXX_STANDARD 14)
@@ -19,4 +21,11 @@ INSTALL(TARGETS _core
 )
 
 # Add the global init file and the additional submodules.
-INSTALL(FILES __init__.py test.py DESTINATION ${DCGPY_INSTALL_PATH})
+set(DCGPY_PYTHON_MODULE_FILES
+    ${CMAKE_CURRENT_SOURCE_DIR}/__init__.py
+    ${CMAKE_CURRENT_SOURCE_DIR}/test.py
+    ${CMAKE_CURRENT_SOURCE_DIR}/_graphviz_visualize.py
+    ${CMAKE_CURRENT_SOURCE_DIR}/_sympy_simplify.py
+)
+
+INSTALL(FILES ${DCGPY_PYTHON_MODULE_FILES} DESTINATION ${DCGPY_INSTALL_PATH})

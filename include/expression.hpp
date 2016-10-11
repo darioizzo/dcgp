@@ -198,6 +198,22 @@ public:
     */
     unsigned int get_cols() const {return m_c;}
 
+    /// Gets the number of levels-back
+    /**
+     * Gets the number of levels-back allowed for the d_CGP expression
+     *
+     * @return the number of levels-back
+    */
+    unsigned int get_levels_back() const {return m_l;}
+
+    /// Gets the arity
+    /**
+     * Gets the arity of the basis functions of the d_CGP expression
+     *
+     * @return the arity
+    */
+    unsigned int get_arity() const {return m_arity;}
+
     /// Gets the functions
     /**
      * Gets the functions
