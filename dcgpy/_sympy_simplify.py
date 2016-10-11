@@ -18,6 +18,7 @@ def _sympy_simplify(self, in_sym, erc = []):
 
     Raises:
         ValueError: if the length of in_sym does not match the number of inputs
+        ValueError: if the length of erc is larger than the number of inputs
         ImportError: if the sympy module is not installed in your Python system
 
     Examples:
@@ -31,6 +32,9 @@ def _sympy_simplify(self, in_sym, erc = []):
     if len(in_sym) != n:
         raise ValueError("The length of in_sym must match the number of inputs")
 
+    if len(erc) > n:
+        raise ValueError("The length of erc can't be larger than the number of inputs")
+
     try:
         import sympy
         from sympy.parsing.sympy_parser import parse_expr
@@ -42,7 +46,7 @@ def _sympy_simplify(self, in_sym, erc = []):
 
     # substitute the ephemeral random constants symbols with their values
     if len(erc) > 0:
-        keys = in_sym[n-len(erc):]
+        keys = in_sym[n - len(erc):]
         subs_dict = dict(zip(keys, erc))
         pe = pe.subs(subs_dict)
 
