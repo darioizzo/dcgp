@@ -1,6 +1,7 @@
 SET(HEADERS_LIST
 	dcgp.hpp
 	expression.hpp
+	expression_weighted.hpp
 	fitness_functions.hpp
 	kernel_set.hpp
     io.hpp

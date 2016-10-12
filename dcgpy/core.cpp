@@ -9,6 +9,7 @@
 #include "../include/kernel.hpp"
 #include "../include/kernel_set.hpp"
 #include "../include/expression.hpp"
+#include "../include/expression_weighted.hpp"
 #include "docstrings.hpp"
 
 using namespace dcgp;
@@ -163,16 +164,73 @@ void expose_expression(std::string type)
     .def("mutate_active_fgene", &expression<T>::mutate_active_fgene, "Mutates exactly one randomly selected active function genes within its allowed bounds.");
 }
 
+template <typename T>
+void expose_expression_weighted(std::string type)
+{
+    std::string class_name = "expression_weighted_" + type;
+    bp::class_<expression_weighted<T>, bp::bases<expression<T> > >(class_name.c_str(), bp::no_init)
+    .def("__init__", bp::make_constructor(
+        +[](unsigned int in, unsigned int out, unsigned int rows, unsigned int cols, unsigned int levelsback, unsigned int arity, const bp::object &kernels, unsigned int seed)
+        {
+            auto kernels_v = l_to_v<kernel<T>>(kernels);
+            return ::new expression_weighted<T>(in, out, rows, cols, levelsback, arity, kernels_v, seed);
+        },
+        bp::default_call_policies(),
+        (bp::arg("in"),bp::arg("out"),bp::arg("rows"),bp::arg("cols"),bp::arg("levels_back"),bp::arg("arity"),bp::arg("kernels"),bp::arg("seed"))
+        ),
+        expression_init_doc(type).c_str()
+    )
+    .def("__repr__",
+        +[](const expression_weighted<T> &instance) -> std::string
+        {
+            std::ostringstream oss;
+            oss << instance;
+            return oss.str();
+        }
+    )
+    .def("__call__",
+        +[](const expression_weighted<T> &instance, const bp::object &in)
+        {
+            try {
+                auto v = l_to_v<T>(in);
+                return v_to_l(instance(v));
+            } catch (...) {
+                PyErr_Clear();
+                auto v = l_to_v<std::string>(in);
+                return v_to_l(instance(v));
+            }
+        }
+    )
+    .def("set_weight", &expression_weighted<T>::set_weight, "Sets a weight", (bp::arg("node_id"), bp::arg("input_id"), bp::arg("weight")))
+    .def("set_weights",
+        +[] (expression_weighted<T> &instance, const bp::object &weights)
+        {
+            instance.set_weights(l_to_v<T>(weights));
+        },
+        "Sets all weights at once",
+        (bp::arg("weights"))
+    )
+    .def("get_weights",
+        +[] (expression_weighted<T> &instance)
+        {
+            return v_to_l(instance.get_weights());
+        },
+        "Gets all weights"
+    );
+}
 
 BOOST_PYTHON_MODULE(_core)
 {
     expose_kernel<double>("double");
     expose_kernel_set<double>("double");
     expose_expression<double>("double");
+    expose_expression_weighted<double>("double");
     expose_kernel<gdual_d>("gdual_double");
     expose_kernel_set<gdual_d>("gdual_double");
     expose_expression<gdual_d>("gdual_double");
+    expose_expression_weighted<gdual_d>("gdual_double");
     expose_kernel<gdual_v>("gdual_vdouble");
     expose_kernel_set<gdual_v>("gdual_vdouble");
     expose_expression<gdual_v>("gdual_vdouble");
+    expose_expression_weighted<gdual_v>("gdual_vdouble");
 }
