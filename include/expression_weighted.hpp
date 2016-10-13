@@ -223,7 +223,7 @@ protected:
     U kernel_call(std::vector<U> & function_in, unsigned int idx, unsigned int weight_idx) const
     {
         for (auto j = 0u; j < this->get_arity(); ++j) {
-            function_in[j] = m_weights_symbols[weight_idx + j] + "*" + function_in[j];
+            function_in[j] = "(" + m_weights_symbols[weight_idx + j] + "*" + function_in[j] + ")";
         }
         return this->get_f()[this->get()[idx]](function_in);
     }
