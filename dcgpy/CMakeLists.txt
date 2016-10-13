@@ -5,7 +5,6 @@ YACMA_PYTHON_MODULE(_core SHARED
     test.py
     _graphviz_visualize.py
     _sympy_simplify.py
-    _subs_weights.py
 )
 
 set_property(TARGET _core PROPERTY CXX_STANDARD 14)
@@ -27,7 +26,6 @@ set(DCGPY_PYTHON_MODULE_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/test.py
     ${CMAKE_CURRENT_SOURCE_DIR}/_graphviz_visualize.py
     ${CMAKE_CURRENT_SOURCE_DIR}/_sympy_simplify.py
-    ${CMAKE_CURRENT_SOURCE_DIR}/_subs_weights.py
 )
 
 INSTALL(FILES ${DCGPY_PYTHON_MODULE_FILES} DESTINATION ${DCGPY_INSTALL_PATH})

@@ -12,9 +12,3 @@ from ._sympy_simplify import _sympy_simplify
 expression_double.simplify = _sympy_simplify
 expression_gdual_double.simplify = _sympy_simplify
 expression_gdual_vdouble.simplify = _sympy_simplify
-
-# Add to expression_weighted a method to substitute the weight values in the d-CGP expression string
-from ._subs_weights import _subs_weights
-expression_weighted_double.subs_weights = _subs_weights
-expression_weighted_gdual_double.subs_weights = _subs_weights
-expression_weighted_gdual_vdouble.subs_weights = _subs_weights
