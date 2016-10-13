@@ -91,8 +91,6 @@ def _graphviz_visualize(self, erc = 0, draw_inactive = True, draw_weights = Fals
         G.add_node('n' + str(n - erc + i), label = '<c<sub>' + str(i) + '</sub>>', shape = 'circle', style = 'bold')
 
     # function nodes and connections
-    if draw_weights:
-        w = self.get_weights()
     for i in range(r * c):
         if is_active[n + i]:
             nstyle = 'solid'
