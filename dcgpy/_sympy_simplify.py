@@ -4,7 +4,7 @@ def _sympy_simplify(self, in_sym, erc = []):
 
     Simplifies the d-CGP expression
 
-    Prints and returns the simplified d-CGP expression
+    Returns the simplified d-CGP expression
 
     Note:
         This method requires the sympy module installed in your Python system
@@ -23,7 +23,7 @@ def _sympy_simplify(self, in_sym, erc = []):
 
     Examples:
         >>> ex = dcgpy.expression_double(3,1,3,3,2,2,dcgpy.kernel_set_double(["sum","diff"])(),0)
-        >>> simplex = ex.simplify(['x','c0','c1'],[1,2])
+        >>> print(ex.simplify(['x','c0','c1'],[1,2]))
         x + 6
     """
 
@@ -51,6 +51,5 @@ def _sympy_simplify(self, in_sym, erc = []):
         pe = pe.subs(subs_dict)
 
     simplex = sympy.expand(pe)
-    print(simplex)
 
     return simplex
