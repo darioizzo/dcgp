@@ -1,10 +1,10 @@
-def _sympy_simplify(self, in_sym, erc = []):
+def _sympy_simplify(self, in_sym, subs_weights = False, erc = []):
     """
-    ex.simplify(self, in_sym, erc)
+    ex.simplify(self, in_sym, subs_weights, erc)
 
     Simplifies the d-CGP expression
 
-    Prints and returns the simplified d-CGP expression
+    Returns the simplified d-CGP expression
 
     Note:
         This method requires the sympy module installed in your Python system
@@ -12,6 +12,7 @@ def _sympy_simplify(self, in_sym, erc = []):
     Args:
         in_sym (a ``List[str]``): input symbols (its length must match the number of inputs)
         erc (a ``List[float]``): values of the ephemeral random constants (if empty their symbolic representation is used instead)
+        subs_weights (a ``bool``): indicates whether to substitute the weights symbols with their values
 
     Returns:
         A string containing the simplified expression
@@ -22,8 +23,8 @@ def _sympy_simplify(self, in_sym, erc = []):
         ImportError: if the sympy module is not installed in your Python system
 
     Examples:
-        >>> ex = dcgpy.expression_double(3,1,3,3,2,2,dcgpy.kernel_set_double(["sum","diff"])(),0)
-        >>> simplex = ex.simplify(['x','c0','c1'],[1,2])
+        >>> ex = dcgpy.expression_weighted_gdual_double(3,1,3,3,2,2,dcgpy.kernel_set_gdual_double(["sum","diff"])(),0)
+        >>> print(ex.simplify(['x','c0','c1'],True,[1,2]))
         x + 6
     """
 
@@ -44,6 +45,16 @@ def _sympy_simplify(self, in_sym, erc = []):
 
     pe = parse_expr(self(in_sym)[0])
 
+    # substitute the weights symbols with their values
+    if subs_weights:
+        r = self.get_rows()
+        c = self.get_cols()
+        a = self.get_arity()
+
+        keys = ['w' + str(n + i) + '_' + str(j) for i in range(r * c) for j in range(a)]
+        subs_dict = dict(zip(keys, self.get_weights()))
+        pe = pe.subs(subs_dict)
+
     # substitute the ephemeral random constants symbols with their values
     if len(erc) > 0:
         keys = in_sym[n - len(erc):]
@@ -51,6 +62,5 @@ def _sympy_simplify(self, in_sym, erc = []):
         pe = pe.subs(subs_dict)
 
     simplex = sympy.expand(pe)
-    print(simplex)
 
     return simplex

@@ -1,6 +1,6 @@
-def _graphviz_visualize(self, erc = 0, draw_inactive = True, file_name = 'cgp_graph.png'):
+def _graphviz_visualize(self, erc = 0, draw_inactive = True, draw_weights = False, file_name = 'cgp_graph.png'):
     """
-    ex.visualize(self, erc, draw_inactive, file_name)
+    ex.visualize(self, erc, draw_inactive, draw_weights, file_name)
 
     Visualizes the d-CGP expression
 
@@ -12,6 +12,7 @@ def _graphviz_visualize(self, erc = 0, draw_inactive = True, file_name = 'cgp_gr
     Args:
         erc (an ``int``): number of ephemeral random constants in input (shows the erc inputs as c_i rather than x_i)
         draw_inactive (a ``bool``): indicates whether to draw inactive nodes
+        draw_weights (a ``bool``): indicates whether to draw connection weights symbols
         file_name (a ``str``): filename of the output image
 
     Returns:
@@ -22,7 +23,7 @@ def _graphviz_visualize(self, erc = 0, draw_inactive = True, file_name = 'cgp_gr
 
     Examples:
         >>> ex = dcgpy.expression_double(2,1,3,3,2,2,dcgpy.kernel_double(["sum","diff"])(),0)
-        >>> img = ex.visualize(1, True, 'out_img.png')
+        >>> img = ex.visualize(1, True, False, 'out_img.png')
     """
 
     try:
@@ -120,7 +121,11 @@ def _graphviz_visualize(self, erc = 0, draw_inactive = True, file_name = 'cgp_gr
                 ah = 'rnormal'
             else:
                 ah = 'normal'
-            G.add_edge('n' + str(x[i * (arity + 1) + j + 1]), 'n' + str(n + i), arrowhead = ah, style = estyle, color = col)
+            if draw_weights:
+                elabel = '<w<sub>' + str(n + i) + ',' + str(j) + '</sub>>'
+            else:
+                elabel = ''
+            G.add_edge('n' + str(x[i * (arity + 1) + j + 1]), 'n' + str(n + i), label = elabel, arrowhead = ah, style = estyle, color = col, fontcolor = col)
 
     # output nodes
     for i in range(m):
