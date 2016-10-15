@@ -29,8 +29,8 @@ std::string expression_init_doc(const std::string &type)
 {
     return R"(A CGP operating on floats
 Args:
-    in (``int``): number of inputs
-    out (``int``): number of outputs
+    inputs (``int``): number of inputs
+    outputs (``int``): number of outputs
     rows (``int``): number of rows in the cartesian program
     columns (``int``): number of columns in the cartesian program
     levels_back (``int``): number of levels-back in the cartesian program
@@ -40,11 +40,11 @@ Args:
 
 Examples:
 >>> from dcgpy import *
->>> cgp = expression_)" + type + R"((1,1,1,10,11,2,kernel_set(["sum","diff","mul","div"])(), 32u)
->>> print(cgp)
+>>> dcgp = expression_)" + type + R"((1,1,1,10,11,2,kernel_set(["sum","diff","mul","div"])(), 32u)
+>>> print(dcgp)
 ...
->>> num_out = cgp([in])
->>> sym_out = cgp(["x"])
+>>> num_out = dcgp([in])
+>>> sym_out = dcgp(["x"])
     )";
 }
 

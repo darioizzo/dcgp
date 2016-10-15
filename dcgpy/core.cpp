@@ -119,7 +119,7 @@ void expose_expression(std::string type)
             return ::new expression<T>(in, out, rows, cols, levelsback, arity, kernels_v, seed);
         },
         bp::default_call_policies(),
-        (bp::arg("in"),bp::arg("out"),bp::arg("rows"),bp::arg("cols"),bp::arg("levels_back"),bp::arg("arity"),bp::arg("kernels"),bp::arg("seed"))
+        (bp::arg("inputs"),bp::arg("outputs"),bp::arg("rows"),bp::arg("cols"),bp::arg("levels_back"),bp::arg("arity"),bp::arg("kernels"),bp::arg("seed"))
         ),
         expression_init_doc(type).c_str()
     )
