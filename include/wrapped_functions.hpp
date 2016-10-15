@@ -133,6 +133,18 @@ std::string print_my_sin(const std::vector<std::string>& in)
     return "sin(" + in[0] + ")";
 }
 
+// cosine
+template <typename T, f_enabler<T> = 0>
+T my_cos(const std::vector<T>& in)
+{
+    return cos(in[0]);
+}
+
+std::string print_my_cos(const std::vector<std::string>& in)
+{
+    return "cos(" + in[0] + ")";
+}
+
 // logarithm
 template <typename T, f_enabler<T> = 0>
 T my_log(const std::vector<T>& in)

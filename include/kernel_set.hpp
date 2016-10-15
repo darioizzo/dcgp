@@ -42,6 +42,8 @@ public:
             m_kernels.emplace_back(my_sig<T>,print_my_sig, kernel_name);
         else if (kernel_name=="sin")
             m_kernels.emplace_back(my_sin<T>,print_my_sin, kernel_name);
+        else if (kernel_name=="cos")
+            m_kernels.emplace_back(my_cos<T>,print_my_cos, kernel_name);
         else if (kernel_name=="log")
             m_kernels.emplace_back(my_log<T>,print_my_log, kernel_name);
         else if (kernel_name=="exp")
