@@ -25,7 +25,7 @@ int main () {
     std::random_device rd;
 
     // Function set
-    dcgp::kernel_set<gdual_d> basic_set({"sum", "diff", "mul", "div"});
+    dcgp::kernel_set<gdual_d> basic_set({"sum", "diff", "mul", "div", "exp", "log", "sin", "cos"});
 
     // d-CGP expression
     dcgp::expression<gdual_d> ex(1, 1, 1, 15, 16, 2, basic_set(), rd());
@@ -41,11 +41,11 @@ int main () {
     }
 
     // We run the (1-4)-ES
-    double best_fit = 1e32;
+    auto best_fit = 1e32;
     std::vector<double> newfits(4, 0.);
-    std::vector<std::vector<unsigned int> > newchromosomes(4);
-    std::vector<unsigned int> best_chromosome(ex.get());
-    unsigned int gen = 0;
+    std::vector<std::vector<unsigned int>> newchromosomes(4);
+    auto best_chromosome(ex.get());
+    auto gen = 0u;
 
     do
     {
@@ -53,7 +53,7 @@ int main () {
         for (auto i = 0u; i < newfits.size(); ++i) {
             ex.set(best_chromosome);
             ex.mutate_active(2);
-            auto fitness_ic = ex(std::vector<gdual_d>{gdual_d(1.)})[0] - 3.;  // Penalty term to enforce the initial conditions
+            auto fitness_ic = ex({gdual_d(1.)})[0] - 3.;  // Penalty term to enforce the initial conditions
             newfits[i] = fitness(ex, in) + fitness_ic.constant_cf() * fitness_ic.constant_cf();     // Total fitness
             newchromosomes[i] = ex.get();
         }
@@ -69,7 +69,7 @@ int main () {
                 ex.set(best_chromosome);
             }
         }
-    } while (best_fit > 1e-3 && gen < 10000);
+    } while (best_fit > 1e-3 && gen < 3000);
     dcgp::stream(std::cout, "Number of generations: ", gen, "\n");
     dcgp::stream(std::cout, "Expression: ", ex(in_sym), "\n");
 }

@@ -158,9 +158,10 @@ void expose_expression(std::string type)
     .def("get_arity", &expression<T>::get_arity, "Gets the arity of the basis functions of the d_CGP expression")
     .def("get_f", +[](const expression<T> &instance){return v_to_l(instance.get_f());}, "Gets the kernel functions")
     .def("mutate", +[](expression<T> &instance, const bp::object &in){instance.mutate(l_to_v<unsigned int>(in));}, "Mutates the selected genes within its allowed bounds.", bp::arg("idxs"))
+    .def("mutate_random", &expression<T>::mutate_random, "Mutates N randomly selected genes within its allowed bounds.")
     .def("mutate_active", &expression<T>::mutate_active, "Mutates N randomly selected active genes within its allowed bounds.")
     .def("mutate_active_cgene", &expression<T>::mutate_active_cgene, "Mutates exactly one randomly selected active connection genes within its allowed bounds.")
-    .def("mutate_ogene", &expression<T>::mutate_ogene, "Mutates exactly one of the output genes within its allowed bounds.")
+    .def("mutate_ogene", &expression<T>::mutate_ogene, "Mutates exactly one randomly selected output genes within its allowed bounds.")
     .def("mutate_active_fgene", &expression<T>::mutate_active_fgene, "Mutates exactly one randomly selected active function genes within its allowed bounds.");
 }
 

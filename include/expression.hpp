@@ -280,6 +280,34 @@ public:
     if (flag) update_active();
     }
 
+    /// Mutates n random genes
+    /**
+     * Mutates n random genes within their bounds
+     *
+     * @param[in] N number of generic genes to be mutated
+     *
+     */
+    void mutate_random(unsigned int N)
+    {
+    bool flag = false;
+    for (auto i = 0u; i < N; ++i) {
+        // If only one value is allowed for the gene, (lb==ub),
+        // then we will not do anything as mutation does not apply
+        auto idx = std::uniform_int_distribution<unsigned int>(0, m_lb.size() - 1)(m_e);
+        if (m_lb[idx]<m_ub[idx])
+        {
+            unsigned int new_value;
+            do
+            {
+                new_value = std::uniform_int_distribution<unsigned int>(m_lb[idx], m_ub[idx])(m_e);
+            } while (new_value == m_x[idx]);
+            m_x[idx] = new_value;
+            flag = true;
+        }
+    }
+    if (flag) update_active();
+    }
+
     /// Mutates one of the active genes
     /**
      * Mutates \P N active genes within its allowed bounds.
