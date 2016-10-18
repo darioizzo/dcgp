@@ -64,10 +64,8 @@ def _sympy_simplify(self, in_sym, subs_weights = False, erc = []):
                 ws = 'w' + str(n + i) + '_' + str(j)
                 ns[ws] = sympy.Symbol(ws, real = True)
 
-
     for i in range(m):
         pe.append(sympy.sympify(exv[i], locals = ns))
-
 
     # substitute the weights symbols with their values
     if subs_weights:
@@ -84,7 +82,6 @@ def _sympy_simplify(self, in_sym, subs_weights = False, erc = []):
         for i in range(m):
             for j in range(len(erc)):
                 pe[i] = pe[i].subs(ns[in_sym[n - len(erc) + j]],erc[j])
-
 
     simplex = []
     for i in range(m):
