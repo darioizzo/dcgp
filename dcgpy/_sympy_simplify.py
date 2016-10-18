@@ -11,8 +11,8 @@ def _sympy_simplify(self, in_sym, subs_weights = False, erc = []):
 
     Args:
         in_sym (a ``List[str]``): input symbols (its length must match the number of inputs)
-        erc (a ``List[float]``): values of the ephemeral random constants (if empty their symbolic representation is used instead)
         subs_weights (a ``bool``): indicates whether to substitute the weights symbols with their values
+        erc (a ``List[float]``): values of the ephemeral random constants (if empty their symbolic representation is used instead)
 
     Returns:
         A list of strings containing the simplified expressions
@@ -39,22 +39,25 @@ def _sympy_simplify(self, in_sym, subs_weights = False, erc = []):
 
     try:
         import sympy
-        from sympy.parsing.sympy_parser import parse_expr
     except ImportError:
         print("Failed to import the required module sympy")
         raise
 
     pe = []
     exv = self(in_sym)
+    ns = {}
+    for i in range(n):
+        ns[in_sym[i]] = sympy.Symbol(in_sym[i], real = True)
+
     for i in range(m):
-        pe.append(parse_expr(exv[i]))
+        pe.append(sympy.sympify(exv[i], locals = ns))
+
 
     # substitute the weights symbols with their values
     if subs_weights:
         r = self.get_rows()
         c = self.get_cols()
         a = self.get_arity()
-
         keys = ['w' + str(n + i) + '_' + str(j) for i in range(r * c) for j in range(a)]
         subs_dict = dict(zip(keys, self.get_weights()))
         for i in range(m):
@@ -62,10 +65,10 @@ def _sympy_simplify(self, in_sym, subs_weights = False, erc = []):
 
     # substitute the ephemeral random constants symbols with their values
     if len(erc) > 0:
-        keys = in_sym[n - len(erc):]
-        subs_dict = dict(zip(keys, erc))
         for i in range(m):
-            pe[i] = pe[i].subs(subs_dict)
+            for j in range(len(erc)):
+                pe[i] = pe[i].subs(ns[in_sym[n - len(erc) + j]],erc[j])
+
 
     simplex = []
     for i in range(m):
