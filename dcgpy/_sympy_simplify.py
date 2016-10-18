@@ -7,7 +7,7 @@ def _sympy_simplify(self, in_sym, subs_weights = False, erc = []):
     Returns the simplified d-CGP expression for each output
 
     Note:
-        This method requires the sympy module installed in your Python system
+        This method requires sympy and pyaudi modules installed in your Python system
 
     Args:
         in_sym (a ``List[str]``): input symbols (its length must match the number of inputs)
@@ -20,7 +20,7 @@ def _sympy_simplify(self, in_sym, subs_weights = False, erc = []):
     Raises:
         ValueError: if the length of in_sym does not match the number of inputs
         ValueError: if the length of erc is larger than the number of inputs
-        ImportError: if the sympy module is not installed in your Python system
+        ImportError: if modules sympy or pyaudi are not installed in your Python system
 
     Examples:
         >>> ex = dcgpy.expression_weighted_gdual_double(3,2,3,3,2,2,dcgpy.kernel_set_gdual_double(["sum","diff"])(),0)
@@ -43,32 +43,45 @@ def _sympy_simplify(self, in_sym, subs_weights = False, erc = []):
         print("Failed to import the required module sympy")
         raise
 
+    try:
+        import pyaudi
+    except ImportError:
+        print("Failed to import the required module pyaudi")
+        raise
+
     pe = []
     exv = self(in_sym)
     ns = {}
     for i in range(n):
         ns[in_sym[i]] = sympy.Symbol(in_sym[i], real = True)
 
-    for i in range(m):
-        pe.append(sympy.sympify(exv[i], locals = ns))
-
-
-    # substitute the weights symbols with their values
     if subs_weights:
         r = self.get_rows()
         c = self.get_cols()
         a = self.get_arity()
-        keys = ['w' + str(n + i) + '_' + str(j) for i in range(r * c) for j in range(a)]
-        subs_dict = dict(zip(keys, self.get_weights()))
+        for i in range(r * c):
+            for j in range(a):
+                ws = 'w' + str(n + i) + '_' + str(j)
+                ns[ws] = sympy.Symbol(ws, real = True)
+
+    for i in range(m):
+        pe.append(sympy.sympify(exv[i], locals = ns))
+
+    # substitute the weights symbols with their values
+    if subs_weights:
+        wl = self.get_weights()
+        if type(wl[0]) == pyaudi._core.gdual_vdouble:
+            wl = [w.constant_cf[0] for w in wl]
         for i in range(m):
-            pe[i] = pe[i].subs(subs_dict)
+            for j in range(r * c):
+                for k in range(a):
+                    pe[i] = pe[i].subs(ns['w' + str(n + j) + '_' + str(k)], wl[a * j + k])
 
     # substitute the ephemeral random constants symbols with their values
     if len(erc) > 0:
         for i in range(m):
             for j in range(len(erc)):
                 pe[i] = pe[i].subs(ns[in_sym[n - len(erc) + j]],erc[j])
-
 
     simplex = []
     for i in range(m):
