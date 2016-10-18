@@ -1,6 +1,6 @@
-def _graphviz_visualize(self, erc = 0, draw_inactive = True, draw_weights = False, file_name = 'cgp_graph.png'):
+def _graphviz_visualize(self, in_sym = [], draw_inactive = True, draw_weights = False, file_name = 'cgp_graph.png'):
     """
-    ex.visualize(self, erc, draw_inactive, draw_weights, file_name)
+    ex.visualize(self, in_sym, draw_inactive, draw_weights, file_name)
 
     Visualizes the d-CGP expression
 
@@ -10,7 +10,7 @@ def _graphviz_visualize(self, erc = 0, draw_inactive = True, draw_weights = Fals
         This method requires matplotlib and pygraphviz modules installed in your Python system
 
     Args:
-        erc (an ``int``): number of ephemeral random constants in input (shows the erc inputs as c_i rather than x_i)
+        in_sym (a ``List[str]``): input symbols. Its length must either match the number of inputs or be zero (to visualize them as x_i)
         draw_inactive (a ``bool``): indicates whether to draw inactive nodes
         draw_weights (a ``bool``): indicates whether to draw connection weights symbols
         file_name (a ``str``): filename of the output image
@@ -20,10 +20,11 @@ def _graphviz_visualize(self, erc = 0, draw_inactive = True, draw_weights = Fals
 
     Raises:
         ImportError: if modules matplotlib or pygraphviz are not installed in your Python system
+        ValueError: if in_sym is nonempty but its length does not match the number of inputs
 
     Examples:
-        >>> ex = dcgpy.expression_double(2,1,3,3,2,2,dcgpy.kernel_double(["sum","diff"])(),0)
-        >>> img = ex.visualize(1, True, False, 'out_img.png')
+        >>> ex = dcgpy.expression_double(2,1,3,3,2,2,dcgpy.kernel_set_double(["sum","diff"])(),0)
+        >>> img = ex.visualize(['x', 'c'], True, False, 'out_img.png')
     """
 
     try:
@@ -39,9 +40,12 @@ def _graphviz_visualize(self, erc = 0, draw_inactive = True, draw_weights = Fals
         print("Failed to import the required module matplotlib")
         raise
 
+    n = self.get_n()
+
+    if len(in_sym) != 0 and len(in_sym) != n:
+        raise ValueError("The length of in_sym must either match the number of inputs or be zero")
 
     x = self.get()
-    n = self.get_n()
     m = self.get_m()
     r = self.get_rows()
     c = self.get_cols()
@@ -83,12 +87,12 @@ def _graphviz_visualize(self, erc = 0, draw_inactive = True, draw_weights = Fals
             G.add_edge('n' + str(n + (c - 1) * r + i),'n' + str(n + r * c + j), style = 'invis')
 
     # input nodes
-    for i in range(n - erc):
-        G.add_node('n' + str(i), label = '<x<sub>' + str(i) + '</sub>>', shape = 'circle', style = 'bold')
-
-    # input constants
-    for i in range(erc):
-        G.add_node('n' + str(n - erc + i), label = '<c<sub>' + str(i) + '</sub>>', shape = 'circle', style = 'bold')
+    for i in range(n):
+        if len(in_sym) != 0:
+            xlabel = in_sym[i]
+        else:
+            xlabel = '<x<sub>' + str(i) + '</sub>>'
+        G.add_node('n' + str(i), label = xlabel, shape = 'circle', style = 'bold')
 
     # function nodes and connections
     for i in range(r * c):
