@@ -122,7 +122,7 @@ std::string print_my_sig(const std::vector<std::string>& in)
 *                                  BINARY FUNCTIONS
 *------------------------------------------------------------------------**/
 
-// protected division: returns 1 if the denominator is too close to 0
+// protected division: returns 1 if the denominator is 0
 template <typename T, f_enabler<T> = 0>
 T my_pdiv(const std::vector<T>& in)
 {
