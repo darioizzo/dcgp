@@ -122,11 +122,11 @@ std::string print_my_sig(const std::vector<std::string>& in)
 *                                  BINARY FUNCTIONS
 *------------------------------------------------------------------------**/
 
-// protected division: returns 1 if the divisor is 0
+// protected division: returns 1 if the the dividend equals the divisor
 template <typename T, f_enabler<T> = 0>
 T my_pdiv(const std::vector<T>& in)
 {
-    if (in[1] == T(0.)) {
+    if (in[0] == in[1]) {
         return T(1.);
     }
     return in[0]/in[1];
