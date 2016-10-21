@@ -115,7 +115,7 @@ def _graphviz_visualize(self, in_sym = [], draw_inactive = True, draw_weights = 
             op = '-'
         elif op == 'mul':
             op = '*'
-        elif op == 'div':
+        elif op == 'div' or op == 'pdiv':
             op = '/'
         G.add_node('n' + str(n + i), label =  op, shape = 'circle', style = nstyle, color = col, fontcolor = col)
         for j in range(arity):
