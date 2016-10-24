@@ -38,6 +38,8 @@ public:
             m_kernels.emplace_back(my_mul<T>,print_my_mul, kernel_name);
         else if (kernel_name=="div")
             m_kernels.emplace_back(my_div<T>,print_my_div, kernel_name);
+        else if (kernel_name=="pdiv")
+            m_kernels.emplace_back(my_pdiv<T>,print_my_pdiv, kernel_name);
         else if (kernel_name=="sig")
             m_kernels.emplace_back(my_sig<T>,print_my_sig, kernel_name);
         else if (kernel_name=="sin")
