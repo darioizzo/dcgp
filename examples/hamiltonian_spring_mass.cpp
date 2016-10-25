@@ -19,7 +19,7 @@ double fitness(const dcgp::expression<gdual_d>& ex, const std::vector<std::vecto
         double p = in[i][0].constant_cf();
         double q = in[i][1].constant_cf();
         double err = - dFp * q + dFq * p;
-        retval += (err) * (err);
+        retval += std::log(1 + std::abs(err));
         check += dFp*dFp + dFq*dFq;                      // We compute the quadratic error
     }
 
@@ -62,7 +62,7 @@ int main () {
             ex.set(best_chromosome);
             double check = 0;
             while (check < 1e-3) {
-                ex.mutate_active(1);
+                ex.mutate_active(6);
                 newfits[i] = fitness(ex, in, check);   // Total fitness
             }
             newchromosomes[i] = ex.get();

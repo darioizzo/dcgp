@@ -16,10 +16,10 @@ double fitness(const dcgp::expression<gdual_d>& ex, const std::vector<std::vecto
         double p = in[i][0].constant_cf();
         double q = in[i][1].constant_cf();
         double err = dFp / dFq - p / q;                 // Here we set (dp/dt) / (dq/dt) = dp/dq
-        retval += (err) * (err);
+        retval += std::log(1 + std::abs(err));
     }
 
-    return retval;
+    return retval / in.size();
 }
 
 using namespace dcgp;
