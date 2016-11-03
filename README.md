@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/38923383.svg)](https://zenodo.org/badge/latestdoi/38923383)
+
 # d-CGP
 Implementation of differentiable Cartesian Genetic Programming (d-CGP)
 
