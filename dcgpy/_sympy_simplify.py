@@ -85,6 +85,6 @@ def _sympy_simplify(self, in_sym, subs_weights = False, erc = []):
 
     simplex = []
     for i in range(m):
-        simplex.append(sympy.expand(pe[i]))
+        simplex.append(sympy.collect(sympy.expand(pe[i]),list(ns.values())))
 
     return simplex
