@@ -49,12 +49,12 @@ def _sympy_simplify(self, in_sym, subs_weights = False, erc = []):
         print("Failed to import the required module pyaudi")
         raise
 
+    # define symbols
     pe = []
     exv = self(in_sym)
     ns = {}
     for i in range(n):
         ns[in_sym[i]] = sympy.Symbol(in_sym[i], real = True)
-
     if subs_weights:
         r = self.get_rows()
         c = self.get_cols()
@@ -64,6 +64,7 @@ def _sympy_simplify(self, in_sym, subs_weights = False, erc = []):
                 ws = 'w' + str(n + i) + '_' + str(j)
                 ns[ws] = sympy.Symbol(ws, real = True)
 
+    # create Sympy expressions from strings
     for i in range(m):
         pe.append(sympy.sympify(exv[i], locals = ns))
 
@@ -83,8 +84,16 @@ def _sympy_simplify(self, in_sym, subs_weights = False, erc = []):
             for j in range(len(erc)):
                 pe[i] = pe[i].subs(ns[in_sym[n - len(erc) + j]],erc[j])
 
+    # simplifications
     simplex = []
     for i in range(m):
-        simplex.append(sympy.collect(sympy.expand(pe[i]),list(ns.values())))
+        currex = sympy.expand(pe[i])
+        if subs_weights:
+            currex = sympy.collect(sympy.expand(pe[i]),list(ns.values()))
+        addends = sympy.Add.make_args(currex)
+        currsum = 0
+        for j in range(len(addends)):
+            currsum = sympy.Add(currsum, sympy.simplify(addends[j]))
+        simplex.append(currsum)
 
     return simplex
