@@ -110,8 +110,8 @@ if is_python_build:
     pinterp = r'c:\\Python' + python_version + r'\\python.exe'
     pip = r'c:\\Python' + python_version + r'\\scripts\\pip'
     twine = r'c:\\Python' + python_version + r'\\scripts\\twine'
-    pyaudi_install_path = r'C:\\Python' + \
-        python_version + r'\\Lib\\site-packages\\pyaudi'
+    dcgpy_install_path = r'C:\\Python' + \
+        python_version + r'\\Lib\\site-packages\\dcgpy'
     # Get Python.
     wget(r'https://github.com/bluescarni/binary_deps/raw/master/' +
          python_package, 'python.7z')
@@ -136,7 +136,7 @@ common_cmake_opts = r'-DCMAKE_PREFIX_PATH=c:\\local -DCMAKE_INSTALL_PREFIX=c:\\l
 
 # Configuration step.
 if is_python_build:
-    run_command(r'cmake -G "MinGW Makefiles" ..  -DPYAUDI_INSTALL_PATH=c:\\local -DBUILD_TESTS=no -DBUILD_PYAUDI=yes -DCMAKE_BUILD_TYPE=Release ' + common_cmake_opts + r' -DBoost_PYTHON_LIBRARY_RELEASE=c:\\local\\lib\\libboost_python' +
+    run_command(r'cmake -G "MinGW Makefiles" ..  -DDCGPY_INSTALL_PATH=c:\\local -DBUILD_TESTS=no -DBUILD_DCGPY=yes -DCMAKE_BUILD_TYPE=Release ' + common_cmake_opts + r' -DBoost_PYTHON_LIBRARY_RELEASE=c:\\local\\lib\\libboost_python' +
                 (python_version[0] if python_version[0] == '3' else r'') + r'-mgw62-mt-1_62.dll  -DPYTHON_EXECUTABLE=C:\\Python' + python_version + r'\\python.exe -DPYTHON_LIBRARY=C:\\Python' + python_version + r'\\libs\\python' + python_version + r'.dll')
 elif BUILD_TYPE in ['Release', 'Debug']:
     cmake_opts = r'-DCMAKE_BUILD_TYPE=' + BUILD_TYPE + r' -DBUILD_TESTS=yes ' + common_cmake_opts
@@ -152,7 +152,7 @@ run_command(r'mingw32-make install VERBOSE=1')
 if is_python_build:
     # Run the Python tests.
     run_command(
-        pinterp + r' -c "import pyaudi; print(pyaudi.gdual_double(0.12,\"x\",1))"')
+        pinterp + r' -c "from dcgpy import test; test.run_test_suite()"')
     # Build the wheel.
     import shutil
     os.chdir('wheel')
@@ -160,16 +160,16 @@ if is_python_build:
     wheel_libs = 'mingw_wheel_libs_python{}.txt'.format(python_version[0])
     DLL_LIST = [_[:-1] for _ in open(wheel_libs, 'r').readlines()]
     for _ in DLL_LIST:
-        shutil.copy(_, 'pyaudi')
+        shutil.copy(_, 'dcgpy')
     run_command(pinterp + r' setup.py bdist_wheel')
     os.environ['PATH'] = ORIGINAL_PATH
     run_command(pip + r' install dist\\' + os.listdir('dist')[0])
 
     os.chdir('/')
     run_command(
-        pinterp + r' -c "import pyaudi; print(pyaudi.gdual_double(0.12,\"x\",1))"')
+        pinterp + r' -c "from dcgpy import test; test.run_test_suite()"')
     if is_release_build:
-        os.chdir('C:/projects/audi/build/wheel')
+        os.chdir('C:/projects/d-cgp/build/wheel')
         run_command(twine + r' upload -u darioizzo dist\\' +
                     os.listdir('dist')[0])
 elif BUILD_TYPE == 'Release':

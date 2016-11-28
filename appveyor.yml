@@ -5,8 +5,8 @@ environment:
     secure: UGpLM1eTRobLbka7TwQ3LA==
   matrix:
     #- BUILD_TYPE: "Release"
-    - BUILD_TYPE: "Debug"
-    #- BUILD_TYPE: "Python27"
+    #- BUILD_TYPE: "Debug"
+    - BUILD_TYPE: "Python27"
     #- BUILD_TYPE: "Python34"
     #- BUILD_TYPE: "Python35"
 
