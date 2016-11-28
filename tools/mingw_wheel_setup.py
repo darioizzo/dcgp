@@ -3,11 +3,11 @@ from setuptools.dist import Distribution
 from distutils import util
 import sys
 
-NAME = 'pyaudi'
-VERSION = '@audi_VERSION@'
-DESCRIPTION = 'Implementation of a high-order automated differentiation system using generalized dual numbers. Implementation of a differential algebra.'
-LONG_DESCRIPTION = 'Implementation of a high-order automated differentiation system using generalized dual numbers. Implementation of a differential algebra.'
-URL = 'https://github.com/darioizzo/audi'
+NAME = 'dcgpy'
+VERSION = '@dCGP_VERSION@'
+DESCRIPTION = 'Implementation of differentiable Cartesian Genetic Programming (d-CGP).'
+LONG_DESCRIPTION = 'The d-CGP is a recent development in the field of Genetic Programming that adds the information about the any-order derivatives of encoded program using a differential algebra.'
+URL = 'https://github.com/darioizzo/d-CGP'
 AUTHOR = 'Dario Izzo'
 AUTHOR_EMAIL = 'dario.izzo@gmail.com'
 LICENSE = 'GPLv3+/LGPL3+'
@@ -32,7 +32,8 @@ CLASSIFIERS = [
     'Programming Language :: Python :: 2',
     'Programming Language :: Python :: 3'
 ]
-KEYWORDS = 'differential algebra taylor polynomials automatic differentiation'
+KEYWORDS = 'cartesian genetic programming backpropagation machine learning'
+INSTALL_REQUIRES = ['pyaudi', 'sympy', 'pygraphviz']
 PLATFORMS = ['Unix','Windows','OSX']
 
 class BinaryDistribution(Distribution):
@@ -56,9 +57,9 @@ setup(name=NAME,
     classifiers=CLASSIFIERS,
     keywords=KEYWORDS,
     platforms=PLATFORMS,
-    packages=['pyaudi'],
+    packages=['dcgpy'],
     # Include pre-compiled extension
     package_data={
-                'pyaudi': ['_core.pyd'] + DLL_LIST
+                'dcgpy': ['_core.pyd'] + DLL_LIST
                 },
     distclass=BinaryDistribution)
