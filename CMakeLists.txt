@@ -63,7 +63,7 @@ message(STATUS "Detected Boost version: ${Boost_VERSION}")
 # Include system Boost headers.
 message(STATUS "Boost include dirs: ${Boost_INCLUDE_DIRS}")
 message(STATUS "Boost libraries: ${Boost_LIBRARIES}")
-include_directories(${Boost_INCLUDE_DIRS})
+include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
 
 # 2 - Piranha (sparse polynomial multiplication) Header only
 find_package(Piranha REQUIRED)
