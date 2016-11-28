@@ -123,7 +123,7 @@ if is_python_build:
     # Install pip and deps.
     wget(r'https://bootstrap.pypa.io/get-pip.py', 'get-pip.py')
     run_command(pinterp + ' get-pip.py')
-    #run_command(pip + ' install numpy')
+    run_command(pip + ' install pyaudi')
     #run_command(pip + ' install mpmath')
     if is_release_build:
         run_command(pip + ' install twine')
