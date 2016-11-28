@@ -33,7 +33,7 @@ CLASSIFIERS = [
     'Programming Language :: Python :: 3'
 ]
 KEYWORDS = 'cartesian genetic programming backpropagation machine learning'
-INSTALL_REQUIRES = ['pyaudi', 'sympy', 'pygraphviz']
+INSTALL_REQUIRES = ['pyaudi']
 PLATFORMS = ['Unix','Windows','OSX']
 
 class BinaryDistribution(Distribution):
@@ -57,6 +57,7 @@ setup(name=NAME,
     classifiers=CLASSIFIERS,
     keywords=KEYWORDS,
     platforms=PLATFORMS,
+    install_requires=INSTALL_REQUIRES,
     packages=['dcgpy'],
     # Include pre-compiled extension
     package_data={
