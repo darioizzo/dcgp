@@ -1,4 +1,4 @@
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.178241.svg)](https://doi.org/10.5281/zenodo.178241)
+[![DOI](https://zenodo.org/badge/38923383.svg)](https://zenodo.org/badge/latestdoi/38923383)
 [![Build status](https://ci.appveyor.com/api/projects/status/0krbaimpvjx76fcm?svg=true)](https://ci.appveyor.com/project/darioizzo/d-cgp)
 [![PyPI](https://img.shields.io/badge/pypi-v1.0.1-blue.svg)](https://pypi.python.org/pypi?:action=display&name=dcgpy&version=1.0.1)
 
