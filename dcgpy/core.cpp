@@ -245,7 +245,7 @@ BOOST_PYTHON_MODULE(_core)
     };
     // Expose it.
     bp::class_<dcgp_cleanup_functor> cl_c("_dcgp_cleanup_functor", bp::init<>());
-    cl_c.def("__call__", &cleanup_functor::operator());
+    cl_c.def("__call__", &dcgp_cleanup_functor::operator());
     // Register it.
     bp::object atexit_mod = bp::import("atexit");
     atexit_mod.attr("register")(dcgp_cleanup_functor{});
