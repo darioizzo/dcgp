@@ -12,3 +12,5 @@ from ._sympy_simplify import _sympy_simplify
 expression_double.simplify = _sympy_simplify
 expression_gdual_double.simplify = _sympy_simplify
 expression_gdual_vdouble.simplify = _sympy_simplify
+
+__version__ = {'major': 1, 'minor': 0, 'bugfix': 1}

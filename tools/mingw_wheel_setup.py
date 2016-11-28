@@ -6,7 +6,7 @@ import sys
 NAME = 'dcgpy'
 VERSION = '@dCGP_VERSION@'
 DESCRIPTION = 'Implementation of differentiable Cartesian Genetic Programming (d-CGP).'
-LONG_DESCRIPTION = 'The d-CGP is a recent development in the field of Genetic Programming that adds the information about the any-order derivatives of encoded program using a differential algebra.'
+LONG_DESCRIPTION = 'The d-CGP is a recent development in the field of Genetic Programming that builds upon Cartesian Genetic Programming adding the information about the any-order derivatives of encoded program using a differential algebra.'
 URL = 'https://github.com/darioizzo/d-CGP'
 AUTHOR = 'Dario Izzo'
 AUTHOR_EMAIL = 'dario.izzo@gmail.com'
