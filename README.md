@@ -1,3 +1,5 @@
+[![Build status](https://ci.appveyor.com/api/projects/status/0krbaimpvjx76fcm?svg=true)](https://ci.appveyor.com/project/darioizzo/d-cgp)
+
 [![DOI](https://zenodo.org/badge/38923383.svg)](https://zenodo.org/badge/latestdoi/38923383)
 
 # d-CGP
