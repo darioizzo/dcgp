@@ -74,16 +74,17 @@ mkdir build
 cd build
 cmake ../
 make install > /dev/null 2>&1
-cd ..
+
 # Apply patch (TODO: remove and use latest piranha with the accepted PR)
 wget --no-check-certificate https://raw.githubusercontent.com/darioizzo/piranha/22ab56da726df41ef18aa898e551af7415a32c25/src/thread_management.hpp
 rm -f /usr/local/include/piranha/thread_management.hpp
 cp thread_management.hpp /usr/local/include/piranha/
 
 # Install audi
+cd /dcgp
 wget https://github.com/darioizzo/d-CGP/archive/v1.0.1.tar.gz > /dev/null 2>&1
 tar xvf v1.0.1.tar.gz
-cd audi-1.0.1
+cd v1.0.1
 mkdir build
 cd build
 cmake ../
