@@ -21,26 +21,22 @@ matrix:
     services:
     - docker
     env: DOCKER_IMAGE=quay.io/pypa/manylinux1_i686 BUILD_TYPE="Python35" PYTHON_VERSION="3.5"
-      PATH_TO_PYTHON="/opt/python/cp35-cp35m"
-      PRE_CMD=linux32
+      PATH_TO_PYTHON="/opt/python/cp35-cp35m" PRE_CMD=linux32
   - sudo: required
     services:
     - docker
     env: DOCKER_IMAGE=quay.io/pypa/manylinux1_i686 BUILD_TYPE="Python34" PYTHON_VERSION="3.4"
-      PATH_TO_PYTHON="/opt/python/cp34-cp34m"
-      PRE_CMD=linux32
+      PATH_TO_PYTHON="/opt/python/cp34-cp34m" PRE_CMD=linux32
   - sudo: required
     services:
     - docker
     env: DOCKER_IMAGE=quay.io/pypa/manylinux1_i686 BUILD_TYPE="Python27" PYTHON_VERSION="2.7"
-      PATH_TO_PYTHON="/opt/python/cp27-cp27m"
-      PRE_CMD=linux32
-
+      PATH_TO_PYTHON="/opt/python/cp27-cp27m" PRE_CMD=linux32
 install:
 - docker pull $DOCKER_IMAGE
 script:
-- docker run --rm -e TWINE_PASSWORD -e BUILD_TYPE -e PYTHON_VERSION -e PATH_TO_PYTHON -e TRAVIS_TAG -v `pwd`:/dcgp
-  $DOCKER_IMAGE $PRE_CMD /dcgp/tools/install_travis.sh
+- docker run --rm -e TWINE_PASSWORD -e BUILD_TYPE -e PYTHON_VERSION -e PATH_TO_PYTHON
+  -e TRAVIS_TAG -v `pwd`:/dcgp $DOCKER_IMAGE $PRE_CMD /dcgp/tools/install_travis.sh
 env:
   global:
-    secure: BspqOXtCZ+Juy9Eg5TbTPZaS9GhYjxM9X2wRBJye2p32WZIQKgJGCSdzC7HyPZpclt2+pePbkFlsaSexPG0ovLqZ9QvAY4UsrFweOPTdVOlp1P8vc+h7qMYQmbq6zIt8u0uh39DhDjQXhmnUx9OY+lgWBHpFQXLIGwI3bvF5sRfrESFcSEjw7TgiYA7zKt4M+spBJW4Yxa4QBJyI2RJQ3SdBhRHIFbg3OjHIaGdwFpGVUY9PNF8jA+8RXIQu3LSxViXWIe/lufyCU5m4Fv5Cey/zNipnx2SndPKCi928IYAJjk5T6o3j5fGGd46gQdqyQ+hSM4V2/doSq0h8Y2RldxELGEnOGWkSivQtp7A+Q6hHiZeNfJ/A6ZnL5NpSxef+4myBXSaLqQyGzMgbujkbnzTDsQkC6Teg+gqSLqxmu1m1sVOenIkyu+NB8+m9gq9gbMMiX8vkz9Pu4ioDgBd7qH8txFXNwzaB+vjSICPm8iePCvg+MkxgR4igGPqU4bkzMj6KKKp1PLB28KZAPzJvAfWL3q+ag0p4Rn4yLOh+1Bbslo182wNsN7plCFksco01Nq0i4YlZMrGGh7jXb/o5K5WKR1YdS24HwuIT4q4Ct57hJwf/kyDgRYDbqTAg+fo9o3Q4A2ZaHMb0e1DvtGCUQHIWVi87MnbcXwm4FiiOAJo=
+    secure: rutYylvpFA+MklZcuQo32452s7L4CMV/lzaF1ccrLvQ94DoAvCYWQm2v1b2Qw9eLXi5+f3TW7BmUDjxKfULpoWH/q2Q+/9W2roixziKoKmxmvtkNPWT4m4EPMEft2Y0eLxMu7arUnezcsv8j3fBEOQZxiTKQrt2EEn6FKSepax+4+ls6oE1VwdGMOAtAeReAqt/aBRwxl5+8P1QPs4B5Mc+7SPvqWaOOXr/3cFpQ10YFsp99L48lCUMnLf6ocbf55Bn9o7/bUTwezzQ3WRz11t5uwNiZDp4Nf76QpQ3zKhoM37fgQ2QlkEUL+BuCzwuPdmMgNInBSwUFnOjVL097l3Sb87lXO0mxS1vDZv1Xks8D9UOLiXb+WMHxyrDf2llGr+4zKzLZrjcJI6Ouz9UzGb81CDQOAsRwls4X1DLpq8ElQp+9bM7lgW3bWE4eB79wLMGcw7wVqqcbf8Th62Nbt2457jraogEYa1gFmoK7YhAS2fmEZK8GoS9uOvmfpQKykZzLb2VNOG8G+kRgovO/4i2rPQ0D1/RJC+8IFv6l5U6Y6mZzFUoFEk7chGY/BxholD3xoSEQpOVrjY95DZhLBEcEeCTAU0N7MBuirF/z+xEGD1JOGzNlKeHLR6v13Ztnv8ih3deO6mnE5nvLZmcqJN3UGRFK6/nryWKVEt2Wqi0=
