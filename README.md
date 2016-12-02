@@ -16,10 +16,11 @@ The first research paper describing d-CGP use to solve symbolic regressions prob
 Izzo, Dario, Francesco Biscani, and Alessio Mereta. "Differentiable Genetic Programming." arXiv preprint arXiv:1611.04766 (2016).
 
 ## dcgpy
-The python package dcgpy (python binding of the C++ code) can be installed via:
+If you have a win 64bit system or a linux based system (32 or 64 bits), the python package dcgpy (python binding of the C++ code) can be installed via:
 
  ```pip install dcgpy```
 
+otherwise you will have to compile it by activating the BUILD_DCGPY option in CMake
 
 ## Compiling the source code or using the header only library
 ### Dependencies
