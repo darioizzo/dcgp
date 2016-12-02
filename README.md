@@ -34,7 +34,7 @@ If you have all this, after cloning the git repository, go into mit and type ```
 ## Other CGP libraries
 ### Comparison to the CGP-Library
 If all below statements are true:
- * You do not care about knowing derivatives of your encoded function
+ * You do not care about knowing derivatives of your encoded program
  * You do not care about run-time capabilities
  * You do not care about the Python module
  * You do not care about the possibility of defining your kernel functions as complex functors (e.g. CGP expressions.)
