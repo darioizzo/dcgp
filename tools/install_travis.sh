@@ -82,14 +82,13 @@ cp thread_management.hpp /usr/local/include/piranha/
 
 # Install audi
 cd /dcgp
-wget https://github.com/darioizzo/d-CGP/archive/v1.0.1.tar.gz > /dev/null 2>&1
-tar xvf v1.0.1.tar.gz
-cd v1.0.1
+wget https://github.com/darioizzo/audi/archive/v1.0.3.tar.gz > /dev/null 2>&1
+tar xvf v1.0.3
+cd audi-1.0.3
 mkdir build
 cd build
-cmake ../
+cmake -DBUILD_TESTS=no ../
 make install > /dev/null 2>&1
-cd ..
 
 # Install and compile dcgpy
 cd /dcgp
@@ -97,9 +96,9 @@ mkdir build
 cd build
 # The include directory for py3 is X.Xm, while for py2 is X.X
 if [[ "${PYTHON_VERSION}" != "2.7" ]]; then
-    cmake -DBUILD_DCGPY=yes -DBUILD_TESTS=no -DCMAKE_INSTALL_PREFIX=/dcgp/local -DCMAKE_BUILD_TYPE=Release -DBoost_PYTHON_LIBRARY_RELEASE=/usr/local/lib/${BOOST_PYTHON_LIB_NAME} -DPYTHON_INCLUDE_DIR=${PATH_TO_PYTHON}/include/python${PYTHON_VERSION}m/ -DPYTHON_EXECUTABLE=${PATH_TO_PYTHON}/bin/python  ../
+    cmake -DBUILD_DCGPY=yes -DBUILD_TESTS=no -DBUILD_MAIN=no -DCMAKE_INSTALL_PREFIX=/dcgp/local -DCMAKE_BUILD_TYPE=Release -DBoost_PYTHON_LIBRARY_RELEASE=/usr/local/lib/${BOOST_PYTHON_LIB_NAME} -DPYTHON_INCLUDE_DIR=${PATH_TO_PYTHON}/include/python${PYTHON_VERSION}m/ -DPYTHON_EXECUTABLE=${PATH_TO_PYTHON}/bin/python  ../
 else
-    cmake -DBUILD_DCGPY=yes -DBUILD_TESTS=no -DCMAKE_INSTALL_PREFIX=/dcgp/local -DCMAKE_BUILD_TYPE=Release -DBoost_PYTHON_LIBRARY_RELEASE=/usr/local/lib/${BOOST_PYTHON_LIB_NAME} -DPYTHON_INCLUDE_DIR=${PATH_TO_PYTHON}/include/python${PYTHON_VERSION}/ -DPYTHON_EXECUTABLE=${PATH_TO_PYTHON}/bin/python  ../
+    cmake -DBUILD_DCGPY=yes -DBUILD_TESTS=no -DBUILD_MAIN=no -DCMAKE_INSTALL_PREFIX=/dcgp/local -DCMAKE_BUILD_TYPE=Release -DBoost_PYTHON_LIBRARY_RELEASE=/usr/local/lib/${BOOST_PYTHON_LIB_NAME} -DPYTHON_INCLUDE_DIR=${PATH_TO_PYTHON}/include/python${PYTHON_VERSION}/ -DPYTHON_EXECUTABLE=${PATH_TO_PYTHON}/bin/python  ../
 fi
 make
 make install

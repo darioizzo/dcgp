@@ -1,13 +1,13 @@
-from distutils.core import setup, Extension
-NAME = 'pyaudi'
-VERSION = '@audi_VERSION@'
-DESCRIPTION = 'Implementation of a high-order automated differentiation system using generalized dual numbers. Implementation of a differential algebra.'
-LONG_DESCRIPTION = 'Implementation of a high-order automated differentiation system using generalized dual numbers. Implementation of a differential algebra.'
-URL = 'https://github.com/darioizzo/audi'
+from setuptools import setup
+
+NAME = 'dcgpy'
+VERSION = '@dCGP_VERSION@'
+DESCRIPTION = 'Implementation of differentiable Cartesian Genetic Programming (d-CGP).'
+LONG_DESCRIPTION = 'The d-CGP is a recent development in the field of Genetic Programming that builds upon Cartesian Genetic Programming adding the information about the any-order derivatives of encoded program using a differential algebra.'
+URL = 'https://github.com/darioizzo/d-CGP'
 AUTHOR = 'Dario Izzo'
 AUTHOR_EMAIL = 'dario.izzo@gmail.com'
 LICENSE = 'GPLv3+/LGPL3+'
-INSTALL_REQUIRES = ['numpy']
 CLASSIFIERS = [
     # How mature is this project? Common values are
     #   3 - Alpha
@@ -29,8 +29,10 @@ CLASSIFIERS = [
     'Programming Language :: Python :: 2',
     'Programming Language :: Python :: 3'
 ]
-KEYWORDS = 'differential algebra taylor polynomials automatic differentiation'
+KEYWORDS = 'cartesian genetic programming backpropagation machine learning'
+INSTALL_REQUIRES = ['pyaudi']
 PLATFORMS = ['Unix','Windows','OSX']
+
 
 extension_module = Extension(
     'dummy',
@@ -50,9 +52,9 @@ setup(name=NAME,
     platforms=PLATFORMS,
     install_requires=INSTALL_REQUIRES,
     ext_modules = [extension_module],
-    packages=['pyaudi'],
+    packages=['dcgpy'],
     # Include pre-compiled extension
     package_data={
-               	'pyaudi': ['_core.so']
+               	'dcgpy': ['_core.so']
                	},
 )
