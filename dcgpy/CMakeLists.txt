@@ -15,6 +15,13 @@ set(DCGPY_INSTALL_PATH "${YACMA_PYTHON_MODULES_INSTALL_PATH}/dcgpy")
 
 # Module needs the Python libs, plus the mandatory libraries.
 TARGET_LINK_LIBRARIES(_core ${MANDATORY_LIBRARIES} ${Boost_SERIALIZATION_LIBRARY} ${Boost_PYTHON_LIBRARY})
+
+# Module needs the Python libs, plus the mandatory libraries.
+if(WIN32)
+    message(STATUS "Windows detected, linking also to the python library")
+    set(MANDATORY_LIBRARIES ${MANDATORY_LIBRARIES} ${PYTHON_LIBRARIES})
+endif()
+
 INSTALL(TARGETS _core
 	RUNTIME DESTINATION ${DCGPY_INSTALL_PATH}
 	LIBRARY DESTINATION ${DCGPY_INSTALL_PATH}
