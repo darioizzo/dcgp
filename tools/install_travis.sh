@@ -126,6 +126,7 @@ ${PATH_TO_PYTHON}/bin/python -c "from dcgpy import test; test.run_test_suite()"
 #export DCGP_RELEASE_VERSION=`echo "${TRAVIS_TAG}"|grep -E 'v[0-9]+\.[0-9]+.*'|cut -c 2-`
 #if [[ "${DCGP_RELEASE_VERSION}" != "" ]]; then
     echo "Release build detected, uploading to PyPi."
+    cd dcgp/build/wheel
     ${PATH_TO_PYTHON}/bin/pip install twine
     ${PATH_TO_PYTHON}/bin/twine upload -u darioizzo wheelhouse2/dcgpy*.whl
 #fi
