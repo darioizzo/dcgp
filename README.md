@@ -1,5 +1,6 @@
 [![DOI](https://zenodo.org/badge/38923383.svg)](https://zenodo.org/badge/latestdoi/38923383)
 [![Build status](https://ci.appveyor.com/api/projects/status/0krbaimpvjx76fcm?svg=true)](https://ci.appveyor.com/project/darioizzo/d-cgp)
+[![Build Status](https://travis-ci.org/darioizzo/d-CGP.svg?branch=master)](https://travis-ci.org/darioizzo/d-CGP)
 [![PyPI](https://img.shields.io/badge/pypi-v1.0.1-blue.svg)](https://pypi.python.org/pypi?:action=display&name=dcgpy&version=1.0.1)
 
 # d-CGP
@@ -9,7 +10,18 @@ The d-CGP is a recent development in the field of Genetic Programming that adds 
 
  * The evolution of the genetic program can now be helped by using the information on the derivatives, enabling for the equivalent of backpropagation in Neural Networks.
  * The fitness function can be defined in terms of the derivatives, allowing to go beyond simple regression tasks and, instead, solve differential equations, learn differential models, capture conserved quantities in dynamical systems.
+ 
+The first research paper describing d-CGP use to solve symbolic regressions problems such is:
 
+Izzo, Dario, Francesco Biscani, and Alessio Mereta. "Differentiable Genetic Programming." arXiv preprint arXiv:1611.04766 (2016).
+
+## dcgpy
+The python package dcgpy (python binding of the C++ code) can be installed via:
+
+ ```pip install dcgpy```
+
+
+## Compiling the source code or using the header only library
 ### Dependencies
 Several and tested dependencies are necessary to succesfully compile d-CGP
  * Audi, headers only library - (git clone https://github.com/darioizzo/audi.git)
@@ -18,6 +30,7 @@ Several and tested dependencies are necessary to succesfully compile d-CGP
  
 If you have all this, after cloning the git repository, go into mit and type ```git submodule init```, ```git submodule update``` and you are good to go! (these last commands clone the pybind11 code necessary to create the python bindings)
 
+## Other CGP libraries
 ### Comparison to the CGP-Library
 If all below statements are true:
  * You do not care about knowing derivatives of your encoded function
