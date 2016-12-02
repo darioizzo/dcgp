@@ -82,9 +82,8 @@ cp thread_management.hpp /usr/local/include/piranha/
 
 # Install audi
 cd /dcgp
-wget https://github.com/darioizzo/audi/archive/v1.0.3.tar.gz > /dev/null 2>&1
-tar xvf v1.0.3
-cd audi-1.0.3
+git clone https://github.com/darioizzo/audi.git > /dev/null 2>&1
+cd audi
 mkdir build
 cd build
 cmake -DBUILD_TESTS=no ../
@@ -111,21 +110,22 @@ cp -R /dcgp/local/lib/python${PYTHON_VERSION}/site-packages/dcgpy ./
 # fixes the issue (TODO: probably better ways?)
 touch dummy.cpp
 
-# We install required dependncies (do it here, do not let pip install do it)
-${PATH_TO_PYTHON}/bin/pip install numpy
+# We install required dependencies (do it here, do not let pip install do it)
+${PATH_TO_PYTHON}/bin/pip install numpy pyaudi
 ${PATH_TO_PYTHON}/bin/pip wheel ./ -w wheelhouse/
 # Bundle external shared libraries into the wheels (only py35 has auditwheel)
 /opt/python/cp35-cp35m/bin/auditwheel repair wheelhouse/dcgpy*.whl -w ./wheelhouse2/
 # Install packages (not sure what --no-index -f does, should also work without, but just in case)
 ${PATH_TO_PYTHON}/bin/pip install dcgpy --no-index -f wheelhouse2
 # Test
+cd /
 ${PATH_TO_PYTHON}/bin/python -c "from dcgpy import test; test.run_test_suite()"
 
 # Upload in PyPi
 # This variable will contain something if this is a tagged build (vx.y.z), otherwise it will be empty.
-export DCGP_RELEASE_VERSION=`echo "${TRAVIS_TAG}"|grep -E 'v[0-9]+\.[0-9]+.*'|cut -c 2-`
-if [[ "${DCGP_RELEASE_VERSION}" != "" ]]; then
+#export DCGP_RELEASE_VERSION=`echo "${TRAVIS_TAG}"|grep -E 'v[0-9]+\.[0-9]+.*'|cut -c 2-`
+#if [[ "${DCGP_RELEASE_VERSION}" != "" ]]; then
     echo "Release build detected, uploading to PyPi."
     ${PATH_TO_PYTHON}/bin/pip install twine
     ${PATH_TO_PYTHON}/bin/twine upload -u darioizzo wheelhouse2/dcgpy*.whl
-fi
+#fi
