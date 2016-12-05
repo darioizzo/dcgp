@@ -234,4 +234,19 @@ BOOST_PYTHON_MODULE(_core)
     expose_kernel_set<gdual_v>("gdual_vdouble");
     expose_expression<gdual_v>("gdual_vdouble");
     expose_expression_weighted<gdual_v>("gdual_vdouble");
+
+    // Define a cleanup functor to be run when the module is unloaded.
+    struct dcgp_cleanup_functor {
+        void operator()() const
+        {
+            std::cout << "Shutting down the thread pool.\n";
+            piranha::thread_pool_shutdown<void>();
+        }
+    };
+    // Expose it.
+    bp::class_<dcgp_cleanup_functor> cl_c("_dcgp_cleanup_functor", bp::init<>());
+    cl_c.def("__call__", &dcgp_cleanup_functor::operator());
+    // Register it.
+    bp::object atexit_mod = bp::import("atexit");
+    atexit_mod.attr("register")(dcgp_cleanup_functor{});
 }

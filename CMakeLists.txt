@@ -1,6 +1,6 @@
-project(dCGP)
-
 cmake_minimum_required(VERSION 3.2.0)
+
+project(dCGP VERSION 1.0.1)
 
 enable_testing()
 
@@ -63,7 +63,7 @@ message(STATUS "Detected Boost version: ${Boost_VERSION}")
 # Include system Boost headers.
 message(STATUS "Boost include dirs: ${Boost_INCLUDE_DIRS}")
 message(STATUS "Boost libraries: ${Boost_LIBRARIES}")
-include_directories(${Boost_INCLUDE_DIRS})
+include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
 
 # 2 - Piranha (sparse polynomial multiplication) Header only
 find_package(Piranha REQUIRED)
@@ -127,4 +127,13 @@ ENDIF(BUILD_EXAMPLES)
 # Build the python module
 if(BUILD_DCGPY)
 	add_subdirectory("${CMAKE_SOURCE_DIR}/dcgpy")
+    if(WIN32 AND MINGW)
+		message(STATUS "Creating the files for the generation of a binary wheel for MinGW.")
+		configure_file("${CMAKE_CURRENT_SOURCE_DIR}/tools/mingw_wheel_setup.py" "${CMAKE_CURRENT_BINARY_DIR}/wheel/setup.py")
+		configure_file("${CMAKE_CURRENT_SOURCE_DIR}/tools/mingw_wheel_libs_python${PYTHON_VERSION_MAJOR}.txt" "${CMAKE_CURRENT_BINARY_DIR}/wheel/mingw_wheel_libs_python${PYTHON_VERSION_MAJOR}.txt")
+    endif()
+    if(UNIX AND NOT APPLE)
+        message(STATUS "Creating the files for the generation of a manylinux binary wheel.")
+        configure_file("${CMAKE_CURRENT_SOURCE_DIR}/tools/manylinux_wheel_setup.py" "${CMAKE_CURRENT_BINARY_DIR}/wheel/setup.py")
+    endif()
 endif()
