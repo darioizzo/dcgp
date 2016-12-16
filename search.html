@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Differentiable Cartesian Genetic Programming &#8212; dCGP documentation</title>
+    <title>Search &#8212; dCGP documentation</title>
     
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -28,13 +28,21 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="_static/searchtools.js"></script>
     <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" />
+    <link rel="search" title="Search" href="#" />
+  <script type="text/javascript">
+    jQuery(function() { Search.loadIndex("searchindex.js"); });
+  </script>
+  
+  <script type="text/javascript" id="searchindexloader"></script>
+  
 <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto|Comfortaa|Space+Mono">
+
 
   </head>
   <body role="document">
@@ -48,7 +56,7 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="#">
+        <a class="navbar-brand" href="index.html">
           dcgp</a>
         <span class="navbar-text navbar-version pull-left"><b>1.0</b></span>
       </div>
@@ -67,7 +75,7 @@
      id="dLabelGlobalToc"
      data-toggle="dropdown"
      data-target="#"
-     href="#">Site <b class="caret"></b></a>
+     href="index.html">Site <b class="caret"></b></a>
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"></ul>
@@ -82,13 +90,6 @@
 
           
             
-<form class="navbar-form navbar-right" action="search.html" method="get">
- <div class="form-group">
-  <input type="text" name="q" class="form-control" placeholder="Search" />
- </div>
-  <input type="hidden" name="check_keywords" value="yes" />
-  <input type="hidden" name="area" value="default" />
-</form>
           
         </div>
     </div>
@@ -98,25 +99,35 @@
   <div class="row">
     <div class="col-md-12 content">
       
-  <div class="figure">
-<img alt="_static/dcgp_logo.png" src="_static/dcgp_logo.png" />
-</div>
-<div class="section" id="differentiable-cartesian-genetic-programming">
-<h1>Differentiable Cartesian Genetic Programming<a class="headerlink" href="#differentiable-cartesian-genetic-programming" title="Permalink to this headline">¶</a></h1>
-<p>Differentiable Cartesian Genetic Programming (dCGP) is a recent development in the field of Genetic Programming
-that adds the information about the derivatives of the output nodes (the programs, or expressions encoded) with
-respect to the input nodes (the input values) and/or weights. In doing so, it enables a number of new applications
-currently the subject of active research.</p>
-<p>The evolution of the genetic program can now be supported by using the information on the derivatives, hence enabling
-for the equivalent of back-propagation in Neural Networks. The fitness function can be defined in terms of the
-derivatives, allowing to go beyond simple regression tasks and, additionally, solve differential equations, learn
-differential models, capture conserved quantities in dynamical systems.</p>
-<div class="section" id="references">
-<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
-<p>Dario Izzo, Francesco Biscani, and Alessio Mereta. <a class="reference external" href="https://arxiv.org/pdf/1611.04766v1.pdf">Differentiable Genetic Programming.</a> arXiv preprint arXiv:1611.04766 (2016).</p>
-</div>
-</div>
+  <h1 id="search-documentation">Search</h1>
+  <div id="fallback" class="admonition warning">
+  <script type="text/javascript">$('#fallback').hide();</script>
+  <p>
+    Please activate JavaScript to enable the search
+    functionality.
+  </p>
+  </div>
+  <p>
+    From here you can search these documents. Enter your search
+    words into the box below and click "search". Note that the search
+    function will automatically search for all of the words. Pages
+    containing fewer words won't appear in the result list.
+  </p>
 
+  
+  <form class="form-inline" action="" method="get">
+    <div class="form-group">
+      <input type="text" class="form-control" name="q" value="" />
+    </div>
+    <input type="submit" class="btn btn-default" value="search" />
+    <span id="search-progress" style="padding-left: 10px"></span>
+  </form>  
+  
+  
+  
+  <div id="search-results">
+  
+  </div>
 
     </div>
       
