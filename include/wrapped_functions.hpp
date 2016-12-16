@@ -176,7 +176,7 @@ std::string print_my_log(const std::vector<std::string>& in)
     return "log(" + in[0] + ")";
 }
 
-// logarithm
+// exponential
 template <typename T, f_enabler<T> = 0>
 T my_exp(const std::vector<T>& in)
 {

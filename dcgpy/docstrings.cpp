@@ -7,14 +7,17 @@ namespace dcgpy
 
 std::string kernel_init_doc(const std::string &type)
 {
-    return R"(Construct a kernel function from callables.
+    return R"(__init__(callable_f, callable_s, name)
+
+Constructs a kernel function from callables.
 
 Args:
-    callable_f (``callable: List[)" + type + R"(] -> )" + type + R"(``): a callable taking a list of )" + type + R"( as inputs and returning a )" + type + R"( (the value of the kernel function evaluated on the inputs)
-    callable_s (``callable: List[string] -> string``): a callable taking a list of string as inputs and returning a string (the symbolic representation of the kernel function evaluated on the input symbols)
+    callable_f (``callable - List[)" + type + R"(] -> )" + type + R"(``): a callable taking a list of )" + type + R"( as inputs and returning a )" + type + R"( (the value of the kernel function evaluated on the inputs)
+    callable_s (``callable - List[string] -> string``): a callable taking a list of string as inputs and returning a string (the symbolic representation of the kernel function evaluated on the input symbols)
     name (``string``): name of the kernel
 
 Examples:
+
 >>> from dcgpy import *
 >>> def my_sum(x):
 ...     return sum(x)
@@ -25,9 +28,30 @@ Examples:
     )";
 }
 
+std::string kernel_set_init_doc(const std::string &type)
+{
+    return R"(__init__(kernels)
+
+Constructs a set of common kernel functions from their common name. The kernel
+functions can be then retrieved via the call operator.
+
+Args:
+    kernels (``List[string]``): a list of strings indicating names of kernels to use. The following are available: "sum", "diff", "mul", "div", "sig", "sin", "log", "exp"
+
+Examples:
+
+>>> from dcgpy import *
+>>> kernels = kernel_set_)" + type + R"((["sum", "diff", "mul", "div"])
+>>> kernels()[0](["x", "y"])
+    )";
+}
+
 std::string expression_init_doc(const std::string &type)
 {
-    return R"(A CGP operating on floats
+    return R"(__init__(inputs, outputs, rows, columns, levels_back, arity, kernels, seed)
+
+Constructs a CGP expression operating on )" + type + R"(
+
 Args:
     inputs (``int``): number of inputs
     outputs (``int``): number of outputs
@@ -35,10 +59,11 @@ Args:
     columns (``int``): number of columns in the cartesian program
     levels_back (``int``): number of levels-back in the cartesian program
     arity (``int``): arity of the kernels
-    kernels (``List[pycgp.kernel]``): kernel functions
+    kernels (``List[dcgpy.kernel_)" + type + R"(]``): kernel functions
     seed (``int``): random seed to generate mutations and chromosomes
 
 Examples:
+
 >>> from dcgpy import *
 >>> dcgp = expression_)" + type + R"((1,1,1,10,11,2,kernel_set(["sum","diff","mul","div"])(), 32u)
 >>> print(dcgp)
@@ -48,21 +73,107 @@ Examples:
     )";
 }
 
-std::string kernel_set_init_doc(const std::string &type)
+std::string kernel_set_push_back_str_doc()
 {
-    return R"(Constructs a set of common kernel functions from their common name. The kernel
-functions can be then retrieved via the call operator.
+    return R"(**push_back(kernel_name)**
+
+Adds one more kernel to the set by common name.
 
 Args:
-    kernels (``List[string]``): a list of strings indicating names of kernels to use.
-    Available are: "sum", "diff", "mul", "div", "sig", "sin", "log", "exp"
-
-Examples:
->>> from dcgpy import *
->>> kernels = kernel_set_)" + type + R"((["sum", "diff", "mul", "div"])
->>> kernels()[0](["x", "y"])
+    kernel_name (``string``): a string containing the function name
     )";
 }
 
+std::string kernel_set_push_back_ker_doc(const std::string &type)
+{
+    return R"(**push_back(kernel)**
 
+Adds one more kernel to the set.
+
+Args:
+    kernel (``dcgpy.kernel_)" + type + R"(``): the kernel to add
+    )";
+}
+
+std::string expression_set_doc()
+{
+    return R"(set(chromosome)
+
+Sets the chromosome.
+
+Args:
+    chromosome (a ``List[int]``): the new chromosome
+
+Raises:
+    ValueError: if the the chromosome is incompatible with the expression (n.inputs, n.outputs, levels-back, etc.)
+    )";
+}
+
+std::string expression_mutate_doc()
+{
+    return R"(mutate(idxs)
+
+Mutates multiple genes within their allowed bounds.
+
+Args:
+    idxs (a ``List[int]``): indexes of the genes to me mutated
+
+Raises:
+    ValueError: if the index of a gene is out of bounds
+    )";
+}
+
+std::string expression_weighted_set_weight_doc()
+{
+    return R"(set_weight(node_id, input_id, weight)
+
+Sets a weight.
+
+Note:
+    Convention adopted for node numbering: http://ppsn2014.ijs.si/files/slides/ppsn2014-tutorial3-miller.pdf
+
+Args:
+    node_id (an ``int``): the id of the node whose weight is being set
+    input_id (an ``int``): the id of the node input (0 for the first one up to arity-1)
+    weight (a ``float``): the new value of the weight
+
+Raises:
+    ValueError: if node_id or input_id are not valid
+    )";
+}
+
+std::string expression_weighted_set_weights_doc()
+{
+    return R"(set_weights(weights)
+
+Sets all weights.
+
+Args:
+    weights (a ``List[float]``): the new values of the weights
+
+Raises:
+    ValueError: if the input vector dimension is not valid (r*c*arity)
+    )";
+}
+
+std::string expression_weighted_get_weight_doc()
+{
+    return R"(get_weight(node_id, input_id)
+
+Gets a weight.
+
+Note:
+    Convention adopted for node numbering: http://ppsn2014.ijs.si/files/slides/ppsn2014-tutorial3-miller.pdf
+
+Args:
+    node_id (an ``int``): the id of the node
+    input_id (an ``int``): the id of the node input (0 for the first one up to arity-1)
+
+Returns:
+    The value of the weight (a ``float``)
+
+Raises:
+    ValueError: if node_id or input_id are not valid
+    )";
+}
 } // namespace

@@ -10,7 +10,6 @@
 #include <audi/audi.hpp>
 #include <iostream>
 #include <sstream>
-#include <audi/audi.hpp>
 
 #include "kernel.hpp"
 #include "io.hpp"
@@ -19,13 +18,14 @@
 
 namespace dcgp {
 
-/// A d-CGP expression
+/// A weighted dCGP expression
 /**
- * This class represent a mathematical expression as encoded using CGP and contains
- * algorithms that compute its value (numerical and symbolical) and its derivatives
- * as well as mutate the expression.
+ * This class represents a mathematical expression as encoded using CGP with the
+ * addition of weights on the connections. It contains algorithms to compute the
+ * value (numerical and symbolical) of the expression and its derivatives, as well
+ * as to mutate the expression.
  *
- * tparam T expression type. Can be double, or a gdual type.
+ * @tparam T expression type. Can be double, or a gdual type.
  *
  * @author Dario Izzo (dario.izzo@gmail.com)
  */
@@ -38,16 +38,16 @@ private:
     using functor_enabler = typename std::enable_if<std::is_same<U,double>::value || audi::is_gdual<T>::value || std::is_same<U,std::string>::value,int>::type;
 public:
     /// Constructor
-    /** Constructs a d-CGP expression
+    /** Constructs a dCGP expression
      *
-     * \param[in] n number of inputs (independent variables)
-     * \param[in] m number of outputs (dependent variables)
-     * \param[in] r number of rows of the cartesian cgp
-     * \param[in] c number of columns of the cartesian cgp
-     * \param[in] l number of levels-back allowed for the cartesian cgp
-     * \param[in] arity arity of the basis functions
-     * \param[in] f function set. An std::vector of dcgp::kernel<expression::type>
-     * \param[in] seed seed for the random number generator (initial expression  and mutations depend on this)
+     * @param[in] n number of inputs (independent variables)
+     * @param[in] m number of outputs (dependent variables)
+     * @param[in] r number of rows of the dCGP
+     * @param[in] c number of columns of the dCGP
+     * @param[in] l number of levels-back allowed for the dCGP
+     * @param[in] arity arity of the basis functions
+     * @param[in] f function set. An std::vector of dcgp::kernel<expression::type>
+     * @param[in] seed seed for the random number generator (initial expression and mutations depend on this)
      */
     expression_weighted(
                unsigned int n,                  // n. inputs
@@ -67,14 +67,14 @@ public:
                     }
                 }
 
-    /// Evaluates the d-CGP expression
-    /*
-     * This evaluates the d-CGP expression. According to the template parameter
+    /// Evaluates the dCGP expression
+    /**
+     * This evaluates the dCGP expression. According to the template parameter
      * it will compute the value (double) the Taylor expansion (gdual) or a symbolic
      * representation (std::string). Any other type will result in a compilation-time
      * error (SFINAE).
      *
-     * @param[in] in an std::vector containing the values where the d-CGP expression has
+     * @param[in] in an std::vector containing the values where the dCGP expression has
      * to be computed (doubles, gduals or strings)
      *
      * @return The value of the function (an std::vector)
@@ -109,17 +109,15 @@ public:
         return retval;
     }
 
-
-
-    /// Evaluates the d-CGP expression
-    /*
-     * This evaluates the d-CGP expression. According to the template parameter
+    /// Evaluates the dCGP expression
+    /**
+     * This evaluates the dCGP expression. According to the template parameter
      * it will compute the value (double) the Taylor expansion (gdual) or a symbolic
      * representation (std::string). Any other type will result in a compilation-time
      * error (SFINAE). This is identical to the other overload and is provided only
      * for convenience
      *
-     * @param[in] in an initializer list containing the values where the d-CGP expression has
+     * @param[in] in an initializer list containing the values where the dCGP expression has
      * to be computed (doubles, gduals or strings)
      *
      * @return The value of the function (an std::vector)
@@ -159,10 +157,12 @@ public:
     }
 
     /// Sets a weight
-    /*
+    /**
+     * Sets a connection weight to a new value
      *
-     * @param[in] node the node id whose weight is being set (convention adopted for node numbering http://ppsn2014.ijs.si/files/slides/ppsn2014-tutorial3-miller.pdf)
+     * @param[in] node_id the id of the node whose weight is being set (convention adopted for node numbering http://ppsn2014.ijs.si/files/slides/ppsn2014-tutorial3-miller.pdf)
      * @param[in] input_id the id of the node input (0 for the first one up to arity-1)
+     * @param[in] w the new value of the weight
      *
      * @throws std::invalid_argument if the node_id or input_id are not valid
      */
@@ -176,16 +176,42 @@ public:
         {
             throw std::invalid_argument("Requested input exceeds the function arity");
         }
-        auto idx = (node_id -this->get_n()) * this->get_arity() + input_id;
+        auto idx = (node_id - this->get_n()) * this->get_arity() + input_id;
         m_weights[idx] = w;
     }
 
+    /// Gets a weight
+    /**
+     * Gets the value of a connection weight
+     *
+     * @param[in] node_id the id of the node (convention adopted for node numbering http://ppsn2014.ijs.si/files/slides/ppsn2014-tutorial3-miller.pdf)
+     * @param[in] input_id the id of the node input (0 for the first one up to arity-1)
+     *
+     * @return the value of the weight
+     *
+     * @throws std::invalid_argument if the node_id or input_id are not valid
+     */
+    T get_weight(typename std::vector<T>::size_type node_id, typename std::vector<T>::size_type input_id)
+    {
+        if(node_id < this->get_n() || node_id >= this->get_n() + this->get_rows() * this->get_cols())
+        {
+            throw std::invalid_argument("Requested node id does not exist");
+        }
+        if(input_id >= this->get_arity())
+        {
+            throw std::invalid_argument("Requested input exceeds the function arity");
+        }
+        auto idx = (node_id - this->get_n()) * this->get_arity() + input_id;
+        return m_weights[idx];
+    }
+
     /// Sets all weights
-    /*
+    /**
+     * Sets all the connection weights at once
      *
      * @param[in] ws an std::vector containing all the weights to set
      *
-     * @throws std::invalid_argument if the input vector dimension are not valid (n*m*arity)
+     * @throws std::invalid_argument if the input vector dimension is not valid (r**arity)
      */
     void set_weights(const std::vector<T> &ws)
     {
@@ -197,8 +223,8 @@ public:
     }
 
     /// Gets the weights
-    /*
-     *
+    /**
+     * Gets the values of all the weights
      *
      * @return an std::vector containing all the weights
      */

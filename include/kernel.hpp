@@ -16,8 +16,8 @@ namespace dcgp {
 /// Basis function
 /**
  * This class represents the function defining the generic CGP node. To be constructed
- * it accepts two functions having prototype \p T(const std::vector< \p T>&) and std::string(const std::vector<std::string>&)
- * computing, respectively the function value on generic inputs and the textual representation of the operation.
+ * it accepts two functions having prototype ``T``(const std::vector<``T``>&) and std::string(const std::vector<std::string>&)
+ * computing, respectively, the function value on generic inputs and the textual representation of the operation.
  *
  * The intended use would then be something like:
  * @code
@@ -25,7 +25,7 @@ namespace dcgp {
  * kernel<double> f(my_sum<gdual_d>, print_my_sum, "sum");
  * @endcode
  *
- * tparam T The type of the function output (and inputs)
+ * @tparam T The type of the function output (and inputs)
  */
 template<typename T>
 class kernel
@@ -37,7 +37,7 @@ public:
     using my_print_fun_type = std::function<std::string(const std::vector<std::string>&)>;
 
     /// Constructor
-    /*
+    /**
      * Constructs a kernel that can be used as kernel in a dCGP expression
      *
      * @param[in] f any callable with prototype T(const std::vector<T>&)
@@ -46,7 +46,7 @@ public:
      *
      */
     template <typename U, typename V>
-    kernel(U &&f, V&&pf, std::string name):m_f(std::forward<U>(f)), m_pf(std::forward<V>(pf)), m_name(name) {}
+    kernel(U &&f, V &&pf, std::string name):m_f(std::forward<U>(f)), m_pf(std::forward<V>(pf)), m_name(name) {}
 
     /// Parenthesis operator
     /**
@@ -64,7 +64,7 @@ public:
     /**
     * Evaluates the kernel in the point \p in
     *
-    * @param[in] in the evaluation point as an std::initiaizer_list<T>
+    * @param[in] in the evaluation point as an std::initializer_list<T>
     *
     * @return the function value
     */

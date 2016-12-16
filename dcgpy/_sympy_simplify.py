@@ -1,13 +1,13 @@
 def _sympy_simplify(self, in_sym, subs_weights = False, erc = []):
     """
-    ex.simplify(self, in_sym, subs_weights, erc)
+    simplify(in_sym, subs_weights = False, erc = [])
 
     Simplifies the d-CGP expressions for the outputs
 
     Returns the simplified d-CGP expression for each output
 
     Note:
-        This method requires sympy and pyaudi modules installed in your Python system
+        This method requires ``sympy`` and ``pyaudi`` modules installed in your Python system
 
     Args:
         in_sym (a ``List[str]``): input symbols (its length must match the number of inputs)
@@ -15,7 +15,7 @@ def _sympy_simplify(self, in_sym, subs_weights = False, erc = []):
         erc (a ``List[float]``): values of the ephemeral random constants (if empty their symbolic representation is used instead)
 
     Returns:
-        A list of strings containing the simplified expressions
+        A ``List[str]`` containing the simplified expressions
 
     Raises:
         ValueError: if the length of in_sym does not match the number of inputs

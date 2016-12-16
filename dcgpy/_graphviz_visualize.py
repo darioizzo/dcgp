@@ -1,13 +1,13 @@
 def _graphviz_visualize(self, in_sym = [], draw_inactive = True, draw_weights = False, file_name = 'cgp_graph.png'):
     """
-    ex.visualize(self, in_sym, draw_inactive, draw_weights, file_name)
+    visualize(in_sym = [], draw_inactive = True, draw_weights = False, file_name = 'cgp_graph.png')
 
     Visualizes the d-CGP expression
 
     Visualizes the graph of the d-CGP expression, by generating a png image in the current directory and displaying it on Matplotlib axes
 
     Note:
-        This method requires matplotlib and pygraphviz modules installed in your Python system
+        This method requires ``matplotlib`` and ``pygraphviz`` modules installed in your Python system
 
     Args:
         in_sym (a ``List[str]``): input symbols. Its length must either match the number of inputs or be zero (to visualize them as x_i)
@@ -16,7 +16,7 @@ def _graphviz_visualize(self, in_sym = [], draw_inactive = True, draw_weights = 
         file_name (a ``str``): filename of the output image
 
     Returns:
-        The AxesImage of the displayed graph
+        The ``matplotlib.image.AxesImage`` of the displayed graph
 
     Raises:
         ImportError: if modules matplotlib or pygraphviz are not installed in your Python system
