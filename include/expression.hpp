@@ -10,7 +10,6 @@
 #include <audi/audi.hpp>
 #include <iostream>
 #include <sstream>
-#include <audi/audi.hpp>
 
 #include "kernel.hpp"
 #include "io.hpp"
@@ -18,13 +17,13 @@
 
 namespace dcgp {
 
-/// A d-CGP expression
+/// A dCGP expression
 /**
- * This class represent a mathematical expression as encoded using CGP and contains
- * algorithms that compute its value (numerical and symbolical) and its derivatives
- * as well as mutate the expression.
+ * This class represents a mathematical expression as encoded using CGP and contains
+ * algorithms to compute its value (numerical and symbolical) and its derivatives
+ * as well as to mutate the expression.
  *
- * tparam T expression type. Can be double, or a gdual type.
+ * @tparam T expression type. Can be double, or a gdual type.
  *
  * @author Dario Izzo (dario.izzo@gmail.com)
  */
@@ -43,16 +42,16 @@ private:
     using functor_enabler = typename std::enable_if<std::is_same<U,double>::value || audi::is_gdual<T>::value || std::is_same<U,std::string>::value,int>::type;
 public:
     /// Constructor
-    /** Constructs a d-CGP expression
+    /** Constructs a dCGP expression
      *
-     * \param[in] n number of inputs (independent variables)
-     * \param[in] m number of outputs (dependent variables)
-     * \param[in] r number of rows of the cartesian cgp
-     * \param[in] c number of columns of the cartesian cgp
-     * \param[in] l number of levels-back allowed for the cartesian cgp
-     * \param[in] arity arity of the basis functions
-     * \param[in] f function set. An std::vector of dcgp::kernel<expression::type>
-     * \param[in] seed seed for the random number generator (initial expression  and mutations depend on this)
+     * @param[in] n number of inputs (independent variables)
+     * @param[in] m number of outputs (dependent variables)
+     * @param[in] r number of rows of the dCGP
+     * @param[in] c number of columns of the dCGP
+     * @param[in] l number of levels-back allowed in the dCGP
+     * @param[in] arity arity of the basis functions
+     * @param[in] f function set. An std::vector of dcgp::kernel<expression::type>
+     * @param[in] seed seed for the random number generator (initial expression and mutations depend on this)
      */
     expression(unsigned int n,                  // n. inputs
                unsigned int m,                  // n. outputs
@@ -60,7 +59,7 @@ public:
                unsigned int c,                  // n. columns
                unsigned int l,                  // n. levels-back
                unsigned int arity,              // basis functions' arity
-               std::vector<kernel<T>> f,   // functions
+               std::vector<kernel<T>> f,        // functions
                unsigned int seed                // seed for the pseudo-random numbers
                ) : m_n(n), m_m(m), m_r(r), m_c(c), m_l(l), m_arity(arity), m_f(f), m_lb((arity + 1) * m_r * m_c + m_m, 0), m_ub((arity + 1) * m_r * m_c + m_m, 0), m_x((arity + 1) * m_r * m_c + m_m, 0), m_e(seed)
     {
@@ -107,10 +106,10 @@ public:
     }
 
     /// Sets the chromosome
-    /** Sets a new chromosome as genotype for the expression and updates
-     * the active nodes and active genes information
+    /** Sets a given chromosome as genotype for the expression and updates
+     * the active nodes and active genes information accordingly
      *
-     * \param[in] x The new cromosome
+     * @param[in] x the new cromosome
      *
      * @throw std::invalid_argument if the chromosome is incompatible with
      * the expression (n.inputs, n.outputs, levels-back, etc.)
@@ -168,7 +167,7 @@ public:
 
     /// Gets the number of inputs
     /**
-     * Gets the number of inputs of the d_CGP expression
+     * Gets the number of inputs of the dCGP expression
      *
      * @return the number of inputs
     */
@@ -176,7 +175,7 @@ public:
 
     /// Gets the number of outputs
     /**
-     * Gets the number of outputs of the d_CGP expression
+     * Gets the number of outputs of the dCGP expression
      *
      * @return the number of outputs
     */
@@ -184,7 +183,7 @@ public:
 
     /// Gets the number of rows
     /**
-     * Gets the number of rows of the d_CGP expression
+     * Gets the number of rows of the dCGP expression
      *
      * @return the number of rows
     */
@@ -192,7 +191,7 @@ public:
 
     /// Gets the number of columns
     /**
-     * Gets the number of columns of the d_CGP expression
+     * Gets the number of columns of the dCGP expression
      *
      * @return the number of columns
     */
@@ -200,7 +199,7 @@ public:
 
     /// Gets the number of levels-back
     /**
-     * Gets the number of levels-back allowed for the d_CGP expression
+     * Gets the number of levels-back allowed for the dCGP expression
      *
      * @return the number of levels-back
     */
@@ -208,27 +207,27 @@ public:
 
     /// Gets the arity
     /**
-     * Gets the arity of the basis functions of the d_CGP expression
+     * Gets the arity of the basis functions of the dCGP expression
      *
      * @return the arity
     */
     unsigned int get_arity() const {return m_arity;}
 
-    /// Gets the functions
+    /// Gets the function set
     /**
-     * Gets the functions
+     * Gets the set of functions used in the dCGP expression
      *
-     * @return an std::vector<kernel>
+     * @return an std::vector of kernels
     */
     const std::vector<kernel<T>>& get_f() const {return m_f;}
 
-    /// Mutates one genes
+    /// Mutates one gene
     /**
      * Mutates exactly one gene within its allowed bounds.
      *
      * @param[in] idx index of the gene to me mutated
      *
-     * @throw std::invalid_argument if \p idx is outside the chromosome
+     * @throw std::invalid_argument if \p idx is too large
      */
     void mutate(unsigned int idx)
     {
@@ -253,9 +252,9 @@ public:
     /**
      * Mutates multiple genes within their allowed bounds.
      *
-     * @param[in] idxs vector of index of the gene to me mutated
+     * @param[in] idxs vector of indexes of the genes to me mutated
      *
-     * @throw std::invalid_argument if \p idx is outside the chromosome
+     * @throw std::invalid_argument if \p idx is too large
      */
     void mutate(std::vector<unsigned int> idxs)
     {
@@ -280,11 +279,11 @@ public:
     if (flag) update_active();
     }
 
-    /// Mutates n random genes
+    /// Mutates N random genes
     /**
-     * Mutates n random genes within their bounds
+     * Mutates a specified number of random genes within their bounds
      *
-     * @param[in] N number of generic genes to be mutated
+     * @param[in] N number of genes to be mutated
      *
      */
     void mutate_random(unsigned int N)
@@ -310,8 +309,8 @@ public:
 
     /// Mutates one of the active genes
     /**
-     * Mutates \P N active genes within its allowed bounds.
-     * The mutation can affect a function gene, an input gene or an output gene.
+     * Mutates \p N active genes within their allowed bounds.
+     * The mutation can affect function genes, input genes and output genes.
      *
      * @param[in] N Number of active genes to be mutated
      *
@@ -370,15 +369,14 @@ public:
         mutate(idx);
     }
 
-
-    /// Evaluates the d-CGP expression
-    /*
-     * This evaluates the d-CGP expression. According to the template parameter
+    /// Evaluates the dCGP expression
+    /**
+     * This evaluates the dCGP expression. According to the template parameter
      * it will compute the value (double) the Taylor expansion (gdual) or a symbolic
      * representation (std::string). Any other type will result in a compilation-time
      * error (SFINAE).
      *
-     * @param[in] in an std::vector containing the values where the d-CGP expression has
+     * @param[in] in an std::vector containing the values where the dCGP expression has
      * to be computed (doubles, gduals or strings)
      *
      * @return The value of the function (an std::vector)
@@ -412,15 +410,15 @@ public:
         return retval;
     }
 
-    /// Evaluates the d-CGP expression
-    /*
-     * This evaluates the d-CGP expression. According to the template parameter
+    /// Evaluates the dCGP expression
+    /**
+     * This evaluates the dCGP expression. According to the template parameter
      * it will compute the value (double) the Taylor expansion (gdual) or a symbolic
      * representation (std::string). Any other type will result in a compilation-time
      * error (SFINAE). This is identical to the other overload and is provided only
      * for convenience
      *
-     * @param[in] in an initializer list containing the values where the d-CGP expression has
+     * @param[in] in an initializer list containing the values where the dCGP expression has
      * to be computed (doubles, gduals or strings)
      *
      * @return The value of the function (an std::vector)
@@ -461,9 +459,9 @@ protected:
     /// Validity of a chromosome
     /**
      * Checks if a chromosome (i.e. a sequence of integers) is a valid expression
-     * by checking its length and the bounds
+     * by verifying its length and the bounds
      *
-     * \param[in] x chromosome
+     * @param[in] x chromosome
      */
     bool is_valid(const std::vector<unsigned int>& x) const
     {
@@ -472,7 +470,7 @@ protected:
             return false;
         }
 
-        // Checking for bounds on all cenes
+        // Checking for bounds on all genes
         for (auto i = 0u; i < x.size(); ++i) {
             if ((x[i] > m_ub[i]) || (x[i] < m_lb[i])) {
                 return false;

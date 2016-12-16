@@ -10,9 +10,9 @@ Quick start examples
 C++
 ---
 
-After following the :ref:`installationguide` you will be able to compile and run your first C++ AuDi program:
+After following the :ref:`installationguide` you will be able to compile and run your first C++ dCGP program:
 
-.. _getting_started:
+.. _getting_started_c++:
 
 .. literalinclude:: ../../doc/examples/getting_started.cpp
    :language: c++
@@ -29,30 +29,35 @@ Place it into a getting_started.cpp text file and compile it with:
 Python
 ------
 
-If you have succesfully compiled and installed pyaudi following the :ref:`installationguide` you will be able to test its use typing the following script.
+If you have successfully compiled and installed dcgpy following the :ref:`installationguide` you will be able to test its use by running the following script:
+
+.. _getting_started_py:
 
 .. literalinclude:: ../../doc/examples/getting_started.py
    :language: python
    :linenos:
 
-Place it into a getting_started.py text file and run it with 
+Place it into a getting_started.py text file and run it with:
 
 .. code-block:: bash
 
    python getting_started.py
 
-We reccomend the use of Jupyter or ipython do enjoy pyaudi the most. 
+We recommend the use of Jupyter or Ipython do enjoy dcgpy the most.
+
+.. _notebooks:
 
 Notebooks
 ^^^^^^^^^
 
-Follow the links below to visualize juypiter notebooks on the use of pyaudi.
+Follow the links below to visualize Jupyter notebooks on the use of dCGP:
 
-- `The very basics <https://github.com/darioizzo/audi/blob/master/examples/example00.ipynb>`_: (by Francesco Biscani and Dario Izzo)
+- `Learning constants in a symbolic regression task I <https://github.com/darioizzo/d-CGP/blob/master/examples/learning_constants.ipynb>`_ (by Dario Izzo)
 
-- `Understanding gduals and floats <https://github.com/darioizzo/audi/blob/master/examples/example01.ipynb>`_: (Dario Izzo)
+- `Learning constants in a symbolic regression task II <https://github.com/darioizzo/d-CGP/blob/master/examples/learning_constants2.ipynb>`_ (by Dario Izzo)
 
-- `Training an artificial neural network <https://github.com/darioizzo/audi/blob/master/examples/example11.ipynb>`_: (by Carlos Sanchez)
+- `Weighted dCGP for a symbolic regression task <https://github.com/darioizzo/d-CGP/blob/master/examples/weighted_symbolic_regression.ipynb>`_ (by Alessio Mereta)
 
-- `Differential Intelligence <https://github.com/darioizzo/audi/blob/master/examples/example10.ipynb>`_: (by Dario Izzo)
+- `Solving differential equations with dCGP <https://github.com/darioizzo/d-CGP/blob/master/examples/solving_odes.ipynb>`_ (by Dario Izzo)
 
+- `Discovery of prime integrals <https://github.com/darioizzo/d-CGP/blob/master/examples/finding_prime_integrals.ipynb>`_ (by Dario Izzo)

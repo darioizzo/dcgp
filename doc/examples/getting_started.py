@@ -1,20 +1,28 @@
+from dcgpy import expression_gdual_double as expression
+from dcgpy import kernel_set_gdual_double as kernel_set
 from pyaudi import gdual_double as gdual
-from pyaudi import exp, log, cbrt
 
-# We want to compute the Taylor expansion of a function f (and thus all derivatives) at x=2, y=3
-# 1 - Define the generalized dual numbers (7 is the truncation order, i.e. the maximum order of derivation we will need)
+# 1- Instantiate a random expression using the 4 basic arithmetic operations
+ks = kernel_set(["sum", "diff", "div", "mul"])
+ex = expression(1, 1, 1, 6, 6, 2, ks(), 4232123212)
 
-x = gdual(2, "x", 7);
-y = gdual(3, "y", 7);
+# 2 - Define the symbol set (in our case, 1 input variable named "x") and print the expression
+in_sym = ["x"]
+print("Expression:", ex(in_sym)[0])
 
-# 2 - Compute your function as usual
-f = exp(x*x + cbrt(y) / log(x*y));
+# 3 - Print the simplified expression
+print("Simplified expression:", ex.simplify(in_sym))
 
-# 3 - Inspect the results (this does not require any more computations)
-print("Taylor polynomial: " + str(f))                          # This is the Taylor expansion of f (truncated at the 7th order)
-print("Derivative value [1,0]: " + str(f.get_derivative([1,0])))     # This is the value of the derivative (d / dx)
-print("Derivative value [4,3]: " + str(f.get_derivative([4,3])))     # This is the value of the mixed derivative (d^7 / dx^4dy^3)
+# 4 - Visualize the dCGP graph
+ex.visualize(in_sym)
 
-# 4 - Using the dictionary interface (note the presence of the "d" before all variables)
-print("Derivative value [1,0]: " + str(f.get_derivative({"dx":1})))     # This is the value of the derivative (d / dx)
-print("Derivative value [4,3]: " + str(f.get_derivative({"dx":4, "dy":3})))     # This is the value of the mixed derivative (d^7 / dx^4dy^3)
+# 5 - Define a gdual number of value 1.2 and truncation order 2
+x = gdual(1.2, "x", 2)
+
+# 6 - Compute the output of the expression and its second derivative in x = 1.2 and print
+print("Expression in x=1.2:", ex([x])[0])
+print("Second derivative:", ex([x])[0].get_derivative([2]))
+
+# 5 - Mutate the expression with 2 random mutations of active genes and print
+ex.mutate_active(2)
+print("Mutated expression:", ex(in_sym)[0])

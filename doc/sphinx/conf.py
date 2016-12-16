@@ -33,14 +33,18 @@ import sphinx_bootstrap_theme
 # ones.
 extensions = [
     'sphinx.ext.mathjax',
+    'sphinx.ext.autodoc',
     'breathe',
+    'sphinxcontrib.napoleon',
 ]
+
+autoclass_content = 'both'
 
 # BREATHE configuration paths
 #sys.path.append( "/home/me/docproj/ext/breathe/" )
 breathe_projects = { "dCGP": "../doxygen/xml" }
 breathe_default_project = "dCGP"
-breathe_default_members = ['members']
+breathe_default_members = ('members',)
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -124,14 +128,14 @@ html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()
 
 # (Optional) Logo. Should be small enough to fit the navbar (ideally 24x24).
 # Path should be relative to the ``_static`` files directory.
-html_logo = "_static/audi_mini_logo.png"
+#html_logo = "_static/audi_mini_logo.png"
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
 html_theme_options = {
     # Navigation bar title. (Default: ``project`` value)
-    'navbar_title': " ",
+    'navbar_title': "dcgp",
 
     # Tab name for entire site. (Default: "Site")
     'navbar_site_name': "Site",
@@ -188,7 +192,7 @@ html_theme_options = {
     #
     # Options are nothing (default) or the name of a valid theme
     # such as "amelia" or "cosmo".
-    'bootswatch_theme': "spacelab",
+    'bootswatch_theme': "flatly",
 
     # Choose Bootstrap version.
     # Values: "3" (default) or "2" (in quotes)

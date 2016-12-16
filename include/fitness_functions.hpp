@@ -9,7 +9,7 @@
 
 namespace dcgp {
 
-/// Computes the error of a d-CGP expression in approximating given data
+/// Computes the quadratic error of a dCGP expression in approximating given data
 template <typename T1, typename T2, typename T3>
 T1 quadratic_error(const expression<T3>& ex,
     const std::vector<std::vector<T1> >& in_des,
