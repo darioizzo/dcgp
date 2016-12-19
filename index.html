@@ -20,8 +20,7 @@
         VERSION:     '1.0.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
+        HAS_SOURCE:  true
       };
     </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
@@ -34,6 +33,7 @@
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="top" title="dCGP documentation" href="#" />
 <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto|Comfortaa|Space+Mono">
 
   </head>
@@ -98,10 +98,7 @@
   <div class="row">
     <div class="col-md-12 content">
       
-  <div class="figure">
-<img alt="_static/dcgp_logo.png" src="_static/dcgp_logo.png" />
-</div>
-<div class="section" id="differentiable-cartesian-genetic-programming">
+  <div class="section" id="differentiable-cartesian-genetic-programming">
 <h1>Differentiable Cartesian Genetic Programming<a class="headerlink" href="#differentiable-cartesian-genetic-programming" title="Permalink to this headline">¶</a></h1>
 <p>Differentiable Cartesian Genetic Programming (dCGP) is a recent development in the field of Genetic Programming
 that adds the information about the derivatives of the output nodes (the programs, or expressions encoded) with
@@ -111,6 +108,10 @@ currently the subject of active research.</p>
 for the equivalent of back-propagation in Neural Networks. The fitness function can be defined in terms of the
 derivatives, allowing to go beyond simple regression tasks and, additionally, solve differential equations, learn
 differential models, capture conserved quantities in dynamical systems.</p>
+<div class="figure align-center" id="id1">
+<a class="reference internal image-reference" href="_images/expression_home.png"><img alt="dCGP expression" src="_images/expression_home.png" style="width: 800px;" /></a>
+<p class="caption"><span class="caption-text">A dCGP expression and its differential expansion in a specified point</span></p>
+</div>
 <div class="section" id="references">
 <h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
 <p>Dario Izzo, Francesco Biscani, and Alessio Mereta. <a class="reference external" href="https://arxiv.org/pdf/1611.04766v1.pdf">Differentiable Genetic Programming.</a> arXiv preprint arXiv:1611.04766 (2016).</p>
@@ -129,8 +130,8 @@ differential models, capture conserved quantities in dynamical systems.</p>
       
     </p>
     <p>
-        &copy; Copyright 2015, Dario Izzo.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.<br/>
+        &copy; Copyright 2015, Dario Izzo, Francesco Biscani, Alessio Mereta.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.8.<br/>
     </p>
   </div>
 </footer>

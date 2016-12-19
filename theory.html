@@ -20,8 +20,7 @@
         VERSION:     '1.0.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
+        HAS_SOURCE:  true
       };
     </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
@@ -34,6 +33,7 @@
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="top" title="dCGP documentation" href="index.html" />
 <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto|Comfortaa|Space+Mono">
 
   </head>
@@ -101,25 +101,29 @@
   <div class="contents topic" id="contents">
 <p class="topic-title first">Contents</p>
 <ul class="simple">
-<li><a class="reference internal" href="#cartesian-genetic-programming" id="id3">Cartesian Genetic Programming</a></li>
-<li><a class="reference internal" href="#dcgp" id="id4">dCGP</a><ul>
-<li><a class="reference internal" href="#reference" id="id5">Reference</a></li>
+<li><a class="reference internal" href="#cartesian-genetic-programming" id="id4">Cartesian Genetic Programming</a></li>
+<li><a class="reference internal" href="#dcgp" id="id5">dCGP</a><ul>
+<li><a class="reference internal" href="#reference" id="id6">Reference</a></li>
 </ul>
 </li>
 </ul>
 </div>
 <div class="section" id="cartesian-genetic-programming">
-<h1><a class="toc-backref" href="#id3">Cartesian Genetic Programming</a><a class="headerlink" href="#cartesian-genetic-programming" title="Permalink to this headline">¶</a></h1>
+<h1><a class="toc-backref" href="#id4">Cartesian Genetic Programming</a><a class="headerlink" href="#cartesian-genetic-programming" title="Permalink to this headline">¶</a></h1>
 <p>Cartesian Genetic Programming (CGP) is a form of Genetic Programming where the program
 representation consists of a graph. For more information visit
 <a class="reference external" href="http://www.cartesiangp.co.uk/">Cartesian Genetic Programming</a>.</p>
 </div>
 <div class="section" id="dcgp">
-<h1><a class="toc-backref" href="#id4">dCGP</a><a class="headerlink" href="#dcgp" title="Permalink to this headline">¶</a></h1>
+<h1><a class="toc-backref" href="#id5">dCGP</a><a class="headerlink" href="#dcgp" title="Permalink to this headline">¶</a></h1>
 <p>Differentiable Cartesian Genetic Programming (dCGP) is a recent development of CGP
 that adds the information about the derivatives of the output nodes (the programs,
 or expressions encoded) with respect to the input nodes (the input values) and/or the
 weights (that can be associated with every connection in the graph, similarly to Neural Networks).</p>
+<div class="figure align-center" id="id3">
+<a class="reference internal image-reference" href="_images/expression_theory.png"><img alt="weighted dCGP expression" src="_images/expression_theory.png" style="width: 800px;" /></a>
+<p class="caption"><span class="caption-text">A weighted dCGP expression</span></p>
+</div>
 <p>The derivatives are obtained by means of Automatic Differentiation through the
 <a class="reference external" href="http://darioizzo.github.io/audi/">AuDi</a> library, that implements the Taylor truncated
 polynomial algebra. See <a class="reference internal" href="#reference"><span class="std std-ref">Reference</span></a> for more details.</p>
@@ -137,7 +141,7 @@ allowing for additional tasks beyond simple regression, <em>e.g.</em>:</p>
 </ul>
 <p>You can find some examples in the <a class="reference internal" href="quickstart.html#notebooks"><span class="std std-ref">Jupyter notebooks</span></a>.</p>
 <div class="section" id="reference">
-<span id="id2"></span><h2><a class="toc-backref" href="#id5">Reference</a><a class="headerlink" href="#reference" title="Permalink to this headline">¶</a></h2>
+<span id="id2"></span><h2><a class="toc-backref" href="#id6">Reference</a><a class="headerlink" href="#reference" title="Permalink to this headline">¶</a></h2>
 <p>Dario Izzo, Francesco Biscani, and Alessio Mereta. <a class="reference external" href="https://arxiv.org/pdf/1611.04766v1.pdf">Differentiable Genetic Programming.</a> arXiv preprint arXiv:1611.04766 (2016).</p>
 </div>
 </div>
@@ -154,8 +158,8 @@ allowing for additional tasks beyond simple regression, <em>e.g.</em>:</p>
       
     </p>
     <p>
-        &copy; Copyright 2015, Dario Izzo.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.<br/>
+        &copy; Copyright 2015, Dario Izzo, Francesco Biscani, Alessio Mereta.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.8.<br/>
     </p>
   </div>
 </footer>
