@@ -62,8 +62,8 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'dCGP'
-copyright = '2015, Dario Izzo'
-author = 'Dario Izzo'
+copyright = '2015, Dario Izzo, Francesco Biscani, Alessio Mereta'
+author = 'Dario Izzo, Alessio Mereta'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

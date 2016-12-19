@@ -50,6 +50,34 @@ kernel: a function defining the generic CGP node
 kernel_set: a set of kernels
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+.. _kernels:
+
+.. cssclass:: table-bordered table-striped
+
+   +----------------+-----------------------+
+   |Kernel name     |  Function             |
+   +================+=======================+
+   |"sum"           |addition               |
+   +----------------+-----------------------+
+   |"diff"          |subtraction            |
+   +----------------+-----------------------+
+   |"mul"           |multiplication         |
+   +----------------+-----------------------+
+   |"div"           |division               |
+   +----------------+-----------------------+
+   |"pdiv"          |protected division     |
+   +----------------+-----------------------+
+   |"sig"           |sigmoid                |
+   +----------------+-----------------------+
+   |"sin"           |sine                   |
+   +----------------+-----------------------+
+   |"cos"           |cosine                 |
+   +----------------+-----------------------+
+   |"log"           |logarithm              |
+   +----------------+-----------------------+
+   |"exp"           |exponential            |
+   +----------------+-----------------------+
+
 .. doxygenclass:: dcgp::kernel_set
    :project: dCGP
    :members:

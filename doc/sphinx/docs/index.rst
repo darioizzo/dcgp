@@ -3,7 +3,7 @@
 Documentation
 =============
 
-For the C++ library you may also read the `doxygen documentation <http://darioizzo.github.io/dcgp/doxygen/>`_
+For the C++ library you may also read the `doxygen documentation <http://darioizzo.github.io/d-CGP/doxygen/>`_
 
 ------------------------------------------------
 

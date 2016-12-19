@@ -13,6 +13,13 @@ that adds the information about the derivatives of the output nodes (the program
 or expressions encoded) with respect to the input nodes (the input values) and/or the
 weights (that can be associated with every connection in the graph, similarly to Neural Networks).
 
+.. figure:: _static/expression_theory.png
+   :alt: weighted dCGP expression
+   :align: center
+   :width: 800px
+
+   A weighted dCGP expression
+
 The derivatives are obtained by means of Automatic Differentiation through the
 `AuDi <http://darioizzo.github.io/audi/>`_ library, that implements the Taylor truncated
 polynomial algebra. See :ref:`reference` for more details.

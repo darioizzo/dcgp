@@ -1,6 +1,3 @@
-
-.. figure:: _static/dcgp_logo.png
-
 Differentiable Cartesian Genetic Programming
 ============================================
 
@@ -13,6 +10,13 @@ The evolution of the genetic program can now be supported by using the informati
 for the equivalent of back-propagation in Neural Networks. The fitness function can be defined in terms of the
 derivatives, allowing to go beyond simple regression tasks and, additionally, solve differential equations, learn
 differential models, capture conserved quantities in dynamical systems.
+
+.. figure:: _static/expression_home.png
+   :alt: dCGP expression
+   :align: center
+   :width: 800px
+
+   A dCGP expression and its differential expansion in a specified point
 
 References
 ^^^^^^^^^^

@@ -74,6 +74,8 @@ kernel_gdual_vdouble
 kernel_set
 ^^^^^^^^^^
 
+For a list of the available kernels see :ref:`kernels <kernels>`.
+
 kernel_set_double
 @@@@@@@@@@@@@@@@@
 
