@@ -33,7 +33,7 @@ Several and tested dependencies are necessary to successfully compile d-CGP
  
 After making sure the dependencies above are installed in your system, you may download the latest dCGP version via git:
 
-git clone https://github.com/darioizzo/d-CGP.git
+```git clone https://github.com/darioizzo/d-CGP.git```
 
 and configure your build using CMake. When done, type (in your build directory):
 
