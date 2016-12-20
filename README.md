@@ -26,12 +26,20 @@ otherwise you will have to compile it by activating the BUILD_DCGPY option in CM
 
 ## Compiling the source code or using the header only library
 ### Dependencies
-Several and tested dependencies are necessary to succesfully compile d-CGP
+Several and tested dependencies are necessary to successfully compile d-CGP
  * Audi, headers only library - (git clone https://github.com/darioizzo/audi.git)
  * Piranha, headers only library - (git clone https://github.com/bluescarni/piranha.git)
  * Boost, headers only
  
-If you have all this, after cloning the git repository, go into mit and type ```git submodule init```, ```git submodule update``` and you are good to go! (these last commands clone the pybind11 code necessary to create the python bindings)
+After making sure the dependencies above are installed in your system, you may download the latest dCGP version via git:
+
+git clone https://github.com/darioizzo/d-CGP.git
+
+and configure your build using CMake. When done, type (in your build directory):
+
+```make install```
+
+The headers will be installed in the CMAKE_INSTALL_PREFIX/include directory. To check that all went well compile the quick-start example.
 
 ## Other CGP libraries
 ### Comparison to the CGP-Library
