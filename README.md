@@ -15,6 +15,8 @@ The first research paper describing d-CGP use to solve symbolic regressions prob
 
 Izzo, Dario, Francesco Biscani, and Alessio Mereta. "Differentiable Genetic Programming." arXiv preprint arXiv:1611.04766 (2016).
 
+Preliminary documentation can be found at http://darioizzo.github.io/d-CGP/
+
 ## dcgpy
 If you have a win 64bit system or a linux based system (32 or 64 bits), the python package dcgpy (python binding of the C++ code) can be installed via:
 
