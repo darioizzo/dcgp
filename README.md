@@ -26,7 +26,7 @@ otherwise you will have to compile it by activating the BUILD_DCGPY option in CM
 
 ## Compiling the source code or using the header only library
 ### Dependencies
-Several and tested dependencies are necessary to successfully compile d-CGP
+Several dependencies are necessary to successfully compile d-CGP
  * Audi, headers only library - (git clone https://github.com/darioizzo/audi.git)
  * Piranha, headers only library - (git clone https://github.com/bluescarni/piranha.git)
  * Boost, headers only
@@ -35,7 +35,19 @@ After making sure the dependencies above are installed in your system, you may d
 
 ```git clone https://github.com/darioizzo/d-CGP.git```
 
-and configure your build using CMake. When done, type (in your build directory):
+and configure your build using CMake. 
+
+```cd d-CGP```
+
+```mkdir build```
+
+```cd build```
+
+```ccmake ../```
+
+To build the python package activate the BUILD_DCGPY option.
+
+When done, type (in your build directory):
 
 ```make install```
 
