@@ -10,6 +10,20 @@ YACMA_PYTHON_MODULE(_core SHARED
 set_property(TARGET _core PROPERTY CXX_STANDARD 14)
 set_property(TARGET _core PROPERTY CXX_STANDARD_REQUIRED YES)
 
+# Boost.Python version 1.64 (and possibly later?) has issues with default hidden visibility.
+if(${Boost_MAJOR_VERSION} GREATER 1 OR (${Boost_MAJOR_VERSION} EQUAL 1 AND ${Boost_MINOR_VERSION} GREATER 63))
+    string(FIND ${CMAKE_CXX_FLAGS} "-fvisibility=hidden" _DCGPY_HAS_VHIDDEN)
+    if (NOT ${_DCGPY_HAS_VHIDDEN} EQUAL -1)
+        message(STATUS "Removing the '-fvisibility=hidden' flag for Boost.Python > 1.63. (release)")
+        string(REPLACE "-fvisibility=hidden" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
+    endif()
+    string(FIND ${CMAKE_CXX_FLAGS} "-fvisibility=hidden" _DCGPY_HAS_VHIDDEN_DEBUG)
+    if (NOT ${_DCGPY_HAS_VHIDDEN_DEBUG} EQUAL -1)
+        message(STATUS "Removing the '-fvisibility=hidden' flag for Boost.Python > 1.63. (debug)")
+        string(REPLACE "-fvisibility=hidden" "" CMAKE_CXX_FLAGS_DEBUG ${CMAKE_CXX_FLAGS_DEBUG})
+    endif()
+endif()
+
 # Setup the installation path.
 set(DCGPY_INSTALL_PATH "${YACMA_PYTHON_MODULES_INSTALL_PATH}/dcgpy")
 
