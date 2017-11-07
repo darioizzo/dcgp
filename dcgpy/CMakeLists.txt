@@ -17,7 +17,7 @@ if(${Boost_MAJOR_VERSION} GREATER 1 OR (${Boost_MAJOR_VERSION} EQUAL 1 AND ${Boo
         message(STATUS "Removing the '-fvisibility=hidden' flag for Boost.Python > 1.63. (release)")
         string(REPLACE "-fvisibility=hidden" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
     endif()
-    string(FIND ${CMAKE_CXX_FLAGS} "-fvisibility=hidden" _DCGPY_HAS_VHIDDEN_DEBUG)
+    string(FIND ${CMAKE_CXX_FLAGS_DEBUG} "-fvisibility=hidden" _DCGPY_HAS_VHIDDEN_DEBUG)
     if (NOT ${_DCGPY_HAS_VHIDDEN_DEBUG} EQUAL -1)
         message(STATUS "Removing the '-fvisibility=hidden' flag for Boost.Python > 1.63. (debug)")
         string(REPLACE "-fvisibility=hidden" "" CMAKE_CXX_FLAGS_DEBUG ${CMAKE_CXX_FLAGS_DEBUG})
