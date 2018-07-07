@@ -1,8 +1,8 @@
 #include <audi/audi.hpp>
 #include <iostream>
 
-#include "../include/expression.hpp"
-#include "../include/kernel_set.hpp"
+#include <dcgp/expression.hpp>
+#include <dcgp/kernel_set.hpp>
 
 // Here we solve the differential equation d^2y dy  = - 4 / x^3 (NLODE3) from Tsoulos paper
 // Tsoulos and Lagaris: "Solving Differential equations with genetic programming"

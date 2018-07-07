@@ -2,8 +2,8 @@
 #include <audi/io.hpp>
 #include <iostream>
 
-#include "../include/expression.hpp"
-#include "../include/kernel_set.hpp"
+#include <dcgp/expression.hpp>
+#include <dcgp/kernel_set.hpp>
 
 // Here we search for first integrals of the mass spring sistem (one dimension)
 // using our "mutation suppression" method The hamiltonian is H = 1/2 p^2 + 1/2

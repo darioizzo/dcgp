@@ -1,5 +1,5 @@
 # Main audi/pyaudi project version.
-set(DCGP_PROJECT_VERSION 1.5)
+set(DCGP_PROJECT_VERSION 1.1)
 
 # CMake version check.
 cmake_minimum_required(VERSION 3.2)
@@ -16,12 +16,38 @@ if(NOT CMAKE_BUILD_TYPE)
     FORCE)
 endif()
 
-# Provides build options to CMake
-# Build Option: when active the file main.cpp is built and linked to the PaGMO static library
-option(BUILD_MAIN "Build 'main.cpp'." ON)
-option(BUILD_TESTS "Build test set." OFF)
-option(BUILD_EXAMPLES "Build examples." OFF)
-option(BUILD_DCGPY "Build the Python bindings." OFF)
+# Main build options: build dcgp or dcgpy. They cannot be on at the same time,
+# and only one must be chosen.
+option(DCGP_BUILD_DCGP "Build dcgp." ON)
+option(DCGP_BUILD_DCGPY "Build dcgpy." OFF)
+
+# Check consistency.
+if(DCGP_BUILD_DCGP AND DCGP_BUILD_DCGPY)
+    message(FATAL_ERROR "Please select whether to build audi or pyaudi: you cannot build them both at the same time.")
+endif()
+
+if((NOT DCGP_BUILD_DCGP) AND (NOT DCGP_BUILD_DCGPY))
+    message(FATAL_ERROR "Please select if you want to build audi or pyudi.")
+endif()
+
+if(DCGP_BUILD_DCGP)
+    # Initial setup of a audi build.
+    project(dcgp VERSION ${AUDI_PROJECT_VERSION})
+    enable_testing()
+
+    # Build option: enable test set.
+    option(DCGP_BUILD_TESTS "Build test set." ON)
+
+    # Build option: enable examples
+    option(DCGP_BUILD_EXAMPLES "Build test set." OFF)
+
+    # Build Option: when active the file main.cpp is built.
+    option(DCGP_BUILD_MAIN "Build 'main.cpp'." OFF)
+
+else()
+    # Initial setup of a pyaudi build.
+    project(dcgpy VERSION ${AUDI_PROJECT_VERSION})
+endif()
 
 # Common general bits.
 
@@ -64,95 +90,81 @@ endif()
 list(REMOVE_ITEM AUDI_CXX_FLAGS_DEBUG "-Wduplicated-branches")
 list(REMOVE_ITEM AUDI_CXX_FLAGS_DEBUG "-Wold-style-cast")
 
+# Boost setup (common to dcgp/dcgpy).
+include(DCGPFindBoost)
 
-set(MANDATORY_LIBRARIES "")
+if(DCGP_BUILD_DCGP)
+    # dcgp dependencies.
 
-# -----------------------------------------------------------------------------------
-# We start finding third party dependencies
+    # Eigen setup
+    find_package(Eigen3 REQUIRED)
+    message(STATUS "Eigen include directory: ${EIGEN3_INCLUDE_DIR}")
+    message(STATUS "Eigen version detected: ${EIGEN3_VERSION}")
+    include_directories(${EIGEN3_INCLUDE_DIR})
+    
+    # Piranha setup.
+    find_package(Piranha REQUIRED)
+    message(STATUS "Piranha library found.")
+    message(STATUS "Piranha include dir is: ${Piranha_INCLUDE_DIR}")
+    include_directories(${Piranha_INCLUDE_DIR})
 
-# set up the python stuff
-if(BUILD_DCGPY)
-	include(YACMAPythonSetup)
-    message(STATUS "Linking boost python.")
-	list(APPEND REQUIRED_BOOST_LIBS python)
-    message(STATUS "Linking serialization.")
-	list(APPEND REQUIRED_BOOST_LIBS serialization)
+    # GMP setup.
+    find_package(GMP REQUIRED)
+    message(STATUS "GMP library found.")
+    message(STATUS "GMP include dir is: ${GMP_INCLUDE_DIR}")
+    message(STATUS "GMP library is: ${GMP_LIBRARIES}")
+    
+    # MPFR setup.
+    find_package(MPFR REQUIRED)
+    message(STATUS "MPFR library found.")
+    message(STATUS "MPFR include dir is: ${MPFR_INCLUDE_DIR}")
+    message(STATUS "MPFR library is: ${MPFR_LIBRARIES}")
+    message(STATUS "Checking MPFR version.")
+    try_compile(MPFR_VERSION_CHECK ${CMAKE_BINARY_DIR} "${CMAKE_SOURCE_DIR}/cmake_modules/mpfr_check_version.cpp"
+        CMAKE_FLAGS "-DINCLUDE_DIRECTORIES:STRING=${MPFR_INCLUDE_DIR};${GMP_INCLUDE_DIR}")
+    if(NOT MPFR_VERSION_CHECK)
+        message(FATAL_ERROR "Unsupported MPFR version, please upgrade.")
+    endif()
+    message(STATUS "MPFR version is ok.")
+
+    # Audi setup
+    find_package(audi REQUIRED)
+    message(STATUS "AUDI header only library found.")
+    message(STATUS "AUDI include dir is: ${AUDI_INCLUDE_DIR}")
+
+    # Setup of the header-only dcgp library.
+    add_library(dcgp INTERFACE)
+    target_link_libraries(dcgp INTERFACE Threads::Threads Boost::boost Boost::serialization)    
+    target_link_libraries(dcgp INTERFACE Eigen3::eigen3 MPFR::MPFR GMP::GMP Audi::audi)
+    
+    # This sets up the include directory to be different if we build
+    target_include_directories(dcgp INTERFACE
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
+    $<INSTALL_INTERFACE:include>)
+
+    # These lines are temporary with piranha v0.10, will be simplified when this is updated
+    target_include_directories(dcgp INTERFACE ${Piranha_INCLUDE_DIR})
+
+    # Build main
+    if(DCGP_BUILD_MAIN)
+        add_executable(main main.cpp)
+        target_link_libraries(main dcgp)
+        set_property(TARGET main PROPERTY CXX_STANDARD 14)
+        set_property(TARGET main PROPERTY CXX_STANDARD_REQUIRED YES)
+        set_property(TARGET main PROPERTY CXX_EXTENSIONS NO)
+    endif()
+
+    # Builds the tests (performance in Release, the others in Debug)
+    if(DCGP_BUILD_TESTS)
+        add_subdirectory("${CMAKE_SOURCE_DIR}/tests")
+    endif()
+
+    # Builds the examples 
+    if(DCGP_BUILD_EXAMPLES)
+        add_subdirectory("${CMAKE_SOURCE_DIR}/examples")
+    endif()
 endif()
-
-# 1 - Boost Setup.
-IF(BUILD_TESTS)
-    enable_testing()
-	message(STATUS "Linking unit tests to Boost.Test.")
-	set(REQUIRED_BOOST_LIBS ${REQUIRED_BOOST_LIBS} unit_test_framework)
-	IF(CMAKE_BUILD_TYPE STREQUAL "Release")
-		message(STATUS "Linking performance tests to Boost Timer and Boost.Chrono.")
-		set(REQUIRED_BOOST_LIBS ${REQUIRED_BOOST_LIBS} timer chrono system)
-	ENDIF()
-ENDIF()
-
-message(STATUS "Required Boost libraries: ${REQUIRED_BOOST_LIBS}")
-# Timers are available since 1.48.0.
-find_package(Boost 1.48.0 REQUIRED COMPONENTS "${REQUIRED_BOOST_LIBS}")
-message(STATUS "Detected Boost version: ${Boost_VERSION}")
-# Include system Boost headers.
-message(STATUS "Boost include dirs: ${Boost_INCLUDE_DIRS}")
-message(STATUS "Boost libraries: ${Boost_LIBRARIES}")
-include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
-
-# Piranha setup.
-find_package(Piranha REQUIRED)
-message(STATUS "Piranha library found.")
-message(STATUS "Piranha include dir is: ${Piranha_INCLUDE_DIR}")
-include_directories(${Piranha_INCLUDE_DIR})
-
-# GMP setup.
-find_package(GMP REQUIRED)
-message(STATUS "GMP library found.")
-message(STATUS "GMP include dir is: ${GMP_INCLUDE_DIR}")
-message(STATUS "GMP library is: ${GMP_LIBRARIES}")
-
-# MPFR setup.
-FIND_PACKAGE(MPFR REQUIRED)
-message(STATUS "MPFR library found.")
-message(STATUS "MPFR include dir is: ${MPFR_INCLUDE_DIR}")
-message(STATUS "MPFR library is: ${MPFR_LIBRARIES}")
-message(STATUS "Checking MPFR version.")
-try_compile(MPFR_VERSION_CHECK ${CMAKE_BINARY_DIR} "${CMAKE_SOURCE_DIR}/cmake_modules/mpfr_check_version.cpp"
-	CMAKE_FLAGS "-DINCLUDE_DIRECTORIES:STRING=${MPFR_INCLUDE_DIR};${GMP_INCLUDE_DIR}")
-if(NOT MPFR_VERSION_CHECK)
-	message(FATAL_ERROR "Unsupported MPFR version, please upgrade.")
-endif()
-message(STATUS "MPFR version is ok.")
-
-# Audi setup
-find_package(audi REQUIRED)
-
-
-# NOTE: MPFR should be linked in before GMP, that's why we link GMP here.
-set(MANDATORY_LIBRARIES ${MANDATORY_LIBRARIES} ${MPFR_LIBRARIES} ${GMP_LIBRARIES})
-
-# Add the subdirectory for the library / headers
-add_subdirectory("${CMAKE_SOURCE_DIR}/include")
-
-# Build main
-IF(BUILD_MAIN)
-	add_executable(main main.cpp)
-	target_link_libraries(main ${MANDATORY_LIBRARIES} Audi::audi)
-    target_compile_options(main PUBLIC "$<$<CONFIG:DEBUG>:${YACMA_CXX_FLAGS_DEBUG}>")
-    target_compile_options(main PUBLIC "$<$<CONFIG:RELEASE>:${YACMA_CXX_FLAGS}>")
-    set_property(TARGET main PROPERTY CXX_STANDARD 14)
-    set_property(TARGET main PROPERTY CXX_STANDARD_REQUIRED YES)
-ENDIF(BUILD_MAIN)
-
-# Build perf test in release and tests in debug
-IF(BUILD_TESTS)
-	add_subdirectory("${CMAKE_SOURCE_DIR}/tests")
-ENDIF(BUILD_TESTS)
-
-# Build examples
-IF(BUILD_EXAMPLES)
-	add_subdirectory("${CMAKE_SOURCE_DIR}/examples")
-ENDIF(BUILD_EXAMPLES)
 
 # Build the python module
 if(BUILD_DCGPY)

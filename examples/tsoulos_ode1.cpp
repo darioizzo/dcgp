@@ -1,7 +1,7 @@
 #include <iostream>
 
-#include "../include/expression.hpp"
-#include "../include/kernel_set.hpp"
+#include <dcgp/expression.hpp>
+#include <dcgp/kernel_set.hpp>
 
 // Here we solve the differential equation dy = (2x - y) / x from Tsoulos paper
 // Tsoulos and Lagaris: "Solving Differential equations with genetic programming"

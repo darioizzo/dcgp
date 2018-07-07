@@ -1,7 +1,7 @@
 #include <iostream>
 
-#include "../include/expression.hpp"
-#include "../include/kernel_set.hpp"
+#include <dcgp/expression.hpp>
+#include <dcgp/kernel_set.hpp>
 
 // Here we search for first integrals of a mass spring sistem (one dimension) using Lipson method
 // The hamiltonian is H = p^2 + q^2 and is consistently found by the evolution

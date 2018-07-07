@@ -1,7 +1,7 @@
 #include <iostream>
 
-#include "../include/expression.hpp"
-#include "../include/kernel_set.hpp"
+#include <dcgp/expression.hpp>
+#include <dcgp/kernel_set.hpp>
 
 // Here we search for first integrals of the Kepler's problem) using our "mutation suppression" method
 // The hamiltonian is H = 1/(2m) (pr^2+pt^2 / r^2) + mu / r

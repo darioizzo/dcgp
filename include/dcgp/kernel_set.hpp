@@ -1,13 +1,14 @@
 #ifndef DCGP_kernel_set_H
 #define DCGP_kernel_set_H
 
-#include <vector>
 #include <audi/gdual.hpp>
+#include <vector>
 
-#include "kernel.hpp"
-#include "wrapped_functions.hpp"
+#include <dcgp/kernel.hpp>
+#include <dcgp/wrapped_functions.hpp>
 
-namespace dcgp {
+namespace dcgp
+{
 
 /// Function set
 /**
@@ -17,39 +18,38 @@ namespace dcgp {
  *
  * @tparam T The type of the functions output (and inputs)
  */
-template<typename T>
+template <typename T>
 class kernel_set
 {
 public:
     /// Constructor
     /**
-    * Default constructor
-    */
-    kernel_set() : m_kernels() {};
+     * Default constructor
+     */
+    kernel_set() : m_kernels(){};
 
     /// Constructor
     /**
-    * Constructs a kernel set that can be used in a dCGP expression
-    *
-    * @param[in] list an std::vector of strings containing the function names (e.g., "sum")
-    */
-    kernel_set(const std::vector<std::string>& list)
+     * Constructs a kernel set that can be used in a dCGP expression
+     *
+     * @param[in] list an std::vector of strings containing the function names (e.g., "sum")
+     */
+    kernel_set(const std::vector<std::string> &list)
     {
-        for (auto kernel_name : list)
-        {
+        for (auto kernel_name : list) {
             push_back(kernel_name);
         }
     }
 
     /// Adds a kernel to the set
     /**
-    * Constructs a kernel<T> given a string containing the function name, and
-    * inserts it into the std::vector
-    *
-    * @param[in] kernel_name a string containing the function name
-    *
-    * @throw std::invalid_argument if the function is not implemented
-    */
+     * Constructs a kernel<T> given a string containing the function name, and
+     * inserts it into the std::vector
+     *
+     * @param[in] kernel_name a string containing the function name
+     *
+     * @throw std::invalid_argument if the function is not implemented
+     */
     void push_back(std::string kernel_name)
     {
         if (kernel_name == "sum")
@@ -78,19 +78,19 @@ public:
 
     /// Adds a kernel to the set
     /**
-    * Inserts the given kernel<T> into the std::vector
-    *
-    * @param[in] kernel the dcgp::kernel<T> to add
-    */
-    void push_back(const dcgp::kernel<T>& kernel)
+     * Inserts the given kernel<T> into the std::vector
+     *
+     * @param[in] kernel the dcgp::kernel<T> to add
+     */
+    void push_back(const dcgp::kernel<T> &kernel)
     {
         m_kernels.push_back(kernel);
     }
 
     /// Clears the kernel set
     /**
-    * Removes all the elements from the std::vector containing the kernels
-    */
+     * Removes all the elements from the std::vector containing the kernels
+     */
     void clear()
     {
         m_kernels.clear();
@@ -98,8 +98,8 @@ public:
 
     /// Overloaded function call operator
     /**
-    * Returns the std::vector containing the kernels
-    */
+     * Returns the std::vector containing the kernels
+     */
     std::vector<dcgp::kernel<T>> operator()() const
     {
         return m_kernels;
@@ -107,14 +107,14 @@ public:
 
     /// Overloaded stream operator
     /**
-    * Will stream the function names
-    *
-    * @param[in,out] os target stream
-    * @param[in] d kernel_set argument
-    *
-    * @return reference to \p os
-    */
-    friend std::ostream& operator<<(std::ostream& os, const kernel_set<T>& d)
+     * Will stream the function names
+     *
+     * @param[in,out] os target stream
+     * @param[in] d kernel_set argument
+     *
+     * @return reference to \p os
+     */
+    friend std::ostream &operator<<(std::ostream &os, const kernel_set<T> &d)
     {
         stream(os, d());
         return os;
@@ -122,13 +122,14 @@ public:
 
     // Overloaded subscript operator
     /**
-    * Returns the kernel at a specified index in the std::vector
-    *
-    * @param[in] idx index of the required kernel
-    *
-    * @return the kernel at the specified index
-    */
-    dcgp::kernel<T> operator[] (const typename std::vector<dcgp::kernel<T>>::size_type idx) const {
+     * Returns the kernel at a specified index in the std::vector
+     *
+     * @param[in] idx index of the required kernel
+     *
+     * @return the kernel at the specified index
+     */
+    dcgp::kernel<T> operator[](const typename std::vector<dcgp::kernel<T>>::size_type idx) const
+    {
         return m_kernels[idx];
     }
 

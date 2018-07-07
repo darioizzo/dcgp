@@ -11,8 +11,8 @@
 #include <string>
 #include <vector>
 
-#include "kernel.hpp"
-#include "type_traits.hpp"
+#include <dcgp/kernel.hpp>
+#include <dcgp/type_traits.hpp>
 
 namespace dcgp
 {

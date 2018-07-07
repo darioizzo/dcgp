@@ -4,8 +4,8 @@
 #define BOOST_TEST_MODULE dcgp_compute_test
 #include <boost/test/unit_test.hpp>
 
-#include "../include/expression.hpp"
-#include "../include/kernel_set.hpp"
+#include <dcgp/expression.hpp>
+#include <dcgp/kernel_set.hpp>
 
 using namespace dcgp;
 

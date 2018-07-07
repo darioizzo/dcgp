@@ -1,8 +1,8 @@
-#include <vector>
-#include <random>
 #include <iostream>
+#include <random>
+#include <vector>
 
-#include "../../include/expression.hpp"
+#include <dcgp/expression.hpp>
 
 struct es_params {
     unsigned int m_childs;
@@ -13,19 +13,20 @@ struct es_params {
 };
 
 // Evolves the expression ex to fit the in-out supervised data
-void es(const std::vector<std::vector<double> >& in, const std::vector<std::vector<double> >& out, dcgp::expression<double> &ex, const es_params& p) {
+void es(const std::vector<std::vector<double>> &in, const std::vector<std::vector<double>> &out,
+        dcgp::expression<double> &ex, const es_params &p)
+{
     // Random seed
     std::random_device rd;
     std::default_random_engine re(rd());
 
     double best_fit = 1e32;
-    std::vector<double> newfits(p.m_childs,0.);
-    std::vector<std::vector<unsigned int> > newchromosomes(p.m_childs);
+    std::vector<double> newfits(p.m_childs, 0.);
+    std::vector<std::vector<unsigned int>> newchromosomes(p.m_childs);
     std::vector<unsigned int> best_chromosome(ex.get());
     unsigned int gen = 0;
 
-    do
-    {
+    do {
         gen++;
         for (auto i = 0u; i < newfits.size(); ++i) {
             ex.set(best_chromosome);
@@ -33,7 +34,7 @@ void es(const std::vector<std::vector<double> >& in, const std::vector<std::vect
                 ex.mutate_active(p.m_n);
             } else {
                 std::vector<unsigned int> tbm;
-                for (auto j = 0u; j < best_chromosome.size(); ++ j) {
+                for (auto j = 0u; j < best_chromosome.size(); ++j) {
                     if (std::uniform_real_distribution<double>(0, 1)(re) < p.m_mut_prob) tbm.push_back(j);
                 }
                 ex.mutate(tbm);
@@ -45,7 +46,8 @@ void es(const std::vector<std::vector<double> >& in, const std::vector<std::vect
         for (auto i = 0u; i < newfits.size(); ++i) {
             if (newfits[i] <= best_fit) {
                 if (newfits[i] != best_fit) {
-                    std::cout << "New best found: gen: " << std::setw(7) << gen << "\t value: " << newfits[i] << std::endl;
+                    std::cout << "New best found: gen: " << std::setw(7) << gen << "\t value: " << newfits[i]
+                              << std::endl;
                 }
                 best_fit = newfits[i];
                 best_chromosome = newchromosomes[i];
