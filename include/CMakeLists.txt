@@ -1,12 +1,12 @@
 SET(HEADERS_LIST
-	dcgp.hpp
-	expression.hpp
-	expression_weighted.hpp
-	fitness_functions.hpp
-	kernel_set.hpp
-    io.hpp
+    dcgp.hpp
+    expression.hpp
+    expression_weighted.hpp
+    fitness_functions.hpp
+    kernel_set.hpp
     wrapped_functions.hpp
     kernel.hpp
+    type_traits.hpp
 )
 
 # NOTE: this dummy cpp file is here with the sole purpose of getting the headers

@@ -2,7 +2,7 @@
 # http://websvn.kde.org/trunk/KDE/kdeutils/cmake/modules/FindGMP.cmake?view=markup&pathrev=675218
 
 # Copyright (c) 2006, Laurent Montel, <montel@kde.org>
-# Copyright (c) 2008-2011 Francesco Biscani, <bluescarni@gmail.com>
+# Copyright (c) 2008-2018 Francesco Biscani, <bluescarni@gmail.com>
 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -13,7 +13,7 @@
 # 2. Redistributions in binary form must reproduce the copyright
 #    notice, this list of conditions and the following disclaimer in the
 #    documentation and/or other materials provided with the distribution.
-# 3. The name of the author may not be used to endorse or promote products 
+# 3. The name of the author may not be used to endorse or promote products
 #    derived from this software without specific prior written permission.
 #
 # THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
@@ -28,16 +28,23 @@
 # THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 # ------------------------------------------------------------------------------------------
 
-IF(GMP_INCLUDE_DIR AND GMP_LIBRARIES)
-	# Already in cache, be silent
-	SET(GMP_FIND_QUIETLY TRUE)
-ENDIF(GMP_INCLUDE_DIR AND GMP_LIBRARIES)
+if(GMP_INCLUDE_DIR AND GMP_LIBRARY)
+    # Already in cache, be silent
+    set(GMP_FIND_QUIETLY TRUE)
+endif()
 
-FIND_PATH(GMP_INCLUDE_DIR NAMES gmp.h)
-FIND_LIBRARY(GMP_LIBRARIES NAMES gmp)
+find_path(GMP_INCLUDE_DIR NAMES gmp.h)
+find_library(GMP_LIBRARY NAMES gmp)
 
-INCLUDE(FindPackageHandleStandardArgs)
+include(FindPackageHandleStandardArgs)
 
-FIND_PACKAGE_HANDLE_STANDARD_ARGS(GMP DEFAULT_MSG GMP_INCLUDE_DIR GMP_LIBRARIES)
+find_package_handle_standard_args(GMP DEFAULT_MSG GMP_INCLUDE_DIR GMP_LIBRARY)
 
-MARK_AS_ADVANCED(GMP_INCLUDE_DIR GMP_LIBRARIES)
+mark_as_advanced(GMP_INCLUDE_DIR GMP_LIBRARY)
+
+# NOTE: this has been adapted from CMake's FindPNG.cmake.
+if(GMP_FOUND AND NOT TARGET GMP::GMP)
+    add_library(GMP::GMP UNKNOWN IMPORTED)
+    set_target_properties(GMP::GMP PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${GMP_INCLUDE_DIR}"
+        IMPORTED_LINK_INTERFACE_LANGUAGES "C" IMPORTED_LOCATION "${GMP_LIBRARY}")
+endif()

@@ -1,6 +1,6 @@
 MACRO(ADD_EXAMPLE arg1)
 	ADD_EXECUTABLE(${arg1} ${arg1}.cpp)
-	TARGET_LINK_LIBRARIES(${arg1} ${MANDATORY_LIBRARIES})
+	TARGET_LINK_LIBRARIES(${arg1} ${MANDATORY_LIBRARIES} Audi::audi)
     target_compile_options(${arg1} PUBLIC "$<$<CONFIG:DEBUG>:${YACMA_CXX_FLAGS_DEBUG}>")
     target_compile_options(${arg1} PUBLIC "$<$<CONFIG:RELEASE>:${YACMA_CXX_FLAGS}>")
     set_property(TARGET ${arg1} PROPERTY CXX_STANDARD 14)
