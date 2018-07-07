@@ -98,7 +98,7 @@ make install > /dev/null 2>&1
 cd ..
 
 # Install audi
-curl -L https://github.com/bluescarni/piranha/archive/v${AUDI_VERSION}.tar.gz > v${AUDI_VERSION}
+curl -L https://github.com/darioizzo/audi/archive/v${AUDI_VERSION}.tar.gz > v${AUDI_VERSION}
 tar xvf v${AUDI_VERSION} > /dev/null 2>&1
 cd audi-${AUDI_VERSION}
 mkdir build

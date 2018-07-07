@@ -69,12 +69,12 @@ print("Installing piranha")
 run_command(r'cmake -G "MinGW Makefiles" .. -DCMAKE_INSTALL_PREFIX=c:\\local ', verbose=False)
 run_command(r'mingw32-make install VERBOSE=1', verbose=False)
 os.chdir('../../')
-print("Piranha sucesfully installed .. continuing")
+print("Piranha sucessfully installed .. continuing")
 
 # Download audi 1.0.3 https://github.com/darioizzo/audi/archive/v1.0.3.zip
 wget(r'https://github.com/darioizzo/audi/archive/v1.0.3.zip', 'audiv103.zip')
 run_command(r'unzip audiv103.zip', verbose=False)
-# Move to the directory created and make piranha install its headers
+# Move to the directory created and make audi install its headers
 os.chdir('audi-1.0.3')
 os.makedirs('build')
 os.chdir('build')
