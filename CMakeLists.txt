@@ -1,4 +1,4 @@
-# Main audi/pyaudi project version.
+# Main dcgp/dcgpy project version.
 set(DCGP_PROJECT_VERSION 1.1)
 
 # CMake version check.
@@ -23,11 +23,11 @@ option(DCGP_BUILD_DCGPY "Build dcgpy." OFF)
 
 # Check consistency.
 if(DCGP_BUILD_DCGP AND DCGP_BUILD_DCGPY)
-    message(FATAL_ERROR "Please select whether to build audi or pyaudi: you cannot build them both at the same time.")
+    message(FATAL_ERROR "Please select whether to build dcgp or dcgpy: you cannot build them both at the same time.")
 endif()
 
 if((NOT DCGP_BUILD_DCGP) AND (NOT DCGP_BUILD_DCGPY))
-    message(FATAL_ERROR "Please select if you want to build audi or pyudi.")
+    message(FATAL_ERROR "Please select if you want to build dcgp or dcgpy.")
 endif()
 
 if(DCGP_BUILD_DCGP)
@@ -58,43 +58,42 @@ include(YACMACompilerLinkerSettings)
 include(YACMAThreadingSetup)
 
 # Assemble the flags.
-set(AUDI_CXX_FLAGS_DEBUG ${YACMA_CXX_FLAGS} ${YACMA_CXX_FLAGS_DEBUG} ${YACMA_THREADING_CXX_FLAGS})
-set(AUDI_CXX_FLAGS_RELEASE ${YACMA_CXX_FLAGS} ${YACMA_THREADING_CXX_FLAGS})
+set(DCGP_CXX_FLAGS_DEBUG ${YACMA_CXX_FLAGS} ${YACMA_CXX_FLAGS_DEBUG} ${YACMA_THREADING_CXX_FLAGS})
+set(DCGP_CXX_FLAGS_RELEASE ${YACMA_CXX_FLAGS} ${YACMA_THREADING_CXX_FLAGS})
 if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin" AND YACMA_COMPILER_IS_CLANGXX)
   message(STATUS "Clang compiler on OSX detected, setting the standard library to 'libc++'.")
-  list(APPEND AUDI_CXX_FLAGS_DEBUG "-stdlib=libc++")
-  list(APPEND AUDI_CXX_FLAGS_RELEASE "-stdlib=libc++")
+  list(APPEND DCGP_CXX_FLAGS_DEBUG "-stdlib=libc++")
+  list(APPEND DCGP_CXX_FLAGS_RELEASE "-stdlib=libc++")
 endif()
 if(YACMA_COMPILER_IS_MSVC)
   # Disable the idiotic minmax macros on MSVC, some annoying warnings,
   # and enable the bigobj option.
-  list(APPEND AUDI_CXX_FLAGS_DEBUG "-DNOMINMAX" "/wd4459" "/wd4127" "/wd4702" "/bigobj")
-  list(APPEND AUDI_CXX_FLAGS_RELEASE "-DNOMINMAX" "/wd4459" "/wd4127" "/wd4702" "/bigobj")
+  list(APPEND DCGP_CXX_FLAGS_DEBUG "-DNOMINMAX" "/wd4459" "/wd4127" "/wd4702" "/bigobj")
+  list(APPEND DCGP_CXX_FLAGS_RELEASE "-DNOMINMAX" "/wd4459" "/wd4127" "/wd4702" "/bigobj")
 endif()
 if(YACMA_COMPILER_IS_INTELXX)
   # NOTE: on MSVC we use the push/pop pragmas, but they do not seem to work on Intel (the pragmas
   # in icc influence the behaviour at instantiation point, not at definition point).
   # These warnings are useful in principle, but they are generated a lot from cereal and we have no
   # way of disabling them selectively. Just rely on the other compilers to provde good diagnostic.
-  list(APPEND AUDI_CXX_FLAGS_DEBUG "-diag-disable" "2259,1682,68")
-  list(APPEND AUDI_CXX_FLAGS_RELEASE "-diag-disable" "2259,1682,68")
+  list(APPEND DCGP_CXX_FLAGS_DEBUG "-diag-disable" "2259,1682,68")
+  list(APPEND DCGP_CXX_FLAGS_RELEASE "-diag-disable" "2259,1682,68")
 endif()
 if(MINGW)
 	# Flag needed to deal with big binaries in MinGW.
 	message(STATUS "Enabling the '-Wa,-mbig-obj' flag in MinGW builds.")
-	list(APPEND AUDI_CXX_FLAGS_DEBUG "-Wa,-mbig-obj")
-	list(APPEND AUDI_CXX_FLAGS_RELEASE "-Wa,-mbig-obj")
+	list(APPEND DCGP_CXX_FLAGS_DEBUG "-Wa,-mbig-obj")
+	list(APPEND DCGP_CXX_FLAGS_RELEASE "-Wa,-mbig-obj")
 endif()
 
 # Some flags that generate warnings due to Eigen or Piranha obsolete versions
-list(REMOVE_ITEM AUDI_CXX_FLAGS_DEBUG "-Wduplicated-branches")
-list(REMOVE_ITEM AUDI_CXX_FLAGS_DEBUG "-Wold-style-cast")
+list(REMOVE_ITEM DCGP_CXX_FLAGS_DEBUG "-Wduplicated-branches")
+list(REMOVE_ITEM DCGP_CXX_FLAGS_DEBUG "-Wold-style-cast")
 
 # Creates the file config.hpp
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/config.hpp.in" "${CMAKE_CURRENT_SOURCE_DIR}/include/dcgp/config.hpp" @ONLY)
 
 if(DCGP_BUILD_DCGPY)
-    # audi dependencies.
     include(YACMAPythonSetup)
     # Python version check.
     if(${PYTHON_VERSION_MAJOR} LESS 2 OR (${PYTHON_VERSION_MAJOR} EQUAL 2 AND ${PYTHON_VERSION_MINOR} LESS 7))
@@ -102,7 +101,7 @@ if(DCGP_BUILD_DCGPY)
     endif()
 
     # NOTE: for the time being, require that dcgp/dcgpy versions are matching exactly.
-    find_package(dcgp ${DCGPY_PROJECT_VERSION} EXACT REQUIRED)
+    find_package(dcgp ${DCGP_PROJECT_VERSION} EXACT REQUIRED)
 
     # Internal variable that will be used to tell DCGPFindBoost to locate Boost.Python.
     set(_DCGP_FIND_BOOST_PYTHON TRUE)
@@ -112,8 +111,6 @@ endif()
 include(DCGPFindBoost)
 
 if(DCGP_BUILD_DCGP)
-    # dcgp dependencies.
-
     # Eigen setup
     find_package(Eigen3 REQUIRED)
     message(STATUS "Eigen include directory: ${EIGEN3_INCLUDE_DIR}")
@@ -222,3 +219,21 @@ if(BUILD_DCGPY)
         configure_file("${CMAKE_CURRENT_SOURCE_DIR}/tools/manylinux_wheel_setup.py" "${CMAKE_CURRENT_BINARY_DIR}/wheel/setup.py")
     endif()
 endif()
+
+if(DCGP_BUILD_DCGPY)
+    # Configure version
+    configure_file("${CMAKE_CURRENT_SOURCE_DIR}/dcgpy/_version.py.in" "${CMAKE_CURRENT_SOURCE_DIR}/dcgpy/_version.py" @ONLY)    
+    # Add the dcgpy subdirectory.
+    add_subdirectory("${CMAKE_SOURCE_DIR}/dcgpy")
+    if(MINGW)
+        message(STATUS "Creating the files for the generation of a binary wheel.")
+        configure_file("${CMAKE_CURRENT_SOURCE_DIR}/tools/wheel_setup.py" "${CMAKE_CURRENT_BINARY_DIR}/wheel/setup.py" @ONLY)
+        configure_file("${CMAKE_CURRENT_SOURCE_DIR}/tools/mingw_wheel_libs_python${PYTHON_VERSION_MAJOR}.txt" "${CMAKE_CURRENT_BINARY_DIR}/wheel/mingw_wheel_libs_python${PYTHON_VERSION_MAJOR}.txt" @ONLY)
+    endif()
+    if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+        # NOTE: this is necessary on linux but harmful on mingw.
+        configure_file("${CMAKE_CURRENT_SOURCE_DIR}/tools/wheel_setup.cfg" "${CMAKE_CURRENT_BINARY_DIR}/wheel/setup.cfg" @ONLY)
+        configure_file("${CMAKE_CURRENT_SOURCE_DIR}/tools/wheel_setup.py" "${CMAKE_CURRENT_BINARY_DIR}/wheel/setup.py" @ONLY)
+    endif()
+endif()
+

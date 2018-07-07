@@ -1,15 +1,16 @@
 #include <audi/audi.hpp>
 #include <boost/python.hpp>
-#include <vector>
-#include <string>
-#include <sstream>
 #include <functional> //std::function
+#include <sstream>
+#include <string>
+#include <vector>
+
+#include <dcgp/expression.hpp>
+#include <dcgp/expression_weighted.hpp>
+#include <dcgp/kernel.hpp>
+#include <dcgp/kernel_set.hpp>
 
 #include "common_utils.hpp"
-#include "../include/kernel.hpp"
-#include "../include/kernel_set.hpp"
-#include "../include/expression.hpp"
-#include "../include/expression_weighted.hpp"
 #include "docstrings.hpp"
 
 using namespace dcgp;
@@ -22,47 +23,38 @@ void expose_kernel(const std::string &type)
 {
     std::string class_name = "kernel_" + type;
     bp::class_<kernel<T>>(class_name.c_str(), "The function defining the generic CGP node", bp::no_init)
-    .def("__init__", bp::make_constructor(
-        +[](const bp::object &obj1, const bp::object &obj2, const std::string &name)
-            {
-                std::function<T(const std::vector<T>&)> my_function = [obj1](const std::vector<T>& x)
-                {
-                    T in = bp::extract<T>(obj1(v_to_l(x)));
-                    return in;
-                };
-                std::function<std::string(const std::vector<std::string>&)> my_print_function = [obj2](const std::vector<std::string>& x)
-                {
-                    std::string in = bp::extract<std::string>(obj2(v_to_l(x)));
-                    return in;
-                };
-                return ::new kernel<T>(my_function, my_print_function, name);
-            },
-            bp::default_call_policies(),
-            (bp::arg("callable_f"), bp::arg("callable_s"), bp::arg("name"))
-            ),
-            kernel_init_doc(type).c_str()
-        )
-    .def("__call__",
-        +[](kernel<T> &instance, const bp::object &in)
-        {
-            try {
-                auto v = l_to_v<T>(in);
-                return bp::object(instance(v));
-            } catch (...) {
-                PyErr_Clear();
-                auto v = l_to_v<std::string>(in);
-                return bp::object(instance(v));
-            }
-        }
-    )
-    .def("__repr__",
-        +[](const kernel<T> &instance) -> std::string
-        {
+        .def("__init__",
+             bp::make_constructor(
+                 +[](const bp::object &obj1, const bp::object &obj2, const std::string &name) {
+                     std::function<T(const std::vector<T> &)> my_function = [obj1](const std::vector<T> &x) {
+                         T in = bp::extract<T>(obj1(v_to_l(x)));
+                         return in;
+                     };
+                     std::function<std::string(const std::vector<std::string> &)> my_print_function
+                         = [obj2](const std::vector<std::string> &x) {
+                               std::string in = bp::extract<std::string>(obj2(v_to_l(x)));
+                               return in;
+                           };
+                     return ::new kernel<T>(my_function, my_print_function, name);
+                 },
+                 bp::default_call_policies(), (bp::arg("callable_f"), bp::arg("callable_s"), bp::arg("name"))),
+             kernel_init_doc(type).c_str())
+        .def("__call__",
+             +[](kernel<T> &instance, const bp::object &in) {
+                 try {
+                     auto v = l_to_v<T>(in);
+                     return bp::object(instance(v));
+                 } catch (...) {
+                     PyErr_Clear();
+                     auto v = l_to_v<std::string>(in);
+                     return bp::object(instance(v));
+                 }
+             })
+        .def("__repr__", +[](const kernel<T> &instance) -> std::string {
             std::ostringstream oss;
             oss << instance;
             return oss.str();
-        }
-    );
+        });
     ;
 }
 
@@ -76,35 +68,28 @@ template <typename T>
 void expose_kernel_set(std::string type)
 {
     std::string class_name = "kernel_set_" + type;
-    bp::class_<kernel_set<T>>(class_name.c_str(), "Helper to construct a set of kernel functions from their common name", bp::no_init)
-    .def("__init__", bp::make_constructor(
-        +[](const bp::object &obj1)
-        {
-            auto a = l_to_v<std::string>(obj1);
-            return ::new kernel_set<T>(a);
-        },
-        bp::default_call_policies(),
-        (bp::arg("kernels"))
-        ),
-        kernel_set_init_doc(type).c_str()
-    )
-    .def("__call__",
-        +[](kernel_set<T> &instance)
-        {
-            return v_to_l(instance());
-        }
-    )
-    .def("__repr__",
-        +[](const kernel_set<T> &instance) -> std::string
-        {
-            std::ostringstream oss;
-            oss << instance;
-            return oss.str();
-        }
-    )
-    .def("push_back", (void (kernel_set<T>::*)(std::string)) &kernel_set<T>::push_back, kernel_set_push_back_str_doc().c_str(), bp::arg("kernel_name"))
-    .def("push_back", (void (kernel_set<T>::*)(const kernel<T>&)) &kernel_set<T>::push_back, kernel_set_push_back_ker_doc(type).c_str(), bp::arg("kernel"))
-    .def("__getitem__", &wrap_operator<T>);
+    bp::class_<kernel_set<T>>(class_name.c_str(),
+                              "Helper to construct a set of kernel functions from their common name", bp::no_init)
+        .def("__init__",
+             bp::make_constructor(
+                 +[](const bp::object &obj1) {
+                     auto a = l_to_v<std::string>(obj1);
+                     return ::new kernel_set<T>(a);
+                 },
+                 bp::default_call_policies(), (bp::arg("kernels"))),
+             kernel_set_init_doc(type).c_str())
+        .def("__call__", +[](kernel_set<T> &instance) { return v_to_l(instance()); })
+        .def("__repr__",
+             +[](const kernel_set<T> &instance) -> std::string {
+                 std::ostringstream oss;
+                 oss << instance;
+                 return oss.str();
+             })
+        .def("push_back", (void (kernel_set<T>::*)(std::string)) & kernel_set<T>::push_back,
+             kernel_set_push_back_str_doc().c_str(), bp::arg("kernel_name"))
+        .def("push_back", (void (kernel_set<T>::*)(const kernel<T> &)) & kernel_set<T>::push_back,
+             kernel_set_push_back_ker_doc(type).c_str(), bp::arg("kernel"))
+        .def("__getitem__", &wrap_operator<T>);
 }
 
 template <typename T>
@@ -112,116 +97,117 @@ void expose_expression(std::string type)
 {
     std::string class_name = "expression_" + type;
     bp::class_<expression<T>>(class_name.c_str(), "A CGP expression", bp::no_init)
-    .def("__init__", bp::make_constructor(
-        +[](unsigned int in, unsigned int out, unsigned int rows, unsigned int cols, unsigned int levelsback, unsigned int arity, const bp::object &kernels, unsigned int seed)
-        {
-            auto kernels_v = l_to_v<kernel<T>>(kernels);
-            return ::new expression<T>(in, out, rows, cols, levelsback, arity, kernels_v, seed);
-        },
-        bp::default_call_policies(),
-        (bp::arg("inputs"),bp::arg("outputs"),bp::arg("rows"),bp::arg("cols"),bp::arg("levels_back"),bp::arg("arity"),bp::arg("kernels"),bp::arg("seed"))
-        ),
-        expression_init_doc(type).c_str()
-    )
-    .def("__repr__",
-        +[](const expression<T> &instance) -> std::string
-        {
-            std::ostringstream oss;
-            oss << instance;
-            return oss.str();
-        }
-    )
-    .def("__call__",
-        +[](const expression<T> &instance, const bp::object &in)
-        {
-            try {
-                auto v = l_to_v<T>(in);
-                return v_to_l(instance(v));
-            } catch (...) {
-                PyErr_Clear();
-                auto v = l_to_v<std::string>(in);
-                return v_to_l(instance(v));
-            }
-        }
-    )
-    .def("set", +[](expression<T> &instance, const bp::object &in){instance.set(l_to_v<unsigned int>(in));}, expression_set_doc().c_str(), bp::arg("chromosome"))
-    .def("get", +[](const expression<T> &instance){return v_to_l(instance.get());}, "Gets the expression chromosome")
-    .def("get_lb", +[](const expression<T> &instance){return v_to_l(instance.get_lb());}, "Gets the lower bounds of the chromosome")
-    .def("get_ub", +[](const expression<T> &instance){return v_to_l(instance.get_ub());}, "Gets the upper bounds of the chromosome")
-    .def("get_active_genes", +[](const expression<T> &instance){return v_to_l(instance.get_active_genes());}, "Gets the idx of the active genes in the current chromosome (numbering is from 0)")
-    .def("get_active_nodes", +[](const expression<T> &instance){return v_to_l(instance.get_active_nodes());}, "Gets the idx of the active nodes in the current chromosome")
-    .def("get_n", &expression<T>::get_n, "Gets the number of inputs of the dCGP expression")
-    .def("get_m", &expression<T>::get_m, "Gets the number of outputs of the dCGP expression")
-    .def("get_rows", &expression<T>::get_rows, "Gets the number of rows of the dCGP expression")
-    .def("get_cols", &expression<T>::get_cols, "Gets the number of columns of the dCGP expression")
-    .def("get_levels_back", &expression<T>::get_levels_back, "Gets the number of levels-back allowed for the dCGP expression")
-    .def("get_arity", &expression<T>::get_arity, "Gets the arity of the basis functions of the dCGP expression")
-    .def("get_f", +[](const expression<T> &instance){return v_to_l(instance.get_f());}, "Gets the kernel functions")
-    .def("mutate", +[](expression<T> &instance, const bp::object &in){instance.mutate(l_to_v<unsigned int>(in));}, expression_mutate_doc().c_str(), bp::arg("idxs"))
-    .def("mutate_random", &expression<T>::mutate_random, "mutate_random(N)\nMutates N randomly selected genes within its allowed bounds", bp::arg("N"))
-    .def("mutate_active", &expression<T>::mutate_active, "mutate_active(N)\nMutates N randomly selected active genes within its allowed bounds", bp::arg("N"))
-    .def("mutate_active_cgene", &expression<T>::mutate_active_cgene, "Mutates exactly one randomly selected active connection genes within its allowed bounds")
-    .def("mutate_ogene", &expression<T>::mutate_ogene, "Mutates exactly one randomly selected output genes within its allowed bounds")
-    .def("mutate_active_fgene", &expression<T>::mutate_active_fgene, "Mutates exactly one randomly selected active function genes within its allowed bounds");
+        .def("__init__",
+             bp::make_constructor(
+                 +[](unsigned int in, unsigned int out, unsigned int rows, unsigned int cols, unsigned int levelsback,
+                     unsigned int arity, const bp::object &kernels, unsigned int seed) {
+                     auto kernels_v = l_to_v<kernel<T>>(kernels);
+                     return ::new expression<T>(in, out, rows, cols, levelsback, arity, kernels_v, seed);
+                 },
+                 bp::default_call_policies(),
+                 (bp::arg("inputs"), bp::arg("outputs"), bp::arg("rows"), bp::arg("cols"), bp::arg("levels_back"),
+                  bp::arg("arity"), bp::arg("kernels"), bp::arg("seed"))),
+             expression_init_doc(type).c_str())
+        .def("__repr__",
+             +[](const expression<T> &instance) -> std::string {
+                 std::ostringstream oss;
+                 oss << instance;
+                 return oss.str();
+             })
+        .def("__call__",
+             +[](const expression<T> &instance, const bp::object &in) {
+                 try {
+                     auto v = l_to_v<T>(in);
+                     return v_to_l(instance(v));
+                 } catch (...) {
+                     PyErr_Clear();
+                     auto v = l_to_v<std::string>(in);
+                     return v_to_l(instance(v));
+                 }
+             })
+        .def("set", +[](expression<T> &instance, const bp::object &in) { instance.set(l_to_v<unsigned int>(in)); },
+             expression_set_doc().c_str(), bp::arg("chromosome"))
+        .def("get", +[](const expression<T> &instance) { return v_to_l(instance.get()); },
+             "Gets the expression chromosome")
+        .def("get_lb", +[](const expression<T> &instance) { return v_to_l(instance.get_lb()); },
+             "Gets the lower bounds of the chromosome")
+        .def("get_ub", +[](const expression<T> &instance) { return v_to_l(instance.get_ub()); },
+             "Gets the upper bounds of the chromosome")
+        .def("get_active_genes", +[](const expression<T> &instance) { return v_to_l(instance.get_active_genes()); },
+             "Gets the idx of the active genes in the current chromosome (numbering is from 0)")
+        .def("get_active_nodes", +[](const expression<T> &instance) { return v_to_l(instance.get_active_nodes()); },
+             "Gets the idx of the active nodes in the current chromosome")
+        .def("get_n", &expression<T>::get_n, "Gets the number of inputs of the dCGP expression")
+        .def("get_m", &expression<T>::get_m, "Gets the number of outputs of the dCGP expression")
+        .def("get_rows", &expression<T>::get_rows, "Gets the number of rows of the dCGP expression")
+        .def("get_cols", &expression<T>::get_cols, "Gets the number of columns of the dCGP expression")
+        .def("get_levels_back", &expression<T>::get_levels_back,
+             "Gets the number of levels-back allowed for the dCGP expression")
+        .def("get_arity", &expression<T>::get_arity, "Gets the arity of the basis functions of the dCGP expression")
+        .def("get_f", +[](const expression<T> &instance) { return v_to_l(instance.get_f()); },
+             "Gets the kernel functions")
+        .def("mutate",
+             +[](expression<T> &instance, const bp::object &in) { instance.mutate(l_to_v<unsigned int>(in)); },
+             expression_mutate_doc().c_str(), bp::arg("idxs"))
+        .def("mutate_random", &expression<T>::mutate_random,
+             "mutate_random(N)\nMutates N randomly selected genes within its allowed bounds", bp::arg("N"))
+        .def("mutate_active", &expression<T>::mutate_active,
+             "mutate_active(N)\nMutates N randomly selected active genes within its allowed bounds", bp::arg("N"))
+        .def("mutate_active_cgene", &expression<T>::mutate_active_cgene,
+             "Mutates exactly one randomly selected active connection genes within its allowed bounds")
+        .def("mutate_ogene", &expression<T>::mutate_ogene,
+             "Mutates exactly one randomly selected output genes within its allowed bounds")
+        .def("mutate_active_fgene", &expression<T>::mutate_active_fgene,
+             "Mutates exactly one randomly selected active function genes within its allowed bounds");
 }
 
 template <typename T>
 void expose_expression_weighted(std::string type)
 {
     std::string class_name = "expression_weighted_" + type;
-    bp::class_<expression_weighted<T>, bp::bases<expression<T> > >(class_name.c_str(), bp::no_init)
-    .def("__init__", bp::make_constructor(
-        +[](unsigned int in, unsigned int out, unsigned int rows, unsigned int cols, unsigned int levelsback, unsigned int arity, const bp::object &kernels, unsigned int seed)
-        {
-            auto kernels_v = l_to_v<kernel<T>>(kernels);
-            return ::new expression_weighted<T>(in, out, rows, cols, levelsback, arity, kernels_v, seed);
-        },
-        bp::default_call_policies(),
-        (bp::arg("inputs"),bp::arg("outputs"),bp::arg("rows"),bp::arg("cols"),bp::arg("levels_back"),bp::arg("arity"),bp::arg("kernels"),bp::arg("seed"))
-        ),
-        expression_init_doc(type).c_str()
-    )
-    .def("__repr__",
-        +[](const expression_weighted<T> &instance) -> std::string
-        {
-            std::ostringstream oss;
-            oss << instance;
-            return oss.str();
-        }
-    )
-    .def("__call__",
-        +[](const expression_weighted<T> &instance, const bp::object &in)
-        {
-            try {
-                auto v = l_to_v<T>(in);
-                return v_to_l(instance(v));
-            } catch (...) {
-                PyErr_Clear();
-                auto v = l_to_v<std::string>(in);
-                return v_to_l(instance(v));
-            }
-        }
-    )
-    .def("set_weight", &expression_weighted<T>::set_weight, expression_weighted_set_weight_doc().c_str(), (bp::arg("node_id"), bp::arg("input_id"), bp::arg("weight")))
-    .def("set_weights",
-        +[] (expression_weighted<T> &instance, const bp::object &weights)
-        {
-            instance.set_weights(l_to_v<T>(weights));
-        },
-        expression_weighted_set_weights_doc().c_str(),
-        (bp::arg("weights"))
-    )
-    .def("get_weight", &expression_weighted<T>::get_weight, expression_weighted_get_weight_doc().c_str(), (bp::arg("node_id"), bp::arg("input_id")))
-    .def("get_weights",
-        +[] (expression_weighted<T> &instance)
-        {
-            return v_to_l(instance.get_weights());
-        },
-        "Gets all weights"
-    );
+    bp::class_<expression_weighted<T>, bp::bases<expression<T>>>(class_name.c_str(), bp::no_init)
+        .def("__init__",
+             bp::make_constructor(
+                 +[](unsigned int in, unsigned int out, unsigned int rows, unsigned int cols, unsigned int levelsback,
+                     unsigned int arity, const bp::object &kernels, unsigned int seed) {
+                     auto kernels_v = l_to_v<kernel<T>>(kernels);
+                     return ::new expression_weighted<T>(in, out, rows, cols, levelsback, arity, kernels_v, seed);
+                 },
+                 bp::default_call_policies(),
+                 (bp::arg("inputs"), bp::arg("outputs"), bp::arg("rows"), bp::arg("cols"), bp::arg("levels_back"),
+                  bp::arg("arity"), bp::arg("kernels"), bp::arg("seed"))),
+             expression_init_doc(type).c_str())
+        .def("__repr__",
+             +[](const expression_weighted<T> &instance) -> std::string {
+                 std::ostringstream oss;
+                 oss << instance;
+                 return oss.str();
+             })
+        .def("__call__",
+             +[](const expression_weighted<T> &instance, const bp::object &in) {
+                 try {
+                     auto v = l_to_v<T>(in);
+                     return v_to_l(instance(v));
+                 } catch (...) {
+                     PyErr_Clear();
+                     auto v = l_to_v<std::string>(in);
+                     return v_to_l(instance(v));
+                 }
+             })
+        .def("set_weight", &expression_weighted<T>::set_weight, expression_weighted_set_weight_doc().c_str(),
+             (bp::arg("node_id"), bp::arg("input_id"), bp::arg("weight")))
+        .def("set_weights",
+             +[](expression_weighted<T> &instance, const bp::object &weights) {
+                 instance.set_weights(l_to_v<T>(weights));
+             },
+             expression_weighted_set_weights_doc().c_str(), (bp::arg("weights")))
+        .def("get_weight", &expression_weighted<T>::get_weight, expression_weighted_get_weight_doc().c_str(),
+             (bp::arg("node_id"), bp::arg("input_id")))
+        .def("get_weights", +[](expression_weighted<T> &instance) { return v_to_l(instance.get_weights()); },
+             "Gets all weights");
 }
 
-BOOST_PYTHON_MODULE(_core)
+BOOST_PYTHON_MODULE(core)
 {
     bp::docstring_options doc_options;
     doc_options.enable_all();

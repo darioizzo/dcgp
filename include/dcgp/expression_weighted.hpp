@@ -13,6 +13,7 @@
 
 #include <dcgp/expression.hpp>
 #include <dcgp/kernel.hpp>
+#include <dcgp/type_traits.hpp>
 
 namespace dcgp
 {
@@ -36,7 +37,7 @@ private:
     // SFINAE dust
     template <typename U>
     using functor_enabler = typename std::enable_if<
-        std::is_same<U, double>::value || audi::is_gdual<T>::value || std::is_same<U, std::string>::value, int>::type;
+        std::is_same<U, double>::value || is_gdual<T>::value || std::is_same<U, std::string>::value, int>::type;
 
 public:
     /// Constructor
@@ -232,8 +233,7 @@ public:
 
 protected:
     // For numeric computations
-    template <typename U,
-              typename std::enable_if<std::is_same<U, double>::value || audi::is_gdual<U>::value, int>::type = 0>
+    template <typename U, typename std::enable_if<std::is_same<U, double>::value || is_gdual<U>::value, int>::type = 0>
     U kernel_call(std::vector<U> &function_in, unsigned int idx, unsigned int weight_idx) const
     {
         for (auto j = 0u; j < this->get_arity(); ++j) {

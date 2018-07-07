@@ -1,5 +1,5 @@
 __all__ = ['test']
-from ._core import *
+from .core import *
 
 # Add to expression a method to visualize the d-CGP graph
 from ._graphviz_visualize import _graphviz_visualize
@@ -13,4 +13,5 @@ expression_double.simplify = _sympy_simplify
 expression_gdual_double.simplify = _sympy_simplify
 expression_gdual_vdouble.simplify = _sympy_simplify
 
-__version__ = {'major': 1, 'minor': 0, 'bugfix': 1}
+# Version setup.
+from ._version import __version__
