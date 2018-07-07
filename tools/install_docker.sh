@@ -86,7 +86,6 @@ cd build
 cmake ../ > /dev/null
 make install > /dev/null
 cd ..
-cd ..
 
 # Install piranha
 curl -L https://github.com/bluescarni/piranha/archive/v${PIRANHA_VERSION}.tar.gz > v${PIRANHA_VERSION}
@@ -99,51 +98,46 @@ make install > /dev/null 2>&1
 cd ..
 
 # Install audi
-git clone https://github.com/darioizzo/audi.git > /dev/null 2>&1
-cd audi
+curl -L https://github.com/bluescarni/piranha/archive/v${AUDI_VERSION}.tar.gz > v${AUDI_VERSION}
+tar xvf v${AUDI_VERSION} > /dev/null 2>&1
+cd audi-${AUDI_VERSION}
 mkdir build
 cd build
-cmake -DBUILD_TESTS=no ../
+cmake -DAUDI_BUILD_AUDI=yes -DAUDI_BUILD_TESTS=no -DCMAKE_BUILD_TYPE=Release ../
 make install > /dev/null 2>&1
 
-# Install and compile dcgpy
+# Install dcgp headers
 cd /dcgp
-mkdir build
-cd build
-# The include directory for py3 is X.Xm, while for py2 is X.X
-if [[ "${PYTHON_VERSION}" != "2.7" ]]; then
-    cmake -DBUILD_DCGPY=yes -DBUILD_TESTS=no -DBUILD_MAIN=no -DCMAKE_INSTALL_PREFIX=/dcgp/local -DCMAKE_BUILD_TYPE=Release -DBoost_PYTHON_LIBRARY_RELEASE=/usr/local/lib/${BOOST_PYTHON_LIB_NAME} -DPYTHON_INCLUDE_DIR=${PATH_TO_PYTHON}/include/python${PYTHON_VERSION}m/ -DPYTHON_EXECUTABLE=${PATH_TO_PYTHON}/bin/python  ../
-else
-    cmake -DBUILD_DCGPY=yes -DBUILD_TESTS=no -DBUILD_MAIN=no -DCMAKE_INSTALL_PREFIX=/dcgp/local -DCMAKE_BUILD_TYPE=Release -DBoost_PYTHON_LIBRARY_RELEASE=/usr/local/lib/${BOOST_PYTHON_LIB_NAME} -DPYTHON_INCLUDE_DIR=${PATH_TO_PYTHON}/include/python${PYTHON_VERSION}/ -DPYTHON_EXECUTABLE=${PATH_TO_PYTHON}/bin/python  ../
-fi
-make
+mkdir build_dcgp
+cd build_dcgp
+cmake -DDCGP_BUILD_DCGP=yes -DDCGP_BUILD_TESTS=no -DCMAKE_BUILD_TYPE=Release ../
 make install
 
-# Compile wheels
-cd /dcgp/build/wheel
-cp -R /dcgp/local/lib/python${PYTHON_VERSION}/site-packages/dcgpy ./
-# The following line is needed as a workaround to the auditwheel problem KeyError = .lib
-# Using and compiling a null extension module (see manylinux_wheel_setup.py)
-# fixes the issue (TODO: probably better ways?)
-touch dummy.cpp
+# Compile and install dcgpy (build directory is created by .travis.yml)
+cd /dcgp
+cd build
+cmake -DCMAKE_BUILD_TYPE=Release -DDCGP_BUILD_DCGP=no -DDCGP_BUILD_DCGPY=yes -DPYTHON_EXECUTABLE=/opt/python/${PYTHON_DIR}/bin/python ../;
+make -j2 install
 
-# We install required dependencies (do it here, do not let pip install do it)
-${PATH_TO_PYTHON}/bin/pip install numpy pyaudi
-${PATH_TO_PYTHON}/bin/pip wheel ./ -w wheelhouse/
-# Bundle external shared libraries into the wheels (only py35 has auditwheel)
-/opt/python/cp35-cp35m/bin/auditwheel repair wheelhouse/dcgpy*.whl -w ./wheelhouse2/
-# Install packages (not sure what --no-index -f does, should also work without, but just in case)
-${PATH_TO_PYTHON}/bin/pip install dcgpy --no-index -f wheelhouse2
-# Test
+
+# Compile wheels
+cd wheel
+# Copy the installed pyaudi files, wherever they might be in /usr/local,
+# into the current dir.
+cp -a `find /usr/local/lib -type d -iname 'dcgpy'` ./
+# Create the wheel and repair it.
+/opt/python/${PYTHON_DIR}/bin/python setup.py bdist_wheel
+auditwheel repair dist/dcgpy* -w ./dist2
+# Try to install it and run the tests.
 cd /
-${PATH_TO_PYTHON}/bin/python -c "from dcgpy import test; test.run_test_suite()"
+/opt/python/${PYTHON_DIR}/bin/pip install /dcgp/build/wheel/dist2/dcgpy*
+/opt/python/${PYTHON_DIR}/bin/python -c "from dcgpy import test; test.run_test_suite()"
 
 # Upload in PyPi
 # This variable will contain something if this is a tagged build (vx.y.z), otherwise it will be empty.
-#export DCGP_RELEASE_VERSION=`echo "${TRAVIS_TAG}"|grep -E 'v[0-9]+\.[0-9]+.*'|cut -c 2-`
+export DCGP_RELEASE_VERSION=`echo "${TRAVIS_TAG}"|grep -E 'v[0-9]+\.[0-9]+.*'|cut -c 2-`
 if [[ "${DCGP_RELEASE_VERSION}" != "" ]]; then
     echo "Release build detected, uploading to PyPi."
-    cd dcgp/build/wheel
-    ${PATH_TO_PYTHON}/bin/pip install twine
-    ${PATH_TO_PYTHON}/bin/twine upload -u darioizzo wheelhouse2/dcgpy*.whl
+    /opt/python/${PYTHON_DIR}/bin/pip install twine
+    /opt/python/${PYTHON_DIR}/bin/twine upload -u darioizzo /dcgp/build/wheel/dist2/dcgpy*
 fi
