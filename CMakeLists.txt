@@ -31,8 +31,8 @@ if((NOT DCGP_BUILD_DCGP) AND (NOT DCGP_BUILD_DCGPY))
 endif()
 
 if(DCGP_BUILD_DCGP)
-    # Initial setup of a audi build.
-    project(dcgp VERSION ${AUDI_PROJECT_VERSION})
+    # Initial setup of a dcgp build.
+    project(dcgp VERSION ${DCGP_PROJECT_VERSION})
     enable_testing()
 
     # Build option: enable test set.
@@ -45,8 +45,8 @@ if(DCGP_BUILD_DCGP)
     option(DCGP_BUILD_MAIN "Build 'main.cpp'." OFF)
 
 else()
-    # Initial setup of a pyaudi build.
-    project(dcgpy VERSION ${AUDI_PROJECT_VERSION})
+    # Initial setup of a dcgpy build.
+    project(dcgpy VERSION ${DCGP_PROJECT_VERSION})
 endif()
 
 # Common general bits.
@@ -89,6 +89,24 @@ endif()
 # Some flags that generate warnings due to Eigen or Piranha obsolete versions
 list(REMOVE_ITEM AUDI_CXX_FLAGS_DEBUG "-Wduplicated-branches")
 list(REMOVE_ITEM AUDI_CXX_FLAGS_DEBUG "-Wold-style-cast")
+
+# Creates the file config.hpp
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/config.hpp.in" "${CMAKE_CURRENT_SOURCE_DIR}/include/dcgp/config.hpp" @ONLY)
+
+if(DCGP_BUILD_DCGPY)
+    # audi dependencies.
+    include(YACMAPythonSetup)
+    # Python version check.
+    if(${PYTHON_VERSION_MAJOR} LESS 2 OR (${PYTHON_VERSION_MAJOR} EQUAL 2 AND ${PYTHON_VERSION_MINOR} LESS 7))
+        message(FATAL_ERROR "Minimum supported Python version is 2.7.")
+    endif()
+
+    # NOTE: for the time being, require that dcgp/dcgpy versions are matching exactly.
+    find_package(dcgp ${DCGPY_PROJECT_VERSION} EXACT REQUIRED)
+
+    # Internal variable that will be used to tell DCGPFindBoost to locate Boost.Python.
+    set(_DCGP_FIND_BOOST_PYTHON TRUE)
+endif()
 
 # Boost setup (common to dcgp/dcgpy).
 include(DCGPFindBoost)
@@ -164,6 +182,31 @@ if(DCGP_BUILD_DCGP)
     if(DCGP_BUILD_EXAMPLES)
         add_subdirectory("${CMAKE_SOURCE_DIR}/examples")
     endif()
+
+    # Configure the doc files.
+    configure_file("${CMAKE_CURRENT_SOURCE_DIR}/doc/doxygen/Doxyfile.in" "${CMAKE_CURRENT_SOURCE_DIR}/doc/doxygen/Doxyfile" @ONLY)
+    configure_file("${CMAKE_CURRENT_SOURCE_DIR}/doc/sphinx/conf.py.in" "${CMAKE_CURRENT_SOURCE_DIR}/doc/sphinx/conf.py" @ONLY)
+
+    # Setup of the export.
+    install(TARGETS dcgp EXPORT dcgp_export)
+
+    # Setup cmake config files
+    configure_file("${CMAKE_CURRENT_SOURCE_DIR}/dcgp-config.cmake.in" "${CMAKE_CURRENT_BINARY_DIR}/dcgp-config.cmake" @ONLY)
+
+    install(FILES "${CMAKE_CURRENT_BINARY_DIR}/dcgp-config.cmake" DESTINATION "lib/cmake/dcgp")
+    install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/FindGMP.cmake" "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/FindMPFR.cmake"
+            "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/FindPiranha.cmake" "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/DCGPFindBoost.cmake"
+            "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/FindAudi.cmake" "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/FindEigen3.cmake" DESTINATION "lib/cmake/dcgp")
+    install(EXPORT dcgp_export NAMESPACE Dcgp:: DESTINATION lib/cmake/dcgp)
+    # Take care of versioning.
+    include(CMakePackageConfigHelpers)
+    write_basic_package_version_file("${CMAKE_CURRENT_BINARY_DIR}/dcgp-config-version.cmake" VERSION ${dcgp_VERSION}
+            COMPATIBILITY ExactVersion)
+    install(FILES "${CMAKE_CURRENT_BINARY_DIR}/dcgp-config-version.cmake" DESTINATION "lib/cmake/dcgp")
+
+    # Do the actual library installation.
+    install(DIRECTORY include/ DESTINATION include)
+
 endif()
 
 # Build the python module
