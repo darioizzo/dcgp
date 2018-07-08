@@ -135,6 +135,7 @@ if is_python_build:
     # Install pip and deps.
     wget(r'https://bootstrap.pypa.io/get-pip.py', 'get-pip.py')
     run_command(pinterp + ' get-pip.py')
+    run_command(pinterp + r' -m pip install pyaudi')
     if is_release_build:
         # call pip via python, workaround to avoid path issues when calling pip from win
         # (https://github.com/pypa/pip/issues/1997)
