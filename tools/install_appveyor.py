@@ -144,6 +144,7 @@ if is_python_build:
 os.environ['PATH'] = os.environ['PATH'] + r';c:\\local\\lib'
 
 # Proceed to the build.
+print("Start Building dcgp(y)")
 common_cmake_opts = r'-DCMAKE_PREFIX_PATH=c:\\local -DCMAKE_INSTALL_PREFIX=c:\\local'
 if is_python_build:
     os.makedirs('build_dcgp')
