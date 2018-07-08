@@ -136,10 +136,6 @@ if is_python_build:
     wget(r'https://bootstrap.pypa.io/get-pip.py', 'get-pip.py')
     run_command(pinterp + ' get-pip.py')
     run_command(pinterp + r' -m pip install pyaudi')
-    if is_release_build:
-        # call pip via python, workaround to avoid path issues when calling pip from win
-        # (https://github.com/pypa/pip/issues/1997)
-        run_command(pinterp + r' -m pip install twine')
 
 # Set the path so that the precompiled libs can be found.
 os.environ['PATH'] = os.environ['PATH'] + r';c:\\local\\lib'
@@ -196,5 +192,6 @@ if is_python_build:
     run_command(
         pinterp + r' -c "from dcgpy import test; test.run_test_suite()"', directory=r'c:\\')
     #if is_release_build:
+    run_command(pinterp + r' -m pip install twine')
     run_command(twine + r' upload -u darioizzo dist\\' +
                     os.listdir('dist')[0])
