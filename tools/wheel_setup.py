@@ -4,9 +4,9 @@ from distutils import util
 import sys
 
 NAME = 'dcgpy'
-VERSION = '@dCGP_VERSION@'
+VERSION = '@dcgp_VERSION@'
 DESCRIPTION = 'Implementation of differentiable Cartesian Genetic Programming (d-CGP).'
-LONG_DESCRIPTION = 'The d-CGP is a recent development in the field of Genetic Programming that builds upon Cartesian Genetic Programming adding the information about the any-order derivatives of encoded program using a differential algebra.'
+LONG_DESCRIPTION = 'The d-CGP is a recent development in the field of Genetic Programming that builds upon Cartesian Genetic Programming adding the information about the any-order derivatives of encoded program using a differential algebra. As such this package can be used both to experiment with Cartesian Genetic Programming in the usual way, and to perform novel research on the use of the derivative in learning GP expressions.'
 URL = 'https://github.com/darioizzo/d-CGP'
 AUTHOR = 'Dario Izzo'
 AUTHOR_EMAIL = 'dario.izzo@gmail.com'
