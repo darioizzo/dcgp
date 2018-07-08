@@ -2,8 +2,8 @@ environment:
   TWINE_PASSWORD:
     secure: M+qvYgRh05fEw6G9aglK4g==
   matrix:
-  #- BUILD_TYPE: "Release"
-  #- BUILD_TYPE: "Debug"
+  - BUILD_TYPE: "Release"
+  - BUILD_TYPE: "Debug"
   - BUILD_TYPE: "Python36"
   - BUILD_TYPE: "Python27"
   - BUILD_TYPE: "Python34"

@@ -191,7 +191,7 @@ if is_python_build:
     run_command(pinterp + r' -m pip install dist\\' + os.listdir('dist')[0])
     run_command(
         pinterp + r' -c "from dcgpy import test; test.run_test_suite()"', directory=r'c:\\')
-    #if is_release_build:
-    run_command(pinterp + r' -m pip install twine')
-    run_command(twine + r' upload -u darioizzo dist\\' +
+    if is_release_build:
+        run_command(pinterp + r' -m pip install twine')
+        run_command(twine + r' upload -u darioizzo dist\\' +
                     os.listdir('dist')[0])
