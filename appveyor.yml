@@ -8,7 +8,7 @@ matrix:
   - BUILD_TYPE: "Python27"
   - BUILD_TYPE: "Python34"
   - BUILD_TYPE: "Python35"
-  global:
+global:
     PLATFORMTOOLSET: "v140"
 
 install:
