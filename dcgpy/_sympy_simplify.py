@@ -71,7 +71,7 @@ def _sympy_simplify(self, in_sym, subs_weights = False, erc = []):
     # substitute the weights symbols with their values
     if subs_weights:
         wl = self.get_weights()
-        if type(wl[0]) == pyaudi._core.gdual_vdouble:
+        if type(wl[0]) == pyaudi.core.gdual_vdouble:
             wl = [w.constant_cf[0] for w in wl]
         for i in range(m):
             for j in range(r * c):
