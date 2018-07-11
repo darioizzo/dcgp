@@ -1,44 +1,25 @@
-def _graphviz_visualize(self, in_sym = [], draw_inactive = True, draw_weights = False, file_name = 'cgp_graph.png'):
+def _graphviz_visualize(self, in_sym = [], draw_inactive = True, draw_weights = False):
     """
-    visualize(in_sym = [], draw_inactive = True, draw_weights = False, file_name = 'cgp_graph.png')
-
+    visualize(in_sym = [], draw_inactive = True, draw_weights = False)
     Visualizes the d-CGP expression
-
-    Visualizes the graph of the d-CGP expression, by generating a png image in the current directory and displaying it on Matplotlib axes
-
+    Visualizes the graph of the d-CGP expression
     Note:
-        This method requires ``matplotlib`` and ``pygraphviz`` modules installed in your Python system
-
+        This method requires the `graphviz`` module installed in your Python system
     Args:
         in_sym (a ``List[str]``): input symbols. Its length must either match the number of inputs or be zero (to visualize them as x_i)
         draw_inactive (a ``bool``): indicates whether to draw inactive nodes
         draw_weights (a ``bool``): indicates whether to draw connection weights symbols
-        file_name (a ``str``): filename of the output image
-
     Returns:
-        The ``matplotlib.image.AxesImage`` of the displayed graph
-
+        The ``graphviz.Digraph`` for the given expression
     Raises:
-        ImportError: if modules matplotlib or pygraphviz are not installed in your Python system
+        ImportError: if module pygraphviz is not installed in your Python system
         ValueError: if in_sym is nonempty but its length does not match the number of inputs
-
     Examples:
         >>> ex = dcgpy.expression_double(2,1,3,3,2,2,dcgpy.kernel_set_double(["sum","diff"])(),0)
-        >>> img = ex.visualize(['x', 'c'], True, False, 'out_img.png')
+        >>> graph = ex.visualize(['x', 'c'], True, False)
     """
 
-    try:
-        import pygraphviz as pgv
-    except ImportError:
-        print("Failed to import the required module pygraphviz")
-        raise
-
-    try:
-        import matplotlib.pyplot as plt
-        import matplotlib.image as mpimg
-    except ImportError:
-        print("Failed to import the required module matplotlib")
-        raise
+    from graphviz import Digraph
 
     n = self.get_n()
 
@@ -58,33 +39,33 @@ def _graphviz_visualize(self, in_sym = [], draw_inactive = True, draw_weights = 
     for i in range(len(active_nodes)):
         is_active[active_nodes[i]] = True
 
-    G = pgv.AGraph(strict = False, directed = True, rankdir = 'LR')
-
+    G = Digraph(graph_attr={'rankdir': 'LR'})
+    
     # force the nodes to be placed in the right ranks
-    inputs = []
+    inputs = Digraph(graph_attr={'rank': 'same'})
     for i in range(n):
-        inputs.append('n' + str(i))
-    G.add_subgraph(inputs, rank = 'same')
+        inputs.node('n' + str(i))
+    G.subgraph(inputs)
     for i in range(c):
-        col = []
+        col = Digraph(graph_attr={'rank': 'same'})
         for j in range(r):
-            col.append('n' + str(n + (i * c) + j))
-        G.add_subgraph(col, rank = 'same')
+            col.node('n' + str(n + (i * r) + j))
+        G.subgraph(col)
         if i == 0:
             for j in range(n):
                 for k in range(r):
-                    G.add_edge('n' + str(j),'n' + str(n + k), style = 'invis')
+                    G.edge('n' + str(j),'n' + str(n + k), style = 'invis')
         else:
             for j in range(r):
                 for k in range(r):
-                    G.add_edge('n' + str(n + (i - 1) * r + j),'n' + str(n + i * r + k), style = 'invis')
-    outputs = []
+                    G.edge('n' + str(n + (i - 1) * r + j),'n' + str(n + i * r + k), style = 'invis')
+    outputs = Digraph(graph_attr={'rank': 'same'})
     for i in range(m):
-        outputs.append('n' + str(n + r * c + i))
-    G.add_subgraph(outputs, rank = 'same')
+        outputs.node('n' + str(n + r * c + i))
+    G.subgraph(outputs)
     for i in range(r):
         for j in range(m):
-            G.add_edge('n' + str(n + (c - 1) * r + i),'n' + str(n + r * c + j), style = 'invis')
+            G.edge('n' + str(n + (c - 1) * r + i),'n' + str(n + r * c + j), style = 'invis')
 
     # input nodes
     for i in range(n):
@@ -92,7 +73,7 @@ def _graphviz_visualize(self, in_sym = [], draw_inactive = True, draw_weights = 
             xlabel = in_sym[i]
         else:
             xlabel = '<x<sub>' + str(i) + '</sub>>'
-        G.add_node('n' + str(i), label = xlabel, shape = 'circle', style = 'bold')
+        G.node('n' + str(i), label = xlabel, shape = 'circle', style = 'bold')
 
     # function nodes and connections
     for i in range(r * c):
@@ -117,7 +98,7 @@ def _graphviz_visualize(self, in_sym = [], draw_inactive = True, draw_weights = 
             op = '*'
         elif op == 'div' or op == 'pdiv':
             op = '/'
-        G.add_node('n' + str(n + i), label =  op, shape = 'circle', style = nstyle, color = col, fontcolor = col)
+        G.node('n' + str(n + i), label =  op, shape = 'circle', style = nstyle, color = col, fontcolor = col)
         for j in range(arity):
             if j == 0:
                 ah = 'lnormal'
@@ -129,17 +110,11 @@ def _graphviz_visualize(self, in_sym = [], draw_inactive = True, draw_weights = 
                 elabel = '<w<sub>' + str(n + i) + ',' + str(j) + '</sub>>'
             else:
                 elabel = ''
-            G.add_edge('n' + str(x[i * (arity + 1) + j + 1]), 'n' + str(n + i), label = elabel, arrowhead = ah, style = estyle, color = col, fontcolor = col)
+            G.edge('n' + str(x[i * (arity + 1) + j + 1]), 'n' + str(n + i), label = elabel, arrowhead = ah, style = estyle, color = col, fontcolor = col)
 
     # output nodes
     for i in range(m):
-        G.add_node('n' + str(n + r * c + i), label = '<o<sub>' + str(i) + '</sub>>', shape = 'circle', style = 'bold')
-        G.add_edge('n' + str(x[len(x) - m + i]), 'n' + str(n + r * c + i))
+        G.node('n' + str(n + r * c + i), label = '<o<sub>' + str(i) + '</sub>>', shape = 'circle', style = 'bold')
+        G.edge('n' + str(x[len(x) - m + i]), 'n' + str(n + r * c + i))
 
-    # generate the graph and display it
-    G.draw(file_name, prog = 'dot')
-    img = plt.imshow(mpimg.imread(file_name))
-    plt.axis('off')
-    plt.show()
-
-    return img
+    return G
