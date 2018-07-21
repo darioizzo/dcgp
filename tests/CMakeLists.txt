@@ -30,6 +30,8 @@ ADD_DCGP_TESTCASE(compute)
 ADD_DCGP_TESTCASE(mutate)
 ADD_DCGP_TESTCASE(differentiate)
 ADD_DCGP_TESTCASE(quadratic_error)
+ADD_DCGP_TESTCASE(expression_ann)
+
 
 ADD_DCGP_PERFORMANCE_TESTCASE(function_calls)
 ADD_DCGP_PERFORMANCE_TESTCASE(compute)

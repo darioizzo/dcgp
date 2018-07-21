@@ -121,6 +121,26 @@ std::string print_my_sig(const std::vector<std::string> &in)
     return "sig(" + retval + ")";
 }
 
+// tanh function:
+template <typename T, f_enabler<T> = 0>
+T my_tanh(const std::vector<T> &in)
+{
+    T retval(in[0]);
+    for (auto i = 1u; i < in.size(); ++i) {
+        retval += in[i];
+    }
+    return audi::tanh(retval);
+}
+
+std::string print_my_tanh(const std::vector<std::string> &in)
+{
+    std::string retval(in[0]);
+    for (auto i = 1u; i < in.size(); ++i) {
+        retval += "+" + in[i];
+    }
+    return "tanh(" + retval + ")";
+}
+
 /*--------------------------------------------------------------------------
  *                                  BINARY FUNCTIONS
  *------------------------------------------------------------------------**/

@@ -72,7 +72,7 @@ public:
         if (c == 0) throw std::invalid_argument("Number of columns is 0");
         if (r == 0) throw std::invalid_argument("Number of rows is 0");
         if (l == 0) throw std::invalid_argument("Number of level-backs is 0");
-        if (arity < 2) throw std::invalid_argument("Basis functions arity must be at least 2");
+        if (arity < 1) throw std::invalid_argument("Basis functions arity must be at least 2");
         if (f.size() == 0) throw std::invalid_argument("Number of basis functions is 0");
 
         // Bounds for the function genes
