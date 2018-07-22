@@ -1,23 +1,25 @@
 #ifndef DCGP_KERNEL_H
 #define DCGP_KERNEL_H
 
-#include <functional> // std::function
-#include <utility>    // std::forward
-#include <string>
-#include <iostream>
-#include <vector>
 #include <audi/audi.hpp>
+#include <functional> // std::function
+#include <iostream>
+#include <string>
+#include <utility> // std::forward
+#include <vector>
 
 using namespace audi;
 using gdual_d = audi::gdual<double>;
 
-namespace dcgp {
+namespace dcgp
+{
 
 /// Basis function
 /**
  * This class represents the function defining the generic CGP node. To be constructed
- * it accepts two functions having prototype ``T``(const std::vector<``T``>&) and std::string(const std::vector<std::string>&)
- * computing, respectively, the function value on generic inputs and the textual representation of the operation.
+ * it accepts two functions having prototype ``T``(const std::vector<``T``>&) and std::string(const
+ * std::vector<std::string>&) computing, respectively, the function value on generic inputs and the textual
+ * representation of the operation.
  *
  * The intended use would then be something like:
  * @code
@@ -27,14 +29,14 @@ namespace dcgp {
  *
  * @tparam T The type of the function output (and inputs)
  */
-template<typename T>
+template <typename T>
 class kernel
 {
 public:
     /// Basic prototype of a kernel function returning its evaluation
-    using my_fun_type = std::function<T(const std::vector<T>&)>;
+    using my_fun_type = std::function<T(const std::vector<T> &)>;
     /// Basic prototype of a kernel function returning its symbolic representation
-    using my_print_fun_type = std::function<std::string(const std::vector<std::string>&)>;
+    using my_print_fun_type = std::function<std::string(const std::vector<std::string> &)>;
 
     /// Constructor
     /**
@@ -46,43 +48,56 @@ public:
      *
      */
     template <typename U, typename V>
-    kernel(U &&f, V &&pf, std::string name):m_f(std::forward<U>(f)), m_pf(std::forward<V>(pf)), m_name(name) {}
+    kernel(U &&f, V &&pf, std::string name) : m_f(std::forward<U>(f)), m_pf(std::forward<V>(pf)), m_name(name)
+    {
+    }
 
     /// Parenthesis operator
     /**
-    * Evaluates the kernel in the point \p in
-    *
-    * @param[in] in the evaluation point as an std::vector<T>
-    *
-    * @return the function value
-    */
-    T operator()(const std::vector<T>& in) const
+     * Evaluates the kernel in the point \p in
+     *
+     * @param[in] in the evaluation point as an std::vector<T>
+     *
+     * @return the function value
+     */
+    T operator()(const std::vector<T> &in) const
     {
-            return m_f(in);
+        return m_f(in);
     }
     /// Parenthesis operator
     /**
-    * Evaluates the kernel in the point \p in
-    *
-    * @param[in] in the evaluation point as an std::initializer_list<T>
-    *
-    * @return the function value
-    */
-    T operator()(const std::initializer_list<T>& in) const
+     * Evaluates the kernel in the point \p in
+     *
+     * @param[in] in the evaluation point as an std::initializer_list<T>
+     *
+     * @return the function value
+     */
+    T operator()(const std::initializer_list<T> &in) const
     {
-            return m_f(in);
+        return m_f(in);
     }
     /// Parenthesis operator
     /**
-    * Returns a symbolic representation of the operation made by \f$f\f$
-    *
-    * @param[in] in std::vector<std::string> with the symbolic names to be used
-    *
-    * @return the string representation of the operation (ex. "ln(s1+s2)")
-    */
-    std::string operator()(const std::vector<std::string>& in) const
+     * Returns a symbolic representation of the operation made by \f$f\f$
+     *
+     * @param[in] in std::vector<std::string> with the symbolic names to be used
+     *
+     * @return the string representation of the operation (ex. "ln(s1+s2)")
+     */
+    std::string operator()(const std::vector<std::string> &in) const
     {
-            return m_pf(in);
+        return m_pf(in);
+    }
+
+    /// Kernel name
+    /**
+     * Returns the Kernel name
+     *
+     * @return the Kernel name
+     */
+    const std::string &get_name() const
+    {
+        return m_name;
     }
 
     /// Overloaded stream operator
@@ -94,8 +109,8 @@ public:
      *
      * @return reference to \p os.
      *
-    */
-    friend std::ostream& operator<<(std::ostream& os, const kernel<T>& d)
+     */
+    friend std::ostream &operator<<(std::ostream &os, const kernel<T> &d)
     {
         os << d.m_name;
         return os;

@@ -62,6 +62,11 @@ public:
                    )
         : expression<T>(n, m, r, c, l, arity, f, seed), m_weights(r * c * arity, T(1.)), m_biases(r * c, T(0.))
     {
+        for (auto ker : f) {
+            if (ker.get_name() != "tanh" && ker.get_name() != "sig" && ker.get_name() != "ReLu") {
+                throw std::invalid_argument("Only tanh, sig and ReLu Kernels are valid for dCGP-ANN expressions");
+            }
+        }
         for (auto i = 0u; i < r * c; ++i) {
             for (auto j = 0u; j < arity; ++j) {
                 m_weights_symbols.push_back("w" + std::to_string(i + n) + "_" + std::to_string(j));
@@ -72,56 +77,71 @@ public:
         }
     }
 
-    /// Evaluates the dCGP expression
+    /// Evaluates the mean square error
     /**
-     * This evaluates the dCGP expression. According to the template parameter
-     * it will compute the value (double) the Taylor expansion (gdual) or a symbolic
+     * Returns the mean squared error and its gradient with respect to weights and biases.
+     *
+     * @param[in] The input data
+     * @param[out] The target data (the label)
+     * @return the mse, the gradient of the mse w.r.t. all weights (also inactive) and the gradient of the mse w.r.t all
+     * biases
+     */
+    template <typename U, functor_enabler<U> = 0>
+    std::pair<U, std::pair<std::vector<U>, std::vector<U>>> mse(const std::vector<U> &in, const std::vector<U> &out)
+    {
+        U value(U(0.));
+        std::vector<U> w_grad(this->get_cols() * this->get_rows() * this->get_arity(), U(0.));
+        std::vector<U> b_grad(this->get_cols() * this->get_rows(), U(0.));
+
+        // Forward pass. All active nodes outputs get computed as well as the activation function derivatives
+        std::map<unsigned, U> node;
+        std::map<unsigned, U> d_node;
+        fill_nodes(in, node, d_node);
+
+        // Backward pass. To fill in all gradients we need to know, for each active node, which active nodes connect to
+        // it. So we loop over the active nodes and read from the chromosome its connections (TODO: this should me moved
+        // out of here and only done once per chromosome set)
+        std::map<unsigned, std::vector<unsigned>> connected;
+        for (auto node_id : this->get_active_nodes()) {
+            // position in the chromosome of the current node
+            unsigned idx = (node_id - this->get_n()) * (this->get_arity() + 1);
+            for (auto i = idx + 1; i < idx + 1 + this->get_arity(); ++i) {
+                connected[this->get()[i]].push_back(node_id);
+            }
+        }
+
+        return {value, {std::move(w_grad), std::move(b_grad)}};
+    }
+
+    /// Evaluates the dCGP-ANN expression
+    /**
+     * This evaluates the dCGP-ANN expression. According to the template parameter
+     * it will compute the value (double) or a symbolic
      * representation (std::string). Any other type will result in a compilation-time
      * error (SFINAE).
      *
-     * @param[in] in an std::vector containing the values where the dCGP expression has
-     * to be computed (doubles, gduals or strings)
+     * @param[in] in an std::vector containing the values where the dCGP-ANN expression has
+     * to be computed (doubles or strings)
      *
      * @return The value of the function (an std::vector)
      */
     template <typename U, functor_enabler<U> = 0>
     std::vector<U> operator()(const std::vector<U> &in) const
     {
-        if (in.size() != this->get_n()) {
-            throw std::invalid_argument("Input size is incompatible");
-        }
         std::vector<U> retval(this->get_m());
-        std::map<unsigned, U> node;
-        std::vector<U> function_in(this->get_arity());
-        for (auto i : this->get_active_nodes()) {
-            if (i < this->get_n()) {
-                node[i] = in[i];
-            } else {
-                // position in the chromosome of the current node
-                unsigned idx = (i - this->get_n()) * (this->get_arity() + 1);
-                // starting position in m_weights of the weights relative to the node
-                unsigned weight_idx = (i - this->get_n()) * this->get_arity();
-                // starting position in m_biases of the node bias
-                unsigned bias_idx = i - this->get_n();
-                for (auto j = 0u; j < this->get_arity(); ++j) {
-                    function_in[j] = node[this->get()[idx + j + 1]];
-                }
-                node[i] = kernel_call(function_in, idx, weight_idx, bias_idx);
-            }
-        }
+        auto node = fill_nodes(in);
         for (auto i = 0u; i < this->get_m(); ++i) {
             retval[i] = node[this->get()[(this->get_rows() * this->get_cols()) * (this->get_arity() + 1) + i]];
         }
         return retval;
     }
 
-    /// Evaluates the dCGP expression
+    /// Evaluates the  dCGP-ANN  expression
     /**
-     * This evaluates the dCGP expression. According to the template parameter
-     * it will compute the value (double) the Taylor expansion (gdual) or a symbolic
+     * This evaluates the dCGP-ANN expression. According to the template parameter
+     * it will compute the value (double) or a symbolic
      * representation (std::string). Any other type will result in a compilation-time
-     * error (SFINAE). This is identical to the other overload and is provided only
-     * for convenience
+     * error (SFINAE).
      *
      * @param[in] is an initializer list containing the values where the dCGP expression has
      * to be computed (doubles, or strings)
@@ -291,6 +311,67 @@ protected:
         // Biases
         function_in[0] = "(" + m_biases_symbols[bias_idx] + " + " + function_in[0] + ")";
         return this->get_f()[this->get()[idx]](function_in);
+    }
+
+    // overload for the operator () no derivatives
+    template <typename U, functor_enabler<U> = 0>
+    std::map<unsigned, U> fill_nodes(const std::vector<U> &in) const
+    {
+        if (in.size() != this->get_n()) {
+            throw std::invalid_argument("Input size is incompatible");
+        }
+        std::map<unsigned, U> node;
+        std::vector<U> function_in(this->get_arity());
+        for (auto i : this->get_active_nodes()) {
+            if (i < this->get_n()) {
+                node[i] = in[i];
+            } else {
+                // position in the chromosome of the current node
+                unsigned idx = (i - this->get_n()) * (this->get_arity() + 1);
+                // starting position in m_weights of the weights relative to the node
+                unsigned weight_idx = (i - this->get_n()) * this->get_arity();
+                // starting position in m_biases of the node bias
+                unsigned bias_idx = i - this->get_n();
+                for (auto j = 0u; j < this->get_arity(); ++j) {
+                    function_in[j] = node[this->get()[idx + j + 1]];
+                }
+                node[i] = kernel_call(function_in, idx, weight_idx, bias_idx);
+            }
+        }
+        return node;
+    }
+
+    // Overload for the backprop (derivatives)
+    template <typename U, functor_enabler<U> = 0>
+    void fill_nodes(const std::vector<U> &in, std::map<unsigned, U> &node, std::map<unsigned, U> &d_node) const
+    {
+        if (in.size() != this->get_n()) {
+            throw std::invalid_argument("Input size is incompatible");
+        }
+        std::vector<U> function_in(this->get_arity());
+        for (auto i : this->get_active_nodes()) {
+            if (i < this->get_n()) {
+                node[i] = in[i];
+            } else {
+                // position in the chromosome of the current node
+                unsigned idx = (i - this->get_n()) * (this->get_arity() + 1);
+                // starting position in m_weights of the weights relative to the node
+                unsigned weight_idx = (i - this->get_n()) * this->get_arity();
+                // starting position in m_biases of the node bias
+                unsigned bias_idx = i - this->get_n();
+                for (auto j = 0u; j < this->get_arity(); ++j) {
+                    function_in[j] = node[this->get()[idx + j + 1]];
+                }
+                node[i] = kernel_call(function_in, idx, weight_idx, bias_idx);
+                // sigmoid derivative is sig(1-sig)
+                if (this->get_f()[this->get()[idx]].get_name() == "sig") {
+                    d_node[i] = node[i] * (1 - node[i]);
+                } else if (this->get_f()[this->get()[idx]].get_name() == "tanh") {
+                    d_node[i] = (1 - node[i] * node[i]);
+                }
+            }
+        }
+        return;
     }
 
 private:
