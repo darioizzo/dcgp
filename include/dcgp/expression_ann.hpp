@@ -93,10 +93,12 @@ public:
         std::vector<U> gweights(m_weights.size(), U(0.));
         std::vector<U> gbiases(m_biases.size(), U(0.));
 
-        // Forward pass. All active nodes outputs get computed as well as the activation function derivatives
+        // ------------------------------------------ Forward pass ----------------------------------------------------------
+        // All active nodes outputs get computed as well as the activation function derivatives
         std::map<unsigned, U> node;
         std::map<unsigned, U> d_node;
         fill_nodes(in, node, d_node);
+
         // Compute mse and store it
         unsigned j = 0u;
         for (auto i = this->get().size() - this->get_m(); i < this->get().size(); ++i) {
@@ -105,7 +107,7 @@ public:
             j++;
         }
 
-        // Backward pass.
+        // ------------------------------------------ Backward pass ----------------------------------------------------------
         // 1 - To fill in all gradients we need to know, for each active node, which active nodes connect to
         // it and with what weight. So we loop over the active nodes and read from the chromosome its connections and
         // from m_weights their weights. (TODO: this should me moved out of this function and only be run once the CGP
@@ -149,11 +151,11 @@ public:
             }
             // fill gradients for weights and biases info
             for (auto i = 0u; i < this->get_arity(); ++i) {
-                gweights[w_idx + i] = d_node[*it] * node[c_idx + 1 + i];
+                gweights[w_idx + i] = d_node[*it] * node[this->get()[c_idx + 1 + i]];
             }
             gbiases[b_idx] = d_node[*it];
         }
-        return std::make_tuple(value, std::move(gweights), std::move(gbiases));
+        return std::make_tuple(std::move(value), std::move(gweights), std::move(gbiases));
     }
 
     /// Evaluates the dCGP-ANN expression
