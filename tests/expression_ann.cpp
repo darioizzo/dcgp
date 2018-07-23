@@ -69,5 +69,12 @@ BOOST_AUTO_TEST_CASE(correctness)
         auto n2 = std::tanh(0.3 * n0 + 0.4 * n0 + 1.1);
         auto ground_truth = std::tanh(0.5 * n1 + 0.6 * n2 + 1.2);
         BOOST_CHECK_CLOSE(res, ground_truth, 1e-13);
+        
+        print(std::get<0>(ex.mse(std::vector<double>(1.),std::vector<double>(1.))),"\n");
+        print(std::get<1>(ex.mse(std::vector<double>(1.),std::vector<double>(1.))),"\n");
+        print(std::get<2>(ex.mse(std::vector<double>(1.),std::vector<double>(1.))),"\n");
+
+        print(ex);
+
     }
 }

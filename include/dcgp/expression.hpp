@@ -1,6 +1,7 @@
 #ifndef DCGP_EXPRESSION_H
 #define DCGP_EXPRESSION_H
 
+#include <algorithm>
 #include <audi/audi.hpp>
 #include <initializer_list>
 #include <iostream>
@@ -445,6 +446,18 @@ public:
             retval[i] = node[m_x[(m_r * m_c) * (m_arity + 1) + i]];
         }
         return retval;
+    }
+
+    /// Checks if a given node is active
+    /**
+     * 
+     * @param[in] idx the node to be checked
+     *
+     * @return True if the node *idx* is active in the CGP expression.
+     */
+    bool is_active(const unsigned idx) const
+    {
+        return (std::find(m_active_nodes.begin(), m_active_nodes.end(), idx) != m_active_nodes.end());
     }
 
     /// Evaluates the dCGP expression

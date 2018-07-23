@@ -87,30 +87,73 @@ public:
      * biases
      */
     template <typename U, functor_enabler<U> = 0>
-    std::pair<U, std::pair<std::vector<U>, std::vector<U>>> mse(const std::vector<U> &in, const std::vector<U> &out)
+    std::tuple<U, std::vector<U>, std::vector<U>> mse(const std::vector<U> &in, const std::vector<U> &out)
     {
         U value(U(0.));
-        std::vector<U> w_grad(this->get_cols() * this->get_rows() * this->get_arity(), U(0.));
-        std::vector<U> b_grad(this->get_cols() * this->get_rows(), U(0.));
+        std::vector<U> gweights(m_weights.size(), U(0.));
+        std::vector<U> gbiases(m_biases.size(), U(0.));
 
         // Forward pass. All active nodes outputs get computed as well as the activation function derivatives
         std::map<unsigned, U> node;
         std::map<unsigned, U> d_node;
         fill_nodes(in, node, d_node);
+        // Compute mse and store it
+        unsigned j = 0u;
+        for (auto i = this->get().size() - this->get_m(); i < this->get().size(); ++i) {
+            auto node_idx = this->get()[i];
+            value += (node[node_idx] - out[j]) * (node[node_idx] - out[j]);
+            j++;
+        }
 
-        // Backward pass. To fill in all gradients we need to know, for each active node, which active nodes connect to
-        // it. So we loop over the active nodes and read from the chromosome its connections (TODO: this should me moved
-        // out of here and only done once per chromosome set)
-        std::map<unsigned, std::vector<unsigned>> connected;
+        // Backward pass.
+        // 1 - To fill in all gradients we need to know, for each active node, which active nodes connect to
+        // it and with what weight. So we loop over the active nodes and read from the chromosome its connections and
+        // from m_weights their weights. (TODO: this should me moved out of this function and only be run once the CGP
+        // chromosome is changed)
+        std::map<unsigned, std::vector<std::pair<unsigned, U>>> connected;
         for (auto node_id : this->get_active_nodes()) {
             // position in the chromosome of the current node
             unsigned idx = (node_id - this->get_n()) * (this->get_arity() + 1);
             for (auto i = idx + 1; i < idx + 1 + this->get_arity(); ++i) {
-                connected[this->get()[i]].push_back(node_id);
+                if (this->is_active(this->get()[i])) {
+                    connected[this->get()[i]].push_back(
+                        {node_id, m_weights[(node_id - this->get_n()) * this->get_arity() + i - idx - 1]});
+                }
             }
         }
-
-        return {value, {std::move(w_grad), std::move(b_grad)}};
+        // 2 - We update d_node on the output nodes and accounting that
+        // mse = sum (O_i-\hat O_i)^2
+        j = 0u;
+        for (auto i = this->get().size() - this->get_m(); i < this->get().size(); ++i) {
+            auto node_idx = this->get()[i];
+            d_node[node_idx] = d_node[node_idx] * 2 * (node[node_idx] - out[j]);
+            j++;
+        }
+        // 3 - We iterate backward on all the active nodes (except the input nodes)
+        // filling up the gradient information at each node for the incoming weights and relative bias
+        for (auto it = this->get_active_nodes().rbegin(); it != this->get_active_nodes().rend() - this->get_n(); ++it) {
+            // index of the node in the bias vector
+            auto b_idx = *it - this->get_n();
+            // index of the node in the weight vector
+            auto w_idx = this->get_arity() * (*it - this->get_n());
+            // index of the node in the chromosome
+            auto c_idx = (*it - this->get_n()) * (this->get_arity() + 1);
+            // update d_node (only if the node is not connected to an output node, in which case the update has been
+            // done above)
+            if (std::find(this->get().end() - this->get_m(), this->get().end(), *it) == this->get().end()) {
+                U cum = 0.;
+                for (auto i = 0u; i < connected[*it].size(); ++i) {
+                    cum += connected[*it][i].second * d_node[connected[*it][i].first];
+                }
+                d_node[*it] *= cum;
+            }
+            // fill gradients for weights and biases info
+            for (auto i = 0u; i < this->get_arity(); ++i) {
+                gweights[w_idx + i] = d_node[*it] * node[c_idx + 1 + i];
+            }
+            gbiases[b_idx] = d_node[*it];
+        }
+        return std::make_tuple(value, std::move(gweights), std::move(gbiases));
     }
 
     /// Evaluates the dCGP-ANN expression
@@ -178,7 +221,7 @@ public:
         audi::stream(os, "\tActive genes:\t\t\t", d.get_active_genes(), '\n');
         audi::stream(os, "\n\tFunction set:\t\t\t", d.get_f(), '\n');
         audi::stream(os, "\n\tWeights:\t\t\t", d.m_weights, '\n');
-        audi::stream(os, "\tBiases:\t\t\t", d.m_biases, '\n');
+        audi::stream(os, "\tBiases:\t\t\t\t", d.m_biases, '\n');
 
         return os;
     }
@@ -380,7 +423,7 @@ private:
 
     std::vector<T> m_biases;
     std::vector<std::string> m_biases_symbols;
-};
+}; // namespace dcgp
 
 } // end of namespace dcgp
 
