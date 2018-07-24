@@ -66,6 +66,8 @@ public:
             m_kernels.emplace_back(my_sig<T>, print_my_sig, kernel_name);
         else if (kernel_name == "tanh")
             m_kernels.emplace_back(my_tanh<T>, print_my_tanh, kernel_name);
+        else if (kernel_name == "ReLu")
+            m_kernels.emplace_back(my_relu<T>, print_my_relu, kernel_name);
         else if (kernel_name == "sin")
             m_kernels.emplace_back(my_sin<T>, print_my_sin, kernel_name);
         else if (kernel_name == "cos")

@@ -93,8 +93,9 @@ public:
         std::vector<U> gweights(m_weights.size(), U(0.));
         std::vector<U> gbiases(m_biases.size(), U(0.));
 
-        // ------------------------------------------ Forward pass ----------------------------------------------------------
-        // All active nodes outputs get computed as well as the activation function derivatives
+        // ------------------------------------------ Forward pass
+        // ---------------------------------------------------------- All active nodes outputs get computed as well as
+        // the activation function derivatives
         std::map<unsigned, U> node;
         std::map<unsigned, U> d_node;
         fill_nodes(in, node, d_node);
@@ -107,11 +108,11 @@ public:
             j++;
         }
 
-        // ------------------------------------------ Backward pass ----------------------------------------------------------
-        // 1 - To fill in all gradients we need to know, for each active node, which active nodes connect to
-        // it and with what weight. So we loop over the active nodes and read from the chromosome its connections and
-        // from m_weights their weights. (TODO: this should me moved out of this function and only be run once the CGP
-        // chromosome is changed)
+        // ------------------------------------------ Backward pass
+        // ---------------------------------------------------------- 1 - To fill in all gradients we need to know, for
+        // each active node, which active nodes connect to it and with what weight. So we loop over the active nodes and
+        // read from the chromosome its connections and from m_weights their weights. (TODO: this should me moved out of
+        // this function and only be run once the CGP chromosome is changed)
         std::map<unsigned, std::vector<std::pair<unsigned, U>>> connected;
         for (auto node_id : this->get_active_nodes()) {
             // position in the chromosome of the current node
@@ -228,6 +229,11 @@ public:
         return os;
     }
 
+    /**
+     * \defgroup Managing Weight and Biases
+     */
+    /*@{*/
+
     /// Sets a weight
     /**
      * Sets a connection weight to a new value
@@ -251,28 +257,17 @@ public:
         m_weights[idx] = w;
     }
 
-    /// Gets a weight
+    /// Sets a weight
     /**
-     * Gets the value of a connection weight
+     * Sets a connection weight to a new value
      *
-     * @param[in] node_id the id of the node (convention adopted for node numbering
-     * http://ppsn2014.ijs.si/files/slides/ppsn2014-tutorial3-miller.pdf)
-     * @param[in] input_id the id of the node input (0 for the first one up to arity-1)
-     *
-     * @return the value of the weight
+     * @param[in] idx index of the weight to be changed.
      *
      * @throws std::invalid_argument if the node_id or input_id are not valid
      */
-    T get_weight(typename std::vector<T>::size_type node_id, typename std::vector<T>::size_type input_id)
+    void set_weight(typename std::vector<T>::size_type idx, const T &w)
     {
-        if (node_id < this->get_n() || node_id >= this->get_n() + this->get_rows() * this->get_cols()) {
-            throw std::invalid_argument("Requested node id does not exist");
-        }
-        if (input_id >= this->get_arity()) {
-            throw std::invalid_argument("Requested input exceeds the function arity");
-        }
-        auto idx = (node_id - this->get_n()) * this->get_arity() + input_id;
-        return m_weights[idx];
+        m_weights[idx] = w;
     }
 
     /// Sets all weights
@@ -291,6 +286,42 @@ public:
         m_weights = ws;
     }
 
+    /// Gets a weight
+    /**
+     * Gets the value of a connection weight
+     *
+     * @param[in] node_id the id of the node (convention adopted for node numbering
+     * http://ppsn2014.ijs.si/files/slides/ppsn2014-tutorial3-miller.pdf)
+     * @param[in] input_id the id of the node input (0 for the first one up to arity-1)
+     *
+     * @return the value of the weight
+     *
+     * @throws std::invalid_argument if the node_id or input_id are not valid
+     */
+    T get_weight(typename std::vector<T>::size_type node_id, typename std::vector<T>::size_type input_id) const
+    {
+        if (node_id < this->get_n() || node_id >= this->get_n() + this->get_rows() * this->get_cols()) {
+            throw std::invalid_argument("Requested node id does not exist");
+        }
+        if (input_id >= this->get_arity()) {
+            throw std::invalid_argument("Requested input exceeds the function arity");
+        }
+        auto idx = (node_id - this->get_n()) * this->get_arity() + input_id;
+        return m_weights[idx];
+    }
+
+    /// Gets a weight
+    /**
+     * Gets the value of a connection weight
+     *
+     * @param[in] idx index of the weight
+     *
+     */
+    T get_weight(typename std::vector<T>::size_type idx) const
+    {
+        return m_weights[idx];
+    }
+
     /// Gets the weights
     /**
      * Gets the values of all the weights
@@ -300,6 +331,18 @@ public:
     const std::vector<T> &get_weights() const
     {
         return m_weights;
+    }
+
+    /// Sets a bias
+    /**
+     * Sets a node bias to a new value
+     *
+     * @param[in] idx index of the bias to be changed.
+     *
+     */
+    void set_bias(typename std::vector<T>::size_type idx, const T &w)
+    {
+        m_biases[idx] = w;
     }
 
     /// Sets all biases
@@ -318,6 +361,18 @@ public:
         m_biases = bs;
     }
 
+    /// Gets a bias
+    /**
+     * Gets the value of a bias
+     *
+     * @param[in] idx index of the bias
+     *
+     */
+    T get_bias(typename std::vector<T>::size_type idx) const
+    {
+        return m_biases[idx];
+    }
+
     /// Gets the biases
     /**
      * Gets the values of all the biases
@@ -328,6 +383,8 @@ public:
     {
         return m_biases;
     }
+
+    /*@}*/
 
 protected:
     // For numeric computations
@@ -411,8 +468,12 @@ protected:
                 // sigmoid derivative is sig(1-sig)
                 if (this->get_f()[this->get()[idx]].get_name() == "sig") {
                     d_node[i] = node[i] * (1 - node[i]);
+                    // tanh derivative is 1 - tanh**2
                 } else if (this->get_f()[this->get()[idx]].get_name() == "tanh") {
                     d_node[i] = (1 - node[i] * node[i]);
+                    // Relu derivative is 0 if relu<0, 1 otherwise
+                } else if (this->get_f()[this->get()[idx]].get_name() == "ReLu") {
+                    d_node[i] = (node[i] > 0) ? 1. : 0.;
                 }
             }
         }
