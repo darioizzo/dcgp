@@ -165,7 +165,7 @@ T my_relu(const std::vector<T> &in)
     for (auto i = 1u; i < in.size(); ++i) {
         retval += in[i];
     }
-    (retval.constant_cf < T(0.).constant_cf) ? retval= T(0.) : retval=retval ;
+    (retval.constant_cf() < T(0.).constant_cf()) ? retval= T(0.) : retval=retval ;
     return retval;
 }
 

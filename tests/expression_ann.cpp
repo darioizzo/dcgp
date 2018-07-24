@@ -79,8 +79,8 @@ BOOST_AUTO_TEST_CASE(mse)
         // Random seed
         std::random_device rd;
         // Kernel functions
-        kernel_set<double> ann_set({"sig"});
-        expression_ann<double> ex(1, 1, 3, 3, 1, 2, ann_set(), rd());
+        kernel_set<double> ann_set({"ReLu"});
+        expression_ann<double> ex(1, 1, 100, 3, 1, 10, ann_set(), rd());
         ex.randomise_weights();
         ex.randomise_biases();
         auto orig_w = ex.get_weights();
@@ -98,7 +98,7 @@ BOOST_AUTO_TEST_CASE(mse)
         for (decltype(ex.get_weights().size()) i = 0u; i < ex.get_weights().size(); ++i) {
             ex.set_weights(orig_w);
             auto tmp = ex.get_weight(i);
-            auto h = tmp * 1e-8;
+            auto h = 1. * 1e-8;
             ex.set_weight(i, tmp + h);
             auto val = (ex(in)[0] - out[0]) * (ex(in)[0] - out[0]);
             ex.set_weight(i, tmp - h);
@@ -110,6 +110,7 @@ BOOST_AUTO_TEST_CASE(mse)
                 print("h: ", h, "\n");
                 print("dval: ", (val - val2) / 2. / h, "\n");
                 print("truth: ", std::get<1>(bp)[i], "\n");
+                print("active_nodes: ", ex.get_active_nodes(), "\n");
             }
         }
         // then the biases
