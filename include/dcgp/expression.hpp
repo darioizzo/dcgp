@@ -105,8 +105,10 @@ public:
         for (auto i = 0u; i < m_x.size(); ++i) {
             m_x[i] = std::uniform_int_distribution<unsigned>(m_lb[i], m_ub[i])(m_e);
         }
-        update_active();
+        update_data_structures();
     }
+
+    virtual ~expression(){};
 
     /// Sets the chromosome
     /** Sets a given chromosome as genotype for the expression and updates
@@ -123,7 +125,7 @@ public:
             throw std::invalid_argument("Chromosome is incompatible");
         }
         m_x = x;
-        update_active();
+        update_data_structures();
     }
 
     /// Gets the chromosome
@@ -283,7 +285,7 @@ public:
                 new_value = std::uniform_int_distribution<unsigned>(m_lb[idx], m_ub[idx])(m_e);
             } while (new_value == m_x[idx]);
             m_x[idx] = new_value;
-            update_active();
+            update_data_structures();
         }
     }
 
@@ -313,7 +315,7 @@ public:
                 flag = true;
             }
         }
-        if (flag) update_active();
+        if (flag) update_data_structures();
     }
 
     /// Mutates N random genes
@@ -339,7 +341,7 @@ public:
                 flag = true;
             }
         }
-        if (flag) update_active();
+        if (flag) update_data_structures();
     }
 
     /// Mutates one of the active genes
@@ -530,8 +532,8 @@ protected:
         return true;
     }
 
-    // Updates the list of active nodes
-    void update_active()
+    // Updates the class data that depend on the chromosome (in this case only the active nodes and genes)
+    virtual void update_data_structures()
     {
         assert(m_x.size() == m_lb.size());
 

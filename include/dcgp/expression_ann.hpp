@@ -75,6 +75,7 @@ public:
         for (auto i = 0u; i < r * c; ++i) {
             m_biases_symbols.push_back("b" + std::to_string(i + n));
         }
+        update_data_structures();
     }
 
     /// Evaluates the mean square error
@@ -89,15 +90,25 @@ public:
     template <typename U, functor_enabler<U> = 0>
     std::tuple<U, std::vector<U>, std::vector<U>> mse(const std::vector<U> &in, const std::vector<U> &out)
     {
+        if (in.size() != this->get_n()) {
+            throw std::invalid_argument("When computing the mse the input data dimension seemed wrong, it was: "
+                                        + std::to_string(in.size())
+                                        + " while I expected: " + std::to_string(this->get_n()));
+        }
+        if (in.size() != this->get_n()) {
+            throw std::invalid_argument("When computing the mse the output data dimension seemed wrong, it was: "
+                                        + std::to_string(out.size())
+                                        + " while I expected: " + std::to_string(this->get_m()));
+        }
         U value(U(0.));
         std::vector<U> gweights(m_weights.size(), U(0.));
         std::vector<U> gbiases(m_biases.size(), U(0.));
 
-        // ------------------------------------------ Forward pass
-        // ---------------------------------------------------------- All active nodes outputs get computed as well as
+        // ------------------------------------------ Forward pass----------------------------------------------------
+        // All active nodes outputs get computed as well as
         // the activation function derivatives
-        std::map<unsigned, U> node;
-        std::map<unsigned, U> d_node;
+        std::unordered_map<unsigned, U> node;
+        std::unordered_map<unsigned, U> d_node;
         fill_nodes(in, node, d_node);
 
         // Compute mse and store it
@@ -108,23 +119,8 @@ public:
             j++;
         }
 
-        // ------------------------------------------ Backward pass
-        // ---------------------------------------------------------- 1 - To fill in all gradients we need to know, for
-        // each active node, which active nodes connect to it and with what weight. So we loop over the active nodes and
-        // read from the chromosome its connections and from m_weights their weights. (TODO: this should me moved out of
-        // this function and only be run once the CGP chromosome is changed)
-        std::map<unsigned, std::vector<std::pair<unsigned, U>>> connected;
-        for (auto node_id : this->get_active_nodes()) {
-            // position in the chromosome of the current node
-            unsigned idx = (node_id - this->get_n()) * (this->get_arity() + 1);
-            for (auto i = idx + 1; i < idx + 1 + this->get_arity(); ++i) {
-                if (this->is_active(this->get()[i])) {
-                    connected[this->get()[i]].push_back(
-                        {node_id, m_weights[(node_id - this->get_n()) * this->get_arity() + i - idx - 1]});
-                }
-            }
-        }
-        // 2 - We update d_node on the output nodes and accounting that
+        // ------------------------------------------ Backward pass-----------------------------------------------------
+        // 1 - We update d_node on the output nodes and accounting that
         // mse = sum (O_i-\hat O_i)^2
         j = 0u;
         for (auto i = this->get().size() - this->get_m(); i < this->get().size(); ++i) {
@@ -132,7 +128,7 @@ public:
             d_node[node_idx] = d_node[node_idx] * 2 * (node[node_idx] - out[j]);
             j++;
         }
-        // 3 - We iterate backward on all the active nodes (except the input nodes)
+        // 2 - We iterate backward on all the active nodes (except the input nodes)
         // filling up the gradient information at each node for the incoming weights and relative bias
         for (auto it = this->get_active_nodes().rbegin(); it != this->get_active_nodes().rend() - this->get_n(); ++it) {
             // index of the node in the bias vector
@@ -145,8 +141,8 @@ public:
             // done above)
             if (std::find(this->get().end() - this->get_m(), this->get().end(), *it) == this->get().end()) {
                 U cum = 0.;
-                for (auto i = 0u; i < connected[*it].size(); ++i) {
-                    cum += connected[*it][i].second * d_node[connected[*it][i].first];
+                for (auto i = 0u; i < m_connected[*it].size(); ++i) {
+                    cum += m_weights[m_connected[*it][i].second] * d_node[m_connected[*it][i].first];
                 }
                 d_node[*it] *= cum;
             }
@@ -230,7 +226,7 @@ public:
     }
 
     /**
-     * \defgroup Managing Weight and Biases
+     * \defgroup Managing Weights and Biases
      */
     /*@{*/
 
@@ -333,6 +329,25 @@ public:
         return m_weights;
     }
 
+    /// Randomises all weights
+    /**
+     * Set all weights to a normally distributed number
+     *
+     * @param[in] mean the mean of the normal distribution
+     * @param[in] std the standard deviation of the normal distribution
+     * @param[in] seed the seed to generate the new weights (by default its randomly generated)
+     *
+     */
+    void randomise_weights(double mean = 0., double std = 0.1,
+                           decltype(std::random_device{}()) seed = std::random_device{}())
+    {
+        std::mt19937 gen{seed};
+        std::normal_distribution<T> nd{mean, std};
+        for (auto &w : m_weights) {
+            w = nd(gen);
+        }
+    }
+
     /// Sets a bias
     /**
      * Sets a node bias to a new value
@@ -384,6 +399,25 @@ public:
         return m_biases;
     }
 
+    /// Randomises all biases
+    /**
+     * Set all biases to a normally distributed number
+     *
+     * @param[in] mean the mean of the normal distribution
+     * @param[in] std the standard deviation of the normal distribution
+     * @param[in] seed the seed to generate the new biases (by default its randomly generated)
+     *
+     */
+    void randomise_biases(double mean = 0., double std = 0.1,
+                          decltype(std::random_device{}()) seed = std::random_device{}())
+    {
+        std::mt19937 gen{seed};
+        std::normal_distribution<T> nd{mean, std};
+        for (auto &b : m_biases) {
+            b = nd(gen);
+        }
+    }
+
     /*@}*/
 
 protected:
@@ -417,12 +451,12 @@ protected:
 
     // overload for the operator () no derivatives
     template <typename U, functor_enabler<U> = 0>
-    std::map<unsigned, U> fill_nodes(const std::vector<U> &in) const
+    std::unordered_map<unsigned, U> fill_nodes(const std::vector<U> &in) const
     {
         if (in.size() != this->get_n()) {
             throw std::invalid_argument("Input size is incompatible");
         }
-        std::map<unsigned, U> node;
+        std::unordered_map<unsigned, U> node;
         std::vector<U> function_in(this->get_arity());
         for (auto i : this->get_active_nodes()) {
             if (i < this->get_n()) {
@@ -445,7 +479,8 @@ protected:
 
     // Overload for the backprop (derivatives)
     template <typename U, functor_enabler<U> = 0>
-    void fill_nodes(const std::vector<U> &in, std::map<unsigned, U> &node, std::map<unsigned, U> &d_node) const
+    void fill_nodes(const std::vector<U> &in, std::unordered_map<unsigned, U> &node,
+                    std::unordered_map<unsigned, U> &d_node) const
     {
         if (in.size() != this->get_n()) {
             throw std::invalid_argument("Input size is incompatible");
@@ -480,12 +515,31 @@ protected:
         return;
     }
 
+    // This overrides the base class update_data_structures and update also the m_connected (as well as m_active_nodes and genes)
+    void update_data_structures()
+    {
+        expression<T>::update_data_structures();
+        m_connected.clear();
+        for (auto node_id : this->get_active_nodes()) {
+            // position in the chromosome of the current node
+            unsigned idx = (node_id - this->get_n()) * (this->get_arity() + 1);
+            for (auto i = idx + 1; i < idx + 1 + this->get_arity(); ++i) {
+                if (this->is_active(this->get()[i])) {
+                    m_connected[this->get()[i]].push_back(
+                        {node_id, (node_id - this->get_n()) * this->get_arity() + i - idx - 1});
+                }
+            }
+        }
+    }
+
 private:
     std::vector<T> m_weights;
     std::vector<std::string> m_weights_symbols;
 
     std::vector<T> m_biases;
     std::vector<std::string> m_biases_symbols;
+
+    std::unordered_map<unsigned, std::vector<std::pair<unsigned, unsigned>>> m_connected;
 }; // namespace dcgp
 
 } // end of namespace dcgp

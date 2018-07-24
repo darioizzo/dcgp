@@ -79,11 +79,10 @@ BOOST_AUTO_TEST_CASE(mse)
         // Random seed
         std::random_device rd;
         // Kernel functions
-        kernel_set<double> ann_set({"tanh"});
-        expression_ann<double> ex(1, 1, 2, 2, 1, 2, ann_set(), rd());
-        ex.set_weights({0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8});
-        ex.set_biases({0.9, 1.1, 1.2, 1.3});
-        // ex.set({0, 0, 0, 0, 0, 0, 0, 1, 2, 0, 1, 2, 3});
+        kernel_set<double> ann_set({"sig"});
+        expression_ann<double> ex(1, 1, 3, 3, 1, 2, ann_set(), rd());
+        ex.randomise_weights();
+        ex.randomise_biases();
         auto orig_w = ex.get_weights();
         auto orig_b = ex.get_biases();
 
@@ -94,23 +93,36 @@ BOOST_AUTO_TEST_CASE(mse)
         // Compute mse and the gradients
         auto bp = ex.mse(in, out);
 
-        // We check against numerical diff (low precision)
+        // We check against numerical diff within 20% of accuracy
         // first the weights
         for (decltype(ex.get_weights().size()) i = 0u; i < ex.get_weights().size(); ++i) {
             ex.set_weights(orig_w);
+            auto tmp = ex.get_weight(i);
+            auto h = tmp * 1e-8;
+            ex.set_weight(i, tmp + h);
             auto val = (ex(in)[0] - out[0]) * (ex(in)[0] - out[0]);
-            ex.set_weight(i, ex.get_weight(i) + 1e-8);
+            ex.set_weight(i, tmp - h);
             auto val2 = (ex(in)[0] - out[0]) * (ex(in)[0] - out[0]);
-            BOOST_CHECK_CLOSE((val2 - val) / 1e-8, std::get<1>(bp)[i], 1e-2);
+            BOOST_CHECK_CLOSE((val - val2) / 2. / h, std::get<1>(bp)[i], 20.);
+            if ((val-val2) == 0 && std::get<1>(bp)[i] != 0) {
+                print("weight: ", i, "\n");
+                print("weight_val: ", tmp, "\n");
+                print("h: ", h, "\n");
+                print("dval: ", (val - val2) / 2. / h, "\n");
+                print("truth: ", std::get<1>(bp)[i], "\n");
+            }
         }
         // then the biases
         ex.set_weights(orig_w);
         for (decltype(ex.get_biases().size()) i = 0u; i < ex.get_biases().size(); ++i) {
             ex.set_biases(orig_b);
+            auto tmp = ex.get_bias(i);
+            auto h = tmp * 1e-8;
+            ex.set_bias(i, tmp + h);
             auto val = (ex(in)[0] - out[0]) * (ex(in)[0] - out[0]);
-            ex.set_bias(i, ex.get_bias(i) + 1e-8);
+            ex.set_bias(i, tmp - h);
             auto val2 = (ex(in)[0] - out[0]) * (ex(in)[0] - out[0]);
-            BOOST_CHECK_CLOSE((val2 - val) / 1e-8, std::get<2>(bp)[i], 1e-2);
+            BOOST_CHECK_CLOSE((val - val2) / 2 / h, std::get<2>(bp)[i], 20.);
         }
     }
 }
