@@ -78,7 +78,7 @@ public:
         update_data_structures();
     }
 
-    /// Evaluates the mean square error
+    /// Evaluates the mean square error (CHANGE THE NAME)
     /**
      * Returns the mean squared error and its gradient with respect to weights and biases.
      *
@@ -155,44 +155,46 @@ public:
         return std::make_tuple(std::move(value), std::move(gweights), std::move(gbiases));
     }
 
-    /// Performs one weight/bias update
+    /// Stochastic gradient descent
     /**
-     * Updates m_weights and m_biases using gradient descent
+     * Performs one "epoch" of stochastic gradient descent using mean square error
      *
-     * @param[data] The input data
-     * @param[label] The output labels
+     * @param[data] The data
+     * @param[label] The labels
      * @param[lr] The learning rate
+     * @param[batch_size] The batch size
      *
-     * @throws std::invalid_argument if the *data* and *label* size do not match or are zero, or if *lr* is not
+     * @throws std::invalid_argument if the *data* and *label* size do not match or is zero, or if *lr* is not
      * positive.
      */
-    void update_weights(const std::vector<std::vector<double>> &data, const std::vector<std::vector<double>> &label,
-                        double lr)
-    {
-        if (data.size() != label.size()) {
-            throw std::invalid_argument("Mismatch in data, labels dimensions. Data size is: "
-                                        + std::to_string(data.size())
-                                        + " while label size is: " + std::to_string(label.size()));
-        }
-        if (lr <= 0) {
-            throw std::invalid_argument("Learning rate should be positive, instead it is: " + std::to_string(lr));
-        }
-        if (data.size() != 0) {
-            throw std::invalid_argument("Input data size cannot be zero");
-        }
-        auto coeff = lr / data.size();
-        for (decltype(data.size()) i = 0u; i < data.size(); ++i) {
-            auto mse_out = mse(data[i], label[i]);
-            std::transform(m_weights.begin(), m_weights.end(), std::get<1>(mse_out).begin(),
-                           std::get<1>(mse_out).begin(), [coeff](double a, double b) { return a + coeff * b; });
-            std::transform(m_biases.begin(), m_biases.end(), std::get<2>(mse_out).begin(), std::get<1>(mse_out).begin(),
-                           [coeff](double a, double b) { return a + coeff * b; });
-        }
-    }
-
-    void sgd(const std::vector<std::vector<double>> &data, const std::vector<std::vector<double>> &label, double lr,
+    template <typename U, functor_enabler<U> = 0>
+    void sgd(const std::vector<std::vector<U>> &data, const std::vector<std::vector<U>> &label, double lr,
              unsigned batch_size)
     {
+        if (data.size() != label.size()) {
+            throw std::invalid_argument("Data and label size mismatch data size is: " + std::to_string(data.size())
+                                        + " while label size is: " + std::to_string(label.size()));
+        }
+        if (data.size() == 0) {
+            throw std::invalid_argument("Data size cannot be zero");
+        }
+        if (lr <= 0) {
+            throw std::invalid_argument("The learning rate must be a positive number, while: " + std::to_string(lr)
+                                        + " was detected.");
+        }
+        typename std::vector<std::vector<U>>::const_iterator dfirst = data.begin();
+        typename std::vector<std::vector<U>>::const_iterator dlast = data.end();
+        typename std::vector<std::vector<U>>::const_iterator lfirst = label.begin();
+        while (dfirst != dlast) {
+            if (dfirst + batch_size > dlast) {
+                update_weights<U>(dfirst, dlast, lfirst, lr);
+                dfirst == dlast;
+            } else {
+                update_weights<U>(dfirst, dfirst + batch_size, lfirst, lr);
+                dfirst += batch_size;
+                lfirst += batch_size;
+            }
+        }
     }
 
     /// Evaluates the dCGP-ANN expression
@@ -471,7 +473,8 @@ protected:
         }
         // Biases (we add to the first input a bias so that a,b,c,d,e goes in c, etc...))
         function_in[0] += m_biases[bias_idx];
-        // We compute the node function that will, for example, map w_1 a + bias, w_2 b, w_3 c,... into f(w_1 a + w_2 b
+        // We compute the node function that will, for example, map w_1 a + bias, w_2 b, w_3 c,... into f(w_1 a +
+        // w_2 b
         // + w_3 c + ... + bias)
         return this->get_f()[this->get()[idx]](function_in);
     }
@@ -555,8 +558,8 @@ protected:
         return;
     }
 
-    // This overrides the base class update_data_structures and update also the m_connected (as well as m_active_nodes
-    // and genes)
+    // This overrides the base class update_data_structures and update also the m_connected (as well as
+    // m_active_nodes and genes)
     void update_data_structures()
     {
         expression<T>::update_data_structures();
@@ -573,6 +576,33 @@ protected:
                     }
                 }
             }
+        }
+    }
+
+    /// Performs one weight/bias update
+    /**
+     * Updates m_weights and m_biases using gradient descent
+     *
+     * @param[dfirst] Start range for the data
+     * @param[dlast] End range for the data
+     * @param[lfirst] Start range for the labels
+     * @param[lr] The learning rate
+     *
+     * @throws std::invalid_argument if the *data* and *label* size do not match or are zero, or if *lr* is not
+     * positive.
+     */
+    template <typename U, functor_enabler<U> = 0>
+    void update_weights(typename std::vector<std::vector<U>>::const_iterator dfirst,
+                        typename std::vector<std::vector<U>>::const_iterator dlast,
+                        typename std::vector<std::vector<U>>::const_iterator lfirst, double lr)
+    {
+        double coeff = lr / static_cast<double>(dlast - dfirst);
+        while (dfirst != dlast) {
+            auto mse_out = mse(*dfirst++, *lfirst++);
+            std::transform(m_weights.begin(), m_weights.end(), std::get<1>(mse_out).begin(), m_weights.begin(),
+                           [coeff](U a, U b) { return a - coeff * b; });
+            std::transform(m_biases.begin(), m_biases.end(), std::get<2>(mse_out).begin(), m_biases.begin(),
+                           [coeff](U a, U b) { return a - coeff * b; });
         }
     }
 
