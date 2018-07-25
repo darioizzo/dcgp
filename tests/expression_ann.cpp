@@ -1,10 +1,10 @@
 #include <random>
 #define BOOST_TEST_MODULE dcgp_expression_ann_test
 #include <algorithm>
-#include <boost/test/unit_test.hpp>
-
 #include <audi/back_compatibility.hpp>
 #include <audi/io.hpp>
+#include <boost/test/unit_test.hpp>
+#include <stdexcept>
 
 #include <dcgp/dcgp.hpp>
 
@@ -22,6 +22,14 @@ BOOST_AUTO_TEST_CASE(construction)
     auto bs = ex.get_biases();
     BOOST_CHECK(std::all_of(ws.begin(), ws.end(), [](unsigned el) { return el == 1u; }));
     BOOST_CHECK(std::all_of(bs.begin(), bs.end(), [](unsigned el) { return el == 0u; }));
+
+    kernel_set<double> ann_set_malformed1({"tanh", "sin"});
+    kernel_set<double> ann_set_malformed2({"cos", "sig"});
+    kernel_set<double> ann_set_malformed3({"ReLu", "sum"});
+
+    BOOST_CHECK_THROW((expression_ann<double>{1, 1, 1, 2, 1, 1, ann_set_malformed1(), rd()}), std::invalid_argument);
+    BOOST_CHECK_THROW((expression_ann<double>{1, 1, 1, 2, 1, 1, ann_set_malformed2(), rd()}), std::invalid_argument);
+    BOOST_CHECK_THROW((expression_ann<double>{1, 1, 1, 2, 1, 1, ann_set_malformed3(), rd()}), std::invalid_argument);
 }
 
 BOOST_AUTO_TEST_CASE(parenthesis)
@@ -74,56 +82,97 @@ BOOST_AUTO_TEST_CASE(parenthesis)
 
 BOOST_AUTO_TEST_CASE(mse)
 {
-    {
-        // We test a arity 2 row 2 column 2 dCGP-ANN
-        // Random seed
-        std::random_device rd;
-        // Kernel functions
-        kernel_set<double> ann_set({"ReLu"});
-        expression_ann<double> ex(1, 1, 100, 3, 1, 10, ann_set(), rd());
-        ex.randomise_weights();
-        ex.randomise_biases();
-        auto orig_w = ex.get_weights();
-        auto orig_b = ex.get_biases();
+    for (auto i = 0u; i < 1000; ++i) {
 
-        // Input value
-        auto in = std::vector<double>(1, 0.22);
-        // Output value desired (supervised signal)
-        auto out = std::vector<double>(1, 0.23);
-        // Compute mse and the gradients
-        auto bp = ex.mse(in, out);
+        {
+            print(i, "\n");
+            // We test a arity 10 row 100 column 3, 3 input 2 outputs dCGP-ANN
+            // Random seed
+            std::random_device rd;
+            // Kernel functions
+            kernel_set<double> ann_set({"sig", "tanh", "ReLu"});
+            expression_ann<double> ex(3, 2, 100, 3, 1, 10, ann_set(), rd());
+            ex.randomise_weights();
+            ex.randomise_biases();
+            auto orig_w = ex.get_weights();
+            auto orig_b = ex.get_biases();
+            // Numerical derivative eps (low precision but more reliable)
+            auto eps = 1e-4;
+            // Input value
+            auto in = std::vector<double>(3, 0.22);
+            // Output value desired (supervised signal)
+            auto out = std::vector<double>(2, 0.23);
+            // Compute mse and the gradients
+            auto bp = ex.mse(in, out);
+            // We check against numerical diff within 20% of accuracy
+            // first the weights
+            for (decltype(ex.get_weights().size()) i = 0u; i < ex.get_weights().size(); ++i) {
+                ex.set_weights(orig_w);
+                auto tmp = ex.get_weight(i);
+                auto h = std::max(1., std::abs(tmp)) * eps;
+                ex.set_weight(i, tmp + h);
+                auto val = (ex(in)[0] - out[0]) * (ex(in)[0] - out[0]) + (ex(in)[1] - out[1]) * (ex(in)[1] - out[1]);
+                ex.set_weight(i, tmp - h);
+                auto val2 = (ex(in)[0] - out[0]) * (ex(in)[0] - out[0]) + (ex(in)[1] - out[1]) * (ex(in)[1] - out[1]);
 
-        // We check against numerical diff within 20% of accuracy
-        // first the weights
-        for (decltype(ex.get_weights().size()) i = 0u; i < ex.get_weights().size(); ++i) {
-            ex.set_weights(orig_w);
-            auto tmp = ex.get_weight(i);
-            auto h = 1. * 1e-8;
-            ex.set_weight(i, tmp + h);
-            auto val = (ex(in)[0] - out[0]) * (ex(in)[0] - out[0]);
-            ex.set_weight(i, tmp - h);
-            auto val2 = (ex(in)[0] - out[0]) * (ex(in)[0] - out[0]);
-            BOOST_CHECK_CLOSE((val - val2) / 2. / h, std::get<1>(bp)[i], 20.);
-            if ((val-val2) == 0 && std::get<1>(bp)[i] != 0) {
-                print("weight: ", i, "\n");
-                print("weight_val: ", tmp, "\n");
-                print("h: ", h, "\n");
-                print("dval: ", (val - val2) / 2. / h, "\n");
-                print("truth: ", std::get<1>(bp)[i], "\n");
-                print("active_nodes: ", ex.get_active_nodes(), "\n");
+                auto flag = std::abs(((val - val2) / 2. / h - std::get<1>(bp)[i]) / ((val - val2) / 2. / h));
+                // if (std::get<2>(bp)[i] != 0) {
+                //    print(flag, "\n");
+                // }
+                if (flag > 0.2) {
+                    print("Epic Fail:\n ");
+                    print(ex);
+                    auto steps = std::vector<double>{
+                        1.,        0.1,        0.01,        0.001,        0.0001,        0.00001,       0.000001,
+                        0.0000001, 0.00000001, 0.000000001, 0.0000000001, 1.00000000001, 1.000000000001};
+                    for (auto hh : steps) {
+                        ex.set_weights(orig_w);
+                        ex.set_weight(i, tmp + hh);
+                        auto val
+                            = (ex(in)[0] - out[0]) * (ex(in)[0] - out[0]) + (ex(in)[1] - out[1]) * (ex(in)[1] - out[1]);
+                        ex.set_weight(i, tmp - hh);
+                        auto val2
+                            = (ex(in)[0] - out[0]) * (ex(in)[0] - out[0]) + (ex(in)[1] - out[1]) * (ex(in)[1] - out[1]);
+                        print("Num Grad: ", (val - val2) / 2. / hh, ", h used: ", h, ", bias: ", tmp, "\n");
+                    }
+                }
+
+                BOOST_CHECK_CLOSE((val - val2) / 2. / h, std::get<1>(bp)[i], 5.);
             }
-        }
-        // then the biases
-        ex.set_weights(orig_w);
-        for (decltype(ex.get_biases().size()) i = 0u; i < ex.get_biases().size(); ++i) {
-            ex.set_biases(orig_b);
-            auto tmp = ex.get_bias(i);
-            auto h = tmp * 1e-8;
-            ex.set_bias(i, tmp + h);
-            auto val = (ex(in)[0] - out[0]) * (ex(in)[0] - out[0]);
-            ex.set_bias(i, tmp - h);
-            auto val2 = (ex(in)[0] - out[0]) * (ex(in)[0] - out[0]);
-            BOOST_CHECK_CLOSE((val - val2) / 2 / h, std::get<2>(bp)[i], 20.);
+            // then the biases
+            ex.set_weights(orig_w);
+            for (decltype(ex.get_biases().size()) i = 0u; i < ex.get_biases().size(); ++i) {
+                ex.set_biases(orig_b);
+                auto tmp = ex.get_bias(i);
+                auto h = std::max(1., std::abs(tmp)) * eps;
+                ex.set_bias(i, tmp + h);
+                auto val = (ex(in)[0] - out[0]) * (ex(in)[0] - out[0]) + (ex(in)[1] - out[1]) * (ex(in)[1] - out[1]);
+                ex.set_bias(i, tmp - h);
+                auto val2 = (ex(in)[0] - out[0]) * (ex(in)[0] - out[0]) + (ex(in)[1] - out[1]) * (ex(in)[1] - out[1]);
+                auto flag = std::abs(((val - val2) / 2. / h - std::get<2>(bp)[i]) / ((val - val2) / 2. / h));
+                // if (std::get<2>(bp)[i] != 0) {
+                //    print(flag, "\n");
+                // }
+                if (flag > 0.2) {
+                    print("Epic Fail:\n ");
+                    print(ex);
+                    auto steps = std::vector<double>{
+                        1.,        0.1,        0.01,        0.001,        0.0001,        0.00001,       0.000001,
+                        0.0000001, 0.00000001, 0.000000001, 0.0000000001, 1.00000000001, 1.000000000001};
+                    for (auto hh : steps) {
+                        ex.set_biases(orig_b);
+                        ex.set_bias(i, tmp + hh);
+                        auto val
+                            = (ex(in)[0] - out[0]) * (ex(in)[0] - out[0]) + (ex(in)[1] - out[1]) * (ex(in)[1] - out[1]);
+                        ex.set_bias(i, tmp - hh);
+                        auto val2
+                            = (ex(in)[0] - out[0]) * (ex(in)[0] - out[0]) + (ex(in)[1] - out[1]) * (ex(in)[1] - out[1]);
+                        print("Num Grad: ", (val - val2) / 2. / hh, ", h used: ", h, ", bias: ", tmp, "\n");
+                    }
+                }
+
+                BOOST_CHECK_CLOSE((val - val2) / 2 / h, std::get<2>(bp)[i], 5.);
+            }
         }
     }
 }

@@ -431,7 +431,7 @@ public:
             throw std::invalid_argument("Input size is incompatible");
         }
         std::vector<U> retval(m_m);
-        std::map<unsigned, U> node;
+        std::unordered_map<unsigned, U> node;
         std::vector<U> function_in(m_arity);
         for (auto i : m_active_nodes) {
             if (i < m_n) {
@@ -452,7 +452,7 @@ public:
 
     /// Checks if a given node is active
     /**
-     * 
+     *
      * @param[in] idx the node to be checked
      *
      * @return True if the node *idx* is active in the CGP expression.

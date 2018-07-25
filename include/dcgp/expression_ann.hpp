@@ -95,7 +95,7 @@ public:
                                         + std::to_string(in.size())
                                         + " while I expected: " + std::to_string(this->get_n()));
         }
-        if (in.size() != this->get_n()) {
+        if (out.size() != this->get_m()) {
             throw std::invalid_argument("When computing the mse the output data dimension seemed wrong, it was: "
                                         + std::to_string(out.size())
                                         + " while I expected: " + std::to_string(this->get_m()));
@@ -502,31 +502,35 @@ protected:
                 node[i] = kernel_call(function_in, idx, weight_idx, bias_idx);
                 // sigmoid derivative is sig(1-sig)
                 if (this->get_f()[this->get()[idx]].get_name() == "sig") {
-                    d_node[i] = node[i] * (1 - node[i]);
+                    d_node[i] = node[i] * (1. - node[i]);
                     // tanh derivative is 1 - tanh**2
                 } else if (this->get_f()[this->get()[idx]].get_name() == "tanh") {
-                    d_node[i] = (1 - node[i] * node[i]);
+                    d_node[i] = (1. - node[i] * node[i]);
                     // Relu derivative is 0 if relu<0, 1 otherwise
                 } else if (this->get_f()[this->get()[idx]].get_name() == "ReLu") {
-                    d_node[i] = (node[i] > 0) ? 1. : 0.;
+                    d_node[i] = (node[i] > 0.) ? 1. : 0.;
                 }
             }
         }
         return;
     }
 
-    // This overrides the base class update_data_structures and update also the m_connected (as well as m_active_nodes and genes)
+    // This overrides the base class update_data_structures and update also the m_connected (as well as m_active_nodes
+    // and genes)
     void update_data_structures()
     {
         expression<T>::update_data_structures();
         m_connected.clear();
         for (auto node_id : this->get_active_nodes()) {
-            // position in the chromosome of the current node
-            unsigned idx = (node_id - this->get_n()) * (this->get_arity() + 1);
-            for (auto i = idx + 1; i < idx + 1 + this->get_arity(); ++i) {
-                if (this->is_active(this->get()[i])) {
-                    m_connected[this->get()[i]].push_back(
-                        {node_id, (node_id - this->get_n()) * this->get_arity() + i - idx - 1});
+            if (node_id >= this->get_n()) { // not for input nodes
+                // position in the chromosome of the current node
+                unsigned idx = (node_id - this->get_n()) * (this->get_arity() + 1);
+                // loop over the genes representing connections
+                for (auto i = idx + 1; i < idx + 1 + this->get_arity(); ++i) {
+                    if (this->is_active(this->get()[i])) {
+                        m_connected[this->get()[i]].push_back(
+                            {node_id, (node_id - this->get_n()) * this->get_arity() + i - idx - 1});
+                    }
                 }
             }
         }
