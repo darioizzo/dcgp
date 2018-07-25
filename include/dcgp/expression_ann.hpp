@@ -155,6 +155,46 @@ public:
         return std::make_tuple(std::move(value), std::move(gweights), std::move(gbiases));
     }
 
+    /// Performs one weight/bias update
+    /**
+     * Updates m_weights and m_biases using gradient descent
+     *
+     * @param[data] The input data
+     * @param[label] The output labels
+     * @param[lr] The learning rate
+     *
+     * @throws std::invalid_argument if the *data* and *label* size do not match or are zero, or if *lr* is not
+     * positive.
+     */
+    void update_weights(const std::vector<std::vector<double>> &data, const std::vector<std::vector<double>> &label,
+                        double lr)
+    {
+        if (data.size() != label.size()) {
+            throw std::invalid_argument("Mismatch in data, labels dimensions. Data size is: "
+                                        + std::to_string(data.size())
+                                        + " while label size is: " + std::to_string(label.size()));
+        }
+        if (lr <= 0) {
+            throw std::invalid_argument("Learning rate should be positive, instead it is: " + std::to_string(lr));
+        }
+        if (data.size() != 0) {
+            throw std::invalid_argument("Input data size cannot be zero");
+        }
+        auto coeff = lr / data.size();
+        for (decltype(data.size()) i = 0u; i < data.size(); ++i) {
+            auto mse_out = mse(data[i], label[i]);
+            std::transform(m_weights.begin(), m_weights.end(), std::get<1>(mse_out).begin(),
+                           std::get<1>(mse_out).begin(), [coeff](double a, double b) { return a + coeff * b; });
+            std::transform(m_biases.begin(), m_biases.end(), std::get<2>(mse_out).begin(), std::get<1>(mse_out).begin(),
+                           [coeff](double a, double b) { return a + coeff * b; });
+        }
+    }
+
+    void sgd(const std::vector<std::vector<double>> &data, const std::vector<std::vector<double>> &label, double lr,
+             unsigned batch_size)
+    {
+    }
+
     /// Evaluates the dCGP-ANN expression
     /**
      * This evaluates the dCGP-ANN expression. According to the template parameter
