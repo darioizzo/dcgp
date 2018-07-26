@@ -155,6 +155,20 @@ public:
         return std::make_tuple(std::move(value), std::move(gweights), std::move(gbiases));
     }
 
+    template <typename U, functor_enabler<U> = 0>
+    std::tuple<U, std::vector<U>, std::vector<U>> mse(const std::vector<std::vector<U>> &data,
+                                                      const std::vector<std::vector<U>> &label)
+    {
+        if (data.size() != label.size()) {
+            throw std::invalid_argument("Data and label size mismatch data size is: " + std::to_string(data.size())
+                                        + " while label size is: " + std::to_string(label.size()));
+        }
+        if (data.size() == 0) {
+            throw std::invalid_argument("Data size cannot be zero");
+        }
+        return mse<U>(data.begin(), data.end(), label.begin());
+    }
+
     /// Stochastic gradient descent
     /**
      * Performs one "epoch" of stochastic gradient descent using mean square error
@@ -594,9 +608,9 @@ protected:
     template <typename U, functor_enabler<U> = 0>
     void update_weights(typename std::vector<std::vector<U>>::const_iterator dfirst,
                         typename std::vector<std::vector<U>>::const_iterator dlast,
-                        typename std::vector<std::vector<U>>::const_iterator lfirst, double lr)
+                        typename std::vector<std::vector<U>>::const_iterator lfirst, U lr)
     {
-        double coeff = lr / static_cast<double>(dlast - dfirst);
+        U coeff(lr / static_cast<U>(dlast - dfirst));
         while (dfirst != dlast) {
             auto mse_out = mse(*dfirst++, *lfirst++);
             std::transform(m_weights.begin(), m_weights.end(), std::get<1>(mse_out).begin(), m_weights.begin(),
@@ -604,6 +618,28 @@ protected:
             std::transform(m_biases.begin(), m_biases.end(), std::get<2>(mse_out).begin(), m_biases.begin(),
                            [coeff](U a, U b) { return a - coeff * b; });
         }
+    }
+
+    template <typename U, functor_enabler<U> = 0>
+    std::tuple<U, std::vector<U>, std::vector<U>> mse(typename std::vector<std::vector<U>>::const_iterator dfirst,
+                                                      typename std::vector<std::vector<U>>::const_iterator dlast,
+                                                      typename std::vector<std::vector<U>>::const_iterator lfirst)
+    {
+        U value(U(0.));
+        std::vector<U> gweights(m_weights.size(), U(0.));
+        std::vector<U> gbiases(m_biases.size(), U(0.));
+        U dim = static_cast<U>(dlast - dfirst);
+        while (dfirst != dlast) {
+            auto mse_out = mse(*dfirst++, *lfirst++);
+            value += std::get<0>(mse_out);
+            std::transform(gweights.begin(), gweights.end(), std::get<1>(mse_out).begin(), gweights.begin(),
+                           [dim](U a, U b) { return a + b / dim; });
+            std::transform(gbiases.begin(), gbiases.end(), std::get<2>(mse_out).begin(), gbiases.begin(),
+                           [dim](U a, U b) { return a + b / dim; });
+        }
+        value /= static_cast<U>(dim);
+
+        return std::make_tuple(std::move(value), std::move(gweights), std::move(gbiases));
     }
 
 private:
