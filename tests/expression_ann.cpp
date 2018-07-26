@@ -97,8 +97,9 @@ BOOST_AUTO_TEST_CASE(sgd)
     for (auto &item : data) {
         std::generate(item.begin(), item.end(), [&norm, &gen](){return norm(gen);});
     }
-    for (auto &item : label) {
-        std::generate(item.begin(), item.end(), [&norm, &gen](){return norm(gen);});
+    for (auto i = 0u; i < label.size(); ++i) {
+        label[i][0] = 1./5.*std::cos(data[i][0]+data[i][1]+data[i][3]) - data[i][0]*data[i][1];
+        label[i][1] = data[i][0]*data[i][1]*data[i][2];
     }
     double tmp;
     for (auto i = 0u; i < data.size(); ++i) {
@@ -108,7 +109,7 @@ BOOST_AUTO_TEST_CASE(sgd)
     tmp /= static_cast<double>(data.size());
     print("Start: ", tmp, "\n");
     for (auto j = 0u; j < 10; ++j) {
-        ex.sgd(data, label, 0.1, 32);
+        ex.sgd(data, label, 0.01, 32);
         for (auto i = 0u; i < data.size(); ++i) {
             tmp = 0.;
             tmp += std::get<0>(ex.mse(data[i], label[i]));
