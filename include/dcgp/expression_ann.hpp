@@ -128,29 +128,34 @@ public:
             d_node[node_idx] = d_node[node_idx] * 2 * (node[node_idx] - out[j]);
             j++;
         }
+
         // 2 - We iterate backward on all the active nodes (except the input nodes)
         // filling up the gradient information at each node for the incoming weights and relative bias
-        for (auto it = this->get_active_nodes().rbegin(); it != this->get_active_nodes().rend() - this->get_n(); ++it) {
-            // index of the node in the bias vector
-            auto b_idx = *it - this->get_n();
-            // index of the node in the weight vector
-            auto w_idx = this->get_arity() * (*it - this->get_n());
-            // index of the node in the chromosome
-            auto c_idx = (*it - this->get_n()) * (this->get_arity() + 1);
-            // update d_node (only if the node is not connected to an output node, in which case the update has been
-            // done above)
-            if (std::find(this->get().end() - this->get_m(), this->get().end(), *it) == this->get().end()) {
-                U cum = 0.;
-                for (auto i = 0u; i < m_connected[*it].size(); ++i) {
-                    cum += m_weights[m_connected[*it][i].second] * d_node[m_connected[*it][i].first];
+        if (this->get_n() == this->get_active_nodes().size()) { // guard for corner case
+            for (auto it = this->get_active_nodes().rbegin(); it != this->get_active_nodes().rend() - this->get_n();
+                 ++it) {
+                // index of the node in the bias vector
+                auto b_idx = *it - this->get_n();
+                // index of the node in the weight vector
+                auto w_idx = this->get_arity() * (*it - this->get_n());
+                // index of the node in the chromosome
+                auto c_idx = (*it - this->get_n()) * (this->get_arity() + 1);
+                // update d_node (only if the node is not connected to an output node, in which case the update has been
+                // done above)
+                if (std::find(this->get().end() - this->get_m(), this->get().end(), *it) == this->get().end()) {
+                    U cum = 0.;
+                    for (auto i = 0u; i < m_connected[*it].size(); ++i) {
+                        cum += m_weights[m_connected[*it][i].second] * d_node[m_connected[*it][i].first];
+                    }
+                    d_node[*it] *= cum;
                 }
-                d_node[*it] *= cum;
+                // fill gradients for weights and biases info
+                for (auto i = 0u; i < this->get_arity(); ++i) {
+
+                    gweights[w_idx + i] = d_node[*it] * node[this->get()[c_idx + 1 + i]];
+                }
+                gbiases[b_idx] = d_node[*it];
             }
-            // fill gradients for weights and biases info
-            for (auto i = 0u; i < this->get_arity(); ++i) {
-                gweights[w_idx + i] = d_node[*it] * node[this->get()[c_idx + 1 + i]];
-            }
-            gbiases[b_idx] = d_node[*it];
         }
         return std::make_tuple(std::move(value), std::move(gweights), std::move(gbiases));
     }
@@ -629,6 +634,7 @@ protected:
         std::vector<U> gweights(m_weights.size(), U(0.));
         std::vector<U> gbiases(m_biases.size(), U(0.));
         U dim = static_cast<U>(dlast - dfirst);
+
         while (dfirst != dlast) {
             auto mse_out = mse(*dfirst++, *lfirst++);
             value += std::get<0>(mse_out);

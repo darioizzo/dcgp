@@ -25,8 +25,10 @@ void perform_evaluations(unsigned int in, unsigned int out, unsigned int rows, u
     // We create the input data upfront and we do not time it.
     ex.randomise_weights();
     ex.randomise_biases();
-    std::vector<std::vector<double>> data(N, std::vector<double>(in, 0.));
-    std::vector<std::vector<double>> label(N, std::vector<double>(out, 0.));
+    std::vector<double> in_dummy(in, 0.);
+    std::vector<double> out_dummy(out, 0.);
+    std::vector<std::vector<double>> data(N, in_dummy);
+    std::vector<std::vector<double>> label(N, out_dummy);
     for (auto &item : data) {
         std::generate(item.begin(), item.end(), [&norm, &gen]() { return norm(gen); });
     }
@@ -47,23 +49,23 @@ void perform_evaluations(unsigned int in, unsigned int out, unsigned int rows, u
 /// the code stability when large number of mutations are performed
 BOOST_AUTO_TEST_CASE(evaluation_speed)
 {
-    unsigned int N = 100;
+    unsigned int N = 1000;
 
     dcgp::kernel_set<double> kernel_set1({"sig", "tanh", "ReLu"});
     dcgp::stream(std::cout, "Function set ", kernel_set1(), "\n");
-    perform_evaluations(3, 2, 2, 3, 4, 2, N, kernel_set1());
-    perform_evaluations(3, 2, 10, 10, 11, 2, N, kernel_set1());
-    perform_evaluations(3, 2, 20, 20, 21, 2, N, kernel_set1());
-    perform_evaluations(3, 2, 1, 100, 101, 2, N, kernel_set1());
-    perform_evaluations(3, 2, 2, 100, 101, 2, N, kernel_set1());
-    perform_evaluations(3, 2, 3, 100, 101, 2, N, kernel_set1());
+    perform_evaluations(3, 2, 2, 3, 1, 2, N, kernel_set1());
+    perform_evaluations(3, 2, 10, 10, 1, 2, N, kernel_set1());
+    perform_evaluations(3, 2, 20, 20, 1, 2, N, kernel_set1());
+    perform_evaluations(3, 2, 1, 100, 1, 2, N, kernel_set1());
+    perform_evaluations(3, 2, 2, 100, 1, 2, N, kernel_set1());
+    perform_evaluations(3, 2, 3, 100, 1, 2, N, kernel_set1());
 
     dcgp::kernel_set<double> kernel_set2({"sig"});
     dcgp::stream(std::cout, "\nFunction set ", kernel_set2(), "\n");
-    perform_evaluations(3, 2, 2, 3, 4, 2, N, kernel_set2());
-    perform_evaluations(3, 2, 10, 10, 11, 2, N, kernel_set2());
-    perform_evaluations(3, 2, 20, 20, 21, 2, N, kernel_set2());
-    perform_evaluations(3, 2, 1, 100, 101, 2, N, kernel_set2());
-    perform_evaluations(3, 2, 2, 100, 101, 2, N, kernel_set2());
-    perform_evaluations(3, 2, 3, 100, 101, 2, N, kernel_set2());
+    perform_evaluations(3, 2, 2, 3, 1, 2, N, kernel_set2());
+    perform_evaluations(3, 2, 10, 10, 1, 2, N, kernel_set2());
+    perform_evaluations(3, 2, 20, 20, 1, 2, N, kernel_set2());
+    perform_evaluations(3, 2, 1, 100, 1, 2, N, kernel_set2());
+    perform_evaluations(3, 2, 2, 100, 1, 2, N, kernel_set2());
+    perform_evaluations(3, 2, 3, 100, 1, 2, N, kernel_set2());
 }
