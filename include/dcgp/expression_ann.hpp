@@ -131,7 +131,7 @@ public:
 
         // 2 - We iterate backward on all the active nodes (except the input nodes)
         // filling up the gradient information at each node for the incoming weights and relative bias
-        if (this->get_n() == this->get_active_nodes().size()) { // guard for corner case
+        if (this->get_active_nodes().size() > this->get_n()) { // guard for corner case
             for (auto it = this->get_active_nodes().rbegin(); it != this->get_active_nodes().rend() - this->get_n();
                  ++it) {
                 // index of the node in the bias vector

@@ -89,7 +89,7 @@ public:
             throw std::invalid_argument("Input size is incompatible");
         }
         std::vector<U> retval(this->get_m());
-        std::map<unsigned int, U> node;
+        std::unordered_map<unsigned int, U> node;
         std::vector<U> function_in(this->get_arity());
         for (auto i : this->get_active_nodes()) {
             if (i < this->get_n()) {
