@@ -188,7 +188,7 @@ public:
         while (dfirst != dlast) {
             if (dfirst + batch_size > dlast) {
                 update_weights<U>(dfirst, dlast, lfirst, lr);
-                dfirst == dlast;
+                dfirst = dlast;
             } else {
                 update_weights<U>(dfirst, dfirst + batch_size, lfirst, lr);
                 dfirst += batch_size;

@@ -82,30 +82,43 @@ BOOST_AUTO_TEST_CASE(parenthesis)
 
 BOOST_AUTO_TEST_CASE(sgd)
 {
+    // Random numbers stuff
     std::random_device rd;
+    std::mt19937 gen{rd()};
+    std::normal_distribution<> norm(0.,1.);
+
     // Kernel functions
     kernel_set<double> ann_set({"sig", "tanh", "ReLu"});
     expression_ann<double> ex(3, 2, 100, 3, 2, 10, ann_set(), rd());
     ex.randomise_weights();
     ex.randomise_biases();
-    std::vector<std::vector<double>> data = {{1.12, 0.23, 0.01}, {-0, 0.23, -0.08}, {0.01, -0.001, 0.11}};
-    std::vector<std::vector<double>> label = {{0.5, -0.5}, {1., -0.003}, {0.023, -0.011}};
+    std::vector<std::vector<double>> data(100, {0.,0.,0.});
+    std::vector<std::vector<double>> label(100, {0., 0.});
+    for (auto &item : data) {
+        std::generate(item.begin(), item.end(), [&norm, &gen](){return norm(gen);});
+    }
+    for (auto &item : label) {
+        std::generate(item.begin(), item.end(), [&norm, &gen](){return norm(gen);});
+    }
     double tmp;
     for (auto i = 0u; i < data.size(); ++i) {
         tmp = 0.;
         tmp += std::get<0>(ex.mse(data[i], label[i]));
     }
-    tmp /= data.size();
-    print("Before: ", tmp, "\n");
-    ex.sgd(data, label, 0.1, 3);
-    for (auto i = 0u; i < data.size(); ++i) {
-        tmp = 0.;
-        tmp += std::get<0>(ex.mse(data[i], label[i]));
+    tmp /= static_cast<double>(data.size());
+    print("Start: ", tmp, "\n");
+    for (auto j = 0u; j < 10; ++j) {
+        ex.sgd(data, label, 0.1, 32);
+        for (auto i = 0u; i < data.size(); ++i) {
+            tmp = 0.;
+            tmp += std::get<0>(ex.mse(data[i], label[i]));
+        }
+        tmp /= static_cast<double>(data.size());
+        print("Then (", j, "): ", tmp, "\n");
     }
-    tmp /= data.size();
-    print("After: ", tmp);
 }
 
+/*
 BOOST_AUTO_TEST_CASE(mse)
 {
     {
@@ -153,3 +166,4 @@ BOOST_AUTO_TEST_CASE(mse)
         }
     }
 }
+*/
