@@ -78,12 +78,12 @@ public:
         update_data_structures();
     }
 
-    /// Evaluates the mean square error (CHANGE THE NAME)
+    /// Evaluates the mean square error and its gradient
     /**
      * Returns the mean squared error and its gradient with respect to weights and biases.
      *
-     * @param[in] The input data
-     * @param[out] The target data (the label)
+     * @param[in] The input data (single point)
+     * @param[out] The target data (single point)
      * @return the mse, the gradient of the mse w.r.t. all weights (also inactive) and the gradient of the mse w.r.t all
      * biases
      */
@@ -160,6 +160,15 @@ public:
         return std::make_tuple(std::move(value), std::move(gweights), std::move(gbiases));
     }
 
+    /// Evaluates the mean square error and its gradient
+    /**
+     * Returns the mean squared error and its gradient with respect to weights and biases.
+     *
+     * @param[data] The input data (a batch)
+     * @param[label] The target data (a batch)
+     * @return the mse, the gradient of the mse w.r.t. all weights (also inactive) and the gradient of the mse w.r.t all
+     * biases
+     */
     template <typename U, functor_enabler<U> = 0>
     std::tuple<U, std::vector<U>, std::vector<U>> mse(const std::vector<std::vector<U>> &data,
                                                       const std::vector<std::vector<U>> &label)
@@ -178,8 +187,8 @@ public:
     /**
      * Performs one "epoch" of stochastic gradient descent using mean square error
      *
-     * @param[data] The data
-     * @param[label] The labels
+     * @param[data] The data (a batch)
+     * @param[label] The labels (a batch)
      * @param[lr] The learning rate
      * @param[batch_size] The batch size
      *
@@ -493,8 +502,7 @@ protected:
         // Biases (we add to the first input a bias so that a,b,c,d,e goes in c, etc...))
         function_in[0] += m_biases[bias_idx];
         // We compute the node function that will, for example, map w_1 a + bias, w_2 b, w_3 c,... into f(w_1 a +
-        // w_2 b
-        // + w_3 c + ... + bias)
+        // w_2 b + w_3 c + ... + bias)
         return this->get_f()[this->get()[idx]](function_in);
     }
 
@@ -511,7 +519,7 @@ protected:
         return this->get_f()[this->get()[idx]](function_in);
     }
 
-    // overload for the operator () no derivatives
+    // computes node to evaluate the expression
     template <typename U, functor_enabler<U> = 0>
     std::unordered_map<unsigned, U> fill_nodes(const std::vector<U> &in) const
     {
@@ -539,7 +547,7 @@ protected:
         return node;
     }
 
-    // Overload for the backprop (derivatives)
+    // computes node and node_d to start backprop
     template <typename U, functor_enabler<U> = 0>
     void fill_nodes(const std::vector<U> &in, std::unordered_map<unsigned, U> &node,
                     std::unordered_map<unsigned, U> &d_node) const
@@ -577,8 +585,8 @@ protected:
         return;
     }
 
-    // This overrides the base class update_data_structures and update also the m_connected (as well as
-    // m_active_nodes and genes)
+    // This overrides the base class update_data_structures and updates also the m_connected (as well as
+    // m_active_nodes and genes). It is called upon construction and each time active genes are changed.
     void update_data_structures()
     {
         expression<T>::update_data_structures();

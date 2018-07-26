@@ -11,11 +11,13 @@
 
 using namespace dcgp;
 
-void perform_evaluations(unsigned int in, unsigned int out, unsigned int rows, unsigned int columns,
-                         unsigned int levels_back, unsigned int arity, unsigned int N,
-                         std::vector<dcgp::kernel<double>> kernel_set)
+void perform_evaluations(unsigned int rows, unsigned int columns, unsigned int levels_back, unsigned int arity,
+                         unsigned int N, unsigned bs, std::vector<dcgp::kernel<double>> kernel_set)
 {
-    // Random numbers engine
+    // Dimensions in and out are fixed
+    unsigned in = 3u;
+    unsigned out = 2u;
+    // Random numbers
     std::default_random_engine rd(123);
     std::mt19937 gen{rd()};
     std::normal_distribution<> norm(0., 1.);
@@ -37,11 +39,12 @@ void perform_evaluations(unsigned int in, unsigned int out, unsigned int rows, u
         label[i][1] = data[i][0] * data[i][1] * data[i][2];
     }
 
-    std::cout << "One epoch of sgd on a data size " << N << " in:" << in << " out:" << out << " rows:" << rows
-              << " columns:" << columns << std::endl;
+    std::cout << "One epoch of sgd:  rows:" << rows << " columns:" << columns
+              << " n. weights:" << ex.get_active_nodes().size() * ex.get_arity()
+              << " n. biases:" << ex.get_active_nodes().size() << std::endl;
     {
         boost::timer::auto_cpu_timer t;
-        ex.sgd(data, label, 0.01, 32);
+        ex.sgd(data, label, 0.01, bs);
     }
 }
 
@@ -49,23 +52,13 @@ void perform_evaluations(unsigned int in, unsigned int out, unsigned int rows, u
 /// the code stability when large number of mutations are performed
 BOOST_AUTO_TEST_CASE(evaluation_speed)
 {
-    unsigned int N = 1000;
+    unsigned int N = 1024;
 
     dcgp::kernel_set<double> kernel_set1({"sig", "tanh", "ReLu"});
     dcgp::stream(std::cout, "Function set ", kernel_set1(), "\n");
-    perform_evaluations(3, 2, 2, 3, 1, 2, N, kernel_set1());
-    perform_evaluations(3, 2, 10, 10, 1, 2, N, kernel_set1());
-    perform_evaluations(3, 2, 20, 20, 1, 2, N, kernel_set1());
-    perform_evaluations(3, 2, 1, 100, 1, 2, N, kernel_set1());
-    perform_evaluations(3, 2, 2, 100, 1, 2, N, kernel_set1());
-    perform_evaluations(3, 2, 3, 100, 1, 2, N, kernel_set1());
-
-    dcgp::kernel_set<double> kernel_set2({"sig"});
-    dcgp::stream(std::cout, "\nFunction set ", kernel_set2(), "\n");
-    perform_evaluations(3, 2, 2, 3, 1, 2, N, kernel_set2());
-    perform_evaluations(3, 2, 10, 10, 1, 2, N, kernel_set2());
-    perform_evaluations(3, 2, 20, 20, 1, 2, N, kernel_set2());
-    perform_evaluations(3, 2, 1, 100, 1, 2, N, kernel_set2());
-    perform_evaluations(3, 2, 2, 100, 1, 2, N, kernel_set2());
-    perform_evaluations(3, 2, 3, 100, 1, 2, N, kernel_set2());
+    perform_evaluations(100, 3, 1, 100, N, 32, kernel_set1());
+    perform_evaluations(100, 4, 1, 100, N, 32, kernel_set1());
+    perform_evaluations(100, 5, 1, 100, N, 32, kernel_set1());
+    perform_evaluations(100, 10, 1, 100, N, 32, kernel_set1());
+    perform_evaluations(100, 10, 1, 100, N, 256, kernel_set1());
 }
