@@ -11,7 +11,7 @@
 
 using namespace dcgp;
 
-void perform_evaluations(unsigned int rows, unsigned int columns, unsigned int levels_back, unsigned int arity,
+void perform_sgd(unsigned int rows, unsigned int columns, unsigned int levels_back, unsigned int arity,
                          unsigned int N, unsigned bs, std::vector<dcgp::kernel<double>> kernel_set)
 {
     // Dimensions in and out are fixed
@@ -56,9 +56,9 @@ BOOST_AUTO_TEST_CASE(evaluation_speed)
 
     dcgp::kernel_set<double> kernel_set1({"sig", "tanh", "ReLu"});
     dcgp::stream(std::cout, "Function set ", kernel_set1(), "\n");
-    perform_evaluations(100, 3, 1, 100, N, 32, kernel_set1());
-    perform_evaluations(100, 4, 1, 100, N, 32, kernel_set1());
-    perform_evaluations(100, 5, 1, 100, N, 32, kernel_set1());
-    perform_evaluations(100, 10, 1, 100, N, 32, kernel_set1());
-    perform_evaluations(100, 10, 1, 100, N, 256, kernel_set1());
+    perform_sgd(100, 3, 1, 100, N, 32, kernel_set1());
+    perform_sgd(100, 4, 1, 100, N, 32, kernel_set1());
+    perform_sgd(100, 5, 1, 100, N, 32, kernel_set1());
+    perform_sgd(100, 10, 1, 100, N, 32, kernel_set1());
+    perform_sgd(100, 10, 1, 100, N, 256, kernel_set1());
 }
