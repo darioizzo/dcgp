@@ -176,4 +176,124 @@ Raises:
     ValueError: if node_id or input_id are not valid
     )";
 }
+
+std::string expression_ann_set_weight_doc()
+{
+    return R"(set_weight(node_id, input_id, weight)
+set_weight(idx, weight)
+
+Sets a weight. Two overloads are available. You can set the weight specifying the node and the input id (that needs
+to be less than the arity), or directly specifying its position in the weight vector.
+
+Note:
+    Convention adopted for node numbering: http://ppsn2014.ijs.si/files/slides/ppsn2014-tutorial3-miller.pdf
+
+Args:
+    node_id (an ``int``): the id of the node whose weight is being set
+    input_id (an ``int``): the id of the node input (0 for the first one up to arity-1)
+    weight (a ``float``): the new value of the weight
+    idx (an ``int``): the idx of weight to be set
+
+Raises:
+    ValueError: if *node_id* or *input_id* or *idx* are not valid
+    )";
+}
+
+std::string expression_ann_get_weight_doc()
+{
+    return R"(get_weight(node_id, input_id)
+get_weight(idx)
+
+Gets a weight. Two overloads are available. You can get the weight specifying the node and the input id (that needs
+to be less than the arity), or directly specifying its position in the weight vector.
+
+Note:
+    Convention adopted for node numbering: http://ppsn2014.ijs.si/files/slides/ppsn2014-tutorial3-miller.pdf
+
+Args:
+    node_id (an ``int``): the id of the node
+    input_id (an ``int``): the id of the node input (0 for the first one up to arity-1)
+    idx (an ``int``): the idx of weight to be set
+
+Returns:
+    The value of the weight (a ``float``)
+
+Raises:
+    ValueError: if *node_id* or *input_id* or *idx* are not valid
+    )";
+}
+
+
+std::string expression_ann_set_bias_doc()
+{
+    return R"(set_bias(node_id, bias)
+
+Sets a bias.
+
+Note:
+    Convention adopted for node numbering: http://ppsn2014.ijs.si/files/slides/ppsn2014-tutorial3-miller.pdf
+
+Args:
+    node_id (an ``int``): the id of the node whose weight is being set
+    weight (a ``float``): the new value of the weight
+
+Raises:
+    ValueError: if node_id is not valid
+    )";
+}
+
+std::string expression_ann_set_biases_doc()
+{
+    return R"(set_biases(biases)
+
+Sets all biases.
+
+Args:
+    biases (a ``List[float]``): the new values of the biases
+
+Raises:
+    ValueError: if the input vector dimension is not valid (r*c)
+    )";
+}
+
+std::string expression_ann_get_bias_doc()
+{
+    return R"(get_bias(node_id)
+
+Gets a bias.
+
+Note:
+    Convention adopted for node numbering: http://ppsn2014.ijs.si/files/slides/ppsn2014-tutorial3-miller.pdf
+
+Args:
+    node_id (an ``int``): the id of the node
+
+Returns:
+    The value of the bias (a ``float``)
+
+Raises:
+    ValueError: if node_id is not valid
+    )";
+}
+
+std::string expression_ann_sgd_doc()
+{
+    return R"(get_bias(node_id)
+
+Gets a bias.
+
+Note:
+    Convention adopted for node numbering: http://ppsn2014.ijs.si/files/slides/ppsn2014-tutorial3-miller.pdf
+
+Args:
+    node_id (an ``int``): the id of the node
+
+Returns:
+    The value of the bias (a ``float``)
+
+Raises:
+    ValueError: if node_id is not valid
+    )";
+}
+
 } // namespace

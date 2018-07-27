@@ -62,7 +62,7 @@ public:
                    )
         : expression<T>(n, m, r, c, l, arity, f, seed), m_weights(r * c * arity, T(1.)), m_biases(r * c, T(0.))
     {
-        for (auto ker : f) {
+        for (const auto &ker : f) {
             if (ker.get_name() != "tanh" && ker.get_name() != "sig" && ker.get_name() != "ReLu") {
                 throw std::invalid_argument("Only tanh, sig and ReLu Kernels are valid for dCGP-ANN expressions");
             }
@@ -91,12 +91,12 @@ public:
     std::tuple<U, std::vector<U>, std::vector<U>> mse(const std::vector<U> &point, const std::vector<U> &prediction)
     {
         if (point.size() != this->get_n()) {
-            throw std::invalid_argument("When computing the mse the input data dimension seemed wrong, it was: "
+            throw std::invalid_argument("When computing the mse the point dimension (input) seemed wrong, it was: "
                                         + std::to_string(point.size())
                                         + " while I expected: " + std::to_string(this->get_n()));
         }
         if (prediction.size() != this->get_m()) {
-            throw std::invalid_argument("When computing the mse the output data dimension seemed wrong, it was: "
+            throw std::invalid_argument("When computing the mse the prediction dimension (output) seemed wrong, it was: "
                                         + std::to_string(prediction.size())
                                         + " while I expected: " + std::to_string(this->get_m()));
         }
@@ -210,9 +210,9 @@ public:
             throw std::invalid_argument("The learning rate must be a positive number, while: " + std::to_string(l_rate)
                                         + " was detected.");
         }
-        typename std::vector<std::vector<U>>::const_iterator dfirst = points.begin();
-        typename std::vector<std::vector<U>>::const_iterator dlast = points.end();
-        typename std::vector<std::vector<U>>::const_iterator lfirst = predictions.begin();
+        auto dfirst = points.begin();
+        auto dlast = points.end();
+        auto lfirst = predictions.begin();
         while (dfirst != dlast) {
             if (dfirst + batch_size > dlast) {
                 update_weights<U>(dfirst, dlast, lfirst, l_rate);
@@ -368,7 +368,7 @@ public:
     T get_weight(typename std::vector<T>::size_type node_id, typename std::vector<T>::size_type input_id) const
     {
         if (node_id < this->get_n() || node_id >= this->get_n() + this->get_rows() * this->get_cols()) {
-            throw std::invalid_argument("Requested node id does not exist");
+            throw std::invalid_argument("Requested node id does not exist or does not have a weight (e.g. input nodes)");
         }
         if (input_id >= this->get_arity()) {
             throw std::invalid_argument("Requested input exceeds the function arity");

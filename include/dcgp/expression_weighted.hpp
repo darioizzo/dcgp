@@ -210,7 +210,7 @@ public:
      *
      * @param[in] ws an std::vector containing all the weights to set
      *
-     * @throws std::invalid_argument if the input vector dimension is not valid (r**arity)
+     * @throws std::invalid_argument if the input vector dimension is not valid (r*c*arity)
      */
     void set_weights(const std::vector<T> &ws)
     {
