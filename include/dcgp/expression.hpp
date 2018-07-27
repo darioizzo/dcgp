@@ -419,15 +419,15 @@ public:
      * symbolic representation (std::string). Any other type will result in a
      * compilation-time error (SFINAE).
      *
-     * @param[in] in an std::vector containing the values where the dCGP
+     * @param[point] an std::vector containing the values where the dCGP
      * expression has to be computed (doubles, gduals or strings)
      *
      * @return The value of the function (an std::vector)
      */
     template <typename U, functor_enabler<U> = 0>
-    std::vector<U> operator()(const std::vector<U> &in) const
+    std::vector<U> operator()(const std::vector<U> &point) const
     {
-        if (in.size() != m_n) {
+        if (point.size() != m_n) {
             throw std::invalid_argument("Input size is incompatible");
         }
         std::vector<U> retval(m_m);
@@ -435,7 +435,7 @@ public:
         std::vector<U> function_in(m_arity);
         for (auto i : m_active_nodes) {
             if (i < m_n) {
-                node[i] = in[i];
+                node[i] = point[i];
             } else {
                 unsigned idx = (i - m_n) * (m_arity + 1); // position in the chromosome of the current node
                 for (auto j = 0u; j < m_arity; ++j) {
@@ -508,7 +508,6 @@ public:
         return os;
     }
 
-protected:
     /// Validity of a chromosome
     /**
      * Checks if a chromosome (i.e. a sequence of integers) is a valid expression
@@ -532,7 +531,16 @@ protected:
         return true;
     }
 
-    // Updates the class data that depend on the chromosome (in this case only the active nodes and genes)
+protected:
+    /// Updates the class data that depend on the chromosome
+    /**
+     * Some of the expression data depend on the chromosome. This is the case, for example, 
+     * of the active nodes and active genes. Each time the chromosome is changed, these structures need also to be changed.
+     * A call to this method takes care of this. In derived classes (such as for example expression_ann), one can add
+     * more of these chromosome dependant data, and will thus need to override this method, making sure to still have it called
+     * by the new method and adding there the new data book-keeping.
+     */
+    // 
     virtual void update_data_structures()
     {
         assert(m_x.size() == m_lb.size());

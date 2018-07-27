@@ -82,22 +82,22 @@ public:
     /**
      * Returns the mean squared error and its gradient with respect to weights and biases.
      *
-     * @param[in] The input data (single point)
-     * @param[out] The target data (single point)
+     * @param[point] The input data (single point)
+     * @param[prediction] The predicted output (single point)
      * @return the mse, the gradient of the mse w.r.t. all weights (also inactive) and the gradient of the mse w.r.t all
      * biases
      */
     template <typename U, functor_enabler<U> = 0>
-    std::tuple<U, std::vector<U>, std::vector<U>> mse(const std::vector<U> &in, const std::vector<U> &out)
+    std::tuple<U, std::vector<U>, std::vector<U>> mse(const std::vector<U> &point, const std::vector<U> &prediction)
     {
-        if (in.size() != this->get_n()) {
+        if (point.size() != this->get_n()) {
             throw std::invalid_argument("When computing the mse the input data dimension seemed wrong, it was: "
-                                        + std::to_string(in.size())
+                                        + std::to_string(point.size())
                                         + " while I expected: " + std::to_string(this->get_n()));
         }
-        if (out.size() != this->get_m()) {
+        if (prediction.size() != this->get_m()) {
             throw std::invalid_argument("When computing the mse the output data dimension seemed wrong, it was: "
-                                        + std::to_string(out.size())
+                                        + std::to_string(prediction.size())
                                         + " while I expected: " + std::to_string(this->get_m()));
         }
         U value(U(0.));
@@ -109,13 +109,13 @@ public:
         // the activation function derivatives
         std::unordered_map<unsigned, U> node;
         std::unordered_map<unsigned, U> d_node;
-        fill_nodes(in, node, d_node);
+        fill_nodes(point, node, d_node);
 
         // Compute mse and store it
         unsigned j = 0u;
         for (auto i = this->get().size() - this->get_m(); i < this->get().size(); ++i) {
             auto node_idx = this->get()[i];
-            value += (node[node_idx] - out[j]) * (node[node_idx] - out[j]);
+            value += (node[node_idx] - prediction[j]) * (node[node_idx] - prediction[j]);
             j++;
         }
 
@@ -125,7 +125,7 @@ public:
         j = 0u;
         for (auto i = this->get().size() - this->get_m(); i < this->get().size(); ++i) {
             auto node_idx = this->get()[i];
-            d_node[node_idx] = d_node[node_idx] * 2 * (node[node_idx] - out[j]);
+            d_node[node_idx] = d_node[node_idx] * 2 * (node[node_idx] - prediction[j]);
             j++;
         }
 
@@ -164,61 +164,61 @@ public:
     /**
      * Returns the mean squared error and its gradient with respect to weights and biases.
      *
-     * @param[data] The input data (a batch)
-     * @param[label] The target data (a batch)
+     * @param[points] The input data (a batch).
+     * @param[predictions] The predicted outputs (a batch).
      * @return the mse, the gradient of the mse w.r.t. all weights (also inactive) and the gradient of the mse w.r.t all
-     * biases
+     * biases.
      */
     template <typename U, functor_enabler<U> = 0>
-    std::tuple<U, std::vector<U>, std::vector<U>> mse(const std::vector<std::vector<U>> &data,
-                                                      const std::vector<std::vector<U>> &label)
+    std::tuple<U, std::vector<U>, std::vector<U>> mse(const std::vector<std::vector<U>> &points,
+                                                      const std::vector<std::vector<U>> &predictions)
     {
-        if (data.size() != label.size()) {
-            throw std::invalid_argument("Data and label size mismatch data size is: " + std::to_string(data.size())
-                                        + " while label size is: " + std::to_string(label.size()));
+        if (points.size() != predictions.size()) {
+            throw std::invalid_argument("Data and label size mismatch data size is: " + std::to_string(points.size())
+                                        + " while label size is: " + std::to_string(predictions.size()));
         }
-        if (data.size() == 0) {
+        if (points.size() == 0) {
             throw std::invalid_argument("Data size cannot be zero");
         }
-        return mse<U>(data.begin(), data.end(), label.begin());
+        return mse<U>(points.begin(), points.end(), predictions.begin());
     }
 
     /// Stochastic gradient descent
     /**
      * Performs one "epoch" of stochastic gradient descent using mean square error
      *
-     * @param[data] The data (a batch)
-     * @param[label] The labels (a batch)
-     * @param[lr] The learning rate
-     * @param[batch_size] The batch size
+     * @param[points] The input data (a batch).
+     * @param[predictions] The predicted outputs (a batch).
+     * @param[l_rate] The learning rate.
+     * @param[batch_size] The batch size.
      *
-     * @throws std::invalid_argument if the *data* and *label* size do not match or is zero, or if *lr* is not
+     * @throws std::invalid_argument if the *data* and *label* size do not match or is zero, or if *l_rate* is not
      * positive.
      */
     template <typename U, functor_enabler<U> = 0>
-    void sgd(const std::vector<std::vector<U>> &data, const std::vector<std::vector<U>> &label, double lr,
+    void sgd(const std::vector<std::vector<U>> &points, const std::vector<std::vector<U>> &predictions, double l_rate,
              unsigned batch_size)
     {
-        if (data.size() != label.size()) {
-            throw std::invalid_argument("Data and label size mismatch data size is: " + std::to_string(data.size())
-                                        + " while label size is: " + std::to_string(label.size()));
+        if (points.size() != predictions.size()) {
+            throw std::invalid_argument("Data and label size mismatch data size is: " + std::to_string(points.size())
+                                        + " while label size is: " + std::to_string(predictions.size()));
         }
-        if (data.size() == 0) {
+        if (points.size() == 0) {
             throw std::invalid_argument("Data size cannot be zero");
         }
-        if (lr <= 0) {
-            throw std::invalid_argument("The learning rate must be a positive number, while: " + std::to_string(lr)
+        if (l_rate <= 0) {
+            throw std::invalid_argument("The learning rate must be a positive number, while: " + std::to_string(l_rate)
                                         + " was detected.");
         }
-        typename std::vector<std::vector<U>>::const_iterator dfirst = data.begin();
-        typename std::vector<std::vector<U>>::const_iterator dlast = data.end();
-        typename std::vector<std::vector<U>>::const_iterator lfirst = label.begin();
+        typename std::vector<std::vector<U>>::const_iterator dfirst = points.begin();
+        typename std::vector<std::vector<U>>::const_iterator dlast = points.end();
+        typename std::vector<std::vector<U>>::const_iterator lfirst = predictions.begin();
         while (dfirst != dlast) {
             if (dfirst + batch_size > dlast) {
-                update_weights<U>(dfirst, dlast, lfirst, lr);
+                update_weights<U>(dfirst, dlast, lfirst, l_rate);
                 dfirst = dlast;
             } else {
-                update_weights<U>(dfirst, dfirst + batch_size, lfirst, lr);
+                update_weights<U>(dfirst, dfirst + batch_size, lfirst, l_rate);
                 dfirst += batch_size;
                 lfirst += batch_size;
             }
@@ -228,20 +228,20 @@ public:
     /// Evaluates the dCGP-ANN expression
     /**
      * This evaluates the dCGP-ANN expression. According to the template parameter
-     * it will compute the value (double) or a symbolic
+     * it will compute the value (U) or a symbolic
      * representation (std::string). Any other type will result in a compilation-time
      * error (SFINAE).
      *
-     * @param[in] in an std::vector containing the values where the dCGP-ANN expression has
+     * @param[point] in an std::vector containing the values where the dCGP-ANN expression has
      * to be computed (doubles or strings)
      *
      * @return The value of the function (an std::vector)
      */
     template <typename U, functor_enabler<U> = 0>
-    std::vector<U> operator()(const std::vector<U> &in) const
+    std::vector<U> operator()(const std::vector<U> &point) const
     {
         std::vector<U> retval(this->get_m());
-        auto node = fill_nodes(in);
+        auto node = fill_nodes(point);
         for (auto i = 0u; i < this->get_m(); ++i) {
             retval[i] = node[this->get()[(this->get_rows() * this->get_cols()) * (this->get_arity() + 1) + i]];
         }
@@ -251,19 +251,19 @@ public:
     /// Evaluates the  dCGP-ANN  expression
     /**
      * This evaluates the dCGP-ANN expression. According to the template parameter
-     * it will compute the value (double) or a symbolic
+     * it will compute the value (U) or a symbolic
      * representation (std::string). Any other type will result in a compilation-time
      * error (SFINAE).
      *
-     * @param[in] is an initializer list containing the values where the dCGP expression has
-     * to be computed (doubles, or strings)
+     * @param[point] in is an initializer list containing the values where the dCGP expression has
+     * to be computed (U, or strings)
      *
      * @return The value of the function (an std::vector)
      */
     template <typename U, functor_enabler<U> = 0>
-    std::vector<U> operator()(const std::initializer_list<U> &in) const
+    std::vector<U> operator()(const std::initializer_list<U> &point) const
     {
-        std::vector<U> dummy(in);
+        std::vector<U> dummy(point);
         return (*this)(dummy);
     }
 
@@ -327,7 +327,8 @@ public:
     /**
      * Sets a connection weight to a new value
      *
-     * @param[in] idx index of the weight to be changed.
+     * @param[idx] index of the weight to be changed.
+     * @param[w] value of the weight to be changed.
      *
      * @throws std::invalid_argument if the node_id or input_id are not valid
      */
@@ -390,7 +391,7 @@ public:
 
     /// Gets the weights
     /**
-     * Gets the values of all the weights
+     * Gets the values of all the weights.
      *
      * @return an std::vector containing all the weights
      */
@@ -403,9 +404,9 @@ public:
     /**
      * Set all weights to a normally distributed number
      *
-     * @param[in] mean the mean of the normal distribution
-     * @param[in] std the standard deviation of the normal distribution
-     * @param[in] seed the seed to generate the new weights (by default its randomly generated)
+     * @param[mean] the mean of the normal distribution.
+     * @param[std] the standard deviation of the normal distribution.
+     * @param[seed] the seed to generate the new weights (by default its randomly generated).
      *
      */
     void randomise_weights(double mean = 0., double std = 0.1,
@@ -422,7 +423,8 @@ public:
     /**
      * Sets a node bias to a new value
      *
-     * @param[in] idx index of the bias to be changed.
+     * @param[idx] index of the bias to be changed.
+     * @param[w] value of the new bias.
      *
      */
     void set_bias(typename std::vector<T>::size_type idx, const T &w)
@@ -490,7 +492,7 @@ public:
 
     /*@}*/
 
-protected:
+private:
     // For numeric computations
     template <typename U, typename std::enable_if<std::is_same<U, double>::value || is_gdual<U>::value, int>::type = 0>
     U kernel_call(std::vector<U> &function_in, unsigned idx, unsigned weight_idx, unsigned bias_idx) const

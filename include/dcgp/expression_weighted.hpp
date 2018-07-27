@@ -231,7 +231,8 @@ public:
         return m_weights;
     }
 
-protected:
+private:
+
     // For numeric computations
     template <typename U, typename std::enable_if<std::is_same<U, double>::value || is_gdual<U>::value, int>::type = 0>
     U kernel_call(std::vector<U> &function_in, unsigned int idx, unsigned int weight_idx) const
@@ -252,7 +253,6 @@ protected:
         return this->get_f()[this->get()[idx]](function_in);
     }
 
-private:
     std::vector<T> m_weights;
     std::vector<std::string> m_weights_symbols;
 };
