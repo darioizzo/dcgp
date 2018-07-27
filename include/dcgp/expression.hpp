@@ -11,6 +11,7 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
+#include <unordered_map>
 
 #include <dcgp/kernel.hpp>
 #include <dcgp/type_traits.hpp>
@@ -431,21 +432,23 @@ public:
             throw std::invalid_argument("Input size is incompatible");
         }
         std::vector<U> retval(m_m);
-        std::unordered_map<unsigned, U> node;
+        // std::unordered_map<unsigned, U> node;
+        std::vector<U> node;
+        node.reserve(this->get_active_nodes().size());
         std::vector<U> function_in(m_arity);
         for (auto i : m_active_nodes) {
             if (i < m_n) {
-                node[i] = point[i];
+                node.push_back(point[i]);
             } else {
                 unsigned idx = (i - m_n) * (m_arity + 1); // position in the chromosome of the current node
                 for (auto j = 0u; j < m_arity; ++j) {
-                    function_in[j] = node[m_x[idx + j + 1]];
+                    function_in[j] = node[m_active_node_idx[m_x[idx + j + 1]]];
                 }
-                node[i] = m_f[m_x[idx]](function_in);
+                node.push_back(m_f[m_x[idx]](function_in));
             }
         }
         for (auto i = 0u; i < m_m; ++i) {
-            retval[i] = node[m_x[(m_r * m_c) * (m_arity + 1) + i]];
+            retval[i] = node[m_active_node_idx[m_x[(m_r * m_c) * (m_arity + 1) + i]]];
         }
         return retval;
     }
@@ -534,13 +537,13 @@ public:
 protected:
     /// Updates the class data that depend on the chromosome
     /**
-     * Some of the expression data depend on the chromosome. This is the case, for example, 
-     * of the active nodes and active genes. Each time the chromosome is changed, these structures need also to be changed.
-     * A call to this method takes care of this. In derived classes (such as for example expression_ann), one can add
-     * more of these chromosome dependant data, and will thus need to override this method, making sure to still have it called
-     * by the new method and adding there the new data book-keeping.
+     * Some of the expression data depend on the chromosome. This is the case, for example,
+     * of the active nodes and active genes. Each time the chromosome is changed, these structures need also to be
+     * changed. A call to this method takes care of this. In derived classes (such as for example expression_ann), one
+     * can add more of these chromosome dependant data, and will thus need to override this method, making sure to still
+     * have it called by the new method and adding there the new data book-keeping.
      */
-    // 
+    //
     virtual void update_data_structures()
     {
         assert(m_x.size() == m_lb.size());
@@ -577,6 +580,9 @@ protected:
         // We remove duplicates and keep m_active_nodes sorted
         std::sort(m_active_nodes.begin(), m_active_nodes.end());
         m_active_nodes.erase(std::unique(m_active_nodes.begin(), m_active_nodes.end()), m_active_nodes.end());
+        for (decltype(m_active_nodes.size()) i = 0u; i < m_active_nodes.size(); ++i) {
+            m_active_node_idx[m_active_nodes[i]] = static_cast<unsigned>(i);
+        }
 
         // Then the active genes
         m_active_genes.clear();
@@ -616,6 +622,7 @@ private:
     std::vector<unsigned> m_active_nodes;
     // active genes idx
     std::vector<unsigned> m_active_genes;
+    mutable std::unordered_map<unsigned, unsigned> m_active_node_idx;
     // the encoded chromosome
     std::vector<unsigned> m_x;
     // the random engine for the class
