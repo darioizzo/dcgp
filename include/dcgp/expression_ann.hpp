@@ -96,9 +96,9 @@ public:
                                         + " while I expected: " + std::to_string(this->get_n()));
         }
         if (prediction.size() != this->get_m()) {
-            throw std::invalid_argument("When computing the mse the prediction dimension (output) seemed wrong, it was: "
-                                        + std::to_string(prediction.size())
-                                        + " while I expected: " + std::to_string(this->get_m()));
+            throw std::invalid_argument(
+                "When computing the mse the prediction dimension (output) seemed wrong, it was: "
+                + std::to_string(prediction.size()) + " while I expected: " + std::to_string(this->get_m()));
         }
         U value(U(0.));
         std::vector<U> gweights(m_weights.size(), U(0.));
@@ -368,7 +368,8 @@ public:
     T get_weight(typename std::vector<T>::size_type node_id, typename std::vector<T>::size_type input_id) const
     {
         if (node_id < this->get_n() || node_id >= this->get_n() + this->get_rows() * this->get_cols()) {
-            throw std::invalid_argument("Requested node id does not exist or does not have a weight (e.g. input nodes)");
+            throw std::invalid_argument(
+                "Requested node id does not exist or does not have a weight (e.g. input nodes)");
         }
         if (input_id >= this->get_arity()) {
             throw std::invalid_argument("Requested input exceeds the function arity");
