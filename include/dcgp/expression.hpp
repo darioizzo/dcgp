@@ -5,11 +5,11 @@
 #include <audi/audi.hpp>
 #include <initializer_list>
 #include <iostream>
-#include <map>
 #include <random>
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 #include <dcgp/kernel.hpp>
@@ -581,7 +581,7 @@ protected:
 
         // We fill in the m_active_nodes_map
         for (decltype(m_active_nodes.size()) i = 0u; i < m_active_nodes.size(); ++i) {
-            m_active_nodes_map[m_active_nodes[i]] = i;
+            m_active_nodes_map[m_active_nodes[i]] = static_cast<unsigned>(i);
         }
         // Then the active genes
         m_active_genes.clear();
