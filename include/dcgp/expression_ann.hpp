@@ -33,10 +33,11 @@ class expression_ann : public expression<T>
 {
 
 private:
-    // SFINAE dust enables only string or double
     template <typename U>
-    using functor_enabler =
+    using enable_double_string =
         typename std::enable_if<std::is_same<U, double>::value || std::is_same<U, std::string>::value, int>::type;
+    template <typename U>
+    using enable_double = typename std::enable_if<std::is_same<U, double>::value, int>::type;
 
 public:
     /// Constructor
@@ -90,7 +91,7 @@ public:
      *
      * @return The value of the function (an std::vector)
      */
-    template <typename U, functor_enabler<U> = 0>
+    template <typename U, enable_double_string<U> = 0>
     std::vector<U> operator()(const std::vector<U> &point) const
     {
         std::vector<U> retval(this->get_m());
@@ -114,7 +115,7 @@ public:
      *
      * @return The value of the function (an std::vector)
      */
-    template <typename U, functor_enabler<U> = 0>
+    template <typename U, enable_double_string<U> = 0>
     std::vector<U> operator()(const std::initializer_list<U> &point) const
     {
         std::vector<U> dummy(point);
@@ -130,7 +131,7 @@ public:
      * @return the mse, the gradient of the mse w.r.t. all weights (also inactive) and the gradient of the mse w.r.t all
      * biases
      */
-    template <typename U, functor_enabler<U> = 0>
+    template <typename U, enable_double<U> = 0>
     std::tuple<U, std::vector<U>, std::vector<U>> mse(const std::vector<U> &point, const std::vector<U> &prediction)
     {
         if (point.size() != this->get_n()) {
@@ -147,7 +148,7 @@ public:
         std::vector<U> gweights(m_weights.size(), U(0.));
         std::vector<U> gbiases(m_biases.size(), U(0.));
 
-        // ------------------------------------------ Forward pass----------------------------------------------------
+        // ------------------------------------------ Forward pass (takes roughly half of the time) --------------------
         // All active nodes outputs get computed as well as
         // the activation function derivatives
         std::vector<U> node, d_node;
@@ -161,7 +162,7 @@ public:
             j++;
         }
 
-        // ------------------------------------------ Backward pass-----------------------------------------------------
+        // ------------------------------------------ Backward pass (takes roughly the remaining half) -----------------
         // 1 - We update d_node on the output nodes and accounting that
         // mse = sum (O_i-\hat O_i)^2
         j = 0u;
@@ -214,7 +215,7 @@ public:
      * @return the mse, the gradient of the mse w.r.t. all weights (also inactive) and the gradient of the mse w.r.t all
      * biases.
      */
-    template <typename U, functor_enabler<U> = 0>
+    template <typename U, enable_double<U> = 0>
     std::tuple<U, std::vector<U>, std::vector<U>> mse(const std::vector<std::vector<U>> &points,
                                                       const std::vector<std::vector<U>> &predictions)
     {
@@ -240,7 +241,7 @@ public:
      * @throws std::invalid_argument if the *data* and *label* size do not match or is zero, or if *l_rate* is not
      * positive.
      */
-    template <typename U, functor_enabler<U> = 0>
+    template <typename U, enable_double<U> = 0>
     void sgd(const std::vector<std::vector<U>> &points, const std::vector<std::vector<U>> &predictions, double l_rate,
              unsigned batch_size)
     {
@@ -498,7 +499,7 @@ public:
 
 private:
     // For numeric computations
-    template <typename U, typename std::enable_if<std::is_same<U, double>::value || is_gdual<U>::value, int>::type = 0>
+    template <typename U, enable_double<U> = 0>
     U kernel_call(std::vector<U> &function_in, unsigned idx, unsigned weight_idx, unsigned bias_idx) const
     {
         // Weights (we transform the inputs a,b,c,d,e in w_1 a, w_2 b, w_3 c, etc...)
@@ -526,7 +527,7 @@ private:
     }
 
     // computes node to evaluate the expression
-    template <typename U, functor_enabler<U> = 0>
+    template <typename U, enable_double_string<U> = 0>
     std::vector<U> fill_nodes(const std::vector<U> &in) const
     {
         if (in.size() != this->get_n()) {
@@ -555,7 +556,7 @@ private:
     }
 
     // computes node and node_d to start backprop
-    template <typename U, functor_enabler<U> = 0>
+    template <typename U, enable_double<U> = 0>
     void fill_nodes(const std::vector<U> &in, std::vector<U> &node, std::vector<U> &d_node) const
     {
         if (in.size() != this->get_n()) {
@@ -564,7 +565,9 @@ private:
         // Init the output
         node.clear();
         node.clear();
+        // This will contain the output of active nodes
         node.reserve(this->get_active_nodes().size());
+        // This will contain the derivative of active nodes output with respect to input df/din
         d_node.reserve(this->get_active_nodes().size());
 
         // Start
@@ -637,7 +640,7 @@ private:
      * @throws std::invalid_argument if the *data* and *label* size do not match or are zero, or if *lr* is not
      * positive.
      */
-    template <typename U, functor_enabler<U> = 0>
+    template <typename U, enable_double<U> = 0>
     void update_weights(typename std::vector<std::vector<U>>::const_iterator dfirst,
                         typename std::vector<std::vector<U>>::const_iterator dlast,
                         typename std::vector<std::vector<U>>::const_iterator lfirst, U lr)
@@ -652,7 +655,7 @@ private:
         }
     }
 
-    template <typename U, functor_enabler<U> = 0>
+    template <typename U, enable_double<U> = 0>
     std::tuple<U, std::vector<U>, std::vector<U>> mse(typename std::vector<std::vector<U>>::const_iterator dfirst,
                                                       typename std::vector<std::vector<U>>::const_iterator dlast,
                                                       typename std::vector<std::vector<U>>::const_iterator lfirst)

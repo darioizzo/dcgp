@@ -11,8 +11,8 @@
 
 using namespace dcgp;
 
-void perform_sgd(unsigned int rows, unsigned int columns, unsigned int levels_back, unsigned int arity,
-                         unsigned int N, unsigned bs, std::vector<dcgp::kernel<double>> kernel_set)
+void perform_sgd(unsigned int rows, unsigned int columns, unsigned int levels_back, unsigned int arity, unsigned int N,
+                 unsigned bs, std::vector<dcgp::kernel<double>> kernel_set)
 {
     // Dimensions in and out are fixed
     unsigned in = 3u;
