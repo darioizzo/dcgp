@@ -32,7 +32,7 @@ endif()
 
 # Setup of the header-only dcgpy library.
 add_library(dcgpy INTERFACE)
-target_link_libraries(dcgpy INTERFACE ${DCGPY_BP_TARGET} Boost::disable_autolinking YACMA::PythonModule Dcgp::dcgp)
+target_link_libraries(dcgpy INTERFACE ${DCGPY_BP_TARGET} Boost::disable_autolinking YACMA::PythonModule NumPy::numpy Dcgp::dcgp)
 target_include_directories(dcgpy INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../>
 $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include/dcgpy> $<INSTALL_INTERFACE:include>)
 

@@ -12,7 +12,9 @@ std::string kernel_init_doc(const std::string &type)
 Constructs a kernel function from callables.
 
 Args:
-    callable_f (``callable - List[)" + type + R"(] -> )" + type + R"(``): a callable taking a list of )" + type + R"( as inputs and returning a )" + type + R"( (the value of the kernel function evaluated on the inputs)
+    callable_f (``callable - List[)"
+           + type + R"(] -> )" + type + R"(``): a callable taking a list of )" + type + R"( as inputs and returning a )"
+           + type + R"( (the value of the kernel function evaluated on the inputs)
     callable_s (``callable - List[string] -> string``): a callable taking a list of string as inputs and returning a string (the symbolic representation of the kernel function evaluated on the input symbols)
     name (``string``): name of the kernel
 
@@ -24,7 +26,8 @@ Examples:
 >>> def print_my_sum(x)
 ...     s = "+"
 ...     return "(" + s.join(x) + ") "
->>> my_kernel = kernel_)" + type + R"((my_sum, print_my_sum, "my_sum")
+>>> my_kernel = kernel_)"
+           + type + R"((my_sum, print_my_sum, "my_sum")
     )";
 }
 
@@ -41,7 +44,8 @@ Args:
 Examples:
 
 >>> from dcgpy import *
->>> kernels = kernel_set_)" + type + R"((["sum", "diff", "mul", "div"])
+>>> kernels = kernel_set_)"
+           + type + R"((["sum", "diff", "mul", "div"])
 >>> kernels()[0](["x", "y"])
     )";
 }
@@ -50,7 +54,8 @@ std::string expression_init_doc(const std::string &type)
 {
     return R"(__init__(inputs, outputs, rows, columns, levels_back, arity, kernels, seed)
 
-Constructs a CGP expression operating on )" + type + R"(
+Constructs a CGP expression operating on )"
+           + type + R"(
 
 Args:
     inputs (``int``): number of inputs
@@ -59,13 +64,15 @@ Args:
     columns (``int``): number of columns in the cartesian program
     levels_back (``int``): number of levels-back in the cartesian program
     arity (``int``): arity of the kernels
-    kernels (``List[dcgpy.kernel_)" + type + R"(]``): kernel functions
+    kernels (``List[dcgpy.kernel_)"
+           + type + R"(]``): kernel functions
     seed (``int``): random seed to generate mutations and chromosomes
 
 Examples:
 
 >>> from dcgpy import *
->>> dcgp = expression_)" + type + R"((1,1,1,10,11,2,kernel_set(["sum","diff","mul","div"])(), 32u)
+>>> dcgp = expression_)"
+           + type + R"((1,1,1,10,11,2,kernel_set(["sum","diff","mul","div"])(), 32u)
 >>> print(dcgp)
 ...
 >>> num_out = dcgp([in])
@@ -91,7 +98,8 @@ std::string kernel_set_push_back_ker_doc(const std::string &type)
 Adds one more kernel to the set.
 
 Args:
-    kernel (``dcgpy.kernel_)" + type + R"(``): the kernel to add
+    kernel (``dcgpy.kernel_)"
+           + type + R"(``): the kernel to add
     )";
 }
 
@@ -138,7 +146,7 @@ Args:
     weight (a ``float``): the new value of the weight
 
 Raises:
-    ValueError: if node_id or input_id are not valid
+    ValueError: if *node_id* or *input_id* are not valid
     )";
 }
 
@@ -173,7 +181,124 @@ Returns:
     The value of the weight (a ``float``)
 
 Raises:
-    ValueError: if node_id or input_id are not valid
+    ValueError: if *node_id* or *input_id* are not valid
     )";
 }
-} // namespace
+
+std::string expression_ann_set_weight_doc()
+{
+    return R"(set_weight(node_id, input_id, weight)
+set_weight(idx, weight)
+
+Sets a weight. Two overloads are available. You can set the weight specifying the node and the input id (that needs
+to be less than the arity), or directly specifying its position in the weight vector.
+
+Note:
+    Convention adopted for node numbering: http://ppsn2014.ijs.si/files/slides/ppsn2014-tutorial3-miller.pdf
+
+Args:
+    node_id (an ``int``): the id of the node whose weight is being set
+    input_id (an ``int``): the id of the node input (0 for the first one up to arity-1)
+    weight (a ``float``): the new value of the weight
+    idx (an ``int``): the idx of weight to be set
+
+Raises:
+    ValueError: if *node_id* or *input_id* or *idx* are not valid
+    )";
+}
+
+std::string expression_ann_get_weight_doc()
+{
+    return R"(get_weight(node_id, input_id)
+get_weight(idx)
+
+Gets a weight. Two overloads are available. You can get the weight specifying the node and the input id (that needs
+to be less than the arity), or directly specifying its position in the weight vector.
+
+Note:
+    Convention adopted for node numbering: http://ppsn2014.ijs.si/files/slides/ppsn2014-tutorial3-miller.pdf
+
+Args:
+    node_id (an ``int``): the id of the node
+    input_id (an ``int``): the id of the node input (0 for the first one up to arity-1)
+    idx (an ``int``): the idx of weight to be set
+
+Returns:
+    The value of the weight (a ``float``)
+
+Raises:
+    ValueError: if *node_id* or *input_id* or *idx* are not valid
+    )";
+}
+
+std::string expression_ann_set_bias_doc()
+{
+    return R"(set_bias(node_id, bias)
+
+Sets a bias.
+
+Note:
+    Convention adopted for node numbering: http://ppsn2014.ijs.si/files/slides/ppsn2014-tutorial3-miller.pdf
+
+Args:
+    node_id (an ``int``): the id of the node whose weight is being set
+    weight (a ``float``): the new value of the weight
+
+Raises:
+    ValueError: if *node_id* is not valid
+    )";
+}
+
+std::string expression_ann_set_biases_doc()
+{
+    return R"(set_biases(biases)
+
+Sets all biases.
+
+Args:
+    biases (a ``List[float]``): the new values of the biases
+
+Raises:
+    ValueError: if the input vector dimension is not valid (r*c)
+    )";
+}
+
+std::string expression_ann_get_bias_doc()
+{
+    return R"(get_bias(node_id)
+
+Gets a bias.
+
+Note:
+    Convention adopted for node numbering: http://ppsn2014.ijs.si/files/slides/ppsn2014-tutorial3-miller.pdf
+
+Args:
+    node_id (an ``int``): the id of the node
+
+Returns:
+    The value of the bias (a ``float``)
+
+Raises:
+    ValueError: if *node_id* is not valid
+    )";
+}
+
+std::string expression_ann_sgd_doc()
+{
+    return R"(sgd(points, predictions, lr, batch_size)
+
+Performs one epoch of stochastic gradient descent updating the weights and biases using the 
+*points* and *predictions* to compute the mean square error.
+
+Args:
+    points (2D NumPy float array or ``list of lists`` of ``float``): the input data
+    predictions (2D NumPy float array or ``list of lists`` of ``float``): the output predictions (supervised signal)
+    lr (a ``float``): the learning generate
+    batch_size (an ``int``): the batch size
+
+Raises:
+    ValueError: if *points* or *predictions* are malformed
+    )";
+}
+
+} // namespace dcgpy

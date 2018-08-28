@@ -4,7 +4,6 @@
 #include <audi/audi.hpp>
 #include <initializer_list>
 #include <iostream>
-#include <map>
 #include <random>
 #include <sstream>
 #include <stdexcept>
@@ -26,8 +25,6 @@ namespace dcgp
  * as to mutate the expression.
  *
  * @tparam T expression type. Can be double, or a gdual type.
- *
- * @author Dario Izzo (dario.izzo@gmail.com)
  */
 template <typename T>
 class expression_weighted : public expression<T>
@@ -89,23 +86,25 @@ public:
             throw std::invalid_argument("Input size is incompatible");
         }
         std::vector<U> retval(this->get_m());
-        std::map<unsigned int, U> node;
+        std::vector<U> node;
+        node.reserve(this->get_active_nodes().size());
         std::vector<U> function_in(this->get_arity());
         for (auto i : this->get_active_nodes()) {
             if (i < this->get_n()) {
-                node[i] = in[i];
+                node.push_back(in[i]);
             } else {
                 unsigned int idx
                     = (i - this->get_n()) * (this->get_arity() + 1); // position in the chromosome of the current node
                 unsigned int weight_idx = (i - this->get_n()) * this->get_arity();
                 for (auto j = 0u; j < this->get_arity(); ++j) {
-                    function_in[j] = node[this->get()[idx + j + 1]];
+                    function_in[j] = node[this->get_active_nodes_map().at(this->get()[idx + j + 1])];
                 }
-                node[i] = kernel_call(function_in, idx, weight_idx);
+                node.push_back(kernel_call(function_in, idx, weight_idx));
             }
         }
         for (auto i = 0u; i < this->get_m(); ++i) {
-            retval[i] = node[this->get()[(this->get_rows() * this->get_cols()) * (this->get_arity() + 1) + i]];
+            retval[i] = node[this->get_active_nodes_map().at(
+                this->get()[(this->get_rows() * this->get_cols()) * (this->get_arity() + 1) + i])];
         }
         return retval;
     }
@@ -210,7 +209,7 @@ public:
      *
      * @param[in] ws an std::vector containing all the weights to set
      *
-     * @throws std::invalid_argument if the input vector dimension is not valid (r**arity)
+     * @throws std::invalid_argument if the input vector dimension is not valid (r*c*arity)
      */
     void set_weights(const std::vector<T> &ws)
     {
@@ -231,7 +230,7 @@ public:
         return m_weights;
     }
 
-protected:
+private:
     // For numeric computations
     template <typename U, typename std::enable_if<std::is_same<U, double>::value || is_gdual<U>::value, int>::type = 0>
     U kernel_call(std::vector<U> &function_in, unsigned int idx, unsigned int weight_idx) const
@@ -252,7 +251,6 @@ protected:
         return this->get_f()[this->get()[idx]](function_in);
     }
 
-private:
     std::vector<T> m_weights;
     std::vector<std::string> m_weights_symbols;
 };

@@ -1,17 +1,15 @@
-#include <audi/audi.hpp>
-#include <ctime>
-#include <iomanip>
-#include <iostream>
 #include <random>
+#define BOOST_TEST_MODULE dcgp_expression_ann_test
+#include <algorithm>
+#include <audi/back_compatibility.hpp>
+#include <audi/io.hpp>
+#include <boost/test/unit_test.hpp>
+#include <boost/timer/timer.hpp>
 
 #include <dcgp/expression_ann.hpp>
-#include <dcgp/kernel.hpp>
 #include <dcgp/kernel_set.hpp>
-#include <dcgp/wrapped_functions.hpp>
 
 using namespace dcgp;
-using fun_type = std::function<double(const std::vector<double> &)>;
-using fun_print_type = std::function<std::string(const std::vector<std::string> &)>;
 
 void perform_sgd(unsigned int rows, unsigned int columns, unsigned int levels_back, unsigned int arity, unsigned int N,
                  unsigned bs, std::vector<dcgp::kernel<double>> kernel_set)
@@ -45,12 +43,14 @@ void perform_sgd(unsigned int rows, unsigned int columns, unsigned int levels_ba
               << " n. weights:" << ex.get_active_nodes().size() * ex.get_arity()
               << " n. biases:" << ex.get_active_nodes().size() << std::endl;
     {
-        // boost::timer::auto_cpu_timer t;
+        boost::timer::auto_cpu_timer t;
         ex.sgd(data, label, 0.01, bs);
     }
 }
 
-int main()
+/// This torture test is passed whenever it completes. It is meant to check for
+/// the code stability when large number of mutations are performed
+BOOST_AUTO_TEST_CASE(evaluation_speed)
 {
     unsigned int N = 1024;
 

@@ -1,14 +1,15 @@
 #ifndef DCGP_EXPRESSION_H
 #define DCGP_EXPRESSION_H
 
+#include <algorithm>
 #include <audi/audi.hpp>
 #include <initializer_list>
 #include <iostream>
-#include <map>
 #include <random>
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 #include <dcgp/kernel.hpp>
@@ -24,8 +25,6 @@ namespace dcgp
  * derivatives as well as to mutate the expression.
  *
  * @tparam T expression type. Can be double, or a gdual type.
- *
- * @author Dario Izzo (dario.izzo@gmail.com)
  */
 template <typename T>
 class expression
@@ -72,7 +71,7 @@ public:
         if (c == 0) throw std::invalid_argument("Number of columns is 0");
         if (r == 0) throw std::invalid_argument("Number of rows is 0");
         if (l == 0) throw std::invalid_argument("Number of level-backs is 0");
-        if (arity < 2) throw std::invalid_argument("Basis functions arity must be at least 2");
+        if (arity < 1) throw std::invalid_argument("Basis functions arity must be at least 2");
         if (f.size() == 0) throw std::invalid_argument("Number of basis functions is 0");
 
         // Bounds for the function genes
@@ -104,8 +103,10 @@ public:
         for (auto i = 0u; i < m_x.size(); ++i) {
             m_x[i] = std::uniform_int_distribution<unsigned>(m_lb[i], m_ub[i])(m_e);
         }
-        update_active();
+        update_data_structures();
     }
+
+    virtual ~expression(){};
 
     /// Sets the chromosome
     /** Sets a given chromosome as genotype for the expression and updates
@@ -122,7 +123,7 @@ public:
             throw std::invalid_argument("Chromosome is incompatible");
         }
         m_x = x;
-        update_active();
+        update_data_structures();
     }
 
     /// Gets the chromosome
@@ -282,7 +283,7 @@ public:
                 new_value = std::uniform_int_distribution<unsigned>(m_lb[idx], m_ub[idx])(m_e);
             } while (new_value == m_x[idx]);
             m_x[idx] = new_value;
-            update_active();
+            update_data_structures();
         }
     }
 
@@ -312,7 +313,7 @@ public:
                 flag = true;
             }
         }
-        if (flag) update_active();
+        if (flag) update_data_structures();
     }
 
     /// Mutates N random genes
@@ -338,7 +339,7 @@ public:
                 flag = true;
             }
         }
-        if (flag) update_active();
+        if (flag) update_data_structures();
     }
 
     /// Mutates one of the active genes
@@ -416,35 +417,48 @@ public:
      * symbolic representation (std::string). Any other type will result in a
      * compilation-time error (SFINAE).
      *
-     * @param[in] in an std::vector containing the values where the dCGP
+     * @param[point] an std::vector containing the values where the dCGP
      * expression has to be computed (doubles, gduals or strings)
      *
      * @return The value of the function (an std::vector)
      */
     template <typename U, functor_enabler<U> = 0>
-    std::vector<U> operator()(const std::vector<U> &in) const
+    std::vector<U> operator()(const std::vector<U> &point) const
     {
-        if (in.size() != m_n) {
+        if (point.size() != m_n) {
             throw std::invalid_argument("Input size is incompatible");
         }
         std::vector<U> retval(m_m);
-        std::map<unsigned, U> node;
+        std::vector<U> node;
+        node.reserve(m_active_nodes.size());
         std::vector<U> function_in(m_arity);
         for (auto i : m_active_nodes) {
             if (i < m_n) {
-                node[i] = in[i];
+                node.push_back(point[i]);
             } else {
                 unsigned idx = (i - m_n) * (m_arity + 1); // position in the chromosome of the current node
                 for (auto j = 0u; j < m_arity; ++j) {
-                    function_in[j] = node[m_x[idx + j + 1]];
+                    function_in[j] = node[m_active_nodes_map.at(m_x[idx + j + 1])];
                 }
-                node[i] = m_f[m_x[idx]](function_in);
+                node.push_back(m_f[m_x[idx]](function_in));
             }
         }
         for (auto i = 0u; i < m_m; ++i) {
-            retval[i] = node[m_x[(m_r * m_c) * (m_arity + 1) + i]];
+            retval[i] = node[m_active_nodes_map.at(m_x[(m_r * m_c) * (m_arity + 1) + i])];
         }
         return retval;
+    }
+
+    /// Checks if a given node is active
+    /**
+     *
+     * @param[in] idx the node to be checked
+     *
+     * @return True if the node *idx* is active in the CGP expression.
+     */
+    bool is_active(const unsigned idx) const
+    {
+        return (std::find(m_active_nodes.begin(), m_active_nodes.end(), idx) != m_active_nodes.end());
     }
 
     /// Evaluates the dCGP expression
@@ -493,7 +507,6 @@ public:
         return os;
     }
 
-protected:
     /// Validity of a chromosome
     /**
      * Checks if a chromosome (i.e. a sequence of integers) is a valid expression
@@ -517,8 +530,17 @@ protected:
         return true;
     }
 
-    // Updates the list of active nodes
-    void update_active()
+protected:
+    /// Updates the class data that depend on the chromosome
+    /**
+     * Some of the expression data depend on the chromosome. This is the case, for example,
+     * of the active nodes and active genes. Each time the chromosome is changed, these structures need also to be
+     * changed. A call to this method takes care of this. In derived classes (such as for example expression_ann), one
+     * can add more of these chromosome dependant data, and will thus need to override this method, making sure to still
+     * have it called by the new method and adding there the new data book-keeping.
+     */
+    //
+    virtual void update_data_structures()
     {
         assert(m_x.size() == m_lb.size());
 
@@ -555,6 +577,10 @@ protected:
         std::sort(m_active_nodes.begin(), m_active_nodes.end());
         m_active_nodes.erase(std::unique(m_active_nodes.begin(), m_active_nodes.end()), m_active_nodes.end());
 
+        // We fill in the m_active_nodes_map
+        for (decltype(m_active_nodes.size()) i = 0u; i < m_active_nodes.size(); ++i) {
+            m_active_nodes_map[m_active_nodes[i]] = static_cast<unsigned>(i);
+        }
         // Then the active genes
         m_active_genes.clear();
         for (auto i = 0u; i < m_active_nodes.size(); ++i) {
@@ -568,6 +594,19 @@ protected:
         for (auto i = 0u; i < m_m; ++i) {
             m_active_genes.push_back(m_r * m_c * (m_arity + 1) + i);
         }
+    }
+
+    /// Gets the active nodes map
+    /**
+     * Gets the unordered map m_active_nodes_map mapping active nodes idx to
+     * their position in the sorted vector. This allows to consider active nodes
+     * indexes (e.g. [1 7 8 9 12]) consecutive (e.g. [0 1 2 3 4])
+     *
+     * @return the unordered_map m_active_nodes_map
+     */
+    const std::unordered_map<unsigned, unsigned> &get_active_nodes_map() const
+    {
+        return m_active_nodes_map;
     }
 
 private:
@@ -591,6 +630,8 @@ private:
     std::vector<unsigned> m_ub;
     // active nodes idx (guaranteed to be always sorted)
     std::vector<unsigned> m_active_nodes;
+    // acive nodes map (mapping active nodes to their sorted position)
+    std::unordered_map<unsigned, unsigned> m_active_nodes_map;
     // active genes idx
     std::vector<unsigned> m_active_genes;
     // the encoded chromosome

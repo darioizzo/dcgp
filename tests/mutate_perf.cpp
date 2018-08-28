@@ -3,7 +3,8 @@
 #include <boost/timer/timer.hpp>
 #include <iostream>
 
-#include <dcgp/dcgp.hpp>
+#include <dcgp/expression.hpp>
+#include <dcgp/kernel_set.hpp>
 
 void perform_active_mutations(unsigned int in, unsigned int out, unsigned int rows, unsigned int columns,
                               unsigned int levels_back, unsigned int arity, unsigned int N,

@@ -6,9 +6,16 @@
 #include <vector>
 
 #include <dcgp/expression.hpp>
+#include <dcgp/expression_ann.hpp>
 #include <dcgp/expression_weighted.hpp>
 #include <dcgp/kernel.hpp>
 #include <dcgp/kernel_set.hpp>
+
+
+// See: https://docs.scipy.org/doc/numpy/reference/c-api.array.html#importing-the-api
+// In every cpp file We need to make sure this is included before everything else,
+// with the correct #defines.
+#define PY_ARRAY_UNIQUE_SYMBOL dcgpy_ARRAY_API
 
 #include "common_utils.hpp"
 #include "docstrings.hpp"
@@ -207,9 +214,91 @@ void expose_expression_weighted(std::string type)
              "Gets all weights");
 }
 
+template <typename T>
+void expose_expression_ann(std::string type)
+{
+    std::string class_name = "expression_ann_" + type;
+    bp::class_<expression_ann<T>, bp::bases<expression<T>>>(class_name.c_str(), bp::no_init)
+        .def("__init__",
+             bp::make_constructor(
+                 +[](unsigned int in, unsigned int out, unsigned int rows, unsigned int cols, unsigned int levelsback,
+                     unsigned int arity, const bp::object &kernels, unsigned int seed) {
+                     auto kernels_v = l_to_v<kernel<T>>(kernels);
+                     return ::new expression_ann<T>(in, out, rows, cols, levelsback, arity, kernels_v, seed);
+                 },
+                 bp::default_call_policies(),
+                 (bp::arg("inputs"), bp::arg("outputs"), bp::arg("rows"), bp::arg("cols"), bp::arg("levels_back"),
+                  bp::arg("arity"), bp::arg("kernels"), bp::arg("seed"))),
+             expression_init_doc(type).c_str())
+        .def("__repr__",
+             +[](const expression_ann<T> &instance) -> std::string {
+                 std::ostringstream oss;
+                 oss << instance;
+                 return oss.str();
+             })
+        .def("__call__",
+             +[](const expression_ann<T> &instance, const bp::object &in) {
+                 try {
+                     auto v = l_to_v<T>(in);
+                     return v_to_l(instance(v));
+                 } catch (...) {
+                     PyErr_Clear();
+                     auto v = l_to_v<std::string>(in);
+                     return v_to_l(instance(v));
+                 }
+             })
+        .def("set_bias", &expression_ann<T>::set_bias, expression_ann_set_bias_doc().c_str(),
+             (bp::arg("node_id"), bp::arg("bias")))
+        .def("set_biases",
+             +[](expression_ann<T> &instance, const bp::object &biases) { instance.set_biases(l_to_v<T>(biases)); },
+             expression_ann_set_biases_doc().c_str(), (bp::arg("biases")))
+        .def("get_bias", &expression_ann<T>::get_bias, expression_ann_get_bias_doc().c_str(), (bp::arg("node_id")))
+        .def("get_biases", +[](expression_ann<T> &instance) { return v_to_l(instance.get_biases()); },
+             "Gets all biases")
+        .def("set_weight", +[](expression_ann<T> &instance, unsigned idx, T w) { instance.set_weight(idx, w); },
+             (bp::arg("idx"), bp::arg("value")))
+        .def("set_weight",
+             +[](expression_ann<T> &instance, unsigned node_id, unsigned input_id, T w) {
+                 instance.set_weight(node_id, input_id, w);
+             },
+             expression_ann_set_weight_doc().c_str(), (bp::arg("node_id"), bp::arg("input_id"), bp::arg("value")))
+        .def("set_weights",
+             +[](expression_ann<T> &instance, const bp::object &weights) { instance.set_weights(l_to_v<T>(weights)); },
+             expression_weighted_set_weights_doc().c_str(), (bp::arg("weights")))
+        .def("get_weight", +[](expression_ann<T> &instance, unsigned idx) { return instance.get_weight(idx); },
+             (bp::arg("idx")))
+        .def("get_weight",
+             +[](expression_ann<T> &instance, unsigned node_id, unsigned input_id) {
+                 return instance.get_weight(node_id, input_id);
+             },
+             expression_ann_get_weight_doc().c_str(), (bp::arg("node_id"), bp::arg("input_id")))
+        .def("get_weights", +[](expression_ann<T> &instance) { return v_to_l(instance.get_weights()); },
+             "Gets all weights")
+        .def("sgd",
+             +[](expression_ann<T> &instance, const bp::object &points, const bp::object &predictions, double l_rate,
+                 unsigned batch_size) { instance.sgd(to_vvd(points), to_vvd(predictions), l_rate, batch_size); },
+             expression_ann_sgd_doc().c_str(),
+             (bp::arg("points"), bp::arg("predictions"), bp::arg("lr"), bp::arg("batch_size")));
+}
+
 BOOST_PYTHON_MODULE(core)
 {
     bp::docstring_options doc_options;
+
+    // Init numpy.
+    // NOTE: only the second import is strictly necessary. We run a first import from BP
+    // because that is the easiest way to detect whether numpy is installed or not (rather
+    // than trying to figure out a way to detect it from import_array()).
+    try {
+        bp::import("numpy.core.multiarray");
+    } catch (...) {
+        dcgpy::builtin().attr("print")(
+            u8"\033[91m====ERROR====\nThe NumPy module could not be imported. "
+            u8"Please make sure that NumPy has been correctly installed.\n====ERROR====\033[0m");
+        throw std::runtime_error("Import error");
+    }
+    dcgpy::numpy_import_array();
+
     doc_options.enable_all();
     doc_options.disable_cpp_signatures();
     doc_options.disable_py_signatures();
@@ -218,10 +307,13 @@ BOOST_PYTHON_MODULE(core)
     expose_kernel_set<double>("double");
     expose_expression<double>("double");
     expose_expression_weighted<double>("double");
+    expose_expression_ann<double>("double");
+
     expose_kernel<gdual_d>("gdual_double");
     expose_kernel_set<gdual_d>("gdual_double");
     expose_expression<gdual_d>("gdual_double");
     expose_expression_weighted<gdual_d>("gdual_double");
+
     expose_kernel<gdual_v>("gdual_vdouble");
     expose_kernel_set<gdual_v>("gdual_vdouble");
     expose_expression<gdual_v>("gdual_vdouble");

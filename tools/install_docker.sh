@@ -106,6 +106,10 @@ cd build
 cmake -DAUDI_BUILD_AUDI=yes -DAUDI_BUILD_TESTS=no -DCMAKE_BUILD_TYPE=Release ../
 make install > /dev/null 2>&1
 
+# Python deps
+/opt/python/${PYTHON_DIR}/bin/pip install numpy
+sleep 20
+
 # Install dcgp headers
 cd /dcgp
 mkdir build_dcgp

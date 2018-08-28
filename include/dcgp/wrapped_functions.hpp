@@ -101,6 +101,10 @@ std::string print_my_div(const std::vector<std::string> &in)
     return "(" + retval + ")";
 }
 
+/*--------------------------------------------------------------------------
+ *                                  Suitable for ANN
+ *------------------------------------------------------------------------**/
+
 // sigmoid function: 1 / (1 + exp(- (a + b + c + d+ .. + ))
 template <typename T, f_enabler<T> = 0>
 T my_sig(const std::vector<T> &in)
@@ -119,6 +123,60 @@ std::string print_my_sig(const std::vector<std::string> &in)
         retval += "+" + in[i];
     }
     return "sig(" + retval + ")";
+}
+
+// tanh function:
+template <typename T, f_enabler<T> = 0>
+T my_tanh(const std::vector<T> &in)
+{
+    T retval(in[0]);
+    for (auto i = 1u; i < in.size(); ++i) {
+        retval += in[i];
+    }
+    return audi::tanh(retval);
+}
+
+std::string print_my_tanh(const std::vector<std::string> &in)
+{
+    std::string retval(in[0]);
+    for (auto i = 1u; i < in.size(); ++i) {
+        retval += "+" + in[i];
+    }
+    return "tanh(" + retval + ")";
+}
+
+// ReLu function:
+template <typename T, typename std::enable_if<std::is_same<T, double>::value, int>::type = 0>
+T my_relu(const std::vector<T> &in)
+{
+    T retval(in[0]);
+    for (auto i = 1u; i < in.size(); ++i) {
+        retval += in[i];
+    }
+    (retval < 0) ? retval= T(0.) : retval=retval ;
+    return retval;
+}
+
+// ReLu function:
+template <typename T, typename std::enable_if<is_gdual<T>::value, int>::type = 0>
+T my_relu(const std::vector<T> &in)
+{
+    T retval(in[0]);
+    for (auto i = 1u; i < in.size(); ++i) {
+        retval += in[i];
+    }
+    (retval.constant_cf() < T(0.).constant_cf()) ? retval= T(0.) : retval=retval ;
+    return retval;
+}
+
+
+std::string print_my_relu(const std::vector<std::string> &in)
+{
+    std::string retval(in[0]);
+    for (auto i = 1u; i < in.size(); ++i) {
+        retval += "+" + in[i];
+    }
+    return "ReLu(" + retval + ")";
 }
 
 /*--------------------------------------------------------------------------

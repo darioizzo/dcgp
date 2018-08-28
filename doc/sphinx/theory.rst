@@ -38,8 +38,6 @@ allowing for additional tasks beyond simple regression, *e.g.*:
 * learning differential models,
 * capturing conserved quantities in dynamical systems.
 
-You can find some examples in the :ref:`Jupyter notebooks <notebooks>`.
-
 .. _reference:
 
 Reference
