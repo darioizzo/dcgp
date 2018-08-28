@@ -25,8 +25,6 @@ namespace dcgp
  * derivatives as well as to mutate the expression.
  *
  * @tparam T expression type. Can be double, or a gdual type.
- *
- * @author Dario Izzo (dario.izzo@gmail.com)
  */
 template <typename T>
 class expression

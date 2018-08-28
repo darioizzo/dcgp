@@ -25,8 +25,6 @@ namespace dcgp
  * dcgp::expression.
  *
  * @tparam T expression type. Can only be a float type
- *
- * @author Dario Izzo (dario.izzo@gmail.com)
  */
 template <typename T>
 class expression_ann : public expression<T>
@@ -414,8 +412,9 @@ public:
      * @param[seed] the seed to generate the new weights (by default its randomly generated).
      *
      */
-    void randomise_weights(double mean = 0., double std = 0.1,
-                           decltype(std::random_device{}()) seed = std::random_device{}())
+#if !defined(DCGP_DOXYGEN_INVOKED)
+    void randomise_weights(double mean = 0, double std = 0.1,
+                           std::random_device::result_type seed = std::random_device{}())
     {
         std::mt19937 gen{seed};
         std::normal_distribution<T> nd{mean, std};
@@ -423,6 +422,9 @@ public:
             w = nd(gen);
         }
     }
+#else
+    void randomise_weights(double mean = 0, double std = 0.1, std::random_device::result_type seed = random_number) {}
+#endif
 
     /// Sets a bias
     /**
@@ -485,8 +487,9 @@ public:
      * @param[in] seed the seed to generate the new biases (by default its randomly generated)
      *
      */
+#if !defined(DCGP_DOXYGEN_INVOKED)
     void randomise_biases(double mean = 0., double std = 0.1,
-                          decltype(std::random_device{}()) seed = std::random_device{}())
+                          std::random_device::result_type seed = std::random_device{}())
     {
         std::mt19937 gen{seed};
         std::normal_distribution<T> nd{mean, std};
@@ -494,6 +497,10 @@ public:
             b = nd(gen);
         }
     }
+#else
+    void randomise_biases(double mean = 0, double std = 0.1, std::random_device::result_type seed = random_number) {}
+#endif
+
 
     /*@}*/
 

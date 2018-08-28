@@ -11,7 +11,7 @@ C++
 
 dCGP is a header-only library which has the following third party dependencies:
 
-* `Piranha <http://bluescarni.github.io/piranha/sphinx/>`_, header-only library (git clone https://github.com/bluescarni/piranha.git)
+* `Piranha <http://bluescarni.github.io/piranha/sphinx/>`_, header-only library (git clone https://github.com/bluescarni/piranha.git). **Version 0.11 is REQUIRED**.
 * `AuDi <http://darioizzo.github.io/audi/>`_, header-only library (git clone https://github.com/darioizzo/audi.git)
 * `Boost <http://www.boost.org/>`_, headers only (needs the libraries if you intend to use the python bindings)
 
@@ -44,10 +44,10 @@ On a Win 64bit system or a Linux based system (32 or 64 bits), the Python packag
 
    pip install dcgpy
 
-Building the module
-^^^^^^^^^^^^^^^^^^^
+Building the python module
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-To build the module you need to have the Boost Python libraries installed and to activate the BUILD_DCGPY option from within CMake.
+To build the module you need to have the Boost Python libraries installed and to activate the BUILD_DCGPY option from within CMake (and deselect BUILD_DCGP)
 
 Check carefully what Python version is detected and what libraries are linked to. In particular select the correct boost_python
 according to the Python version (2 or 3) you want to compile the module for.
