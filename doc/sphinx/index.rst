@@ -21,7 +21,24 @@ The first one adds weights to the standard CGP nodes connections, while the seco
 
    A dCGP expression and its differential expansion in a specified point
 
+----------------------------------------------------------------
+
+Table of contents:
+^^^^^^^^^^^^^^^^^^^^
+
+.. toctree::
+  :maxdepth: 1
+
+  installation
+  quickstart
+  docs/index
+  tutorials/index
+  theory
+
+---------------------------------------------------------------
+
 References
 ^^^^^^^^^^
 
 Dario Izzo, Francesco Biscani, and Alessio Mereta. `Differentiable Genetic Programming. <https://arxiv.org/pdf/1611.04766v1.pdf>`_ arXiv preprint arXiv:1611.04766 (2016).
+

@@ -33,11 +33,12 @@ template <typename T>
 class kernel
 {
 public:
+#if !defined(DCGP_DOXYGEN_INVOKED)
     /// Basic prototype of a kernel function returning its evaluation
     using my_fun_type = std::function<T(const std::vector<T> &)>;
     /// Basic prototype of a kernel function returning its symbolic representation
     using my_print_fun_type = std::function<std::string(const std::vector<std::string> &)>;
-
+#endif
     /// Constructor
     /**
      * Constructs a kernel that can be used as kernel in a dCGP expression
