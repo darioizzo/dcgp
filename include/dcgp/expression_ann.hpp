@@ -95,8 +95,7 @@ public:
         std::vector<U> retval(this->get_m());
         auto node = fill_nodes(point);
         for (auto i = 0u; i < this->get_m(); ++i) {
-            retval[i] = node[this->get_active_nodes_map().at(
-                this->get()[(this->get_rows() * this->get_cols()) * (this->get_arity() + 1) + i])];
+            retval[i] = node[this->get()[(this->get_rows() * this->get_cols()) * (this->get_arity() + 1) + i]];
         }
         return retval;
     }
@@ -149,14 +148,15 @@ public:
         // ------------------------------------------ Forward pass (takes roughly half of the time) --------------------
         // All active nodes outputs get computed as well as
         // the activation function derivatives
-        std::vector<U> node, d_node;
+        auto n_nodes = this->get_n() + this->get_rows() * this->get_cols();
+        std::vector<U> node(n_nodes, 0.), d_node(n_nodes, 0.);
         fill_nodes(point, node, d_node); // here is where the computations happen.
 
         // We add to node and node_d some virtual nodes containing the output values (x_i-\hat x_i) ^ 2, and its
         // derivative 2(x_i - \hat x_i) so that the acyclic graph is now computing all blocks of the mse (a dCGP-ANN
         // only computes outputs)
         for (decltype(this->get_m()) i = 0u; i < this->get_m(); ++i) {
-            auto node_idx = this->get_active_nodes_map().at(this->get()[this->get().size() - this->get_m() + i]);
+            auto node_idx = this->get()[this->get().size() - this->get_m() + i];
             auto dummy = (node[node_idx] - prediction[i]);
             node.push_back(dummy * dummy);
             d_node.push_back(2 * dummy);
@@ -175,14 +175,14 @@ public:
             // index of the node in the chromosome
             auto c_idx = (*it - this->get_n()) * (this->get_arity() + 1);
             // index in the node/d_node vectors
-            auto n_idx = this->get_active_nodes_map().at(*it);
+            auto n_idx = *it;
             // We update the d_node information
             U cum = 0.;
             for (auto i = 0u; i < m_connected.at(*it).size(); ++i) {
                 // If the node is not "virtual", that is not one of the m virtual nodes we added computing (x-x_i)^2
                 if (m_connected.at(*it)[i].first < this->get_n() + this->get_rows() * this->get_cols()) {
                     cum += m_weights[m_connected.at(*it)[i].second]
-                           * d_node[this->get_active_nodes_map().at(m_connected.at(*it)[i].first)];
+                           * d_node[m_connected.at(*it)[i].first];
                 } else {
                     auto n_out = m_connected.at(*it)[i].first - (this->get_n() + this->get_rows() * this->get_cols());
                     cum += d_node[d_node.size() - this->get_m() + n_out];
@@ -192,7 +192,7 @@ public:
 
             // fill gradients for weights and biases info
             for (auto i = 0u; i < this->get_arity(); ++i) {
-                gweights[w_idx + i] = d_node[n_idx] * node[this->get_active_nodes_map().at(this->get()[c_idx + 1 + i])];
+                gweights[w_idx + i] = d_node[n_idx] * node[this->get()[c_idx + 1 + i]];
             }
             gbiases[b_idx] = d_node[n_idx];
         }
@@ -535,12 +535,11 @@ private:
         if (in.size() != this->get_n()) {
             throw std::invalid_argument("Input size is incompatible");
         }
-        std::vector<U> node;
-        node.reserve(this->get_active_nodes().size());
+        std::vector<U> node(this->get_n() + this->get_rows() * this->get_cols());
         std::vector<U> function_in(this->get_arity());
         for (auto i : this->get_active_nodes()) {
             if (i < this->get_n()) {
-                node.push_back(in[i]);
+                node[i] = in[i];
             } else {
                 // position in the chromosome of the current node
                 unsigned idx = (i - this->get_n()) * (this->get_arity() + 1);
@@ -549,9 +548,9 @@ private:
                 // starting position in m_biases of the node bias
                 unsigned bias_idx = i - this->get_n();
                 for (auto j = 0u; j < this->get_arity(); ++j) {
-                    function_in[j] = node[this->get_active_nodes_map().at(this->get()[idx + j + 1])];
+                    function_in[j] = node[this->get()[idx + j + 1]];
                 }
-                node.push_back(kernel_call(function_in, idx, weight_idx, bias_idx));
+                node[i] = kernel_call(function_in, idx, weight_idx, bias_idx);
             }
         }
         return node;
@@ -564,23 +563,15 @@ private:
         if (in.size() != this->get_n()) {
             throw std::invalid_argument("Input size is incompatible");
         }
-        // Init the output
-        node.clear();
-        node.clear();
-        // This will contain the output of active nodes
-        node.reserve(this->get_active_nodes().size());
-        // This will contain the derivative of active nodes output with respect to input df/din
-        d_node.reserve(this->get_active_nodes().size());
-
         // Start
         std::vector<U> function_in(this->get_arity());
         for (auto i : this->get_active_nodes()) {
             if (i < this->get_n()) {
-                node.push_back(in[i]);
+                node[i] = in[i];
                 // We need d_node to have the same structure of node, hence we also
                 // put some bogus entries fot the input nodes that actually do not have an activation function
                 // hence no need/use/meaning for a derivative
-                d_node.push_back(0.);
+                d_node[i] = 0.;
             } else {
                 // position in the chromosome of the current node
                 unsigned idx = (i - this->get_n()) * (this->get_arity() + 1);
@@ -589,20 +580,19 @@ private:
                 // starting position in m_biases of the node bias
                 unsigned bias_idx = i - this->get_n();
                 for (auto j = 0u; j < this->get_arity(); ++j) {
-                    function_in[j] = node[this->get_active_nodes_map().at(this->get()[idx + j + 1])];
+                    function_in[j] = node[this->get()[idx + j + 1]];
                 }
-                node.push_back(kernel_call(function_in, idx, weight_idx, bias_idx));
+                node[i] = kernel_call(function_in, idx, weight_idx, bias_idx);
                 // take cares of d_node
-                auto ii = this->get_active_nodes_map().at(i);
                 // sigmoid derivative is sig(1-sig)
                 if (this->get_f()[this->get()[idx]].get_name() == "sig") {
-                    d_node.push_back(node[ii] * (1. - node[ii]));
+                    d_node[i] = node[i] * (1. - node[i]);
                     // tanh derivative is 1 - tanh**2
                 } else if (this->get_f()[this->get()[idx]].get_name() == "tanh") {
-                    d_node.push_back(1. - node[ii] * node[ii]);
+                    d_node[i] = 1. - node[i] * node[i];
                     // Relu derivative is 0 if relu<0, 1 otherwise
                 } else if (this->get_f()[this->get()[idx]].get_name() == "ReLu") {
-                    d_node.push_back((node[ii] > 0.) ? 1. : 0.);
+                    d_node[i] = (node[i] > 0.) ? 1. : 0.;
                 }
             }
         }

@@ -86,25 +86,23 @@ public:
             throw std::invalid_argument("Input size is incompatible");
         }
         std::vector<U> retval(this->get_m());
-        std::vector<U> node;
-        node.reserve(this->get_active_nodes().size());
+        std::vector<U> node(this->get_n() + this->get_rows() * this->get_cols());
         std::vector<U> function_in(this->get_arity());
         for (auto i : this->get_active_nodes()) {
             if (i < this->get_n()) {
-                node.push_back(in[i]);
+                node[i] = in[i];
             } else {
                 unsigned int idx
                     = (i - this->get_n()) * (this->get_arity() + 1); // position in the chromosome of the current node
                 unsigned int weight_idx = (i - this->get_n()) * this->get_arity();
                 for (auto j = 0u; j < this->get_arity(); ++j) {
-                    function_in[j] = node[this->get_active_nodes_map().at(this->get()[idx + j + 1])];
+                    function_in[j] = node[this->get()[idx + j + 1]];
                 }
                 node.push_back(kernel_call(function_in, idx, weight_idx));
             }
         }
         for (auto i = 0u; i < this->get_m(); ++i) {
-            retval[i] = node[this->get_active_nodes_map().at(
-                this->get()[(this->get_rows() * this->get_cols()) * (this->get_arity() + 1) + i])];
+            retval[i] = node[this->get()[(this->get_rows() * this->get_cols()) * (this->get_arity() + 1) + i]];
         }
         return retval;
     }

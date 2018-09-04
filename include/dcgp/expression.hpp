@@ -429,22 +429,21 @@ public:
             throw std::invalid_argument("Input size is incompatible");
         }
         std::vector<U> retval(m_m);
-        std::vector<U> node;
-        node.reserve(m_active_nodes.size());
+        std::vector<U> node(m_n + m_r * m_c);
         std::vector<U> function_in(m_arity);
         for (auto i : m_active_nodes) {
             if (i < m_n) {
-                node.push_back(point[i]);
+                node[i] = point[i];
             } else {
                 unsigned idx = (i - m_n) * (m_arity + 1); // position in the chromosome of the current node
                 for (auto j = 0u; j < m_arity; ++j) {
-                    function_in[j] = node[m_active_nodes_map.at(m_x[idx + j + 1])];
+                    function_in[j] = node[m_x[idx + j + 1]];
                 }
-                node.push_back(m_f[m_x[idx]](function_in));
+                node[i] = m_f[m_x[idx]](function_in);
             }
         }
         for (auto i = 0u; i < m_m; ++i) {
-            retval[i] = node[m_active_nodes_map.at(m_x[(m_r * m_c) * (m_arity + 1) + i])];
+            retval[i] = node[m_x[(m_r * m_c) * (m_arity + 1) + i]];
         }
         return retval;
     }
@@ -577,10 +576,6 @@ protected:
         std::sort(m_active_nodes.begin(), m_active_nodes.end());
         m_active_nodes.erase(std::unique(m_active_nodes.begin(), m_active_nodes.end()), m_active_nodes.end());
 
-        // We fill in the m_active_nodes_map
-        for (decltype(m_active_nodes.size()) i = 0u; i < m_active_nodes.size(); ++i) {
-            m_active_nodes_map[m_active_nodes[i]] = static_cast<unsigned>(i);
-        }
         // Then the active genes
         m_active_genes.clear();
         for (auto i = 0u; i < m_active_nodes.size(); ++i) {
@@ -594,19 +589,6 @@ protected:
         for (auto i = 0u; i < m_m; ++i) {
             m_active_genes.push_back(m_r * m_c * (m_arity + 1) + i);
         }
-    }
-
-    /// Gets the active nodes map
-    /**
-     * Gets the unordered map m_active_nodes_map mapping active nodes idx to
-     * their position in the sorted vector. This allows to consider active nodes
-     * indexes (e.g. [1 7 8 9 12]) consecutive (e.g. [0 1 2 3 4])
-     *
-     * @return the unordered_map m_active_nodes_map
-     */
-    const std::unordered_map<unsigned, unsigned> &get_active_nodes_map() const
-    {
-        return m_active_nodes_map;
     }
 
 private:
@@ -630,8 +612,6 @@ private:
     std::vector<unsigned> m_ub;
     // active nodes idx (guaranteed to be always sorted)
     std::vector<unsigned> m_active_nodes;
-    // acive nodes map (mapping active nodes to their contiguous sorted position). i.e [0, 1, 5, 7] -> [0, 1, 2, 3]
-    std::unordered_map<unsigned, unsigned> m_active_nodes_map;
     // active genes idx
     std::vector<unsigned> m_active_genes;
     // the encoded chromosome
