@@ -630,7 +630,7 @@ private:
     std::vector<unsigned> m_ub;
     // active nodes idx (guaranteed to be always sorted)
     std::vector<unsigned> m_active_nodes;
-    // acive nodes map (mapping active nodes to their sorted position)
+    // acive nodes map (mapping active nodes to their contiguous sorted position). i.e [0, 1, 5, 7] -> [0, 1, 2, 3]
     std::unordered_map<unsigned, unsigned> m_active_nodes_map;
     // active genes idx
     std::vector<unsigned> m_active_genes;

@@ -151,56 +151,105 @@ public:
         // the activation function derivatives
         std::vector<U> node, d_node;
         fill_nodes(point, node, d_node);
+        
+        //print("point: ", point, "\n");
+        //print("node: ", node, "\n");
+        //print("d_node: ", d_node, "\n");
 
         // Compute mse and store it
-        unsigned j = 0u;
-        for (auto i = this->get().size() - this->get_m(); i < this->get().size(); ++i) {
-            auto node_idx = this->get_active_nodes_map().at(this->get()[i]);
-            value += (node[node_idx] - prediction[j]) * (node[node_idx] - prediction[j]);
-            j++;
+        // unsigned j = 0u;
+        // for (auto i = this->get().size() - this->get_m(); i < this->get().size(); ++i) {
+        //    auto node_idx = this->get_active_nodes_map().at(this->get()[i]);
+        //    auto dummy = (node[node_idx] - prediction[j]);
+        //    node.push_back(dummy*dummy);
+        //    value += dummy*dummy;
+        //    j++;
+
+        // We add some virtual nodes containing the output values (x_i-\hat x_i) ^ 2, and the derivative 2(x_i - \hat
+        // x_i) and compute the mse
+        for (decltype(this->get_m()) i = 0u; i < this->get_m(); ++i) {
+            auto node_idx = this->get_active_nodes_map().at(this->get()[this->get().size() - this->get_m() + i]);
+            auto dummy = (node[node_idx] - prediction[i]);
+            node.push_back(dummy * dummy);
+            d_node.push_back(2 * dummy);
+            value += dummy * dummy;
         }
 
+        print("\npoint: ", point, "\n");
+        print("node: ", node, "\n");
+        print("d_node: ", d_node, "\n");
+        print("m_weights: ", m_weights, "\n");
+        print("m_biases: ", m_biases, "\n");
+        print("get_active_nodes: ", this->get_active_nodes(), "\n");
+        print("get_active_nodes_map: {");
+        for (auto const& x : this->get_active_nodes_map())
+            {
+                print(x.first, ": ", x.second, ", ");
+            }
+        print("}\n");
+        print("m_connected: {");
+        for (auto const& x : m_connected)
+            {
+                print(x.first, ": ", x.second, ", ");
+            }
+        print("}\n");
+
         // ------------------------------------------ Backward pass (takes roughly the remaining half) -----------------
-        // 1 - We update d_node on the output nodes and accounting that
-        // mse = sum (O_i-\hat O_i)^2
-        j = 0u;
-        for (auto i = this->get().size() - this->get_m(); i < this->get().size(); ++i) {
-            auto node_idx = this->get_active_nodes_map().at(this->get()[i]);
-            d_node[node_idx] = d_node[node_idx] * 2 * (node[node_idx] - prediction[j]);
-            j++;
-        }
+        // 1 - We update d_node on the nodes connected to output nodes. To do so we must be careful as some nodes can
+        // influence more than one output value. In those cases d_node must contain the sum of the two (or more)
+        // contributions.
+        //std::vector<unsigned> last_nodes_idx(this->get().end() - this->get_m(), this->get().end());
+        //std::transform(last_nodes_idx.begin(), last_nodes_idx.end(), last_nodes_idx.begin(),
+        //               [this](unsigned i) { return this->get_active_nodes_map().at(i); });
+        //std::vector<double> save;
+        //print("last Nodes: ", last_nodes_idx, "\n");
+        //for (auto idx : last_nodes_idx) {
+        //    save.push_back(d_node[idx]);
+       // }
+       // for (auto idx : last_nodes_idx) {
+         //   d_node[idx] = 0;
+       // }
+        //print("d_node ", d_node, "\n");
+
+        //for (decltype(last_nodes_idx.size()) i = 0u; i < last_nodes_idx.size(); ++i) {
+        //    d_node[last_nodes_idx[i]] += 2 * (node[last_nodes_idx[i]] - prediction[i]) * save[i];
+       // }
 
         // 2 - We iterate backward on all the active nodes (except the input nodes)
         // filling up the gradient information at each node for the incoming weights and relative bias
-        if (this->get_active_nodes().size() > this->get_n()) { // guard for corner case
-            for (auto it = this->get_active_nodes().rbegin(); it != this->get_active_nodes().rend() - this->get_n();
-                 ++it) {
-                // index of the node in the bias vector
-                auto b_idx = *it - this->get_n();
-                // index of the node in the weight vector
-                auto w_idx = this->get_arity() * (*it - this->get_n());
-                // index of the node in the chromosome
-                auto c_idx = (*it - this->get_n()) * (this->get_arity() + 1);
-                // index in the node/d_node vectors
-                auto n_idx = this->get_active_nodes_map().at(*it);
-                // update d_node (only if the node is not connected to an output node, in which case the update has been
-                // done above)
-                if (std::find(this->get().end() - this->get_m(), this->get().end(), *it) == this->get().end()) {
-                    U cum = 0.;
-                    for (auto i = 0u; i < m_connected.at(*it).size(); ++i) {
+        for (auto it = this->get_active_nodes().rbegin(); it != this->get_active_nodes().rend(); ++it) {
+            if (*it < this->get_n()) continue;
+            // index of the node in the bias vector
+            auto b_idx = *it - this->get_n();
+            // index of the node in the weight vector
+            auto w_idx = this->get_arity() * (*it - this->get_n());
+            // index of the node in the chromosome
+            auto c_idx = (*it - this->get_n()) * (this->get_arity() + 1);
+            // index in the node/d_node vectors
+            auto n_idx = this->get_active_nodes_map().at(*it);
+            // update d_node (only if the node is not connected to an output node, in which case the update has been
+            // done above)
+            //if (std::find(this->get().end() - this->get_m(), this->get().end(), *it) == this->get().end()) {
+                U cum = 0.;
+                for (auto i = 0u; i < m_connected.at(*it).size(); ++i) {
+                    // If the node is not "virtual", that is not one of the m virtual nodes we added computing (x-x_i)^2
+                    if (m_connected.at(*it)[i].first < this->get_n() + this->get_rows() * this->get_cols()) {
                         cum += m_weights[m_connected.at(*it)[i].second]
-                               * d_node[this->get_active_nodes_map().at(m_connected.at(*it)[i].first)];
+                            * d_node[this->get_active_nodes_map().at(m_connected.at(*it)[i].first)];
+                    } else {
+                        auto n_out = m_connected.at(*it)[i].first - (this->get_n() + this->get_rows() * this->get_cols()) ;
+                        cum += d_node[d_node.size() - this->get_m() + n_out];
                     }
-                    d_node[n_idx] *= cum;
                 }
-                // fill gradients for weights and biases info
-                for (auto i = 0u; i < this->get_arity(); ++i) {
-                    gweights[w_idx + i]
-                        = d_node[n_idx] * node[this->get_active_nodes_map().at(this->get()[c_idx + 1 + i])];
-                }
-                gbiases[b_idx] = d_node[n_idx];
+                d_node[n_idx] *= cum;
+            //}
+            // fill gradients for weights and biases info
+            for (auto i = 0u; i < this->get_arity(); ++i) {
+                gweights[w_idx + i] = d_node[n_idx] * node[this->get_active_nodes_map().at(this->get()[c_idx + 1 + i])];
             }
+            gbiases[b_idx] = d_node[n_idx];
         }
+
         return std::make_tuple(std::move(value), std::move(gweights), std::move(gbiases));
     }
 
@@ -501,7 +550,6 @@ public:
     void randomise_biases(double mean = 0, double std = 0.1, std::random_device::result_type seed = random_number) {}
 #endif
 
-
     /*@}*/
 
 private:
@@ -633,6 +681,13 @@ private:
                 }
             }
         }
+        // We now add the output nodes with ids starting from n + r * c. In this case the weight is not
+        // relevant, hence we use the arbitrary value 0u as index in the weight vector.
+        for (auto i = 0u; i < this->get_m(); ++i) {
+            auto virtual_idx = this->get_n() + this->get_rows() * this->get_cols() + i;
+            auto node_idx = this->get()[this->get().size() - this->get_m() + i];
+            m_connected[node_idx].push_back({virtual_idx, 0u});
+        }
     }
 
     /// Performs one weight/bias update
@@ -692,6 +747,8 @@ private:
     std::vector<T> m_biases;
     std::vector<std::string> m_biases_symbols;
 
+    // This maps, for each active node, all the nodes it will feed into and the weight_idx
+    // The map includes also the output nodes having an assigned id starting from n + r * c
     std::unordered_map<unsigned, std::vector<std::pair<unsigned, unsigned>>> m_connected;
 }; // namespace dcgp
 
