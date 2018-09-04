@@ -150,23 +150,11 @@ public:
         // All active nodes outputs get computed as well as
         // the activation function derivatives
         std::vector<U> node, d_node;
-        fill_nodes(point, node, d_node);
-        
-        //print("point: ", point, "\n");
-        //print("node: ", node, "\n");
-        //print("d_node: ", d_node, "\n");
+        fill_nodes(point, node, d_node); // here is where the computations happen.
 
-        // Compute mse and store it
-        // unsigned j = 0u;
-        // for (auto i = this->get().size() - this->get_m(); i < this->get().size(); ++i) {
-        //    auto node_idx = this->get_active_nodes_map().at(this->get()[i]);
-        //    auto dummy = (node[node_idx] - prediction[j]);
-        //    node.push_back(dummy*dummy);
-        //    value += dummy*dummy;
-        //    j++;
-
-        // We add some virtual nodes containing the output values (x_i-\hat x_i) ^ 2, and the derivative 2(x_i - \hat
-        // x_i) and compute the mse
+        // We add to node and node_d some virtual nodes containing the output values (x_i-\hat x_i) ^ 2, and its
+        // derivative 2(x_i - \hat x_i) so that the acyclic graph is now computing all blocks of the mse (a dCGP-ANN
+        // only computes outputs)
         for (decltype(this->get_m()) i = 0u; i < this->get_m(); ++i) {
             auto node_idx = this->get_active_nodes_map().at(this->get()[this->get().size() - this->get_m() + i]);
             auto dummy = (node[node_idx] - prediction[i]);
@@ -175,47 +163,8 @@ public:
             value += dummy * dummy;
         }
 
-        print("\npoint: ", point, "\n");
-        print("node: ", node, "\n");
-        print("d_node: ", d_node, "\n");
-        print("m_weights: ", m_weights, "\n");
-        print("m_biases: ", m_biases, "\n");
-        print("get_active_nodes: ", this->get_active_nodes(), "\n");
-        print("get_active_nodes_map: {");
-        for (auto const& x : this->get_active_nodes_map())
-            {
-                print(x.first, ": ", x.second, ", ");
-            }
-        print("}\n");
-        print("m_connected: {");
-        for (auto const& x : m_connected)
-            {
-                print(x.first, ": ", x.second, ", ");
-            }
-        print("}\n");
-
         // ------------------------------------------ Backward pass (takes roughly the remaining half) -----------------
-        // 1 - We update d_node on the nodes connected to output nodes. To do so we must be careful as some nodes can
-        // influence more than one output value. In those cases d_node must contain the sum of the two (or more)
-        // contributions.
-        //std::vector<unsigned> last_nodes_idx(this->get().end() - this->get_m(), this->get().end());
-        //std::transform(last_nodes_idx.begin(), last_nodes_idx.end(), last_nodes_idx.begin(),
-        //               [this](unsigned i) { return this->get_active_nodes_map().at(i); });
-        //std::vector<double> save;
-        //print("last Nodes: ", last_nodes_idx, "\n");
-        //for (auto idx : last_nodes_idx) {
-        //    save.push_back(d_node[idx]);
-       // }
-       // for (auto idx : last_nodes_idx) {
-         //   d_node[idx] = 0;
-       // }
-        //print("d_node ", d_node, "\n");
-
-        //for (decltype(last_nodes_idx.size()) i = 0u; i < last_nodes_idx.size(); ++i) {
-        //    d_node[last_nodes_idx[i]] += 2 * (node[last_nodes_idx[i]] - prediction[i]) * save[i];
-       // }
-
-        // 2 - We iterate backward on all the active nodes (except the input nodes)
+        // We iterate backward on all the active nodes (except the input nodes)
         // filling up the gradient information at each node for the incoming weights and relative bias
         for (auto it = this->get_active_nodes().rbegin(); it != this->get_active_nodes().rend(); ++it) {
             if (*it < this->get_n()) continue;
@@ -227,22 +176,20 @@ public:
             auto c_idx = (*it - this->get_n()) * (this->get_arity() + 1);
             // index in the node/d_node vectors
             auto n_idx = this->get_active_nodes_map().at(*it);
-            // update d_node (only if the node is not connected to an output node, in which case the update has been
-            // done above)
-            //if (std::find(this->get().end() - this->get_m(), this->get().end(), *it) == this->get().end()) {
-                U cum = 0.;
-                for (auto i = 0u; i < m_connected.at(*it).size(); ++i) {
-                    // If the node is not "virtual", that is not one of the m virtual nodes we added computing (x-x_i)^2
-                    if (m_connected.at(*it)[i].first < this->get_n() + this->get_rows() * this->get_cols()) {
-                        cum += m_weights[m_connected.at(*it)[i].second]
-                            * d_node[this->get_active_nodes_map().at(m_connected.at(*it)[i].first)];
-                    } else {
-                        auto n_out = m_connected.at(*it)[i].first - (this->get_n() + this->get_rows() * this->get_cols()) ;
-                        cum += d_node[d_node.size() - this->get_m() + n_out];
-                    }
+            // We update the d_node information
+            U cum = 0.;
+            for (auto i = 0u; i < m_connected.at(*it).size(); ++i) {
+                // If the node is not "virtual", that is not one of the m virtual nodes we added computing (x-x_i)^2
+                if (m_connected.at(*it)[i].first < this->get_n() + this->get_rows() * this->get_cols()) {
+                    cum += m_weights[m_connected.at(*it)[i].second]
+                           * d_node[this->get_active_nodes_map().at(m_connected.at(*it)[i].first)];
+                } else {
+                    auto n_out = m_connected.at(*it)[i].first - (this->get_n() + this->get_rows() * this->get_cols());
+                    cum += d_node[d_node.size() - this->get_m() + n_out];
                 }
-                d_node[n_idx] *= cum;
-            //}
+            }
+            d_node[n_idx] *= cum;
+
             // fill gradients for weights and biases info
             for (auto i = 0u; i < this->get_arity(); ++i) {
                 gweights[w_idx + i] = d_node[n_idx] * node[this->get_active_nodes_map().at(this->get()[c_idx + 1 + i])];
