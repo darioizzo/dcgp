@@ -178,13 +178,12 @@ public:
             auto n_idx = *it;
             // We update the d_node information
             U cum = 0.;
-            for (auto i = 0u; i < m_connected.at(*it).size(); ++i) {
+            for (auto i = 0u; i < m_connected[*it].size(); ++i) {
                 // If the node is not "virtual", that is not one of the m virtual nodes we added computing (x-x_i)^2
-                if (m_connected.at(*it)[i].first < this->get_n() + this->get_rows() * this->get_cols()) {
-                    cum += m_weights[m_connected.at(*it)[i].second]
-                           * d_node[m_connected.at(*it)[i].first];
+                if (m_connected[*it][i].first < this->get_n() + this->get_rows() * this->get_cols()) {
+                    cum += m_weights[m_connected[*it][i].second] * d_node[m_connected[*it][i].first];
                 } else {
-                    auto n_out = m_connected.at(*it)[i].first - (this->get_n() + this->get_rows() * this->get_cols());
+                    auto n_out = m_connected[*it][i].first - (this->get_n() + this->get_rows() * this->get_cols());
                     cum += d_node[d_node.size() - this->get_m() + n_out];
                 }
             }
@@ -605,6 +604,7 @@ private:
     {
         expression<T>::update_data_structures();
         m_connected.clear();
+        m_connected.resize(this->get_n() + this->get_m() + this->get_rows() * this->get_cols());
         for (auto node_id : this->get_active_nodes()) {
             if (node_id >= this->get_n()) { // not for input nodes
                 // position in the chromosome of the current node
@@ -684,9 +684,10 @@ private:
     std::vector<T> m_biases;
     std::vector<std::string> m_biases_symbols;
 
-    // This maps, for each active node, all the nodes it will feed into and the weight_idx
-    // The map includes also the output nodes having an assigned id starting from n + r * c
-    std::unordered_map<unsigned, std::vector<std::pair<unsigned, unsigned>>> m_connected;
+    // This contains, for each (active) node, the list of nodes it feeds. If the node is not active 
+    // it contains garbage or nothing.
+    // Also the output nodes are included in the feeded nodes. Assigned id starting from n + r * c
+    std::vector<std::vector<std::pair<unsigned, unsigned>>> m_connected;
 }; // namespace dcgp
 
 } // end of namespace dcgp
