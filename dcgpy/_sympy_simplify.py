@@ -1,10 +1,14 @@
+def _ann_simplify(self, *args, **kwargs):
+    print("No point in simplifying a dCGPANN expression, sorry :)")
+
+
 def _sympy_simplify(self, in_sym, subs_weights = False, erc = []):
     """
     simplify(in_sym, subs_weights = False, erc = [])
 
-    Simplifies the d-CGP expressions for the outputs
+    Simplifies the symbolic output of dCGP expressions
 
-    Returns the simplified d-CGP expression for each output
+    Returns the simplified dCGP expression for each output
 
     Note:
         This method requires ``sympy`` and ``pyaudi`` modules installed in your Python system

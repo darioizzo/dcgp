@@ -11,7 +11,7 @@ for the equivalent of back-propagation in Neural Networks. The fitness function 
 derivatives, allowing to go beyond simple regression tasks and, additionally, solve differential equations, learn
 differential models, capture conserved quantities in dynamical systems.
 
-Beyond the standard **CGP** we provide two new encodings called **weighted** and **DCGPANN**. 
+Beyond the standard **CGP** we provide two new encodings called **weighted** and **CGPANN**. 
 The first one adds weights to the standard CGP nodes connections, while the second one allows to encode and evolve a Deep Neural Network using the CGP basic idea.
 
 .. figure:: _static/expression_home.png

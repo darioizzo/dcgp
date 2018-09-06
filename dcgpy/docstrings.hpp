@@ -19,9 +19,13 @@ std::string expression_weighted_get_weight_doc();
 
 std::string expression_ann_set_weight_doc();
 std::string expression_ann_get_weight_doc();
+std::string expression_ann_randomise_weights_doc();
+
 std::string expression_ann_set_bias_doc();
 std::string expression_ann_set_biases_doc();
 std::string expression_ann_get_bias_doc();
+std::string expression_ann_randomise_biases_doc();
+
 std::string expression_ann_sgd_doc();
 
 

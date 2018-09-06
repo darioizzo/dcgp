@@ -520,10 +520,10 @@ private:
     {
         // Weights
         for (auto j = 0u; j < this->get_arity(); ++j) {
-            function_in[j] = "(" + m_weights_symbols[weight_idx + j] + "*" + function_in[j] + ")";
+            function_in[j] = m_weights_symbols[weight_idx + j] + "*" + function_in[j];
         }
         // Biases
-        function_in[0] = "(" + m_biases_symbols[bias_idx] + " + " + function_in[0] + ")";
+        function_in[0] = m_biases_symbols[bias_idx] + "+" + function_in[0];
         return this->get_f()[this->get()[idx]](function_in);
     }
 
@@ -684,9 +684,11 @@ private:
     std::vector<T> m_biases;
     std::vector<std::string> m_biases_symbols;
 
-    // This contains, for each (active) node, the list of nodes it feeds. If the node is not active 
-    // it contains garbage or nothing.
-    // Also the output nodes are included in the feeded nodes. Assigned id starting from n + r * c
+    // In order to be able to perform backpropagation on the dCGPANN program, we need to add
+    // to the usual CGP data structures one that contains for each node the list of nodes
+    // (and weights) it feeds into. We also need to add some virtual nodes (output nodes) 
+    // computing the error components (x_i-\hat x_i) as to be able to get the mse deirvatives
+    // Assigned virtual ids starting from n + r * c
     std::vector<std::vector<std::pair<unsigned, unsigned>>> m_connected;
 }; // namespace dcgp
 
