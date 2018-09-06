@@ -4,14 +4,16 @@
 [![PyPI](https://img.shields.io/badge/pypi-v1.0.1-blue.svg)](https://pypi.python.org/pypi?:action=display&name=dcgpy&version=1.0.1)
 
 # d-CGP
-Implementation of differentiable Cartesian Genetic Programming (d-CGP)
+Implementation of differentiable Cartesian Genetic Programming (dCGP)
 
-The d-CGP is a recent development in the field of Genetic Programming that adds the information about the derivatives of the output nodes (the programs, or expressions encoded) with respect to the input nodes (the input values) and weights. In doing so, it enables a number of new applications currently the subject of active research.
+The dCGP is a development in the field of Genetic Programming that adds the information about the derivatives of the program output with respect to the input values and various parameters (weights, biases, etc..). In doing so, it enables a number of new applications currently the subject of active research.
 
- * The evolution of the genetic program can now be helped by using the information on the derivatives, enabling for the equivalent of backpropagation in Neural Networks.
- * The fitness function can be defined in terms of the derivatives, allowing to go beyond simple regression tasks and, instead, solve differential equations, learn differential models, capture conserved quantities in dynamical systems.
+ * The representation of deep neural networks using a dCGPANN allows the whole network to be encoded and evolved, including the connection topology, the weights, the biases, etc, .... as well as to learn the weights and biases using backpropagation.
+ * The solution to boundary values problems, differential equations etc. can be encoded in a dCGP and evolved against different boundary conditions or initial conditions
+ * Prime integrals of motion can be represented by a dCGP and learned
+ * Symbolic regression tasks can learn ephemeral constants using backprop or even higher order methods.
  
-The first research paper describing d-CGP use to solve symbolic regressions problems such is:
+The first research paper describing dCGP use to solve symbolic regressions problems such is:
 
 Izzo, Dario, Francesco Biscani, and Alessio Mereta. "Differentiable Genetic Programming." arXiv preprint arXiv:1611.04766 (2016).
 
