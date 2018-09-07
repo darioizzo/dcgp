@@ -326,4 +326,18 @@ Raises:
     )";
 }
 
+std::string expression_ann_mse_doc()
+{
+    return R"(sgd(points, predictions)
+
+Computes the mean squared error of the dCGPANN on the data
+
+Args:
+    points (2D NumPy float array or ``list of lists`` of ``float``): the input data
+    predictions (2D NumPy float array or ``list of lists`` of ``float``): the output predictions (supervised signal)
+
+Raises:
+    ValueError: if *points* or *predictions* are malformed
+    )";
+}
 } // namespace dcgpy

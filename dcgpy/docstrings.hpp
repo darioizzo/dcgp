@@ -27,7 +27,7 @@ std::string expression_ann_get_bias_doc();
 std::string expression_ann_randomise_biases_doc();
 
 std::string expression_ann_sgd_doc();
-
+std::string expression_ann_mse_doc();
 
 
 }

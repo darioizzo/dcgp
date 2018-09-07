@@ -100,7 +100,7 @@ public:
         return retval;
     }
 
-    /// Evaluates the  dCGP-ANN  expression
+    /// Evaluates the  dCGP-ANN  expression (initializer list)
     /**
      * This evaluates the dCGP-ANN expression. According to the template parameter
      * it will compute the value (U) or a symbolic
@@ -119,6 +119,55 @@ public:
         return (*this)(dummy);
     }
 
+   /// Evaluates the mean square error 
+    /**
+     * Returns the mean squared error.
+     *
+     * @param[point] The input data (single point)
+     * @param[prediction] The predicted output (single point)
+     * @return the mse
+     */
+    double mse(const std::vector<double> &point, const std::vector<double> &prediction)
+    {
+        if (point.size() != this->get_n()) {
+            throw std::invalid_argument("When computing the mse the point dimension (input) seemed wrong, it was: "
+                                        + std::to_string(point.size())
+                                        + " while I expected: " + std::to_string(this->get_n()));
+        }
+        if (prediction.size() != this->get_m()) {
+            throw std::invalid_argument(
+                "When computing the mse the prediction dimension (output) seemed wrong, it was: "
+                + std::to_string(prediction.size()) + " while I expected: " + std::to_string(this->get_m()));
+        }
+        double retval(0.);
+
+        auto outputs = this->operator()(point);
+        for (decltype(outputs.size()) i = 0u; i < outputs.size(); ++i) {
+            retval += (outputs[i] - prediction[i])*(outputs[i] - prediction[i]);
+        }
+        return retval;
+    }
+
+   /// Evaluates the mean square error 
+    /**
+     * Returns the mean squared error.
+     *
+     * @param[points] The input data (a batch).
+     * @param[predictions] The predicted outputs (a batch).
+     * @return the mse
+     */
+    double mse(const std::vector<std::vector<double>> &points, const std::vector<std::vector<double>> &predictions)
+    {
+        if (points.size() != predictions.size()) {
+            throw std::invalid_argument("Data and label size mismatch data size is: " + std::to_string(points.size())
+                                        + " while label size is: " + std::to_string(predictions.size()));
+        }
+        if (points.size() == 0) {
+            throw std::invalid_argument("Data size cannot be zero");
+        }
+        return mse(points.begin(), points.end(), predictions.begin());
+    }
+
     /// Evaluates the mean square error and its gradient
     /**
      * Returns the mean squared error and its gradient with respect to weights and biases.
@@ -129,7 +178,7 @@ public:
      * biases
      */
     template <typename U, enable_double<U> = 0>
-    std::tuple<U, std::vector<U>, std::vector<U>> mse(const std::vector<U> &point, const std::vector<U> &prediction)
+    std::tuple<U, std::vector<U>, std::vector<U>> d_mse(const std::vector<U> &point, const std::vector<U> &prediction)
     {
         if (point.size() != this->get_n()) {
             throw std::invalid_argument("When computing the mse the point dimension (input) seemed wrong, it was: "
@@ -209,8 +258,8 @@ public:
      * biases.
      */
     template <typename U, enable_double<U> = 0>
-    std::tuple<U, std::vector<U>, std::vector<U>> mse(const std::vector<std::vector<U>> &points,
-                                                      const std::vector<std::vector<U>> &predictions)
+    std::tuple<U, std::vector<U>, std::vector<U>> d_mse(const std::vector<std::vector<U>> &points,
+                                                        const std::vector<std::vector<U>> &predictions)
     {
         if (points.size() != predictions.size()) {
             throw std::invalid_argument("Data and label size mismatch data size is: " + std::to_string(points.size())
@@ -219,7 +268,7 @@ public:
         if (points.size() == 0) {
             throw std::invalid_argument("Data size cannot be zero");
         }
-        return mse<U>(points.begin(), points.end(), predictions.begin());
+        return d_mse<U>(points.begin(), points.end(), predictions.begin());
     }
 
     /// Stochastic gradient descent
@@ -646,7 +695,7 @@ private:
     {
         U coeff(lr / static_cast<U>(dlast - dfirst));
         while (dfirst != dlast) {
-            auto mse_out = mse(*dfirst++, *lfirst++);
+            auto mse_out = d_mse(*dfirst++, *lfirst++);
             std::transform(m_weights.begin(), m_weights.end(), std::get<1>(mse_out).begin(), m_weights.begin(),
                            [coeff](U a, U b) { return a - coeff * b; });
             std::transform(m_biases.begin(), m_biases.end(), std::get<2>(mse_out).begin(), m_biases.begin(),
@@ -655,9 +704,9 @@ private:
     }
 
     template <typename U, enable_double<U> = 0>
-    std::tuple<U, std::vector<U>, std::vector<U>> mse(typename std::vector<std::vector<U>>::const_iterator dfirst,
-                                                      typename std::vector<std::vector<U>>::const_iterator dlast,
-                                                      typename std::vector<std::vector<U>>::const_iterator lfirst)
+    std::tuple<U, std::vector<U>, std::vector<U>> d_mse(typename std::vector<std::vector<U>>::const_iterator dfirst,
+                                                        typename std::vector<std::vector<U>>::const_iterator dlast,
+                                                        typename std::vector<std::vector<U>>::const_iterator lfirst)
     {
         U value(U(0.));
         std::vector<U> gweights(m_weights.size(), U(0.));
@@ -665,16 +714,32 @@ private:
         U dim = static_cast<U>(dlast - dfirst);
 
         while (dfirst != dlast) {
-            auto mse_out = mse(*dfirst++, *lfirst++);
+            auto mse_out = d_mse(*dfirst++, *lfirst++);
             value += std::get<0>(mse_out);
             std::transform(gweights.begin(), gweights.end(), std::get<1>(mse_out).begin(), gweights.begin(),
                            [dim](U a, U b) { return a + b / dim; });
             std::transform(gbiases.begin(), gbiases.end(), std::get<2>(mse_out).begin(), gbiases.begin(),
                            [dim](U a, U b) { return a + b / dim; });
         }
-        value /= static_cast<U>(dim);
+        value /= dim;
 
         return std::make_tuple(std::move(value), std::move(gweights), std::move(gbiases));
+    }
+
+    double mse(typename std::vector<std::vector<double>>::const_iterator dfirst,
+               typename std::vector<std::vector<double>>::const_iterator dlast,
+               typename std::vector<std::vector<double>>::const_iterator lfirst)
+    {
+        double retval(0.);
+        double dim = static_cast<double>(dlast - dfirst);
+        while (dfirst != dlast) {
+            double mse_out = mse(*dfirst++, *lfirst++);
+            retval += mse_out;
+
+        }
+        retval /= dim;
+
+        return retval;
     }
 
 private:
@@ -686,7 +751,7 @@ private:
 
     // In order to be able to perform backpropagation on the dCGPANN program, we need to add
     // to the usual CGP data structures one that contains for each node the list of nodes
-    // (and weights) it feeds into. We also need to add some virtual nodes (output nodes) 
+    // (and weights) it feeds into. We also need to add some virtual nodes (output nodes)
     // computing the error components (x_i-\hat x_i) as to be able to get the mse deirvatives
     // Assigned virtual ids starting from n + r * c
     std::vector<std::vector<std::pair<unsigned, unsigned>>> m_connected;

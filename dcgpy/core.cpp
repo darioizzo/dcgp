@@ -11,7 +11,6 @@
 #include <dcgp/kernel.hpp>
 #include <dcgp/kernel_set.hpp>
 
-
 // See: https://docs.scipy.org/doc/numpy/reference/c-api.array.html#importing-the-api
 // In every cpp file We need to make sure this is included before everything else,
 // with the correct #defines.
@@ -115,16 +114,16 @@ void expose_expression(std::string type)
                  (bp::arg("inputs"), bp::arg("outputs"), bp::arg("rows"), bp::arg("cols"), bp::arg("levels_back"),
                   bp::arg("arity"), bp::arg("kernels"), bp::arg("seed"))),
              expression_init_doc(type).c_str())
-        .def("__init__",
-             bp::make_constructor(
-                 +[](unsigned int in, unsigned int out, unsigned int rows, unsigned int cols, unsigned int levelsback,
-                     unsigned int arity, const bp::object &kernels) {
-                     auto kernels_v = l_to_v<kernel<T>>(kernels);
-                     return ::new expression<T>(in, out, rows, cols, levelsback, arity, kernels_v, std::random_device()());
-                 },
-                 bp::default_call_policies(),
-                 (bp::arg("inputs"), bp::arg("outputs"), bp::arg("rows"), bp::arg("cols"), bp::arg("levels_back"),
-                  bp::arg("arity"), bp::arg("kernels"))))
+        .def("__init__", bp::make_constructor(
+                             +[](unsigned int in, unsigned int out, unsigned int rows, unsigned int cols,
+                                 unsigned int levelsback, unsigned int arity, const bp::object &kernels) {
+                                 auto kernels_v = l_to_v<kernel<T>>(kernels);
+                                 return ::new expression<T>(in, out, rows, cols, levelsback, arity, kernels_v,
+                                                            std::random_device()());
+                             },
+                             bp::default_call_policies(),
+                             (bp::arg("inputs"), bp::arg("outputs"), bp::arg("rows"), bp::arg("cols"),
+                              bp::arg("levels_back"), bp::arg("arity"), bp::arg("kernels"))))
         .def("__repr__",
              +[](const expression<T> &instance) -> std::string {
                  std::ostringstream oss;
@@ -194,16 +193,16 @@ void expose_expression_weighted(std::string type)
                  (bp::arg("inputs"), bp::arg("outputs"), bp::arg("rows"), bp::arg("cols"), bp::arg("levels_back"),
                   bp::arg("arity"), bp::arg("kernels"), bp::arg("seed"))),
              expression_init_doc(type).c_str())
-        .def("__init__",
-             bp::make_constructor(
-                 +[](unsigned int in, unsigned int out, unsigned int rows, unsigned int cols, unsigned int levelsback,
-                     unsigned int arity, const bp::object &kernels) {
-                     auto kernels_v = l_to_v<kernel<T>>(kernels);
-                     return ::new expression_weighted<T>(in, out, rows, cols, levelsback, arity, kernels_v, std::random_device()());
-                 },
-                 bp::default_call_policies(),
-                 (bp::arg("inputs"), bp::arg("outputs"), bp::arg("rows"), bp::arg("cols"), bp::arg("levels_back"),
-                  bp::arg("arity"), bp::arg("kernels"))))
+        .def("__init__", bp::make_constructor(
+                             +[](unsigned int in, unsigned int out, unsigned int rows, unsigned int cols,
+                                 unsigned int levelsback, unsigned int arity, const bp::object &kernels) {
+                                 auto kernels_v = l_to_v<kernel<T>>(kernels);
+                                 return ::new expression_weighted<T>(in, out, rows, cols, levelsback, arity, kernels_v,
+                                                                     std::random_device()());
+                             },
+                             bp::default_call_policies(),
+                             (bp::arg("inputs"), bp::arg("outputs"), bp::arg("rows"), bp::arg("cols"),
+                              bp::arg("levels_back"), bp::arg("arity"), bp::arg("kernels"))))
         .def("__repr__",
              +[](const expression_weighted<T> &instance) -> std::string {
                  std::ostringstream oss;
@@ -250,16 +249,16 @@ void expose_expression_ann(std::string type)
                  (bp::arg("inputs"), bp::arg("outputs"), bp::arg("rows"), bp::arg("cols"), bp::arg("levels_back"),
                   bp::arg("arity"), bp::arg("kernels"), bp::arg("seed"))),
              expression_init_doc(type).c_str())
-        .def("__init__",
-             bp::make_constructor(
-                 +[](unsigned int in, unsigned int out, unsigned int rows, unsigned int cols, unsigned int levelsback,
-                     unsigned int arity, const bp::object &kernels) {
-                     auto kernels_v = l_to_v<kernel<T>>(kernels);
-                     return ::new expression_ann<T>(in, out, rows, cols, levelsback, arity, kernels_v, std::random_device()());
-                 },
-                 bp::default_call_policies(),
-                 (bp::arg("inputs"), bp::arg("outputs"), bp::arg("rows"), bp::arg("cols"), bp::arg("levels_back"),
-                  bp::arg("arity"), bp::arg("kernels"))))
+        .def("__init__", bp::make_constructor(
+                             +[](unsigned int in, unsigned int out, unsigned int rows, unsigned int cols,
+                                 unsigned int levelsback, unsigned int arity, const bp::object &kernels) {
+                                 auto kernels_v = l_to_v<kernel<T>>(kernels);
+                                 return ::new expression_ann<T>(in, out, rows, cols, levelsback, arity, kernels_v,
+                                                                std::random_device()());
+                             },
+                             bp::default_call_policies(),
+                             (bp::arg("inputs"), bp::arg("outputs"), bp::arg("rows"), bp::arg("cols"),
+                              bp::arg("levels_back"), bp::arg("arity"), bp::arg("kernels"))))
         .def("__repr__",
              +[](const expression_ann<T> &instance) -> std::string {
                  std::ostringstream oss;
@@ -304,25 +303,38 @@ void expose_expression_ann(std::string type)
              expression_ann_get_weight_doc().c_str(), (bp::arg("node_id"), bp::arg("input_id")))
         .def("get_weights", +[](expression_ann<T> &instance) { return v_to_l(instance.get_weights()); },
              "Gets all weights")
-        .def("randomise_weights", +[](expression_ann<T> &instance, double mean, double std , unsigned seed) {return instance.randomise_weights(mean, std, seed);}, 
-            expression_ann_randomise_weights_doc().c_str(),
-            (bp::arg("mean") = 0., bp::arg("std") = 0.1, bp::arg("seed"))
-            )
-        .def("randomise_weights", +[](expression_ann<T> &instance, double mean, double std) {return instance.randomise_weights(mean, std, std::random_device()());}, 
-            (bp::arg("mean") = 0., bp::arg("std") = 0.1)
-            )
-        .def("randomise_biases", +[](expression_ann<T> &instance, double mean, double std , unsigned seed) {return instance.randomise_biases(mean, std, seed);}, 
-            expression_ann_randomise_biases_doc().c_str(),
-            (bp::arg("mean") = 0., bp::arg("std") = 0.1, bp::arg("seed"))
-            )
-        .def("randomise_biases", +[](expression_ann<T> &instance, double mean, double std) {return instance.randomise_biases(mean, std, std::random_device()());}, 
-            (bp::arg("mean") = 0., bp::arg("std") = 0.1)
-            )
+        .def("randomise_weights",
+             +[](expression_ann<T> &instance, double mean, double std, unsigned seed) {
+                 return instance.randomise_weights(mean, std, seed);
+             },
+             expression_ann_randomise_weights_doc().c_str(),
+             (bp::arg("mean") = 0., bp::arg("std") = 0.1, bp::arg("seed")))
+        .def("randomise_weights",
+             +[](expression_ann<T> &instance, double mean, double std) {
+                 return instance.randomise_weights(mean, std, std::random_device()());
+             },
+             (bp::arg("mean") = 0., bp::arg("std") = 0.1))
+        .def("randomise_biases",
+             +[](expression_ann<T> &instance, double mean, double std, unsigned seed) {
+                 return instance.randomise_biases(mean, std, seed);
+             },
+             expression_ann_randomise_biases_doc().c_str(),
+             (bp::arg("mean") = 0., bp::arg("std") = 0.1, bp::arg("seed")))
+        .def("randomise_biases",
+             +[](expression_ann<T> &instance, double mean, double std) {
+                 return instance.randomise_biases(mean, std, std::random_device()());
+             },
+             (bp::arg("mean") = 0., bp::arg("std") = 0.1))
         .def("sgd",
              +[](expression_ann<T> &instance, const bp::object &points, const bp::object &predictions, double l_rate,
                  unsigned batch_size) { instance.sgd(to_vvd(points), to_vvd(predictions), l_rate, batch_size); },
              expression_ann_sgd_doc().c_str(),
-             (bp::arg("points"), bp::arg("predictions"), bp::arg("lr"), bp::arg("batch_size")));
+             (bp::arg("points"), bp::arg("predictions"), bp::arg("lr"), bp::arg("batch_size")))
+        .def("mse",
+             +[](expression_ann<T> &instance, const bp::object &points, const bp::object &predictions) {
+                 return instance.mse(to_vvd(points), to_vvd(predictions));
+             },
+             expression_ann_mse_doc().c_str(), (bp::arg("points"), bp::arg("predictions")));
 }
 
 BOOST_PYTHON_MODULE(core)

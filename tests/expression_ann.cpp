@@ -33,7 +33,7 @@ void test_against_numerical_derivatives(unsigned n, unsigned m, unsigned r, unsi
     // Output value desired (supervised signal)
     auto out = std::vector<double>(ex.get_m(), norm(gen));
     // Compute mse and the gradients
-    auto bp = ex.mse(in, out);
+    auto bp = ex.d_mse(in, out);
 
     // We check against numerical diff
     // first the weights
@@ -262,23 +262,23 @@ BOOST_AUTO_TEST_CASE(sgd)
     }
     double tmp = 0.;
     for (auto i = 0u; i < data.size(); ++i) {
-        tmp += std::get<0>(ex.mse(data[i], label[i]));
+        tmp += std::get<0>(ex.d_mse(data[i], label[i]));
     }
     tmp /= static_cast<double>(data.size());
     print("Start: ", tmp, "\n");
-    print("Start: ", std::get<0>(ex.mse(data,label)), "\n");
+    print("Start: ", std::get<0>(ex.d_mse(data,label)), "\n");
     for (auto j = 0u; j < 10; ++j) {
         ex.sgd(data, label, 0.1, 32);
         tmp = 0.;
         for (auto i = 0u; i < data.size(); ++i) {
-            tmp += std::get<0>(ex.mse(data[i], label[i]));
+            tmp += std::get<0>(ex.d_mse(data[i], label[i]));
         }
         tmp /= static_cast<double>(data.size());
         print("Then (", j, "): ", tmp, "\n");
     }
 }
 
-BOOST_AUTO_TEST_CASE(mse)
+BOOST_AUTO_TEST_CASE(d_mse)
 {
     print("Testing against numerical derivatives\n");
 
