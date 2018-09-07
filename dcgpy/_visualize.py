@@ -1,5 +1,5 @@
-def _dcgpann_visualize(self, show_connections = True, fill_color = 'w', show_nonlinearities = False, active_connection_alpha = 0.1, inactive_connection_alpha = 0.01):
-    """visualize(show_connections = True, fill_color = 'w', show_nonlinearities = False, active_connection_alpha = 0.1, inactive_connection_alpha = 0.01)
+def _dcgpann_visualize(self, show_connections = True, fill_color = 'w', show_nonlinearities = False, active_connection_alpha = 0.1, inactive_connection_alpha = 0.01, legend = True, axes = None):
+    """visualize(show_connections = True, fill_color = 'w', show_nonlinearities = False, active_connection_alpha = 0.1, inactive_connection_alpha = 0.01, legend = True)
 
     Visualizes the dCGPANN expression
 
@@ -9,6 +9,8 @@ def _dcgpann_visualize(self, show_connections = True, fill_color = 'w', show_non
         show_nonlinearities (``bool``): shows also what nonlinearity is where and adds a legend
         active_connection_alpha (``bool``): the alpha used to show active connections
         inactive_connection_alpha (``bool``): the alpha used to show inactive connections
+        legend (``bool``): shows a legend when show_nonlinearities is also True
+
 
 
     Examples:
@@ -36,7 +38,10 @@ def _dcgpann_visualize(self, show_connections = True, fill_color = 'w', show_non
         raise
 
     # We prepare the plot
-    fig, ax = plt.subplots() 
+    if axes is None:
+        fig, ax = plt.subplots() 
+    else:
+        ax = axes
     plt.axis('off')
     ax.grid(False)
     color_map = ['k', 'b','g','r','c','m', 'y']
@@ -126,12 +131,13 @@ def _dcgpann_visualize(self, show_connections = True, fill_color = 'w', show_non
     ymax = max([pos[key][1] for key in pos]) + radius * 2
 
     # We plot a legend if we are visualising nonlinearities
-    if show_nonlinearities:
+    if show_nonlinearities and legend:
         legend_x = xmax + 0.3
         legend_y = ymax - radius * 3
+        sep = max(3 *radius, 0.08)
         for i,kernel in enumerate(self.get_f()):
-            circle = plt.Circle((legend_x, legend_y - i * dr), radius, color=color_map[i % len(color_map)], alpha=0.8,fill = False)
-            plt.text(legend_x + 3 * radius, legend_y - i * dr, kernel.__repr__())
+            circle = plt.Circle((legend_x, legend_y - i * sep), radius, color=color_map[i % len(color_map)], alpha=0.8,fill = False)
+            plt.text(legend_x + 3 * radius, legend_y - i *sep, kernel.__repr__())
             ax.add_artist(circle)
         xmax = xmax + 0.4
 

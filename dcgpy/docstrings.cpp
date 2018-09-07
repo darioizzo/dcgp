@@ -117,6 +117,24 @@ Raises:
     )";
 }
 
+std::string expression_set_f_gene_doc()
+{
+    return R"(set_f_gene(node_id, f_id)
+
+Sets for a valid node (i.e. not an input node) a new kernel.
+
+Args:
+    node_id (a ``List[int]``): the node id
+    f_id (a ``List[int]``): the kernel id
+
+
+Raises:
+    ValueError: if the node_id or f_id are  incompatible with the expression.
+    )";
+}
+
+
+
 std::string expression_mutate_doc()
 {
     return R"(mutate(idxs)
@@ -338,6 +356,22 @@ Args:
 
 Raises:
     ValueError: if *points* or *predictions* are malformed
+    )";
+}
+
+std::string expression_ann_set_output_f_doc()
+{
+    return R"(set_output_f(f_id)
+
+Sets the nonlinearities of all nodes connected to the output nodes.
+This is useful when, for example, the dCGPANN is used for a regression task where output values are expected in [-1 1]
+and hence the output layer should have some sigmoid or tanh nonlinearity.
+
+Args:
+    f_id (a ``List[int]``): the kernel id
+
+Raises:
+    ValueError: if f_id is  incompatible with the expression.
     )";
 }
 } // namespace dcgpy

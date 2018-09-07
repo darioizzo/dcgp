@@ -267,7 +267,7 @@ BOOST_AUTO_TEST_CASE(sgd)
     tmp /= static_cast<double>(data.size());
     print("Start: ", tmp, "\n");
     print("Start: ", std::get<0>(ex.d_mse(data,label)), "\n");
-    for (auto j = 0u; j < 10; ++j) {
+    for (auto j = 0u; j < 1000; ++j) {
         ex.sgd(data, label, 0.1, 32);
         tmp = 0.;
         for (auto i = 0u; i < data.size(); ++i) {

@@ -143,6 +143,7 @@ void expose_expression(std::string type)
              })
         .def("set", +[](expression<T> &instance, const bp::object &in) { instance.set(l_to_v<unsigned int>(in)); },
              expression_set_doc().c_str(), bp::arg("chromosome"))
+        .def("set_f_gene", &expression<T>::set_f_gene, expression_set_f_gene_doc().c_str(), (bp::arg("node_id"), bp::arg("f_id")))
         .def("get", +[](const expression<T> &instance) { return v_to_l(instance.get()); },
              "Gets the expression chromosome")
         .def("get_lb", +[](const expression<T> &instance) { return v_to_l(instance.get_lb()); },
@@ -166,15 +167,15 @@ void expose_expression(std::string type)
              +[](expression<T> &instance, const bp::object &in) { instance.mutate(l_to_v<unsigned int>(in)); },
              expression_mutate_doc().c_str(), bp::arg("idxs"))
         .def("mutate_random", &expression<T>::mutate_random,
-             "mutate_random(N)\nMutates N randomly selected genes within its allowed bounds", bp::arg("N"))
+             "mutate_random(N = 1)\nMutates N randomly selected genes within its allowed bounds", bp::arg("N"))
         .def("mutate_active", &expression<T>::mutate_active,
-             "mutate_active(N)\nMutates N randomly selected active genes within its allowed bounds", bp::arg("N"))
+             "mutate_active(N = 1)\nMutates N randomly selected active genes within their allowed bounds", (bp::arg("N") = 1))
         .def("mutate_active_cgene", &expression<T>::mutate_active_cgene,
-             "Mutates exactly one randomly selected active connection genes within its allowed bounds")
+             "mutate_active_cgene(N = 1)\nMutates N randomly selected active connections within their allowed bounds", (bp::arg("N") = 1))
         .def("mutate_ogene", &expression<T>::mutate_ogene,
-             "Mutates exactly one randomly selected output genes within its allowed bounds")
+             "mutate_ogene(N = 1)\nMutates N randomly selected output genes connection within their allowed bounds", (bp::arg("N") = 1))
         .def("mutate_active_fgene", &expression<T>::mutate_active_fgene,
-             "Mutates exactly one randomly selected active function genes within its allowed bounds");
+             "mutate_active_fgene(N = 1)\nMutates N randomly selected active function genes within their allowed bounds", (bp::arg("N") = 1));
 }
 
 template <typename T>
@@ -294,6 +295,8 @@ void expose_expression_ann(std::string type)
         .def("set_weights",
              +[](expression_ann<T> &instance, const bp::object &weights) { instance.set_weights(l_to_v<T>(weights)); },
              expression_weighted_set_weights_doc().c_str(), (bp::arg("weights")))
+        .def("set_output_f", &expression_ann<T>::set_output_f, expression_ann_set_output_f_doc().c_str(),
+             (bp::arg("f_id")))
         .def("get_weight", +[](expression_ann<T> &instance, unsigned idx) { return instance.get_weight(idx); },
              (bp::arg("idx")))
         .def("get_weight",

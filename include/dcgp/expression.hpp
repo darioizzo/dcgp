@@ -126,6 +126,30 @@ public:
         update_data_structures();
     }
 
+    /// Sets the function gene of a node
+    /** Sets for a valid node (i.e. not an input node) a new kernel
+     *
+     * @param[in] node_id the id of the node
+     * @param[in] f_id the id of the kernel
+     *
+     * @throw std::invalid_argument if the *node_id* or *f_id* are invalid.
+     */
+    void set_f_gene(unsigned node_id, unsigned f_id)
+    {
+        if (f_id > m_f.size() - 1) {
+            throw std::invalid_argument("You are trying to set a kernel id of: " + std::to_string(f_id)
+                                        + ", but allowed values are [0 ... " + std::to_string(m_f.size() - 1)
+                                        + "] since this CGP has " + std::to_string(m_f.size() - 1) + " kernels.");
+        }
+        if (node_id < m_n || node_id > m_n + m_c * m_r - 1u) {
+            throw std::invalid_argument("You are trying to set the gene corresponding to a node_id: "
+                                        + std::to_string(node_id) + ", but allowed values are [" + std::to_string(m_n)
+                                        + " ... " + std::to_string(m_n + m_c * m_r - 1u) + "]");
+        }
+        auto gene_idx = (node_id - m_n) * (m_arity + 1);
+        m_x[gene_idx] = f_id;
+    }
+
     /// Gets the chromosome
     /**
      * Gets the chromosome encoding the current expression
@@ -283,7 +307,7 @@ public:
                 new_value = std::uniform_int_distribution<unsigned>(m_lb[idx], m_ub[idx])(m_e);
             } while (new_value == m_x[idx]);
             m_x[idx] = new_value;
-            update_data_structures();
+            update_data_structures(); // TODO: unecessary if the gene is a function gene
         }
     }
 
@@ -342,7 +366,7 @@ public:
         if (flag) update_data_structures();
     }
 
-    /// Mutates one of the active genes
+    /// Mutates active genes
     /**
      * Mutates \p N active genes within their allowed bounds.
      * The mutation can affect function genes, input genes and output genes.
@@ -364,14 +388,16 @@ public:
     /**
      * Mutates exactly one of the active function genes within its allowed bounds.
      */
-    void mutate_active_fgene()
+    void mutate_active_fgene(unsigned N = 1)
     {
         // If no active function gene exists, do nothing
         if (m_active_genes.size() > m_m) {
-            unsigned idx = std::uniform_int_distribution<unsigned>(
-                0, static_cast<unsigned>(m_active_genes.size() - 1u - m_m))(m_e);
-            idx = m_active_genes[idx] - (m_active_genes[idx] % (m_arity + 1));
-            mutate(idx);
+            for (auto i = 0u; i < N; ++i) {
+                unsigned idx = std::uniform_int_distribution<unsigned>(
+                    0, static_cast<unsigned>(m_active_genes.size() - 1u - m_m))(m_e);
+                idx = m_active_genes[idx] - (m_active_genes[idx] % (m_arity + 1));
+                mutate(idx);
+            }
         }
     }
 
@@ -380,15 +406,17 @@ public:
      * Mutates exactly one of the active connection genes within its allowed
      * bounds.
      */
-    void mutate_active_cgene()
+    void mutate_active_cgene(unsigned N = 1)
     {
         // If no active function gene exists, do nothing
         if (m_active_genes.size() > m_m) {
-            unsigned idx = std::uniform_int_distribution<unsigned>(
-                0u, static_cast<unsigned>(m_active_genes.size() - 1u - m_m))(m_e);
-            idx = m_active_genes[idx] - (m_active_genes[idx] % (m_arity + 1))
-                  + std::uniform_int_distribution<unsigned>(1, m_arity)(m_e);
-            mutate(idx);
+            for (auto i = 0u; i < N; ++i) {
+                unsigned idx = std::uniform_int_distribution<unsigned>(
+                    0u, static_cast<unsigned>(m_active_genes.size() - 1u - m_m))(m_e);
+                idx = m_active_genes[idx] - (m_active_genes[idx] % (m_arity + 1))
+                      + std::uniform_int_distribution<unsigned>(1, m_arity)(m_e);
+                mutate(idx);
+            }
         }
     }
 
@@ -396,12 +424,14 @@ public:
     /**
      * Mutates exactly one of the output genes within its allowed bounds.
      */
-    void mutate_ogene()
+    void mutate_ogene(unsigned N = 1)
     {
         unsigned idx;
         if (m_m > 1) {
-            idx = std::uniform_int_distribution<unsigned>(static_cast<unsigned>(m_active_genes.size() - m_m),
-                                                          static_cast<unsigned>(m_active_genes.size() - 1u))(m_e);
+            for (auto i = 0u; i < N; ++i) {
+                idx = std::uniform_int_distribution<unsigned>(static_cast<unsigned>(m_active_genes.size() - m_m),
+                                                              static_cast<unsigned>(m_active_genes.size() - 1u))(m_e);
+            }
 
         } else {
             idx = static_cast<unsigned>(m_active_genes.size() - 1u);

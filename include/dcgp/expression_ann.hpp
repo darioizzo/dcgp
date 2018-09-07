@@ -119,7 +119,7 @@ public:
         return (*this)(dummy);
     }
 
-   /// Evaluates the mean square error 
+    /// Evaluates the mean square error
     /**
      * Returns the mean squared error.
      *
@@ -143,12 +143,12 @@ public:
 
         auto outputs = this->operator()(point);
         for (decltype(outputs.size()) i = 0u; i < outputs.size(); ++i) {
-            retval += (outputs[i] - prediction[i])*(outputs[i] - prediction[i]);
+            retval += (outputs[i] - prediction[i]) * (outputs[i] - prediction[i]);
         }
         return retval;
     }
 
-   /// Evaluates the mean square error 
+    /// Evaluates the mean square error
     /**
      * Returns the mean squared error.
      *
@@ -310,6 +310,24 @@ public:
                 dfirst += batch_size;
                 lfirst += batch_size;
             }
+        }
+    }
+
+    /// Sets the output nonlinearities
+    /**
+     * Sets the nonlinearities of all nodes connected to the output nodes.
+     * This is useful when, for example, the dCGPANN is used for a regression task where output values are expected in [-1 1]
+     * and hence the output layer should have some sigmoid or tanh nonlinearity.
+     * 
+     * 
+     * @param[in] f_id the id of the kernel (nonlinearity)
+     *
+     * @throw std::invalid_argument if *f_id* is invalid.
+     */
+    void set_output_f(unsigned f_id)
+    {
+        for (decltype(this->get_m()) i = 0u; i < this->get_m(); ++i) {
+            this->set_f_gene(this->get()[this->get().size() - 1 - i], f_id);
         }
     }
 
@@ -735,7 +753,6 @@ private:
         while (dfirst != dlast) {
             double mse_out = mse(*dfirst++, *lfirst++);
             retval += mse_out;
-
         }
         retval /= dim;
 
