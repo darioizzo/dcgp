@@ -316,10 +316,10 @@ public:
     /// Sets the output nonlinearities
     /**
      * Sets the nonlinearities of all nodes connected to the output nodes.
-     * This is useful when, for example, the dCGPANN is used for a regression task where output values are expected in [-1 1]
-     * and hence the output layer should have some sigmoid or tanh nonlinearity.
-     * 
-     * 
+     * This is useful when, for example, the dCGPANN is used for a regression task where output values are expected in
+     * [-1 1] and hence the output layer should have some sigmoid or tanh nonlinearity.
+     *
+     *
      * @param[in] f_id the id of the kernel (nonlinearity)
      *
      * @throw std::invalid_argument if *f_id* is invalid.

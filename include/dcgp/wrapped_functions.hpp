@@ -153,7 +153,7 @@ T my_relu(const std::vector<T> &in)
     for (auto i = 1u; i < in.size(); ++i) {
         retval += in[i];
     }
-    (retval < 0) ? retval= T(0.) : retval=retval ;
+    (retval < 0) ? retval = T(0.) : retval = retval;
     return retval;
 }
 
@@ -165,10 +165,9 @@ T my_relu(const std::vector<T> &in)
     for (auto i = 1u; i < in.size(); ++i) {
         retval += in[i];
     }
-    (retval.constant_cf() < T(0.).constant_cf()) ? retval= T(0.) : retval=retval ;
+    (retval.constant_cf() < T(0.).constant_cf()) ? retval = T(0.) : retval = retval;
     return retval;
 }
-
 
 std::string print_my_relu(const std::vector<std::string> &in)
 {
