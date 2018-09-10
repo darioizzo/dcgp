@@ -23,4 +23,6 @@ Python examples
   ../notebooks/solving_odes.ipynb
   ../notebooks/weighted_symbolic_regression.ipynb
   ../notebooks/finding_prime_integrals.ipynb
+  ../notebooks/dCGPANN.ipynb
+
 

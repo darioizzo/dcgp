@@ -145,7 +145,7 @@ std::string print_my_tanh(const std::vector<std::string> &in)
     return "tanh(" + retval + ")";
 }
 
-// ReLu function:
+// ReLu function (double overload):
 template <typename T, typename std::enable_if<std::is_same<T, double>::value, int>::type = 0>
 T my_relu(const std::vector<T> &in)
 {
@@ -157,7 +157,7 @@ T my_relu(const std::vector<T> &in)
     return retval;
 }
 
-// ReLu function:
+// ReLu function (gdual overload):
 template <typename T, typename std::enable_if<is_gdual<T>::value, int>::type = 0>
 T my_relu(const std::vector<T> &in)
 {
