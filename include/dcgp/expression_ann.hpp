@@ -7,6 +7,7 @@
 #include <map>
 #include <random>
 #include <sstream>
+#include <numeric>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -62,8 +63,9 @@ public:
         : expression<T>(n, m, r, c, l, arity, f, seed), m_weights(r * c * arity, T(1.)), m_biases(r * c, T(0.))
     {
         for (const auto &ker : f) {
-            if (ker.get_name() != "tanh" && ker.get_name() != "sig" && ker.get_name() != "ReLu") {
-                throw std::invalid_argument("Only tanh, sig and ReLu Kernels are valid for dCGP-ANN expressions");
+            if (ker.get_name() != "tanh" && ker.get_name() != "sig" && ker.get_name() != "ReLu"
+                && ker.get_name() != "ELU" && ker.get_name() != "ISRU") {
+                throw std::invalid_argument("Only tanh, sig, ReLu, ELU and ISRU Kernels are valid for dCGP-ANN expressions");
             }
         }
         for (auto i = 0u; i < r * c; ++i) {
@@ -659,6 +661,11 @@ private:
                     // Relu derivative is 0 if relu<0, 1 otherwise
                 } else if (this->get_f()[this->get()[idx]].get_name() == "ReLu") {
                     d_node[i] = (node[i] > 0.) ? 1. : 0.;
+                } else if (this->get_f()[this->get()[idx]].get_name() == "ELU") {
+                    d_node[i] = (node[i] > 0.) ? 1. : node[i] + 1.;
+                } else if (this->get_f()[this->get()[idx]].get_name() == "ISRU") {
+                    auto cumin = std::accumulate(function_in.begin(), function_in.end(), 0.);
+                    d_node[i] = node[i] * node[i] * node[i] / cumin / cumin / cumin;
                 }
             }
         }

@@ -23,7 +23,7 @@ using f_enabler = typename std::enable_if<std::is_same<T, double>::value || is_g
 using namespace audi;
 
 /*--------------------------------------------------------------------------
- *                                  N-ARITY FUNCTIONS
+ *                              N-ARITY FUNCTIONS
  *------------------------------------------------------------------------**/
 template <typename T, f_enabler<T> = 0>
 T my_sum(const std::vector<T> &in)
@@ -101,8 +101,39 @@ std::string print_my_div(const std::vector<std::string> &in)
     return "(" + retval + ")";
 }
 
+// protected division (double overload):
+template <typename T, typename std::enable_if<std::is_same<T, double>::value, int>::type = 0>
+T my_pdiv(const std::vector<T> &in)
+{
+    T retval(in[0]);
+    for (auto i = 1u; i < in.size(); ++i) {
+        if (in[i] == 0.) {
+            retval /= in[i];
+        }
+    }
+    return retval;
+}
+
+// protected division (gdual overload):
+template <typename T, typename std::enable_if<is_gdual<T>::value, int>::type = 0>
+T my_pdiv(const std::vector<T> &in)
+{
+    T retval(in[0]);
+    for (auto i = 1u; i < in.size(); ++i) {
+        if (in[i].constant_cf() == typename T::cf_type(0.)) {
+            retval /= in[i];
+        }
+    }
+    return retval;
+}
+
+std::string print_my_pdiv(const std::vector<std::string> &in)
+{
+    return "(" + in[0] + "/" + in[1] + ")";
+}
+
 /*--------------------------------------------------------------------------
- *                                  Suitable for ANN
+ *                            Suitable for dCGPANN
  *------------------------------------------------------------------------**/
 
 // sigmoid function: 1 / (1 + exp(- (a + b + c + d+ .. + ))
@@ -178,27 +209,61 @@ std::string print_my_relu(const std::vector<std::string> &in)
     return "ReLu(" + retval + ")";
 }
 
-/*--------------------------------------------------------------------------
- *                                  BINARY FUNCTIONS
- *------------------------------------------------------------------------**/
-
-// protected division: returns 1 if the the dividend equals the divisor
-template <typename T, f_enabler<T> = 0>
-T my_pdiv(const std::vector<T> &in)
+// Exponential linear unit (ELU) function (double overload):
+template <typename T, typename std::enable_if<std::is_same<T, double>::value, int>::type = 0>
+T my_elu(const std::vector<T> &in)
 {
-    if (in[0] == in[1]) {
-        return T(1.);
+    T retval(in[0]);
+    for (auto i = 1u; i < in.size(); ++i) {
+        retval += in[i];
     }
-    return in[0] / in[1];
+    (retval < 0) ? retval = T(0.) : retval = audi::exp(retval) - T(1.);
+    return retval;
 }
 
-std::string print_my_pdiv(const std::vector<std::string> &in)
+// Exponential linear unit (ELU) function (gdual overload):
+template <typename T, typename std::enable_if<is_gdual<T>::value, int>::type = 0>
+T my_elu(const std::vector<T> &in)
 {
-    return "(" + in[0] + "/" + in[1] + ")";
+    T retval(in[0]);
+    for (auto i = 1u; i < in.size(); ++i) {
+        retval += in[i];
+    }
+    (retval.constant_cf() < T(0.).constant_cf()) ? retval = T(0.) : retval = audi::exp(retval) - T(1.);
+    return retval;
+}
+
+std::string print_my_elu(const std::vector<std::string> &in)
+{
+    std::string retval(in[0]);
+    for (auto i = 1u; i < in.size(); ++i) {
+        retval += "+" + in[i];
+    }
+    return "ELU(" + retval + ")";
+}
+
+// Inverse square root function: x / sqrt(1+x^2):
+template <typename T, f_enabler<T> = 0>
+T my_isru(const std::vector<T> &in)
+{
+    T retval(in[0]);
+    for (auto i = 1u; i < in.size(); ++i) {
+        retval += in[i];
+    }
+    return retval / (audi::sqrt(1 + retval * retval));
+}
+
+std::string print_my_isru(const std::vector<std::string> &in)
+{
+    std::string retval(in[0]);
+    for (auto i = 1u; i < in.size(); ++i) {
+        retval += "+" + in[i];
+    }
+    return "ISRU(" + retval + ")";
 }
 
 /*--------------------------------------------------------------------------
- *                                  UNARY FUNCTIONS
+ *                               UNARY FUNCTIONS
  *------------------------------------------------------------------------**/
 // sine
 template <typename T, f_enabler<T> = 0>
