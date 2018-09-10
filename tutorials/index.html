@@ -1,0 +1,175 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>C++ examples &#8212; dCGP documentation</title>
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Finding the Koza quintic polynomial" href="cpp_koza_quintic.html" />
+    <link rel="prev" title="Python Documentation" href="../docs/python_docs.html" />
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto|Comfortaa|Space+Mono">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-inverse navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          dcgp</a>
+        <span class="navbar-text navbar-version pull-left"><b>1.2</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../installation.html">Install</a></li>
+                <li><a href="../quickstart.html">Quick Start</a></li>
+                <li><a href="../docs/index.html">Docs</a></li>
+                <li><a href="#">Tutorials</a></li>
+                <li><a href="../theory.html">Theory</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#c">C++</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#python">Python</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick start examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#c">C++</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#python">Python</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../docs/index.html">Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../docs/cpp_docs.html">C++ Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../docs/python_docs.html">Python Documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">C++ examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cpp_koza_quintic.html">Finding the Koza quintic polynomial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cpp_supervised_learning.html">Fitting a data set with an expression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cpp_tsoulos_ode1.html">Solving the ODE1 problem from Tsoulos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cpp_tsoulos_nlode3.html">Solving the NLODE3 problem from Tsoulos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cpp_hamiltonian_spring_mass.html">Finding the prime integral for a spring mass system</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cpp_hamiltonian_spring_mass_lipson.html">Finding the prime integral for a spring mass system using Lipson method</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cpp_kepler_first_integral.html">Search for first integrals of Kepler’s problem</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#python-examples">Python examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/learning_constants.html">Learning constants in a symbolic regression task</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/learning_constants2.html">Learning constants in a symbolic regression task (PART II)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/solving_odes.html">Solving differential equations with dCGP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/weighted_symbolic_regression.html">Weighted dCGP for a symbolic regression task</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/finding_prime_integrals.html">Discovery of prime integrals with dCGP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/dCGPANN.html">Representing an Artificial Neural Network as a Cartesian Genetic Program</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../theory.html">Cartesian Genetic Programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../theory.html#dcgp">dCGP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../theory.html#reference">Reference</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="c-examples">
+<h1>C++ examples<a class="headerlink" href="#c-examples" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="cpp_koza_quintic.html">Finding the Koza quintic polynomial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cpp_supervised_learning.html">Fitting a data set with an expression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cpp_tsoulos_ode1.html">Solving the ODE1 problem from Tsoulos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cpp_tsoulos_nlode3.html">Solving the NLODE3 problem from Tsoulos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cpp_hamiltonian_spring_mass.html">Finding the prime integral for a spring mass system</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cpp_hamiltonian_spring_mass_lipson.html">Finding the prime integral for a spring mass system using Lipson method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cpp_kepler_first_integral.html">Search for first integrals of Kepler’s problem</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="python-examples">
+<h1>Python examples<a class="headerlink" href="#python-examples" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/learning_constants.html">Learning constants in a symbolic regression task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/learning_constants2.html">Learning constants in a symbolic regression task (PART II)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/solving_odes.html">Solving differential equations with dCGP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/weighted_symbolic_regression.html">Weighted dCGP for a symbolic regression task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/finding_prime_integrals.html">Discovery of prime integrals with dCGP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/dCGPANN.html">Representing an Artificial Neural Network as a Cartesian Genetic Program</a></li>
+</ul>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2018, Dario Izzo, Francesco Biscani, Alessio Mereta.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.5.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

@@ -1,0 +1,332 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>dcgp::expression_weighted, A weighted Cartesian Genetic Program (dCGP-W) &#8212; dCGP documentation</title>
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="dcgp::expression_ann, An artificial neural network Cartesian Genetic Program (dCGP-ANN)" href="expression_ann.html" />
+    <link rel="prev" title="dcgp::expression, The standard Cartesian Genetic Program (dCGP)" href="expression.html" />
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto|Comfortaa|Space+Mono">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-inverse navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          dcgp</a>
+        <span class="navbar-text navbar-version pull-left"><b>1.2</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../installation.html">Install</a></li>
+                <li><a href="../quickstart.html">Quick Start</a></li>
+                <li><a href="index.html">Docs</a></li>
+                <li><a href="../tutorials/index.html">Tutorials</a></li>
+                <li><a href="../theory.html">Theory</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#c">C++</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#python">Python</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick start examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#c">C++</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#python">Python</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Documentation</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="cpp_docs.html">C++ Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="python_docs.html">Python Documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">C++ examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/cpp_koza_quintic.html">Finding the Koza quintic polynomial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/cpp_supervised_learning.html">Fitting a data set with an expression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/cpp_tsoulos_ode1.html">Solving the ODE1 problem from Tsoulos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/cpp_tsoulos_nlode3.html">Solving the NLODE3 problem from Tsoulos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/cpp_hamiltonian_spring_mass.html">Finding the prime integral for a spring mass system</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/cpp_hamiltonian_spring_mass_lipson.html">Finding the prime integral for a spring mass system using Lipson method</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/cpp_kepler_first_integral.html">Search for first integrals of Kepler’s problem</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html#python-examples">Python examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/learning_constants.html">Learning constants in a symbolic regression task</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/learning_constants2.html">Learning constants in a symbolic regression task (PART II)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/solving_odes.html">Solving differential equations with dCGP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/weighted_symbolic_regression.html">Weighted dCGP for a symbolic regression task</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/finding_prime_integrals.html">Discovery of prime integrals with dCGP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/dCGPANN.html">Representing an Artificial Neural Network as a Cartesian Genetic Program</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../theory.html">Cartesian Genetic Programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../theory.html#dcgp">dCGP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../theory.html#reference">Reference</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="dcgp-expression-weighted-a-weighted-cartesian-genetic-program-dcgp-w">
+<h1>dcgp::expression_weighted, A weighted Cartesian Genetic Program (dCGP-W)<a class="headerlink" href="#dcgp-expression-weighted-a-weighted-cartesian-genetic-program-dcgp-w" title="Permalink to this headline">¶</a></h1>
+<p>This class represents a <strong>Weighted Cartesian Genetic Program</strong>. Each node connection is associated to a weight so that more generic mathematical expressions
+can be represented. When instantiated with the type <em>gdual&lt;T&gt;</em>, also the weights are defined as gduals, hence the program output can be expanded also with respect to the weights
+thus allowing to train the weights using algorithms such as stochastic gradient descent, while the rest of the expression remains fixed.</p>
+<p>The class template can be instantiated using the types <em>double</em> or <em>gdual&lt;T&gt;</em>.</p>
+<div class="figure align-center" id="id1">
+<img alt="weighted dCGP expression" src="../_images/expression_weighted.png" />
+<p class="caption"><span class="caption-text">A weighted dCGP expression</span></p>
+</div>
+<dl class="class">
+<dt>
+<span class="target" id="classdcgp_1_1expression__weighted"></span><em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
+<dt id="_CPPv3N4dcgp19expression_weightedE">
+<em class="property">class </em><code class="descclassname">dcgp<code class="descclassname">::</code></code><code class="descname">expression_weighted</code><a class="headerlink" href="#_CPPv3N4dcgp19expression_weightedE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>A weighted dCGP expression. </p>
+<p>This class represents a mathematical expression as encoded using CGP with the addition of weights on the connections. It contains algorithms to compute the value (numerical and symbolical) of the expression and its derivatives, as well as to mutate the expression.</p>
+<p><dl class="docutils">
+<dt><strong>Template Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">T</span></code>: expression type. Can be double, or a gdual type. </li>
+</ul>
+</dd>
+</dl>
+</p>
+<p>Inherits from <a class="reference internal" href="expression.html#classdcgp_1_1expression"><span class="std std-ref">dcgp::expression&lt; T &gt;</span></a></p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Functions</p>
+<dl class="function">
+<dt id="_CPPv3N4dcgp19expression_weighted19expression_weightedEjjjjjjNSt6vectorI6kernelI1TEEEj">
+<span class="target" id="classdcgp_1_1expression__weighted_1a7e063a2c9246b2ee562bdb96ab5b957b"></span><code class="descname">expression_weighted</code><span class="sig-paren">(</span>unsigned int <em>n</em>, unsigned int <em>m</em>, unsigned int <em>r</em>, unsigned int <em>c</em>, unsigned int <em>l</em>, unsigned int <em>arity</em>, std::vector&lt;<a class="reference internal" href="kernel.html#_CPPv3N4dcgp6kernelE" title="dcgp::kernel">kernel</a>&lt;T&gt;&gt; <em>f</em>, unsigned int <em>seed</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N4dcgp19expression_weighted19expression_weightedEjjjjjjNSt6vectorI6kernelI1TEEEj" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Constructor. </p>
+<p>Constructs a dCGP expression</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">n</span></code>: number of inputs (independent variables) </li>
+<li><code class="docutils literal notranslate"><span class="pre">m</span></code>: number of outputs (dependent variables) </li>
+<li><code class="docutils literal notranslate"><span class="pre">r</span></code>: number of rows of the dCGP </li>
+<li><code class="docutils literal notranslate"><span class="pre">c</span></code>: number of columns of the dCGP </li>
+<li><code class="docutils literal notranslate"><span class="pre">l</span></code>: number of levels-back allowed for the dCGP </li>
+<li><code class="docutils literal notranslate"><span class="pre">arity</span></code>: arity of the basis functions </li>
+<li><code class="docutils literal notranslate"><span class="pre">f</span></code>: function set. An std::vector of dcgp::kernel&lt;expression::type&gt; </li>
+<li><code class="docutils literal notranslate"><span class="pre">seed</span></code>: seed for the random number generator (initial expression and mutations depend on this) </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> U, functor_enabler&lt; U &gt; = 0&gt;</dt>
+<dt id="_CPPv3NK4dcgp19expression_weightedclERKNSt6vectorI1UEE">
+<span class="target" id="classdcgp_1_1expression__weighted_1a5cdcbef5f1850e4b8027d0110ed58a82"></span>std::vector&lt;U&gt; <code class="descname">operator()</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;U&gt; &amp;<em>in</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv3NK4dcgp19expression_weightedclERKNSt6vectorI1UEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Evaluates the dCGP expression. </p>
+<p>This evaluates the dCGP expression. According to the template parameter it will compute the value (double) the Taylor expansion (gdual) or a symbolic representation (std::string). Any other type will result in a compilation-time error (SFINAE).</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The value of the function (an std::vector) </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">in</span></code>: an std::vector containing the values where the dCGP expression has to be computed (doubles, gduals or strings)</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<em class="property">template </em>&lt;<em class="property">typename</em> U, functor_enabler&lt; U &gt; = 0&gt;</dt>
+<dt id="_CPPv3NK4dcgp19expression_weightedclERKNSt16initializer_listI1UEE">
+<span class="target" id="classdcgp_1_1expression__weighted_1a270e1838475bcd4eb53a1573f5fc0269"></span>std::vector&lt;U&gt; <code class="descname">operator()</code><span class="sig-paren">(</span><em class="property">const</em> std::initializer_list&lt;U&gt; &amp;<em>in</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv3NK4dcgp19expression_weightedclERKNSt16initializer_listI1UEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Evaluates the dCGP expression. </p>
+<p>This evaluates the dCGP expression. According to the template parameter it will compute the value (double) the Taylor expansion (gdual) or a symbolic representation (std::string). Any other type will result in a compilation-time error (SFINAE). This is identical to the other overload and is provided only for convenience</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The value of the function (an std::vector) </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">in</span></code>: an initializer list containing the values where the dCGP expression has to be computed (doubles, gduals or strings)</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv3N4dcgp19expression_weighted10set_weightENSt6vectorI1TE9size_typeENSt6vectorI1TE9size_typeERK1T">
+<span class="target" id="classdcgp_1_1expression__weighted_1a723dc0df718c2550814285d9dd43e92b"></span>void <code class="descname">set_weight</code><span class="sig-paren">(</span><em class="property">typename</em> std::vector&lt;T&gt;::size_type <em>node_id</em>, <em class="property">typename</em> std::vector&lt;T&gt;::size_type <em>input_id</em>, <em class="property">const</em> T &amp;<em>w</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N4dcgp19expression_weighted10set_weightENSt6vectorI1TE9size_typeENSt6vectorI1TE9size_typeERK1T" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sets a weight. </p>
+<p>Sets a connection weight to a new value</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">node_id</span></code>: the id of the node whose weight is being set (convention adopted for node numbering <a class="reference external" href="http://ppsn2014.ijs.si/files/slides/ppsn2014-tutorial3-miller.pdf">http://ppsn2014.ijs.si/files/slides/ppsn2014-tutorial3-miller.pdf</a>) </li>
+<li><code class="docutils literal notranslate"><span class="pre">input_id</span></code>: the id of the node input (0 for the first one up to arity-1) </li>
+<li><code class="docutils literal notranslate"><span class="pre">w</span></code>: the new value of the weight</li>
+</ul>
+</dd>
+<dt><strong>Exceptions</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">std::invalid_argument</span></code>: if the node_id or input_id are not valid </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv3N4dcgp19expression_weighted10get_weightENSt6vectorI1TE9size_typeENSt6vectorI1TE9size_typeE">
+<span class="target" id="classdcgp_1_1expression__weighted_1a2ace942af3d87fbfd03165791af9d59c"></span>T <code class="descname">get_weight</code><span class="sig-paren">(</span><em class="property">typename</em> std::vector&lt;T&gt;::size_type <em>node_id</em>, <em class="property">typename</em> std::vector&lt;T&gt;::size_type <em>input_id</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N4dcgp19expression_weighted10get_weightENSt6vectorI1TE9size_typeENSt6vectorI1TE9size_typeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Gets a weight. </p>
+<p>Gets the value of a connection weight</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>the value of the weight</dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">node_id</span></code>: the id of the node (convention adopted for node numbering <a class="reference external" href="http://ppsn2014.ijs.si/files/slides/ppsn2014-tutorial3-miller.pdf">http://ppsn2014.ijs.si/files/slides/ppsn2014-tutorial3-miller.pdf</a>) </li>
+<li><code class="docutils literal notranslate"><span class="pre">input_id</span></code>: the id of the node input (0 for the first one up to arity-1)</li>
+</ul>
+</dd>
+<dt><strong>Exceptions</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">std::invalid_argument</span></code>: if the node_id or input_id are not valid </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv3N4dcgp19expression_weighted11set_weightsERKNSt6vectorI1TEE">
+<span class="target" id="classdcgp_1_1expression__weighted_1a820f4d854a0191f3428848a457dd6aec"></span>void <code class="descname">set_weights</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;T&gt; &amp;<em>ws</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N4dcgp19expression_weighted11set_weightsERKNSt6vectorI1TEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sets all weights. </p>
+<p>Sets all the connection weights at once</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">ws</span></code>: an std::vector containing all the weights to set</li>
+</ul>
+</dd>
+<dt><strong>Exceptions</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">std::invalid_argument</span></code>: if the input vector dimension is not valid (r*c*arity) </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv3NK4dcgp19expression_weighted11get_weightsEv">
+<span class="target" id="classdcgp_1_1expression__weighted_1a2908c8feb77b4f14d00168e429c35417"></span><em class="property">const</em> std::vector&lt;T&gt; &amp;<code class="descname">get_weights</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv3NK4dcgp19expression_weighted11get_weightsEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Gets the weights. </p>
+<p>Gets the values of all the weights</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>an std::vector containing all the weights </dd>
+</dl>
+</p>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Friends</p>
+<dl class="function">
+<dt id="_CPPv3lsRNSt7ostreamERK19expression_weighted">
+<span class="target" id="classdcgp_1_1expression__weighted_1a5c09e3e2f450b73266358cbc2d0e8c76"></span>std::ostream &amp;<code class="descname">operator&lt;&lt;</code><span class="sig-paren">(</span>std::ostream &amp;<em>os</em>, <em class="property">const</em> expression_weighted &amp;<em>d</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3lsRNSt7ostreamERK19expression_weighted" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Overloaded stream operator. </p>
+<p>Will return a formatted string containing a human readable representation of the class</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>std::string containing a human-readable representation of the problem. </dd>
+</dl>
+</p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2018, Dario Izzo, Francesco Biscani, Alessio Mereta.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.5.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

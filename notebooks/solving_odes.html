@@ -1,0 +1,1318 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Solving differential equations with dCGP &#8212; dCGP documentation</title>
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Weighted dCGP for a symbolic regression task" href="weighted_symbolic_regression.html" />
+    <link rel="prev" title="Learning constants in a symbolic regression task (PART II)" href="learning_constants2.html" />
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto|Comfortaa|Space+Mono">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-inverse navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          dcgp</a>
+        <span class="navbar-text navbar-version pull-left"><b>1.2</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../installation.html">Install</a></li>
+                <li><a href="../quickstart.html">Quick Start</a></li>
+                <li><a href="../docs/index.html">Docs</a></li>
+                <li><a href="../tutorials/index.html">Tutorials</a></li>
+                <li><a href="../theory.html">Theory</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#c">C++</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#python">Python</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick start examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#c">C++</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#python">Python</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../docs/index.html">Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../docs/cpp_docs.html">C++ Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../docs/python_docs.html">Python Documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">C++ examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/cpp_koza_quintic.html">Finding the Koza quintic polynomial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/cpp_supervised_learning.html">Fitting a data set with an expression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/cpp_tsoulos_ode1.html">Solving the ODE1 problem from Tsoulos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/cpp_tsoulos_nlode3.html">Solving the NLODE3 problem from Tsoulos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/cpp_hamiltonian_spring_mass.html">Finding the prime integral for a spring mass system</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/cpp_hamiltonian_spring_mass_lipson.html">Finding the prime integral for a spring mass system using Lipson method</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/cpp_kepler_first_integral.html">Search for first integrals of Kepler’s problem</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../tutorials/index.html#python-examples">Python examples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="learning_constants.html">Learning constants in a symbolic regression task</a></li>
+<li class="toctree-l2"><a class="reference internal" href="learning_constants2.html">Learning constants in a symbolic regression task (PART II)</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Solving differential equations with dCGP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="weighted_symbolic_regression.html">Weighted dCGP for a symbolic regression task</a></li>
+<li class="toctree-l2"><a class="reference internal" href="finding_prime_integrals.html">Discovery of prime integrals with dCGP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dCGPANN.html">Representing an Artificial Neural Network as a Cartesian Genetic Program</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../theory.html">Cartesian Genetic Programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../theory.html#dcgp">dCGP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../theory.html#reference">Reference</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput,
+div.nbinput div.prompt,
+div.nbinput div.input_area,
+div.nbinput div[class*=highlight],
+div.nbinput div[class*=highlight] pre,
+div.nboutput,
+div.nbinput div.prompt,
+div.nbinput div.output_area,
+div.nboutput div[class*=highlight],
+div.nboutput div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput,
+div.nboutput {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput,
+    div.nboutput {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput div.prompt pre {
+    color: #303F9F;
+}
+
+/* output prompt */
+div.nboutput div.prompt pre {
+    color: #D84315;
+}
+
+/* all prompts */
+div.nbinput div.prompt,
+div.nboutput div.prompt {
+    min-width: 9ex;
+    padding-top: 0.4em;
+    padding-right: 0.4em;
+    text-align: right;
+    flex: 0;
+}
+@media (max-width: 540px) {
+    div.nbinput div.prompt,
+    div.nboutput div.prompt {
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput div.prompt.empty {
+        padding: 0;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput div.prompt pre,
+div.nboutput div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput div.input_area,
+div.nboutput div.output_area {
+    padding: 0.4em;
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput div.input_area,
+    div.nboutput div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput div.input_area {
+    border: 1px solid #cfcfcf;
+    border-radius: 2px;
+    background: #f7f7f7;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.pngmath center alignment in output cells */
+div.nboutput div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+</style>
+<div class="section" id="Solving-differential-equations-with-dCGP">
+<h1>Solving differential equations with dCGP<a class="headerlink" href="#Solving-differential-equations-with-dCGP" title="Permalink to this headline">¶</a></h1>
+<p>Lets first import dcgpy and pyaudi and set up things as to use dCGP on
+gduals defined over vectorized floats</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">dcgpy</span> <span class="kn">import</span> <span class="n">expression_gdual_vdouble</span> <span class="k">as</span> <span class="n">expression</span>
+<span class="kn">from</span> <span class="nn">dcgpy</span> <span class="kn">import</span> <span class="n">kernel_set_gdual_vdouble</span> <span class="k">as</span> <span class="n">kernel_set</span>
+<span class="kn">from</span> <span class="nn">pyaudi</span> <span class="kn">import</span> <span class="n">gdual_vdouble</span> <span class="k">as</span> <span class="n">gdual</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">sin</span><span class="p">,</span> <span class="n">cos</span>
+<span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">randint</span>
+<span class="n">np</span><span class="o">.</span><span class="n">seterr</span><span class="p">(</span><span class="nb">all</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span> <span class="c1"># avoids numpy complaining about early on malformed expressions being evalkuated</span>
+<span class="o">%</span><span class="k">matplotlib</span> inline
+</pre></div>
+</div>
+</div>
+<div class="section" id="The-kernel-functions">
+<h2>The kernel functions<a class="headerlink" href="#The-kernel-functions" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [125]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">kernels</span> <span class="o">=</span> <span class="n">kernel_set</span><span class="p">([</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span> <span class="s2">&quot;mul&quot;</span><span class="p">,</span> <span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="s2">&quot;diff&quot;</span><span class="p">,</span> <span class="s2">&quot;log&quot;</span><span class="p">,</span> <span class="s2">&quot;sin&quot;</span><span class="p">,</span> <span class="s2">&quot;cos&quot;</span><span class="p">,</span> <span class="s2">&quot;exp&quot;</span><span class="p">])()</span> <span class="c1"># note the call operator (returns the list of kernels)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Instantiate-a-(1-input,-1-output)-dCGP-and-we-inspect-a-randomly-created-program">
+<h2>Instantiate a (1 input, 1 output) dCGP and we inspect a randomly created program<a class="headerlink" href="#Instantiate-a-(1-input,-1-output)-dCGP-and-we-inspect-a-randomly-created-program" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">dCGP_example</span> <span class="o">=</span> <span class="n">expression</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">rows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">levels_back</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">arity</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">kernels</span><span class="o">=</span><span class="n">kernels</span><span class="p">,</span> <span class="n">seed</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span><span class="mi">6</span><span class="p">]</span>
+<span class="n">dCGP_example</span><span class="o">.</span><span class="n">visualize</span><span class="p">()</span> <span class="c1">#requires pygraphwiz module installed</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Represented expression: &quot;</span><span class="p">,</span> <span class="n">dCGP_example</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">])[</span><span class="mi">0</span><span class="p">])</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Simplified expression: &quot;</span><span class="p">,</span> <span class="n">dCGP_example</span><span class="o">.</span><span class="n">simplify</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">]))</span> <span class="c1">#requires sympy module installed</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_solving_odes_7_0.png" src="../_images/notebooks_solving_odes_7_0.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Represented expression:  (x+x)
+Simplified expression:  [2*x]
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Define-the-ES-that-will-evolve-solutions">
+<h2>Define the ES that will evolve solutions<a class="headerlink" href="#Define-the-ES-that-will-evolve-solutions" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [115]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># We run an evolutionary strategy ES(1 + offspring)</span>
+<span class="k">def</span> <span class="nf">run_experiment</span><span class="p">(</span><span class="n">max_gen</span><span class="p">,</span> <span class="n">offsprings</span><span class="p">,</span> <span class="n">quadratic_error</span><span class="p">,</span> <span class="n">initial_conditions_error</span><span class="p">,</span> <span class="n">dCGP</span><span class="p">,</span> <span class="n">screen_output</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="n">chromosome</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">offsprings</span>
+    <span class="n">fitness</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span><span class="n">offsprings</span>
+    <span class="n">best_chromosome</span> <span class="o">=</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+    <span class="n">best_fitness</span> <span class="o">=</span> <span class="n">quadratic_error</span><span class="p">(</span><span class="n">dCGP</span><span class="p">,</span> <span class="n">grid</span><span class="p">)</span> <span class="o">+</span> <span class="n">initial_conditions_error</span><span class="p">(</span><span class="n">dCGP</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_gen</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">offsprings</span><span class="p">):</span>
+            <span class="n">dCGP</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">best_chromosome</span><span class="p">)</span>
+            <span class="n">dCGP</span><span class="o">.</span><span class="n">mutate_active</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="c1">#  we mutate a number of increasingly higher active genes</span>
+            <span class="n">qe</span> <span class="o">=</span> <span class="n">quadratic_error</span><span class="p">(</span><span class="n">dCGP</span><span class="p">,</span> <span class="n">grid</span><span class="p">)</span>
+            <span class="n">ie</span> <span class="o">=</span> <span class="n">initial_conditions_error</span><span class="p">(</span><span class="n">dCGP</span><span class="p">)</span>
+            <span class="n">fitness</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">ie</span> <span class="o">+</span> <span class="n">qe</span>
+            <span class="n">chromosome</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">offsprings</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">fitness</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">best_fitness</span><span class="p">:</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">fitness</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">best_fitness</span><span class="p">)</span> <span class="ow">and</span> <span class="n">screen_output</span><span class="p">:</span>
+                    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;New best found: gen: &quot;</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="s2">&quot; value: &quot;</span><span class="p">,</span> <span class="n">fitness</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                <span class="n">best_chromosome</span> <span class="o">=</span> <span class="n">chromosome</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="n">best_fitness</span> <span class="o">=</span> <span class="n">fitness</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="n">dCGP</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">best_chromosome</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">best_fitness</span> <span class="o">&lt;</span> <span class="mf">1e-7</span><span class="p">:</span>
+            <span class="k">break</span>
+    <span class="k">return</span> <span class="n">g</span><span class="p">,</span> <span class="n">best_chromosome</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Consider-the-following-Ordinary-Differential-Equation-(ODE1):">
+<h2>Consider the following Ordinary Differential Equation (ODE1):<a class="headerlink" href="#Consider-the-following-Ordinary-Differential-Equation-(ODE1):" title="Permalink to this headline">¶</a></h2>
+<p><span class="math notranslate nohighlight">\(\frac{dy}{dx} = \frac{2x - y}{x}\)</span>, with <span class="math notranslate nohighlight">\(y(0.1) = 20.1\)</span> and
+<span class="math notranslate nohighlight">\(x \in [0.1,1]\)</span></p>
+<p>we demand its punctual validity over a grid of <span class="math notranslate nohighlight">\(N\)</span> equally spaced
+points.</p>
+<p>The solution to the ODE is <span class="math notranslate nohighlight">\(y = x + \frac 2x\)</span></p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [126]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># We define the quadratic error of the dCGP in the grid points</span>
+<span class="k">def</span> <span class="nf">qe_ODE1</span><span class="p">(</span><span class="n">dCGP</span><span class="p">,</span> <span class="n">grid</span><span class="p">):</span>
+    <span class="n">retval</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">dCGP</span><span class="p">([</span><span class="n">grid</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">constant_cf</span><span class="p">)</span>
+    <span class="n">dydx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">get_derivative</span><span class="p">({</span><span class="s2">&quot;dx&quot;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">}))</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">grid</span><span class="o">.</span><span class="n">constant_cf</span><span class="p">)</span>
+    <span class="n">ode1</span> <span class="o">=</span> <span class="p">(</span><span class="mf">2.</span> <span class="o">*</span> <span class="n">x</span> <span class="o">-</span> <span class="n">y</span><span class="p">)</span> <span class="o">/</span> <span class="n">x</span>
+    <span class="n">retval</span> <span class="o">+=</span> <span class="p">(</span><span class="n">ode1</span> <span class="o">-</span> <span class="n">dydx</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">ode1</span> <span class="o">-</span> <span class="n">dydx</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">retval</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [127]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># We define a penalty term associated to the initial conditions violation</span>
+<span class="k">def</span> <span class="nf">ic_ODE1</span><span class="p">(</span><span class="n">dCGP</span><span class="p">):</span>
+    <span class="n">x0</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">y0</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">dCGP</span><span class="p">([</span><span class="n">gdual</span><span class="p">([</span><span class="n">x0</span><span class="p">])])[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">constant_cf</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">y0</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">constant_cf</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">y0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [128]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># We construct the grid of points. Since the ODE only contains first order derivatives we use truncation order 1.</span>
+<span class="c1"># Since we are using vectorized gdual we can instantiate only one gdual</span>
+
+<span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">grid</span> <span class="o">=</span> <span class="n">gdual</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [135]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># We run nexp experiments to accumulate statistic for the ERT</span>
+<span class="n">nexp</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">offsprings</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">stop</span> <span class="o">=</span> <span class="mi">500</span>
+<span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;restart: </span><span class="se">\t</span><span class="s2"> gen: </span><span class="se">\t</span><span class="s2"> expression:&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nexp</span><span class="p">):</span>
+    <span class="n">dCGP</span> <span class="o">=</span> <span class="n">expression</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">rows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">levels_back</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">arity</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">kernels</span><span class="o">=</span><span class="n">kernels</span><span class="p">,</span> <span class="n">seed</span> <span class="o">=</span> <span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">100000</span><span class="p">))</span>
+    <span class="n">g</span><span class="p">,</span> <span class="n">best_chromosome</span> <span class="o">=</span> <span class="n">run_experiment</span><span class="p">(</span><span class="n">max_gen</span> <span class="o">=</span> <span class="n">stop</span><span class="p">,</span> <span class="n">offsprings</span> <span class="o">=</span> <span class="n">offsprings</span><span class="p">,</span> \
+            <span class="n">quadratic_error</span><span class="o">=</span><span class="n">qe_ODE1</span><span class="p">,</span> <span class="n">initial_conditions_error</span><span class="o">=</span><span class="n">ic_ODE1</span><span class="p">,</span> <span class="n">dCGP</span> <span class="o">=</span> <span class="n">dCGP</span><span class="p">)</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+    <span class="n">dCGP</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">best_chromosome</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">g</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">stop</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\t\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">res</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">dCGP</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">]),</span> <span class="s2">&quot; a.k.a &quot;</span><span class="p">,</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">simplify</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">]))</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+restart:         gen:    expression:
+0                194     [&#39;(x+((x+x)/(x*x)))&#39;]  a.k.a  [x + 2/x]
+1                44      [&#39;(x+(((x/x)/x)*(((x/x)+(x/x))*(x/x))))&#39;]  a.k.a  [x + 2/x]
+4                483     [&#39;((x/(x/x))+(((x/x)/x)+((x/x)/x)))&#39;]  a.k.a  [x + 2/x]
+6                423     [&#39;(x+(((x/x)+(x/x))/x))&#39;]  a.k.a  [x + 2/x]
+13               292     [&#39;(((x/x)/x)+(x+((x/x)/x)))&#39;]  a.k.a  [x + 2/x]
+14               248     [&#39;(sin((x-x))+(((exp((x-x))+((x-x)+exp(sin((x-x)))))/x)+(x+(x-x))))&#39;]  a.k.a  [x + 2/x]
+19               456     [&#39;((x+(x/(x*x)))+(x/(x*x)))&#39;]  a.k.a  [x + 2/x]
+21               321     [&#39;(((x+x)-x)+((x+x)/(((x+x)-x)*((x+x)-x))))&#39;]  a.k.a  [x + 2/x]
+26               348     [&#39;(((x/x)/x)+(x+((x/x)/x)))&#39;]  a.k.a  [x + 2/x]
+27               149     [&#39;(x+(((x+x)+(x+x))/((x+x)*x)))&#39;]  a.k.a  [x + 2/x]
+29               205     [&#39;((((x/x)/x)+((x/x)/x))+x)&#39;]  a.k.a  [x + 2/x]
+32               223     [&#39;((((x/x)+(x/x))/((x/x)*x))+log(exp(x)))&#39;]  a.k.a  [x + 2/x]
+34               142     [&#39;(x+(((x/x)+(x/x))/x))&#39;]  a.k.a  [x + 2/x]
+35               426     [&#39;(x+(((x+x)/x)/x))&#39;]  a.k.a  [x + 2/x]
+36               371     [&#39;(x+((x+x)/(x*x)))&#39;]  a.k.a  [x + 2/x]
+37               344     [&#39;(((x/x)/x)+(x+((x/x)/x)))&#39;]  a.k.a  [x + 2/x]
+39               228     [&#39;(((((x/((x-x)+x))/x)*((x/x)+(x/((x-x)+x))))*(x/x))+x)&#39;]  a.k.a  [x + 2/x]
+44               134     [&#39;(x+(((x/x)+(x/x))/x))&#39;]  a.k.a  [x + 2/x]
+46               217     [&#39;(((x/x)/x)+(x+((x/x)/x)))&#39;]  a.k.a  [x + 2/x]
+48               492     [&#39;((((x/x)+(x/x))/x)+x)&#39;]  a.k.a  [x + 2/x]
+52               316     [&#39;(((x/(x*x))+(x/(x*x)))+x)&#39;]  a.k.a  [x + 2/x]
+56               219     [&#39;((((x/x)+(x/x))/x)+x)&#39;]  a.k.a  [x + 2/x]
+57               265     [&#39;((x/(x*x))+(x+(x/(x*x))))&#39;]  a.k.a  [x + 2/x]
+61               438     [&#39;((x+(x/(x*x)))+(x/(x*x)))&#39;]  a.k.a  [x + 2/x]
+62               228     [&#39;(((x+x)/(x*x))+x)&#39;]  a.k.a  [x + 2/x]
+63               239     [&#39;((x+((x+x)/((x+x)*x)))+((x+x)/((x+x)*x)))&#39;]  a.k.a  [x + 2/x]
+64               166     [&#39;exp(log((x+(((x/x)+(x/x))/x))))&#39;]  a.k.a  [x + 2/x]
+65               192     [&#39;(x+(((x+x)/x)/x))&#39;]  a.k.a  [x + 2/x]
+70               65      [&#39;((((x*x)/x)+(cos((exp(((x*x)/x))-exp(x)))/x))+(cos((exp(((x*x)/x))-exp(x)))/x))&#39;]  a.k.a  [x + 2/x]
+72               191     [&#39;((((exp(x)+exp(x))/x)/exp(x))+x)&#39;]  a.k.a  [x + 2/x]
+75               231     [&#39;(x+((x/(x*x))+(x/(x*x))))&#39;]  a.k.a  [x + 2/x]
+79               396     [&#39;(((x/x)/x)+(x+((x/x)/x)))&#39;]  a.k.a  [x + 2/x]
+81               19      [&#39;(((x+x)/(x*x))+x)&#39;]  a.k.a  [x + 2/x]
+83               322     [&#39;((cos(x)/(cos(x)*x))+((cos(x)/(cos(x)*x))+x))&#39;]  a.k.a  [x + 2/x]
+84               393     [&#39;(((x/x)*(((x/x)+(x/x))/x))+x)&#39;]  a.k.a  [x + 2/x]
+87               361     [&#39;(((x/(x*x))+(x/(x*x)))+x)&#39;]  a.k.a  [x + 2/x]
+88               457     [&#39;((((x/x)/x)+x)+((x/x)/x))&#39;]  a.k.a  [x + 2/x]
+89               112     [&#39;((((sin(x)+sin(x))/x)/sin(x))+x)&#39;]  a.k.a  [x + 2/x]
+90               151     [&#39;(x+((((x/x)*(x/x))*(((x/x)*(x/x))+(x/x)))/x))&#39;]  a.k.a  [x + 2/x]
+91               122     [&#39;((((x/x)*(x*(x/x)))+((x/x)/x))+((x/x)*((x/x)/x)))&#39;]  a.k.a  [x + 2/x]
+94               169     [&#39;(x+(((x+x)/x)/x))&#39;]  a.k.a  [x + 2/x]
+95               249     [&#39;(((x+x)/(x*x))+x)&#39;]  a.k.a  [x + 2/x]
+96               382     [&#39;(((x+x)/(x*x))+x)&#39;]  a.k.a  [x + 2/x]
+97               133     [&#39;((((x/x)+(x/x))/x)+x)&#39;]  a.k.a  [x + 2/x]
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [136]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">ERT</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="o">&lt;</span><span class="p">(</span><span class="n">stop</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;ERT Expected run time - avg. number of function evaluations needed: &quot;</span><span class="p">,</span> <span class="n">ERT</span> <span class="o">*</span> <span class="n">offsprings</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Avg. number of function evaluations from Tsoulos paper: &quot;</span><span class="p">,</span> <span class="mi">653</span> <span class="o">*</span> <span class="mi">200</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+ERT Expected run time - avg. number of function evaluations needed:  8977.27272727
+Avg. number of function evaluations from Tsoulos paper:  130600
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Consider-the-following-Ordinary-Differential-Equation-(ODE2):">
+<h2>Consider the following Ordinary Differential Equation (ODE2):<a class="headerlink" href="#Consider-the-following-Ordinary-Differential-Equation-(ODE2):" title="Permalink to this headline">¶</a></h2>
+<p><span class="math notranslate nohighlight">\(\frac{dy}{dx} = \frac{1 - ycos(x)}{sin(x)}\)</span>, with
+<span class="math notranslate nohighlight">\(y(0.1) = \frac{2.1}{sin(0,1)}\)</span> and <span class="math notranslate nohighlight">\(x \in [0.1,1]\)</span></p>
+<p>we demand its punctual validity over a grid of <span class="math notranslate nohighlight">\(N\)</span> equally spaced
+points.</p>
+<p>NOTE: The solution to the ODE is <span class="math notranslate nohighlight">\(y = \frac{x+2}{sin(x)}\)</span></p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [137]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># We construct the grid of points. Since the ODE only contains first order derivatives we use truncation order 1.</span>
+<span class="c1"># Since we are using vectorized gdual we can instantiate only one gdual</span>
+
+<span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">grid</span> <span class="o">=</span> <span class="n">gdual</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [138]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># We define the quadratic error of the dCGP in the grid points</span>
+<span class="k">def</span> <span class="nf">qe_ODE2</span><span class="p">(</span><span class="n">dCGP</span><span class="p">,</span> <span class="n">grid</span><span class="p">):</span>
+    <span class="n">retval</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">dCGP</span><span class="p">([</span><span class="n">grid</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">constant_cf</span><span class="p">)</span>
+    <span class="n">dydx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">get_derivative</span><span class="p">({</span><span class="s2">&quot;dx&quot;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">}))</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">grid</span><span class="o">.</span><span class="n">constant_cf</span><span class="p">)</span>
+    <span class="n">ode2</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">-</span>  <span class="n">y</span> <span class="o">*</span> <span class="n">cos</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="o">/</span> <span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">retval</span> <span class="o">+=</span> <span class="p">(</span><span class="n">ode2</span> <span class="o">-</span> <span class="n">dydx</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">ode2</span> <span class="o">-</span> <span class="n">dydx</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">retval</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [139]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># We define a penalty term associated to the initial conditions violation</span>
+<span class="n">dummy</span> <span class="o">=</span> <span class="p">(</span><span class="mf">2.1</span><span class="p">)</span><span class="o">/</span><span class="n">sin</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">ic_ODE2</span><span class="p">(</span><span class="n">dCGP</span><span class="p">):</span>
+    <span class="n">x0</span> <span class="o">=</span> <span class="mf">0.1</span>
+    <span class="n">y0</span> <span class="o">=</span> <span class="n">dummy</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">dCGP</span><span class="p">([</span><span class="n">gdual</span><span class="p">([</span><span class="n">x0</span><span class="p">])])[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">constant_cf</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">y0</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">constant_cf</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">y0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [140]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># We run nexp experiments to accumulate statistic for the ERT</span>
+<span class="n">nexp</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">stop</span> <span class="o">=</span> <span class="mi">500</span>
+<span class="n">offsprings</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;restart: </span><span class="se">\t</span><span class="s2"> gen: </span><span class="se">\t</span><span class="s2"> expression:&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nexp</span><span class="p">):</span>
+    <span class="n">dCGP</span> <span class="o">=</span> <span class="n">expression</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">rows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">levels_back</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">arity</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">kernels</span><span class="o">=</span><span class="n">kernels</span><span class="p">,</span> <span class="n">seed</span> <span class="o">=</span> <span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">100000</span><span class="p">))</span>
+    <span class="n">g</span><span class="p">,</span> <span class="n">best_chromosome</span> <span class="o">=</span> <span class="n">run_experiment</span><span class="p">(</span><span class="n">max_gen</span> <span class="o">=</span> <span class="n">stop</span><span class="p">,</span> <span class="n">offsprings</span> <span class="o">=</span> <span class="n">offsprings</span><span class="p">,</span> \
+            <span class="n">quadratic_error</span><span class="o">=</span><span class="n">qe_ODE2</span><span class="p">,</span> <span class="n">initial_conditions_error</span><span class="o">=</span><span class="n">ic_ODE2</span><span class="p">,</span> <span class="n">dCGP</span><span class="o">=</span><span class="n">dCGP</span><span class="p">)</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+    <span class="n">dCGP</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">best_chromosome</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">g</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">stop</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\t\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">res</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">dCGP</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">]),</span> <span class="s2">&quot; a.k.a &quot;</span><span class="p">,</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">simplify</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">]))</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+restart:         gen:    expression:
+18               269     [&#39;((((x/sin(x))+(x/sin(x)))/(sin(x)*(x/sin(x))))+(x/sin(x)))&#39;]  a.k.a  [x/sin(x) + 2/sin(x)]
+30               33      [&#39;(((x/x)+((x/x)+x))/((x/x)*sin(x)))&#39;]  a.k.a  [x/sin(x) + 2/sin(x)]
+33               61      [&#39;((((x+x)/sin(x))/x)+(((x+x)/sin(x))/((x+x)/x)))&#39;]  a.k.a  [x/sin(x) + 2/sin(x)]
+41               456     [&#39;((((x/sin(x))/x)+((x/sin(x))/x))+(x/sin(x)))&#39;]  a.k.a  [x/sin(x) + 2/sin(x)]
+48               328     [&#39;((((x+(sin(x)/sin(x)))*((x+(sin(x)/sin(x)))/(x+(sin(x)/sin(x)))))+((x+(sin(x)/sin(x)))/(x+(sin(x)/sin(x)))))/sin(x))&#39;]  a.k.a  [x/sin(x) + 2/sin(x)]
+59               127     [&#39;((((x/x)*(x/x))+((x/x)+x))/sin(x))&#39;]  a.k.a  [x/sin(x) + 2/sin(x)]
+60               124     [&#39;(((x/x)+((x/x)+x))/sin(x))&#39;]  a.k.a  [x/sin(x) + 2/sin(x)]
+62               191     [&#39;((((x/x)+x)+(x/x))/sin(x))&#39;]  a.k.a  [x/sin(x) + 2/sin(x)]
+71               8       [&#39;(((x+(x/x))+(x/x))/sin(x))&#39;]  a.k.a  [x/sin(x) + 2/sin(x)]
+76               37      [&#39;((((x/x)+x)+(x/x))/sin(x))&#39;]  a.k.a  [x/sin(x) + 2/sin(x)]
+90               351     [&#39;(((x/sin(x))+((x/sin(x))/x))+((x/sin(x))/x))&#39;]  a.k.a  [x/sin(x) + 2/sin(x)]
+96               377     [&#39;(((x+((x*x)+x))/x)/sin(x))&#39;]  a.k.a  [x/sin(x) + 2/sin(x)]
+98               352     [&#39;(((x/x)+((x+(x/x))/(x/x)))/sin(x))&#39;]  a.k.a  [x/sin(x) + 2/sin(x)]
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [141]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">ERT</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="o">&lt;</span><span class="p">(</span><span class="n">stop</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;ERT Expected run time - avg. number of function evaluations needed: &quot;</span><span class="p">,</span> <span class="n">ERT</span> <span class="o">*</span> <span class="n">offsprings</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Avg. number of function evaluations from Tsoulos paper: &quot;</span><span class="p">,</span> <span class="mi">742</span> <span class="o">*</span> <span class="mi">200</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+ERT Expected run time - avg. number of function evaluations needed:  35482.3076923
+Avg. number of function evaluations from Tsoulos paper:  148400
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Consider-the-following-Ordinary-Differential-Equation-(ODE5):">
+<h2>Consider the following Ordinary Differential Equation (ODE5):<a class="headerlink" href="#Consider-the-following-Ordinary-Differential-Equation-(ODE5):" title="Permalink to this headline">¶</a></h2>
+<p><span class="math notranslate nohighlight">\(\frac{d^2y}{dx^2} = 6\frac{dy}{dx} - 9y\)</span>, with <span class="math notranslate nohighlight">\(y(0) = 0\)</span>,
+<span class="math notranslate nohighlight">\(\frac{dy}{dx}(0)=2\)</span> and <span class="math notranslate nohighlight">\(x \in [0,1]\)</span></p>
+<p>we demand its punctual validity over a grid of <span class="math notranslate nohighlight">\(N\)</span> equally spaced
+points.</p>
+<p>NOTE: The solution to the ODE is <span class="math notranslate nohighlight">\(y = 2x \exp(3x)\)</span></p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [142]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># We construct the grid of points. Since the ODE only contains second order derivatives we use truncation order 2.</span>
+<span class="c1"># Since we are using vectorized gdual we can instantiate only one gdual</span>
+
+<span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">grid</span> <span class="o">=</span> <span class="n">gdual</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [143]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># We define the quadratic error of the dCGP in the grid points</span>
+<span class="k">def</span> <span class="nf">qe_ODE5</span><span class="p">(</span><span class="n">dCGP</span><span class="p">,</span> <span class="n">grid</span><span class="p">):</span>
+    <span class="n">retval</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">dCGP</span><span class="p">([</span><span class="n">grid</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">constant_cf</span><span class="p">)</span>
+    <span class="n">dydx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">get_derivative</span><span class="p">({</span><span class="s2">&quot;dx&quot;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">}))</span>
+    <span class="n">dydx2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">get_derivative</span><span class="p">({</span><span class="s2">&quot;dx&quot;</span> <span class="p">:</span> <span class="mi">2</span><span class="p">}))</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">grid</span><span class="o">.</span><span class="n">constant_cf</span><span class="p">)</span>
+    <span class="n">ode5</span> <span class="o">=</span> <span class="mf">6.</span> <span class="o">*</span> <span class="n">dydx</span> <span class="o">-</span> <span class="mi">9</span> <span class="o">*</span> <span class="n">y</span>
+    <span class="n">retval</span> <span class="o">+=</span> <span class="p">(</span><span class="n">ode5</span> <span class="o">-</span> <span class="n">dydx2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">ode5</span> <span class="o">-</span> <span class="n">dydx2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">retval</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [144]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># We define a penalty term associated to the initial conditions violation</span>
+<span class="k">def</span> <span class="nf">ic_ODE5</span><span class="p">(</span><span class="n">dCGP</span><span class="p">):</span>
+    <span class="n">x0</span> <span class="o">=</span> <span class="mf">1e-16</span> <span class="c1"># avoids what seems a numerical problem with vectorized dual?</span>
+    <span class="n">y0</span> <span class="o">=</span> <span class="mf">0.</span>
+    <span class="n">dy0</span> <span class="o">=</span> <span class="mf">2.</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">dCGP</span><span class="p">([</span><span class="n">gdual</span><span class="p">([</span><span class="n">x0</span><span class="p">],</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)])[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">dCGP_y0</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">constant_cf</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">dCGP_dy0</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">get_derivative</span><span class="p">({</span><span class="s2">&quot;dx&quot;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">})[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">dCGP_y0</span> <span class="o">-</span> <span class="n">y0</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">dCGP_y0</span> <span class="o">-</span> <span class="n">y0</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">dCGP_dy0</span> <span class="o">-</span> <span class="n">dy0</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">dCGP_dy0</span> <span class="o">-</span> <span class="n">dy0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [145]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># We run nexp experiments to accumulate statistic for the ERT</span>
+<span class="n">nexp</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">stop</span> <span class="o">=</span> <span class="mi">500</span>
+<span class="n">offsprings</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;restart: </span><span class="se">\t</span><span class="s2"> gen: </span><span class="se">\t</span><span class="s2"> expression:&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nexp</span><span class="p">):</span>
+    <span class="n">dCGP</span> <span class="o">=</span> <span class="n">expression</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">rows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">levels_back</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">arity</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">kernels</span><span class="o">=</span><span class="n">kernels</span><span class="p">,</span> <span class="n">seed</span> <span class="o">=</span> <span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">100000</span><span class="p">))</span>
+    <span class="n">g</span><span class="p">,</span> <span class="n">best_chromosome</span> <span class="o">=</span> <span class="n">run_experiment</span><span class="p">(</span><span class="n">max_gen</span> <span class="o">=</span> <span class="n">stop</span><span class="p">,</span> <span class="n">offsprings</span> <span class="o">=</span> <span class="n">offsprings</span><span class="p">,</span> \
+            <span class="n">quadratic_error</span><span class="o">=</span><span class="n">qe_ODE5</span><span class="p">,</span> <span class="n">initial_conditions_error</span><span class="o">=</span><span class="n">ic_ODE5</span><span class="p">,</span> <span class="n">dCGP</span><span class="o">=</span><span class="n">dCGP</span><span class="p">)</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+    <span class="n">dCGP</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">best_chromosome</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">g</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">stop</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\t\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">res</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">dCGP</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">]),</span> <span class="s2">&quot; a.k.a &quot;</span><span class="p">,</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">simplify</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">]))</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+restart:         gen:    expression:
+8                220     [&#39;(((exp(x)*exp(x))*exp(x))*log((exp(x)*exp(x))))&#39;]  a.k.a  [2*x*exp(3*x)]
+12               301     [&#39;(((x*exp(x))*exp(x))*(exp(x)+exp(x)))&#39;]  a.k.a  [2*x*exp(3*x)]
+16               191     [&#39;((x+x)*exp((x+(x+x))))&#39;]  a.k.a  [2*x*exp(3*x)]
+31               253     [&#39;(log((exp(x)*exp(x)))*((exp(x)*exp(x))*exp(x)))&#39;]  a.k.a  [2*x*exp(3*x)]
+32               359     [&#39;((x+x)*exp((x+(x+x))))&#39;]  a.k.a  [2*x*exp(3*x)]
+37               173     [&#39;(((exp(x)*x)*(exp(x)*exp(x)))+((exp(x)*x)*(exp(x)*exp(x))))&#39;]  a.k.a  [2*x*exp(3*x)]
+48               216     [&#39;((exp(x)*exp(x))*(exp(x)*(x+x)))&#39;]  a.k.a  [2*x*exp(3*x)]
+50               444     [&#39;(((x+x)*exp((x+x)))*exp(x))&#39;]  a.k.a  [2*x*exp(3*x)]
+52               473     [&#39;((x+x)*exp(((x+x)+x)))&#39;]  a.k.a  [2*x*exp(3*x)]
+64               179     [&#39;(exp(x)*((exp(x)*(exp(x)+exp(x)))*x))&#39;]  a.k.a  [2*x*exp(3*x)]
+65               52      [&#39;((x+x)*exp(((x+x)+x)))&#39;]  a.k.a  [2*x*exp(3*x)]
+68               193     [&#39;((x+x)*log(exp(exp((x+(x+x))))))&#39;]  a.k.a  [2*x*exp(3*x)]
+71               291     [&#39;((x+x)*exp((((x+x)-x)+(x+x))))&#39;]  a.k.a  [2*x*exp(3*x)]
+72               468     [&#39;((x+x)*exp(((x+x)+x)))&#39;]  a.k.a  [2*x*exp(3*x)]
+73               102     [&#39;(exp((x+(x+x)))*(x+x))&#39;]  a.k.a  [2*x*exp(3*x)]
+78               311     [&#39;((exp(x)+exp(x))*((x*exp(x))*exp(x)))&#39;]  a.k.a  [2*x*exp(3*x)]
+80               263     [&#39;((exp(x)*((exp(x)+exp(x))*exp(x)))*x)&#39;]  a.k.a  [2*x*exp(3*x)]
+83               287     [&#39;((x+x)*exp((x+(x+x))))&#39;]  a.k.a  [2*x*exp(3*x)]
+88               115     [&#39;(((x+x)+(x-x))*exp((x+(x+x))))&#39;]  a.k.a  [2*x*exp(3*x)]
+92               410     [&#39;(exp((x+(x+x)))*(x+x))&#39;]  a.k.a  [2*x*exp(3*x)]
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [146]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">ERT</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="o">&lt;</span><span class="p">(</span><span class="n">stop</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;ERT Expected run time - avg. number of function evaluations needed: &quot;</span><span class="p">,</span> <span class="n">ERT</span> <span class="o">*</span> <span class="n">offsprings</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Avg. number of function evaluations from Tsoulos paper: &quot;</span><span class="p">,</span> <span class="mi">441</span> <span class="o">*</span> <span class="mi">200</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+ERT Expected run time - avg. number of function evaluations needed:  22610.5
+Avg. number of function evaluations from Tsoulos paper:  88200
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Consider-the-following-non-linear-Ordinary-Differential-Equation-(NLODE3):">
+<h2>Consider the following non linear Ordinary Differential Equation (NLODE3):<a class="headerlink" href="#Consider-the-following-non-linear-Ordinary-Differential-Equation-(NLODE3):" title="Permalink to this headline">¶</a></h2>
+<p><span class="math notranslate nohighlight">\(\frac{d^2y}{dx^2}\frac{dy}{dx} = -\frac4{x^3}\)</span>, with
+<span class="math notranslate nohighlight">\(y(1) = 0\)</span>, and <span class="math notranslate nohighlight">\(x \in [1,2]\)</span></p>
+<p>we demand its punctual validity over a grid of <span class="math notranslate nohighlight">\(N\)</span> equally spaced
+points.</p>
+<p>NOTE: The solution to the ODE is <span class="math notranslate nohighlight">\(y = log(x^2)\)</span></p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [147]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># We construct the grid of points. Since the ODE only contains second order derivatives we use truncation order 2.</span>
+<span class="c1"># Since we are using vectorized gdual we can instantiate only one gdual</span>
+
+<span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">grid</span> <span class="o">=</span> <span class="n">gdual</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [148]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># We define the quadratic error of the dCGP in the grid points</span>
+<span class="k">def</span> <span class="nf">qe_NLODE3</span><span class="p">(</span><span class="n">dCGP</span><span class="p">,</span> <span class="n">grid</span><span class="p">):</span>
+    <span class="n">retval</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">dCGP</span><span class="p">([</span><span class="n">grid</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">constant_cf</span><span class="p">)</span>
+    <span class="n">dydx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">get_derivative</span><span class="p">({</span><span class="s2">&quot;dx&quot;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">}))</span>
+    <span class="n">dydx2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">get_derivative</span><span class="p">({</span><span class="s2">&quot;dx&quot;</span> <span class="p">:</span> <span class="mi">2</span><span class="p">}))</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">grid</span><span class="o">.</span><span class="n">constant_cf</span><span class="p">)</span>
+    <span class="n">nlode3</span> <span class="o">=</span> <span class="n">dydx2</span><span class="o">*</span><span class="n">dydx</span>
+    <span class="n">retval</span> <span class="o">+=</span> <span class="p">(</span><span class="n">nlode3</span> <span class="o">+</span> <span class="mi">4</span><span class="o">/</span><span class="n">x</span><span class="o">/</span><span class="n">x</span><span class="o">/</span><span class="n">x</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">nlode3</span> <span class="o">+</span> <span class="mi">4</span><span class="o">/</span><span class="n">x</span><span class="o">/</span><span class="n">x</span><span class="o">/</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">retval</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [149]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># We define a penalty term associated to the initial conditions violation</span>
+<span class="k">def</span> <span class="nf">ic_NLODE3</span><span class="p">(</span><span class="n">dCGP</span><span class="p">):</span>
+    <span class="n">x0</span> <span class="o">=</span> <span class="mf">1.</span>
+    <span class="n">y0</span> <span class="o">=</span> <span class="mf">0.</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">dCGP</span><span class="p">([</span><span class="n">gdual</span><span class="p">([</span><span class="n">x0</span><span class="p">])])[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">dCGP_y0</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">constant_cf</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">dCGP_dy0</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">get_derivative</span><span class="p">({</span><span class="s2">&quot;dx&quot;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">})[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">dCGP_y0</span> <span class="o">-</span> <span class="n">y0</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">dCGP_y0</span> <span class="o">-</span> <span class="n">y0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [150]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># We run nexp experiments to accumulate statistic for the ERT</span>
+<span class="n">nexp</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">stop</span> <span class="o">=</span> <span class="mi">500</span>
+<span class="n">offsprings</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;restart: </span><span class="se">\t</span><span class="s2"> gen: </span><span class="se">\t</span><span class="s2"> expression:&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nexp</span><span class="p">):</span>
+    <span class="n">dCGP</span> <span class="o">=</span> <span class="n">expression</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">rows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">levels_back</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">arity</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">kernels</span><span class="o">=</span><span class="n">kernels</span><span class="p">,</span> <span class="n">seed</span> <span class="o">=</span> <span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">100000</span><span class="p">))</span>
+    <span class="n">g</span><span class="p">,</span> <span class="n">best_chromosome</span> <span class="o">=</span> <span class="n">run_experiment</span><span class="p">(</span><span class="n">max_gen</span> <span class="o">=</span> <span class="n">stop</span><span class="p">,</span> <span class="n">offsprings</span> <span class="o">=</span> <span class="n">offsprings</span><span class="p">,</span> \
+            <span class="n">quadratic_error</span><span class="o">=</span><span class="n">qe_NLODE3</span><span class="p">,</span> <span class="n">initial_conditions_error</span><span class="o">=</span><span class="n">ic_NLODE3</span><span class="p">,</span> <span class="n">dCGP</span><span class="o">=</span><span class="n">dCGP</span><span class="p">)</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+    <span class="n">dCGP</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">best_chromosome</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">g</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">stop</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\t\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">res</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">dCGP</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">]),</span> <span class="s2">&quot; a.k.a &quot;</span><span class="p">,</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">simplify</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">]))</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+restart:         gen:    expression:
+0                13      [&#39;log((x*x))&#39;]  a.k.a  [log(x**2)]
+2                4       [&#39;log((x*x))&#39;]  a.k.a  [log(x**2)]
+3                8       [&#39;log((x*x))&#39;]  a.k.a  [log(x**2)]
+4                21      [&#39;log((x*x))&#39;]  a.k.a  [log(x**2)]
+5                39      [&#39;(log(x)+log(x))&#39;]  a.k.a  [2*log(x)]
+6                138     [&#39;log((x*x))&#39;]  a.k.a  [log(x**2)]
+7                0       [&#39;log(((x*x)-log((x/x))))&#39;]  a.k.a  [log(x**2)]
+9                10      [&#39;log((x*x))&#39;]  a.k.a  [log(x**2)]
+10               5       [&#39;log((x*x))&#39;]  a.k.a  [log(x**2)]
+11               9       [&#39;(log(x)+log(x))&#39;]  a.k.a  [2*log(x)]
+12               50      [&#39;(log(x)+log(x))&#39;]  a.k.a  [2*log(x)]
+13               15      [&#39;log((x*x))&#39;]  a.k.a  [log(x**2)]
+14               11      [&#39;((log(x)+log(x))+(x-x))&#39;]  a.k.a  [2*log(x)]
+16               80      [&#39;log((x*x))&#39;]  a.k.a  [log(x**2)]
+17               2       [&#39;(log(x)+log(x))&#39;]  a.k.a  [2*log(x)]
+18               47      [&#39;(log(x)+log(x))&#39;]  a.k.a  [2*log(x)]
+19               1       [&#39;(log(sin(x))-log(((x*sin(x))*x)))&#39;]  a.k.a  [-log(x**2*sin(x)) + log(sin(x))]
+21               7       [&#39;log((x*x))&#39;]  a.k.a  [log(x**2)]
+24               17      [&#39;log((x*x))&#39;]  a.k.a  [log(x**2)]
+26               39      [&#39;log((x*x))&#39;]  a.k.a  [log(x**2)]
+29               6       [&#39;(log(x)+log(x))&#39;]  a.k.a  [2*log(x)]
+30               55      [&#39;log((x*x))&#39;]  a.k.a  [log(x**2)]
+31               54      [&#39;log((x*x))&#39;]  a.k.a  [log(x**2)]
+32               188     [&#39;(log(x)+log(x))&#39;]  a.k.a  [2*log(x)]
+33               4       [&#39;(log(x)+log(x))&#39;]  a.k.a  [2*log(x)]
+34               32      [&#39;(log(x)+(log(x)+sin((x-x))))&#39;]  a.k.a  [2*log(x)]
+35               66      [&#39;(log(x)+log(x))&#39;]  a.k.a  [2*log(x)]
+36               36      [&#39;log((x*x))&#39;]  a.k.a  [log(x**2)]
+37               56      [&#39;(sin(sin((x-x)))+log((x*x)))&#39;]  a.k.a  [log(x**2)]
+38               5       [&#39;log((x*x))&#39;]  a.k.a  [log(x**2)]
+39               11      [&#39;(log((x+(x-x)))+log((x+(x-x))))&#39;]  a.k.a  [2*log(x)]
+40               9       [&#39;log((((x/x)*x)*x))&#39;]  a.k.a  [log(x**2)]
+41               91      [&#39;(log((x*x))-(log((x*x))+log((x*x))))&#39;]  a.k.a  [-log(x**2)]
+42               44      [&#39;log((x*x))&#39;]  a.k.a  [log(x**2)]
+43               0       [&#39;log((x*x))&#39;]  a.k.a  [log(x**2)]
+45               83      [&#39;(log(x)+log(x))&#39;]  a.k.a  [2*log(x)]
+46               23      [&#39;log((x*x))&#39;]  a.k.a  [log(x**2)]
+47               6       [&#39;(log(x)+log(x))&#39;]  a.k.a  [2*log(x)]
+48               13      [&#39;(log(x)+log(x))&#39;]  a.k.a  [2*log(x)]
+49               14      [&#39;(log(x)+log(x))&#39;]  a.k.a  [2*log(x)]
+50               28      [&#39;(log(x)+log(x))&#39;]  a.k.a  [2*log(x)]
+51               6       [&#39;(log(x)+log(x))&#39;]  a.k.a  [2*log(x)]
+52               10      [&#39;(log(x)+log(x))&#39;]  a.k.a  [2*log(x)]
+53               5       [&#39;(log(x)+log(x))&#39;]  a.k.a  [2*log(x)]
+54               13      [&#39;log((x*x))&#39;]  a.k.a  [log(x**2)]
+55               44      [&#39;log((x*x))&#39;]  a.k.a  [log(x**2)]
+56               35      [&#39;(log(x)+log(x))&#39;]  a.k.a  [2*log(x)]
+57               25      [&#39;(log(x)+(log(x)-(log(x)-log(x))))&#39;]  a.k.a  [2*log(x)]
+58               11      [&#39;log((x*x))&#39;]  a.k.a  [log(x**2)]
+59               46      [&#39;((((x/x)-log(x))-log(x))-(x/x))&#39;]  a.k.a  [-2*log(x)]
+60               17      [&#39;log((x*x))&#39;]  a.k.a  [log(x**2)]
+61               1       [&#39;(log(x)+log(x))&#39;]  a.k.a  [2*log(x)]
+62               56      [&#39;(log(x)+log(x))&#39;]  a.k.a  [2*log(x)]
+63               0       [&#39;((log(x)+log(x))*cos(((log(x)-log(x))-(exp((log(x)-log(x)))*(log(x)-log(x))))))&#39;]  a.k.a  [2*log(x)]
+64               21      [&#39;(log(x)+log(x))&#39;]  a.k.a  [2*log(x)]
+65               52      [&#39;log((x*x))&#39;]  a.k.a  [log(x**2)]
+66               178     [&#39;log((x*(x/cos((x-x)))))&#39;]  a.k.a  [log(x**2)]
+67               7       [&#39;((x-x)-(log(x)+(log(x)-(x-x))))&#39;]  a.k.a  [-2*log(x)]
+68               2       [&#39;log((x*x))&#39;]  a.k.a  [log(x**2)]
+69               2       [&#39;log((x*x))&#39;]  a.k.a  [log(x**2)]
+70               3       [&#39;(log(x)+log(x))&#39;]  a.k.a  [2*log(x)]
+71               69      [&#39;log((x*x))&#39;]  a.k.a  [log(x**2)]
+72               24      [&#39;((log(x)*(x+x))/x)&#39;]  a.k.a  [2*log(x)]
+73               3       [&#39;(log(x)+log(x))&#39;]  a.k.a  [2*log(x)]
+74               25      [&#39;log((x*x))&#39;]  a.k.a  [log(x**2)]
+75               121     [&#39;(log(x)+log(x))&#39;]  a.k.a  [2*log(x)]
+76               29      [&#39;log((x*x))&#39;]  a.k.a  [log(x**2)]
+77               1       [&#39;(log(x)+log(x))&#39;]  a.k.a  [2*log(x)]
+78               4       [&#39;(log(x)+log(x))&#39;]  a.k.a  [2*log(x)]
+79               299     [&#39;log((x*x))&#39;]  a.k.a  [log(x**2)]
+80               3       [&#39;(log(x)+log(x))&#39;]  a.k.a  [2*log(x)]
+81               33      [&#39;log((x*x))&#39;]  a.k.a  [log(x**2)]
+82               19      [&#39;log((x*x))&#39;]  a.k.a  [log(x**2)]
+83               2       [&#39;log((x*x))&#39;]  a.k.a  [log(x**2)]
+84               278     [&#39;log((((x-x)-x)*((x-x)-x)))&#39;]  a.k.a  [log(x**2)]
+85               69      [&#39;log((x*x))&#39;]  a.k.a  [log(x**2)]
+86               7       [&#39;(log(x)+((log(x)-log(x))+log(x)))&#39;]  a.k.a  [2*log(x)]
+87               11      [&#39;log((x*x))&#39;]  a.k.a  [log(x**2)]
+88               1       [&#39;log((x*x))&#39;]  a.k.a  [log(x**2)]
+89               10      [&#39;(log((x*x))-(((x*x)+(x*x))-((x*x)+(x*x))))&#39;]  a.k.a  [log(x**2)]
+90               32      [&#39;(log(x)+log(x))&#39;]  a.k.a  [2*log(x)]
+91               17      [&#39;log((x*x))&#39;]  a.k.a  [log(x**2)]
+92               13      [&#39;(log(x)+log(x))&#39;]  a.k.a  [2*log(x)]
+93               8       [&#39;(log(x)+log(x))&#39;]  a.k.a  [2*log(x)]
+94               3       [&#39;(log(x)+log(x))&#39;]  a.k.a  [2*log(x)]
+95               28      [&#39;(log(x)+log(x))&#39;]  a.k.a  [2*log(x)]
+96               22      [&#39;log((x*x))&#39;]  a.k.a  [log(x**2)]
+97               7       [&#39;(log(x)+log(x))&#39;]  a.k.a  [2*log(x)]
+98               6       [&#39;log((x*x))&#39;]  a.k.a  [log(x**2)]
+99               62      [&#39;(((log(x)+(x+x))+log(x))-(x+x))&#39;]  a.k.a  [2*log(x)]
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [151]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">ERT</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="o">&lt;</span><span class="p">(</span><span class="n">stop</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;ERT Expected run time - avg. number of function evaluations needed: &quot;</span><span class="p">,</span> <span class="n">ERT</span> <span class="o">*</span> <span class="n">offsprings</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Avg. number of function evaluations from Tsoulos paper: &quot;</span><span class="p">,</span> <span class="mi">191</span> <span class="o">*</span> <span class="mi">200</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+ERT Expected run time - avg. number of function evaluations needed:  896.666666667
+Avg. number of function evaluations from Tsoulos paper:  38200
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Consider-the-following-non-linear-Patial-Differential-Equation-(PDE2):">
+<h2>Consider the following non linear Patial Differential Equation (PDE2):<a class="headerlink" href="#Consider-the-following-non-linear-Patial-Differential-Equation-(PDE2):" title="Permalink to this headline">¶</a></h2>
+<p><span class="math notranslate nohighlight">\(\nabla^2 \psi(x,y) = -\psi(x,y)\)</span> with <span class="math notranslate nohighlight">\(x\in[0,1]\)</span>,
+<span class="math notranslate nohighlight">\(y\in[0,1]\)</span> and boundary conditions: <span class="math notranslate nohighlight">\(\psi(0,y) = 0\)</span>,
+<span class="math notranslate nohighlight">\(\psi(1,y) = \sin(1)\cos(y)\)</span></p>
+<p>we demand its punctual validity over a squared grid of <span class="math notranslate nohighlight">\(N\)</span> equally
+spaced points.</p>
+<p>NOTE: The solution to the PDE is <span class="math notranslate nohighlight">\(\psi(x,y) = \sin(x)\cos(y)\)</span></p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [152]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># We construct the grid of points. Since the PDE only contains second order derivatives we use truncation order 2.</span>
+<span class="c1"># Since we are using vectorized gdual we can instantiate only one gdual</span>
+<span class="n">N</span><span class="o">=</span><span class="mi">10</span>
+<span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">N</span><span class="p">)</span>
+<span class="n">xval</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">values</span><span class="p">,[</span><span class="n">values</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">N</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">yval</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+<span class="n">grid</span> <span class="o">=</span> <span class="p">[</span><span class="n">gdual</span><span class="p">(</span><span class="n">xval</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">gdual</span><span class="p">(</span><span class="n">yval</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [153]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># We define the quadratic error of the dCGP in the grid points</span>
+<span class="k">def</span> <span class="nf">qe_PDE1</span><span class="p">(</span><span class="n">dCGP</span><span class="p">,</span> <span class="n">grid</span><span class="p">):</span>
+    <span class="n">retval</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">dCGP</span><span class="p">([</span><span class="n">grid</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">grid</span><span class="p">[</span><span class="mi">1</span><span class="p">]])[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">psi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">constant_cf</span><span class="p">)</span>
+    <span class="n">dpsidx2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">get_derivative</span><span class="p">({</span><span class="s2">&quot;dx&quot;</span> <span class="p">:</span> <span class="mi">2</span><span class="p">}))</span>
+    <span class="n">dpsidy2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">get_derivative</span><span class="p">({</span><span class="s2">&quot;dy&quot;</span> <span class="p">:</span> <span class="mi">2</span><span class="p">}))</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">grid</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">constant_cf</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">grid</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">constant_cf</span><span class="p">)</span>
+    <span class="n">pde1</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span> <span class="o">*</span> <span class="n">psi</span>
+    <span class="n">retval</span> <span class="o">+=</span> <span class="p">(</span><span class="n">pde1</span> <span class="o">-</span> <span class="n">dpsidx2</span> <span class="o">-</span> <span class="n">dpsidy2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">pde1</span> <span class="o">-</span> <span class="n">dpsidx2</span> <span class="o">-</span> <span class="n">dpsidy2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">retval</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [154]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># We define a penalty term associated to the initial conditions violation</span>
+<span class="n">sin1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">ic_PDE1</span><span class="p">(</span><span class="n">dCGP</span><span class="p">):</span>
+    <span class="n">x0</span> <span class="o">=</span> <span class="n">gdual</span><span class="p">([</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">N</span><span class="p">)</span>
+    <span class="n">y0</span> <span class="o">=</span> <span class="n">gdual</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+    <span class="n">psi</span> <span class="o">=</span> <span class="n">dCGP</span><span class="p">([</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">dCGP_psi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">psi</span><span class="o">.</span><span class="n">constant_cf</span><span class="p">)</span>
+    <span class="n">err1</span> <span class="o">=</span> <span class="p">(</span><span class="n">dCGP_psi</span> <span class="o">-</span> <span class="mf">0.</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">dCGP_psi</span> <span class="o">-</span> <span class="mf">0.</span><span class="p">)</span>
+    <span class="n">x0</span> <span class="o">=</span> <span class="n">gdual</span><span class="p">([</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">N</span><span class="p">)</span>
+    <span class="n">y0</span> <span class="o">=</span> <span class="n">gdual</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+    <span class="n">psi</span> <span class="o">=</span> <span class="n">dCGP</span><span class="p">([</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">dCGP_psi</span> <span class="o">=</span> <span class="n">psi</span><span class="o">.</span><span class="n">constant_cf</span>
+    <span class="n">err2</span> <span class="o">=</span> <span class="p">(</span><span class="n">dCGP_psi</span> <span class="o">-</span> <span class="n">sin1</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">values</span><span class="p">))</span> <span class="o">*</span> <span class="p">(</span><span class="n">dCGP_psi</span> <span class="o">-</span> <span class="n">sin1</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">values</span><span class="p">))</span>
+    <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">err1</span><span class="p">)</span> <span class="o">+</span> <span class="nb">sum</span><span class="p">(</span><span class="n">err2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [155]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># We run nexp experiments to accumulate statistic for the ERT</span>
+<span class="n">nexp</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">stop</span> <span class="o">=</span> <span class="mi">500</span>
+<span class="n">offsprings</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;restart: </span><span class="se">\t</span><span class="s2"> gen: </span><span class="se">\t</span><span class="s2"> expression:&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nexp</span><span class="p">):</span>
+    <span class="n">dCGP</span> <span class="o">=</span> <span class="n">expression</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">rows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">levels_back</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">arity</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">kernels</span><span class="o">=</span><span class="n">kernels</span><span class="p">,</span> <span class="n">seed</span> <span class="o">=</span> <span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">100000</span><span class="p">))</span>
+    <span class="n">g</span><span class="p">,</span> <span class="n">best_chromosome</span> <span class="o">=</span> <span class="n">run_experiment</span><span class="p">(</span><span class="n">max_gen</span> <span class="o">=</span> <span class="n">stop</span><span class="p">,</span> <span class="n">offsprings</span> <span class="o">=</span> <span class="n">offsprings</span><span class="p">,</span> \
+            <span class="n">quadratic_error</span><span class="o">=</span><span class="n">qe_PDE1</span><span class="p">,</span> <span class="n">initial_conditions_error</span><span class="o">=</span><span class="n">ic_PDE1</span><span class="p">,</span> <span class="n">screen_output</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">dCGP</span><span class="o">=</span><span class="n">dCGP</span><span class="p">)</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+    <span class="n">dCGP</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">best_chromosome</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">g</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">stop</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\t\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">res</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">dCGP</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">,</span><span class="s2">&quot;y&quot;</span><span class="p">]),</span> <span class="s2">&quot; a.k.a &quot;</span><span class="p">,</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">simplify</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">,</span><span class="s2">&quot;y&quot;</span><span class="p">]))</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+restart:         gen:    expression:
+1                291     [&#39;(sin(x)*cos(y))&#39;]  a.k.a  [sin(x)*cos(y)]
+7                410     [&#39;(cos(y)*sin(x))&#39;]  a.k.a  [sin(x)*cos(y)]
+9                487     [&#39;(sin(x)*cos(y))&#39;]  a.k.a  [sin(x)*cos(y)]
+16               254     [&#39;(cos(y)*sin(x))&#39;]  a.k.a  [sin(x)*cos(y)]
+20               203     [&#39;(sin(x)*cos(y))&#39;]  a.k.a  [sin(x)*cos(y)]
+30               81      [&#39;(cos(y)*sin(x))&#39;]  a.k.a  [sin(x)*cos(y)]
+32               409     [&#39;(cos(y)*sin(x))&#39;]  a.k.a  [sin(x)*cos(y)]
+35               472     [&#39;(sin(x)*cos(y))&#39;]  a.k.a  [sin(x)*cos(y)]
+46               270     [&#39;(cos(y)*sin(x))&#39;]  a.k.a  [sin(x)*cos(y)]
+49               375     [&#39;(sin(x)*cos(y))&#39;]  a.k.a  [sin(x)*cos(y)]
+51               245     [&#39;(cos(y)*sin(x))&#39;]  a.k.a  [sin(x)*cos(y)]
+55               201     [&#39;(cos(y)*sin(x))&#39;]  a.k.a  [sin(x)*cos(y)]
+62               53      [&#39;(sin(x)*cos(y))&#39;]  a.k.a  [sin(x)*cos(y)]
+70               363     [&#39;(sin(x)*cos(y))&#39;]  a.k.a  [sin(x)*cos(y)]
+71               481     [&#39;(cos(y)*sin(x))&#39;]  a.k.a  [sin(x)*cos(y)]
+78               34      [&#39;(sin(x)*cos(y))&#39;]  a.k.a  [sin(x)*cos(y)]
+87               288     [&#39;(sin(x)*cos(y))&#39;]  a.k.a  [sin(x)*cos(y)]
+93               377     [&#39;(cos(((y-y)-y))*sin(x))&#39;]  a.k.a  [sin(x)*cos(y)]
+95               252     [&#39;(sin(x)*cos(y))&#39;]  a.k.a  [sin(x)*cos(y)]
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [156]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">ERT</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="o">&lt;</span><span class="p">(</span><span class="n">stop</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;ERT Expected Run Time - avg. number of function evaluations needed: &quot;</span><span class="p">,</span> <span class="n">ERT</span> <span class="o">*</span> <span class="n">offsprings</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Avg. number of function evaluations from Tsoulos paper: &quot;</span><span class="p">,</span> <span class="mi">203</span> <span class="o">*</span> <span class="mi">200</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+ERT Expected Run Time - avg. number of function evaluations needed:  24192.1052632
+Avg. number of function evaluations from Tsoulos paper:  40600
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Consider-the-following-non-linear-Patial-Differential-Equation-(PDE6):">
+<h2>Consider the following non linear Patial Differential Equation (PDE6):<a class="headerlink" href="#Consider-the-following-non-linear-Patial-Differential-Equation-(PDE6):" title="Permalink to this headline">¶</a></h2>
+<p><span class="math notranslate nohighlight">\(\nabla^2 \psi(x,y) + \exp(\psi(x,y)) = 1 + x^2 + y^2 + \frac 4{(1 + x^2 + y^2)^2}\)</span>
+with <span class="math notranslate nohighlight">\(x\in[0.1,3]\)</span>, <span class="math notranslate nohighlight">\(y\in[0.1,3]\)</span> and boundary conditions:
+<span class="math notranslate nohighlight">\(\psi(0,y) = \log(1+y^2)\)</span>, <span class="math notranslate nohighlight">\(\psi(1,y) = \log(2+y^2)\)</span></p>
+<p>we demand its punctual validity over a squared grid of <span class="math notranslate nohighlight">\(N\)</span> equally
+spaced points.</p>
+<p>NOTE: The solution to the PDE is <span class="math notranslate nohighlight">\(\psi(x,y) = \log(1 + x^2 + y^2)\)</span></p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [171]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># We construct the grid of points. Since the PDE only contains second order derivatives we use truncation order 2.</span>
+<span class="c1"># Since we are using vectorized gdual we can instantiate only one gdual</span>
+<span class="n">N</span><span class="o">=</span><span class="mi">10</span>
+<span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="n">N</span><span class="p">)</span>
+<span class="n">xval</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">values</span><span class="p">,[</span><span class="n">values</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">N</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">yval</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+<span class="n">grid</span> <span class="o">=</span> <span class="p">[</span><span class="n">gdual</span><span class="p">(</span><span class="n">xval</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">gdual</span><span class="p">(</span><span class="n">yval</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [172]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># We define the quadratic error of the dCGP in the grid points</span>
+<span class="k">def</span> <span class="nf">qe_PDE6</span><span class="p">(</span><span class="n">dCGP</span><span class="p">,</span> <span class="n">grid</span><span class="p">):</span>
+    <span class="n">retval</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">dCGP</span><span class="p">([</span><span class="n">grid</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">grid</span><span class="p">[</span><span class="mi">1</span><span class="p">]])[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">psi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">constant_cf</span><span class="p">)</span>
+    <span class="n">dpsidx2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">get_derivative</span><span class="p">({</span><span class="s2">&quot;dx&quot;</span> <span class="p">:</span> <span class="mi">2</span><span class="p">}))</span>
+    <span class="n">dpsidy2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">get_derivative</span><span class="p">({</span><span class="s2">&quot;dy&quot;</span> <span class="p">:</span> <span class="mi">2</span><span class="p">}))</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">grid</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">constant_cf</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">grid</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">constant_cf</span><span class="p">)</span>
+    <span class="n">pde6</span> <span class="o">=</span> <span class="mf">4.</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">x</span><span class="o">*</span><span class="n">x</span><span class="o">+</span><span class="n">y</span><span class="o">*</span><span class="n">y</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+    <span class="n">retval</span> <span class="o">+=</span> <span class="p">(</span><span class="n">pde6</span> <span class="o">-</span> <span class="n">dpsidx2</span> <span class="o">-</span> <span class="n">dpsidy2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">pde6</span> <span class="o">-</span> <span class="n">dpsidx2</span> <span class="o">-</span> <span class="n">dpsidy2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">retval</span><span class="p">)</span> <span class="o">/</span> <span class="n">N</span><span class="o">**</span><span class="mi">2</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [190]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1">### We define a penalty term associated to the initial conditions violation</span>
+<span class="k">def</span> <span class="nf">ic_PDE6</span><span class="p">(</span><span class="n">dCGP</span><span class="p">):</span>
+    <span class="n">x0</span> <span class="o">=</span> <span class="n">gdual</span><span class="p">([</span><span class="mf">0.1</span><span class="p">]</span><span class="o">*</span><span class="n">N</span><span class="p">)</span>
+    <span class="n">y0</span> <span class="o">=</span> <span class="n">gdual</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+    <span class="n">psi</span> <span class="o">=</span> <span class="n">dCGP</span><span class="p">([</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">dCGP_psi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">psi</span><span class="o">.</span><span class="n">constant_cf</span><span class="p">)</span>
+    <span class="n">err1</span> <span class="o">=</span> <span class="p">(</span><span class="n">dCGP_psi</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">values</span><span class="o">*</span><span class="n">values</span><span class="o">+</span><span class="mf">0.01</span><span class="p">))</span> <span class="o">*</span> <span class="p">(</span><span class="n">dCGP_psi</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">values</span><span class="o">*</span><span class="n">values</span><span class="o">+</span><span class="mf">0.01</span><span class="p">))</span>
+    <span class="n">x0</span> <span class="o">=</span> <span class="n">gdual</span><span class="p">([</span><span class="mi">3</span><span class="p">]</span><span class="o">*</span><span class="n">N</span><span class="p">)</span>
+    <span class="n">y0</span> <span class="o">=</span> <span class="n">gdual</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+    <span class="n">psi</span> <span class="o">=</span> <span class="n">dCGP</span><span class="p">([</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">dCGP_psi</span> <span class="o">=</span> <span class="n">psi</span><span class="o">.</span><span class="n">constant_cf</span>
+    <span class="n">err2</span> <span class="o">=</span> <span class="p">(</span><span class="n">dCGP_psi</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">10</span><span class="o">+</span><span class="n">values</span><span class="o">*</span><span class="n">values</span><span class="p">))</span> <span class="o">*</span> <span class="p">(</span><span class="n">dCGP_psi</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">10</span><span class="o">+</span><span class="n">values</span><span class="o">*</span><span class="n">values</span><span class="p">))</span>
+    <span class="n">x0</span> <span class="o">=</span> <span class="n">gdual</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+    <span class="n">y0</span> <span class="o">=</span> <span class="n">gdual</span><span class="p">([</span><span class="mf">0.1</span><span class="p">]</span><span class="o">*</span><span class="n">N</span><span class="p">)</span>
+    <span class="n">psi</span> <span class="o">=</span> <span class="n">dCGP</span><span class="p">([</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">dCGP_psi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">psi</span><span class="o">.</span><span class="n">constant_cf</span><span class="p">)</span>
+    <span class="n">err3</span> <span class="o">=</span> <span class="p">(</span><span class="n">dCGP_psi</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">values</span><span class="o">*</span><span class="n">values</span><span class="o">+</span><span class="mf">0.01</span><span class="p">))</span> <span class="o">*</span> <span class="p">(</span><span class="n">dCGP_psi</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">values</span><span class="o">*</span><span class="n">values</span><span class="o">+</span><span class="mf">0.01</span><span class="p">))</span>
+    <span class="n">x0</span> <span class="o">=</span> <span class="n">gdual</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+    <span class="n">y0</span> <span class="o">=</span> <span class="n">gdual</span><span class="p">([</span><span class="mi">3</span><span class="p">]</span><span class="o">*</span><span class="n">N</span><span class="p">)</span>
+    <span class="n">psi</span> <span class="o">=</span> <span class="n">dCGP</span><span class="p">([</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">dCGP_psi</span> <span class="o">=</span> <span class="n">psi</span><span class="o">.</span><span class="n">constant_cf</span>
+    <span class="n">err4</span> <span class="o">=</span> <span class="p">(</span><span class="n">dCGP_psi</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">10</span><span class="o">+</span><span class="n">values</span><span class="o">*</span><span class="n">values</span><span class="p">))</span> <span class="o">*</span> <span class="p">(</span><span class="n">dCGP_psi</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">10</span><span class="o">+</span><span class="n">values</span><span class="o">*</span><span class="n">values</span><span class="p">))</span>
+    <span class="k">return</span> <span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">err1</span><span class="p">)</span> <span class="o">+</span> <span class="nb">sum</span><span class="p">(</span><span class="n">err2</span><span class="p">)</span> <span class="o">+</span> <span class="nb">sum</span><span class="p">(</span><span class="n">err4</span><span class="p">)</span> <span class="o">+</span> <span class="nb">sum</span><span class="p">(</span><span class="n">err3</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [191]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># We run nexp experiments to accumulate statistic for the ERT</span>
+<span class="n">kernels</span> <span class="o">=</span> <span class="n">kernel_set</span><span class="p">([</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span> <span class="s2">&quot;mul&quot;</span><span class="p">,</span> <span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="s2">&quot;diff&quot;</span><span class="p">,</span> <span class="s2">&quot;log&quot;</span><span class="p">,</span><span class="s2">&quot;exp&quot;</span><span class="p">,</span><span class="s2">&quot;cos&quot;</span><span class="p">,</span><span class="s2">&quot;sin&quot;</span><span class="p">])()</span> <span class="c1"># note the call operator (returns the list of kernels)</span>
+<span class="n">nexp</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">stop</span> <span class="o">=</span> <span class="mi">2000</span>
+<span class="n">offsprings</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;restart: </span><span class="se">\t</span><span class="s2"> gen: </span><span class="se">\t</span><span class="s2"> expression:&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nexp</span><span class="p">):</span>
+    <span class="n">dCGP</span> <span class="o">=</span> <span class="n">expression</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">rows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">levels_back</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">arity</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">kernels</span><span class="o">=</span><span class="n">kernels</span><span class="p">,</span> <span class="n">seed</span> <span class="o">=</span> <span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">100000</span><span class="p">))</span>
+    <span class="n">g</span><span class="p">,</span> <span class="n">best_chromosome</span> <span class="o">=</span> <span class="n">run_experiment</span><span class="p">(</span><span class="n">max_gen</span> <span class="o">=</span> <span class="n">stop</span><span class="p">,</span> <span class="n">offsprings</span> <span class="o">=</span> <span class="n">offsprings</span><span class="p">,</span> \
+            <span class="n">quadratic_error</span><span class="o">=</span><span class="n">qe_PDE6</span><span class="p">,</span> <span class="n">initial_conditions_error</span><span class="o">=</span><span class="n">ic_PDE6</span><span class="p">,</span> <span class="n">screen_output</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">dCGP</span><span class="o">=</span><span class="n">dCGP</span><span class="p">)</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+    <span class="n">dCGP</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">best_chromosome</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">g</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">stop</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\t\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">res</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">dCGP</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">,</span><span class="s2">&quot;y&quot;</span><span class="p">]),</span> <span class="s2">&quot; a.k.a &quot;</span><span class="p">,</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">simplify</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">,</span><span class="s2">&quot;y&quot;</span><span class="p">]),</span> <span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">qe_PDE6</span><span class="p">(</span><span class="n">dCGP</span><span class="p">,</span><span class="n">grid</span><span class="p">)</span><span class="o">+</span><span class="n">ic_PDE6</span><span class="p">(</span><span class="n">dCGP</span><span class="p">))</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+restart:         gen:    expression:
+13               1586    [&#39;log(((x*x)+((y*y)+((y*y)/(y*y)))))&#39;]  a.k.a  [log(x**2 + y**2 + 1)]   2.05547700971e-28
+36               1225    [&#39;log((((x*x)+(y/y))+(y*y)))&#39;]  a.k.a  [log(x**2 + y**2 + 1)]   7.18298744104e-32
+47               511     [&#39;log((((((x*x)/(x*x))*(y*y))+((x*x)/(x*x)))+(x*x)))&#39;]  a.k.a  [log(x**2 + y**2 + 1)]   7.90590617962e-28
+48               1917    [&#39;log((((x/x)+(x*x))+(y*y)))&#39;]  a.k.a  [log(x**2 + y**2 + 1)]   7.21996529597e-32
+77               1230    [&#39;log((((y/y)+(y*y))+(x*x)))&#39;]  a.k.a  [log(x**2 + y**2 + 1)]   7.17836520917e-32
+93               1837    [&#39;log((((y*y)+(y/y))+(x*x)))&#39;]  a.k.a  [log(x**2 + y**2 + 1)]   7.17836520917e-32
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [192]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">ERT</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="o">&lt;</span><span class="p">(</span><span class="n">stop</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;ERT Expected Run Time - avg. number of function evaluations needed: &quot;</span><span class="p">,</span> <span class="n">ERT</span> <span class="o">*</span> <span class="n">offsprings</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Avg. number of function evaluations from Tsoulos paper: &quot;</span><span class="p">,</span> <span class="mi">797</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span> <span class="c1"># here we assume tsoulos used the maximum population size since PDE6 is the most difficult problem</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+ERT Expected Run Time - avg. number of function evaluations needed:  327020.0
+Avg. number of function evaluations from Tsoulos paper:  797000
+</pre></div></div>
+</div>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2018, Dario Izzo, Francesco Biscani, Alessio Mereta.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.5.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

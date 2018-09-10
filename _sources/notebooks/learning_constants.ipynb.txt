@@ -1,0 +1,530 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Learning constants in a symbolic regression task\n",
+    "\n",
+    "One of the long standing \"skeletons in the closet\" of GP techniques is the constant finding problem. It is widely acknowledged that the **ephemeral random constant** approach, de facto the main solution proposed to this problem, is far from being satisfactory.\n",
+    "\n",
+    "Using dCGP, we are here able to successfully learn constants as well as expressions during evolution thanks to the hybridization of the evolutionary strategy with a, second order, gradient descent approach that learns the exact value of ephemeral constants, thus avoiding to build such a value by applying kernel functions to the constants.\n",
+    "\n",
+    "Lets first import dcgpy and pyaudi and set up things as to compute our CGP using the type \"gdual\" and thus get for free all derivatives"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from dcgpy import expression_gdual_vdouble as expression\n",
+    "from dcgpy import kernel_set_gdual_vdouble as kernel_set\n",
+    "from pyaudi import gdual_vdouble as gdual\n",
+    "import pyaudi\n",
+    "from matplotlib import pyplot as plt\n",
+    "import numpy as np\n",
+    "from random import randint\n",
+    "%matplotlib inline"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "collapsed": true
+   },
+   "source": [
+    "## The kernel functions"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# note he use of the protected division \"pdiv\" (not necessary here)\n",
+    "# note the call operator (returns the list of kernels)\n",
+    "kernels = kernel_set([\"sum\", \"mul\", \"diff\",\"pdiv\"])() "
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## The ES-(1+$\\lambda$) algorithm"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 41,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "def run_experiment(dCGP, offsprings, max_gen, x, yt, screen_output):\n",
+    "    # The offsprings chromosome, fitness and constant\n",
+    "    chromosome = [1] * offsprings\n",
+    "    fitness = [1] *offsprings\n",
+    "    constant = [1]*offsprings\n",
+    "    # Init the best as the initial random dCGP\n",
+    "    best_chromosome = dCGP.get()\n",
+    "    best_constant = 1.\n",
+    "    fit, _ = err2(dCGP, x, yt, best_constant)\n",
+    "    best_fitness = sum(fit.constant_cf)\n",
+    "    # Main loop over generations\n",
+    "    for g in range(max_gen):\n",
+    "        for i in range(offsprings):\n",
+    "            dCGP.set(best_chromosome)\n",
+    "            cumsum=0\n",
+    "            dCGP.mutate_active(i+1)\n",
+    "            fit, constant[i] = err2(dCGP, x, yt, best_constant)\n",
+    "            fitness[i] = sum(fit.constant_cf )\n",
+    "            chromosome[i] = dCGP.get()\n",
+    "        for i in range(offsprings):\n",
+    "            if fitness[i] <= best_fitness:\n",
+    "                if (fitness[i] != best_fitness):\n",
+    "                    best_chromosome = chromosome[i]\n",
+    "                    best_fitness = fitness[i]\n",
+    "                    best_constant = constant[i]\n",
+    "                    dCGP.set(best_chromosome)\n",
+    "                    if screen_output:\n",
+    "                        print(\"New best found: gen: \", g, \" value: \", fitness[i],  dCGP.simplify([\"x\",\"c\"]), \"c =\", best_constant)\n",
+    "\n",
+    "        if best_fitness < 1e-14:\n",
+    "            break\n",
+    "    return g, best_chromosome, best_constant"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## The test problems\n",
+    "As target functions, we define three different problems of increasing complexity:\n",
+    "\n",
+    "P1: $x^5 - \\pi x^3 + x$\n",
+    "\n",
+    "P2: $x^5 - \\pi x^3 + \\frac{2\\pi}x$\n",
+    "\n",
+    "P3: $\\frac{e x^5 + x^3}{x + 1}$\n",
+    "\n",
+    "P4: $\\sin(\\pi x) + \\frac 1x$\n",
+    "\n",
+    "note how $\\pi$ and $e$ are present in the expressions."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 45,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# The following functions create the target values for a gridded input x for different test problems\n",
+    "def data_P1(x):\n",
+    "    return x**5 - np.pi*x**3 + x\n",
+    "def data_P2(x):\n",
+    "    return x**5 - np.pi*x**3 + 2*np.pi / x\n",
+    "def data_P3(x):\n",
+    "    return (np.e*x**5 + x**3)/(x + 1)\n",
+    "def data_P4(x):\n",
+    "    return pyaudi.sin(np.pi * x) + 1./x\n",
+    "def data_P5(x):\n",
+    "    return np.e * x**5 - np.pi*x**3 + np.sqrt(2) * x\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## The error functions"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# This is the quadratic error of a dCGP expression when the constant value is cin. The error is computed\n",
+    "# over the input points xin (of type gdual, order 0 as we are not interested in expanding the program w.r.t. these)\n",
+    "# The target values are contained in yt (of type gdual, order 0 as we are not interested in expanding the program w.r.t. these)\n",
+    "def err(dCGP, xin, yt, cin):\n",
+    "    c = gdual([cin], \"c\", 2)\n",
+    "    y = dCGP([xin,c])[0]\n",
+    "    return (y-yt)**2\n",
+    "\n",
+    "# This is the quadratic error of the expression when the constant value is learned using a, one step, \n",
+    "# second order method.\n",
+    "def err2(dCGP, xin, yt,cin):\n",
+    "    c = gdual([cin], \"c\", 2)\n",
+    "    y = dCGP([xin,c])[0]\n",
+    "    error = err(dCGP,xin,yt,cin)\n",
+    "    dc =  sum(error.get_derivative({\"dc\":1}))\n",
+    "    dc2 = sum(error.get_derivative({\"dc\":2}))\n",
+    "    if dc2 != 0:\n",
+    "        learned_constant = c - dc/dc2\n",
+    "        y = dCGP([xin, learned_constant])[0]\n",
+    "    else:\n",
+    "        learned_constant = c\n",
+    "    return (y-yt)**2, learned_constant.constant_cf[0]"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "##  Problem P1:  $x^5 - \\pi x^3 + x$"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 17,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "x = np.linspace(1,3,10)\n",
+    "x = gdual(x)\n",
+    "yt = data_P1(x)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 18,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "restart: \t gen: \t expression:\n",
+      "5 \t\t 163 \t ['((((x*x)-c)/(x/((x*x)*(x*x))))+x)']  a.k.a  [-c*x**3 + x**5 + x] c =  3.141592653589793\n",
+      "8 \t\t 452 \t ['(x+((((((x/c)*(c*x))-(c+c))*((x/c)*(c*x)))-((x/c)*(c*x)))*x))']  a.k.a  [-2*c*x**3 + x**5 - x**3 + x] c =  1.0707963267948972\n",
+      "12 \t\t 309 \t ['(((x*x)*(((c-(x*x))*(x*x))/(((c-(x*x))*(x*x))*x)))-(((c-(x*x))*(x*x))*x))']  a.k.a  [-c*x**3 + x**5 + x] c =  3.141592653589793\n",
+      "15 \t\t 764 \t ['(((x/c)*c)+((x*(x*x))*((x*x)-c)))']  a.k.a  [-c*x**3 + x**5 + x] c =  3.1415926535897927\n",
+      "18 \t\t 193 \t ['(((x*(x*x))*((x*x)+c))-(c-(c+x)))']  a.k.a  [c*x**3 + x**5 + x] c =  -3.1415926535897927\n",
+      "36 \t\t 334 \t ['(x+((x*x)*(((((x*x)-c)+x)*x)-(x*x))))']  a.k.a  [-c*x**3 + x**5 + x] c =  3.1415926535897927\n",
+      "54 \t\t 826 \t ['((((x*x)*x)*((c+(x*x))+c))+x)']  a.k.a  [2*c*x**3 + x**5 + x] c =  -1.5707963267948968\n",
+      "57 \t\t 154 \t ['(((x+((x*x)+c))-((x*x)+c))+(((x*x)+c)*((x*x)*x)))']  a.k.a  [c*x**3 + x**5 + x] c =  -3.1415926535897927\n",
+      "58 \t\t 312 \t ['((((x*x)+c)*(x*(x*x)))-((x*(x*x))+((x*(x*x))-x)))']  a.k.a  [c*x**3 + x**5 - 2*x**3 + x] c =  -1.1415926535897931\n",
+      "66 \t\t 378 \t ['(((((x*x)-c)*(x*x))*x)+x)']  a.k.a  [-c*x**3 + x**5 + x] c =  3.1415926535897927\n",
+      "72 \t\t 68 \t ['(((c/x)/((c/x)/x))-((((x*c)*x)*x)-((((x*c)*x)*x)/((c/x)/x))))']  a.k.a  [-c*x**3 + x**5 + x] c =  3.141592653589794\n",
+      "77 \t\t 67 \t ['(x+((x*x)*(x*((x*x)+c))))']  a.k.a  [c*x**3 + x**5 + x] c =  -3.1415926535897927\n",
+      "81 \t\t 891 \t ['(((x*(x/(x/x)))+(x*((x*(x/(x/x)))*((x*(x/(x/x)))+(c+(x/x))))))-((x*(x/(x/x)))-x))']  a.k.a  [c*x**3 + x**5 + x**3 + x] c =  -4.141592653589793\n",
+      "83 \t\t 815 \t ['(((x*x)*(((x*x)-c)*x))+((x*c)/c))']  a.k.a  [-c*x**3 + x**5 + x] c =  3.1415926535897927\n",
+      "97 \t\t 210 \t ['((((x*x)/c)+((x*x)*(x*x)))*(x+(c/x)))']  a.k.a  [c*x**3 + x**5 + x + x**3/c] c =  -2.782160919529689\n"
+     ]
+    }
+   ],
+   "source": [
+    "# We run nexp experiments and accumulate statistic for the ERT\n",
+    "nexp = 100\n",
+    "offsprings = 4\n",
+    "max_gen=1000\n",
+    "res = []\n",
+    "kernels = kernel_set([\"sum\", \"mul\", \"diff\",\"pdiv\"])() \n",
+    "print(\"restart: \\t gen: \\t expression:\")\n",
+    "for i in range(nexp):\n",
+    "    dCGP = expression(inputs=2, outputs=1, rows=1, cols=15, levels_back=16, arity=2, kernels=kernels, seed = randint(0,1233456))\n",
+    "    g, best_chromosome, best_constant = run_experiment(dCGP, offsprings,max_gen,x,yt, screen_output=False)\n",
+    "    res.append(g)\n",
+    "    dCGP.set(best_chromosome)\n",
+    "    if g < (max_gen-1):\n",
+    "        print(i, \"\\t\\t\", res[i], \"\\t\", dCGP([\"x\",\"c\"]), \" a.k.a \", dCGP.simplify([\"x\",\"c\"]), \"c = \", best_constant)\n",
+    "res = np.array(res)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "ERT Expected run time = avg. number of dCGP evaluations needed:  19902.4444444\n"
+     ]
+    }
+   ],
+   "source": [
+    "mean_gen = sum(res) / sum(res<(max_gen-1))\n",
+    "print(\"ERT Expected run time = avg. number of dCGP evaluations needed: \", mean_gen * offsprings)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Problem P2 - $x^5 - \\pi x^3 + \\frac{2\\pi}x$\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 9,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "x = np.linspace(0.1,5,10) # we include points close to zero here to favour learning of 1/x\n",
+    "x = gdual(x)\n",
+    "yt = data_P2(x)\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 10,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "restart: \t gen: \t expression:\n",
+      "2 \t\t 4663 \t ['(((x-((((x*x)-c)*x)/(x*x)))+((((x*x)-c)*x)*(x*x)))+(x-((((x*x)-c)*x)/(x*x))))']  a.k.a  [-c*x**3 + 2*c/x + x**5] c =  3.1415926535897913\n",
+      "6 \t\t 1520 \t ['((x*((x*x)*((x*x)+c)))+((((x*x)-c)-((x*x)+c))/x))']  a.k.a  [c*x**3 - 2*c/x + x**5] c =  -3.1415926535897927\n",
+      "15 \t\t 2945 \t ['(((x*((c*x)/c))*((x*(x*((c*x)/c)))+(c*x)))-((c+c)*(c/(c*x))))']  a.k.a  [c*x**3 - 2*c/x + x**5] c =  -3.1415926535897927\n",
+      "18 \t\t 1937 \t ['((((x*x)*x)*(c+(x*x)))-(((x/(x*x))*c)+((x/(x*x))*c)))']  a.k.a  [c*x**3 - 2*c/x + x**5] c =  -3.141592653589793\n",
+      "20 \t\t 3489 \t ['(x*((c/(x*x))-(((x*x)*(c-(x*x)))-(c/(x*x)))))']  a.k.a  [-c*x**3 + 2*c/x + x**5] c =  3.1415926535897905\n",
+      "21 \t\t 3427 \t ['((((c+(x*x))*((x*x)*x))+x)-(((c+(x*x))*(x/(x*x)))-(x-((c+(x*x))*(x/(x*x))))))']  a.k.a  [c*x**3 - 2*c/x + x**5] c =  -3.1415926535897944\n",
+      "36 \t\t 1999 \t ['((((x*x)*(x*c))*((x*x)/c))-(((x*x)*(x*c))-((c+c)/x)))']  a.k.a  [-c*x**3 + 2*c/x + x**5] c =  3.141592653589792\n",
+      "44 \t\t 3911 \t ['((((c+(x*x))*(x*x))-((c/(x*x))+(c/(x*x))))*x)']  a.k.a  [c*x**3 - 2*c/x + x**5] c =  -3.141592653589789\n",
+      "52 \t\t 4993 \t ['((((x-x)/(c+c))-((x*(x*x))*(c-(x*x))))+((c+c)/x))']  a.k.a  [-c*x**3 + 2*c/x + x**5] c =  3.141592653589792\n",
+      "56 \t\t 3723 \t ['(((x-((c+(x*x))/x))+(x-((c+(x*x))/x)))+((c+(x*x))*(x*(x*x))))']  a.k.a  [c*x**3 - 2*c/x + x**5] c =  -3.1415926535897913\n",
+      "68 \t\t 3551 \t ['(((((x*x)-c)-(c+(x*x)))/x)+((c+(x*x))*((x*x)*x)))']  a.k.a  [c*x**3 - 2*c/x + x**5] c =  -3.1415926535897936\n",
+      "69 \t\t 1716 \t ['(((((x*x)-c)*(x*x))*x)+((c+c)/x))']  a.k.a  [-c*x**3 + 2*c/x + x**5] c =  3.141592653589794\n",
+      "75 \t\t 315 \t ['(((((x*x)*((x*x)+c))/(c/x))*((c/x)*x))-((c/x)+(c/x)))']  a.k.a  [c*x**3 - 2*c/x + x**5] c =  -3.1415926535897922\n",
+      "76 \t\t 3441 \t ['((((x*x)*((x*x)+c))*x)-((c/x)+(c/x)))']  a.k.a  [c*x**3 - 2*c/x + x**5] c =  -3.141592653589797\n",
+      "79 \t\t 1366 \t ['(((c/x)+(c/x))+((((x*x)-c)*x)/((c/x)/((x*x)*(c/x)))))']  a.k.a  [-c*x**3 + 2*c/x + x**5] c =  3.1415926535897927\n"
+     ]
+    }
+   ],
+   "source": [
+    "# We run nexp experiments and accumulate statistic for the ERT\n",
+    "nexp = 100\n",
+    "offsprings = 4\n",
+    "max_gen=5000\n",
+    "res = []\n",
+    "kernels = kernel_set([\"sum\", \"mul\", \"diff\",\"pdiv\"])() \n",
+    "print(\"restart: \\t gen: \\t expression:\")\n",
+    "for i in range(nexp):\n",
+    "    dCGP = expression(inputs=2, outputs=1, rows=1, cols=15, levels_back=16, arity=2, kernels=kernels, seed = randint(0,1233456))\n",
+    "    g, best_chromosome, best_constant = run_experiment(dCGP, offsprings,max_gen,x,yt, screen_output=False)\n",
+    "    res.append(g)\n",
+    "    dCGP.set(best_chromosome)\n",
+    "    if g < (max_gen-1):\n",
+    "        print(i, \"\\t\\t\", res[i], \"\\t\", dCGP([\"x\",\"c\"]), \" a.k.a \", dCGP.simplify([\"x\",\"c\"]), \"c = \", best_constant)\n",
+    "res = np.array(res)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 11,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "ERT Expected run time = avg. number of dCGP evaluations needed:  124776.266667\n"
+     ]
+    }
+   ],
+   "source": [
+    "mean_gen = sum(res) / sum(res<(max_gen-1))\n",
+    "print(\"ERT Expected run time = avg. number of dCGP evaluations needed: \", mean_gen * offsprings)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Problem P3 - $\\frac{e x^5 + x^3}{x + 1}$\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 12,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "x = np.linspace(-0.9,1,10)\n",
+    "x = gdual(x)\n",
+    "yt = data_P3(x)\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 13,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "restart: \t gen: \t expression:\n",
+      "1 \t\t 2610 \t ['((((x*x)-((x*x)*(c*(x*x))))*(x*x))/(x+(x*x)))']  a.k.a  [-c*x**6/(x**2 + x) + x**4/(x**2 + x)] c =  -2.7182818284590438\n",
+      "5 \t\t 3618 \t ['(((x*(x*(c*x)))*(x/((c*x)+(x*(c*x)))))*(((x-c)/(x-c))+(x*(c*x))))']  a.k.a  [c**2*x**6/(c*x**2 + c*x) + c*x**4/(c*x**2 + c*x)] c =  2.7182818284590478\n",
+      "10 \t\t 3956 \t ['(((x*x)*((x*x)+(((x*x)*c)*(x*x))))/((x*x)+x))']  a.k.a  [c*x**6/(x**2 + x) + x**4/(x**2 + x)] c =  2.7182818284590455\n",
+      "14 \t\t 4942 \t ['((((((c*x)*x)/c)*(((c/c)+((c*x)*x))*((c*x)*x)))*(c/c))/((c*x)+((c*x)*x)))']  a.k.a  [c**2*x**6/(c*x**2 + c*x) + c*x**4/(c*x**2 + c*x)] c =  2.718281828459043\n",
+      "27 \t\t 4107 \t ['((((c*(x*x))*(x*x))+(x*x))*(((c*(x*x))*(x*x))/((x*(c*(x*x)))+((x*(c*(x*x)))*x))))']  a.k.a  [c**2*x**8/(c*x**4 + c*x**3) + c*x**6/(c*x**4 + c*x**3)] c =  2.7182818284590287\n",
+      "77 \t\t 1921 \t ['((x*((x*x)+(x*(((x*x)*c)*x))))/(((x*((x*x)+(x*(((x*x)*c)*x))))/(x*((x*x)+(x*(((x*x)*c)*x)))))+x))']  a.k.a  [c*x**5/(x + 1) + x**3/(x + 1)] c =  2.7182818284590455\n",
+      "78 \t\t 3011 \t ['(((x-((x*(c*x))*x))/((x*(c*x))+((x*(c*x))/x)))*((x*(c*x))*x))']  a.k.a  [-c**2*x**6/(c*x**2 + c*x) + c*x**4/(c*x**2 + c*x)] c =  -2.7182818284590495\n"
+     ]
+    }
+   ],
+   "source": [
+    "# We run nexp experiments and accumulate statistic for the ERT\n",
+    "nexp = 100\n",
+    "offsprings = 4\n",
+    "max_gen=5000\n",
+    "res = []\n",
+    "kernels = kernel_set([\"sum\", \"mul\", \"diff\",\"pdiv\"])() \n",
+    "print(\"restart: \\t gen: \\t expression:\")\n",
+    "for i in range(nexp):\n",
+    "    dCGP = expression(inputs=2, outputs=1, rows=1, cols=15, levels_back=16, arity=2, kernels=kernels, seed = randint(0,1233456))\n",
+    "    g, best_chromosome, best_constant = run_experiment(dCGP, offsprings,max_gen,x,yt, screen_output=False)\n",
+    "    res.append(g)\n",
+    "    dCGP.set(best_chromosome)\n",
+    "    if g < (max_gen-1):\n",
+    "        print(i, \"\\t\\t\", res[i], \"\\t\", dCGP([\"x\",\"c\"]), \" a.k.a \", dCGP.simplify([\"x\",\"c\"]), \"c = \", best_constant)\n",
+    "res = np.array(res)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 14,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "ERT Expected run time = avg. number of dCGP evaluations needed:  279469.714286\n"
+     ]
+    }
+   ],
+   "source": [
+    "mean_gen = sum(res) / sum(res<(max_gen-1))\n",
+    "print(\"ERT Expected run time = avg. number of dCGP evaluations needed: \", mean_gen * offsprings)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Problem P4: $\\sin(\\pi x) + \\frac 1x$"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 42,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "x = np.linspace(-1,1,10)\n",
+    "x = gdual(x)\n",
+    "yt = data_P4(x)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 43,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "restart: \t gen: \t expression:\n",
+      "5 \t\t 2914 \t ['(sin((x/c))+(((x-(x/c))/((x*(x-(x/c)))/c))/(x/(x/c))))']  a.k.a  [sin(x/c) + 1/x] c =  0.3183098859546274\n",
+      "12 \t\t 808 \t ['((c/((x*c)+((x*c)-(x*c))))+sin((x+((x*c)+((x*c)-(x*c))))))']  a.k.a  [sin(c*x + x) + 1/x] c =  2.1415926536812546\n",
+      "17 \t\t 1434 \t ['(sin(((x*c)+x))+(c/(x*c)))']  a.k.a  [sin(c*x + x) + 1/x] c =  2.1415926536986984\n",
+      "28 \t\t 1079 \t ['((c/(x*c))+sin((x+((x*c)+(x*c)))))']  a.k.a  [sin(2*c*x + x) + 1/x] c =  1.0707963267948972\n",
+      "29 \t\t 2113 \t ['(sin((((x/c)/c)+(x+x)))+((x/x)/x))']  a.k.a  [sin(2*x + x/c**2) + 1/x] c =  -0.935932260872573\n",
+      "35 \t\t 3739 \t ['(((c/c)/x)+sin(((c-(c-x))+((x*(c+(c/c)))+x))))']  a.k.a  [sin(c*x + 3*x) + 1/x] c =  0.14159265368124904\n",
+      "36 \t\t 127 \t ['((c/(x*c))-(sin(((x*c)-c))*((c/(x*c))/(c/(x*c)))))']  a.k.a  [-sin(c*x - c) + 1/x] c =  3.1415926536189205\n",
+      "39 \t\t 805 \t ['(sin(((x*c)+(x*c)))+(c/(x*c)))']  a.k.a  [sin(2*c*x) + 1/x] c =  1.5707963267952043\n",
+      "46 \t\t 4412 \t ['(sin(((x/c)+x))+((sin(((x/c)+x))+x)/((sin(((x/c)+x))+x)*x)))']  a.k.a  [sin(x + x/c) + 1/x] c =  0.4669422068457747\n",
+      "53 \t\t 2197 \t ['((((c/x)*(c/x))*(((c/(c/x))/c)/c))+sin((((c/(c/x))/c)/c)))']  a.k.a  [sin(x/c**2) + 1/x] c =  0.5641895835477555\n",
+      "54 \t\t 4082 \t ['((((c+(sin((x*c))*sin((x*c))))/(sin((x*c))*sin((x*c))))-c)/((((c+(sin((x*c))*sin((x*c))))/(sin((x*c))*sin((x*c))))-c)/((c/(x*c))+sin((x*c)))))']  a.k.a  [sin(c*x) + 1/x] c =  3.1415926535902257\n",
+      "59 \t\t 601 \t ['(sin((x*c))+(c/(x*c)))']  a.k.a  [sin(c*x) + 1/x] c =  3.1415926537675927\n",
+      "64 \t\t 4031 \t ['(sin((x+(x*c)))+(c/(x*c)))']  a.k.a  [sin(c*x + x) + 1/x] c =  2.1415926536986984\n",
+      "66 \t\t 1069 \t ['((x/(x*x))+sin(((x+x)+(x/sin(c)))))']  a.k.a  [sin(2*x + x/sin(c)) + 1/x] c =  2.0741512360814633\n",
+      "73 \t\t 978 \t ['((c/(x*c))+sin((x*c)))']  a.k.a  [sin(c*x) + 1/x] c =  3.141592653745218\n",
+      "74 \t\t 2798 \t ['(sin((c*x))+(((c*x)/(c*x))/x))']  a.k.a  [sin(c*x) + 1/x] c =  3.141592653590368\n",
+      "81 \t\t 2771 \t ['(sin((x+(x*c)))+(c/(x*c)))']  a.k.a  [sin(c*x + x) + 1/x] c =  2.1415926536986984\n",
+      "83 \t\t 2865 \t ['(sin(((x-(x*c))-(x*c)))+(c/(x*c)))']  a.k.a  [-sin(2*c*x - x) + 1/x] c =  -1.0707963269360328\n",
+      "90 \t\t 3688 \t ['(sin(((c*(x*c))-x))+(c/(x*c)))']  a.k.a  [sin(c**2*x - x) + 1/x] c =  2.035090330583488\n"
+     ]
+    }
+   ],
+   "source": [
+    "# We run nexp experiments and accumulate statistic for the ERT\n",
+    "nexp = 100\n",
+    "offsprings = 4\n",
+    "max_gen=5000\n",
+    "res = []\n",
+    "kernels = kernel_set([\"sum\", \"mul\", \"diff\",\"pdiv\",\"sin\"])() \n",
+    "print(\"restart: \\t gen: \\t expression:\")\n",
+    "for i in range(nexp):\n",
+    "    dCGP = expression(inputs=2, outputs=1, rows=1, cols=15, levels_back=16, arity=2, kernels=kernels, seed = randint(0,1233456))\n",
+    "    g, best_chromosome, best_constant = run_experiment(dCGP, offsprings,max_gen,x,yt, screen_output=False)\n",
+    "    res.append(g)\n",
+    "    dCGP.set(best_chromosome)\n",
+    "    if g < (max_gen-1):\n",
+    "        print(i, \"\\t\\t\", res[i], \"\\t\", dCGP([\"x\",\"c\"]), \" a.k.a \", dCGP.simplify([\"x\",\"c\"]), \"c = \", best_constant)\n",
+    "res = np.array(res)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 44,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "ERT Expected run time = avg. number of dCGP evaluations needed:  94195.7894737\n"
+     ]
+    }
+   ],
+   "source": [
+    "mean_gen = sum(res) / sum(res<(max_gen-1))\n",
+    "print(\"ERT Expected run time = avg. number of dCGP evaluations needed: \", mean_gen * offsprings)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.6.6"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 1
+}

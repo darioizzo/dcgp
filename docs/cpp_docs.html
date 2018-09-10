@@ -1,43 +1,29 @@
 
 <!DOCTYPE html>
 
-
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
     <title>C++ Documentation &#8212; dCGP documentation</title>
-    
-    <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/bootswatch-3.3.6/flatly/bootstrap.min.css" type="text/css" />
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/my-styles.css" type="text/css" />
-    
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
-        VERSION:     '1.0.1',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="dCGP documentation" href="../index.html" />
+    <link rel="next" title="dcgp::expression, The standard Cartesian Genetic Program (dCGP)" href="expression.html" />
+    <link rel="prev" title="Documentation" href="index.html" />
 <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto|Comfortaa|Space+Mono">
 
-  </head>
-  <body role="document">
+  </head><body>
 
   <div id="navbar" class="navbar navbar-inverse navbar-default navbar-fixed-top">
     <div class="container">
@@ -50,7 +36,7 @@
         </button>
         <a class="navbar-brand" href="../index.html">
           dcgp</a>
-        <span class="navbar-text navbar-version pull-left"><b>1.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>1.2</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -59,6 +45,7 @@
                 <li><a href="../installation.html">Install</a></li>
                 <li><a href="../quickstart.html">Quick Start</a></li>
                 <li><a href="index.html">Docs</a></li>
+                <li><a href="../tutorials/index.html">Tutorials</a></li>
                 <li><a href="../theory.html">Theory</a></li>
             
             
@@ -70,7 +57,48 @@
      href="../index.html">Site <b class="caret"></b></a>
   <ul class="dropdown-menu globaltoc"
       role="menu"
-      aria-labelledby="dLabelGlobalToc"></ul>
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#c">C++</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#python">Python</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick start examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#c">C++</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#python">Python</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Documentation</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">C++ Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="python_docs.html">Python Documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">C++ examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/cpp_koza_quintic.html">Finding the Koza quintic polynomial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/cpp_supervised_learning.html">Fitting a data set with an expression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/cpp_tsoulos_ode1.html">Solving the ODE1 problem from Tsoulos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/cpp_tsoulos_nlode3.html">Solving the NLODE3 problem from Tsoulos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/cpp_hamiltonian_spring_mass.html">Finding the prime integral for a spring mass system</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/cpp_hamiltonian_spring_mass_lipson.html">Finding the prime integral for a spring mass system using Lipson method</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/cpp_kepler_first_integral.html">Search for first integrals of Kepler’s problem</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html#python-examples">Python examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/learning_constants.html">Learning constants in a symbolic regression task</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/learning_constants2.html">Learning constants in a symbolic regression task (PART II)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/solving_odes.html">Solving differential equations with dCGP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/weighted_symbolic_regression.html">Weighted dCGP for a symbolic regression task</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/finding_prime_integrals.html">Discovery of prime integrals with dCGP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/dCGPANN.html">Representing an Artificial Neural Network as a Cartesian Genetic Program</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../theory.html">Cartesian Genetic Programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../theory.html#dcgp">dCGP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../theory.html#reference">Reference</a></li>
+</ul>
+</li>
+</ul>
+</ul>
 </li>
               
             
@@ -99,880 +127,24 @@
     <div class="col-md-12 content">
       
   <div class="section" id="c-documentation">
-<h1><a class="toc-backref" href="#id3">C++ Documentation</a><a class="headerlink" href="#c-documentation" title="Permalink to this headline">¶</a></h1>
-<div class="contents topic" id="contents">
-<p class="topic-title first">Contents</p>
-<ul class="simple">
-<li><a class="reference internal" href="#c-documentation" id="id3">C++ Documentation</a><ul>
-<li><a class="reference internal" href="#classes" id="id4">Classes</a><ul>
-<li><a class="reference internal" href="#expression-a-cartesian-genetic-program" id="id5">expression: a Cartesian Genetic Program</a></li>
-<li><a class="reference internal" href="#expression-weighted-a-weighted-cartesian-genetic-program" id="id6">expression_weighted: a weighted Cartesian Genetic Program</a></li>
-<li><a class="reference internal" href="#kernel-a-function-defining-the-generic-cgp-node" id="id7">kernel: a function defining the generic CGP node</a></li>
-<li><a class="reference internal" href="#kernel-set-a-set-of-kernels" id="id8">kernel_set: a set of kernels</a></li>
-</ul>
-</li>
-</ul>
-</li>
+<h1>C++ Documentation<a class="headerlink" href="#c-documentation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="types-of-dcgps">
+<h2>Types of dCGPs<a class="headerlink" href="#types-of-dcgps" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="expression.html">dcgp::expression, The standard Cartesian Genetic Program (dCGP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="expression_weighted.html">dcgp::expression_weighted, A weighted Cartesian Genetic Program (dCGP-W)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="expression_ann.html">dcgp::expression_ann, An artificial neural network Cartesian Genetic Program (dCGP-ANN)</a></li>
 </ul>
 </div>
-<div class="section" id="classes">
-<h2><a class="toc-backref" href="#id4">Classes</a><a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="expression-a-cartesian-genetic-program">
-<h3><a class="toc-backref" href="#id5">expression: a Cartesian Genetic Program</a><a class="headerlink" href="#expression-a-cartesian-genetic-program" title="Permalink to this headline">¶</a></h3>
-<div class="figure align-center" id="id1">
-<img alt="dCGP expression" src="../_images/expression.png" />
-<p class="caption"><span class="caption-text">A dCGP expression</span></p>
 </div>
-<dl class="class">
-<dt>
-<span class="target" id="dCGPclassdcgp_1_1expression"></span><em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
-<dt id="_CPPv2N4dcgp10expressionE">
-<span id="dcgp::expression"></span><em class="property">class </em><code class="descclassname">dcgp::</code><code class="descname">expression</code><a class="headerlink" href="#_CPPv2N4dcgp10expressionE" title="Permalink to this definition">¶</a></dt>
-<dd><p>A dCGP expression. </p>
-<p>This class represents a mathematical expression as encoded using CGP and contains algorithms to compute its value (numerical and symbolical) and its derivatives as well as to mutate the expression.</p>
-<p><dl class="docutils">
-<dt><strong>Author</strong></dt>
-<dd>Dario Izzo (<a class="reference external" href="mailto:dario&#46;izzo&#37;&#52;&#48;gmail&#46;com">dario<span>&#46;</span>izzo<span>&#64;</span>gmail<span>&#46;</span>com</a>) </dd>
-<dt><strong>Template Parameters</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal"><span class="pre">T</span></code>: expression type. Can be double, or a gdual type.</li>
+<div class="section" id="non-linearities">
+<h2>Non linearities<a class="headerlink" href="#non-linearities" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="kernel.html">dcgp::kernel, a function defining the generic dCGP node</a></li>
+<li class="toctree-l1"><a class="reference internal" href="kernel_set.html">dcgp::kernel_set: a set of kernels</a></li>
 </ul>
-</dd>
-</dl>
-</p>
-<p>Subclassed by <a class="reference internal" href="#dCGPclassdcgp_1_1expression__weighted"><span class="std std-ref">dcgp::expression_weighted&lt; T &gt;</span></a></p>
-<div class="breathe-sectiondef container">
-<p class="breathe-sectiondef-title rubric">Public Functions</p>
-<dl class="function">
-<dt id="_CPPv2N4dcgp10expression10expressionEjjjjjjNSt6vectorI6kernelI1TEEEj">
-<span id="dcgp::expression::expression__unsigned-i.unsigned-i.unsigned-i.unsigned-i.unsigned-i.unsigned-i.std::vector:kernel:T::.unsigned-i"></span><span class="target" id="dCGPclassdcgp_1_1expression_1ab19e5450d9853460a83c4c8e3a225a9d"></span><code class="descname">expression</code><span class="sig-paren">(</span>unsigned int <em>n</em>, unsigned int <em>m</em>, unsigned int <em>r</em>, unsigned int <em>c</em>, unsigned int <em>l</em>, unsigned int <em>arity</em>, std::vector&lt;<a class="reference internal" href="#_CPPv2N4dcgp6kernelE" title="dcgp::kernel">kernel</a>&lt;T&gt;&gt; <em>f</em>, unsigned int <em>seed</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N4dcgp10expression10expressionEjjjjjjNSt6vectorI6kernelI1TEEEj" title="Permalink to this definition">¶</a></dt>
-<dd><p>Constructor. </p>
-<p>Constructs a dCGP expression</p>
-<p><dl class="docutils">
-<dt><strong>Parameters</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal"><span class="pre">n</span></code>: number of inputs (independent variables) </li>
-<li><code class="docutils literal"><span class="pre">m</span></code>: number of outputs (dependent variables) </li>
-<li><code class="docutils literal"><span class="pre">r</span></code>: number of rows of the dCGP </li>
-<li><code class="docutils literal"><span class="pre">c</span></code>: number of columns of the dCGP </li>
-<li><code class="docutils literal"><span class="pre">l</span></code>: number of levels-back allowed in the dCGP </li>
-<li><code class="docutils literal"><span class="pre">arity</span></code>: arity of the basis functions </li>
-<li><code class="docutils literal"><span class="pre">f</span></code>: function set. An std::vector of dcgp::kernel&lt;expression::type&gt; </li>
-<li><code class="docutils literal"><span class="pre">seed</span></code>: seed for the random number generator (initial expression and mutations depend on this) </li>
-</ul>
-</dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="_CPPv2N4dcgp10expression3setERKNSt6vectorIjEE">
-<span id="dcgp::expression::set__std::vector:unsigned-i:CR"></span><span class="target" id="dCGPclassdcgp_1_1expression_1a4ae3fb8e3caa06814416b2c3af06f974"></span>void <code class="descname">set</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;unsigned int&gt; &amp;<em>x</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N4dcgp10expression3setERKNSt6vectorIjEE" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sets the chromosome. </p>
-<p>Sets a given chromosome as genotype for the expression and updates the active nodes and active genes information accordingly</p>
-<p><dl class="docutils">
-<dt><strong>Parameters</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal"><span class="pre">x</span></code>: the new cromosome</li>
-</ul>
-</dd>
-<dt><strong>Exceptions</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal"><span class="pre">std::invalid_argument</span></code>: if the chromosome is incompatible with the expression (n.inputs, n.outputs, levels-back, etc.) </li>
-</ul>
-</dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="_CPPv2NK4dcgp10expression3getEv">
-<span id="dcgp::expression::getC"></span><span class="target" id="dCGPclassdcgp_1_1expression_1a7fe24b96465868f0f297fdceebb48c1a"></span><em class="property">const</em> std::vector&lt;unsigned int&gt; &amp;<code class="descname">get</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK4dcgp10expression3getEv" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets the chromosome. </p>
-<p>Gets the chromosome encoding the current expression</p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>The chromosome </dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="_CPPv2NK4dcgp10expression6get_lbEv">
-<span id="dcgp::expression::get_lbC"></span><span class="target" id="dCGPclassdcgp_1_1expression_1a1851a3e9b0f45df2a0974518d2e4b43e"></span><em class="property">const</em> std::vector&lt;unsigned int&gt; &amp;<code class="descname">get_lb</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK4dcgp10expression6get_lbEv" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets the lower bounds. </p>
-<p>Gets the lower bounds for the genes</p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>An std::vector containing the lower bound for each gene </dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="_CPPv2NK4dcgp10expression6get_ubEv">
-<span id="dcgp::expression::get_ubC"></span><span class="target" id="dCGPclassdcgp_1_1expression_1a697d4774126246f9e54a772bc2586bbd"></span><em class="property">const</em> std::vector&lt;unsigned int&gt; &amp;<code class="descname">get_ub</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK4dcgp10expression6get_ubEv" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets the upper bounds. </p>
-<p>Gets the upper bounds for the genes</p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>An std::vector containing the upper bound for each gene </dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="_CPPv2NK4dcgp10expression16get_active_genesEv">
-<span id="dcgp::expression::get_active_genesC"></span><span class="target" id="dCGPclassdcgp_1_1expression_1a18c65c22fe59f719dd220ca1dba6dd20"></span><em class="property">const</em> std::vector&lt;unsigned int&gt; &amp;<code class="descname">get_active_genes</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK4dcgp10expression16get_active_genesEv" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets the active genes. </p>
-<p>Gets the idx of the active genes in the current chromosome (numbering is from 0)</p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>An std::vector containing the idx of the active genes in the current chromosome </dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="_CPPv2NK4dcgp10expression16get_active_nodesEv">
-<span id="dcgp::expression::get_active_nodesC"></span><span class="target" id="dCGPclassdcgp_1_1expression_1aa14936a497da3b8bf2f0c71c6add6a30"></span><em class="property">const</em> std::vector&lt;unsigned int&gt; &amp;<code class="descname">get_active_nodes</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK4dcgp10expression16get_active_nodesEv" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets the active nodes. </p>
-<p>Gets the idx of the active nodes in the current chromosome. The numbering starts from 0 at the first input node to then follow PPSN tutorial from Miller</p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>An std::vector containing the idx of the active nodes </dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="_CPPv2NK4dcgp10expression5get_nEv">
-<span id="dcgp::expression::get_nC"></span><span class="target" id="dCGPclassdcgp_1_1expression_1a47eb7a0e585b9d45ae1b9cd8a8d92fcd"></span>unsigned int <code class="descname">get_n</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK4dcgp10expression5get_nEv" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets the number of inputs. </p>
-<p>Gets the number of inputs of the dCGP expression</p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>the number of inputs </dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="_CPPv2NK4dcgp10expression5get_mEv">
-<span id="dcgp::expression::get_mC"></span><span class="target" id="dCGPclassdcgp_1_1expression_1ab807da3045e19d76a12889c1920fcc46"></span>unsigned int <code class="descname">get_m</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK4dcgp10expression5get_mEv" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets the number of outputs. </p>
-<p>Gets the number of outputs of the dCGP expression</p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>the number of outputs </dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="_CPPv2NK4dcgp10expression8get_rowsEv">
-<span id="dcgp::expression::get_rowsC"></span><span class="target" id="dCGPclassdcgp_1_1expression_1a0e91c268fc326d2ac3ee089155182622"></span>unsigned int <code class="descname">get_rows</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK4dcgp10expression8get_rowsEv" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets the number of rows. </p>
-<p>Gets the number of rows of the dCGP expression</p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>the number of rows </dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="_CPPv2NK4dcgp10expression8get_colsEv">
-<span id="dcgp::expression::get_colsC"></span><span class="target" id="dCGPclassdcgp_1_1expression_1a775b807f0cb3f636f6665b692021f957"></span>unsigned int <code class="descname">get_cols</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK4dcgp10expression8get_colsEv" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets the number of columns. </p>
-<p>Gets the number of columns of the dCGP expression</p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>the number of columns </dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="_CPPv2NK4dcgp10expression15get_levels_backEv">
-<span id="dcgp::expression::get_levels_backC"></span><span class="target" id="dCGPclassdcgp_1_1expression_1a6f10b8a97fd3959cce8ba2564c90c72f"></span>unsigned int <code class="descname">get_levels_back</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK4dcgp10expression15get_levels_backEv" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets the number of levels-back. </p>
-<p>Gets the number of levels-back allowed for the dCGP expression</p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>the number of levels-back </dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="_CPPv2NK4dcgp10expression9get_arityEv">
-<span id="dcgp::expression::get_arityC"></span><span class="target" id="dCGPclassdcgp_1_1expression_1a500a19882cf5e91814d672e2f7a77693"></span>unsigned int <code class="descname">get_arity</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK4dcgp10expression9get_arityEv" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets the arity. </p>
-<p>Gets the arity of the basis functions of the dCGP expression</p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>the arity </dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="_CPPv2NK4dcgp10expression5get_fEv">
-<span id="dcgp::expression::get_fC"></span><span class="target" id="dCGPclassdcgp_1_1expression_1afd314c2e2e9f177bc27829bf25c0bc63"></span><em class="property">const</em> std::vector&lt;<a class="reference internal" href="#_CPPv2N4dcgp6kernelE" title="dcgp::kernel">kernel</a>&lt;T&gt;&gt; &amp;<code class="descname">get_f</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK4dcgp10expression5get_fEv" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets the function set. </p>
-<p>Gets the set of functions used in the dCGP expression</p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>an std::vector of kernels </dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="_CPPv2N4dcgp10expression6mutateEj">
-<span id="dcgp::expression::mutate__unsigned-i"></span><span class="target" id="dCGPclassdcgp_1_1expression_1a2b9d6c9e150c9608be7184a15e57284d"></span>void <code class="descname">mutate</code><span class="sig-paren">(</span>unsigned int <em>idx</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N4dcgp10expression6mutateEj" title="Permalink to this definition">¶</a></dt>
-<dd><p>Mutates one gene. </p>
-<p>Mutates exactly one gene within its allowed bounds.</p>
-<p><dl class="docutils">
-<dt><strong>Parameters</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal"><span class="pre">idx</span></code>: index of the gene to me mutated</li>
-</ul>
-</dd>
-<dt><strong>Exceptions</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal"><span class="pre">std::invalid_argument</span></code>: if <code class="docutils literal"><span class="pre">idx</span></code> is too large </li>
-</ul>
-</dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="_CPPv2N4dcgp10expression6mutateENSt6vectorIjEE">
-<span id="dcgp::expression::mutate__std::vector:unsigned-i:"></span><span class="target" id="dCGPclassdcgp_1_1expression_1a44a7d1f5aa584e80703b38681c9b6a9e"></span>void <code class="descname">mutate</code><span class="sig-paren">(</span>std::vector&lt;unsigned int&gt; <em>idxs</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N4dcgp10expression6mutateENSt6vectorIjEE" title="Permalink to this definition">¶</a></dt>
-<dd><p>Mutates multiple genes at once. </p>
-<p>Mutates multiple genes within their allowed bounds.</p>
-<p><dl class="docutils">
-<dt><strong>Parameters</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal"><span class="pre">idxs</span></code>: vector of indexes of the genes to me mutated</li>
-</ul>
-</dd>
-<dt><strong>Exceptions</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal"><span class="pre">std::invalid_argument</span></code>: if <code class="docutils literal"><span class="pre">idx</span></code> is too large </li>
-</ul>
-</dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="_CPPv2N4dcgp10expression13mutate_randomEj">
-<span id="dcgp::expression::mutate_random__unsigned-i"></span><span class="target" id="dCGPclassdcgp_1_1expression_1a78f1be80758a1d077958b87411debdde"></span>void <code class="descname">mutate_random</code><span class="sig-paren">(</span>unsigned int <em>N</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N4dcgp10expression13mutate_randomEj" title="Permalink to this definition">¶</a></dt>
-<dd><p>Mutates N random genes. </p>
-<p>Mutates a specified number of random genes within their bounds</p>
-<p><dl class="docutils">
-<dt><strong>Parameters</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal"><span class="pre">N</span></code>: number of genes to be mutated </li>
-</ul>
-</dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="_CPPv2N4dcgp10expression13mutate_activeEj">
-<span id="dcgp::expression::mutate_active__unsigned-i"></span><span class="target" id="dCGPclassdcgp_1_1expression_1a7e425aefba5f1d7f65d0c40ad241d7bb"></span>void <code class="descname">mutate_active</code><span class="sig-paren">(</span>unsigned int <em>N</em> = 1<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N4dcgp10expression13mutate_activeEj" title="Permalink to this definition">¶</a></dt>
-<dd><p>Mutates one of the active genes. </p>
-<p>Mutates <code class="docutils literal"><span class="pre">N</span></code> active genes within their allowed bounds. The mutation can affect function genes, input genes and output genes.</p>
-<p><dl class="docutils">
-<dt><strong>Parameters</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal"><span class="pre">N</span></code>: Number of active genes to be mutated </li>
-</ul>
-</dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="_CPPv2N4dcgp10expression19mutate_active_fgeneEv">
-<span id="dcgp::expression::mutate_active_fgene"></span><span class="target" id="dCGPclassdcgp_1_1expression_1a30f70a4c89a6d65454edecc2713dea7a"></span>void <code class="descname">mutate_active_fgene</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N4dcgp10expression19mutate_active_fgeneEv" title="Permalink to this definition">¶</a></dt>
-<dd><p>Mutates one of the active function genes. </p>
-<p>Mutates exactly one of the active function genes within its allowed bounds. </p>
-</dd></dl>
-
-<dl class="function">
-<dt id="_CPPv2N4dcgp10expression19mutate_active_cgeneEv">
-<span id="dcgp::expression::mutate_active_cgene"></span><span class="target" id="dCGPclassdcgp_1_1expression_1a376ed5a85bf6f993407acb936f500f47"></span>void <code class="descname">mutate_active_cgene</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N4dcgp10expression19mutate_active_cgeneEv" title="Permalink to this definition">¶</a></dt>
-<dd><p>Mutates one of the active connection genes. </p>
-<p>Mutates exactly one of the active connection genes within its allowed bounds. </p>
-</dd></dl>
-
-<dl class="function">
-<dt id="_CPPv2N4dcgp10expression12mutate_ogeneEv">
-<span id="dcgp::expression::mutate_ogene"></span><span class="target" id="dCGPclassdcgp_1_1expression_1a5fb1d0dd8a408791a2452d80e2bc656d"></span>void <code class="descname">mutate_ogene</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N4dcgp10expression12mutate_ogeneEv" title="Permalink to this definition">¶</a></dt>
-<dd><p>Mutates one of the active output genes. </p>
-<p>Mutates exactly one of the output genes within its allowed bounds. </p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<em class="property">template </em>&lt;<em class="property">typename</em> U, functor_enabler&lt; U &gt; = 0&gt;</dt>
-<dt id="_CPPv2NK4dcgp10expressionclERKNSt6vectorI1UEE">
-<span id="dcgp::expression::call-operator__std::vector:U:CRC"></span><span class="target" id="dCGPclassdcgp_1_1expression_1a3aecf04e75a842717625f9d48dfd3fdc"></span>std::vector&lt;U&gt; <code class="descname">operator()</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;U&gt; &amp;<em>in</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK4dcgp10expressionclERKNSt6vectorI1UEE" title="Permalink to this definition">¶</a></dt>
-<dd><p>Evaluates the dCGP expression. </p>
-<p>This evaluates the dCGP expression. According to the template parameter it will compute the value (double) the Taylor expansion (gdual) or a symbolic representation (std::string). Any other type will result in a compilation-time error (SFINAE).</p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>The value of the function (an std::vector) </dd>
-<dt><strong>Parameters</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal"><span class="pre">in</span></code>: an std::vector containing the values where the dCGP expression has to be computed (doubles, gduals or strings)</li>
-</ul>
-</dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<em class="property">template </em>&lt;<em class="property">typename</em> U, functor_enabler&lt; U &gt; = 0&gt;</dt>
-<dt id="_CPPv2NK4dcgp10expressionclERKNSt16initializer_listI1UEE">
-<span id="dcgp::expression::call-operator__std::initializer_list:U:CRC"></span><span class="target" id="dCGPclassdcgp_1_1expression_1af8ed036974b18bc999d7c063708c2b20"></span>std::vector&lt;U&gt; <code class="descname">operator()</code><span class="sig-paren">(</span><em class="property">const</em> std::initializer_list&lt;U&gt; &amp;<em>in</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK4dcgp10expressionclERKNSt16initializer_listI1UEE" title="Permalink to this definition">¶</a></dt>
-<dd><p>Evaluates the dCGP expression. </p>
-<p>This evaluates the dCGP expression. According to the template parameter it will compute the value (double) the Taylor expansion (gdual) or a symbolic representation (std::string). Any other type will result in a compilation-time error (SFINAE). This is identical to the other overload and is provided only for convenience</p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>The value of the function (an std::vector) </dd>
-<dt><strong>Parameters</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal"><span class="pre">in</span></code>: an initializer list containing the values where the dCGP expression has to be computed (doubles, gduals or strings)</li>
-</ul>
-</dd>
-</dl>
-</p>
-</dd></dl>
-
-</div>
-<div class="breathe-sectiondef container">
-<p class="breathe-sectiondef-title rubric">Friends</p>
-<dl class="function">
-<dt id="_CPPv2lsRNSt7ostreamERK10expression">
-<span id="lshift-operator__osR.expressionCR"></span><span class="target" id="dCGPclassdcgp_1_1expression_1a214aa46f452981db5c7e37e80475e9fe"></span>std::ostream &amp;<code class="descname">operator&lt;&lt;</code><span class="sig-paren">(</span>std::ostream &amp;<em>os</em>, <em class="property">const</em> expression &amp;<em>d</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2lsRNSt7ostreamERK10expression" title="Permalink to this definition">¶</a></dt>
-<dd><p>Overloaded stream operator. </p>
-<p>Will return a formatted string containing a human readable representation of the class</p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>std::string containing a human-readable representation of the problem. </dd>
-</dl>
-</p>
-</dd></dl>
-
-</div>
-</dd></dl>
-
-</div>
-<hr class="docutils" />
-<div class="section" id="expression-weighted-a-weighted-cartesian-genetic-program">
-<h3><a class="toc-backref" href="#id6">expression_weighted: a weighted Cartesian Genetic Program</a><a class="headerlink" href="#expression-weighted-a-weighted-cartesian-genetic-program" title="Permalink to this headline">¶</a></h3>
-<div class="figure align-center" id="id2">
-<img alt="weighted dCGP expression" src="../_images/expression_weighted.png" />
-<p class="caption"><span class="caption-text">A weighted dCGP expression</span></p>
-</div>
-<dl class="class">
-<dt>
-<span class="target" id="dCGPclassdcgp_1_1expression__weighted"></span><em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
-<dt id="_CPPv2N4dcgp19expression_weightedE">
-<span id="dcgp::expression_weighted"></span><em class="property">class </em><code class="descclassname">dcgp::</code><code class="descname">expression_weighted</code><a class="headerlink" href="#_CPPv2N4dcgp19expression_weightedE" title="Permalink to this definition">¶</a></dt>
-<dd><p>A weighted dCGP expression. </p>
-<p>This class represents a mathematical expression as encoded using CGP with the addition of weights on the connections. It contains algorithms to compute the value (numerical and symbolical) of the expression and its derivatives, as well as to mutate the expression.</p>
-<p><dl class="docutils">
-<dt><strong>Author</strong></dt>
-<dd>Dario Izzo (<a class="reference external" href="mailto:dario&#46;izzo&#37;&#52;&#48;gmail&#46;com">dario<span>&#46;</span>izzo<span>&#64;</span>gmail<span>&#46;</span>com</a>) </dd>
-<dt><strong>Template Parameters</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal"><span class="pre">T</span></code>: expression type. Can be double, or a gdual type.</li>
-</ul>
-</dd>
-</dl>
-</p>
-<p>Inherits from <a class="reference internal" href="#dCGPclassdcgp_1_1expression"><span class="std std-ref">dcgp::expression&lt; T &gt;</span></a></p>
-<div class="breathe-sectiondef container">
-<p class="breathe-sectiondef-title rubric">Public Functions</p>
-<dl class="function">
-<dt id="_CPPv2N4dcgp19expression_weighted19expression_weightedEjjjjjjNSt6vectorI6kernelI1TEEEj">
-<span id="dcgp::expression_weighted::expression_weighted__unsigned-i.unsigned-i.unsigned-i.unsigned-i.unsigned-i.unsigned-i.std::vector:kernel:T::.unsigned-i"></span><span class="target" id="dCGPclassdcgp_1_1expression__weighted_1a7e063a2c9246b2ee562bdb96ab5b957b"></span><code class="descname">expression_weighted</code><span class="sig-paren">(</span>unsigned int <em>n</em>, unsigned int <em>m</em>, unsigned int <em>r</em>, unsigned int <em>c</em>, unsigned int <em>l</em>, unsigned int <em>arity</em>, std::vector&lt;<a class="reference internal" href="#_CPPv2N4dcgp6kernelE" title="dcgp::kernel">kernel</a>&lt;T&gt;&gt; <em>f</em>, unsigned int <em>seed</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N4dcgp19expression_weighted19expression_weightedEjjjjjjNSt6vectorI6kernelI1TEEEj" title="Permalink to this definition">¶</a></dt>
-<dd><p>Constructor. </p>
-<p>Constructs a dCGP expression</p>
-<p><dl class="docutils">
-<dt><strong>Parameters</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal"><span class="pre">n</span></code>: number of inputs (independent variables) </li>
-<li><code class="docutils literal"><span class="pre">m</span></code>: number of outputs (dependent variables) </li>
-<li><code class="docutils literal"><span class="pre">r</span></code>: number of rows of the dCGP </li>
-<li><code class="docutils literal"><span class="pre">c</span></code>: number of columns of the dCGP </li>
-<li><code class="docutils literal"><span class="pre">l</span></code>: number of levels-back allowed for the dCGP </li>
-<li><code class="docutils literal"><span class="pre">arity</span></code>: arity of the basis functions </li>
-<li><code class="docutils literal"><span class="pre">f</span></code>: function set. An std::vector of dcgp::kernel&lt;expression::type&gt; </li>
-<li><code class="docutils literal"><span class="pre">seed</span></code>: seed for the random number generator (initial expression and mutations depend on this) </li>
-</ul>
-</dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<em class="property">template </em>&lt;<em class="property">typename</em> U, functor_enabler&lt; U &gt; = 0&gt;</dt>
-<dt id="_CPPv2NK4dcgp19expression_weightedclERKNSt6vectorI1UEE">
-<span id="dcgp::expression_weighted::call-operator__std::vector:U:CRC"></span><span class="target" id="dCGPclassdcgp_1_1expression__weighted_1a5cdcbef5f1850e4b8027d0110ed58a82"></span>std::vector&lt;U&gt; <code class="descname">operator()</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;U&gt; &amp;<em>in</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK4dcgp19expression_weightedclERKNSt6vectorI1UEE" title="Permalink to this definition">¶</a></dt>
-<dd><p>Evaluates the dCGP expression. </p>
-<p>This evaluates the dCGP expression. According to the template parameter it will compute the value (double) the Taylor expansion (gdual) or a symbolic representation (std::string). Any other type will result in a compilation-time error (SFINAE).</p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>The value of the function (an std::vector) </dd>
-<dt><strong>Parameters</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal"><span class="pre">in</span></code>: an std::vector containing the values where the dCGP expression has to be computed (doubles, gduals or strings)</li>
-</ul>
-</dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<em class="property">template </em>&lt;<em class="property">typename</em> U, functor_enabler&lt; U &gt; = 0&gt;</dt>
-<dt id="_CPPv2NK4dcgp19expression_weightedclERKNSt16initializer_listI1UEE">
-<span id="dcgp::expression_weighted::call-operator__std::initializer_list:U:CRC"></span><span class="target" id="dCGPclassdcgp_1_1expression__weighted_1a270e1838475bcd4eb53a1573f5fc0269"></span>std::vector&lt;U&gt; <code class="descname">operator()</code><span class="sig-paren">(</span><em class="property">const</em> std::initializer_list&lt;U&gt; &amp;<em>in</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK4dcgp19expression_weightedclERKNSt16initializer_listI1UEE" title="Permalink to this definition">¶</a></dt>
-<dd><p>Evaluates the dCGP expression. </p>
-<p>This evaluates the dCGP expression. According to the template parameter it will compute the value (double) the Taylor expansion (gdual) or a symbolic representation (std::string). Any other type will result in a compilation-time error (SFINAE). This is identical to the other overload and is provided only for convenience</p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>The value of the function (an std::vector) </dd>
-<dt><strong>Parameters</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal"><span class="pre">in</span></code>: an initializer list containing the values where the dCGP expression has to be computed (doubles, gduals or strings)</li>
-</ul>
-</dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="_CPPv2N4dcgp19expression_weighted10set_weightENSt6vectorI1TE9size_typeENSt6vectorI1TE9size_typeERK1T">
-<span id="dcgp::expression_weighted::set_weight__std::vector:T:::size_type.std::vector:T:::size_type.TCR"></span><span class="target" id="dCGPclassdcgp_1_1expression__weighted_1a723dc0df718c2550814285d9dd43e92b"></span>void <code class="descname">set_weight</code><span class="sig-paren">(</span><em class="property">typename</em> std::vector&lt;T&gt;::size_type <em>node_id</em>, <em class="property">typename</em> std::vector&lt;T&gt;::size_type <em>input_id</em>, <em class="property">const</em> T &amp;<em>w</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N4dcgp19expression_weighted10set_weightENSt6vectorI1TE9size_typeENSt6vectorI1TE9size_typeERK1T" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sets a weight. </p>
-<p>Sets a connection weight to a new value</p>
-<p><dl class="docutils">
-<dt><strong>Parameters</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal"><span class="pre">node_id</span></code>: the id of the node whose weight is being set (convention adopted for node numbering <a class="reference external" href="http://ppsn2014.ijs.si/files/slides/ppsn2014-tutorial3-miller.pdf">http://ppsn2014.ijs.si/files/slides/ppsn2014-tutorial3-miller.pdf</a>) </li>
-<li><code class="docutils literal"><span class="pre">input_id</span></code>: the id of the node input (0 for the first one up to arity-1) </li>
-<li><code class="docutils literal"><span class="pre">w</span></code>: the new value of the weight</li>
-</ul>
-</dd>
-<dt><strong>Exceptions</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal"><span class="pre">std::invalid_argument</span></code>: if the node_id or input_id are not valid </li>
-</ul>
-</dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="_CPPv2N4dcgp19expression_weighted10get_weightENSt6vectorI1TE9size_typeENSt6vectorI1TE9size_typeE">
-<span id="dcgp::expression_weighted::get_weight__std::vector:T:::size_type.std::vector:T:::size_type"></span><span class="target" id="dCGPclassdcgp_1_1expression__weighted_1a2ace942af3d87fbfd03165791af9d59c"></span>T <code class="descname">get_weight</code><span class="sig-paren">(</span><em class="property">typename</em> std::vector&lt;T&gt;::size_type <em>node_id</em>, <em class="property">typename</em> std::vector&lt;T&gt;::size_type <em>input_id</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N4dcgp19expression_weighted10get_weightENSt6vectorI1TE9size_typeENSt6vectorI1TE9size_typeE" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets a weight. </p>
-<p>Gets the value of a connection weight</p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>the value of the weight</dd>
-<dt><strong>Parameters</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal"><span class="pre">node_id</span></code>: the id of the node (convention adopted for node numbering <a class="reference external" href="http://ppsn2014.ijs.si/files/slides/ppsn2014-tutorial3-miller.pdf">http://ppsn2014.ijs.si/files/slides/ppsn2014-tutorial3-miller.pdf</a>) </li>
-<li><code class="docutils literal"><span class="pre">input_id</span></code>: the id of the node input (0 for the first one up to arity-1)</li>
-</ul>
-</dd>
-<dt><strong>Exceptions</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal"><span class="pre">std::invalid_argument</span></code>: if the node_id or input_id are not valid </li>
-</ul>
-</dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="_CPPv2N4dcgp19expression_weighted11set_weightsERKNSt6vectorI1TEE">
-<span id="dcgp::expression_weighted::set_weights__std::vector:T:CR"></span><span class="target" id="dCGPclassdcgp_1_1expression__weighted_1a820f4d854a0191f3428848a457dd6aec"></span>void <code class="descname">set_weights</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;T&gt; &amp;<em>ws</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N4dcgp19expression_weighted11set_weightsERKNSt6vectorI1TEE" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sets all weights. </p>
-<p>Sets all the connection weights at once</p>
-<p><dl class="docutils">
-<dt><strong>Parameters</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal"><span class="pre">ws</span></code>: an std::vector containing all the weights to set</li>
-</ul>
-</dd>
-<dt><strong>Exceptions</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal"><span class="pre">std::invalid_argument</span></code>: if the input vector dimension is not valid (r**arity) </li>
-</ul>
-</dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="_CPPv2NK4dcgp19expression_weighted11get_weightsEv">
-<span id="dcgp::expression_weighted::get_weightsC"></span><span class="target" id="dCGPclassdcgp_1_1expression__weighted_1a2908c8feb77b4f14d00168e429c35417"></span><em class="property">const</em> std::vector&lt;T&gt; &amp;<code class="descname">get_weights</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK4dcgp19expression_weighted11get_weightsEv" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets the weights. </p>
-<p>Gets the values of all the weights</p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>an std::vector containing all the weights </dd>
-</dl>
-</p>
-</dd></dl>
-
-</div>
-<div class="breathe-sectiondef container">
-<p class="breathe-sectiondef-title rubric">Friends</p>
-<dl class="function">
-<dt id="_CPPv2lsRNSt7ostreamERK19expression_weighted">
-<span id="lshift-operator__osR.expression_weightedCR"></span><span class="target" id="dCGPclassdcgp_1_1expression__weighted_1a5c09e3e2f450b73266358cbc2d0e8c76"></span>std::ostream &amp;<code class="descname">operator&lt;&lt;</code><span class="sig-paren">(</span>std::ostream &amp;<em>os</em>, <em class="property">const</em> expression_weighted &amp;<em>d</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2lsRNSt7ostreamERK19expression_weighted" title="Permalink to this definition">¶</a></dt>
-<dd><p>Overloaded stream operator. </p>
-<p>Will return a formatted string containing a human readable representation of the class</p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>std::string containing a human-readable representation of the problem. </dd>
-</dl>
-</p>
-</dd></dl>
-
-</div>
-</dd></dl>
-
-</div>
-<hr class="docutils" />
-<div class="section" id="kernel-a-function-defining-the-generic-cgp-node">
-<h3><a class="toc-backref" href="#id7">kernel: a function defining the generic CGP node</a><a class="headerlink" href="#kernel-a-function-defining-the-generic-cgp-node" title="Permalink to this headline">¶</a></h3>
-<dl class="class">
-<dt>
-<span class="target" id="dCGPclassdcgp_1_1kernel"></span><em class="property">template </em>&lt;typename <em>T</em>&gt;</dt>
-<dt id="_CPPv2N4dcgp6kernelE">
-<span id="dcgp::kernel"></span><em class="property">class </em><code class="descclassname">dcgp::</code><code class="descname">kernel</code><a class="headerlink" href="#_CPPv2N4dcgp6kernelE" title="Permalink to this definition">¶</a></dt>
-<dd><p>Basis function. </p>
-<p>This class represents the function defining the generic CGP node. To be constructed it accepts two functions having prototype <code class="docutils literal"><span class="pre">T</span></code>(const std::vector&lt;<code class="docutils literal"><span class="pre">T</span></code>&gt;&amp;) and std::string(const std::vector&lt;std::string&gt;&amp;) computing, respectively, the function value on generic inputs and the textual representation of the operation.</p>
-<p>The intended use would then be something like: <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">kernel</span><span class="o">&lt;</span><span class="n">double</span><span class="o">&gt;</span> <span class="n">f</span><span class="p">(</span><span class="n">my_sum</span><span class="o">&lt;</span><span class="n">double</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">print_my_sum</span><span class="p">,</span> <span class="s2">&quot;sum&quot;</span><span class="p">);</span>
-<span class="n">kernel</span><span class="o">&lt;</span><span class="n">double</span><span class="o">&gt;</span> <span class="n">f</span><span class="p">(</span><span class="n">my_sum</span><span class="o">&lt;</span><span class="n">gdual_d</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">print_my_sum</span><span class="p">,</span> <span class="s2">&quot;sum&quot;</span><span class="p">);</span>
-</pre></div>
-</div>
-</p>
-<p><dl class="docutils">
-<dt><strong>Template Parameters</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal"><span class="pre">T</span></code>: The type of the function output (and inputs) </li>
-</ul>
-</dd>
-</dl>
-</p>
-<div class="breathe-sectiondef container">
-<p class="breathe-sectiondef-title rubric">Public Types</p>
-<dl class="type">
-<dt>
-<span class="target" id="dCGPclassdcgp_1_1kernel_1a21d4740e0bcee9fe7dfee5c3ae0f5a2a"></span><em class="property">using </em>&gt;</dt>
-<dt id="_CPPv2IEN4dcgp6kernelI1TE11my_fun_typeE">
-<em class="property">using </em><code class="descclassname">dcgp::kernel&lt;T&gt;::</code><code class="descname">my_fun_type</code> = std::function&lt;T<span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;T&gt;&amp;<span class="sig-paren">)</span>&gt;<a class="headerlink" href="#_CPPv2IEN4dcgp6kernelI1TE11my_fun_typeE" title="Permalink to this definition">¶</a></dt>
-<dd><p>Basic prototype of a kernel function returning its evaluation. </p>
-</dd></dl>
-
-<dl class="type">
-<dt>
-<span class="target" id="dCGPclassdcgp_1_1kernel_1a69e3bcf6dc0789b25a66686b042ea52c"></span><em class="property">using </em>&gt;</dt>
-<dt id="_CPPv2IEN4dcgp6kernelI1TE17my_print_fun_typeE">
-<em class="property">using </em><code class="descclassname">dcgp::kernel&lt;T&gt;::</code><code class="descname">my_print_fun_type</code> = std::function&lt;std::string<span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;std::string&gt;&amp;<span class="sig-paren">)</span>&gt;<a class="headerlink" href="#_CPPv2IEN4dcgp6kernelI1TE17my_print_fun_typeE" title="Permalink to this definition">¶</a></dt>
-<dd><p>Basic prototype of a kernel function returning its symbolic representation. </p>
-</dd></dl>
-
-</div>
-<div class="breathe-sectiondef container">
-<p class="breathe-sectiondef-title rubric">Public Functions</p>
-<dl class="function">
-<dt>
-<em class="property">template </em>&lt;<em class="property">typename</em> U, <em class="property">typename</em> V&gt;</dt>
-<dt id="_CPPv2N4dcgp6kernel6kernelERR1URR1VNSt6stringE">
-<span id="dcgp::kernel::kernel__URR.VRR.ss"></span><span class="target" id="dCGPclassdcgp_1_1kernel_1ab78ad1e0f42e6b167d12e7df4f37b264"></span><code class="descname">kernel</code><span class="sig-paren">(</span>U &amp;&amp;<em>f</em>, V &amp;&amp;<em>pf</em>, std::string <em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N4dcgp6kernel6kernelERR1URR1VNSt6stringE" title="Permalink to this definition">¶</a></dt>
-<dd><p>Constructor. </p>
-<p>Constructs a kernel that can be used as kernel in a dCGP expression</p>
-<p><dl class="docutils">
-<dt><strong>Parameters</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal"><span class="pre">f</span></code>: any callable with prototype T(const std::vector&lt;T&gt;&amp;) </li>
-<li><code class="docutils literal"><span class="pre">pf</span></code>: any callable with prototype std::string(const std::vector&lt;std::string&gt;&amp;) </li>
-<li><code class="docutils literal"><span class="pre">name</span></code>: string containing the function name (ex. &#8220;sum&#8221;) </li>
-</ul>
-</dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="_CPPv2NK4dcgp6kernelclERKNSt6vectorI1TEE">
-<span id="dcgp::kernel::call-operator__std::vector:T:CRC"></span><span class="target" id="dCGPclassdcgp_1_1kernel_1a3cc2a4e230049b3713a59aca942627f5"></span>T <code class="descname">operator()</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;T&gt; &amp;<em>in</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK4dcgp6kernelclERKNSt6vectorI1TEE" title="Permalink to this definition">¶</a></dt>
-<dd><p>Parenthesis operator. </p>
-<p>Evaluates the kernel in the point <code class="docutils literal"><span class="pre">in</span></code> </p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>the function value </dd>
-<dt><strong>Parameters</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal"><span class="pre">in</span></code>: the evaluation point as an std::vector&lt;T&gt;</li>
-</ul>
-</dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="_CPPv2NK4dcgp6kernelclERKNSt16initializer_listI1TEE">
-<span id="dcgp::kernel::call-operator__std::initializer_list:T:CRC"></span><span class="target" id="dCGPclassdcgp_1_1kernel_1a6111e48bc880c82c915389a83ec39ded"></span>T <code class="descname">operator()</code><span class="sig-paren">(</span><em class="property">const</em> std::initializer_list&lt;T&gt; &amp;<em>in</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK4dcgp6kernelclERKNSt16initializer_listI1TEE" title="Permalink to this definition">¶</a></dt>
-<dd><p>Parenthesis operator. </p>
-<p>Evaluates the kernel in the point <code class="docutils literal"><span class="pre">in</span></code> </p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>the function value </dd>
-<dt><strong>Parameters</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal"><span class="pre">in</span></code>: the evaluation point as an std::initializer_list&lt;T&gt;</li>
-</ul>
-</dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="_CPPv2NK4dcgp6kernelclERKNSt6vectorINSt6stringEEE">
-<span id="dcgp::kernel::call-operator__std::vector:ss:CRC"></span><span class="target" id="dCGPclassdcgp_1_1kernel_1a9d488e4764fc00904f28cc0b8331dea1"></span>std::string <code class="descname">operator()</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;std::string&gt; &amp;<em>in</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK4dcgp6kernelclERKNSt6vectorINSt6stringEEE" title="Permalink to this definition">¶</a></dt>
-<dd><p>Parenthesis operator. </p>
-<p>Returns a symbolic representation of the operation made by <span class="math">\(f\)</span></p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>the string representation of the operation (ex. &#8220;ln(s1+s2)&#8221;) </dd>
-<dt><strong>Parameters</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal"><span class="pre">in</span></code>: std::vector&lt;std::string&gt; with the symbolic names to be used</li>
-</ul>
-</dd>
-</dl>
-</p>
-</dd></dl>
-
-</div>
-<div class="breathe-sectiondef container">
-<p class="breathe-sectiondef-title rubric">Friends</p>
-<dl class="function">
-<dt id="_CPPv2lsRNSt7ostreamERK6kernelI1TE">
-<span id="lshift-operator__osR.kernel:T:CR"></span><span class="target" id="dCGPclassdcgp_1_1kernel_1a1f620b72353526882766124db7489b6b"></span>std::ostream &amp;<code class="descname">operator&lt;&lt;</code><span class="sig-paren">(</span>std::ostream &amp;<em>os</em>, <em class="property">const</em> kernel&lt;T&gt; &amp;<em>d</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2lsRNSt7ostreamERK6kernelI1TE" title="Permalink to this definition">¶</a></dt>
-<dd><p>Overloaded stream operator. </p>
-<p>Will stream the function name</p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>reference to <code class="docutils literal"><span class="pre">os</span></code>. </dd>
-<dt><strong>Parameters</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal"><span class="pre">os</span></code>: target stream. </li>
-<li><code class="docutils literal"><span class="pre">d</span></code>: kernel argument.</li>
-</ul>
-</dd>
-</dl>
-</p>
-</dd></dl>
-
-</div>
-</dd></dl>
-
-</div>
-<hr class="docutils" />
-<div class="section" id="kernel-set-a-set-of-kernels">
-<h3><a class="toc-backref" href="#id8">kernel_set: a set of kernels</a><a class="headerlink" href="#kernel-set-a-set-of-kernels" title="Permalink to this headline">¶</a></h3>
-<table border="1" class="table-bordered table-striped docutils" id="kernels">
-<colgroup>
-<col width="41%" />
-<col width="59%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Kernel name</th>
-<th class="head">Function</th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr class="row-even"><td>&#8220;sum&#8221;</td>
-<td>addition</td>
-</tr>
-<tr class="row-odd"><td>&#8220;diff&#8221;</td>
-<td>subtraction</td>
-</tr>
-<tr class="row-even"><td>&#8220;mul&#8221;</td>
-<td>multiplication</td>
-</tr>
-<tr class="row-odd"><td>&#8220;div&#8221;</td>
-<td>division</td>
-</tr>
-<tr class="row-even"><td>&#8220;pdiv&#8221;</td>
-<td>protected division</td>
-</tr>
-<tr class="row-odd"><td>&#8220;sig&#8221;</td>
-<td>sigmoid</td>
-</tr>
-<tr class="row-even"><td>&#8220;sin&#8221;</td>
-<td>sine</td>
-</tr>
-<tr class="row-odd"><td>&#8220;cos&#8221;</td>
-<td>cosine</td>
-</tr>
-<tr class="row-even"><td>&#8220;log&#8221;</td>
-<td>logarithm</td>
-</tr>
-<tr class="row-odd"><td>&#8220;exp&#8221;</td>
-<td>exponential</td>
-</tr>
-</tbody>
-</table>
-<dl class="class">
-<dt>
-<span class="target" id="dCGPclassdcgp_1_1kernel__set"></span><em class="property">template </em>&lt;<em class="property">typename</em> T&gt;</dt>
-<dt id="_CPPv2N4dcgp10kernel_setE">
-<span id="dcgp::kernel_set"></span><em class="property">class </em><code class="descclassname">dcgp::</code><code class="descname">kernel_set</code><a class="headerlink" href="#_CPPv2N4dcgp10kernel_setE" title="Permalink to this definition">¶</a></dt>
-<dd><p>Function set. </p>
-<p>This class is provided as an helper to construct the std::vector&lt;kernel&lt;T&gt;&gt; that is requested to form a dcgp::expression&lt;T&gt;. Once constructed, a call to its parenthesis operator will return the std::vector containing the requested kernels</p>
-<p><dl class="docutils">
-<dt><strong>Template Parameters</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal"><span class="pre">T</span></code>: The type of the functions output (and inputs) </li>
-</ul>
-</dd>
-</dl>
-</p>
-<div class="breathe-sectiondef container">
-<p class="breathe-sectiondef-title rubric">Public Functions</p>
-<dl class="function">
-<dt id="_CPPv2N4dcgp10kernel_set10kernel_setEv">
-<span id="dcgp::kernel_set::kernel_set"></span><span class="target" id="dCGPclassdcgp_1_1kernel__set_1a816e6b39a37cf37ff0f997eba28adf3c"></span><code class="descname">kernel_set</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N4dcgp10kernel_set10kernel_setEv" title="Permalink to this definition">¶</a></dt>
-<dd><p>Constructor. </p>
-<p>Default constructor </p>
-</dd></dl>
-
-<dl class="function">
-<dt id="_CPPv2N4dcgp10kernel_set10kernel_setERKNSt6vectorINSt6stringEEE">
-<span id="dcgp::kernel_set::kernel_set__std::vector:ss:CR"></span><span class="target" id="dCGPclassdcgp_1_1kernel__set_1a9e77585d4db14d2863d2ca66903b7123"></span><code class="descname">kernel_set</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;std::string&gt; &amp;<em>list</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N4dcgp10kernel_set10kernel_setERKNSt6vectorINSt6stringEEE" title="Permalink to this definition">¶</a></dt>
-<dd><p>Constructor. </p>
-<p>Constructs a kernel set that can be used in a dCGP expression</p>
-<p><dl class="docutils">
-<dt><strong>Parameters</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal"><span class="pre">list</span></code>: an std::vector of strings containing the function names (e.g., &#8220;sum&#8221;) </li>
-</ul>
-</dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="_CPPv2N4dcgp10kernel_set9push_backENSt6stringE">
-<span id="dcgp::kernel_set::push_back__ss"></span><span class="target" id="dCGPclassdcgp_1_1kernel__set_1ab50af3275d6540e3e15009ee725d527c"></span>void <code class="descname">push_back</code><span class="sig-paren">(</span>std::string <em>kernel_name</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N4dcgp10kernel_set9push_backENSt6stringE" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds a kernel to the set. </p>
-<p>Constructs a kernel&lt;T&gt; given a string containing the function name, and inserts it into the std::vector</p>
-<p><dl class="docutils">
-<dt><strong>Parameters</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal"><span class="pre">kernel_name</span></code>: a string containing the function name</li>
-</ul>
-</dd>
-<dt><strong>Exceptions</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal"><span class="pre">std::invalid_argument</span></code>: if the function is not implemented </li>
-</ul>
-</dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="_CPPv2N4dcgp10kernel_set9push_backERKN4dcgp6kernelI1TEE">
-<span id="dcgp::kernel_set::push_back__dcgp::kernel:T:CR"></span><span class="target" id="dCGPclassdcgp_1_1kernel__set_1aa9e742d425be06e5791e84169dbe80c3"></span>void <code class="descname">push_back</code><span class="sig-paren">(</span><em class="property">const</em> dcgp::<a class="reference internal" href="#_CPPv2N4dcgp6kernelE" title="dcgp::kernel">kernel</a>&lt;T&gt; &amp;<em>kernel</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N4dcgp10kernel_set9push_backERKN4dcgp6kernelI1TEE" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds a kernel to the set. </p>
-<p>Inserts the given kernel&lt;T&gt; into the std::vector</p>
-<p><dl class="docutils">
-<dt><strong>Parameters</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal"><span class="pre">kernel</span></code>: the dcgp::kernel&lt;T&gt; to add </li>
-</ul>
-</dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="_CPPv2N4dcgp10kernel_set5clearEv">
-<span id="dcgp::kernel_set::clear"></span><span class="target" id="dCGPclassdcgp_1_1kernel__set_1a03ec6a5a1ffa91b78b4c334d7aa7978b"></span>void <code class="descname">clear</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N4dcgp10kernel_set5clearEv" title="Permalink to this definition">¶</a></dt>
-<dd><p>Clears the kernel set. </p>
-<p>Removes all the elements from the std::vector containing the kernels </p>
-</dd></dl>
-
-<dl class="function">
-<dt id="_CPPv2NK4dcgp10kernel_setclEv">
-<span id="dcgp::kernel_set::call-operatorC"></span><span class="target" id="dCGPclassdcgp_1_1kernel__set_1a052341c728d41cf6e4a09c73d05fe260"></span>std::vector&lt;dcgp::<a class="reference internal" href="#_CPPv2N4dcgp6kernelE" title="dcgp::kernel">kernel</a>&lt;T&gt;&gt; <code class="descname">operator()</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK4dcgp10kernel_setclEv" title="Permalink to this definition">¶</a></dt>
-<dd><p>Overloaded function call operator. </p>
-<p>Returns the std::vector containing the kernels </p>
-</dd></dl>
-
-<dl class="function">
-<dt id="_CPPv2NK4dcgp10kernel_setixEKNSt6vectorIN4dcgp6kernelI1TEEE9size_typeE">
-<span id="dcgp::kernel_set::subscript-operator__std::vector:dcgp::kernel:T::::size_typeCC"></span><span class="target" id="dCGPclassdcgp_1_1kernel__set_1a23a266ae572f831f2b8959cdf471e477"></span>dcgp::<a class="reference internal" href="#_CPPv2N4dcgp6kernelE" title="dcgp::kernel">kernel</a>&lt;T&gt; <code class="descname">operator[]</code><span class="sig-paren">(</span><em class="property">const</em> <em class="property">typename</em> std::vector&lt;dcgp::<a class="reference internal" href="#_CPPv2N4dcgp6kernelE" title="dcgp::kernel">kernel</a>&lt;T&gt;&gt;::size_type <em>idx</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK4dcgp10kernel_setixEKNSt6vectorIN4dcgp6kernelI1TEEE9size_typeE" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the kernel at a specified index in the std::vector</p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>the kernel at the specified index </dd>
-<dt><strong>Parameters</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal"><span class="pre">idx</span></code>: index of the required kernel</li>
-</ul>
-</dd>
-</dl>
-</p>
-</dd></dl>
-
-</div>
-<div class="breathe-sectiondef container">
-<p class="breathe-sectiondef-title rubric">Friends</p>
-<dl class="function">
-<dt id="_CPPv2lsRNSt7ostreamERK10kernel_setI1TE">
-<span id="lshift-operator__osR.kernel_set:T:CR"></span><span class="target" id="dCGPclassdcgp_1_1kernel__set_1ae1010fbacdb829ac82538a01ea8d790d"></span>std::ostream &amp;<code class="descname">operator&lt;&lt;</code><span class="sig-paren">(</span>std::ostream &amp;<em>os</em>, <em class="property">const</em> kernel_set&lt;T&gt; &amp;<em>d</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2lsRNSt7ostreamERK10kernel_setI1TE" title="Permalink to this definition">¶</a></dt>
-<dd><p>Overloaded stream operator. </p>
-<p>Will stream the function names</p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>reference to <code class="docutils literal"><span class="pre">os</span></code> </dd>
-<dt><strong>Parameters</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal"><span class="pre">os</span></code>: target stream </li>
-<li><code class="docutils literal"><span class="pre">d</span></code>: <a class="reference internal" href="#dCGPclassdcgp_1_1kernel__set"><span class="std std-ref">kernel_set</span></a> argument</li>
-</ul>
-</dd>
-</dl>
-</p>
-</dd></dl>
-
-</div>
-</dd></dl>
-
 </div>
 </div>
 </div>
@@ -989,8 +161,8 @@
       
     </p>
     <p>
-        &copy; Copyright 2015, Dario Izzo, Francesco Biscani, Alessio Mereta.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.8.<br/>
+        &copy; Copyright 2018, Dario Izzo, Francesco Biscani, Alessio Mereta.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.5.<br/>
     </p>
   </div>
 </footer>

@@ -1,0 +1,713 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "collapsed": true
+   },
+   "source": [
+    "# Weighted dCGP for a symbolic regression task "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "from pyaudi import gdual_vdouble as gdual\n",
+    "from dcgpy import expression_weighted_gdual_vdouble as expression\n",
+    "from dcgpy import kernel_set_gdual_vdouble as kernel_set\n",
+    "import pyaudi\n",
+    "import numpy as np\n",
+    "import math\n",
+    "import re\n",
+    "%matplotlib inline"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## The ES-(1+$\\lambda$) algorithm"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "def run_experiment(dCGP, offsprings, max_gen, x, yt, newtonParams, screen_output):\n",
+    "    # The offsprings chromosome, fitness and weights\n",
+    "    chromosome = [1] * offsprings\n",
+    "    fitness = [1] * offsprings\n",
+    "    weights = [1] * offsprings\n",
+    "    # Init the best as the initial random dCGP\n",
+    "    best_chromosome = dCGP.get()\n",
+    "    best_weights = dCGP.get_weights()\n",
+    "    best_fitness = sum(mse(dCGP, x, yt).constant_cf)\n",
+    "    # Main loop over generations\n",
+    "    for g in range(max_gen):\n",
+    "        for i in range(offsprings):\n",
+    "            dCGP.set(best_chromosome)\n",
+    "            dCGP.set_weights(best_weights)\n",
+    "            cumsum=0\n",
+    "            dCGP.mutate_active(i)\n",
+    "            newton(dCGP, mse, x, yt, newtonParams)\n",
+    "            fitness[i] = sum(mse(dCGP, x, yt).constant_cf)\n",
+    "            chromosome[i] = dCGP.get()\n",
+    "            weights[i] = dCGP.get_weights()\n",
+    "        for i in range(offsprings):\n",
+    "            if fitness[i] <= best_fitness:\n",
+    "                dCGP.set(chromosome[i])\n",
+    "                dCGP.set_weights(weights[i])\n",
+    "                if (fitness[i] != best_fitness) and screen_output:\n",
+    "                    print(\"New best found: gen: \", g, \" value: \", fitness[i], dCGP.simplify([\"x\"],True))\n",
+    "                best_chromosome = chromosome[i]\n",
+    "                best_fitness = fitness[i]\n",
+    "                best_weights = weights[i]\n",
+    "\n",
+    "        if best_fitness < 1e-14:\n",
+    "            break\n",
+    "    return g, best_chromosome, best_weights"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## The test problems\n",
+    "P1: $x^5 - \\pi x^3 + x$\n",
+    "\n",
+    "P2: $x^5 - \\pi x^3 + \\frac{2\\pi}x$\n",
+    "\n",
+    "P3: $\\frac{e x^5 + x^3}{x + 1}$\n",
+    "\n",
+    "P4: $\\sin(\\pi x) + \\frac 1x$\n",
+    "\n",
+    "P5: $e x^5 - \\pi x^3 + x$\n",
+    "\n",
+    "P6: $\\frac{e x^2-1}{\\pi (x + 2)}$\n",
+    "\n",
+    "P7: $\\sin(e x) + \\cos(\\pi x)$"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "# The following functions create the target values for a gridded input x for different test problems\n",
+    "def data_P1(x):\n",
+    "    return x**5 - np.pi*x**3 + x\n",
+    "def data_P2(x):\n",
+    "    return x**5 - np.pi*x**3 + 2*np.pi / x\n",
+    "def data_P3(x):\n",
+    "    return (np.e*x**5 + x**3)/(x + 1)\n",
+    "def data_P4(x):\n",
+    "    return pyaudi.sin(np.pi * x) + 1./x\n",
+    "def data_P5(x):\n",
+    "    return np.e * x**5 - np.pi*x**3 + np.sqrt(2) * x\n",
+    "def data_P5(x):\n",
+    "    return np.e * x**5 - np.pi*x**3 + x\n",
+    "def data_P6(x):\n",
+    "    return (np.e*x**2-1) / (np.pi*(x + 2))\n",
+    "def data_P7(x):\n",
+    "    return pyaudi.sin(np.e*x)+pyaudi.cos(np.pi*x)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## The error function"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# This is used to sum over the component of a vectorized coefficient, accounting for the fact that if its dimension\n",
+    "# is 1, then it could represent [a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a ...] with [a]\n",
+    "def collapse_vectorized_coefficient(x, N):\n",
+    "    if len(x) == N:\n",
+    "        return sum(x)\n",
+    "    return x[0] * N\n",
+    "\n",
+    "# Quadratic error of a dCGP expression. The error is computed over the input points xin (of type gdual, order 0 as\n",
+    "# we are not interested in expanding the program w.r.t. these). The target values are contained in yt (of type gdual,\n",
+    "# order 0 as we are not interested in expanding the program w.r.t. these)\n",
+    "def mse(dCGP, xin, yt):\n",
+    "    y = dCGP([xin])[0]\n",
+    "    return (y-yt)**2"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Newton's method"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Newton's method for minimizing the error function f w.r.t. the weights of the dCGP expression.\n",
+    "# We take a specified amount of steps, each by choosing randomly 2 or 3 weights\n",
+    "def newton(ex, f, x, yt, p):\n",
+    "    n = ex.get_n()\n",
+    "    r = ex.get_rows()\n",
+    "    c = ex.get_cols()\n",
+    "    a = ex.get_arity()\n",
+    "    v = np.zeros(r * c * a)\n",
+    "    \n",
+    "    # random initialization of weights\n",
+    "    w=[]\n",
+    "    for i in range(r*c):\n",
+    "        for j in range(a):\n",
+    "            w.append(gdual([np.random.normal(0,1)]))\n",
+    "    ex.set_weights(w)\n",
+    "    wi = ex.get_weights()\n",
+    "        \n",
+    "    # get active weights\n",
+    "    an = ex.get_active_nodes()\n",
+    "    is_active = [False] * (n + r * c) # bool vector of active nodes\n",
+    "    for k in range(len(an)):\n",
+    "        is_active[an[k]] = True\n",
+    "    aw=[] # list of active weights\n",
+    "    for k in range(len(an)):\n",
+    "        if an[k] >= n:\n",
+    "            for l in range(a):\n",
+    "                aw.append([an[k], l]) # pair node/ingoing connection \n",
+    "    if len(aw)<2:\n",
+    "        return\n",
+    "    \n",
+    "    for i in range(p['steps']):\n",
+    "        w = ex.get_weights() # initial weights\n",
+    "        \n",
+    "        # random choice of the weights w.r.t. which we'll minimize the error\n",
+    "        num_vars = np.random.randint(2, min(3, len(aw)) + 1) # number of weights (2 or 3)\n",
+    "        awidx = np.random.choice(len(aw), num_vars, replace = False) # indexes of chosen weights\n",
+    "        ss = [] # symbols\n",
+    "        for j in range(len(awidx)):\n",
+    "            ss.append(\"w\" + str(aw[awidx[j]][0]) + \"_\" + str(aw[awidx[j]][1]))\n",
+    "            idx = (aw[awidx[j]][0] - n) * a + aw[awidx[j]][1]\n",
+    "            w[idx] = gdual(w[idx].constant_cf, ss[j], 2)\n",
+    "        ex.set_weights(w)\n",
+    "        \n",
+    "        # compute the error\n",
+    "        E = f(ex, x, yt)\n",
+    "        Ei = sum(E.constant_cf)\n",
+    "        \n",
+    "        # get gradient and Hessian\n",
+    "        dw = np.zeros(len(ss))\n",
+    "        H = np.zeros((len(ss),len(ss)))\n",
+    "        for k in range(len(ss)):\n",
+    "            dw[k] = collapse_vectorized_coefficient(E.get_derivative({\"d\"+ss[k]: 1}), len(x.constant_cf))\n",
+    "            H[k][k] = collapse_vectorized_coefficient(E.get_derivative({\"d\"+ss[k]: 2}), len(x.constant_cf))\n",
+    "            for l in range(k):\n",
+    "                H[k][l] = collapse_vectorized_coefficient(E.get_derivative({\"d\"+ss[k]: 1, \"d\"+ss[l]: 1}), len(x.constant_cf))\n",
+    "                H[l][k] = H[k][l]\n",
+    "        \n",
+    "        det = np.linalg.det(H)\n",
+    "        if det == 0: # if H is singular\n",
+    "            continue\n",
+    "        \n",
+    "        # compute the updates\n",
+    "        updates = - np.linalg.inv(H) @ dw\n",
+    "        \n",
+    "        # update the weights\n",
+    "        for k in range(len(updates)):\n",
+    "            idx = (aw[awidx[k]][0] - n) * a + aw[awidx[k]][1]\n",
+    "            ex.set_weight(aw[awidx[k]][0], aw[awidx[k]][1], w[idx] + updates[k])\n",
+    "        wfe = ex.get_weights()\n",
+    "        for j in range(len(awidx)):\n",
+    "            idx = (aw[awidx[j]][0] - n) * a + aw[awidx[j]][1]\n",
+    "            wfe[idx] = gdual(wfe[idx].constant_cf)\n",
+    "        ex.set_weights(wfe)\n",
+    "        \n",
+    "        # if error increased restore the initial weights\n",
+    "        Ef = sum(f(ex, x, yt).constant_cf)\n",
+    "        if not Ef < Ei:\n",
+    "            for j in range(len(awidx)):\n",
+    "                idx = (aw[awidx[j]][0] - n) * a + aw[awidx[j]][1]\n",
+    "                w[idx] = gdual(w[idx].constant_cf)\n",
+    "            ex.set_weights(w)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "##  Problem P1:  $x^5 - \\pi x^3 + x$"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "x = np.linspace(1,3,10)\n",
+    "x = gdual(x)\n",
+    "yt = data_P1(x)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# We run nexp experiments and accumulate statistic for the ERT\n",
+    "nexp = 100\n",
+    "offsprings = 4\n",
+    "max_gen=200\n",
+    "res = []\n",
+    "kernels = kernel_set([\"sum\", \"mul\", \"diff\", \"pdiv\"])()\n",
+    "newtonParams = {\n",
+    "    'steps': 100,\n",
+    "}\n",
+    "print(\"restart: \\t gen: \\t expression:\")\n",
+    "for i in range(nexp):\n",
+    "    dCGP = expression(1, 1, rows=1, cols=15, levels_back=16, arity=2, kernels=kernels, seed = np.random.randint(1233456))\n",
+    "    for j in range(dCGP.get_n(), dCGP.get_n() + dCGP.get_rows() * dCGP.get_cols()):\n",
+    "        for k in range(dCGP.get_arity()):\n",
+    "            dCGP.set_weight(j, k, gdual([np.random.normal(0,1)]))\n",
+    "    g, best_chromosome, best_weights = run_experiment(dCGP, offsprings, max_gen, x, yt, newtonParams, screen_output=False)\n",
+    "    res.append(g)\n",
+    "    dCGP.set(best_chromosome)\n",
+    "    if g < (max_gen-1):\n",
+    "        print(i, \"\\t\\t\", res[i], \"\\t\", dCGP.simplify([\"x\"],True))\n",
+    "res = np.array(res)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "mean_gen = sum(res) / sum(res<(max_gen-1)) * newtonParams['steps']\n",
+    "print(\"ERT Expected run time = avg. number of dCGP evaluations needed: \", mean_gen * offsprings)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Problem P2: $x^5 - \\pi x^3 + \\frac{2\\pi}x$"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "x = np.linspace(0.1,5,10) # we include points close to zero here to favour learning of 1/x\n",
+    "x = gdual(x)\n",
+    "yt = data_P2(x)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# We run nexp experiments and accumulate statistic for the ERT\n",
+    "nexp = 100\n",
+    "offsprings = 4\n",
+    "max_gen=200\n",
+    "res = []\n",
+    "kernels = kernel_set([\"sum\", \"mul\", \"diff\", \"pdiv\"])()\n",
+    "newtonParams = {\n",
+    "    'steps': 100,\n",
+    "}\n",
+    "print(\"restart: \\t gen: \\t expression:\")\n",
+    "for i in range(nexp):\n",
+    "    dCGP = expression(1, 1, rows=1, cols=15, levels_back=16, arity=2, kernels=kernels, seed = np.random.randint(1233456))\n",
+    "    for j in range(dCGP.get_n(), dCGP.get_n() + dCGP.get_rows() * dCGP.get_cols()):\n",
+    "        for k in range(dCGP.get_arity()):\n",
+    "            dCGP.set_weight(j, k, gdual([np.random.normal(0,1)]))\n",
+    "    g, best_chromosome, best_weights = run_experiment(dCGP, offsprings, max_gen, x, yt, newtonParams, screen_output=False)\n",
+    "    res.append(g)\n",
+    "    dCGP.set(best_chromosome)\n",
+    "    if g < (max_gen-1):\n",
+    "        print(i, \"\\t\\t\", res[i], \"\\t\", dCGP.simplify([\"x\"],True))\n",
+    "res = np.array(res)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Problem P3: $\\frac{e x^5 + x^3}{x + 1}$"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 367,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "x = np.linspace(-0.9,1,10)\n",
+    "x = gdual(x)\n",
+    "yt = data_P3(x)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# We run nexp experiments and accumulate statistic for the ERT\n",
+    "nexp = 100\n",
+    "offsprings = 4\n",
+    "max_gen=200\n",
+    "res = []\n",
+    "kernels = kernel_set([\"sum\", \"mul\", \"diff\", \"pdiv\"])()\n",
+    "newtonParams = {\n",
+    "    'steps': 100,\n",
+    "}\n",
+    "print(\"restart: \\t gen: \\t expression:\")\n",
+    "for i in range(nexp):\n",
+    "    dCGP = expression(1, 1, rows=1, cols=15, levels_back=16, arity=2, kernels=kernels, seed = np.random.randint(1233456))\n",
+    "    for j in range(dCGP.get_n(), dCGP.get_n() + dCGP.get_rows() * dCGP.get_cols()):\n",
+    "        for k in range(dCGP.get_arity()):\n",
+    "            dCGP.set_weight(j, k, gdual([np.random.normal(0,1)]))\n",
+    "    g, best_chromosome, best_weights = run_experiment(dCGP, offsprings, max_gen, x, yt, newtonParams, screen_output=False)\n",
+    "    res.append(g)\n",
+    "    dCGP.set(best_chromosome)\n",
+    "    if g < (max_gen-1):\n",
+    "        print(i, \"\\t\\t\", res[i], \"\\t\", dCGP.simplify([\"x\"],True))\n",
+    "res = np.array(res)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Problem P4: $\\sin(\\pi x) + \\frac 1x$"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "x = np.linspace(-1,1,10)\n",
+    "x = gdual(x)\n",
+    "yt = data_P4(x)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "# We run nexp experiments and accumulate statistic for the ERT\n",
+    "nexp = 100\n",
+    "offsprings = 4\n",
+    "max_gen=200\n",
+    "res = []\n",
+    "kernels = kernel_set([\"sum\", \"mul\", \"diff\", \"pdiv\", \"sin\"])()\n",
+    "newtonParams = {\n",
+    "    'steps': 100,\n",
+    "}\n",
+    "print(\"restart: \\t gen: \\t expression:\")\n",
+    "for i in range(nexp):\n",
+    "    dCGP = expression(1, 1, rows=1, cols=15, levels_back=16, arity=2, kernels=kernels, seed = np.random.randint(1233456))\n",
+    "    for j in range(dCGP.get_n(), dCGP.get_n() + dCGP.get_rows() * dCGP.get_cols()):\n",
+    "        for k in range(dCGP.get_arity()):\n",
+    "            dCGP.set_weight(j, k, gdual([np.random.normal(0,1)]))\n",
+    "    g, best_chromosome, best_weights = run_experiment(dCGP, offsprings, max_gen, x, yt, newtonParams, screen_output=False)\n",
+    "    res.append(g)\n",
+    "    dCGP.set(best_chromosome)\n",
+    "    if g < (max_gen-1):\n",
+    "        print(i, \"\\t\\t\", res[i], \"\\t\", dCGP.simplify([\"x\"],True))\n",
+    "res = np.array(res)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "##  Problem P5:  $ex^5 - \\pi x^3 + x$"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "x = np.linspace(1,3,10)\n",
+    "x = gdual(x)\n",
+    "yt = data_P5(x)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "restart: \t gen: \t expression:\n",
+      "0 \t\t 38 \t [2.71828182845905*x**5 - 3.1415926535898*x**3 + 1.00000000000002*x]\n",
+      "1 \t\t 102 \t [2.71828182845905*x**5 - 3.14159265358979*x**3 + 1.0*x]\n",
+      "2 \t\t 23 \t [2.71828182845905*x**5 - 3.14159265358982*x**3 + 1.00000000000005*x]\n",
+      "3 \t\t 35 \t [2.71828182845878*x**5 - 3.14159265358636*x**3 + 0.999999999993344*x]\n",
+      "7 \t\t 71 \t [2.71828182845905*x**5 - 3.14159265358979*x**3 + 1.0*x]\n",
+      "8 \t\t 101 \t [2.71828182845905*x**5 - 3.1415926535898*x**3 + 1.0*x]\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "/usr/lib/python3/dist-packages/numpy/linalg/linalg.py:1776: RuntimeWarning: invalid value encountered in det\n",
+      "  r = _umath_linalg.det(a, signature=signature)\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "11 \t\t 116 \t [2.71828182845904*x**5 - 3.1415926535898*x**3 + 1.00000000000001*x]\n",
+      "20 \t\t 100 \t [2.71828182845905*x**5 - 3.14159265358981*x**3 + 1.00000000000003*x]\n",
+      "21 \t\t 19 \t [2.71828182845905*x**5 - 3.1415926535898*x**3 + 1.0*x]\n",
+      "22 \t\t 53 \t [2.71828182845905*x**5 - 3.14159265358983*x**3 + 1.00000000000007*x]\n",
+      "23 \t\t 160 \t [2.71828182845905*x**5 - 3.1415926535898*x**3 + 1.00000000000002*x]\n",
+      "24 \t\t 17 \t [2.71828182845905*x**5 - 3.14159265358981*x**3 + 1.00000000000003*x]\n",
+      "25 \t\t 98 \t [2.71828182845905*x**5 - 3.14159265358979*x**3 + 0.999999999999999*x]\n",
+      "29 \t\t 51 \t [2.71828182845905*x**5 - 3.14159265358987*x**3 + 1.00000000000014*x]\n",
+      "30 \t\t 119 \t [2.71828182845905*x**5 - 3.14159265358981*x**3 + 1.00000000000002*x]\n",
+      "32 \t\t 8 \t [2.71828182845905*x**5 - 3.14159265358979*x**3 + 1.0*x]\n",
+      "33 \t\t 40 \t [2.71828182845905*x**5 - 3.1415926535898*x**3 + 1.00000000000001*x]\n",
+      "34 \t\t 56 \t [2.71828182845905*x**5 - 3.14159265358979*x**3 + 0.999999999999995*x]\n",
+      "35 \t\t 170 \t [2.71828182845904*x**5 - 3.14159265358979*x**3 + 1.00000000000001*x]\n",
+      "38 \t\t 25 \t [2.71828182845905*x**5 - 3.14159265358981*x**3 + 1.00000000000003*x]\n",
+      "39 \t\t 136 \t [2.71828182845905*x**5 - 3.14159265358981*x**3 + 1.00000000000003*x]\n",
+      "41 \t\t 64 \t [2.71828182845904*x**5 - 3.14159265358978*x**3 + 0.999999999999961*x]\n",
+      "42 \t\t 16 \t [2.71828182845904*x**5 - 3.14159265358979*x**3 + 0.999999999999988*x]\n",
+      "47 \t\t 100 \t [2.71828182845904*x**5 - 3.14159265358976*x**3 + 0.999999999999933*x]\n",
+      "48 \t\t 53 \t [2.71828182845904*x**5 - 3.14159265358978*x**3 + 0.99999999999997*x]\n",
+      "49 \t\t 46 \t [2.71828182845905*x**5 - 3.14159265358979*x**3 + 1.0*x]\n",
+      "57 \t\t 35 \t [2.71828182845904*x**5 - 3.14159265358979*x**3 + 0.999999999999987*x]\n",
+      "58 \t\t 27 \t [2.71828182845905*x**5 - 3.14159265358982*x**3 + 1.00000000000004*x]\n",
+      "59 \t\t 73 \t [2.71828182845905*x**5 - 3.1415926535898*x**3 + 1.00000000000001*x]\n",
+      "60 \t\t 34 \t [2.71828182845905*x**5 - 3.1415926535898*x**3 + 1.0*x]\n",
+      "61 \t\t 22 \t [2.71828182845905*x**5 - 3.14159265358982*x**3 + 1.00000000000004*x]\n",
+      "63 \t\t 66 \t [2.71828182845905*x**5 - 3.14159265358981*x**3 + 1.00000000000003*x]\n",
+      "64 \t\t 62 \t [2.71828182845905*x**5 - 3.14159265358981*x**3 + 1.00000000000003*x]\n",
+      "65 \t\t 73 \t [2.71828182845905*x**5 - 3.14159265358981*x**3 + 1.00000000000003*x]\n",
+      "66 \t\t 20 \t [2.71828182845905*x**5 - 3.14159265358982*x**3 + 1.00000000000006*x]\n",
+      "68 \t\t 46 \t [2.71828182845905*x**5 - 3.14159265358982*x**3 + 1.00000000000004*x]\n",
+      "72 \t\t 14 \t [2.71828182845905*x**5 - 3.14159265358986*x**3 + 1.00000000000009*x]\n",
+      "75 \t\t 47 \t [2.71828182845905*x**5 - 3.1415926535898*x**3 + 1.00000000000002*x]\n",
+      "77 \t\t 44 \t [2.71828182845905*x**5 - 3.1415926535898*x**3 + 1.00000000000001*x]\n",
+      "80 \t\t 29 \t [2.71828182845905*x**5 - 3.14159265358982*x**3 + 1.00000000000006*x]\n",
+      "82 \t\t 111 \t [2.71828182845905*x**5 - 3.1415926535898*x**3 + 1.00000000000002*x]\n",
+      "86 \t\t 54 \t [2.71828182845904*x**5 - 3.14159265358978*x**3 + 0.999999999999977*x]\n",
+      "94 \t\t 79 \t [2.71828182845904*x**5 - 3.14159265358979*x**3 + 0.99999999999999*x]\n",
+      "97 \t\t 88 \t [2.71828182845905*x**5 - 3.1415926535898*x**3 + 1.00000000000001*x]\n",
+      "99 \t\t 47 \t [2.71828182845905*x**5 - 3.1415926535898*x**3 + 1.00000000000001*x]\n"
+     ]
+    }
+   ],
+   "source": [
+    "# We run nexp experiments and accumulate statistic for the ERT\n",
+    "nexp = 100\n",
+    "offsprings = 4\n",
+    "max_gen=200\n",
+    "res = []\n",
+    "kernels = kernel_set([\"sum\", \"mul\", \"diff\", \"pdiv\"])()\n",
+    "newtonParams = {\n",
+    "    'steps': 100,\n",
+    "}\n",
+    "print(\"restart: \\t gen: \\t expression:\")\n",
+    "for i in range(nexp):\n",
+    "    dCGP = expression(1, 1, rows=1, cols=15, levels_back=16, arity=2, kernels=kernels, seed = np.random.randint(1233456))\n",
+    "    for j in range(dCGP.get_n(), dCGP.get_n() + dCGP.get_rows() * dCGP.get_cols()):\n",
+    "        for k in range(dCGP.get_arity()):\n",
+    "            dCGP.set_weight(j, k, gdual([np.random.normal(0,1)]))\n",
+    "    g, best_chromosome, best_weights = run_experiment(dCGP, offsprings, max_gen, x, yt, newtonParams, screen_output=False)\n",
+    "    res.append(g)\n",
+    "    dCGP.set(best_chromosome)\n",
+    "    if g < (max_gen-1):\n",
+    "        print(i, \"\\t\\t\", res[i], \"\\t\", dCGP.simplify([\"x\"],True))\n",
+    "res = np.array(res)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "ERT Expected run time = avg. number of dCGP evaluations needed:  122071.111111\n"
+     ]
+    }
+   ],
+   "source": [
+    "mean_gen = sum(res) / sum(res<(max_gen-1)) * newtonParams['steps']\n",
+    "print(\"ERT Expected run time = avg. number of dCGP evaluations needed: \", mean_gen * offsprings)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "##  Problem P6: $\\frac{e x^2-1}{\\pi (x + 2)}$"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "x = np.linspace(-2.1,1,10)\n",
+    "x = gdual(x)\n",
+    "yt = data_P6(x)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "# We run nexp experiments and accumulate statistic for the ERT\n",
+    "nexp = 100\n",
+    "offsprings = 4\n",
+    "max_gen=200\n",
+    "res = []\n",
+    "kernels = kernel_set([\"sum\", \"mul\", \"diff\", \"pdiv\"])()\n",
+    "newtonParams = {\n",
+    "    'steps': 100,\n",
+    "}\n",
+    "print(\"restart: \\t gen: \\t expression:\")\n",
+    "for i in range(nexp):\n",
+    "    dCGP = expression(1, 1, rows=1, cols=15, levels_back=16, arity=2, kernels=kernels, seed = np.random.randint(1233456))\n",
+    "    for j in range(dCGP.get_n(), dCGP.get_n() + dCGP.get_rows() * dCGP.get_cols()):\n",
+    "        for k in range(dCGP.get_arity()):\n",
+    "            dCGP.set_weight(j, k, gdual([np.random.normal(0,1)]))\n",
+    "    g, best_chromosome, best_weights = run_experiment(dCGP, offsprings, max_gen, x, yt, newtonParams, screen_output=False)\n",
+    "    res.append(g)\n",
+    "    dCGP.set(best_chromosome)\n",
+    "    if g < (max_gen-1):\n",
+    "        print(i, \"\\t\\t\", res[i], \"\\t\", dCGP.simplify([\"x\"],True))\n",
+    "res = np.array(res)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "##  Problem P7:  $\\sin(e x) + \\cos(\\pi x)$"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 348,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "x = np.linspace(-1,1,10)\n",
+    "x = gdual(x)\n",
+    "yt = data_P7(x)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# We run nexp experiments and accumulate statistic for the ERT\n",
+    "nexp = 100\n",
+    "offsprings = 4\n",
+    "max_gen=200\n",
+    "res = []\n",
+    "kernels = kernel_set([\"sum\", \"mul\", \"diff\", \"pdiv\", \"sin\", \"cos\"])()\n",
+    "newtonParams = {\n",
+    "    'steps': 100,\n",
+    "}\n",
+    "print(\"restart: \\t gen: \\t expression:\")\n",
+    "for i in range(nexp):\n",
+    "    dCGP = expression(1, 1, rows=1, cols=15, levels_back=16, arity=2, kernels=kernels, seed = np.random.randint(1233456))\n",
+    "    for j in range(dCGP.get_n(), dCGP.get_n() + dCGP.get_rows() * dCGP.get_cols()):\n",
+    "        for k in range(dCGP.get_arity()):\n",
+    "            dCGP.set_weight(j, k, gdual([np.random.normal(0,1)]))\n",
+    "    g, best_chromosome, best_weights = run_experiment(dCGP, offsprings, max_gen, x, yt, newtonParams, screen_output=False)\n",
+    "    res.append(g)\n",
+    "    dCGP.set(best_chromosome)\n",
+    "    if g < (max_gen-1):\n",
+    "        print(i, \"\\t\\t\", res[i], \"\\t\", dCGP.simplify([\"x\"],True))\n",
+    "res = np.array(res)"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.6.6"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 1
+}
