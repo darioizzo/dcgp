@@ -1,13 +1,14 @@
 #ifndef DCGP_EXPRESSION_ANN_H
 #define DCGP_EXPRESSION_ANN_H
 
+#include <algorithm>
 #include <audi/audi.hpp>
 #include <initializer_list>
 #include <iostream>
 #include <map>
+#include <numeric>
 #include <random>
 #include <sstream>
-#include <numeric>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -39,6 +40,9 @@ private:
     using enable_double = typename std::enable_if<std::is_same<U, double>::value, int>::type;
 
 public:
+    // loss types: Mean Sqrae Error or Cross Entropy
+    enum class loss_type { MSE, CE };
+
     /// Constructor
     /** Constructs a dCGP expression
      *
@@ -65,7 +69,8 @@ public:
         for (const auto &ker : f) {
             if (ker.get_name() != "tanh" && ker.get_name() != "sig" && ker.get_name() != "ReLu"
                 && ker.get_name() != "ELU" && ker.get_name() != "ISRU") {
-                throw std::invalid_argument("Only tanh, sig, ReLu, ELU and ISRU Kernels are valid for dCGP-ANN expressions");
+                throw std::invalid_argument(
+                    "Only tanh, sig, ReLu, ELU and ISRU Kernels are valid for dCGP-ANN expressions");
             }
         }
         for (auto i = 0u; i < r * c; ++i) {
@@ -121,15 +126,68 @@ public:
         return (*this)(dummy);
     }
 
-    /// Evaluates the mean square error
+    /// Evaluates the loss (single data point)
     /**
-     * Returns the mean squared error.
+     * Returns the loss over a single point of data of the dCGPANN output.
+     *
+     * @param[point] The input data (single point)
+     * @param[prediction] The predicted output (single point)
+     * @param[loss_e] The loss type. Can be "MSE" for Mean Square Error (regression) or "CE" for Cross Entropy
+     * (classification)
+     * @return the mse
+     */
+    double loss(const std::vector<double> &point, const std::vector<double> &prediction,
+                loss_type loss_e)
+    {
+        if (point.size() != this->get_n()) {
+            throw std::invalid_argument("When computing the loss the point dimension (input) seemed wrong, it was: "
+                                        + std::to_string(point.size())
+                                        + " while I expected: " + std::to_string(this->get_n()));
+        }
+        if (prediction.size() != this->get_m()) {
+            throw std::invalid_argument(
+                "When computing the loss the prediction dimension (output) seemed wrong, it was: "
+                + std::to_string(prediction.size()) + " while I expected: " + std::to_string(this->get_m()));
+        }
+        double retval(0.);
+
+        auto outputs = this->operator()(point);
+        switch (loss_e) {
+            // Mean Square Error
+            case loss_type::MSE:
+                for (decltype(outputs.size()) i = 0u; i < outputs.size(); ++i) {
+                    retval += (outputs[i] - prediction[i]) * (outputs[i] - prediction[i]);
+                }
+                break; // and exits the switch
+            // Cross Entropy
+            case loss_type::CE:
+                // exp(a_i)
+                std::transform(outputs.begin(), outputs.end(), outputs.begin(), [](double a) { return std::exp(a); });
+                // sum exp(a_i)
+                double cumsum = std::accumulate(outputs.begin(), outputs.end(), 0.);
+                // log(p_i) * y_i
+                std::transform(outputs.begin(), outputs.end(), prediction.begin(), outputs.begin(),
+                               [cumsum](double a, double y) { return std::log(a / cumsum) * y; });
+                // - sum log(p_i) y_i
+                retval = - std::accumulate(outputs.begin(), outputs.end(), 0.);
+                break;
+        }
+
+        return retval;
+    }
+
+    /// Evaluates the loss (on a batch)
+    /**
+     * Returns the loss over a batch of data of the dCGPANN output.
      *
      * @param[points] The input data (a batch).
      * @param[predictions] The predicted outputs (a batch).
-     * @return the mse
+     * @param[loss_e] The loss type. Can be "MSE" for Mean Square Error (regression) or "CE" for Cross Entropy
+     * (classification)
+     * @return the loss
      */
-    double mse(const std::vector<std::vector<double>> &points, const std::vector<std::vector<double>> &predictions)
+    double loss(const std::vector<std::vector<double>> &points, const std::vector<std::vector<double>> &predictions,
+                std::string loss_s)
     {
         if (points.size() != predictions.size()) {
             throw std::invalid_argument("Data and label size mismatch data size is: " + std::to_string(points.size())
@@ -138,20 +196,31 @@ public:
         if (points.size() == 0) {
             throw std::invalid_argument("Data size cannot be zero");
         }
-        return mse(points.begin(), points.end(), predictions.begin());
+        loss_type loss_e;
+        if (loss_s == "MSE") { // Mean Square Error
+            loss_e = loss_type::MSE;
+        } else if (loss_s == "CE") {
+            loss_e = loss_type::CE; // Cross Entropy
+        } else {
+            throw std::invalid_argument("The requested loss was: " + loss_s + " while only MSE and CE are allowed");
+        }
+        return loss(points.begin(), points.end(), predictions.begin(), loss_e);
     }
 
-    /// Evaluates the mean square error and its gradient
+    /// Evaluates the loss and its gradient (on a single point)
     /**
-     * Returns the mean squared error and its gradient with respect to weights and biases.
+     * Returns the loss and its gradient with respect to weights and biases.
      *
      * @param[point] The input data (single point)
      * @param[prediction] The predicted output (single point)
-     * @return the mse, the gradient of the mse w.r.t. all weights (also inactive) and the gradient of the mse w.r.t all
-     * biases
+     * @param[loss_e] The loss type. Must be loss_type::MSE for Mean Square Error (regression) or loss_type::CE for Cross
+     * Entropy (classification)
+     * @return the loss, the gradient of the loss w.r.t. all weights (also inactive) and the gradient of the loss w.r.t
+     * all biases
      */
     template <typename U, enable_double<U> = 0>
-    std::tuple<U, std::vector<U>, std::vector<U>> d_mse(const std::vector<U> &point, const std::vector<U> &prediction)
+    std::tuple<U, std::vector<U>, std::vector<U>> d_loss(const std::vector<U> &point, const std::vector<U> &prediction,
+                                                         const loss_type loss_e)
     {
         if (point.size() != this->get_n()) {
             throw std::invalid_argument("When computing the mse the point dimension (input) seemed wrong, it was: "
@@ -174,20 +243,45 @@ public:
         std::vector<U> node(n_nodes, 0.), d_node(n_nodes, 0.);
         fill_nodes(point, node, d_node); // here is where the computations happen.
 
-        // We add to node and node_d some virtual nodes containing the output values (x_i-\hat x_i) ^ 2, and its
-        // derivative 2(x_i - \hat x_i) so that the acyclic graph is now computing all blocks of the mse (a dCGP-ANN
-        // only computes outputs)
-        for (decltype(this->get_m()) i = 0u; i < this->get_m(); ++i) {
-            auto node_idx = this->get()[this->get().size() - this->get_m() + i];
-            auto dummy = (node[node_idx] - prediction[i]);
-            node.push_back(dummy * dummy);
-            d_node.push_back(2 * dummy);
-            value += dummy * dummy;
+        // We add to node_d some virtual nodes containing the derivative of the loss with respect to the outputs
+        // (dL/do_i)
+        switch (loss_e) {
+            // Mean Square Error
+            case loss_type::MSE:
+                for (decltype(this->get_m()) i = 0u; i < this->get_m(); ++i) {
+                    auto node_idx = this->get()[this->get().size() - this->get_m() + i];
+                    auto dummy = (node[node_idx] - prediction[i]);
+                    d_node.push_back(2 * dummy);
+                    value += dummy * dummy;
+                }
+                break; // and exits the switch
+            // Cross Entropy
+            case loss_type::CE:
+                std::vector<double> ps(this->get_m(), 0.);
+                double cumsum = 0.;
+                // We compute exp(a_i) and sum exp(a_i) for softmax
+                for (decltype(this->get_m()) i = 0u; i < this->get_m(); ++i) {
+                    auto node_idx = this->get()[this->get().size() - this->get_m() + i];
+                    ps[i] = std::exp(node[node_idx]);
+                    cumsum += ps[i];
+                }
+                // We compute the probabilities p_i = a_i / sum a_i
+                std::transform(ps.begin(), ps.end(), ps.begin(), [cumsum](double a) { return a / cumsum; });
+                // We add the derivatives of the loss w.r.t. to outputs
+                for (decltype(ps.size()) i = 0u; i < ps.size(); ++i) {
+                    d_node.push_back(ps[i] - prediction[i]);
+                }
+                // We compute the cross-entropy
+                std::transform(ps.begin(), ps.end(), prediction.begin(), ps.begin(),
+                               [](double p, double y) { return std::log(p) * y; });
+                // - sum log(p_i) y_i
+                value = - std::accumulate(ps.begin(), ps.end(), 0.);
+                break;
         }
 
-        // ------------------------------------------ Backward pass (takes roughly the remaining half) -----------------
-        // We iterate backward on all the active nodes (except the input nodes)
-        // filling up the gradient information at each node for the incoming weights and relative bias
+        // ------------------------------------------ Backward pass (takes roughly the remaining half)
+        // ----------------- We iterate backward on all the active nodes (except the input nodes) filling up the
+        // gradient information at each node for the incoming weights and relative bias
         for (auto it = this->get_active_nodes().rbegin(); it != this->get_active_nodes().rend(); ++it) {
             if (*it < this->get_n()) continue;
             // index of the node in the bias vector
@@ -221,18 +315,21 @@ public:
         return std::make_tuple(std::move(value), std::move(gweights), std::move(gbiases));
     }
 
-    /// Evaluates the mean square error and its gradient
+    /// Evaluates the mean square error and its gradient  (on a batch)
     /**
      * Returns the mean squared error and its gradient with respect to weights and biases.
      *
      * @param[points] The input data (a batch).
      * @param[predictions] The predicted outputs (a batch).
-     * @return the mse, the gradient of the mse w.r.t. all weights (also inactive) and the gradient of the mse w.r.t all
-     * biases.
+     * @param[loss_e] The loss type. Must be loss_type::MSE for Mean Square Error (regression) or loss_type::CE for Cross
+     * Entropy (classification)
+     * @return the loss, the gradient of the loss w.r.t. all weights (also inactive) and the gradient of the loss w.r.t
+     * all biases.
      */
     template <typename U, enable_double<U> = 0>
-    std::tuple<U, std::vector<U>, std::vector<U>> d_mse(const std::vector<std::vector<U>> &points,
-                                                        const std::vector<std::vector<U>> &predictions)
+    std::tuple<U, std::vector<U>, std::vector<U>> d_loss(const std::vector<std::vector<U>> &points,
+                                                         const std::vector<std::vector<U>> &predictions,
+                                                         loss_type loss_e)
     {
         if (points.size() != predictions.size()) {
             throw std::invalid_argument("Data and label size mismatch data size is: " + std::to_string(points.size())
@@ -241,7 +338,7 @@ public:
         if (points.size() == 0) {
             throw std::invalid_argument("Data size cannot be zero");
         }
-        return d_mse<U>(points.begin(), points.end(), predictions.begin());
+        return d_loss<U>(points.begin(), points.end(), predictions.begin(), loss_e);
     }
 
     /// Stochastic gradient descent
@@ -258,7 +355,7 @@ public:
      */
     template <typename U, enable_double<U> = 0>
     void sgd(const std::vector<std::vector<U>> &points, const std::vector<std::vector<U>> &predictions, double l_rate,
-             unsigned batch_size)
+             unsigned batch_size, std::string loss_s)
     {
         if (points.size() != predictions.size()) {
             throw std::invalid_argument("Data and label size mismatch data size is: " + std::to_string(points.size())
@@ -271,15 +368,25 @@ public:
             throw std::invalid_argument("The learning rate must be a positive number, while: " + std::to_string(l_rate)
                                         + " was detected.");
         }
+
+        loss_type loss_e;
+        if (loss_s == "MSE") {
+            loss_e = loss_type::MSE;
+        } else if (loss_s == "CE") {
+            loss_e = loss_type::CE;
+        } else {
+            throw std::invalid_argument("The requested loss was: " + loss_s + " while only MSE and CE are allowed");
+        }
+
         auto dfirst = points.begin();
         auto dlast = points.end();
         auto lfirst = predictions.begin();
         while (dfirst != dlast) {
             if (dfirst + batch_size > dlast) {
-                update_weights<U>(dfirst, dlast, lfirst, l_rate);
+                update_weights<U>(dfirst, dlast, lfirst, l_rate, loss_e);
                 dfirst = dlast;
             } else {
-                update_weights<U>(dfirst, dfirst + batch_size, lfirst, l_rate);
+                update_weights<U>(dfirst, dfirst + batch_size, lfirst, l_rate, loss_e);
                 dfirst += batch_size;
                 lfirst += batch_size;
             }
@@ -438,15 +545,15 @@ public:
         return m_weights;
     }
 
-    /// Randomises all weights
-    /**
-     * Set all weights to a normally distributed number
-     *
-     * @param[mean] the mean of the normal distribution.
-     * @param[std] the standard deviation of the normal distribution.
-     * @param[seed] the seed to generate the new weights (by default its randomly generated).
-     *
-     */
+/// Randomises all weights
+/**
+ * Set all weights to a normally distributed number
+ *
+ * @param[mean] the mean of the normal distribution.
+ * @param[std] the standard deviation of the normal distribution.
+ * @param[seed] the seed to generate the new weights (by default its randomly generated).
+ *
+ */
 #if !defined(DCGP_DOXYGEN_INVOKED)
     void randomise_weights(double mean = 0, double std = 0.1,
                            std::random_device::result_type seed = std::random_device{}())
@@ -513,15 +620,15 @@ public:
         return m_biases;
     }
 
-    /// Randomises all biases
-    /**
-     * Set all biases to a normally distributed number
-     *
-     * @param[in] mean the mean of the normal distribution
-     * @param[in] std the standard deviation of the normal distribution
-     * @param[in] seed the seed to generate the new biases (by default its randomly generated)
-     *
-     */
+/// Randomises all biases
+/**
+ * Set all biases to a normally distributed number
+ *
+ * @param[in] mean the mean of the normal distribution
+ * @param[in] std the standard deviation of the normal distribution
+ * @param[in] seed the seed to generate the new biases (by default its randomly generated)
+ *
+ */
 #if !defined(DCGP_DOXYGEN_INVOKED)
     void randomise_biases(double mean = 0., double std = 0.1,
                           std::random_device::result_type seed = std::random_device{}())
@@ -687,11 +794,12 @@ private:
     template <typename U, enable_double<U> = 0>
     void update_weights(typename std::vector<std::vector<U>>::const_iterator dfirst,
                         typename std::vector<std::vector<U>>::const_iterator dlast,
-                        typename std::vector<std::vector<U>>::const_iterator lfirst, U lr)
+                        typename std::vector<std::vector<U>>::const_iterator lfirst, U lr,
+                        loss_type loss_e)
     {
         U coeff(lr / static_cast<U>(dlast - dfirst));
         while (dfirst != dlast) {
-            auto mse_out = d_mse(*dfirst++, *lfirst++);
+            auto mse_out = d_loss(*dfirst++, *lfirst++, loss_e);
             std::transform(m_weights.begin(), m_weights.end(), std::get<1>(mse_out).begin(), m_weights.begin(),
                            [coeff](U a, U b) { return a - coeff * b; });
             std::transform(m_biases.begin(), m_biases.end(), std::get<2>(mse_out).begin(), m_biases.begin(),
@@ -700,9 +808,10 @@ private:
     }
 
     template <typename U, enable_double<U> = 0>
-    std::tuple<U, std::vector<U>, std::vector<U>> d_mse(typename std::vector<std::vector<U>>::const_iterator dfirst,
-                                                        typename std::vector<std::vector<U>>::const_iterator dlast,
-                                                        typename std::vector<std::vector<U>>::const_iterator lfirst)
+    std::tuple<U, std::vector<U>, std::vector<U>> d_loss(typename std::vector<std::vector<U>>::const_iterator dfirst,
+                                                         typename std::vector<std::vector<U>>::const_iterator dlast,
+                                                         typename std::vector<std::vector<U>>::const_iterator lfirst,
+                                                         loss_type loss_e)
     {
         U value(U(0.));
         std::vector<U> gweights(m_weights.size(), U(0.));
@@ -710,7 +819,7 @@ private:
         U dim = static_cast<U>(dlast - dfirst);
 
         while (dfirst != dlast) {
-            auto mse_out = d_mse(*dfirst++, *lfirst++);
+            auto mse_out = d_loss(*dfirst++, *lfirst++, loss_e);
             value += std::get<0>(mse_out);
             std::transform(gweights.begin(), gweights.end(), std::get<1>(mse_out).begin(), gweights.begin(),
                            [dim](U a, U b) { return a + b / dim; });
@@ -722,43 +831,14 @@ private:
         return std::make_tuple(std::move(value), std::move(gweights), std::move(gbiases));
     }
 
-    /// Evaluates the mean square error
-    /**
-     * Returns the mean squared error.
-     *
-     * @param[point] The input data (single point)
-     * @param[prediction] The predicted output (single point)
-     * @return the mse
-     */
-    double mse(const std::vector<double> &point, const std::vector<double> &prediction)
-    {
-        if (point.size() != this->get_n()) {
-            throw std::invalid_argument("When computing the mse the point dimension (input) seemed wrong, it was: "
-                                        + std::to_string(point.size())
-                                        + " while I expected: " + std::to_string(this->get_n()));
-        }
-        if (prediction.size() != this->get_m()) {
-            throw std::invalid_argument(
-                "When computing the mse the prediction dimension (output) seemed wrong, it was: "
-                + std::to_string(prediction.size()) + " while I expected: " + std::to_string(this->get_m()));
-        }
-        double retval(0.);
-
-        auto outputs = this->operator()(point);
-        for (decltype(outputs.size()) i = 0u; i < outputs.size(); ++i) {
-            retval += (outputs[i] - prediction[i]) * (outputs[i] - prediction[i]);
-        }
-        return retval;
-    }
-
-    double mse(typename std::vector<std::vector<double>>::const_iterator dfirst,
-               typename std::vector<std::vector<double>>::const_iterator dlast,
-               typename std::vector<std::vector<double>>::const_iterator lfirst)
+    double loss(typename std::vector<std::vector<double>>::const_iterator dfirst,
+                typename std::vector<std::vector<double>>::const_iterator dlast,
+                typename std::vector<std::vector<double>>::const_iterator lfirst, loss_type loss_e)
     {
         double retval(0.);
         double dim = static_cast<double>(dlast - dfirst);
         while (dfirst != dlast) {
-            double mse_out = mse(*dfirst++, *lfirst++);
+            double mse_out = loss(*dfirst++, *lfirst++, loss_e);
             retval += mse_out;
         }
         retval /= dim;
@@ -775,9 +855,8 @@ private:
 
     // In order to be able to perform backpropagation on the dCGPANN program, we need to add
     // to the usual CGP data structures one that contains for each node the list of nodes
-    // (and weights) it feeds into. We also need to add some virtual nodes (output nodes)
-    // computing the error components (x_i-\hat x_i) as to be able to get the mse deirvatives
-    // Assigned virtual ids starting from n + r * c
+    // (and weights) it feeds into. We also need to add some virtual nodes (to keep track of output nodes dependencies)
+    // The assigned virtual ids starting from n + r * c
     std::vector<std::vector<std::pair<unsigned, unsigned>>> m_connected;
 }; // namespace dcgp
 

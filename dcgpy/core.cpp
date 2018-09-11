@@ -330,14 +330,14 @@ void expose_expression_ann(std::string type)
              (bp::arg("mean") = 0., bp::arg("std") = 0.1))
         .def("sgd",
              +[](expression_ann<T> &instance, const bp::object &points, const bp::object &predictions, double l_rate,
-                 unsigned batch_size) { instance.sgd(to_vvd(points), to_vvd(predictions), l_rate, batch_size); },
+                 unsigned batch_size, std::string loss) { instance.sgd(to_vvd(points), to_vvd(predictions), l_rate, batch_size, loss); },
              expression_ann_sgd_doc().c_str(),
-             (bp::arg("points"), bp::arg("predictions"), bp::arg("lr"), bp::arg("batch_size")))
-        .def("mse",
-             +[](expression_ann<T> &instance, const bp::object &points, const bp::object &predictions) {
-                 return instance.mse(to_vvd(points), to_vvd(predictions));
+             (bp::arg("points"), bp::arg("predictions"), bp::arg("lr"), bp::arg("batch_size"), bp::arg("loss")))
+        .def("loss",
+             +[](expression_ann<T> &instance, const bp::object &points, const bp::object &predictions, std::string loss) {
+                 return instance.loss(to_vvd(points), to_vvd(predictions), loss);
              },
-             expression_ann_mse_doc().c_str(), (bp::arg("points"), bp::arg("predictions")));
+             expression_ann_loss_doc().c_str(), (bp::arg("points"), bp::arg("predictions"), bp::arg("loss")));
 }
 
 BOOST_PYTHON_MODULE(core)

@@ -328,34 +328,36 @@ Args:
 
 std::string expression_ann_sgd_doc()
 {
-    return R"(sgd(points, predictions, lr, batch_size)
+    return R"(sgd(points, predictions, lr, batch_size, loss_type)
 
 Performs one epoch of stochastic gradient descent updating the weights and biases using the 
-*points* and *predictions* to compute the mean square error.
+*points* and *predictions* to decrease the loss.
 
 Args:
     points (2D NumPy float array or ``list of lists`` of ``float``): the input data
     predictions (2D NumPy float array or ``list of lists`` of ``float``): the output predictions (supervised signal)
     lr (a ``float``): the learning generate
     batch_size (an ``int``): the batch size
+    loss_type (a ``str``): the loss, one of "MSE" for Mean Square Error and "CE" for Cross-Entropy.
 
 Raises:
-    ValueError: if *points* or *predictions* are malformed
+    ValueError: if *points* or *predictions* are malformed or if *loss_type* is not one of the available types.
     )";
 }
 
-std::string expression_ann_mse_doc()
+std::string expression_ann_loss_doc()
 {
-    return R"(sgd(points, predictions)
+    return R"(sgd(points, predictions, loss_type)
 
 Computes the mean squared error of the dCGPANN on the data
 
 Args:
     points (2D NumPy float array or ``list of lists`` of ``float``): the input data
     predictions (2D NumPy float array or ``list of lists`` of ``float``): the output predictions (supervised signal)
+    loss_type (a ``str``): the loss, one of "MSE" for Mean Square Error and "CE" for Cross-Entropy.
 
 Raises:
-    ValueError: if *points* or *predictions* are malformed
+    ValueError: if *points* or *predictions* are malformed or if *loss_type* is not one of the available types.
     )";
 }
 

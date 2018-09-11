@@ -6,12 +6,12 @@
 #include <boost/test/unit_test.hpp>
 #include <stdexcept>
 
-#include <dcgp/dcgp.hpp>
-
+#include <dcgp/expression_ann.hpp>
+#include <dcgp/kernel_set.hpp>
 using namespace dcgp;
 
 void test_against_numerical_derivatives(unsigned n, unsigned m, unsigned r, unsigned c, unsigned lb, unsigned arity,
-                                        unsigned seed)
+                                        unsigned seed, expression_ann<double>::loss_type loss_e)
 {
     std::mt19937 gen(seed);
     // Random distributions
@@ -32,8 +32,14 @@ void test_against_numerical_derivatives(unsigned n, unsigned m, unsigned r, unsi
     auto in = std::vector<double>(ex.get_n(), norm(gen));
     // Output value desired (supervised signal)
     auto out = std::vector<double>(ex.get_m(), norm(gen));
-    // Compute mse and the gradients
-    auto bp = ex.d_mse(in, out);
+    if (loss_e == expression_ann<double>::loss_type::CE) {
+        // we normalize to probabilities
+        auto cumout = std::accumulate(out.begin(), out.end(), 0.);
+        std::transform(out.begin(), out.end(), out.begin(), [cumout](double x) { return x / cumout; });
+    }
+
+    // Compute the loss and the gradients
+    auto bp = ex.d_loss(in, out, loss_e);
 
     // We check against numerical diff
     // first the weights
@@ -45,13 +51,9 @@ void test_against_numerical_derivatives(unsigned n, unsigned m, unsigned r, unsi
         auto tmp = ex.get_weight(i);
         auto h = std::max(1., std::abs(tmp)) * eps;
         ex.set_weight(i, tmp + h);
-        auto res = ex(in);
-        std::transform(res.begin(), res.end(), out.begin(), res.begin(), [](double a, double b) { return a - b; });
-        auto val = std::inner_product(res.begin(), res.end(), res.begin(), 0.0);
+        auto val = ex.loss(in, out, loss_e);
         ex.set_weight(i, tmp - h);
-        res = ex(in);
-        std::transform(res.begin(), res.end(), out.begin(), res.begin(), [](double a, double b) { return a - b; });
-        auto val2 = std::inner_product(res.begin(), res.end(), res.begin(), 0.0);
+        auto val2 = ex.loss(in, out, loss_e);
 
         auto abs_diff = std::abs(((val - val2) / 2. / h - std::get<1>(bp)[i]));
         auto rel_diff = abs_diff / std::abs(std::get<1>(bp)[i]);
@@ -68,15 +70,9 @@ void test_against_numerical_derivatives(unsigned n, unsigned m, unsigned r, unsi
                 tmp = ex.get_weight(i);
                 h = h * 0.01; // will generate 0.1, 0.001, ...., 0.000000001
                 ex.set_weight(i, tmp + h);
-                res = ex(in);
-                std::transform(res.begin(), res.end(), out.begin(), res.begin(),
-                               [](double a, double b) { return a - b; });
-                val = std::inner_product(res.begin(), res.end(), res.begin(), 0.0);
+                val = ex.loss(in, out, loss_e);
                 ex.set_weight(i, tmp - h);
-                res = ex(in);
-                std::transform(res.begin(), res.end(), out.begin(), res.begin(),
-                               [](double a, double b) { return a - b; });
-                val2 = std::inner_product(res.begin(), res.end(), res.begin(), 0.0);
+                val2 = ex.loss(in, out, loss_e);
                 abs_diff = std::abs(((val - val2) / 2. / h - std::get<1>(bp)[i]));
                 rel_diff = abs_diff / std::abs(std::get<1>(bp)[i]);
 
@@ -109,13 +105,9 @@ void test_against_numerical_derivatives(unsigned n, unsigned m, unsigned r, unsi
         auto tmp = ex.get_bias(i);
         auto h = std::max(1., std::abs(tmp)) * eps;
         ex.set_bias(i, tmp + h);
-        auto res = ex(in);
-        std::transform(res.begin(), res.end(), out.begin(), res.begin(), [](double a, double b) { return a - b; });
-        auto val = std::inner_product(res.begin(), res.end(), res.begin(), 0.0);
+        auto val = ex.loss(in, out, loss_e);
         ex.set_bias(i, tmp - h);
-        res = ex(in);
-        std::transform(res.begin(), res.end(), out.begin(), res.begin(), [](double a, double b) { return a - b; });
-        auto val2 = std::inner_product(res.begin(), res.end(), res.begin(), 0.0);
+        auto val2 = ex.loss(in, out, loss_e);
 
         auto abs_diff = std::abs(((val - val2) / 2. / h - std::get<2>(bp)[i]));
         auto rel_diff = abs_diff / std::abs(std::get<2>(bp)[i]);
@@ -128,19 +120,13 @@ void test_against_numerical_derivatives(unsigned n, unsigned m, unsigned r, unsi
         if (!(rel_diff < 0.05 || abs_diff < 1e-8)) {
             h = 10.;
             for (auto j = 0u; j < 6; ++j) {
-                ex.set_weights(orig_w);
-                tmp = ex.get_weight(i);
+                ex.set_biases(orig_b);
+                auto tmp = ex.get_bias(i);
                 h = h * 0.01; // will generate 0.1, 0.001, ...., 0.000000001
-                ex.set_weight(i, tmp + h);
-                res = ex(in);
-                std::transform(res.begin(), res.end(), out.begin(), res.begin(),
-                               [](double a, double b) { return a - b; });
-                val = std::inner_product(res.begin(), res.end(), res.begin(), 0.0);
-                ex.set_weight(i, tmp - h);
-                res = ex(in);
-                std::transform(res.begin(), res.end(), out.begin(), res.begin(),
-                               [](double a, double b) { return a - b; });
-                val2 = std::inner_product(res.begin(), res.end(), res.begin(), 0.0);
+                ex.set_bias(i, tmp + h);
+                val = ex.loss(in, out, loss_e);
+                ex.set_bias(i, tmp - h);
+                val2 = ex.loss(in, out, loss_e);
                 abs_diff = std::abs(((val - val2) / 2. / h - std::get<2>(bp)[i]));
                 rel_diff = abs_diff / std::abs(std::get<2>(bp)[i]);
 
@@ -164,8 +150,6 @@ void test_against_numerical_derivatives(unsigned n, unsigned m, unsigned r, unsi
         }
     }
 }
-
-
 
 BOOST_AUTO_TEST_CASE(construction)
 {
@@ -244,58 +228,54 @@ BOOST_AUTO_TEST_CASE(sgd)
     // Random numbers stuff
     std::random_device rd;
     std::mt19937 gen{rd()};
-    std::normal_distribution<> norm(0.,1.);
+    std::normal_distribution<> norm(0., 1.);
 
     // Kernel functions
     kernel_set<double> ann_set({"sig", "tanh", "ReLu"});
     expression_ann<double> ex(3, 2, 100, 3, 1, 10, ann_set(), rd());
     ex.randomise_weights();
     ex.randomise_biases();
-    std::vector<std::vector<double>> data(100, {0.,0.,0.});
+    std::vector<std::vector<double>> data(100, {0., 0., 0.});
     std::vector<std::vector<double>> label(100, {0., 0.});
     for (auto &item : data) {
-        std::generate(item.begin(), item.end(), [&norm, &gen](){return norm(gen);});
+        std::generate(item.begin(), item.end(), [&norm, &gen]() { return norm(gen); });
     }
     for (auto i = 0u; i < label.size(); ++i) {
-        label[i][0] = 1./5.*std::cos(data[i][0]+data[i][1]+data[i][2]) - data[i][0]*data[i][1];
-        label[i][1] = data[i][0]*data[i][1]*data[i][2];
+        label[i][0] = 1. / 5. * std::cos(data[i][0] + data[i][1] + data[i][2]) - data[i][0] * data[i][1];
+        label[i][1] = data[i][0] * data[i][1] * data[i][2];
     }
-    double tmp = 0.;
-    for (auto i = 0u; i < data.size(); ++i) {
-        tmp += std::get<0>(ex.d_mse(data[i], label[i]));
-    }
-    tmp /= static_cast<double>(data.size());
+    double tmp = ex.loss(data, label, "MSE");
     print("Start: ", tmp, "\n");
-    print("Start: ", std::get<0>(ex.d_mse(data,label)), "\n");
-    for (auto j = 0u; j < 1000; ++j) {
-        ex.sgd(data, label, 0.1, 32);
-        tmp = 0.;
-        for (auto i = 0u; i < data.size(); ++i) {
-            tmp += std::get<0>(ex.d_mse(data[i], label[i]));
-        }
-        tmp /= static_cast<double>(data.size());
+    for (auto j = 0u; j < 10; ++j) {
+        ex.sgd(data, label, 0.1, 32, "MSE");
+        tmp = ex.loss(data, label, "MSE");
         print("Then (", j, "): ", tmp, "\n");
     }
 }
 
-BOOST_AUTO_TEST_CASE(d_mse)
+BOOST_AUTO_TEST_CASE(d_loss)
 {
     print("Testing against numerical derivatives\n");
 
     // corner cases
-    test_against_numerical_derivatives(1, 1, 1, 1, 1, 2, 234625446u);
-    test_against_numerical_derivatives(2, 1, 1, 1, 1, 2, 234625446u);
-    test_against_numerical_derivatives(1, 2, 1, 1, 1, 2, 234625446u);
-    test_against_numerical_derivatives(2, 2, 1, 1, 1, 2, 234625446u);
-    test_against_numerical_derivatives(2, 2, 2, 2, 2, 2, 234625446u);
+    test_against_numerical_derivatives(1, 1, 1, 1, 1, 2, 234625446u, expression_ann<double>::loss_type::MSE);
+    test_against_numerical_derivatives(2, 1, 1, 1, 1, 2, 234625446u, expression_ann<double>::loss_type::MSE);
+    test_against_numerical_derivatives(1, 2, 1, 1, 1, 2, 234625446u, expression_ann<double>::loss_type::MSE);
+    test_against_numerical_derivatives(2, 2, 1, 1, 1, 2, 234625446u, expression_ann<double>::loss_type::MSE);
+    test_against_numerical_derivatives(2, 2, 2, 2, 2, 2, 234625446u, expression_ann<double>::loss_type::MSE);
 
     // medium
-    test_against_numerical_derivatives(5, 1, 5, 5, 1, 2, 234625446u);
-    test_against_numerical_derivatives(1, 5, 1, 1, 1, 2, 234625446u);
-    test_against_numerical_derivatives(3, 4, 6, 6, 1, 6, 234625446u);
+    test_against_numerical_derivatives(5, 1, 5, 5, 1, 2, 234625446u, expression_ann<double>::loss_type::MSE);
+    test_against_numerical_derivatives(1, 5, 1, 1, 1, 2, 234625446u, expression_ann<double>::loss_type::MSE);
+    test_against_numerical_derivatives(3, 4, 6, 6, 1, 6, 234625446u, expression_ann<double>::loss_type::MSE);
 
     // high dimension
-    test_against_numerical_derivatives(10, 13, 100, 1, 1, 45, 234625446u);
-    test_against_numerical_derivatives(3, 2, 100, 1, 1, 23, 234625446u);
-    test_against_numerical_derivatives(5, 2, 100, 3, 4, 100, 234625446u);
+    test_against_numerical_derivatives(10, 13, 100, 1, 1, 45, 234625446u, expression_ann<double>::loss_type::MSE);
+    test_against_numerical_derivatives(3, 2, 100, 1, 1, 23, 234625446u, expression_ann<double>::loss_type::MSE);
+    test_against_numerical_derivatives(5, 2, 100, 3, 4, 100, 234625446u, expression_ann<double>::loss_type::MSE);
+
+    // Checks on Cross - entropy
+    test_against_numerical_derivatives(5, 1, 5, 5, 1, 2, 234625446u, expression_ann<double>::loss_type::CE);
+    test_against_numerical_derivatives(1, 5, 1, 1, 1, 2, 234625446u, expression_ann<double>::loss_type::CE);
+    test_against_numerical_derivatives(3, 4, 6, 6, 1, 6, 234625446u, expression_ann<double>::loss_type::CE);
 }

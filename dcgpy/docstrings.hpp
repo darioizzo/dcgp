@@ -29,7 +29,7 @@ std::string expression_ann_randomise_biases_doc();
 std::string expression_ann_set_output_f_doc();
 
 std::string expression_ann_sgd_doc();
-std::string expression_ann_mse_doc();
+std::string expression_ann_loss_doc();
 
 
 }
