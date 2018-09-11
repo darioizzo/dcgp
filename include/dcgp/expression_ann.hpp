@@ -125,35 +125,6 @@ public:
     /**
      * Returns the mean squared error.
      *
-     * @param[point] The input data (single point)
-     * @param[prediction] The predicted output (single point)
-     * @return the mse
-     */
-    double mse(const std::vector<double> &point, const std::vector<double> &prediction)
-    {
-        if (point.size() != this->get_n()) {
-            throw std::invalid_argument("When computing the mse the point dimension (input) seemed wrong, it was: "
-                                        + std::to_string(point.size())
-                                        + " while I expected: " + std::to_string(this->get_n()));
-        }
-        if (prediction.size() != this->get_m()) {
-            throw std::invalid_argument(
-                "When computing the mse the prediction dimension (output) seemed wrong, it was: "
-                + std::to_string(prediction.size()) + " while I expected: " + std::to_string(this->get_m()));
-        }
-        double retval(0.);
-
-        auto outputs = this->operator()(point);
-        for (decltype(outputs.size()) i = 0u; i < outputs.size(); ++i) {
-            retval += (outputs[i] - prediction[i]) * (outputs[i] - prediction[i]);
-        }
-        return retval;
-    }
-
-    /// Evaluates the mean square error
-    /**
-     * Returns the mean squared error.
-     *
      * @param[points] The input data (a batch).
      * @param[predictions] The predicted outputs (a batch).
      * @return the mse
@@ -749,6 +720,35 @@ private:
         value /= dim;
 
         return std::make_tuple(std::move(value), std::move(gweights), std::move(gbiases));
+    }
+
+    /// Evaluates the mean square error
+    /**
+     * Returns the mean squared error.
+     *
+     * @param[point] The input data (single point)
+     * @param[prediction] The predicted output (single point)
+     * @return the mse
+     */
+    double mse(const std::vector<double> &point, const std::vector<double> &prediction)
+    {
+        if (point.size() != this->get_n()) {
+            throw std::invalid_argument("When computing the mse the point dimension (input) seemed wrong, it was: "
+                                        + std::to_string(point.size())
+                                        + " while I expected: " + std::to_string(this->get_n()));
+        }
+        if (prediction.size() != this->get_m()) {
+            throw std::invalid_argument(
+                "When computing the mse the prediction dimension (output) seemed wrong, it was: "
+                + std::to_string(prediction.size()) + " while I expected: " + std::to_string(this->get_m()));
+        }
+        double retval(0.);
+
+        auto outputs = this->operator()(point);
+        for (decltype(outputs.size()) i = 0u; i < outputs.size(); ++i) {
+            retval += (outputs[i] - prediction[i]) * (outputs[i] - prediction[i]);
+        }
+        return retval;
     }
 
     double mse(typename std::vector<std::vector<double>>::const_iterator dfirst,
