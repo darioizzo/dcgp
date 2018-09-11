@@ -44,7 +44,7 @@ void perform_sgd(unsigned int rows, unsigned int columns, unsigned int levels_ba
               << " n. biases:" << ex.get_active_nodes().size() << std::endl;
     {
         boost::timer::auto_cpu_timer t;
-        ex.sgd(data, label, 0.01, bs);
+        ex.sgd(data, label, 0.01, bs, "MSE");
     }
 }
 
