@@ -44,6 +44,9 @@ BOOST_AUTO_TEST_CASE(construction)
     BOOST_CHECK(ex.get_l() == 4u);
     BOOST_CHECK(ex.get_f().size() == 4u);
     BOOST_CHECK(ex.get_arity() == arity);
+
+    // Checking validity of produced chromosome
+    BOOST_CHECK_NO_THROW(ex.is_valid(ex.get()));
 }
 
 BOOST_AUTO_TEST_CASE(compute)
