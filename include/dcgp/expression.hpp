@@ -42,15 +42,15 @@ public:
     /// Constructor
     /** Constructs a dCGP expression with variable arity
      *
-     * @param[in] n number of inputs (independent variables)
-     * @param[in] m number of outputs (dependent variables)
-     * @param[in] r number of rows of the dCGP
-     * @param[in] c number of columns of the dCGP
-     * @param[in] l number of levels-back allowed in the dCGP
-     * @param[in] arity arity of the basis functions in each column
-     * @param[in] f function set. An std::vector of dcgp::kernel<expression::type>
+     * @param[in] n number of inputs (independent variables).
+     * @param[in] m number of outputs (dependent variables).
+     * @param[in] r number of rows of the dCGP.
+     * @param[in] c number of columns of the dCGP.
+     * @param[in] l number of levels-back allowed in the dCGP.
+     * @param[in] arity arities of the basis functions for each column.
+     * @param[in] f function set. An std::vector of dcgp::kernel<expression::type>.
      * @param[in] seed seed for the random number generator (initial expression
-     * and mutations depend on this)
+     * and mutations depend on this).
      */
     expression(unsigned n,                  // n. inputs
                unsigned m,                  // n. outputs
@@ -77,15 +77,15 @@ public:
     /// Constructor
     /** Constructs a dCGP expression with uniform arity
      *
-     * @param[in] n number of inputs (independent variables)
-     * @param[in] m number of outputs (dependent variables)
-     * @param[in] r number of rows of the dCGP
-     * @param[in] c number of columns of the dCGP
-     * @param[in] l number of levels-back allowed in the dCGP
-     * @param[in] arity arity of the basis functions
-     * @param[in] f function set. An std::vector of dcgp::kernel<expression::type>
+     * @param[in] n number of inputs (independent variables).
+     * @param[in] m number of outputs (dependent variables).
+     * @param[in] r number of rows of the dCGP.
+     * @param[in] c number of columns of the dCGP.
+     * @param[in] l number of levels-back allowed in the dCGP.
+     * @param[in] arity arity of the basis functions.
+     * @param[in] f function set. An std::vector of dcgp::kernel<expression::type>.
      * @param[in] seed seed for the random number generator (initial expression
-     * and mutations depend on this)
+     * and mutations depend on this).
      */
     expression(unsigned n,               // n. inputs
                unsigned m,               // n. outputs

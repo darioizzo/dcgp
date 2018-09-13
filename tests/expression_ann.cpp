@@ -121,7 +121,7 @@ void test_against_numerical_derivatives(unsigned n, unsigned m, unsigned r, unsi
             h = 10.;
             for (auto j = 0u; j < 6; ++j) {
                 ex.set_biases(orig_b);
-                auto tmp = ex.get_bias(i);
+                tmp = ex.get_bias(i);
                 h = h * 0.01; // will generate 0.1, 0.001, ...., 0.000000001
                 ex.set_bias(i, tmp + h);
                 val = ex.loss(in, out, loss_e);
