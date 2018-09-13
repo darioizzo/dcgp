@@ -33,7 +33,7 @@ BOOST_AUTO_TEST_CASE(construction)
     // Easy getters
     expression<double> ex(2, 4, 2, 3, 4, arity, basic_set(), rd());
     BOOST_CHECK_NO_THROW(ex.get());
-    BOOST_CHECK_NO_THROW(ex({1.2,-0.34}));
+    BOOST_CHECK_NO_THROW(ex({1.2, -0.34}));
     BOOST_CHECK_NO_THROW(ex({std::string("x"), std::string("y")}));
     BOOST_CHECK_NO_THROW(ex(std::vector<double>{1.2, -0.34}));
     BOOST_CHECK_NO_THROW(ex(std::vector<std::string>{"x", "y"}));
@@ -94,9 +94,9 @@ BOOST_AUTO_TEST_CASE(get_node_x_idx)
     // Random seed
     std::random_device rd;
     kernel_set<double> basic_set({"sum", "diff", "mul", "div"});
-    expression<double> ex(3, 2, 3, 3, 2, {2,1,3}, basic_set(), rd());
+    expression<double> ex(3, 2, 3, 3, 2, {2, 1, 3}, basic_set(), rd());
     auto test = ex.get_node_x_idx();
-    BOOST_CHECK(test == (std::vector<unsigned>{0,0,0,0,3,6,9,11,13,15,19,23}));
+    BOOST_CHECK(test == (std::vector<unsigned>{0, 0, 0, 0, 3, 6, 9, 11, 13, 15, 19, 23}));
 }
 
 BOOST_AUTO_TEST_CASE(get_active_nodes_and_genes)
@@ -104,18 +104,24 @@ BOOST_AUTO_TEST_CASE(get_active_nodes_and_genes)
     // Random seed
     std::random_device rd;
     kernel_set<double> basic_set({"sum", "diff", "mul", "div"});
-    expression<double> ex(3, 2, 3, 3, 4, {2,1,3}, basic_set(), rd());
+    expression<double> ex(3, 2, 3, 3, 4, {2, 1, 3}, basic_set(), rd());
 
-    ex.set({0,0,1,1,1,2,2,0,2,0,3,1,2,2,4,0,6,6,7,3,6,7,8,1,7,8,2,11,11});
+    ex.set({0, 0, 1, 1, 1, 2, 2, 0, 2, 0, 3, 1, 2, 2, 4, 0, 6, 6, 7, 3, 6, 7, 8, 1, 7, 8, 2, 11, 11});
 
     auto a_nodes = ex.get_active_nodes();
     auto a_genes = ex.get_active_genes();
-    auto node_x_idxs = ex.get_node_x_idx();
-
-print(a_nodes, "\n");
-print(a_genes, "\n");
-print(node_x_idxs, "\n");
-
+    auto node_x_idx = ex.get_node_x_idx();
+    for (auto i = 0u; i < a_nodes.size(); ++i) {
+        auto node_id = a_nodes[i];
+        // First the function gene
+        if (node_id > ex.get_n()) {
+            BOOST_CHECK(std::find(a_genes.begin(), a_genes.end(), node_x_idx[node_id]) != a_genes.end());
+            // Then the connection genes
+            for (auto j = 0u; j < ex.get_arity(node_id); ++j) {
+                BOOST_CHECK(std::find(a_genes.begin(), a_genes.end(), node_x_idx[node_id] + j) != a_genes.end());
+            }
+        }
+    }
 }
 
 BOOST_AUTO_TEST_CASE(mutate)

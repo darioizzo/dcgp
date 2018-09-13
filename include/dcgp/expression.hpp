@@ -342,6 +342,22 @@ public:
         return m_arity;
     }
 
+    /// Gets the arity of a particular node
+    /**
+     * This does not perform any checks on the node_id. If an invalid node is queried ITS BAD an
+     * invalid read will be performed.
+     *
+     * param[in] node_id id of the node
+     * return the arity of that node
+     *
+     */
+    unsigned get_arity(unsigned node_id) const
+    {
+        assert(node_id < m_r * m_c + m_n);
+        unsigned col = (node_id - m_n) / m_r;
+        return m_arity[col];
+    }
+
     /// Gets the function set
     /**
      * Gets the set of functions used in the dCGP expression
@@ -588,21 +604,6 @@ public:
     }
 
 protected:
-    /// Gets the arity of a particular node
-    /**
-     * This does not perform any checks on the node_id. If an invalid node is queried ITS BAD
-     *
-     * param[in] node_id id of the node
-     * return the arity of that node
-     *
-     */
-    unsigned get_arity(unsigned node_id) const
-    {
-        assert(node_id < m_r * m_c + m_n);
-        unsigned col = (node_id - m_n) / m_r;
-        return m_arity[col];
-    }
-
     /// Updates the class data that depend on the chromosome
     /**
      * Some of the expression data depend on the chromosome. This is the case, for example,
@@ -657,7 +658,7 @@ protected:
             auto node_id = m_active_nodes[i];
             if (node_id >= m_n) {
                 for (auto j = 0u; j <= get_arity(node_id); ++j) {
-                    m_active_genes.push_back(m_node_x_idx[j] + j);
+                    m_active_genes.push_back(m_node_x_idx[node_id] + j);
                 }
             }
         }
