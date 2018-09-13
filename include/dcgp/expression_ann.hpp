@@ -81,20 +81,22 @@ public:
         for (auto i = 0u; i < r * c; ++i) {
             m_biases_symbols.push_back("b" + std::to_string(i + n));
         }
+        // This will call the derived class method (not the base class) where the base class method is also called.
+        // As a consequence data members of both classes will be updated.
         update_data_structures();
     }
 
     /// Evaluates the dCGP-ANN expression
     /**
      * This evaluates the dCGP-ANN expression. According to the template parameter
-     * it will compute the value (U) or a symbolic
+     * it will compute the value (T) or a symbolic
      * representation (std::string). Any other type will result in a compilation-time
-     * error (SFINAE).
+     * error.
      *
      * @param[point] in an std::vector containing the values where the dCGP-ANN expression has
      * to be computed (doubles or strings)
      *
-     * @return The value of the function (an std::vector)
+     * @return The value of the output (an std::vector)
      */
     template <typename U, enable_double_string<U> = 0>
     std::vector<U> operator()(const std::vector<U> &point) const
@@ -110,14 +112,14 @@ public:
     /// Evaluates the  dCGP-ANN  expression (initializer list)
     /**
      * This evaluates the dCGP-ANN expression. According to the template parameter
-     * it will compute the value (U) or a symbolic
+     * it will compute the value (T) or a symbolic
      * representation (std::string). Any other type will result in a compilation-time
-     * error (SFINAE).
+     * error.
      *
      * @param[point] in is an initializer list containing the values where the dCGP expression has
-     * to be computed (U, or strings)
+     * to be computed (T, or strings)
      *
-     * @return The value of the function (an std::vector)
+     * @return The value of the output (an std::vector)
      */
     template <typename U, enable_double_string<U> = 0>
     std::vector<U> operator()(const std::initializer_list<U> &point) const
@@ -176,22 +178,22 @@ public:
         return retval;
     }
 
-    /// Evaluates the loss (on a batch)
+    /// Evaluates the model loss (on a batch)
     /**
-     * Returns the loss over a batch of data of the dCGPANN output.
+     * Evaluates the model loss over a batch.
      *
      * @param[points] The input data (a batch).
-     * @param[predictions] The predicted outputs (a batch).
+     * @param[labels] The predicted outputs (a batch).
      * @param[loss_e] The loss type. Can be "MSE" for Mean Square Error (regression) or "CE" for Cross Entropy
      * (classification)
      * @return the loss
      */
-    double loss(const std::vector<std::vector<double>> &points, const std::vector<std::vector<double>> &predictions,
+    double loss(const std::vector<std::vector<double>> &points, const std::vector<std::vector<double>> &labels,
                 std::string loss_s)
     {
-        if (points.size() != predictions.size()) {
+        if (points.size() != labels.size()) {
             throw std::invalid_argument("Data and label size mismatch data size is: " + std::to_string(points.size())
-                                        + " while label size is: " + std::to_string(predictions.size()));
+                                        + " while label size is: " + std::to_string(labels.size()));
         }
         if (points.size() == 0) {
             throw std::invalid_argument("Data size cannot be zero");
@@ -204,7 +206,7 @@ public:
         } else {
             throw std::invalid_argument("The requested loss was: " + loss_s + " while only MSE and CE are allowed");
         }
-        return loss(points.begin(), points.end(), predictions.begin(), loss_e);
+        return loss(points.begin(), points.end(), labels.begin(), loss_e);
     }
 
     /// Evaluates the loss and its gradient (on a single point)
@@ -320,7 +322,7 @@ public:
      * Returns the mean squared error and its gradient with respect to weights and biases.
      *
      * @param[points] The input data (a batch).
-     * @param[predictions] The predicted outputs (a batch).
+     * @param[labels] The predicted outputs (a batch).
      * @param[loss_e] The loss type. Must be loss_type::MSE for Mean Square Error (regression) or loss_type::CE for Cross
      * Entropy (classification)
      * @return the loss, the gradient of the loss w.r.t. all weights (also inactive) and the gradient of the loss w.r.t
@@ -328,17 +330,17 @@ public:
      */
     template <typename U, enable_double<U> = 0>
     std::tuple<U, std::vector<U>, std::vector<U>> d_loss(const std::vector<std::vector<U>> &points,
-                                                         const std::vector<std::vector<U>> &predictions,
+                                                         const std::vector<std::vector<U>> &labels,
                                                          loss_type loss_e)
     {
-        if (points.size() != predictions.size()) {
+        if (points.size() != labels.size()) {
             throw std::invalid_argument("Data and label size mismatch data size is: " + std::to_string(points.size())
-                                        + " while label size is: " + std::to_string(predictions.size()));
+                                        + " while label size is: " + std::to_string(labels.size()));
         }
         if (points.size() == 0) {
             throw std::invalid_argument("Data size cannot be zero");
         }
-        return d_loss<U>(points.begin(), points.end(), predictions.begin(), loss_e);
+        return d_loss<U>(points.begin(), points.end(), labels.begin(), loss_e);
     }
 
     /// Stochastic gradient descent
@@ -346,7 +348,7 @@ public:
      * Performs one "epoch" of stochastic gradient descent using mean square error
      *
      * @param[points] The input data (a batch).
-     * @param[predictions] The predicted outputs (a batch).
+     * @param[labels] The predicted outputs (a batch).
      * @param[l_rate] The learning rate.
      * @param[batch_size] The batch size.
      *
@@ -354,12 +356,12 @@ public:
      * positive.
      */
     template <typename U, enable_double<U> = 0>
-    void sgd(const std::vector<std::vector<U>> &points, const std::vector<std::vector<U>> &predictions, double l_rate,
+    void sgd(const std::vector<std::vector<U>> &points, const std::vector<std::vector<U>> &labels, double l_rate,
              unsigned batch_size, std::string loss_s)
     {
-        if (points.size() != predictions.size()) {
+        if (points.size() != labels.size()) {
             throw std::invalid_argument("Data and label size mismatch data size is: " + std::to_string(points.size())
-                                        + " while label size is: " + std::to_string(predictions.size()));
+                                        + " while label size is: " + std::to_string(labels.size()));
         }
         if (points.size() == 0) {
             throw std::invalid_argument("Data size cannot be zero");
@@ -380,7 +382,7 @@ public:
 
         auto dfirst = points.begin();
         auto dlast = points.end();
-        auto lfirst = predictions.begin();
+        auto lfirst = labels.begin();
         while (dfirst != dlast) {
             if (dfirst + batch_size > dlast) {
                 update_weights<U>(dfirst, dlast, lfirst, l_rate, loss_e);
