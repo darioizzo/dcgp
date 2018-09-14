@@ -39,9 +39,7 @@ void perform_sgd(unsigned int rows, unsigned int columns, unsigned int levels_ba
         label[i][1] = data[i][0] * data[i][1] * data[i][2];
     }
 
-    std::cout << "One epoch of sgd:  rows:" << rows << " columns:" << columns
-              << " n. weights:" << ex.get_active_nodes().size() * ex.get_arity()
-              << " n. biases:" << ex.get_active_nodes().size() << std::endl;
+    std::cout << "One epoch of sgd:  rows:" << rows << " columns:" << columns << std::endl;
     {
         boost::timer::auto_cpu_timer t;
         ex.sgd(data, label, 0.01, bs, "MSE");

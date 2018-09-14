@@ -51,7 +51,7 @@ def _dcgpann_visualize(self, show_connections = True, fill_color = 'w', show_non
     m = self.get_m()
     r = self.get_rows()
     c = self.get_cols()
-    arity = self.get_arity()
+    gene = self.get_gene_idx()
 
     # We get the active nodes id and add the output nodes id (they do not have an id in CGP encoding)
     an = self.get_active_nodes()
@@ -92,8 +92,8 @@ def _dcgpann_visualize(self, show_connections = True, fill_color = 'w', show_non
         # We loop over all cartesian nodes and plot intranodes connections
         weight_normalization = max(np.abs(self.get_weights()))
         for node_id in range(n, n+r*c):
-            start = (node_id-n)*(1+arity)
-            connections = x[start+1:start+1+arity]
+            start = gene[node_id]
+            connections = x[start+1:start+1+self.get_arity(node_id)]
             for j, target_node in enumerate(connections):
                 if node_id in an:
                     alpha = abs(self.get_weight(node_id, j)) / weight_normalization * active_connection_alpha
@@ -103,7 +103,7 @@ def _dcgpann_visualize(self, show_connections = True, fill_color = 'w', show_non
         # And the connections to the output
         for i in range(m):
             start = n+r*c
-            ax.plot([pos[start+i][0], pos[x[-m+i]][0]],[pos[start+i][1], pos[x[-m+i]][1]],alpha=0.1, color='k', zorder=-10)
+            ax.plot([pos[start+i][0], pos[x[-m+i]][0]],[pos[start+i][1], pos[x[-m+i]][1]],alpha=active_connection_alpha, color='k', zorder=-10)
 
     # We plot the cartesian nodes
     for node_id in pos:
@@ -118,7 +118,7 @@ def _dcgpann_visualize(self, show_connections = True, fill_color = 'w', show_non
             alpha = 0.1
         ax.add_artist(circle)
         if show_nonlinearities and node_id >=n and node_id < n+r*c:
-            nl_type = x[(node_id-n) * (arity +1)]
+            nl_type = x[gene[node_id]]
             nl_color = color_map[nl_type % len(color_map)]
         else:
             nl_color = 'k'

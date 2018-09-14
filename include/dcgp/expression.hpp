@@ -142,7 +142,7 @@ public:
             } else {
                 unsigned arity = get_arity(i);
                 function_in.resize(arity);
-                unsigned idx = m_node_x_idx[i]; // position in the chromosome of the current node
+                unsigned idx = m_gene_idx[i]; // position in the chromosome of the current node
                 for (auto j = 0u; j < arity; ++j) {
                     function_in[j] = node[m_x[idx + j + 1u]];
                 }
@@ -213,7 +213,7 @@ public:
                                         + std::to_string(node_id) + ", but allowed values are [" + std::to_string(m_n)
                                         + " ... " + std::to_string(m_n + m_c * m_r - 1u) + "]");
         }
-        auto gene_idx = m_node_x_idx[node_id];
+        auto gene_idx = m_gene_idx[node_id];
         m_x[gene_idx] = f_id;
     }
 
@@ -369,16 +369,16 @@ public:
         return m_f;
     }
 
-    /// Gets node_x_idx
+    /// Gets gene_idx
     /**
-     * Gets node_x_idx, a vector containing the indexes in the chromosome where
+     * Gets gene_idx, a vector containing the indexes in the chromosome where
      * nodes start expressing.
      *
-     * @return an std::vector of kernels
+     * @return an std::vector containing the indexes of the chromosome expressing each node
      */
-    const std::vector<unsigned> &get_node_x_idx() const
+    const std::vector<unsigned> &get_gene_idx() const
     {
-        return m_node_x_idx;
+        return m_gene_idx;
     }
 
     /// Mutates randomly one gene
@@ -494,7 +494,7 @@ public:
                         0, static_cast<unsigned>(m_active_nodes.size() - 1u))(m_e)];
                 }
                 // Since the first gene, for each node, is the function gene, we just mutate on that position
-                mutate(m_node_x_idx[node_id]);
+                mutate(m_gene_idx[node_id]);
             }
         }
     }
@@ -514,7 +514,7 @@ public:
                     idx = m_active_nodes[std::uniform_int_distribution<unsigned>(
                         0, static_cast<unsigned>(m_active_nodes.size() - 1u))(m_e)];
                 }
-                idx = m_node_x_idx[idx]
+                idx = m_gene_idx[idx]
                       + std::uniform_int_distribution<unsigned>(1, static_cast<unsigned>(get_arity(idx)))(m_e);
                 mutate(idx);
             }
@@ -570,7 +570,7 @@ public:
         audi::stream(os, "\tNumber of columns:\t\t", d.m_c, '\n');
         audi::stream(os, "\tNumber of levels-back allowed:\t", d.m_l, '\n');
         audi::stream(os, "\tBasis function arity:\t\t", d.m_arity, '\n');
-        audi::stream(os, "\tStart of the gene expressing the node:\t\t", d.m_node_x_idx, '\n');
+        audi::stream(os, "\tStart of the gene expressing the node:\t\t", d.m_gene_idx, '\n');
         audi::stream(os, "\n\tResulting lower bounds:\t", d.m_lb);
         audi::stream(os, "\n\tResulting upper bounds:\t", d.m_ub, '\n');
         audi::stream(os, "\n\tCurrent expression (encoded):\t", d.m_x, '\n');
@@ -634,7 +634,7 @@ protected:
                 {
                     auto node_arity = get_arity(node_id);
                     for (auto i = 1u; i <= node_arity; ++i) {
-                        next.push_back(m_x[m_node_x_idx[node_id] + i]);
+                        next.push_back(m_x[m_gene_idx[node_id] + i]);
                     }
                 } else {
                     m_active_nodes.push_back(node_id);
@@ -658,7 +658,7 @@ protected:
             auto node_id = m_active_nodes[i];
             if (node_id >= m_n) {
                 for (auto j = 0u; j <= get_arity(node_id); ++j) {
-                    m_active_genes.push_back(m_node_x_idx[node_id] + j);
+                    m_active_genes.push_back(m_gene_idx[node_id] + j);
                 }
             }
         }
@@ -691,7 +691,7 @@ private:
         m_x = std::vector<unsigned>(size, 0u);
         m_lb = std::vector<unsigned>(size, 0u);
         m_ub = std::vector<unsigned>(size, 0u);
-        m_node_x_idx = std::vector<unsigned>(m_r * m_c + m_n, 0u);
+        m_gene_idx = std::vector<unsigned>(m_r * m_c + m_n, 0u);
 
         // We loop over all nodes and set function and connection genes
         unsigned k = 0u;
@@ -718,9 +718,9 @@ private:
             }
         }
         // We compute the position of genes expressing a given node
-        for (auto node_id = 0u; node_id < m_node_x_idx.size(); ++node_id) {
+        for (auto node_id = 0u; node_id < m_gene_idx.size(); ++node_id) {
             if (node_id < m_n) {
-                m_node_x_idx[node_id]
+                m_gene_idx[node_id]
                     = 0u; // We put some unused values for the input nodes as they have no gene representation
             } else {
                 unsigned col = (node_id - m_n) / m_r;
@@ -730,7 +730,7 @@ private:
                     acc = acc + m_arity[j];
                 }
                 acc *= m_r;
-                m_node_x_idx[node_id] = acc + row * m_arity[col] + (node_id - m_n);
+                m_gene_idx[node_id] = acc + row * m_arity[col] + (node_id - m_n);
             }
         }
     }
@@ -760,7 +760,7 @@ private:
     // the encoded chromosome
     std::vector<unsigned> m_x;
     // The starting index in the chromosome of the genes expressing a node
-    std::vector<unsigned> m_node_x_idx;
+    std::vector<unsigned> m_gene_idx;
     // the random engine for the class
     std::default_random_engine m_e;
     // The expression type

@@ -345,7 +345,7 @@ public:
             // index of the node in the bias vector
             auto b_idx = *it - this->get_n();
             // index of the node in the chromosome
-            auto c_idx = this->get_node_x_idx()[*it];
+            auto c_idx = this->get_gene_idx()[*it];
             // index of the node in the weight vector
             auto w_idx = c_idx - (*it - this->get_n());
 
@@ -522,7 +522,7 @@ public:
             throw std::invalid_argument("Requested input exceeds the function arity");
         }
         // index of the node in the weight vector
-        auto idx = this->get_node_x_idx()[node_id] - (node_id - this->get_n());
+        auto idx = this->get_gene_idx()[node_id] - (node_id - this->get_n());
         m_weights[idx] = w;
     }
 
@@ -578,7 +578,7 @@ public:
             throw std::invalid_argument("Requested input exceeds the function arity");
         }
 
-        auto idx = this->get_node_x_idx()[node_id] - (node_id - this->get_n());
+        auto idx = this->get_gene_idx()[node_id] - (node_id - this->get_n());
         return m_weights[idx];
     }
 
@@ -752,7 +752,7 @@ private:
                 unsigned arity = this->get_arity(node_id);
                 function_in.resize(arity);
                 // position in the chromosome of the current node
-                unsigned g_idx = this->get_node_x_idx()[node_id];
+                unsigned g_idx = this->get_gene_idx()[node_id];
                 // starting position in m_weights of the weights relative to the node
                 unsigned w_idx = g_idx - (node_id - this->get_n());
                 // starting position in m_biases of the node bias
@@ -786,7 +786,7 @@ private:
                 unsigned arity = this->get_arity(node_id);
                 function_in.resize(arity);
                 // position in the chromosome of the current node
-                unsigned g_idx = this->get_node_x_idx()[node_id];
+                unsigned g_idx = this->get_gene_idx()[node_id];
                 // starting position in m_weights of the weights relative to the node
                 unsigned w_idx = g_idx - (node_id - this->get_n());
                 // starting position in m_biases of the node bias
@@ -825,7 +825,7 @@ private:
         for (auto node_id : this->get_active_nodes()) {
             if (node_id >= this->get_n()) { // not for input nodes
                 // start in the chromosome of the genes expressing the node_id connections
-                unsigned idx = this->get_node_x_idx()[node_id] + 1u;
+                unsigned idx = this->get_gene_idx()[node_id] + 1u;
                 // start in the weight vector of the genes expressing the node_id connections
                 unsigned w_idx = (idx - 1u) - (node_id - this->get_n());
                 // loop over the genes representing connections

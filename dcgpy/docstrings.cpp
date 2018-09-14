@@ -63,7 +63,7 @@ Args:
     rows (``int``): number of rows in the cartesian program
     columns (``int``): number of columns in the cartesian program
     levels_back (``int``): number of levels-back in the cartesian program
-    arity (``int``): arity of the kernels
+    arity (``int`` on ``list``): arity of the kernels. Assumed equal for all columns unless its specified by a list. The list must contain a number of entries equal to the number of columns.
     kernels (``List[dcgpy.kernel_)"
            + type + R"(]``): kernel functions
     seed (``int``): random seed to generate mutations and chromosomes
@@ -87,7 +87,7 @@ std::string kernel_set_push_back_str_doc()
 Adds one more kernel to the set by common name.
 
 Args:
-    kernel_name (``string``): a string containing the function name
+    kernel_name (``string``): a string containing the kernel name
     )";
 }
 
@@ -132,8 +132,6 @@ Raises:
     ValueError: if the node_id or f_id are  incompatible with the expression.
     )";
 }
-
-
 
 std::string expression_mutate_doc()
 {
