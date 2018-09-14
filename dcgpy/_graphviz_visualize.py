@@ -31,7 +31,7 @@ def _graphviz_visualize(self, in_sym = [], draw_inactive = True, draw_weights = 
     r = self.get_rows()
     c = self.get_cols()
     f = self.get_f()
-    arity = self.get_arity()
+    #arity = self.get_arity()[0]
     active_nodes = self.get_active_nodes()
 
     # bool vector of active nodes
@@ -77,7 +77,8 @@ def _graphviz_visualize(self, in_sym = [], draw_inactive = True, draw_weights = 
 
     # function nodes and connections
     for i in range(r * c):
-        if is_active[n + i]:
+        node_id = n+i
+        if is_active[node_id]:
             nstyle = 'solid'
             estyle = 'solid'
             col = 'black'
@@ -89,7 +90,7 @@ def _graphviz_visualize(self, in_sym = [], draw_inactive = True, draw_weights = 
             nstyle = 'invis'
             estyle = 'invis'
             col = 'black'
-        op = str(f[x[i * (arity + 1)]])
+        op = str(f[x[self.get_gene_idx()[node_id]]])
         if op == 'sum':
             op = '+'
         elif op == 'diff':
@@ -98,8 +99,8 @@ def _graphviz_visualize(self, in_sym = [], draw_inactive = True, draw_weights = 
             op = '*'
         elif op == 'div' or op == 'pdiv':
             op = '/'
-        G.node('n' + str(n + i), label =  op, shape = 'circle', style = nstyle, color = col, fontcolor = col)
-        for j in range(arity):
+        G.node('n' + str(node_id), label =  op, shape = 'circle', style = nstyle, color = col, fontcolor = col)
+        for j in range(self.get_arity(node_id)):
             if j == 0:
                 ah = 'lnormal'
             elif j == 1:
@@ -107,10 +108,10 @@ def _graphviz_visualize(self, in_sym = [], draw_inactive = True, draw_weights = 
             else:
                 ah = 'normal'
             if draw_weights:
-                elabel = '<w<sub>' + str(n + i) + ',' + str(j) + '</sub>>'
+                elabel = '<w<sub>' + str(node_id) + ',' + str(j) + '</sub>>'
             else:
                 elabel = ''
-            G.edge('n' + str(x[i * (arity + 1) + j + 1]), 'n' + str(n + i), label = elabel, arrowhead = ah, style = estyle, color = col, fontcolor = col)
+            G.edge('n' + str(x[self.get_gene_idx()[node_id] + 1 + j]), 'n' + str(node_id), label = elabel, arrowhead = ah, style = estyle, color = col, fontcolor = col)
 
     # output nodes
     for i in range(m):
