@@ -211,27 +211,46 @@ void expose_expression_weighted(std::string type)
 {
     std::string class_name = "expression_weighted_" + type;
     bp::class_<expression_weighted<T>, bp::bases<expression<T>>>(class_name.c_str(), bp::no_init)
+         // Constructor with seed
         .def("__init__",
              bp::make_constructor(
-                 +[](unsigned in, unsigned out, unsigned rows, unsigned cols, unsigned levelsback, unsigned arity,
-                     const bp::object &kernels, unsigned seed) {
+                 +[](unsigned in, unsigned out, unsigned rows, unsigned cols, unsigned levelsback,
+                     const bp::object &arity, const bp::object &kernels, unsigned seed) {
                      auto kernels_v = l_to_v<kernel<T>>(kernels);
-                     return ::new expression_weighted<T>(in, out, rows, cols, levelsback, arity, kernels_v, seed);
+                     bp::extract<unsigned> is_int(arity);
+                     if (is_int.check()) { // arity is passed as an integer
+                         unsigned ar = bp::extract<unsigned>(arity);
+                         return ::new expression_weighted<T>(in, out, rows, cols, levelsback, ar, kernels_v, seed);
+                     } else { // arity is passed as something else, a list is assumed
+                         auto varity = l_to_v<unsigned>(arity);
+                         return ::new expression_weighted<T>(in, out, rows, cols, levelsback, varity, kernels_v, seed);
+                     }
                  },
                  bp::default_call_policies(),
                  (bp::arg("inputs"), bp::arg("outputs"), bp::arg("rows"), bp::arg("cols"), bp::arg("levels_back"),
                   bp::arg("arity"), bp::arg("kernels"), bp::arg("seed"))),
              expression_init_doc(type).c_str())
-        .def("__init__", bp::make_constructor(
-                             +[](unsigned in, unsigned out, unsigned rows, unsigned cols, unsigned levelsback,
-                                 unsigned arity, const bp::object &kernels) {
-                                 auto kernels_v = l_to_v<kernel<T>>(kernels);
-                                 return ::new expression_weighted<T>(in, out, rows, cols, levelsback, arity, kernels_v,
-                                                                     std::random_device()());
-                             },
-                             bp::default_call_policies(),
-                             (bp::arg("inputs"), bp::arg("outputs"), bp::arg("rows"), bp::arg("cols"),
-                              bp::arg("levels_back"), bp::arg("arity"), bp::arg("kernels"))))
+        // Constructor with no seed
+        .def("__init__",
+             bp::make_constructor(
+                 +[](unsigned in, unsigned out, unsigned rows, unsigned cols, unsigned levelsback,
+                     const bp::object &arity, const bp::object &kernels) {
+                     auto kernels_v = l_to_v<kernel<T>>(kernels);
+                     bp::extract<unsigned> is_int(arity);
+                     if (is_int.check()) { // arity is passed as an integer
+                         unsigned ar = bp::extract<unsigned>(arity);
+                         return ::new expression_weighted<T>(in, out, rows, cols, levelsback, ar, kernels_v,
+                                                    std::random_device()());
+                     } else { // arity is passed as something else, a list is assumed
+                         auto varity = l_to_v<unsigned>(arity);
+                         return ::new expression_weighted<T>(in, out, rows, cols, levelsback, varity, kernels_v,
+                                                    std::random_device()());
+                     }
+                 },
+                 bp::default_call_policies(),
+                 (bp::arg("inputs"), bp::arg("outputs"), bp::arg("rows"), bp::arg("cols"), bp::arg("levels_back"),
+                  bp::arg("arity"), bp::arg("kernels"))),
+             expression_init_doc(type).c_str())
         .def("__repr__",
              +[](const expression_weighted<T> &instance) -> std::string {
                  std::ostringstream oss;
@@ -412,7 +431,7 @@ BOOST_PYTHON_MODULE(core)
     expose_kernel<double>("double");
     expose_kernel_set<double>("double");
     expose_expression<double>("double");
-    // expose_expression_weighted<double>("double");
+    expose_expression_weighted<double>("double");
     expose_expression_ann<double>("double");
 
     expose_kernel<gdual_d>("gdual_double");

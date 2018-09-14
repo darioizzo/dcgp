@@ -31,7 +31,6 @@ def _graphviz_visualize(self, in_sym = [], draw_inactive = True, draw_weights = 
     r = self.get_rows()
     c = self.get_cols()
     f = self.get_f()
-    #arity = self.get_arity()[0]
     active_nodes = self.get_active_nodes()
 
     # bool vector of active nodes

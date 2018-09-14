@@ -44,13 +44,13 @@ public:
     enum class loss_type { MSE, CE };
 
     /// Constructor
-    /** Constructs a dCGP expression
+    /** Constructs a dCGPANN expression
      *
      * @param[in] n number of inputs (independent variables).
      * @param[in] m number of outputs (dependent variables).
-     * @param[in] r number of rows of the dCGP.
-     * @param[in] c number of columns of the dCGP.
-     * @param[in] l number of levels-back allowed for the dCGP.
+     * @param[in] r number of rows of the dCGPANN.
+     * @param[in] c number of columns of the dCGPANN.
+     * @param[in] l number of levels-back allowed for the dCGPANN.
      * @param[in] arity arities of the basis functions for each column.
      * @param[in] f function set. An std::vector of dcgp::kernel<expression::type>.
      * @param[in] seed seed for the random number generator (initial expression and mutations depend on this).
@@ -94,13 +94,13 @@ public:
     }
 
     /// Constructor
-    /** Constructs a dCGP expression
+    /** Constructs a dCGPANN expression
      *
      * @param[in] n number of inputs (independent variables).
      * @param[in] m number of outputs (dependent variables).
-     * @param[in] r number of rows of the dCGP.
-     * @param[in] c number of columns of the dCGP.
-     * @param[in] l number of levels-back allowed for the dCGP.
+     * @param[in] r number of rows of the dCGPANN.
+     * @param[in] c number of columns of the dCGPANN.
+     * @param[in] l number of levels-back allowed for the dCGPANN.
      * @param[in] arity uniform arity for all basis functions.
      * @param[in] f function set. An std::vector of dcgp::kernel<expression::type>.
      * @param[in] seed seed for the random number generator (initial expression and mutations depend on this).
