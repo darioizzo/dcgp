@@ -245,7 +245,7 @@ public:
      * @return the loss
      */
     double loss(const std::vector<std::vector<double>> &points, const std::vector<std::vector<double>> &labels,
-                std::string loss_s)
+                const std::string &loss_s)
     {
         if (points.size() != labels.size()) {
             throw std::invalid_argument("Data and label size mismatch data size is: " + std::to_string(points.size())
