@@ -10,8 +10,9 @@
 #include <dcgp/kernel_set.hpp>
 using namespace dcgp;
 
-void test_against_numerical_derivatives(unsigned n, unsigned m, unsigned r, unsigned c, unsigned lb, unsigned arity,
-                                        unsigned seed, expression_ann<double>::loss_type loss_e)
+void test_against_numerical_derivatives(unsigned n, unsigned m, unsigned r, unsigned c, unsigned lb,
+                                        std::vector<unsigned> arity, unsigned seed,
+                                        expression_ann<double>::loss_type loss_e)
 {
     std::mt19937 gen(seed);
     // Random distributions
@@ -34,7 +35,7 @@ void test_against_numerical_derivatives(unsigned n, unsigned m, unsigned r, unsi
     auto out = std::vector<double>(ex.get_m(), norm(gen));
     if (loss_e == expression_ann<double>::loss_type::CE) {
         // we normalize to probabilities
-        auto cumout = std::accumulate(out.begin(), out.end(), 0.);
+        double cumout = std::accumulate(out.begin(), out.end(), 0.);
         std::transform(out.begin(), out.end(), out.begin(), [cumout](double x) { return x / cumout; });
     }
 
@@ -256,26 +257,34 @@ BOOST_AUTO_TEST_CASE(sgd)
 BOOST_AUTO_TEST_CASE(d_loss)
 {
     print("Testing against numerical derivatives\n");
-
+    using loss_t = expression_ann<double>::loss_type;
     // corner cases
-    test_against_numerical_derivatives(1, 1, 1, 1, 1, 2, 234625446u, expression_ann<double>::loss_type::MSE);
-    test_against_numerical_derivatives(2, 1, 1, 1, 1, 2, 234625446u, expression_ann<double>::loss_type::MSE);
-    test_against_numerical_derivatives(1, 2, 1, 1, 1, 2, 234625446u, expression_ann<double>::loss_type::MSE);
-    test_against_numerical_derivatives(2, 2, 1, 1, 1, 2, 234625446u, expression_ann<double>::loss_type::MSE);
-    test_against_numerical_derivatives(2, 2, 2, 2, 2, 2, 234625446u, expression_ann<double>::loss_type::MSE);
+    test_against_numerical_derivatives(1, 1, 1, 1, 1, {2}, 234625446u, loss_t::MSE);
+    test_against_numerical_derivatives(2, 1, 1, 1, 1, {2}, 234625446u, loss_t::MSE);
+    test_against_numerical_derivatives(1, 2, 1, 1, 1, {2}, 234625446u, loss_t::MSE);
+    test_against_numerical_derivatives(2, 2, 1, 1, 1, {2}, 234625446u, loss_t::MSE);
+    test_against_numerical_derivatives(2, 2, 2, 2, 2, {2, 2}, 234625446u, loss_t::MSE);
 
     // medium
-    test_against_numerical_derivatives(5, 1, 5, 5, 1, 2, 234625446u, expression_ann<double>::loss_type::MSE);
-    test_against_numerical_derivatives(1, 5, 1, 1, 1, 2, 234625446u, expression_ann<double>::loss_type::MSE);
-    test_against_numerical_derivatives(3, 4, 6, 6, 1, 6, 234625446u, expression_ann<double>::loss_type::MSE);
+    test_against_numerical_derivatives(5, 1, 5, 5, 1, {2, 2, 2, 2, 2}, 234625446u, loss_t::MSE);
+    test_against_numerical_derivatives(1, 5, 1, 1, 1, {2}, 234625446u, loss_t::MSE);
+    test_against_numerical_derivatives(3, 4, 6, 6, 1, {6, 6, 6, 6, 6, 6}, 234625446u, loss_t::MSE);
 
     // high dimension
-    test_against_numerical_derivatives(10, 13, 100, 1, 1, 45, 234625446u, expression_ann<double>::loss_type::MSE);
-    test_against_numerical_derivatives(3, 2, 100, 1, 1, 23, 234625446u, expression_ann<double>::loss_type::MSE);
-    test_against_numerical_derivatives(5, 2, 100, 3, 4, 100, 234625446u, expression_ann<double>::loss_type::MSE);
+    test_against_numerical_derivatives(10, 13, 100, 1, 1, {45}, 234625446u, loss_t::MSE);
+    test_against_numerical_derivatives(3, 2, 100, 1, 1, {23}, 234625446u, loss_t::MSE);
+    test_against_numerical_derivatives(5, 2, 100, 3, 4, {100, 100, 100}, 234625446u, loss_t::MSE);
 
     // Checks on Cross - entropy
-    test_against_numerical_derivatives(5, 1, 5, 5, 1, 2, 234625446u, expression_ann<double>::loss_type::CE);
-    test_against_numerical_derivatives(1, 5, 1, 1, 1, 2, 234625446u, expression_ann<double>::loss_type::CE);
-    test_against_numerical_derivatives(3, 4, 6, 6, 1, 6, 234625446u, expression_ann<double>::loss_type::CE);
+    test_against_numerical_derivatives(5, 1, 5, 5, 1, {2, 2, 2, 2, 2}, 234625446u, loss_t::CE);
+    test_against_numerical_derivatives(1, 5, 1, 1, 1, {2}, 234625446u, loss_t::CE);
+    test_against_numerical_derivatives(3, 4, 6, 6, 1, {6, 6, 6, 6, 6, 6}, 234625446u, loss_t::CE);
+
+    // Checks on non-uniform arity
+    test_against_numerical_derivatives(5, 1, 5, 5, 2, {2, 4, 3, 5, 7}, 234625446u, loss_t::MSE);
+    test_against_numerical_derivatives(3, 4, 6, 6, 2, {10, 10, 30, 2, 4, 5}, 234625446u, loss_t::CE);
+
+    // CHecks on corner case arity (1)
+    test_against_numerical_derivatives(5, 1, 5, 5, 2, {2, 1, 3, 1, 7}, 234625446u, loss_t::MSE);
+    test_against_numerical_derivatives(5, 1, 6, 6, 2, {1, 1, 1, 1, 1, 1}, 234625446u, loss_t::MSE);
 }

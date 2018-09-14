@@ -29,6 +29,7 @@ BOOST_AUTO_TEST_CASE(construction)
     BOOST_CHECK_THROW(expression<double>(2, 4, 2, 3, 0, arity, basic_set(), rd()), std::invalid_argument);
     BOOST_CHECK_THROW(expression<double>(2, 4, 2, 3, 4, 1, empty_set(), rd()), std::invalid_argument);
     BOOST_CHECK_THROW(expression<double>(2, 4, 2, 3, 4, arity_wrong, basic_set(), rd()), std::invalid_argument);
+    BOOST_CHECK_THROW(expression<double>(2, 4, 2, 3, 4, {3, 0, 1}, basic_set(), rd()), std::invalid_argument);
 
     // Easy getters
     expression<double> ex(2, 4, 2, 3, 4, arity, basic_set(), rd());
@@ -45,7 +46,7 @@ BOOST_AUTO_TEST_CASE(construction)
     BOOST_CHECK(ex.get_f().size() == 4u);
     BOOST_CHECK(ex.get_arity() == arity);
 
-    // Checking validity of produced chromosome
+    // Checking validity of randomly produced chromosome
     BOOST_CHECK_NO_THROW(ex.is_valid(ex.get()));
 }
 

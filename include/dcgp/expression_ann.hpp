@@ -76,7 +76,7 @@ public:
             }
         }
         // Default initialization of weights to 1.
-        auto n_connections = std::accumulate(this->get_arity().begin(), this->get_arity().end(), 0.) * r;
+        unsigned n_connections = std::accumulate(this->get_arity().begin(), this->get_arity().end(), 0u) * r;
         m_weights = std::vector<T>(n_connections, T(1.));
 
         // Filling in the symbols for the weights and biases
@@ -126,7 +126,7 @@ public:
             }
         }
         // Default initialization of weights to 1.
-        auto n_connections = std::accumulate(this->get_arity().begin(), this->get_arity().end(), 0u) * r;
+        unsigned n_connections = std::accumulate(this->get_arity().begin(), this->get_arity().end(), 0u) * r;
         m_weights = std::vector<T>(n_connections, T(1.));
 
         // Filling in the symbols for the weights and biases
@@ -350,7 +350,7 @@ public:
             auto w_idx = c_idx - (*it - this->get_n());
 
             // index in the node/d_node vectors
-            auto n_idx = *it;
+            auto node_id = *it;
             // We update the d_node information
             U cum = 0.;
             for (auto i = 0u; i < m_connected[*it].size(); ++i) {
@@ -362,13 +362,13 @@ public:
                     cum += d_node[d_node.size() - this->get_m() + n_out];
                 }
             }
-            d_node[n_idx] *= cum;
+            d_node[node_id] *= cum;
 
             // fill gradients for weights and biases info
-            for (auto i = 0u; i < this->get_arity(*it); ++i) {
-                gweights[w_idx + i] = d_node[n_idx] * node[this->get()[c_idx + 1 + i]];
+            for (auto i = 0u; i < this->get_arity(node_id); ++i) {
+                gweights[w_idx + i] = d_node[node_id] * node[this->get()[c_idx + 1 + i]];
             }
-            gbiases[b_idx] = d_node[n_idx];
+            gbiases[b_idx] = d_node[node_id];
         }
 
         return std::make_tuple(std::move(value), std::move(gweights), std::move(gbiases));
@@ -824,13 +824,15 @@ private:
         m_connected.resize(this->get_n() + this->get_m() + this->get_r() * this->get_c());
         for (auto node_id : this->get_active_nodes()) {
             if (node_id >= this->get_n()) { // not for input nodes
-                // position in the chromosome of the current node
-                unsigned idx = this->get_node_x_idx()[node_id];
+                // start in the chromosome of the genes expressing the node_id connections
+                unsigned idx = this->get_node_x_idx()[node_id] + 1u;
+                // start in the weight vector of the genes expressing the node_id connections
+                unsigned w_idx = (idx - 1u) - (node_id - this->get_n());
                 // loop over the genes representing connections
-                for (auto i = idx + 1; i < idx + 1 + this->get_arity(node_id); ++i) {
-                    if (this->is_active(this->get()[i])) {
-                        m_connected[this->get()[i]].push_back(
-                            {node_id, (node_id - this->get_n()) * this->get_arity(node_id) + i - idx - 1});
+                for (auto i = 0u; i < this->get_arity(node_id); ++i) {
+                    if (this->is_active(this->get()[idx + i])) {
+                        m_connected[this->get()[idx + i]].push_back(
+                            {node_id, w_idx + i});
                     }
                 }
             }

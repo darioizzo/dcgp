@@ -544,13 +544,13 @@ public:
     /// Checks if a given node is active
     /**
      *
-     * @param[in] idx the node to be checked
+     * @param[in] node_id the node to be checked
      *
-     * @return True if the node *idx* is active in the CGP expression.
+     * @return True if the node *node_id* is active in the CGP expression.
      */
-    bool is_active(const unsigned idx) const
+    bool is_active(const unsigned node_id) const
     {
-        return (std::find(m_active_nodes.begin(), m_active_nodes.end(), idx) != m_active_nodes.end());
+        return (std::find(m_active_nodes.begin(), m_active_nodes.end(), node_id) != m_active_nodes.end());
     }
 
     /// Overloaded stream operator
@@ -677,10 +677,10 @@ private:
         if (m_r == 0) throw std::invalid_argument("Number of rows is 0");
         if (m_l == 0) throw std::invalid_argument("Number of level-backs is 0");
         if (m_arity.size() != m_c)
-            throw std::invalid_argument("The arity vector must have the same size as the number of columns");
-        // if (std::any_of(m_arity.begin(), m_arity.end(), [](unsigned a) { return a < 1; })) {
-        //    throw std::invalid_argument("Basis functions arity must be at least 2");
-        //}
+            throw std::invalid_argument("The arity vector size (" + std::to_string(m_arity.size()) + ") must be the same as the number of columns (" + std::to_string(m_c) + ")");
+        if (std::any_of(m_arity.begin(), m_arity.end(), [](unsigned a) { return a == 0; })) {
+            throw std::invalid_argument("Basis functions arity cannot be zero");
+        }
         if (m_f.size() == 0) throw std::invalid_argument("Number of basis functions is 0");
     }
     void init_bounds_and_chromosome()
