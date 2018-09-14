@@ -81,7 +81,7 @@ public:
 
         // Filling in the symbols for the weights and biases
         for (auto node_id = n; node_id < r * c + n; ++node_id) {
-            for (auto j = 0u; j < this->get_arity(node_id); ++j) {
+            for (auto j = 0u; j < this->_get_arity(node_id); ++j) {
                 m_weights_symbols.push_back("w" + std::to_string(node_id) + "_" + std::to_string(j));
             }
         }
@@ -131,7 +131,7 @@ public:
 
         // Filling in the symbols for the weights and biases
         for (auto node_id = n; node_id < r * c + n; ++node_id) {
-            for (auto j = 0u; j < this->get_arity(node_id); ++j) {
+            for (auto j = 0u; j < this->_get_arity(node_id); ++j) {
                 m_weights_symbols.push_back("w" + std::to_string(node_id) + "_" + std::to_string(j));
             }
         }
@@ -365,7 +365,7 @@ public:
             d_node[node_id] *= cum;
 
             // fill gradients for weights and biases info
-            for (auto i = 0u; i < this->get_arity(node_id); ++i) {
+            for (auto i = 0u; i < this->_get_arity(node_id); ++i) {
                 gweights[w_idx + i] = d_node[node_id] * node[this->get()[c_idx + 1 + i]];
             }
             gbiases[b_idx] = d_node[node_id];
@@ -518,7 +518,7 @@ public:
         if (node_id < this->get_n() || node_id >= this->get_n() + this->get_r() * this->get_c()) {
             throw std::invalid_argument("Requested node id does not exist");
         }
-        if (input_id >= this->get_arity(node_id)) {
+        if (input_id >= this->_get_arity(node_id)) {
             throw std::invalid_argument("Requested input exceeds the function arity");
         }
         // index of the node in the weight vector
@@ -574,7 +574,7 @@ public:
             throw std::invalid_argument(
                 "Requested node id does not exist or does not have a weight (e.g. input nodes)");
         }
-        if (input_id >= this->get_arity(node_id)) {
+        if (input_id >= this->_get_arity(node_id)) {
             throw std::invalid_argument("Requested input exceeds the function arity");
         }
 
@@ -712,7 +712,7 @@ private:
                   unsigned bias_idx) const
     {
         // Weights (we transform the inputs a,b,c,d,e in w_1 a, w_2 b, w_3 c, etc...)
-        for (auto j = 0u; j < this->get_arity(node_id); ++j) {
+        for (auto j = 0u; j < this->_get_arity(node_id); ++j) {
             function_in[j] = function_in[j] * m_weights[weight_idx + j];
         }
         // Biases (we add to the first input a bias so that a,b,c,d,e goes in c, etc...))
@@ -728,7 +728,7 @@ private:
                   unsigned bias_idx) const
     {
         // Weights
-        for (auto j = 0u; j < this->get_arity(node_id); ++j) {
+        for (auto j = 0u; j < this->_get_arity(node_id); ++j) {
             function_in[j] = m_weights_symbols[weight_idx + j] + "*" + function_in[j];
         }
         // Biases
@@ -749,7 +749,7 @@ private:
             if (node_id < this->get_n()) {
                 node[node_id] = in[node_id];
             } else {
-                unsigned arity = this->get_arity(node_id);
+                unsigned arity = this->_get_arity(node_id);
                 function_in.resize(arity);
                 // position in the chromosome of the current node
                 unsigned g_idx = this->get_gene_idx()[node_id];
@@ -757,7 +757,7 @@ private:
                 unsigned w_idx = g_idx - (node_id - this->get_n());
                 // starting position in m_biases of the node bias
                 unsigned b_idx = node_id - this->get_n();
-                for (auto j = 0u; j < this->get_arity(node_id); ++j) {
+                for (auto j = 0u; j < this->_get_arity(node_id); ++j) {
                     function_in[j] = node[this->get()[g_idx + j + 1]];
                 }
                 node[node_id] = kernel_call(function_in, g_idx, node_id, w_idx, b_idx);
@@ -783,7 +783,7 @@ private:
                 // hence no need/use/meaning for a derivative
                 d_node[node_id] = 0.;
             } else {
-                unsigned arity = this->get_arity(node_id);
+                unsigned arity = this->_get_arity(node_id);
                 function_in.resize(arity);
                 // position in the chromosome of the current node
                 unsigned g_idx = this->get_gene_idx()[node_id];
@@ -791,7 +791,7 @@ private:
                 unsigned w_idx = g_idx - (node_id - this->get_n());
                 // starting position in m_biases of the node bias
                 unsigned b_idx = node_id - this->get_n();
-                for (auto j = 0u; j < this->get_arity(node_id); ++j) {
+                for (auto j = 0u; j < this->_get_arity(node_id); ++j) {
                     function_in[j] = node[this->get()[g_idx + j + 1]];
                 }
                 node[node_id] = kernel_call(function_in, g_idx, node_id, w_idx, b_idx);
@@ -829,7 +829,7 @@ private:
                 // start in the weight vector of the genes expressing the node_id connections
                 unsigned w_idx = (idx - 1u) - (node_id - this->get_n());
                 // loop over the genes representing connections
-                for (auto i = 0u; i < this->get_arity(node_id); ++i) {
+                for (auto i = 0u; i < this->_get_arity(node_id); ++i) {
                     if (this->is_active(this->get()[idx + i])) {
                         m_connected[this->get()[idx + i]].push_back(
                             {node_id, w_idx + i});

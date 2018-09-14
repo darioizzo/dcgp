@@ -136,17 +136,17 @@ public:
         std::vector<U> node(m_n + m_r * m_c);
         std::vector<U> function_in;
 
-        for (auto i : m_active_nodes) {
-            if (i < m_n) {
-                node[i] = point[i];
+        for (auto node_id : m_active_nodes) {
+            if (node_id < m_n) {
+                node[node_id] = point[node_id];
             } else {
-                unsigned arity = get_arity(i);
+                unsigned arity = _get_arity(node_id);
                 function_in.resize(arity);
-                unsigned idx = m_gene_idx[i]; // position in the chromosome of the current node
+                unsigned idx = m_gene_idx[node_id]; // position in the chromosome of the current node
                 for (auto j = 0u; j < arity; ++j) {
                     function_in[j] = node[m_x[idx + j + 1u]];
                 }
-                node[i] = m_f[m_x[idx]](function_in);
+                node[node_id] = m_f[m_x[idx]](function_in);
             }
         }
         for (auto i = 0u; i < m_m; ++i) {
@@ -344,16 +344,19 @@ public:
 
     /// Gets the arity of a particular node
     /**
-     * This does not perform any checks on the node_id. If an invalid node is queried ITS BAD an
-     * invalid read will be performed.
+     * Gets the arity of a particular node
      *
-     * param[in] node_id id of the node
-     * return the arity of that node
+     * @param[in] node_id id of the node
+     * @return the arity of that node
      *
      */
     unsigned get_arity(unsigned node_id) const
     {
-        assert(node_id < m_r * m_c + m_n);
+        if (node_id >= m_r * m_c + m_n || node_id < m_n) {
+            throw std::invalid_argument("node_id requested was: " + std::to_string(node_id) + " but only ids in ["
+                                        + std::to_string(m_n) + "," + std::to_string(m_r * m_c + m_n - 1u)
+                                        + "] are valid");
+        }
         unsigned col = (node_id - m_n) / m_r;
         return m_arity[col];
     }
@@ -515,7 +518,7 @@ public:
                         0, static_cast<unsigned>(m_active_nodes.size() - 1u))(m_e)];
                 }
                 idx = m_gene_idx[idx]
-                      + std::uniform_int_distribution<unsigned>(1, static_cast<unsigned>(get_arity(idx)))(m_e);
+                      + std::uniform_int_distribution<unsigned>(1, static_cast<unsigned>(_get_arity(idx)))(m_e);
                 mutate(idx);
             }
         }
@@ -604,6 +607,14 @@ public:
     }
 
 protected:
+    // the public method checks are significantly impacting speed, thus this protected method is used in the
+    // class methods instead but use carefully as it may result in invalid reads
+    unsigned _get_arity(unsigned node_id) const
+    {
+        assert(node_id >= m_n && node_id < m_n + m_r * m_c);
+        unsigned col = (node_id - m_n) / m_r;
+        return m_arity[col];
+    }
     /// Updates the class data that depend on the chromosome
     /**
      * Some of the expression data depend on the chromosome. This is the case, for example,
@@ -632,7 +643,7 @@ protected:
                 if (node_id >= m_n) // we skip the input nodes as they do
                                     // not have any connection
                 {
-                    auto node_arity = get_arity(node_id);
+                    auto node_arity = _get_arity(node_id);
                     for (auto i = 1u; i <= node_arity; ++i) {
                         next.push_back(m_x[m_gene_idx[node_id] + i]);
                     }
@@ -657,7 +668,7 @@ protected:
         for (auto i = 0u; i < m_active_nodes.size(); ++i) {
             auto node_id = m_active_nodes[i];
             if (node_id >= m_n) {
-                for (auto j = 0u; j <= get_arity(node_id); ++j) {
+                for (auto j = 0u; j <= _get_arity(node_id); ++j) {
                     m_active_genes.push_back(m_gene_idx[node_id] + j);
                 }
             }
@@ -677,7 +688,8 @@ private:
         if (m_r == 0) throw std::invalid_argument("Number of rows is 0");
         if (m_l == 0) throw std::invalid_argument("Number of level-backs is 0");
         if (m_arity.size() != m_c)
-            throw std::invalid_argument("The arity vector size (" + std::to_string(m_arity.size()) + ") must be the same as the number of columns (" + std::to_string(m_c) + ")");
+            throw std::invalid_argument("The arity vector size (" + std::to_string(m_arity.size())
+                                        + ") must be the same as the number of columns (" + std::to_string(m_c) + ")");
         if (std::any_of(m_arity.begin(), m_arity.end(), [](unsigned a) { return a == 0; })) {
             throw std::invalid_argument("Basis functions arity cannot be zero");
         }

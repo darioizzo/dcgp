@@ -66,7 +66,7 @@ public:
 
         // Filling in the symbols for the weights and biases
         for (auto node_id = n; node_id < r * c + n; ++node_id) {
-            for (auto j = 0u; j < this->get_arity(node_id); ++j) {
+            for (auto j = 0u; j < this->_get_arity(node_id); ++j) {
                 m_weights_symbols.push_back("w" + std::to_string(node_id) + "_" + std::to_string(j));
             }
         }
@@ -101,7 +101,7 @@ public:
 
         // Filling in the symbols for the weights and biases.
         for (auto node_id = n; node_id < r * c + n; ++node_id) {
-            for (auto j = 0u; j < this->get_arity(node_id); ++j) {
+            for (auto j = 0u; j < this->_get_arity(node_id); ++j) {
                 m_weights_symbols.push_back("w" + std::to_string(node_id) + "_" + std::to_string(j));
             }
         }
@@ -132,13 +132,13 @@ public:
             if (node_id < this->get_n()) {
                 node[node_id] = in[node_id];
             } else {
-                unsigned arity = this->get_arity(node_id);
+                unsigned arity = this->_get_arity(node_id);
                 function_in.resize(arity);
                 // position in the chromosome of the current node
                 unsigned g_idx = this->get_gene_idx()[node_id];
                 // starting position in m_weights of the weights relative to the node
                 unsigned w_idx = g_idx - (node_id - this->get_n());
-                for (unsigned j = 0u; j < this->get_arity(node_id); ++j) {
+                for (unsigned j = 0u; j < this->_get_arity(node_id); ++j) {
                     function_in[j] = node[this->get()[g_idx + j + 1]];
                 }
                 node[node_id] = kernel_call(function_in, g_idx, node_id, w_idx);
@@ -213,7 +213,7 @@ public:
         if (node_id < this->get_n() || node_id >= this->get_n() + this->get_r() * this->get_c()) {
             throw std::invalid_argument("Requested node id does not exist");
         }
-        if (input_id >= this->get_arity(node_id)) {
+        if (input_id >= this->_get_arity(node_id)) {
             throw std::invalid_argument("Requested input exceeds the function arity");
         }
         // index of the node in the weight vector
@@ -255,7 +255,7 @@ public:
             throw std::invalid_argument(
                 "Requested node id does not exist or does not have a weight (e.g. input nodes)");
         }
-        if (input_id >= this->get_arity(node_id)) {
+        if (input_id >= this->_get_arity(node_id)) {
             throw std::invalid_argument("Requested input exceeds the function arity");
         }
 
@@ -280,7 +280,7 @@ private:
     U kernel_call(std::vector<U> &function_in, unsigned idx, unsigned node_id, unsigned weight_idx) const
     {
         // Weights (we transform the inputs a,b,c,d,e in w_1 a, w_2 b, w_3 c, etc...)
-        for (auto j = 0u; j < this->get_arity(node_id); ++j) {
+        for (auto j = 0u; j < this->_get_arity(node_id); ++j) {
             function_in[j] = function_in[j] * m_weights[weight_idx + j];
         }
         return this->get_f()[this->get()[idx]](function_in);
@@ -291,7 +291,7 @@ private:
     U kernel_call(std::vector<U> &function_in, unsigned idx, unsigned node_id, unsigned weight_idx) const
     {
         // Weights
-        for (auto j = 0u; j < this->get_arity(node_id); ++j) {
+        for (auto j = 0u; j < this->_get_arity(node_id); ++j) {
             function_in[j] = m_weights_symbols[weight_idx + j] + "*" + function_in[j];
         }
         return this->get_f()[this->get()[idx]](function_in);
