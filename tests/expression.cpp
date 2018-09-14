@@ -93,13 +93,13 @@ BOOST_AUTO_TEST_CASE(check_bounds)
                                    {3, 2, 2, 2, 3, 2, 2, 2, 3, 4, 4, 4, 3, 4, 4, 4, 3, 6, 6, 6, 3, 6, 6, 6, 8}));
 }
 
-BOOST_AUTO_TEST_CASE(get_node_x_idx)
+BOOST_AUTO_TEST_CASE(get_gene_idx)
 {
     // Random seed
     std::random_device rd;
     kernel_set<double> basic_set({"sum", "diff", "mul", "div"});
     expression<double> ex(3, 2, 3, 3, 2, {2, 1, 3}, basic_set(), rd());
-    auto test = ex.get_node_x_idx();
+    auto test = ex.get_gene_idx();
     BOOST_CHECK(test == (std::vector<unsigned>{0, 0, 0, 0, 3, 6, 9, 11, 13, 15, 19, 23}));
 }
 
@@ -114,7 +114,7 @@ BOOST_AUTO_TEST_CASE(get_active_nodes_and_genes)
 
     auto a_nodes = ex.get_active_nodes();
     auto a_genes = ex.get_active_genes();
-    auto node_x_idx = ex.get_node_x_idx();
+    auto node_x_idx = ex.get_gene_idx();
     for (auto i = 0u; i < a_nodes.size(); ++i) {
         auto node_id = a_nodes[i];
         // First the function gene
