@@ -517,8 +517,7 @@ public:
                     idx = m_active_nodes[std::uniform_int_distribution<unsigned>(
                         0, static_cast<unsigned>(m_active_nodes.size() - 1u))(m_e)];
                 }
-                idx = m_gene_idx[idx]
-                      + std::uniform_int_distribution<unsigned>(1, static_cast<unsigned>(_get_arity(idx)))(m_e);
+                idx = m_gene_idx[idx] + std::uniform_int_distribution<unsigned>(1, _get_arity(idx))(m_e);
                 mutate(idx);
             }
         }

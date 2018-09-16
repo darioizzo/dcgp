@@ -342,23 +342,23 @@ public:
         // gradient information at each node for the incoming weights and relative bias
         for (auto it = this->get_active_nodes().rbegin(); it != this->get_active_nodes().rend(); ++it) {
             if (*it < this->get_n()) continue;
-            // index of the node in the bias vector
-            auto b_idx = *it - this->get_n();
-            // index of the node in the chromosome
-            auto c_idx = this->get_gene_idx()[*it];
-            // index of the node in the weight vector
-            auto w_idx = c_idx - (*it - this->get_n());
-
             // index in the node/d_node vectors
             auto node_id = *it;
+            // index of the node in the bias vector
+            auto b_idx = node_id - this->get_n();
+            // index of the node in the chromosome
+            auto c_idx = this->get_gene_idx()[node_id];
+            // index of the node in the weight vector
+            auto w_idx = c_idx - (node_id - this->get_n());
+
             // We update the d_node information
             U cum = 0.;
-            for (auto i = 0u; i < m_connected[*it].size(); ++i) {
+            for (auto i = 0u; i < m_connected[node_id].size(); ++i) {
                 // If the node is not "virtual", that is not one of the m virtual nodes we added computing (x-x_i)^2
-                if (m_connected[*it][i].first < this->get_n() + this->get_r() * this->get_c()) {
-                    cum += m_weights[m_connected[*it][i].second] * d_node[m_connected[*it][i].first];
+                if (m_connected[node_id][i].first < this->get_n() + this->get_r() * this->get_c()) {
+                    cum += m_weights[m_connected[node_id][i].second] * d_node[m_connected[node_id][i].first];
                 } else {
-                    auto n_out = m_connected[*it][i].first - (this->get_n() + this->get_r() * this->get_c());
+                    auto n_out = m_connected[node_id][i].first - (this->get_n() + this->get_r() * this->get_c());
                     cum += d_node[d_node.size() - this->get_m() + n_out];
                 }
             }
@@ -708,11 +708,11 @@ public:
 private:
     // For numeric computations
     template <typename U, enable_double<U> = 0>
-    U kernel_call(std::vector<U> &function_in, unsigned idx, unsigned node_id, unsigned weight_idx,
+    U kernel_call(std::vector<U> &function_in, unsigned idx, unsigned arity, unsigned weight_idx,
                   unsigned bias_idx) const
     {
         // Weights (we transform the inputs a,b,c,d,e in w_1 a, w_2 b, w_3 c, etc...)
-        for (auto j = 0u; j < this->_get_arity(node_id); ++j) {
+        for (auto j = 0u; j < arity; ++j) {
             function_in[j] = function_in[j] * m_weights[weight_idx + j];
         }
         // Biases (we add to the first input a bias so that a,b,c,d,e goes in c, etc...))
@@ -724,11 +724,11 @@ private:
 
     // For the symbolic expression
     template <typename U, typename std::enable_if<std::is_same<U, std::string>::value, int>::type = 0>
-    U kernel_call(std::vector<U> &function_in, unsigned idx, unsigned node_id, unsigned weight_idx,
+    U kernel_call(std::vector<U> &function_in, unsigned idx, unsigned arity, unsigned weight_idx,
                   unsigned bias_idx) const
     {
         // Weights
-        for (auto j = 0u; j < this->_get_arity(node_id); ++j) {
+        for (auto j = 0u; j < arity; ++j) {
             function_in[j] = m_weights_symbols[weight_idx + j] + "*" + function_in[j];
         }
         // Biases
@@ -757,10 +757,10 @@ private:
                 unsigned w_idx = g_idx - (node_id - this->get_n());
                 // starting position in m_biases of the node bias
                 unsigned b_idx = node_id - this->get_n();
-                for (auto j = 0u; j < this->_get_arity(node_id); ++j) {
+                for (auto j = 0u; j < arity; ++j) {
                     function_in[j] = node[this->get()[g_idx + j + 1]];
                 }
-                node[node_id] = kernel_call(function_in, g_idx, node_id, w_idx, b_idx);
+                node[node_id] = kernel_call(function_in, g_idx, arity, w_idx, b_idx);
             }
         }
         return node;
@@ -791,10 +791,10 @@ private:
                 unsigned w_idx = g_idx - (node_id - this->get_n());
                 // starting position in m_biases of the node bias
                 unsigned b_idx = node_id - this->get_n();
-                for (auto j = 0u; j < this->_get_arity(node_id); ++j) {
+                for (auto j = 0u; j < arity; ++j) {
                     function_in[j] = node[this->get()[g_idx + j + 1]];
                 }
-                node[node_id] = kernel_call(function_in, g_idx, node_id, w_idx, b_idx);
+                node[node_id] = kernel_call(function_in, g_idx, arity, w_idx, b_idx);
                 // take cares of d_node
                 // sigmoid derivative is sig(1-sig)
                 if (this->get_f()[this->get()[g_idx]].get_name() == "sig") {
@@ -831,8 +831,7 @@ private:
                 // loop over the genes representing connections
                 for (auto i = 0u; i < this->_get_arity(node_id); ++i) {
                     if (this->is_active(this->get()[idx + i])) {
-                        m_connected[this->get()[idx + i]].push_back(
-                            {node_id, w_idx + i});
+                        m_connected[this->get()[idx + i]].push_back({node_id, w_idx + i});
                     }
                 }
             }
