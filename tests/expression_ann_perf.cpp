@@ -25,8 +25,8 @@ void perform_sgd(unsigned int rows, unsigned int columns, unsigned int levels_ba
     // Instatiate the expression
     expression_ann<double> ex(in, out, rows, columns, levels_back, arity, kernel_set, 123);
     // We create the input data upfront and we do not time it.
-    ex.randomise_weights();
-    ex.randomise_biases();
+    ex.randomise_weights(0., 1., 123u);
+    ex.randomise_biases(0., 1., 123u);
     std::vector<double> in_dummy(in, 0.);
     std::vector<double> out_dummy(out, 0.);
     std::vector<std::vector<double>> data(N, in_dummy);
