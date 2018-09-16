@@ -374,4 +374,17 @@ Raises:
     ValueError: if f_id is  incompatible with the expression.
     )";
 }
+
+std::string expression_ann_n_active_weights_doc()
+{
+    return R"(n_active_weights(unique = False)
+
+Computes the number of weights influencing the result. This will also be the number
+of weights that are updated when calling sgd. The number of active weights, as well as
+the number of active nodes, define the complexity of the expression expressed by the chromosome.
+
+Args:
+    unique (a ``bool``): when True weights are counted only once if connecting the same two nodes.
+    )";
+}
 } // namespace dcgpy

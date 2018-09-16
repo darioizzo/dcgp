@@ -245,13 +245,15 @@ BOOST_AUTO_TEST_CASE(sgd)
         label[i][0] = 1. / 5. * std::cos(data[i][0] + data[i][1] + data[i][2]) - data[i][0] * data[i][1];
         label[i][1] = data[i][0] * data[i][1] * data[i][2];
     }
-    double tmp = ex.loss(data, label, "MSE");
-    print("Start: ", tmp, "\n");
-    for (auto j = 0u; j < 10; ++j) {
+    double tmp_start = ex.loss(data, label, "MSE");
+    double tmp_end = 0.;
+    print("Start: ", tmp_start, "\n");
+    for (auto j = 0u; j < 20; ++j) {
         ex.sgd(data, label, 0.1, 32, "MSE");
-        tmp = ex.loss(data, label, "MSE");
-        print("Then (", j, "): ", tmp, "\n");
+        tmp_end = ex.loss(data, label, "MSE");
+        print("Then (", j, "): ", tmp_end, "\n");
     }
+    BOOST_CHECK(tmp_end < tmp_start);
 }
 
 BOOST_AUTO_TEST_CASE(d_loss)
@@ -284,7 +286,31 @@ BOOST_AUTO_TEST_CASE(d_loss)
     test_against_numerical_derivatives(5, 1, 5, 5, 2, {2, 4, 3, 5, 7}, 234625446u, loss_t::MSE);
     test_against_numerical_derivatives(3, 4, 6, 6, 2, {10, 10, 30, 2, 4, 5}, 234625446u, loss_t::CE);
 
-    // CHecks on corner case arity (1)
+    // Checks on corner case arity (1)
     test_against_numerical_derivatives(5, 1, 5, 5, 2, {2, 1, 3, 1, 7}, 234625446u, loss_t::MSE);
-    test_against_numerical_derivatives(5, 1, 6, 6, 2, {1, 1, 1, 1, 1, 1}, 234625446u, loss_t::MSE);
+    test_against_numerical_derivatives(5, 1, 6, 6, 2, {1, 1, 1, 1, 1, 1}, 234625446u, loss_t::CE);
+}
+
+BOOST_AUTO_TEST_CASE(n_active_weights)
+{
+    // Random numbers stuff
+    std::random_device rd;
+    std::mt19937 gen{rd()};
+    std::normal_distribution<> norm(0., 1.);
+
+    // Kernel functions
+    kernel_set<double> ann_set({"sig", "tanh", "ReLu"});
+    {
+        expression_ann<double> ex(2, 2, 2, 2, 5, 2, ann_set(), rd());
+        ex.set({0, 0, 1, 0, 0, 1, 0, 2, 3, 0, 2, 3, 4, 5});
+        BOOST_CHECK(ex.n_active_weights() == 8u);
+        BOOST_CHECK(ex.n_active_weights(false) == 8u);
+        BOOST_CHECK(ex.n_active_weights(true) == 8u);
+        print(ex.n_active_weights(true), "\n");
+        ex.set({0, 1, 1, 0, 0, 1, 0, 2, 3, 0, 2, 3, 4, 5});
+        BOOST_CHECK(ex.n_active_weights() == 8u);
+        BOOST_CHECK(ex.n_active_weights(false) == 8u);
+        BOOST_CHECK(ex.n_active_weights(true) == 7u);
+        print(ex.n_active_weights(true), "\n");
+    }
 }

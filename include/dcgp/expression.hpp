@@ -697,7 +697,7 @@ private:
     void init_bounds_and_chromosome()
     {
         // Chromosome size is r*c + sum(arity)*r + m
-        auto size = m_r * m_c + m_r * std::accumulate(m_arity.begin(), m_arity.end(), 0u) + m_m;
+        unsigned size = m_r * m_c + m_r * std::accumulate(m_arity.begin(), m_arity.end(), 0u) + m_m;
         // Allocate bounds and chromosome and gene position
         m_x = std::vector<unsigned>(size, 0u);
         m_lb = std::vector<unsigned>(size, 0u);

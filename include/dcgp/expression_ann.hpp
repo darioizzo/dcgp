@@ -130,7 +130,8 @@ public:
                    std::vector<kernel<T>> f, // functions
                    unsigned seed             // seed for the pseudo-random numbers
                    )
-        : expression<T>(n, m, r, c, l, std::vector<unsigned>(c, arity), f, seed), m_biases(r * c, T(0.))
+        : expression<T>(n, m, r, c, l, std::vector<unsigned>(c, arity), f, seed), m_biases(r * c, T(0.)),
+          m_kernel_map(f.size())
 
     {
         // Sanity checks
@@ -260,7 +261,6 @@ public:
                 retval = -std::accumulate(outputs.begin(), outputs.end(), 0.);
                 break;
         }
-
         return retval;
     }
 
@@ -334,16 +334,17 @@ public:
         // (dL/do_i)
         switch (loss_e) {
             // Mean Square Error
-            case loss_type::MSE:
+            case loss_type::MSE: {
                 for (decltype(this->get_m()) i = 0u; i < this->get_m(); ++i) {
                     auto node_idx = this->get()[this->get().size() - this->get_m() + i];
                     auto dummy = (node[node_idx] - prediction[i]);
-                    d_node.push_back(2 * dummy);
+                    d_node.push_back(2. * dummy);
                     value += dummy * dummy;
                 }
                 break; // and exits the switch
+            }
             // Cross Entropy
-            case loss_type::CE:
+            case loss_type::CE: {
                 std::vector<double> ps(this->get_m(), 0.);
                 double cumsum = 0.;
                 // We compute exp(a_i) and sum exp(a_i) for softmax
@@ -364,6 +365,7 @@ public:
                 // - sum log(p_i) y_i
                 value = -std::accumulate(ps.begin(), ps.end(), 0.);
                 break;
+            }
         }
 
         // ------------------------------------------ Backward pass (takes roughly the remaining half)
@@ -399,7 +401,6 @@ public:
             }
             gbiases[b_idx] = d_node[node_id];
         }
-
         return std::make_tuple(std::move(value), std::move(gweights), std::move(gbiases));
     }
 
@@ -441,7 +442,7 @@ public:
      * positive.
      */
     void sgd(const std::vector<std::vector<double>> &points, const std::vector<std::vector<double>> &labels,
-             double l_rate, unsigned batch_size, std::string loss_s)
+             double l_rate, unsigned batch_size, const std::string &loss_s)
     {
         if (points.size() != labels.size()) {
             throw std::invalid_argument("Data and label size mismatch data size is: " + std::to_string(points.size())
@@ -495,6 +496,32 @@ public:
         for (decltype(this->get_m()) i = 0u; i < this->get_m(); ++i) {
             this->set_f_gene(this->get()[this->get().size() - 1 - i], f_id);
         }
+    }
+
+    /// Computes the number of weights influencing the result
+    /**
+     * Computes the number of weights influencing the result. This will also be the number
+     * of weights that are updated when calling sgd. The number of active weights, as well as
+     * the number of active nodes, define the complexity of the expression expressed by the chromosome.
+     *
+     * @param[in] unique when true weights are counted only once if connecting the same two nodes.
+     */
+    unsigned n_active_weights(bool unique = false) const
+    {
+        unsigned retval = 0u;
+        for (auto node_id : this->get_active_nodes()) {
+            if (node_id < this->get_n()) continue;
+            if (!unique) {
+                retval += this->_get_arity(node_id);
+            } else {
+                auto g_idx = this->get_gene_idx()[node_id];
+                auto arity = this->_get_arity(node_id);
+                std::vector<unsigned> con_id(this->get().begin() + g_idx + 1, this->get().begin() + g_idx + 1 + arity);
+                std::sort(con_id.begin(), con_id.end());
+                retval += static_cast<unsigned>(std::unique(con_id.begin(), con_id.end()) - con_id.begin());
+            }
+        }
+        return retval;
     }
 
     /// Overloaded stream operator

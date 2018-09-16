@@ -3,7 +3,8 @@
 
 #include <string>
 
-namespace dcgpy {
+namespace dcgpy
+{
 std::string kernel_init_doc(const std::string &);
 std::string kernel_set_init_doc(const std::string &);
 std::string kernel_set_push_back_str_doc();
@@ -27,11 +28,10 @@ std::string expression_ann_set_biases_doc();
 std::string expression_ann_get_bias_doc();
 std::string expression_ann_randomise_biases_doc();
 std::string expression_ann_set_output_f_doc();
-
+std::string expression_ann_n_active_weights_doc();
 std::string expression_ann_sgd_doc();
 std::string expression_ann_loss_doc();
 
-
-}
+} // namespace dcgpy
 
 #endif

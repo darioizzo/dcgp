@@ -374,6 +374,8 @@ void expose_expression_ann(std::string type)
              expression_ann_get_weight_doc().c_str(), (bp::arg("node_id"), bp::arg("input_id")))
         .def("get_weights", +[](expression_ann<T> &instance) { return v_to_l(instance.get_weights()); },
              "Gets all weights")
+        .def("n_active_weights", &expression_ann<T>::n_active_weights, expression_ann_n_active_weights_doc().c_str(),
+             bp::arg("unique") = false)
         .def("randomise_weights",
              +[](expression_ann<T> &instance, double mean, double std, unsigned seed) {
                  return instance.randomise_weights(mean, std, seed);
