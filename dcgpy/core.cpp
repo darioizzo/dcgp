@@ -180,11 +180,13 @@ void expose_expression(std::string type)
         .def("get_cols", &expression<T>::get_c, "Gets the number of columns of the dCGP expression")
         .def("get_levels_back", &expression<T>::get_l, "Gets the number of levels-back allowed for the dCGP expression")
         .def("get_arity", +[](const expression<T> &instance) { return v_to_l(instance.get_arity()); },
-             "get_arity()\nget_arity(node_id)\nGets the arity of the basis functions of the dCGP expression. Either the whole vector or that of a single node.")
+             "get_arity()\nget_arity(node_id)\nGets the arity of the basis functions of the dCGP expression. Either "
+             "the whole vector or that of a single node.")
         .def("get_arity", +[](const expression<T> &instance, unsigned node_id) { return instance.get_arity(node_id); },
              (bp::arg("node_id")))
         .def("get_gene_idx", +[](const expression<T> &instance) { return v_to_l(instance.get_gene_idx()); },
-             "get_gene_idx()\nGets a vector containing the indexes in the chromosome where each node starts to be expressed.")
+             "get_gene_idx()\nGets a vector containing the indexes in the chromosome where each node starts to be "
+             "expressed.")
         .def("get_f", +[](const expression<T> &instance) { return v_to_l(instance.get_f()); },
              "Gets the kernel functions")
         .def("mutate", +[](expression<T> &instance, const bp::object &in) { instance.mutate(l_to_v<unsigned>(in)); },
@@ -211,7 +213,7 @@ void expose_expression_weighted(std::string type)
 {
     std::string class_name = "expression_weighted_" + type;
     bp::class_<expression_weighted<T>, bp::bases<expression<T>>>(class_name.c_str(), bp::no_init)
-         // Constructor with seed
+        // Constructor with seed
         .def("__init__",
              bp::make_constructor(
                  +[](unsigned in, unsigned out, unsigned rows, unsigned cols, unsigned levelsback,
@@ -240,11 +242,11 @@ void expose_expression_weighted(std::string type)
                      if (is_int.check()) { // arity is passed as an integer
                          unsigned ar = bp::extract<unsigned>(arity);
                          return ::new expression_weighted<T>(in, out, rows, cols, levelsback, ar, kernels_v,
-                                                    std::random_device()());
+                                                             std::random_device()());
                      } else { // arity is passed as something else, a list is assumed
                          auto varity = l_to_v<unsigned>(arity);
                          return ::new expression_weighted<T>(in, out, rows, cols, levelsback, varity, kernels_v,
-                                                    std::random_device()());
+                                                             std::random_device()());
                      }
                  },
                  bp::default_call_policies(),
@@ -315,11 +317,11 @@ void expose_expression_ann(std::string type)
                      if (is_int.check()) { // arity is passed as an integer
                          unsigned ar = bp::extract<unsigned>(arity);
                          return ::new expression_ann<T>(in, out, rows, cols, levelsback, ar, kernels_v,
-                                                    std::random_device()());
+                                                        std::random_device()());
                      } else { // arity is passed as something else, a list is assumed
                          auto varity = l_to_v<unsigned>(arity);
                          return ::new expression_ann<T>(in, out, rows, cols, levelsback, varity, kernels_v,
-                                                    std::random_device()());
+                                                        std::random_device()());
                      }
                  },
                  bp::default_call_policies(),
@@ -396,13 +398,14 @@ void expose_expression_ann(std::string type)
              (bp::arg("mean") = 0., bp::arg("std") = 0.1))
         .def("sgd",
              +[](expression_ann<T> &instance, const bp::object &points, const bp::object &predictions, double l_rate,
-                 unsigned batch_size,
-                 std::string loss) { instance.sgd(to_vvd(points), to_vvd(predictions), l_rate, batch_size, loss); },
+                 unsigned batch_size, const std::string &loss) {
+                 instance.sgd(to_vvd(points), to_vvd(predictions), l_rate, batch_size, loss);
+             },
              expression_ann_sgd_doc().c_str(),
              (bp::arg("points"), bp::arg("predictions"), bp::arg("lr"), bp::arg("batch_size"), bp::arg("loss")))
         .def("loss",
              +[](expression_ann<T> &instance, const bp::object &points, const bp::object &predictions,
-                 std::string loss) { return instance.loss(to_vvd(points), to_vvd(predictions), loss); },
+                 const std::string &loss) { return instance.loss(to_vvd(points), to_vvd(predictions), loss); },
              expression_ann_loss_doc().c_str(), (bp::arg("points"), bp::arg("predictions"), bp::arg("loss")));
 }
 
@@ -437,12 +440,12 @@ BOOST_PYTHON_MODULE(core)
     expose_kernel<gdual_d>("gdual_double");
     expose_kernel_set<gdual_d>("gdual_double");
     expose_expression<gdual_d>("gdual_double");
-    // expose_expression_weighted<gdual_d>("gdual_double");
+    expose_expression_weighted<gdual_d>("gdual_double");
 
     expose_kernel<gdual_v>("gdual_vdouble");
     expose_kernel_set<gdual_v>("gdual_vdouble");
     expose_expression<gdual_v>("gdual_vdouble");
-    // expose_expression_weighted<gdual_v>("gdual_vdouble");
+    expose_expression_weighted<gdual_v>("gdual_vdouble");
 
     // Define a cleanup functor to be run when the module is unloaded.
     struct dcgp_cleanup_functor {

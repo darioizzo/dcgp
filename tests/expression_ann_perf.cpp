@@ -52,10 +52,11 @@ BOOST_AUTO_TEST_CASE(evaluation_speed)
 {
     unsigned int N = 1024;
 
-    dcgp::kernel_set<double> kernel_set1({"sig", "tanh", "ReLu"});
+    dcgp::kernel_set<double> kernel_set1({"sig", "tanh", "ReLu", "ISRU", "ELU"});
     dcgp::stream(std::cout, "Function set ", kernel_set1(), "\n");
     perform_sgd(10, 10, 1, {100, 100, 100, 100, 100, 100, 100, 100, 100, 100}, N, 32, kernel_set1());
     perform_sgd(10, 100, 1, std::vector<unsigned>(100, 10), N, 32, kernel_set1());
     perform_sgd(100, 10, 1, {100, 10, 100, 10, 100, 10, 100, 10, 100, 10}, N, 32, kernel_set1());
     perform_sgd(100, 10, 1, {100, 100, 100, 100, 100, 100, 100, 100, 100, 100}, N, 32, kernel_set1());
+    perform_sgd(200, 10, 1, {100, 100, 100, 100, 100, 100, 100, 100, 100, 100}, N, 32, kernel_set1());
 }
