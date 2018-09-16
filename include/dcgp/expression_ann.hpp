@@ -42,6 +42,8 @@ private:
 public:
     // loss types: Mean Squared Error or Cross Entropy
     enum class loss_type { MSE, CE };
+    // loss types: Mean Squared Error or Cross Entropy
+    enum class kernel_type { SIG, TANH, RELU, ELU, ISRU };
 
     /// Constructor
     /** Constructs a dCGPANN expression
@@ -64,7 +66,7 @@ public:
                    std::vector<kernel<T>> f,    // functions
                    unsigned seed                // seed for the pseudo-random numbers
                    )
-        : expression<T>(n, m, r, c, l, arity, f, seed), m_biases(r * c, T(0.))
+        : expression<T>(n, m, r, c, l, arity, f, seed), m_biases(r * c, T(0.)), m_kernel_map(f.size())
 
     {
         // Sanity checks
@@ -73,6 +75,20 @@ public:
                 && ker.get_name() != "ELU" && ker.get_name() != "ISRU") {
                 throw std::invalid_argument(
                     "Only tanh, sig, ReLu, ELU and ISRU Kernels are valid for dCGP-ANN expressions");
+            }
+        }
+        // Initialize the kernel map
+        for (decltype(f.size()) i = 0u; i < f.size(); ++i) {
+            if (f[i].get_name() == "sig") {
+                m_kernel_map[i] = kernel_type::SIG;
+            } else if (f[i].get_name() == "tanh") {
+                m_kernel_map[i] = kernel_type::TANH;
+            } else if (f[i].get_name() == "ReLu") {
+                m_kernel_map[i] = kernel_type::RELU;
+            } else if (f[i].get_name() == "ELU") {
+                m_kernel_map[i] = kernel_type::ELU;
+            } else if (f[i].get_name() == "ISRU") {
+                m_kernel_map[i] = kernel_type::ISRU;
             }
         }
         // Default initialization of weights to 1.
@@ -123,6 +139,20 @@ public:
                 && ker.get_name() != "ELU" && ker.get_name() != "ISRU") {
                 throw std::invalid_argument(
                     "Only tanh, sig, ReLu, ELU and ISRU Kernels are valid for dCGP-ANN expressions");
+            }
+        }
+        // Initialize the kernel map
+        for (decltype(f.size()) i = 0u; i < f.size(); ++i) {
+            if (f[i].get_name() == "sig") {
+                m_kernel_map[i] = kernel_type::SIG;
+            } else if (f[i].get_name() == "tanh") {
+                m_kernel_map[i] = kernel_type::TANH;
+            } else if (f[i].get_name() == "ReLu") {
+                m_kernel_map[i] = kernel_type::RELU;
+            } else if (f[i].get_name() == "ELU") {
+                m_kernel_map[i] = kernel_type::ELU;
+            } else if (f[i].get_name() == "ISRU") {
+                m_kernel_map[i] = kernel_type::ISRU;
             }
         }
         // Default initialization of weights to 1.
@@ -276,9 +306,8 @@ public:
      * @return the loss, the gradient of the loss w.r.t. all weights (also inactive) and the gradient of the loss w.r.t
      * all biases
      */
-    template <typename U, enable_double<U> = 0>
-    std::tuple<U, std::vector<U>, std::vector<U>> d_loss(const std::vector<U> &point, const std::vector<U> &prediction,
-                                                         const loss_type loss_e)
+    std::tuple<double, std::vector<double>, std::vector<double>>
+    d_loss(const std::vector<double> &point, const std::vector<double> &prediction, const loss_type loss_e)
     {
         if (point.size() != this->get_n()) {
             throw std::invalid_argument("When computing the mse the point dimension (input) seemed wrong, it was: "
@@ -290,15 +319,15 @@ public:
                 "When computing the mse the prediction dimension (output) seemed wrong, it was: "
                 + std::to_string(prediction.size()) + " while I expected: " + std::to_string(this->get_m()));
         }
-        U value(U(0.));
-        std::vector<U> gweights(m_weights.size(), U(0.));
-        std::vector<U> gbiases(m_biases.size(), U(0.));
+        double value = 0.;
+        std::vector<double> gweights(m_weights.size(), 0.);
+        std::vector<double> gbiases(m_biases.size(), 0.);
 
         // ------------------------------------------ Forward pass (takes roughly half of the time) --------------------
         // All active nodes outputs get computed as well as
         // the activation function derivatives
         auto n_nodes = this->get_n() + this->get_r() * this->get_c();
-        std::vector<U> node(n_nodes, 0.), d_node(n_nodes, 0.);
+        std::vector<double> node(n_nodes, 0.), d_node(n_nodes, 0.);
         fill_nodes(point, node, d_node); // here is where the computations happen.
 
         // We add to node_d some virtual nodes containing the derivative of the loss with respect to the outputs
@@ -352,7 +381,7 @@ public:
             auto w_idx = c_idx - (node_id - this->get_n());
 
             // We update the d_node information
-            U cum = 0.;
+            double cum = 0.;
             for (auto i = 0u; i < m_connected[node_id].size(); ++i) {
                 // If the node is not "virtual", that is not one of the m virtual nodes we added computing (x-x_i)^2
                 if (m_connected[node_id][i].first < this->get_n() + this->get_r() * this->get_c()) {
@@ -385,9 +414,9 @@ public:
      * @return the loss, the gradient of the loss w.r.t. all weights (also inactive) and the gradient of the loss w.r.t
      * all biases.
      */
-    template <typename U, enable_double<U> = 0>
-    std::tuple<U, std::vector<U>, std::vector<U>> d_loss(const std::vector<std::vector<U>> &points,
-                                                         const std::vector<std::vector<U>> &labels, loss_type loss_e)
+    std::tuple<double, std::vector<double>, std::vector<double>> d_loss(const std::vector<std::vector<double>> &points,
+                                                                        const std::vector<std::vector<double>> &labels,
+                                                                        loss_type loss_e)
     {
         if (points.size() != labels.size()) {
             throw std::invalid_argument("Data and label size mismatch data size is: " + std::to_string(points.size())
@@ -396,7 +425,7 @@ public:
         if (points.size() == 0) {
             throw std::invalid_argument("Data size cannot be zero");
         }
-        return d_loss<U>(points.begin(), points.end(), labels.begin(), loss_e);
+        return d_loss(points.begin(), points.end(), labels.begin(), loss_e);
     }
 
     /// Stochastic gradient descent
@@ -411,9 +440,8 @@ public:
      * @throws std::invalid_argument if the *data* and *label* size do not match or is zero, or if *l_rate* is not
      * positive.
      */
-    template <typename U, enable_double<U> = 0>
-    void sgd(const std::vector<std::vector<U>> &points, const std::vector<std::vector<U>> &labels, double l_rate,
-             unsigned batch_size, std::string loss_s)
+    void sgd(const std::vector<std::vector<double>> &points, const std::vector<std::vector<double>> &labels,
+             double l_rate, unsigned batch_size, std::string loss_s)
     {
         if (points.size() != labels.size()) {
             throw std::invalid_argument("Data and label size mismatch data size is: " + std::to_string(points.size())
@@ -441,10 +469,10 @@ public:
         auto lfirst = labels.begin();
         while (dfirst != dlast) {
             if (dfirst + batch_size > dlast) {
-                update_weights<U>(dfirst, dlast, lfirst, l_rate, loss_e);
+                update_weights(dfirst, dlast, lfirst, l_rate, loss_e);
                 dfirst = dlast;
             } else {
-                update_weights<U>(dfirst, dfirst + batch_size, lfirst, l_rate, loss_e);
+                update_weights(dfirst, dfirst + batch_size, lfirst, l_rate, loss_e);
                 dfirst += batch_size;
                 lfirst += batch_size;
             }
@@ -707,9 +735,8 @@ public:
 
 private:
     // For numeric computations
-    template <typename U, enable_double<U> = 0>
-    U kernel_call(std::vector<U> &function_in, unsigned idx, unsigned arity, unsigned weight_idx,
-                  unsigned bias_idx) const
+    double kernel_call(std::vector<double> &function_in, unsigned idx, unsigned arity, unsigned weight_idx,
+                       unsigned bias_idx) const
     {
         // Weights (we transform the inputs a,b,c,d,e in w_1 a, w_2 b, w_3 c, etc...)
         for (auto j = 0u; j < arity; ++j) {
@@ -723,9 +750,8 @@ private:
     }
 
     // For the symbolic expression
-    template <typename U, typename std::enable_if<std::is_same<U, std::string>::value, int>::type = 0>
-    U kernel_call(std::vector<U> &function_in, unsigned idx, unsigned arity, unsigned weight_idx,
-                  unsigned bias_idx) const
+    std::string kernel_call(std::vector<std::string> &function_in, unsigned idx, unsigned arity, unsigned weight_idx,
+                            unsigned bias_idx) const
     {
         // Weights
         for (auto j = 0u; j < arity; ++j) {
@@ -767,14 +793,13 @@ private:
     }
 
     // computes node and node_d to start backprop
-    template <typename U, enable_double<U> = 0>
-    void fill_nodes(const std::vector<U> &in, std::vector<U> &node, std::vector<U> &d_node) const
+    void fill_nodes(const std::vector<double> &in, std::vector<double> &node, std::vector<double> &d_node) const
     {
         if (in.size() != this->get_n()) {
             throw std::invalid_argument("Input size is incompatible");
         }
         // Start
-        std::vector<U> function_in;
+        std::vector<double> function_in;
         for (auto node_id : this->get_active_nodes()) {
             if (node_id < this->get_n()) {
                 node[node_id] = in[node_id];
@@ -797,19 +822,24 @@ private:
                 node[node_id] = kernel_call(function_in, g_idx, arity, w_idx, b_idx);
                 // take cares of d_node
                 // sigmoid derivative is sig(1-sig)
-                if (this->get_f()[this->get()[g_idx]].get_name() == "sig") {
-                    d_node[node_id] = node[node_id] * (1. - node[node_id]);
-                    // tanh derivative is 1 - tanh**2
-                } else if (this->get_f()[this->get()[g_idx]].get_name() == "tanh") {
-                    d_node[node_id] = 1. - node[node_id] * node[node_id];
-                    // Relu derivative is 0 if relu<0, 1 otherwise
-                } else if (this->get_f()[this->get()[g_idx]].get_name() == "ReLu") {
-                    d_node[node_id] = (node[node_id] > 0.) ? 1. : 0.;
-                } else if (this->get_f()[this->get()[g_idx]].get_name() == "ELU") {
-                    d_node[node_id] = (node[node_id] > 0.) ? 1. : node[node_id] + 1.;
-                } else if (this->get_f()[this->get()[g_idx]].get_name() == "ISRU") {
-                    auto cumin = std::accumulate(function_in.begin(), function_in.end(), 0.);
-                    d_node[node_id] = node[node_id] * node[node_id] * node[node_id] / cumin / cumin / cumin;
+                switch (m_kernel_map[this->get()[g_idx]]) {
+                    case kernel_type::SIG:
+                        d_node[node_id] = node[node_id] * (1. - node[node_id]);
+                        break;
+                    case kernel_type::TANH:
+                        d_node[node_id] = 1. - node[node_id] * node[node_id];
+                        break;
+                    case kernel_type::RELU:
+                        d_node[node_id] = (node[node_id] > 0.) ? 1. : 0.;
+                        break;
+                    case kernel_type::ELU:
+                        d_node[node_id] = (node[node_id] > 0.) ? 1. : node[node_id] + 1.;
+                        break;
+                    case kernel_type::ISRU: {
+                        auto cumin = std::accumulate(function_in.begin(), function_in.end(), 0.);
+                        d_node[node_id] = node[node_id] * node[node_id] * node[node_id] / cumin / cumin / cumin;
+                        break;
+                    }
                 }
             }
         }
@@ -857,39 +887,37 @@ private:
      * @throws std::invalid_argument if the *data* and *label* size do not match or are zero, or if *lr* is not
      * positive.
      */
-    template <typename U, enable_double<U> = 0>
-    void update_weights(typename std::vector<std::vector<U>>::const_iterator dfirst,
-                        typename std::vector<std::vector<U>>::const_iterator dlast,
-                        typename std::vector<std::vector<U>>::const_iterator lfirst, U lr, loss_type loss_e)
+    void update_weights(typename std::vector<std::vector<double>>::const_iterator dfirst,
+                        typename std::vector<std::vector<double>>::const_iterator dlast,
+                        typename std::vector<std::vector<double>>::const_iterator lfirst, double lr, loss_type loss_e)
     {
-        U coeff(lr / static_cast<U>(dlast - dfirst));
+        double coeff(lr / static_cast<double>(dlast - dfirst));
         while (dfirst != dlast) {
             auto mse_out = d_loss(*dfirst++, *lfirst++, loss_e);
             std::transform(m_weights.begin(), m_weights.end(), std::get<1>(mse_out).begin(), m_weights.begin(),
-                           [coeff](U a, U b) { return a - coeff * b; });
+                           [coeff](double a, double b) { return a - coeff * b; });
             std::transform(m_biases.begin(), m_biases.end(), std::get<2>(mse_out).begin(), m_biases.begin(),
-                           [coeff](U a, U b) { return a - coeff * b; });
+                           [coeff](double a, double b) { return a - coeff * b; });
         }
     }
 
-    template <typename U, enable_double<U> = 0>
-    std::tuple<U, std::vector<U>, std::vector<U>> d_loss(typename std::vector<std::vector<U>>::const_iterator dfirst,
-                                                         typename std::vector<std::vector<U>>::const_iterator dlast,
-                                                         typename std::vector<std::vector<U>>::const_iterator lfirst,
-                                                         loss_type loss_e)
+    std::tuple<double, std::vector<double>, std::vector<double>>
+    d_loss(typename std::vector<std::vector<double>>::const_iterator dfirst,
+           typename std::vector<std::vector<double>>::const_iterator dlast,
+           typename std::vector<std::vector<double>>::const_iterator lfirst, loss_type loss_e)
     {
-        U value(U(0.));
-        std::vector<U> gweights(m_weights.size(), U(0.));
-        std::vector<U> gbiases(m_biases.size(), U(0.));
-        U dim = static_cast<U>(dlast - dfirst);
+        double value = 0.;
+        std::vector<double> gweights(m_weights.size(), 0.);
+        std::vector<double> gbiases(m_biases.size(), 0.);
+        double dim = static_cast<double>(dlast - dfirst);
 
         while (dfirst != dlast) {
             auto mse_out = d_loss(*dfirst++, *lfirst++, loss_e);
             value += std::get<0>(mse_out);
             std::transform(gweights.begin(), gweights.end(), std::get<1>(mse_out).begin(), gweights.begin(),
-                           [dim](U a, U b) { return a + b / dim; });
+                           [dim](double a, double b) { return a + b / dim; });
             std::transform(gbiases.begin(), gbiases.end(), std::get<2>(mse_out).begin(), gbiases.begin(),
-                           [dim](U a, U b) { return a + b / dim; });
+                           [dim](double a, double b) { return a + b / dim; });
         }
         value /= dim;
 
@@ -923,6 +951,8 @@ private:
     // (and weights) it feeds into. We also need to add some virtual nodes (to keep track of output nodes dependencies)
     // The assigned virtual ids starting from n + r * c
     std::vector<std::vector<std::pair<unsigned, unsigned>>> m_connected;
+    // Kernel map (this is here to avoid string comparisons)
+    std::vector<kernel_type> m_kernel_map;
 }; // namespace dcgp
 
 } // end of namespace dcgp
