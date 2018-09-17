@@ -243,13 +243,14 @@ public:
         auto outputs = this->operator()(point);
         switch (loss_e) {
             // Mean Square Error
-            case loss_type::MSE:
+            case loss_type::MSE: {
                 for (decltype(outputs.size()) i = 0u; i < outputs.size(); ++i) {
                     retval += (outputs[i] - prediction[i]) * (outputs[i] - prediction[i]);
                 }
                 break; // and exits the switch
+            }
             // Cross Entropy
-            case loss_type::CE:
+            case loss_type::CE: {
                 // exp(a_i)
                 std::transform(outputs.begin(), outputs.end(), outputs.begin(), [](double a) { return std::exp(a); });
                 // sum exp(a_i)
@@ -260,6 +261,7 @@ public:
                 // - sum log(p_i) y_i
                 retval = -std::accumulate(outputs.begin(), outputs.end(), 0.);
                 break;
+            }
         }
         return retval;
     }
