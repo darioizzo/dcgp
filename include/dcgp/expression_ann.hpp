@@ -577,7 +577,7 @@ public:
             throw std::invalid_argument("Requested input exceeds the function arity");
         }
         // index of the node in the weight vector
-        auto idx = this->get_gene_idx()[node_id] - (node_id - this->get_n());
+        auto idx = this->get_gene_idx()[node_id] - (node_id - this->get_n()) + input_id;
         m_weights[idx] = w;
     }
 
@@ -617,7 +617,7 @@ public:
      *
      * @param[in] node_id the id of the node (convention adopted for node numbering
      * http://ppsn2014.ijs.si/files/slides/ppsn2014-tutorial3-miller.pdf)
-     * @param[in] input_id the id of the node input (0 for the first one up to arity-1)
+     * @param[in] input_id the id of the node input (0 up to node arity-1)
      *
      * @return the value of the weight
      *
@@ -633,7 +633,7 @@ public:
             throw std::invalid_argument("Requested input exceeds the function arity");
         }
 
-        auto idx = this->get_gene_idx()[node_id] - (node_id - this->get_n());
+        auto idx = this->get_gene_idx()[node_id] - (node_id - this->get_n()) + input_id;
         return m_weights[idx];
     }
 
@@ -919,11 +919,14 @@ private:
                         typename std::vector<std::vector<double>>::const_iterator lfirst, double lr, loss_type loss_e)
     {
         double coeff(lr / static_cast<double>(dlast - dfirst));
+        // This is stochastic gradient descent: w_{i+1} = w_i - lr * dL/dw_i
         while (dfirst != dlast) {
-            auto mse_out = d_loss(*dfirst++, *lfirst++, loss_e);
-            std::transform(m_weights.begin(), m_weights.end(), std::get<1>(mse_out).begin(), m_weights.begin(),
+            auto err = d_loss(*dfirst++, *lfirst++, loss_e);
+            // On weights
+            std::transform(m_weights.begin(), m_weights.end(), std::get<1>(err).begin(), m_weights.begin(),
                            [coeff](double a, double b) { return a - coeff * b; });
-            std::transform(m_biases.begin(), m_biases.end(), std::get<2>(mse_out).begin(), m_biases.begin(),
+            // And on biases
+            std::transform(m_biases.begin(), m_biases.end(), std::get<2>(err).begin(), m_biases.begin(),
                            [coeff](double a, double b) { return a - coeff * b; });
         }
     }
@@ -939,11 +942,11 @@ private:
         double dim = static_cast<double>(dlast - dfirst);
 
         while (dfirst != dlast) {
-            auto mse_out = d_loss(*dfirst++, *lfirst++, loss_e);
-            value += std::get<0>(mse_out);
-            std::transform(gweights.begin(), gweights.end(), std::get<1>(mse_out).begin(), gweights.begin(),
+            auto err = d_loss(*dfirst++, *lfirst++, loss_e);
+            value += std::get<0>(err);
+            std::transform(gweights.begin(), gweights.end(), std::get<1>(err).begin(), gweights.begin(),
                            [dim](double a, double b) { return a + b / dim; });
-            std::transform(gbiases.begin(), gbiases.end(), std::get<2>(mse_out).begin(), gbiases.begin(),
+            std::transform(gbiases.begin(), gbiases.end(), std::get<2>(err).begin(), gbiases.begin(),
                            [dim](double a, double b) { return a + b / dim; });
         }
         value /= dim;
@@ -958,8 +961,8 @@ private:
         double retval(0.);
         double dim = static_cast<double>(dlast - dfirst);
         while (dfirst != dlast) {
-            double mse_out = loss(*dfirst++, *lfirst++, loss_e);
-            retval += mse_out;
+            double err = loss(*dfirst++, *lfirst++, loss_e);
+            retval += err;
         }
         retval /= dim;
 
