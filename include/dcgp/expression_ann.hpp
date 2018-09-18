@@ -439,11 +439,14 @@ public:
      * @param[labels] The predicted outputs (a batch).
      * @param[l_rate] The learning rate.
      * @param[batch_size] The batch size.
+     * 
+     * @return The average error across the batches. Note: this will not be equal to the error on the whole data set
+     * as weights get updated after each batch. It is an indicator, though, and its free to compute.
      *
      * @throws std::invalid_argument if the *data* and *label* size do not match or is zero, or if *l_rate* is not
      * positive.
      */
-    void sgd(const std::vector<std::vector<double>> &points, const std::vector<std::vector<double>> &labels,
+    double sgd(const std::vector<std::vector<double>> &points, const std::vector<std::vector<double>> &labels,
              double l_rate, unsigned batch_size, const std::string &loss_s)
     {
         if (points.size() != labels.size()) {
@@ -470,16 +473,18 @@ public:
         auto dfirst = points.begin();
         auto dlast = points.end();
         auto lfirst = labels.begin();
+        double retval = 0.;
         while (dfirst != dlast) {
             if (dfirst + batch_size > dlast) {
-                update_weights(dfirst, dlast, lfirst, l_rate, loss_e);
+                retval += update_weights(dfirst, dlast, lfirst, l_rate, loss_e);
                 dfirst = dlast;
             } else {
-                update_weights(dfirst, dfirst + batch_size, lfirst, l_rate, loss_e);
+                retval += update_weights(dfirst, dfirst + batch_size, lfirst, l_rate, loss_e);
                 dfirst += batch_size;
                 lfirst += batch_size;
             }
         }
+        return retval / (points.size() / batch_size + 1.);
     }
 
     /// Sets the output nonlinearities
@@ -912,15 +917,19 @@ private:
      * @param[dlast] End range for the data
      * @param[lfirst] Start range for the labels
      * @param[lr] The learning rate
+     * 
+     * @ return the 
      *
      * @throws std::invalid_argument if the *data* and *label* size do not match or are zero, or if *lr* is not
      * positive.
      */
-    void update_weights(typename std::vector<std::vector<double>>::const_iterator dfirst,
+    double update_weights(typename std::vector<std::vector<double>>::const_iterator dfirst,
                         typename std::vector<std::vector<double>>::const_iterator dlast,
                         typename std::vector<std::vector<double>>::const_iterator lfirst, double lr, loss_type loss_e)
     {
-        double coeff(lr / static_cast<double>(dlast - dfirst));
+        unsigned n_samples = static_cast<unsigned>(dlast - dfirst);
+        double coeff(lr / n_samples);
+        double retval = 0.;
         // This is stochastic gradient descent: w_{i+1} = w_i - lr * dL/dw_i
         while (dfirst != dlast) {
             auto err = d_loss(*dfirst++, *lfirst++, loss_e);
@@ -930,7 +939,9 @@ private:
             // And on biases
             std::transform(m_biases.begin(), m_biases.end(), std::get<2>(err).begin(), m_biases.begin(),
                            [coeff](double a, double b) { return a - coeff * b; });
+            retval += std::get<0>(err);
         }
+        return retval / n_samples;
     }
 
     std::tuple<double, std::vector<double>, std::vector<double>>

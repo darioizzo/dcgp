@@ -338,6 +338,10 @@ Args:
     batch_size (an ``int``): the batch size
     loss_type (a ``str``): the loss, one of "MSE" for Mean Square Error and "CE" for Cross-Entropy.
 
+Returns:
+    The average error across the batches a (``float``). Note: this will not be equal to the final error on the whole data set
+     as weights get updated after each batch. It is an indicator, though, and its free to compute.
+
 Raises:
     ValueError: if *points* or *predictions* are malformed or if *loss_type* is not one of the available types.
     )";

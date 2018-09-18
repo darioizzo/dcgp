@@ -85,7 +85,7 @@ def _dcgpann_visualize(self, show_connections = True, fill_color = 'w', show_non
     xpos = 1 + dc 
     offset = (1. - (m-1) * dr) / 2.
     for inp in range(m):
-            pos[n+r*c+inp] = [xpos, ypos + dr*inp + offset]      
+            pos[n+r*c+inp] = [xpos, ypos + (dr*(m-1)) + offset - dr*inp]      
 
     # ------------------------------_HERE WE PLOT -----------------------------------------------
     if show_connections:
