@@ -43,7 +43,7 @@ public:
     // loss types: Mean Squared Error or Cross Entropy
     enum class loss_type { MSE, CE };
     // loss types: Mean Squared Error or Cross Entropy
-    enum class kernel_type { SIG, TANH, RELU, ELU, ISRU };
+    enum class kernel_type { SIG, TANH, RELU, ELU, ISRU, SUM };
 
     /// Constructor
     /** Constructs a dCGPANN expression
@@ -72,9 +72,9 @@ public:
         // Sanity checks
         for (const auto &ker : f) {
             if (ker.get_name() != "tanh" && ker.get_name() != "sig" && ker.get_name() != "ReLu"
-                && ker.get_name() != "ELU" && ker.get_name() != "ISRU") {
+                && ker.get_name() != "ELU" && ker.get_name() != "ISRU" && ker.get_name() != "SUM") {
                 throw std::invalid_argument(
-                    "Only tanh, sig, ReLu, ELU and ISRU Kernels are valid for dCGP-ANN expressions");
+                    "Only tanh, sig, ReLu, ELU, ISRU and sum Kernels are valid for dCGP-ANN expressions");
             }
         }
         // Initialize the kernel map
@@ -89,6 +89,8 @@ public:
                 m_kernel_map[i] = kernel_type::ELU;
             } else if (f[i].get_name() == "ISRU") {
                 m_kernel_map[i] = kernel_type::ISRU;
+            } else if (f[i].get_name() == "SUM") {
+                m_kernel_map[i] = kernel_type::SUM;
             }
         }
         // Default initialization of weights to 1.
@@ -137,7 +139,7 @@ public:
         // Sanity checks
         for (const auto &ker : f) {
             if (ker.get_name() != "tanh" && ker.get_name() != "sig" && ker.get_name() != "ReLu"
-                && ker.get_name() != "ELU" && ker.get_name() != "ISRU") {
+                && ker.get_name() != "ELU" && ker.get_name() != "ISRU" && ker.get_name() != "SUM") {
                 throw std::invalid_argument(
                     "Only tanh, sig, ReLu, ELU and ISRU Kernels are valid for dCGP-ANN expressions");
             }
@@ -154,6 +156,8 @@ public:
                 m_kernel_map[i] = kernel_type::ELU;
             } else if (f[i].get_name() == "ISRU") {
                 m_kernel_map[i] = kernel_type::ISRU;
+            } else if (f[i].get_name() == "SUM") {
+                m_kernel_map[i] = kernel_type::SUM;
             }
         }
         // Default initialization of weights to 1.
@@ -439,7 +443,7 @@ public:
      * @param[labels] The predicted outputs (a batch).
      * @param[l_rate] The learning rate.
      * @param[batch_size] The batch size.
-     * 
+     *
      * @return The average error across the batches. Note: this will not be equal to the error on the whole data set
      * as weights get updated after each batch. It is an indicator, though, and its free to compute.
      *
@@ -447,7 +451,7 @@ public:
      * positive.
      */
     double sgd(const std::vector<std::vector<double>> &points, const std::vector<std::vector<double>> &labels,
-             double l_rate, unsigned batch_size, const std::string &loss_s)
+               double l_rate, unsigned batch_size, const std::string &loss_s)
     {
         if (points.size() != labels.size()) {
             throw std::invalid_argument("Data and label size mismatch data size is: " + std::to_string(points.size())
@@ -855,7 +859,6 @@ private:
                 }
                 node[node_id] = kernel_call(function_in, g_idx, arity, w_idx, b_idx);
                 // take cares of d_node
-                // sigmoid derivative is sig(1-sig)
                 switch (m_kernel_map[this->get()[g_idx]]) {
                     case kernel_type::SIG:
                         d_node[node_id] = node[node_id] * (1. - node[node_id]);
@@ -864,14 +867,18 @@ private:
                         d_node[node_id] = 1. - node[node_id] * node[node_id];
                         break;
                     case kernel_type::RELU:
-                        d_node[node_id] = (node[node_id] > 0.) ? 1. : 0.;
+                        d_node[node_id] = (node[node_id] < 0.) ? 0. : 1.;
                         break;
                     case kernel_type::ELU:
-                        d_node[node_id] = (node[node_id] > 0.) ? 1. : node[node_id] + 1.;
+                        d_node[node_id] = (node[node_id] < 0.) ? node[node_id] + 1. : 1.;
                         break;
                     case kernel_type::ISRU: {
                         auto cumin = std::accumulate(function_in.begin(), function_in.end(), 0.);
                         d_node[node_id] = node[node_id] * node[node_id] * node[node_id] / cumin / cumin / cumin;
+                        break;
+                    }
+                    case kernel_type::SUM: {
+                        d_node[node_id] = 1.;
                         break;
                     }
                 }
@@ -917,15 +924,15 @@ private:
      * @param[dlast] End range for the data
      * @param[lfirst] Start range for the labels
      * @param[lr] The learning rate
-     * 
-     * @ return the 
+     *
+     * @ return the
      *
      * @throws std::invalid_argument if the *data* and *label* size do not match or are zero, or if *lr* is not
      * positive.
      */
     double update_weights(typename std::vector<std::vector<double>>::const_iterator dfirst,
-                        typename std::vector<std::vector<double>>::const_iterator dlast,
-                        typename std::vector<std::vector<double>>::const_iterator lfirst, double lr, loss_type loss_e)
+                          typename std::vector<std::vector<double>>::const_iterator dlast,
+                          typename std::vector<std::vector<double>>::const_iterator lfirst, double lr, loss_type loss_e)
     {
         unsigned n_samples = static_cast<unsigned>(dlast - dfirst);
         double coeff(lr / n_samples);
