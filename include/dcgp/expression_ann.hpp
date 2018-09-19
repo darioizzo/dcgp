@@ -484,7 +484,7 @@ public:
                 lfirst += batch_size;
             }
         }
-        return retval / (points.size() / batch_size + 1.);
+        return retval / static_cast<double>(points.size() / batch_size + 1u);
     }
 
     /// Sets the output nonlinearities

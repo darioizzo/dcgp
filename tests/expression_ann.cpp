@@ -19,7 +19,7 @@ void test_against_numerical_derivatives(unsigned n, unsigned m, unsigned r, unsi
     std::normal_distribution<> norm{0., 1.};
     std::uniform_int_distribution<unsigned> random_seed(2, 1654636360u);
     // Kernel functions
-    kernel_set<double> ann_set({"sig", "tanh", "ReLu"});
+    kernel_set<double> ann_set({"sig", "tanh", "ReLu", "ELU", "ISRU"});
     // a random dCGPANN
     expression_ann<double> ex(n, m, r, c, lb, arity, ann_set(), random_seed(gen));
     // Since weights and biases are, by default, set to ones, we randomize them
@@ -236,8 +236,8 @@ BOOST_AUTO_TEST_CASE(sgd)
     expression_ann<double> ex(3, 2, 100, 3, 1, 10, ann_set(), rd());
     ex.randomise_weights();
     ex.randomise_biases();
-    std::vector<std::vector<double>> data(100, {0., 0., 0.});
-    std::vector<std::vector<double>> label(100, {0., 0.});
+    std::vector<std::vector<double>> data(200, {0., 0., 0.});
+    std::vector<std::vector<double>> label(200, {0., 0.});
     for (auto &item : data) {
         std::generate(item.begin(), item.end(), [&norm, &gen]() { return norm(gen); });
     }
@@ -249,7 +249,7 @@ BOOST_AUTO_TEST_CASE(sgd)
     double tmp_end = 0.;
     print("Start: ", tmp_start, "\n");
     for (auto j = 0u; j < 20; ++j) {
-        ex.sgd(data, label, 0.1, 32, "MSE");
+        ex.sgd(data, label, 0.001, 32, "MSE");
         tmp_end = ex.loss(data, label, "MSE");
         print("Then (", j, "): ", tmp_end, "\n");
     }
