@@ -89,7 +89,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../notebooks/solving_odes.html">Solving differential equations with dCGP</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notebooks/weighted_symbolic_regression.html">Weighted dCGP for a symbolic regression task</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notebooks/finding_prime_integrals.html">Discovery of prime integrals with dCGP</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../notebooks/dCGPANN.html">Representing an Artificial Neural Network as a Cartesian Genetic Program</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/An_intro_to_dCGPANNs.html">Representing an Artificial Neural Network as a Cartesian Genetic Program</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/dCGPANNs_for_classification.html">Training a FFNN in dCGPANN vs.&nbsp;Keras (classification)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/dCGPANNs_for_function_approximation.html">Training a FFNN in dCGPANN vs.&nbsp;Keras (regression)</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../theory.html">Cartesian Genetic Programming</a></li>
@@ -184,7 +186,7 @@
 <li><strong>rows</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – number of rows in the cartesian program</li>
 <li><strong>columns</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – number of columns in the cartesian program</li>
 <li><strong>levels_back</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – number of levels-back in the cartesian program</li>
-<li><strong>arity</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – arity of the kernels</li>
+<li><strong>arity</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code> on <code class="docutils literal notranslate"><span class="pre">list</span></code>) – arity of the kernels. Assumed equal for all columns unless its specified by a list. The list must contain a number of entries equal to the number of columns.</li>
 <li><strong>kernels</strong> (<code class="docutils literal notranslate"><span class="pre">List[dcgpy.kernel_double]</span></code>) – kernel functions</li>
 <li><strong>seed</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – random seed to generate mutations and chromosomes</li>
 </ul>
@@ -222,7 +224,11 @@
 <dl class="method">
 <dt id="dcgpy.expression_double.get_arity">
 <code class="descname">get_arity</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_double.get_arity" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets the arity of the basis functions of the dCGP expression</p>
+<dd><p>get_arity(node_id)
+Gets the arity of the basis functions of the dCGP expression. Either the whole vector or that of a single node.</p>
+<p>get_arity()
+get_arity(node_id)
+Gets the arity of the basis functions of the dCGP expression. Either the whole vector or that of a single node.</p>
 </dd></dl>
 
 <dl class="method">
@@ -235,6 +241,12 @@
 <dt id="dcgpy.expression_double.get_f">
 <code class="descname">get_f</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_double.get_f" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the kernel functions</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dcgpy.expression_double.get_gene_idx">
+<code class="descname">get_gene_idx</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_double.get_gene_idx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a vector containing the indexes in the chromosome where each node starts to be expressed.</p>
 </dd></dl>
 
 <dl class="method">
@@ -451,7 +463,7 @@ Visualizes the graph of the d-CGP expression
 <li><strong>rows</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – number of rows in the cartesian program</li>
 <li><strong>columns</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – number of columns in the cartesian program</li>
 <li><strong>levels_back</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – number of levels-back in the cartesian program</li>
-<li><strong>arity</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – arity of the kernels</li>
+<li><strong>arity</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code> on <code class="docutils literal notranslate"><span class="pre">list</span></code>) – arity of the kernels. Assumed equal for all columns unless its specified by a list. The list must contain a number of entries equal to the number of columns.</li>
 <li><strong>kernels</strong> (<code class="docutils literal notranslate"><span class="pre">List[dcgpy.kernel_gdual_double]</span></code>) – kernel functions</li>
 <li><strong>seed</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – random seed to generate mutations and chromosomes</li>
 </ul>
@@ -489,7 +501,11 @@ Visualizes the graph of the d-CGP expression
 <dl class="method">
 <dt id="dcgpy.expression_gdual_double.get_arity">
 <code class="descname">get_arity</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_double.get_arity" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets the arity of the basis functions of the dCGP expression</p>
+<dd><p>get_arity(node_id)
+Gets the arity of the basis functions of the dCGP expression. Either the whole vector or that of a single node.</p>
+<p>get_arity()
+get_arity(node_id)
+Gets the arity of the basis functions of the dCGP expression. Either the whole vector or that of a single node.</p>
 </dd></dl>
 
 <dl class="method">
@@ -502,6 +518,12 @@ Visualizes the graph of the d-CGP expression
 <dt id="dcgpy.expression_gdual_double.get_f">
 <code class="descname">get_f</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_double.get_f" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the kernel functions</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dcgpy.expression_gdual_double.get_gene_idx">
+<code class="descname">get_gene_idx</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_double.get_gene_idx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a vector containing the indexes in the chromosome where each node starts to be expressed.</p>
 </dd></dl>
 
 <dl class="method">
@@ -718,7 +740,7 @@ Visualizes the graph of the d-CGP expression
 <li><strong>rows</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – number of rows in the cartesian program</li>
 <li><strong>columns</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – number of columns in the cartesian program</li>
 <li><strong>levels_back</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – number of levels-back in the cartesian program</li>
-<li><strong>arity</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – arity of the kernels</li>
+<li><strong>arity</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code> on <code class="docutils literal notranslate"><span class="pre">list</span></code>) – arity of the kernels. Assumed equal for all columns unless its specified by a list. The list must contain a number of entries equal to the number of columns.</li>
 <li><strong>kernels</strong> (<code class="docutils literal notranslate"><span class="pre">List[dcgpy.kernel_gdual_vdouble]</span></code>) – kernel functions</li>
 <li><strong>seed</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – random seed to generate mutations and chromosomes</li>
 </ul>
@@ -756,7 +778,11 @@ Visualizes the graph of the d-CGP expression
 <dl class="method">
 <dt id="dcgpy.expression_gdual_vdouble.get_arity">
 <code class="descname">get_arity</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_vdouble.get_arity" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets the arity of the basis functions of the dCGP expression</p>
+<dd><p>get_arity(node_id)
+Gets the arity of the basis functions of the dCGP expression. Either the whole vector or that of a single node.</p>
+<p>get_arity()
+get_arity(node_id)
+Gets the arity of the basis functions of the dCGP expression. Either the whole vector or that of a single node.</p>
 </dd></dl>
 
 <dl class="method">
@@ -769,6 +795,12 @@ Visualizes the graph of the d-CGP expression
 <dt id="dcgpy.expression_gdual_vdouble.get_f">
 <code class="descname">get_f</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_vdouble.get_f" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the kernel functions</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dcgpy.expression_gdual_vdouble.get_gene_idx">
+<code class="descname">get_gene_idx</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_vdouble.get_gene_idx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a vector containing the indexes in the chromosome where each node starts to be expressed.</p>
 </dd></dl>
 
 <dl class="method">
@@ -987,7 +1019,7 @@ Visualizes the graph of the d-CGP expression
 <li><strong>rows</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – number of rows in the cartesian program</li>
 <li><strong>columns</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – number of columns in the cartesian program</li>
 <li><strong>levels_back</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – number of levels-back in the cartesian program</li>
-<li><strong>arity</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – arity of the kernels</li>
+<li><strong>arity</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code> on <code class="docutils literal notranslate"><span class="pre">list</span></code>) – arity of the kernels. Assumed equal for all columns unless its specified by a list. The list must contain a number of entries equal to the number of columns.</li>
 <li><strong>kernels</strong> (<code class="docutils literal notranslate"><span class="pre">List[dcgpy.kernel_double]</span></code>) – kernel functions</li>
 <li><strong>seed</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – random seed to generate mutations and chromosomes</li>
 </ul>
@@ -1099,7 +1131,7 @@ Visualizes the graph of the d-CGP expression
 <li><strong>rows</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – number of rows in the cartesian program</li>
 <li><strong>columns</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – number of columns in the cartesian program</li>
 <li><strong>levels_back</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – number of levels-back in the cartesian program</li>
-<li><strong>arity</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – arity of the kernels</li>
+<li><strong>arity</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code> on <code class="docutils literal notranslate"><span class="pre">list</span></code>) – arity of the kernels. Assumed equal for all columns unless its specified by a list. The list must contain a number of entries equal to the number of columns.</li>
 <li><strong>kernels</strong> (<code class="docutils literal notranslate"><span class="pre">List[dcgpy.kernel_gdual_double]</span></code>) – kernel functions</li>
 <li><strong>seed</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – random seed to generate mutations and chromosomes</li>
 </ul>
@@ -1211,7 +1243,7 @@ Visualizes the graph of the d-CGP expression
 <li><strong>rows</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – number of rows in the cartesian program</li>
 <li><strong>columns</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – number of columns in the cartesian program</li>
 <li><strong>levels_back</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – number of levels-back in the cartesian program</li>
-<li><strong>arity</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – arity of the kernels</li>
+<li><strong>arity</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code> on <code class="docutils literal notranslate"><span class="pre">list</span></code>) – arity of the kernels. Assumed equal for all columns unless its specified by a list. The list must contain a number of entries equal to the number of columns.</li>
 <li><strong>kernels</strong> (<code class="docutils literal notranslate"><span class="pre">List[dcgpy.kernel_gdual_vdouble]</span></code>) – kernel functions</li>
 <li><strong>seed</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – random seed to generate mutations and chromosomes</li>
 </ul>
@@ -1444,7 +1476,7 @@ functions can be then retrieved via the call operator.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>kernel_name</strong> (<code class="docutils literal notranslate"><span class="pre">string</span></code>) – a string containing the function name</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>kernel_name</strong> (<code class="docutils literal notranslate"><span class="pre">string</span></code>) – a string containing the kernel name</td>
 </tr>
 </tbody>
 </table>
@@ -1494,7 +1526,7 @@ functions can be then retrieved via the call operator.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>kernel_name</strong> (<code class="docutils literal notranslate"><span class="pre">string</span></code>) – a string containing the function name</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>kernel_name</strong> (<code class="docutils literal notranslate"><span class="pre">string</span></code>) – a string containing the kernel name</td>
 </tr>
 </tbody>
 </table>
@@ -1544,7 +1576,7 @@ functions can be then retrieved via the call operator.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>kernel_name</strong> (<code class="docutils literal notranslate"><span class="pre">string</span></code>) – a string containing the function name</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>kernel_name</strong> (<code class="docutils literal notranslate"><span class="pre">string</span></code>) – a string containing the kernel name</td>
 </tr>
 </tbody>
 </table>

@@ -89,7 +89,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../notebooks/solving_odes.html">Solving differential equations with dCGP</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notebooks/weighted_symbolic_regression.html">Weighted dCGP for a symbolic regression task</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notebooks/finding_prime_integrals.html">Discovery of prime integrals with dCGP</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../notebooks/dCGPANN.html">Representing an Artificial Neural Network as a Cartesian Genetic Program</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/An_intro_to_dCGPANNs.html">Representing an Artificial Neural Network as a Cartesian Genetic Program</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/dCGPANNs_for_classification.html">Training a FFNN in dCGPANN vs.&nbsp;Keras (classification)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/dCGPANNs_for_function_approximation.html">Training a FFNN in dCGPANN vs.&nbsp;Keras (regression)</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../theory.html">Cartesian Genetic Programming</a></li>
@@ -190,6 +192,27 @@ the class would operate in the differential algebra of truncated Taylor polynomi
 <dt><strong>Exceptions</strong></dt>
 <dd><ul class="breatheparameterlist first last simple">
 <li><code class="docutils literal notranslate"><span class="pre">std::invalid_argument</span></code>: if the chromosome is incompatible with the expression (n.inputs, n.outputs, levels-back, etc.) </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv3N4dcgp10expression10set_f_geneEjj">
+<span class="target" id="classdcgp_1_1expression_1a51f752bcd1bcba27c40c435301bba18f"></span>void <code class="descname">set_f_gene</code><span class="sig-paren">(</span>unsigned <em>node_id</em>, unsigned <em>f_id</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N4dcgp10expression10set_f_geneEjj" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sets the function gene of a node. </p>
+<p>Sets for a valid node (i.e. not an input node) a new kernel</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">node_id</span></code>: the id of the node </li>
+<li><code class="docutils literal notranslate"><span class="pre">f_id</span></code>: the id of the kernel</li>
+</ul>
+</dd>
+<dt><strong>Exceptions</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">std::invalid_argument</span></code>: if the <em>node_id</em> or <em>f_id</em> are invalid. </li>
 </ul>
 </dd>
 </dl>
@@ -398,7 +421,7 @@ the class would operate in the differential algebra of truncated Taylor polynomi
 <dl class="function">
 <dt id="_CPPv3N4dcgp10expression13mutate_activeEj">
 <span class="target" id="classdcgp_1_1expression_1a5db413e253396fb830ba9911f10e8290"></span>void <code class="descname">mutate_active</code><span class="sig-paren">(</span>unsigned <em>N</em> = 1<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N4dcgp10expression13mutate_activeEj" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Mutates one of the active genes. </p>
+<dd><p>Mutates active genes. </p>
 <p>Mutates <code class="docutils literal notranslate"><span class="pre">N</span></code> active genes within their allowed bounds. The mutation can affect function genes, input genes and output genes.</p>
 <p><dl class="docutils">
 <dt><strong>Parameters</strong></dt>
@@ -411,22 +434,22 @@ the class would operate in the differential algebra of truncated Taylor polynomi
 </dd></dl>
 
 <dl class="function">
-<dt id="_CPPv3N4dcgp10expression19mutate_active_fgeneEv">
-<span class="target" id="classdcgp_1_1expression_1a30f70a4c89a6d65454edecc2713dea7a"></span>void <code class="descname">mutate_active_fgene</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N4dcgp10expression19mutate_active_fgeneEv" title="Permalink to this definition">¶</a><br /></dt>
+<dt id="_CPPv3N4dcgp10expression19mutate_active_fgeneEj">
+<span class="target" id="classdcgp_1_1expression_1aeac7b9e98e157ceeda63d084d1f6a430"></span>void <code class="descname">mutate_active_fgene</code><span class="sig-paren">(</span>unsigned <em>N</em> = 1<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N4dcgp10expression19mutate_active_fgeneEj" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Mutates one of the active function genes. </p>
 <p>Mutates exactly one of the active function genes within its allowed bounds. </p>
 </dd></dl>
 
 <dl class="function">
-<dt id="_CPPv3N4dcgp10expression19mutate_active_cgeneEv">
-<span class="target" id="classdcgp_1_1expression_1a376ed5a85bf6f993407acb936f500f47"></span>void <code class="descname">mutate_active_cgene</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N4dcgp10expression19mutate_active_cgeneEv" title="Permalink to this definition">¶</a><br /></dt>
+<dt id="_CPPv3N4dcgp10expression19mutate_active_cgeneEj">
+<span class="target" id="classdcgp_1_1expression_1aeb491c96aed9c666a383ecb57d57021d"></span>void <code class="descname">mutate_active_cgene</code><span class="sig-paren">(</span>unsigned <em>N</em> = 1<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N4dcgp10expression19mutate_active_cgeneEj" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Mutates one of the active connection genes. </p>
 <p>Mutates exactly one of the active connection genes within its allowed bounds. </p>
 </dd></dl>
 
 <dl class="function">
-<dt id="_CPPv3N4dcgp10expression12mutate_ogeneEv">
-<span class="target" id="classdcgp_1_1expression_1a5fb1d0dd8a408791a2452d80e2bc656d"></span>void <code class="descname">mutate_ogene</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N4dcgp10expression12mutate_ogeneEv" title="Permalink to this definition">¶</a><br /></dt>
+<dt id="_CPPv3N4dcgp10expression12mutate_ogeneEj">
+<span class="target" id="classdcgp_1_1expression_1a758e3ac88035e1fb8948e3d09e8472ba"></span>void <code class="descname">mutate_ogene</code><span class="sig-paren">(</span>unsigned <em>N</em> = 1<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N4dcgp10expression12mutate_ogeneEj" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Mutates one of the active output genes. </p>
 <p>Mutates exactly one of the output genes within its allowed bounds. </p>
 </dd></dl>

@@ -89,7 +89,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../notebooks/solving_odes.html">Solving differential equations with dCGP</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notebooks/weighted_symbolic_regression.html">Weighted dCGP for a symbolic regression task</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notebooks/finding_prime_integrals.html">Discovery of prime integrals with dCGP</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../notebooks/dCGPANN.html">Representing an Artificial Neural Network as a Cartesian Genetic Program</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/An_intro_to_dCGPANNs.html">Representing an Artificial Neural Network as a Cartesian Genetic Program</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/dCGPANNs_for_classification.html">Training a FFNN in dCGPANN vs.&nbsp;Keras (classification)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/dCGPANNs_for_function_approximation.html">Training a FFNN in dCGPANN vs.&nbsp;Keras (regression)</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../theory.html">Cartesian Genetic Programming</a></li>
@@ -200,7 +202,7 @@ deep networks ML.)</p>
 <em class="property">template </em>&lt;<em class="property">typename</em> U, enable_double_string&lt; U &gt; = 0&gt;</dt>
 <dt id="_CPPv3NK4dcgp14expression_annclERKNSt16initializer_listI1UEE">
 <span class="target" id="classdcgp_1_1expression__ann_1a7145588ef4d8039f8ccd422d056ae5aa"></span>std::vector&lt;U&gt; <code class="descname">operator()</code><span class="sig-paren">(</span><em class="property">const</em> std::initializer_list&lt;U&gt; &amp;<em>point</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv3NK4dcgp14expression_annclERKNSt16initializer_listI1UEE" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Evaluates the dCGP-ANN expression. </p>
+<dd><p>Evaluates the dCGP-ANN expression (initializer list) </p>
 <p>This evaluates the dCGP-ANN expression. According to the template parameter it will compute the value (U) or a symbolic representation (std::string). Any other type will result in a compilation-time error (SFINAE).</p>
 <p><dl class="docutils">
 <dt><strong>Return</strong></dt>
@@ -215,10 +217,46 @@ deep networks ML.)</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="_CPPv3N4dcgp14expression_ann3mseERKNSt6vectorIdEERKNSt6vectorIdEE">
+<span class="target" id="classdcgp_1_1expression__ann_1a42bf139ea8f1d4d2e40d30f8f83141c5"></span>double <code class="descname">mse</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;double&gt; &amp;<em>point</em>, <em class="property">const</em> std::vector&lt;double&gt; &amp;<em>prediction</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N4dcgp14expression_ann3mseERKNSt6vectorIdEERKNSt6vectorIdEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Evaluates the mean square error. </p>
+<p>Returns the mean squared error.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>the mse </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">[point]</span></code>: The input data (single point) </li>
+<li><code class="docutils literal notranslate"><span class="pre">[prediction]</span></code>: The predicted output (single point) </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv3N4dcgp14expression_ann3mseERKNSt6vectorINSt6vectorIdEEEERKNSt6vectorINSt6vectorIdEEEE">
+<span class="target" id="classdcgp_1_1expression__ann_1aee7ecbd946478f76f7bacc2958c2f2ea"></span>double <code class="descname">mse</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;std::vector&lt;double&gt;&gt; &amp;<em>points</em>, <em class="property">const</em> std::vector&lt;std::vector&lt;double&gt;&gt; &amp;<em>predictions</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N4dcgp14expression_ann3mseERKNSt6vectorINSt6vectorIdEEEERKNSt6vectorINSt6vectorIdEEEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Evaluates the mean square error. </p>
+<p>Returns the mean squared error.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>the mse </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">[points]</span></code>: The input data (a batch). </li>
+<li><code class="docutils literal notranslate"><span class="pre">[predictions]</span></code>: The predicted outputs (a batch). </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
 <dt>
 <em class="property">template </em>&lt;<em class="property">typename</em> U, enable_double&lt; U &gt; = 0&gt;</dt>
-<dt id="_CPPv3N4dcgp14expression_ann3mseERKNSt6vectorI1UEERKNSt6vectorI1UEE">
-<span class="target" id="classdcgp_1_1expression__ann_1ad4d24550efa3e5aecfc815c0547ec8f1"></span>std::tuple&lt;U, std::vector&lt;U&gt;, std::vector&lt;U&gt;&gt; <code class="descname">mse</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;U&gt; &amp;<em>point</em>, <em class="property">const</em> std::vector&lt;U&gt; &amp;<em>prediction</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N4dcgp14expression_ann3mseERKNSt6vectorI1UEERKNSt6vectorI1UEE" title="Permalink to this definition">¶</a><br /></dt>
+<dt id="_CPPv3N4dcgp14expression_ann5d_mseERKNSt6vectorI1UEERKNSt6vectorI1UEE">
+<span class="target" id="classdcgp_1_1expression__ann_1a3169947d31dee40ae178a3ea97a67cb4"></span>std::tuple&lt;U, std::vector&lt;U&gt;, std::vector&lt;U&gt;&gt; <code class="descname">d_mse</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;U&gt; &amp;<em>point</em>, <em class="property">const</em> std::vector&lt;U&gt; &amp;<em>prediction</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N4dcgp14expression_ann5d_mseERKNSt6vectorI1UEERKNSt6vectorI1UEE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Evaluates the mean square error and its gradient. </p>
 <p>Returns the mean squared error and its gradient with respect to weights and biases.</p>
 <p><dl class="docutils">
@@ -237,8 +275,8 @@ deep networks ML.)</p>
 <dl class="function">
 <dt>
 <em class="property">template </em>&lt;<em class="property">typename</em> U, enable_double&lt; U &gt; = 0&gt;</dt>
-<dt id="_CPPv3N4dcgp14expression_ann3mseERKNSt6vectorINSt6vectorI1UEEEERKNSt6vectorINSt6vectorI1UEEEE">
-<span class="target" id="classdcgp_1_1expression__ann_1a84220a53e5cae7359e6a0289b41e78a1"></span>std::tuple&lt;U, std::vector&lt;U&gt;, std::vector&lt;U&gt;&gt; <code class="descname">mse</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;std::vector&lt;U&gt;&gt; &amp;<em>points</em>, <em class="property">const</em> std::vector&lt;std::vector&lt;U&gt;&gt; &amp;<em>predictions</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N4dcgp14expression_ann3mseERKNSt6vectorINSt6vectorI1UEEEERKNSt6vectorINSt6vectorI1UEEEE" title="Permalink to this definition">¶</a><br /></dt>
+<dt id="_CPPv3N4dcgp14expression_ann5d_mseERKNSt6vectorINSt6vectorI1UEEEERKNSt6vectorINSt6vectorI1UEEEE">
+<span class="target" id="classdcgp_1_1expression__ann_1a83c1132eb2c4824461ccc2a80c6b1658"></span>std::tuple&lt;U, std::vector&lt;U&gt;, std::vector&lt;U&gt;&gt; <code class="descname">d_mse</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;std::vector&lt;U&gt;&gt; &amp;<em>points</em>, <em class="property">const</em> std::vector&lt;std::vector&lt;U&gt;&gt; &amp;<em>predictions</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N4dcgp14expression_ann5d_mseERKNSt6vectorINSt6vectorI1UEEEERKNSt6vectorINSt6vectorI1UEEEE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Evaluates the mean square error and its gradient. </p>
 <p>Returns the mean squared error and its gradient with respect to weights and biases.</p>
 <p><dl class="docutils">
@@ -273,6 +311,26 @@ deep networks ML.)</p>
 <dt><strong>Exceptions</strong></dt>
 <dd><ul class="breatheparameterlist first last simple">
 <li><code class="docutils literal notranslate"><span class="pre">std::invalid_argument</span></code>: if the <em>data</em> and <em>label</em> size do not match or is zero, or if <em>l_rate</em> is not positive. </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv3N4dcgp14expression_ann12set_output_fEj">
+<span class="target" id="classdcgp_1_1expression__ann_1a233770cb4ebd20ed5a2c959a9556e55f"></span>void <code class="descname">set_output_f</code><span class="sig-paren">(</span>unsigned <em>f_id</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N4dcgp14expression_ann12set_output_fEj" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sets the output nonlinearities. </p>
+<p>Sets the nonlinearities of all nodes connected to the output nodes. This is useful when, for example, the dCGPANN is used for a regression task where output values are expected in [-1 1] and hence the output layer should have some sigmoid or tanh nonlinearity.</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">f_id</span></code>: the id of the kernel (nonlinearity)</li>
+</ul>
+</dd>
+<dt><strong>Exceptions</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">std::invalid_argument</span></code>: if <em>f_id</em> is invalid. </li>
 </ul>
 </dd>
 </dl>
