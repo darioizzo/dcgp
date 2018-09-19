@@ -23,6 +23,9 @@ Python examples
   ../notebooks/solving_odes.ipynb
   ../notebooks/weighted_symbolic_regression.ipynb
   ../notebooks/finding_prime_integrals.ipynb
-  ../notebooks/dCGPANN.ipynb
+  ../notebooks/An_intro_to_dCGPANNs.ipynb
+  ../notebooks/dCGPANNs_for_classification.ipynb
+  ../notebooks/dCGPANNs_for_function_approximation.ipynb
+
 
 
