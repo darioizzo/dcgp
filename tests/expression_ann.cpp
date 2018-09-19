@@ -19,7 +19,7 @@ void test_against_numerical_derivatives(unsigned n, unsigned m, unsigned r, unsi
     std::normal_distribution<> norm{0., 1.};
     std::uniform_int_distribution<unsigned> random_seed(2, 1654636360u);
     // Kernel functions
-    kernel_set<double> ann_set({"sig", "tanh", "ReLu", "ELU", "ISRU"});
+    kernel_set<double> ann_set({"sig", "tanh", "ReLu", "ELU", "ISRU", "sum"});
     // a random dCGPANN
     expression_ann<double> ex(n, m, r, c, lb, arity, ann_set(), random_seed(gen));
     // Since weights and biases are, by default, set to ones, we randomize them
@@ -166,7 +166,7 @@ BOOST_AUTO_TEST_CASE(construction)
 
     kernel_set<double> ann_set_malformed1({"tanh", "sin"});
     kernel_set<double> ann_set_malformed2({"cos", "sig"});
-    kernel_set<double> ann_set_malformed3({"ReLu", "sum"});
+    kernel_set<double> ann_set_malformed3({"ReLu", "diff"});
 
     BOOST_CHECK_THROW((expression_ann<double>{1, 1, 1, 2, 1, 1, ann_set_malformed1(), rd()}), std::invalid_argument);
     BOOST_CHECK_THROW((expression_ann<double>{1, 1, 1, 2, 1, 1, ann_set_malformed2(), rd()}), std::invalid_argument);

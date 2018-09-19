@@ -43,7 +43,7 @@ public:
     // loss types: Mean Squared Error or Cross Entropy
     enum class loss_type { MSE, CE };
     // loss types: Mean Squared Error or Cross Entropy
-    enum class kernel_type { SIG, TANH, RELU, ELU, ISRU, EXPM };
+    enum class kernel_type { SIG, TANH, RELU, ELU, ISRU, SUM };
 
     /// Constructor
     /** Constructs a dCGPANN expression
@@ -72,9 +72,9 @@ public:
         // Sanity checks
         for (const auto &ker : f) {
             if (ker.get_name() != "tanh" && ker.get_name() != "sig" && ker.get_name() != "ReLu"
-                && ker.get_name() != "ELU" && ker.get_name() != "ISRU" && ker.get_name() != "expm") {
+                && ker.get_name() != "ELU" && ker.get_name() != "ISRU" && ker.get_name() != "sum") {
                 throw std::invalid_argument(
-                    "Only tanh, sig, ReLu, ELU, ISRU and expm Kernels are valid for dCGP-ANN expressions");
+                    "Only tanh, sig, ReLu, ELU, ISRU and sum Kernels are valid for dCGP-ANN expressions");
             }
         }
         // Initialize the kernel map
@@ -89,8 +89,8 @@ public:
                 m_kernel_map[i] = kernel_type::ELU;
             } else if (f[i].get_name() == "ISRU") {
                 m_kernel_map[i] = kernel_type::ISRU;
-            } else if (f[i].get_name() == "expm") {
-                m_kernel_map[i] = kernel_type::EXPM;
+            } else if (f[i].get_name() == "sum") {
+                m_kernel_map[i] = kernel_type::SUM;
             }
         }
         // Default initialization of weights to 1.
@@ -139,9 +139,9 @@ public:
         // Sanity checks
         for (const auto &ker : f) {
             if (ker.get_name() != "tanh" && ker.get_name() != "sig" && ker.get_name() != "ReLu"
-                && ker.get_name() != "ELU" && ker.get_name() != "ISRU") {
+                && ker.get_name() != "ELU" && ker.get_name() != "ISRU" && ker.get_name() != "sum") {
                 throw std::invalid_argument(
-                    "Only tanh, sig, ReLu, ELU and ISRU Kernels are valid for dCGP-ANN expressions");
+                    "Only tanh, sig, ReLu, ELU, ISRU and sum Kernels are valid for dCGP-ANN expressions");
             }
         }
         // Initialize the kernel map
@@ -156,8 +156,8 @@ public:
                 m_kernel_map[i] = kernel_type::ELU;
             } else if (f[i].get_name() == "ISRU") {
                 m_kernel_map[i] = kernel_type::ISRU;
-            } else if (f[i].get_name() == "expm") {
-                m_kernel_map[i] = kernel_type::EXPM;
+            } else if (f[i].get_name() == "sum") {
+                m_kernel_map[i] = kernel_type::SUM;
             }
         }
         // Default initialization of weights to 1.
@@ -873,8 +873,8 @@ private:
                     case kernel_type::TANH:
                         d_node[node_id] = 1. - node[node_id] * node[node_id];
                         break;
-                    case kernel_type::EXPM:
-                        d_node[node_id] = node[node_id];
+                    case kernel_type::SUM:
+                        d_node[node_id] = 1.;
                         break;
                     case kernel_type::RELU:
                         d_node[node_id] = (node[node_id] > 0.) ? 1. : 0.;
