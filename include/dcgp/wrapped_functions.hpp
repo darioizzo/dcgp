@@ -217,7 +217,7 @@ T my_elu(const std::vector<T> &in)
     for (auto i = 1u; i < in.size(); ++i) {
         retval += in[i];
     }
-    (retval < 0) ? retval = audi::exp(retval) - T(1.) : retval = retval;
+    (retval < 0) ? retval = T(0.) : retval = audi::exp(retval) - T(1.);
     return retval;
 }
 
@@ -229,7 +229,7 @@ T my_elu(const std::vector<T> &in)
     for (auto i = 1u; i < in.size(); ++i) {
         retval += in[i];
     }
-    (retval.constant_cf() < T(0.).constant_cf()) ? retval = audi::exp(retval) - T(1.) : retval = retval;
+    (retval.constant_cf() < T(0.).constant_cf()) ? retval = T(0.) : retval = audi::exp(retval) - T(1.);
     return retval;
 }
 
