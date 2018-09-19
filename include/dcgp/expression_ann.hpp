@@ -255,9 +255,12 @@ public:
             }
             // Cross Entropy
             case loss_type::CE: {
-                // exp(a_i)
-                std::transform(outputs.begin(), outputs.end(), outputs.begin(), [](double a) { return std::exp(a); });
-                // sum exp(a_i)
+                // We guard from numerical instabilities subtracting the max element
+                auto max = *std::max_element(outputs.begin(), outputs.end());
+                // exp(a_i - max)
+                std::transform(outputs.begin(), outputs.end(), outputs.begin(),
+                               [max](double a) { return std::exp(a - max); });
+                // sum exp(a_i - max)
                 double cumsum = std::accumulate(outputs.begin(), outputs.end(), 0.);
                 // log(p_i) * y_i
                 std::transform(outputs.begin(), outputs.end(), prediction.begin(), outputs.begin(),
@@ -352,14 +355,17 @@ public:
             // Cross Entropy
             case loss_type::CE: {
                 std::vector<double> ps(this->get_m(), 0.);
-                double cumsum = 0.;
-                // We compute exp(a_i) and sum exp(a_i) for softmax
+                // We store output values in ps
                 for (decltype(this->get_m()) i = 0u; i < this->get_m(); ++i) {
                     auto node_idx = this->get()[this->get().size() - this->get_m() + i];
-                    ps[i] = std::exp(node[node_idx]);
-                    cumsum += ps[i];
+                    ps[i] = node[node_idx];
                 }
-                // We compute the probabilities p_i = a_i / sum a_i
+                // We guard from numerical instabilities subtracting the max
+                auto max = *std::max_element(ps.begin(), ps.end());
+                std::transform(ps.begin(), ps.end(), ps.begin(), [max](double a) { return std::exp(a - max); });
+                // We compute the sum of exp(o_i - max)
+                double cumsum = std::accumulate(ps.begin(), ps.end(), 0.);
+                // We transform to probabilities p_i
                 std::transform(ps.begin(), ps.end(), ps.begin(), [cumsum](double a) { return a / cumsum; });
                 // We add the derivatives of the loss w.r.t. to outputs
                 for (decltype(ps.size()) i = 0u; i < ps.size(); ++i) {
