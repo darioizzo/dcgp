@@ -262,6 +262,27 @@ std::string print_my_isru(const std::vector<std::string> &in)
     return "ISRU(" + retval + ")";
 }
 
+// exponential (multiple arity)
+// This exponential takes the inputs, sums them and evalutes the exponential
+template <typename T, f_enabler<T> = 0>
+T my_expm(const std::vector<T> &in)
+{
+    T retval(in[0]);
+    for (auto i = 1u; i < in.size(); ++i) {
+        retval += in[i];
+    }
+    return audi::exp(retval);
+}
+
+std::string print_my_expm(const std::vector<std::string> &in)
+{
+    std::string retval(in[0]);
+    for (auto i = 1u; i < in.size(); ++i) {
+        retval += "+" + in[i];
+    }
+    return "exp(" + retval + ")";
+}
+
 /*--------------------------------------------------------------------------
  *                               UNARY FUNCTIONS
  *------------------------------------------------------------------------**/
@@ -301,7 +322,8 @@ std::string print_my_log(const std::vector<std::string> &in)
     return "log(" + in[0] + ")";
 }
 
-// exponential
+// exponential (unary)
+// This exponential discards all inputs except the first one
 template <typename T, f_enabler<T> = 0>
 T my_exp(const std::vector<T> &in)
 {

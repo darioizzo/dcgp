@@ -72,6 +72,8 @@ public:
             m_kernels.emplace_back(my_elu<T>, print_my_elu, kernel_name);
         else if (kernel_name == "ISRU")
             m_kernels.emplace_back(my_isru<T>, print_my_isru, kernel_name);
+        else if (kernel_name == "expm")
+            m_kernels.emplace_back(my_expm<T>, print_my_expm, kernel_name);
         else if (kernel_name == "sin")
             m_kernels.emplace_back(my_sin<T>, print_my_sin, kernel_name);
         else if (kernel_name == "cos")
