@@ -252,6 +252,7 @@ public:
                 for (decltype(outputs.size()) i = 0u; i < outputs.size(); ++i) {
                     retval += (outputs[i] - prediction[i]) * (outputs[i] - prediction[i]);
                 }
+                retval /= static_cast<double>(outputs.size());
                 break; // and exits the switch
             }
             // Cross Entropy
@@ -295,7 +296,7 @@ public:
             throw std::invalid_argument("Data size cannot be zero");
         }
         loss_type loss_e;
-        if (loss_s == "MSE") { // Mean Square Error
+        if (loss_s == "MSE") { // Mean Squared Error
             loss_e = loss_type::MSE;
         } else if (loss_s == "CE") {
             loss_e = loss_type::CE; // Cross Entropy
@@ -348,9 +349,10 @@ public:
                 for (decltype(this->get_m()) i = 0u; i < this->get_m(); ++i) {
                     auto node_idx = this->get()[this->get().size() - this->get_m() + i];
                     auto dummy = (node[node_idx] - prediction[i]);
-                    d_node.push_back(2. * dummy);
+                    d_node.push_back(2. * dummy / prediction.size());
                     value += dummy * dummy;
                 }
+                value /= prediction.size();
                 break; // and exits the switch
             }
             // Cross Entropy
@@ -492,15 +494,15 @@ public:
             if (dfirst + batch_size > dlast) {
                 retval += update_weights(dfirst, dlast, lfirst, lr, loss_e);
                 dfirst = dlast;
-                ++counter;
+                counter++;
             } else {
                 retval += update_weights(dfirst, dfirst + batch_size, lfirst, lr, loss_e);
                 dfirst += batch_size;
                 lfirst += batch_size;
-                ++counter;
+                counter++;
             }
         }
-        return retval; // counter;
+        return retval / counter;
     }
 
     /// Sets the output nonlinearities
@@ -558,7 +560,8 @@ public:
             } else {
                 auto g_idx = this->get_gene_idx()[node_id];
                 auto arity = this->_get_arity(node_id);
-                std::vector<unsigned> con_id(this->get().begin() + g_idx + 1, this->get().begin() + g_idx + 1 + arity);
+                std::vector<unsigned> con_id(this->get().begin() + g_idx + 1u,
+                                             this->get().begin() + g_idx + 1u + arity);
                 std::sort(con_id.begin(), con_id.end());
                 retval += static_cast<unsigned>(std::unique(con_id.begin(), con_id.end()) - con_id.begin());
             }
