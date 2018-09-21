@@ -41,6 +41,11 @@ void test_against_numerical_derivatives(unsigned n, unsigned m, unsigned r, unsi
 
     // Compute the loss and the gradients
     auto bp = ex.d_loss(in, out, loss_e);
+    // Compute only the loss
+    auto loss = ex.loss(in, out, loss_e);
+    // We check the loss is equal when computed in both ways
+    BOOST_CHECK_EQUAL(std::get<0>(bp), loss);
+
 
     // We check against numerical diff
     // first the weights
@@ -228,7 +233,7 @@ BOOST_AUTO_TEST_CASE(sgd)
     // Random numbers stuff
     std::random_device rd;
     std::mt19937 gen{rd()};
-    std::normal_distribution<> norm(0., 1.);
+    std::uniform_real_distribution<> uniform(-1., 1.);
 
     // Kernel functions
     kernel_set<double> ann_set({"sig", "tanh", "ReLu"});
@@ -238,7 +243,7 @@ BOOST_AUTO_TEST_CASE(sgd)
     std::vector<std::vector<double>> data(200, {0., 0., 0.});
     std::vector<std::vector<double>> label(200, {0., 0.});
     for (auto &item : data) {
-        std::generate(item.begin(), item.end(), [&norm, &gen]() { return norm(gen); });
+        std::generate(item.begin(), item.end(), [&uniform, &gen]() { return uniform(gen); });
     }
     for (auto i = 0u; i < label.size(); ++i) {
         label[i][0] = 1. / 5. * std::cos(data[i][0] + data[i][1] + data[i][2]) - data[i][0] * data[i][1];
@@ -294,6 +299,7 @@ BOOST_AUTO_TEST_CASE(d_loss)
     test_against_numerical_derivatives(5, 1, 5, 5, 2, {2, 1, 3, 1, 7}, random_seed(gen), loss_t::MSE);
     test_against_numerical_derivatives(5, 1, 6, 6, 2, {1, 1, 1, 1, 1, 1}, random_seed(gen), loss_t::CE);
 }
+
 
 BOOST_AUTO_TEST_CASE(n_active_weights)
 {

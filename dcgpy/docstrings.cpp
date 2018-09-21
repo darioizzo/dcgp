@@ -365,17 +365,18 @@ Raises:
 
 std::string expression_ann_set_output_f_doc()
 {
-    return R"(set_output_f(f_id)
+    return R"(set_output_f(name)
 
 Sets the nonlinearities of all nodes connected to the output nodes.
 This is useful when, for example, the dCGPANN is used for a regression task where output values are expected in [-1 1]
-and hence the output layer should have some sigmoid or tanh nonlinearity.
+and hence the output layer should have some sigmoid or tanh nonlinearity, or in a classification task when one wants to have a softmax
+layer by having a sum in all output neurons.
 
 Args:
-    f_id (a ``List[int]``): the kernel id
+    name (a ``string``): the kernel name
 
 Raises:
-    ValueError: if f_id is  incompatible with the expression.
+    ValueError: if *name* is not one of the kernels in the expression.
     )";
 }
 

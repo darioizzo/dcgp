@@ -3,6 +3,7 @@
 
 #include <algorithm>
 #include <audi/io.hpp>
+#include <functional>
 #include <initializer_list>
 #include <iostream>
 #include <map>
@@ -447,18 +448,19 @@ public:
      *
      * @param[points] The input data (a batch).
      * @param[labels] The predicted outputs (a batch).
-     * @param[l_rate] The learning rate.
+     * @param[lr] The learning rate.
      * @param[batch_size] The batch size.
      *
      * @return The average error across the batches. Note: this will not be equal to the error on the whole data set
      * as weights get updated after each batch. It is an indicator, though, and its free to compute.
      *
-     * @throws std::invalid_argument if the *data* and *label* size do not match or is zero, or if *l_rate* is not
+     * @throws std::invalid_argument if the *data* and *label* size do not match or is zero, or if *lr* is not
      * positive.
      */
     double sgd(const std::vector<std::vector<double>> &points, const std::vector<std::vector<double>> &labels,
-               double l_rate, unsigned batch_size, const std::string &loss_s)
+               double lr, unsigned batch_size, const std::string &loss_s)
     {
+        // Sanity checks for the inputs
         if (points.size() != labels.size()) {
             throw std::invalid_argument("Data and label size mismatch data size is: " + std::to_string(points.size())
                                         + " while label size is: " + std::to_string(labels.size()));
@@ -466,11 +468,12 @@ public:
         if (points.size() == 0) {
             throw std::invalid_argument("Data size cannot be zero");
         }
-        if (l_rate <= 0) {
-            throw std::invalid_argument("The learning rate must be a positive number, while: " + std::to_string(l_rate)
+        if (lr <= 0) {
+            throw std::invalid_argument("The learning rate must be a positive number, while: " + std::to_string(lr)
                                         + " was detected.");
         }
 
+        // Decoding the loss from string to the enum type (loss_s -> loss_e)
         loss_type loss_e;
         if (loss_s == "MSE") {
             loss_e = loss_type::MSE;
@@ -484,17 +487,20 @@ public:
         auto dlast = points.end();
         auto lfirst = labels.begin();
         double retval = 0.;
+        double counter = 0.;
         while (dfirst != dlast) {
             if (dfirst + batch_size > dlast) {
-                retval += update_weights(dfirst, dlast, lfirst, l_rate, loss_e);
+                retval += update_weights(dfirst, dlast, lfirst, lr, loss_e);
                 dfirst = dlast;
+                ++counter;
             } else {
-                retval += update_weights(dfirst, dfirst + batch_size, lfirst, l_rate, loss_e);
+                retval += update_weights(dfirst, dfirst + batch_size, lfirst, lr, loss_e);
                 dfirst += batch_size;
                 lfirst += batch_size;
+                ++counter;
             }
         }
-        return retval / static_cast<double>(points.size() / batch_size + 1u);
+        return retval; // counter;
     }
 
     /// Sets the output nonlinearities
@@ -504,17 +510,36 @@ public:
      * [-1 1] and hence the output layer should have some sigmoid or tanh nonlinearity.
      *
      *
-     * @param[in] f_id the id of the kernel (nonlinearity)
+     * @param[in] name the name of the kernel (nonlinearity)
      *
-     * @throw std::invalid_argument if *f_id* is invalid.
+     * @throw std::invalid_argument if *name* is invalid.
      */
-    void set_output_f(unsigned f_id)
+    void set_output_f(const std::string &name)
     {
-        for (decltype(this->get_m()) i = 0u; i < this->get_m(); ++i) {
-            this->set_f_gene(this->get()[this->get().size() - 1 - i], f_id);
+        typename std::vector<kernel_type>::iterator it;
+        if (name == "sig") {
+            it = std::find(m_kernel_map.begin(), m_kernel_map.end(), kernel_type::SIG);
+        } else if (name == "tanh") {
+            it = std::find(m_kernel_map.begin(), m_kernel_map.end(), kernel_type::TANH);
+        } else if (name == "ReLu") {
+            it = std::find(m_kernel_map.begin(), m_kernel_map.end(), kernel_type::RELU);
+        } else if (name == "ELU") {
+            it = std::find(m_kernel_map.begin(), m_kernel_map.end(), kernel_type::ELU);
+        } else if (name == "ISRU") {
+            it = std::find(m_kernel_map.begin(), m_kernel_map.end(), kernel_type::ISRU);
+        } else if (name == "sum") {
+            it = std::find(m_kernel_map.begin(), m_kernel_map.end(), kernel_type::SUM);
+        }
+
+        if (it == m_kernel_map.end()) {
+            throw std::invalid_argument("The nonlinearity " + name + " is not a Kernel for this dCGP expression");
+        } else {
+            unsigned f_id = static_cast<unsigned>(it - m_kernel_map.begin());
+            for (decltype(this->get_m()) i = 0u; i < this->get_m(); ++i) {
+                this->set_f_gene(this->get()[this->get().size() - 1 - i], f_id);
+            }
         }
     }
-
     /// Computes the number of weights influencing the result
     /**
      * Computes the number of weights influencing the result. This will also be the number
@@ -940,21 +965,14 @@ private:
                           typename std::vector<std::vector<double>>::const_iterator dlast,
                           typename std::vector<std::vector<double>>::const_iterator lfirst, double lr, loss_type loss_e)
     {
-        unsigned n_samples = static_cast<unsigned>(dlast - dfirst);
-        double coeff(lr / n_samples);
-        double retval = 0.;
-        // This is stochastic gradient descent: w_{i+1} = w_i - lr * dL/dw_i
-        while (dfirst != dlast) {
-            auto err = d_loss(*dfirst++, *lfirst++, loss_e);
-            // On weights
-            std::transform(m_weights.begin(), m_weights.end(), std::get<1>(err).begin(), m_weights.begin(),
-                           [coeff](double a, double b) { return a - coeff * b; });
-            // And on biases
-            std::transform(m_biases.begin(), m_biases.end(), std::get<2>(err).begin(), m_biases.begin(),
-                           [coeff](double a, double b) { return a - coeff * b; });
-            retval += std::get<0>(err);
-        }
-        return retval / n_samples;
+        auto err = d_loss(dfirst, dlast, lfirst, loss_e);
+
+        // We now update the weights with the stochastic gradient descent update rule
+        std::transform(m_weights.begin(), m_weights.end(), std::get<1>(err).begin(), m_weights.begin(),
+                       [&lr](double a, double b) { return a - lr * b; });
+        std::transform(m_biases.begin(), m_biases.end(), std::get<2>(err).begin(), m_biases.begin(),
+                       [&lr](double a, double b) { return a - lr * b; });
+        return std::get<0>(err);
     }
 
     std::tuple<double, std::vector<double>, std::vector<double>>
@@ -971,9 +989,9 @@ private:
             auto err = d_loss(*dfirst++, *lfirst++, loss_e);
             value += std::get<0>(err);
             std::transform(gweights.begin(), gweights.end(), std::get<1>(err).begin(), gweights.begin(),
-                           [dim](double a, double b) { return a + b / dim; });
+                           [&dim](double a, double b) { return a + b / dim; });
             std::transform(gbiases.begin(), gbiases.end(), std::get<2>(err).begin(), gbiases.begin(),
-                           [dim](double a, double b) { return a + b / dim; });
+                           [&dim](double a, double b) { return a + b / dim; });
         }
         value /= dim;
 
