@@ -11,8 +11,8 @@
 
 using namespace dcgp;
 
-void perform_sgd(unsigned int rows, unsigned int columns, unsigned int levels_back, unsigned int arity, unsigned int N,
-                 unsigned bs, std::vector<dcgp::kernel<double>> kernel_set)
+void perform_sgd(unsigned int rows, unsigned int columns, unsigned int levels_back, const std::vector<unsigned> &arity,
+                 unsigned int N, unsigned bs, std::vector<dcgp::kernel<double>> kernel_set)
 {
     // Dimensions in and out are fixed
     unsigned in = 3u;
@@ -25,8 +25,8 @@ void perform_sgd(unsigned int rows, unsigned int columns, unsigned int levels_ba
     // Instatiate the expression
     expression_ann<double> ex(in, out, rows, columns, levels_back, arity, kernel_set, 123);
     // We create the input data upfront and we do not time it.
-    ex.randomise_weights();
-    ex.randomise_biases();
+    ex.randomise_weights(0., 1., 123u);
+    ex.randomise_biases(0., 1., 123u);
     std::vector<double> in_dummy(in, 0.);
     std::vector<double> out_dummy(out, 0.);
     std::vector<std::vector<double>> data(N, in_dummy);
@@ -39,9 +39,7 @@ void perform_sgd(unsigned int rows, unsigned int columns, unsigned int levels_ba
         label[i][1] = data[i][0] * data[i][1] * data[i][2];
     }
 
-    std::cout << "One epoch of sgd:  rows:" << rows << " columns:" << columns
-              << " n. weights:" << ex.get_active_nodes().size() * ex.get_arity()
-              << " n. biases:" << ex.get_active_nodes().size() << std::endl;
+    std::cout << "One epoch of sgd:  rows:" << rows << " columns:" << columns << std::endl;
     {
         boost::timer::auto_cpu_timer t;
         ex.sgd(data, label, 0.01, bs, "MSE");
@@ -54,11 +52,11 @@ BOOST_AUTO_TEST_CASE(evaluation_speed)
 {
     unsigned int N = 1024;
 
-    dcgp::kernel_set<double> kernel_set1({"sig", "tanh", "ReLu"});
+    dcgp::kernel_set<double> kernel_set1({"sig", "tanh", "ReLu", "ISRU", "ELU"});
     dcgp::stream(std::cout, "Function set ", kernel_set1(), "\n");
-    perform_sgd(100, 3, 1, 100, N, 32, kernel_set1());
-    perform_sgd(100, 4, 1, 100, N, 32, kernel_set1());
-    perform_sgd(100, 5, 1, 100, N, 32, kernel_set1());
-    perform_sgd(100, 10, 1, 100, N, 32, kernel_set1());
-    perform_sgd(100, 10, 1, 100, N, 256, kernel_set1());
+    perform_sgd(10, 10, 1, {100, 100, 100, 100, 100, 100, 100, 100, 100, 100}, N, 32, kernel_set1());
+    perform_sgd(10, 100, 1, std::vector<unsigned>(100, 10), N, 32, kernel_set1());
+    perform_sgd(100, 10, 1, {100, 10, 100, 10, 100, 10, 100, 10, 100, 10}, N, 32, kernel_set1());
+    perform_sgd(100, 10, 1, {100, 100, 100, 100, 100, 100, 100, 100, 100, 100}, N, 32, kernel_set1());
+    perform_sgd(200, 10, 1, {100, 100, 100, 100, 100, 100, 100, 100, 100, 100}, N, 32, kernel_set1());
 }

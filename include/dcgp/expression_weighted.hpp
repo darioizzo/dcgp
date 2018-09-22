@@ -38,31 +38,71 @@ private:
 
 public:
     /// Constructor
-    /** Constructs a dCGP expression
+    /** Constructs a weighted dCGP expression.
      *
-     * @param[in] n number of inputs (independent variables)
-     * @param[in] m number of outputs (dependent variables)
-     * @param[in] r number of rows of the dCGP
-     * @param[in] c number of columns of the dCGP
-     * @param[in] l number of levels-back allowed for the dCGP
-     * @param[in] arity arity of the basis functions
-     * @param[in] f function set. An std::vector of dcgp::kernel<expression::type>
-     * @param[in] seed seed for the random number generator (initial expression and mutations depend on this)
+     * @param[in] n number of inputs (independent variables).
+     * @param[in] m number of outputs (dependent variables).
+     * @param[in] r number of rows of the weighted dCGP.
+     * @param[in] c number of columns of the weighted dCGP.
+     * @param[in] l number of levels-back allowed for the weighted dCGP.
+     * @param[in] arity arities of the basis functions for each column.
+     * @param[in] f function set. An std::vector of dcgp::kernel<expression::type>.
+     * @param[in] seed seed for the random number generator (initial expression and mutations depend on this).
      */
-    expression_weighted(unsigned int n,           // n. inputs
-                        unsigned int m,           // n. outputs
-                        unsigned int r,           // n. rows
-                        unsigned int c,           // n. columns
-                        unsigned int l,           // n. levels-back
-                        unsigned int arity,       // basis functions' arity
+    expression_weighted(unsigned n,               // n. inputs
+                        unsigned m,               // n. outputs
+                        unsigned r,               // n. rows
+                        unsigned c,               // n. columns
+                        unsigned l,               // n. levels-back
+                        unsigned arity,           // basis functions' arity
                         std::vector<kernel<T>> f, // functions
-                        unsigned int seed         // seed for the pseudo-random numbers
+                        unsigned seed             // seed for the pseudo-random numbers
                         )
-        : expression<T>(n, m, r, c, l, arity, f, seed), m_weights(r * c * arity, T(1.))
+        : expression<T>(n, m, r, c, l, std::vector<unsigned>(c, arity), f, seed)
     {
-        for (auto i = 0u; i < r * c; ++i) {
-            for (auto j = 0u; j < arity; ++j) {
-                m_weights_symbols.push_back("w" + std::to_string(i + n) + "_" + std::to_string(j));
+        // Default initialization of weights to 1.
+        unsigned n_connections = std::accumulate(this->get_arity().begin(), this->get_arity().end(), 0u) * r;
+        m_weights = std::vector<T>(n_connections, T(1.));
+
+        // Filling in the symbols for the weights and biases
+        for (auto node_id = n; node_id < r * c + n; ++node_id) {
+            for (auto j = 0u; j < this->_get_arity(node_id); ++j) {
+                m_weights_symbols.push_back("w" + std::to_string(node_id) + "_" + std::to_string(j));
+            }
+        }
+    }
+
+    /// Constructor
+    /** Constructs a weighted dCGP expression
+     *
+     * @param[in] n number of inputs (independent variables).
+     * @param[in] m number of outputs (dependent variables).
+     * @param[in] r number of rows of the weighted dCGP.
+     * @param[in] c number of columns of the weighted dCGP.
+     * @param[in] l number of levels-back allowed for the weighted dCGP.
+     * @param[in] arity arity of the basis functions.
+     * @param[in] f function set. An std::vector of dcgp::kernel<expression::type>.
+     * @param[in] seed seed for the random number generator (initial expression and mutations depend on this).
+     */
+    expression_weighted(unsigned n,                  // n. inputs
+                        unsigned m,                  // n. outputs
+                        unsigned r,                  // n. rows
+                        unsigned c,                  // n. columns
+                        unsigned l,                  // n. levels-back
+                        std::vector<unsigned> arity, // basis functions' arity
+                        std::vector<kernel<T>> f,    // functions
+                        unsigned seed                // seed for the pseudo-random numbers
+                        )
+        : expression<T>(n, m, r, c, l, arity, f, seed)
+    {
+        // Default initialization of weights to 1.
+        unsigned n_connections = std::accumulate(this->get_arity().begin(), this->get_arity().end(), 0u) * r;
+        m_weights = std::vector<T>(n_connections, T(1.));
+
+        // Filling in the symbols for the weights and biases.
+        for (auto node_id = n; node_id < r * c + n; ++node_id) {
+            for (auto j = 0u; j < this->_get_arity(node_id); ++j) {
+                m_weights_symbols.push_back("w" + std::to_string(node_id) + "_" + std::to_string(j));
             }
         }
     }
@@ -86,23 +126,26 @@ public:
             throw std::invalid_argument("Input size is incompatible");
         }
         std::vector<U> retval(this->get_m());
-        std::vector<U> node(this->get_n() + this->get_rows() * this->get_cols());
-        std::vector<U> function_in(this->get_arity());
-        for (auto i : this->get_active_nodes()) {
-            if (i < this->get_n()) {
-                node[i] = in[i];
+        std::vector<U> node(this->get_n() + this->get_r() * this->get_c());
+        std::vector<U> function_in;
+        for (auto node_id : this->get_active_nodes()) {
+            if (node_id < this->get_n()) {
+                node[node_id] = in[node_id];
             } else {
-                unsigned int idx
-                    = (i - this->get_n()) * (this->get_arity() + 1); // position in the chromosome of the current node
-                unsigned int weight_idx = (i - this->get_n()) * this->get_arity();
-                for (auto j = 0u; j < this->get_arity(); ++j) {
-                    function_in[j] = node[this->get()[idx + j + 1]];
+                unsigned arity = this->_get_arity(node_id);
+                function_in.resize(arity);
+                // position in the chromosome of the current node
+                unsigned g_idx = this->get_gene_idx()[node_id];
+                // starting position in m_weights of the weights relative to the node
+                unsigned w_idx = g_idx - (node_id - this->get_n());
+                for (unsigned j = 0u; j < this->_get_arity(node_id); ++j) {
+                    function_in[j] = node[this->get()[g_idx + j + 1]];
                 }
-                node.push_back(kernel_call(function_in, idx, weight_idx));
+                node[node_id] = kernel_call(function_in, g_idx, node_id, w_idx);
             }
         }
         for (auto i = 0u; i < this->get_m(); ++i) {
-            retval[i] = node[this->get()[(this->get_rows() * this->get_cols()) * (this->get_arity() + 1) + i]];
+            retval[i] = node[this->get()[this->get().size() - this->get_m() + i]];
         }
         return retval;
     }
@@ -139,9 +182,9 @@ public:
         audi::stream(os, "d-CGP Expression:\n");
         audi::stream(os, "\tNumber of inputs:\t\t", d.get_n(), '\n');
         audi::stream(os, "\tNumber of outputs:\t\t", d.get_m(), '\n');
-        audi::stream(os, "\tNumber of rows:\t\t\t", d.get_rows(), '\n');
-        audi::stream(os, "\tNumber of columns:\t\t", d.get_cols(), '\n');
-        audi::stream(os, "\tNumber of levels-back allowed:\t", d.get_levels_back(), '\n');
+        audi::stream(os, "\tNumber of rows:\t\t\t", d.get_r(), '\n');
+        audi::stream(os, "\tNumber of columns:\t\t", d.get_c(), '\n');
+        audi::stream(os, "\tNumber of levels-back allowed:\t", d.get_l(), '\n');
         audi::stream(os, "\tBasis function arity:\t\t", d.get_arity(), '\n');
         audi::stream(os, "\n\tResulting lower bounds:\t", d.get_lb());
         audi::stream(os, "\n\tResulting upper bounds:\t", d.get_ub(), '\n');
@@ -167,38 +210,15 @@ public:
      */
     void set_weight(typename std::vector<T>::size_type node_id, typename std::vector<T>::size_type input_id, const T &w)
     {
-        if (node_id < this->get_n() || node_id >= this->get_n() + this->get_rows() * this->get_cols()) {
+        if (node_id < this->get_n() || node_id >= this->get_n() + this->get_r() * this->get_c()) {
             throw std::invalid_argument("Requested node id does not exist");
         }
-        if (input_id >= this->get_arity()) {
+        if (input_id >= this->_get_arity(node_id)) {
             throw std::invalid_argument("Requested input exceeds the function arity");
         }
-        auto idx = (node_id - this->get_n()) * this->get_arity() + input_id;
+        // index of the node in the weight vector
+        auto idx = this->get_gene_idx()[node_id] - (node_id - this->get_n());
         m_weights[idx] = w;
-    }
-
-    /// Gets a weight
-    /**
-     * Gets the value of a connection weight
-     *
-     * @param[in] node_id the id of the node (convention adopted for node numbering
-     * http://ppsn2014.ijs.si/files/slides/ppsn2014-tutorial3-miller.pdf)
-     * @param[in] input_id the id of the node input (0 for the first one up to arity-1)
-     *
-     * @return the value of the weight
-     *
-     * @throws std::invalid_argument if the node_id or input_id are not valid
-     */
-    T get_weight(typename std::vector<T>::size_type node_id, typename std::vector<T>::size_type input_id)
-    {
-        if (node_id < this->get_n() || node_id >= this->get_n() + this->get_rows() * this->get_cols()) {
-            throw std::invalid_argument("Requested node id does not exist");
-        }
-        if (input_id >= this->get_arity()) {
-            throw std::invalid_argument("Requested input exceeds the function arity");
-        }
-        auto idx = (node_id - this->get_n()) * this->get_arity() + input_id;
-        return m_weights[idx];
     }
 
     /// Sets all weights
@@ -217,6 +237,32 @@ public:
         m_weights = ws;
     }
 
+    /// Gets a weight
+    /**
+     * Gets the value of a connection weight
+     *
+     * @param[in] node_id the id of the node (convention adopted for node numbering
+     * http://ppsn2014.ijs.si/files/slides/ppsn2014-tutorial3-miller.pdf)
+     * @param[in] input_id the id of the node input (0 for the first one up to arity-1)
+     *
+     * @return the value of the weight
+     *
+     * @throws std::invalid_argument if the node_id or input_id are not valid
+     */
+    T get_weight(typename std::vector<T>::size_type node_id, typename std::vector<T>::size_type input_id) const
+    {
+        if (node_id < this->get_n() || node_id >= this->get_n() + this->get_r() * this->get_c()) {
+            throw std::invalid_argument(
+                "Requested node id does not exist or does not have a weight (e.g. input nodes)");
+        }
+        if (input_id >= this->_get_arity(node_id)) {
+            throw std::invalid_argument("Requested input exceeds the function arity");
+        }
+
+        auto idx = this->get_gene_idx()[node_id] - (node_id - this->get_n());
+        return m_weights[idx];
+    }
+
     /// Gets the weights
     /**
      * Gets the values of all the weights
@@ -231,9 +277,10 @@ public:
 private:
     // For numeric computations
     template <typename U, typename std::enable_if<std::is_same<U, double>::value || is_gdual<U>::value, int>::type = 0>
-    U kernel_call(std::vector<U> &function_in, unsigned int idx, unsigned int weight_idx) const
+    U kernel_call(std::vector<U> &function_in, unsigned idx, unsigned node_id, unsigned weight_idx) const
     {
-        for (auto j = 0u; j < this->get_arity(); ++j) {
+        // Weights (we transform the inputs a,b,c,d,e in w_1 a, w_2 b, w_3 c, etc...)
+        for (auto j = 0u; j < this->_get_arity(node_id); ++j) {
             function_in[j] = function_in[j] * m_weights[weight_idx + j];
         }
         return this->get_f()[this->get()[idx]](function_in);
@@ -241,10 +288,11 @@ private:
 
     // For the symbolic expression
     template <typename U, typename std::enable_if<std::is_same<U, std::string>::value, int>::type = 0>
-    U kernel_call(std::vector<U> &function_in, unsigned int idx, unsigned int weight_idx) const
+    U kernel_call(std::vector<U> &function_in, unsigned idx, unsigned node_id, unsigned weight_idx) const
     {
-        for (auto j = 0u; j < this->get_arity(); ++j) {
-            function_in[j] = "(" + m_weights_symbols[weight_idx + j] + "*" + function_in[j] + ")";
+        // Weights
+        for (auto j = 0u; j < this->_get_arity(node_id); ++j) {
+            function_in[j] = m_weights_symbols[weight_idx + j] + "*" + function_in[j];
         }
         return this->get_f()[this->get()[idx]](function_in);
     }

@@ -63,7 +63,7 @@ Args:
     rows (``int``): number of rows in the cartesian program
     columns (``int``): number of columns in the cartesian program
     levels_back (``int``): number of levels-back in the cartesian program
-    arity (``int``): arity of the kernels
+    arity (``int`` on ``list``): arity of the kernels. Assumed equal for all columns unless its specified by a list. The list must contain a number of entries equal to the number of columns.
     kernels (``List[dcgpy.kernel_)"
            + type + R"(]``): kernel functions
     seed (``int``): random seed to generate mutations and chromosomes
@@ -87,7 +87,7 @@ std::string kernel_set_push_back_str_doc()
 Adds one more kernel to the set by common name.
 
 Args:
-    kernel_name (``string``): a string containing the function name
+    kernel_name (``string``): a string containing the kernel name
     )";
 }
 
@@ -132,8 +132,6 @@ Raises:
     ValueError: if the node_id or f_id are  incompatible with the expression.
     )";
 }
-
-
 
 std::string expression_mutate_doc()
 {
@@ -340,6 +338,10 @@ Args:
     batch_size (an ``int``): the batch size
     loss_type (a ``str``): the loss, one of "MSE" for Mean Square Error and "CE" for Cross-Entropy.
 
+Returns:
+    The average error across the batches a (``float``). Note: this will not be equal to the final error on the whole data set
+     as weights get updated after each batch. It is an indicator, though, and its free to compute.
+
 Raises:
     ValueError: if *points* or *predictions* are malformed or if *loss_type* is not one of the available types.
     )";
@@ -363,17 +365,31 @@ Raises:
 
 std::string expression_ann_set_output_f_doc()
 {
-    return R"(set_output_f(f_id)
+    return R"(set_output_f(name)
 
 Sets the nonlinearities of all nodes connected to the output nodes.
 This is useful when, for example, the dCGPANN is used for a regression task where output values are expected in [-1 1]
-and hence the output layer should have some sigmoid or tanh nonlinearity.
+and hence the output layer should have some sigmoid or tanh nonlinearity, or in a classification task when one wants to have a softmax
+layer by having a sum in all output neurons.
 
 Args:
-    f_id (a ``List[int]``): the kernel id
+    name (a ``string``): the kernel name
 
 Raises:
-    ValueError: if f_id is  incompatible with the expression.
+    ValueError: if *name* is not one of the kernels in the expression.
+    )";
+}
+
+std::string expression_ann_n_active_weights_doc()
+{
+    return R"(n_active_weights(unique = False)
+
+Computes the number of weights influencing the result. This will also be the number
+of weights that are updated when calling sgd. The number of active weights, as well as
+the number of active nodes, define the complexity of the expression expressed by the chromosome.
+
+Args:
+    unique (a ``bool``): when True weights are counted only once if connecting the same two nodes.
     )";
 }
 } // namespace dcgpy

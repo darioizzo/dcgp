@@ -25,24 +25,6 @@ using namespace audi;
 /*--------------------------------------------------------------------------
  *                              N-ARITY FUNCTIONS
  *------------------------------------------------------------------------**/
-template <typename T, f_enabler<T> = 0>
-T my_sum(const std::vector<T> &in)
-{
-    T retval(in[0]);
-    for (auto i = 1u; i < in.size(); ++i) {
-        retval += in[i];
-    }
-    return retval;
-}
-
-std::string print_my_sum(const std::vector<std::string> &in)
-{
-    std::string retval(in[0]);
-    for (auto i = 1u; i < in.size(); ++i) {
-        retval += "+" + in[i];
-    }
-    return "(" + retval + ")";
-}
 
 template <typename T, f_enabler<T> = 0>
 T my_diff(const std::vector<T> &in)
@@ -217,7 +199,7 @@ T my_elu(const std::vector<T> &in)
     for (auto i = 1u; i < in.size(); ++i) {
         retval += in[i];
     }
-    (retval < 0) ? retval = T(0.) : retval = audi::exp(retval) - T(1.);
+    (retval < 0) ? retval = audi::exp(retval) - T(1.) : retval = retval;
     return retval;
 }
 
@@ -229,7 +211,7 @@ T my_elu(const std::vector<T> &in)
     for (auto i = 1u; i < in.size(); ++i) {
         retval += in[i];
     }
-    (retval.constant_cf() < T(0.).constant_cf()) ? retval = T(0.) : retval = audi::exp(retval) - T(1.);
+    (retval.constant_cf() < T(0.).constant_cf()) ? retval = audi::exp(retval) - T(1.) : retval = retval;
     return retval;
 }
 
@@ -260,6 +242,25 @@ std::string print_my_isru(const std::vector<std::string> &in)
         retval += "+" + in[i];
     }
     return "ISRU(" + retval + ")";
+}
+
+template <typename T, f_enabler<T> = 0>
+T my_sum(const std::vector<T> &in)
+{
+    T retval(in[0]);
+    for (auto i = 1u; i < in.size(); ++i) {
+        retval += in[i];
+    }
+    return retval;
+}
+
+std::string print_my_sum(const std::vector<std::string> &in)
+{
+    std::string retval(in[0]);
+    for (auto i = 1u; i < in.size(); ++i) {
+        retval += "+" + in[i];
+    }
+    return "(" + retval + ")";
 }
 
 /*--------------------------------------------------------------------------
@@ -301,7 +302,8 @@ std::string print_my_log(const std::vector<std::string> &in)
     return "log(" + in[0] + ")";
 }
 
-// exponential
+// exponential (unary)
+// This exponential discards all inputs except the first one
 template <typename T, f_enabler<T> = 0>
 T my_exp(const std::vector<T> &in)
 {

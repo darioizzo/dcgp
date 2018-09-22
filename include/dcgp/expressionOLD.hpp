@@ -9,6 +9,7 @@
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 #include <dcgp/kernel.hpp>
@@ -40,52 +41,17 @@ private:
 
 public:
     /// Constructor
-    /** Constructs a dCGP expression with variable arity
+    /** Constructs a dCGP expression
      *
-     * @param[in] n number of inputs (independent variables).
-     * @param[in] m number of outputs (dependent variables).
-     * @param[in] r number of rows of the dCGP.
-     * @param[in] c number of columns of the dCGP.
-     * @param[in] l number of levels-back allowed in the dCGP.
-     * @param[in] arity arities of the basis functions for each column.
-     * @param[in] f function set. An std::vector of dcgp::kernel<expression::type>.
+     * @param[in] n number of inputs (independent variables)
+     * @param[in] m number of outputs (dependent variables)
+     * @param[in] r number of rows of the dCGP
+     * @param[in] c number of columns of the dCGP
+     * @param[in] l number of levels-back allowed in the dCGP
+     * @param[in] arity arity of the basis functions
+     * @param[in] f function set. An std::vector of dcgp::kernel<expression::type>
      * @param[in] seed seed for the random number generator (initial expression
-     * and mutations depend on this).
-     */
-    expression(unsigned n,                  // n. inputs
-               unsigned m,                  // n. outputs
-               unsigned r,                  // n. rows
-               unsigned c,                  // n. columns
-               unsigned l,                  // n. levels-back
-               std::vector<unsigned> arity, // basis functions' arity
-               std::vector<kernel<T>> f,    // functions
-               unsigned seed                // seed for the pseudo-random numbers
-               )
-        : m_n(n), m_m(m), m_r(r), m_c(c), m_l(l), m_arity(arity), m_f(f), m_e(seed)
-    {
-        // Sanity checks
-        sanity_checks();
-        // Initializing bounds and chromosome
-        init_bounds_and_chromosome();
-        // We generate a random chromosome (expression)
-        for (auto i = 0u; i < m_x.size(); ++i) {
-            m_x[i] = std::uniform_int_distribution<unsigned>(m_lb[i], m_ub[i])(m_e);
-        }
-        update_data_structures();
-    }
-
-    /// Constructor
-    /** Constructs a dCGP expression with uniform arity
-     *
-     * @param[in] n number of inputs (independent variables).
-     * @param[in] m number of outputs (dependent variables).
-     * @param[in] r number of rows of the dCGP.
-     * @param[in] c number of columns of the dCGP.
-     * @param[in] l number of levels-back allowed in the dCGP.
-     * @param[in] arity arity of the basis functions.
-     * @param[in] f function set. An std::vector of dcgp::kernel<expression::type>.
-     * @param[in] seed seed for the random number generator (initial expression
-     * and mutations depend on this).
+     * and mutations depend on this)
      */
     expression(unsigned n,               // n. inputs
                unsigned m,               // n. outputs
@@ -101,7 +67,15 @@ public:
         // We fill the arity vector with the same number (uniform arity)
         m_arity = std::vector<unsigned>(m_c, arity);
         // Sanity checks
-        sanity_checks();
+        if (n == 0) throw std::invalid_argument("Number of inputs is 0");
+        if (m == 0) throw std::invalid_argument("Number of outputs is 0");
+        if (c == 0) throw std::invalid_argument("Number of columns is 0");
+        if (r == 0) throw std::invalid_argument("Number of rows is 0");
+        if (l == 0) throw std::invalid_argument("Number of level-backs is 0");
+        if (std::any_of(arity.begin, arity.end(), [](unsigned a) { return a < 1; })) {
+            throw std::invalid_argument("Basis functions arity must be at least 2");
+        }
+        if (f.size() == 0) throw std::invalid_argument("Number of basis functions is 0");
         // Initializing bounds and chromosome
         init_bounds_and_chromosome();
         // We generate a random chromosome (expression)
@@ -111,69 +85,44 @@ public:
         update_data_structures();
     }
 
-    /// Virtual destructor (necessary for inheritance?)
-    virtual ~expression(){};
-
-    /// Evaluates the dCGP expression
-    /**
-     * This evaluates the dCGP expression. According to the template parameter
-     * it will compute the value (double) the Taylor expansion (gdual) or a
-     * symbolic representation (std::string). Any other type will result in a
-     * compilation-time error (SFINAE).
-     *
-     * @param[point] an std::vector containing the values where the dCGP
-     * expression has to be computed (doubles, gduals or strings)
-     *
-     * @return The value of the function (an std::vector)
-     */
-    template <typename U, functor_enabler<U> = 0>
-    std::vector<U> operator()(const std::vector<U> &point) const
+    void init_bounds_and_chromosome()
     {
-        if (point.size() != m_n) {
-            throw std::invalid_argument("Input size is incompatible");
-        }
-        std::vector<U> retval(m_m);
-        std::vector<U> node(m_n + m_r * m_c);
-        std::vector<U> function_in;
+        // Chromosome size is r*c + sum(arity)*r + m
+        auto size = m_r * m_c + m_r * std::accumulate(m_arity.begin(), m_arity.end(), 0u) + m_m;
+        // Allocate bounds and chromosome
+        m_x = std::vector<unsigned>(size, 0u);
+        m_lb = std::vector<unsigned>(size, 0u);
+        m_ub = std::vector<unsigned>(size, 0u);
 
-        for (auto node_id : m_active_nodes) {
-            if (node_id < m_n) {
-                node[node_id] = point[node_id];
-            } else {
-                unsigned arity = _get_arity(node_id);
-                function_in.resize(arity);
-                unsigned idx = m_gene_idx[node_id]; // position in the chromosome of the current node
-                for (auto j = 0u; j < arity; ++j) {
-                    function_in[j] = node[m_x[idx + j + 1u]];
+        // We loop over all nodes and set function and connection genes
+        unsigned k = 0u;
+        for (auto i = 0u; i < m_c; ++i) {     // column first
+            for (auto j = 0u; i < m_r; ++i) { // then rows
+                // Function gene (lower bounds are all 0u)
+                m_ub[k] = static_cast<unsigned>(f.size() - 1u);
+                k++;
+                // Connections genes
+                for (auto l = 0u; l < m_arity[i]; ++l) {
+                    m_ub[k] = m_n + i * m_r - 1u;
+                    if (i >= m_l) { // only if level-backs allow a lower bound exists
+                        m_lb[k] = m_n + m_r * (i - m_l);
+                    }
+                    k++;
                 }
-                node[node_id] = m_f[m_x[idx]](function_in);
             }
         }
-        for (auto i = 0u; i < m_m; ++i) {
-            retval[i] = node[m_x[m_x.size() - m_m + i]];
+
+        // Bounds for the output genes
+        for (auto i = size - 1u - m_m; i < size - 1u; ++i) {
+            m_ub[i] = m_n + m_r * m_c - 1u;
+            if (m_l <= m_c) {
+                m_lb[i] = m_n + m_r * (m_c - m_l);
+            }
         }
-        return retval;
     }
 
-    /// Evaluates the dCGP expression
-    /**
-     * This evaluates the dCGP expression. According to the template parameter
-     * it will compute the value (double) the Taylor expansion (gdual) or a
-     * symbolic representation (std::string). Any other type will result in a
-     * compilation-time error (SFINAE). This is identical to the other overload
-     * and is provided only for convenience
-     *
-     * @param[in] in an initializer list containing the values where the dCGP
-     * expression has to be computed (doubles, gduals or strings)
-     *
-     * @return The value of the function (an std::vector)
-     */
-    template <typename U, functor_enabler<U> = 0>
-    std::vector<U> operator()(const std::initializer_list<U> &in) const
-    {
-        std::vector<U> dummy(in);
-        return (*this)(dummy);
-    }
+    /// Virtual destructor (necessary for inheritance?)
+    virtual ~expression(){};
 
     /// Sets the chromosome
     /** Sets a given chromosome as genotype for the expression and updates
@@ -213,7 +162,7 @@ public:
                                         + std::to_string(node_id) + ", but allowed values are [" + std::to_string(m_n)
                                         + " ... " + std::to_string(m_n + m_c * m_r - 1u) + "]");
         }
-        auto gene_idx = m_gene_idx[node_id];
+        auto gene_idx = (node_id - m_n) * (m_arity + 1);
         m_x[gene_idx] = f_id;
     }
 
@@ -304,7 +253,7 @@ public:
      *
      * @return the number of rows
      */
-    unsigned get_r() const
+    unsigned get_rows() const
     {
         return m_r;
     }
@@ -315,7 +264,7 @@ public:
      *
      * @return the number of columns
      */
-    unsigned get_c() const
+    unsigned get_cols() const
     {
         return m_c;
     }
@@ -326,7 +275,7 @@ public:
      *
      * @return the number of levels-back
      */
-    unsigned get_l() const
+    unsigned get_levels_back() const
     {
         return m_l;
     }
@@ -337,28 +286,9 @@ public:
      *
      * @return the arity
      */
-    const std::vector<unsigned> &get_arity() const
+    unsigned get_arity() const
     {
         return m_arity;
-    }
-
-    /// Gets the arity of a particular node
-    /**
-     * Gets the arity of a particular node
-     *
-     * @param[in] node_id id of the node
-     * @return the arity of that node
-     *
-     */
-    unsigned get_arity(unsigned node_id) const
-    {
-        if (node_id >= m_r * m_c + m_n || node_id < m_n) {
-            throw std::invalid_argument("node_id requested was: " + std::to_string(node_id) + " but only ids in ["
-                                        + std::to_string(m_n) + "," + std::to_string(m_r * m_c + m_n - 1u)
-                                        + "] are valid");
-        }
-        unsigned col = (node_id - m_n) / m_r;
-        return m_arity[col];
     }
 
     /// Gets the function set
@@ -372,19 +302,7 @@ public:
         return m_f;
     }
 
-    /// Gets gene_idx
-    /**
-     * Gets gene_idx, a vector containing the indexes in the chromosome where
-     * nodes start expressing.
-     *
-     * @return an std::vector containing the indexes of the chromosome expressing each node
-     */
-    const std::vector<unsigned> &get_gene_idx() const
-    {
-        return m_gene_idx;
-    }
-
-    /// Mutates randomly one gene
+    /// Mutates one gene
     /**
      * Mutates exactly one gene within its allowed bounds.
      *
@@ -486,18 +404,15 @@ public:
     /**
      * Mutates exactly one of the active function genes within its allowed bounds.
      */
-    void mutate_active_fgene(unsigned N = 1u)
+    void mutate_active_fgene(unsigned N = 1)
     {
         // If no active function gene exists, do nothing
         if (m_active_genes.size() > m_m) {
             for (auto i = 0u; i < N; ++i) {
-                unsigned node_id = 0u;
-                while (node_id < m_n) { // we get a random active node (there will be one that is not an input node)
-                    node_id = m_active_nodes[std::uniform_int_distribution<unsigned>(
-                        0, static_cast<unsigned>(m_active_nodes.size() - 1u))(m_e)];
-                }
-                // Since the first gene, for each node, is the function gene, we just mutate on that position
-                mutate(m_gene_idx[node_id]);
+                unsigned idx = std::uniform_int_distribution<unsigned>(
+                    0, static_cast<unsigned>(m_active_genes.size() - 1u - m_m))(m_e);
+                idx = m_active_genes[idx] - (m_active_genes[idx] % (m_arity + 1));
+                mutate(idx);
             }
         }
     }
@@ -507,17 +422,15 @@ public:
      * Mutates exactly one of the active connection genes within its allowed
      * bounds.
      */
-    void mutate_active_cgene(unsigned N = 1u)
+    void mutate_active_cgene(unsigned N = 1)
     {
         // If no active function gene exists, do nothing
         if (m_active_genes.size() > m_m) {
             for (auto i = 0u; i < N; ++i) {
-                unsigned idx = 0u;
-                while (idx < m_n) { // we get a random active node (there will be one that is not an input node)
-                    idx = m_active_nodes[std::uniform_int_distribution<unsigned>(
-                        0, static_cast<unsigned>(m_active_nodes.size() - 1u))(m_e)];
-                }
-                idx = m_gene_idx[idx] + std::uniform_int_distribution<unsigned>(1, _get_arity(idx))(m_e);
+                unsigned idx = std::uniform_int_distribution<unsigned>(
+                    0u, static_cast<unsigned>(m_active_genes.size() - 1u - m_m))(m_e);
+                idx = m_active_genes[idx] - (m_active_genes[idx] % (m_arity + 1))
+                      + std::uniform_int_distribution<unsigned>(1, m_arity)(m_e);
                 mutate(idx);
             }
         }
@@ -543,16 +456,74 @@ public:
         mutate(idx);
     }
 
+    /// Evaluates the dCGP expression
+    /**
+     * This evaluates the dCGP expression. According to the template parameter
+     * it will compute the value (double) the Taylor expansion (gdual) or a
+     * symbolic representation (std::string). Any other type will result in a
+     * compilation-time error (SFINAE).
+     *
+     * @param[point] an std::vector containing the values where the dCGP
+     * expression has to be computed (doubles, gduals or strings)
+     *
+     * @return The value of the function (an std::vector)
+     */
+    template <typename U, functor_enabler<U> = 0>
+    std::vector<U> operator()(const std::vector<U> &point) const
+    {
+        if (point.size() != m_n) {
+            throw std::invalid_argument("Input size is incompatible");
+        }
+        std::vector<U> retval(m_m);
+        std::vector<U> node(m_n + m_r * m_c);
+        std::vector<U> function_in(m_arity);
+        for (auto i : m_active_nodes) {
+            if (i < m_n) {
+                node[i] = point[i];
+            } else {
+                unsigned idx = (i - m_n) * (m_arity + 1); // position in the chromosome of the current node
+                for (auto j = 0u; j < m_arity; ++j) {
+                    function_in[j] = node[m_x[idx + j + 1]];
+                }
+                node[i] = m_f[m_x[idx]](function_in);
+            }
+        }
+        for (auto i = 0u; i < m_m; ++i) {
+            retval[i] = node[m_x[(m_r * m_c) * (m_arity + 1) + i]];
+        }
+        return retval;
+    }
+
     /// Checks if a given node is active
     /**
      *
-     * @param[in] node_id the node to be checked
+     * @param[in] idx the node to be checked
      *
-     * @return True if the node *node_id* is active in the CGP expression.
+     * @return True if the node *idx* is active in the CGP expression.
      */
-    bool is_active(const unsigned node_id) const
+    bool is_active(const unsigned idx) const
     {
-        return (std::find(m_active_nodes.begin(), m_active_nodes.end(), node_id) != m_active_nodes.end());
+        return (std::find(m_active_nodes.begin(), m_active_nodes.end(), idx) != m_active_nodes.end());
+    }
+
+    /// Evaluates the dCGP expression
+    /**
+     * This evaluates the dCGP expression. According to the template parameter
+     * it will compute the value (double) the Taylor expansion (gdual) or a
+     * symbolic representation (std::string). Any other type will result in a
+     * compilation-time error (SFINAE). This is identical to the other overload
+     * and is provided only for convenience
+     *
+     * @param[in] in an initializer list containing the values where the dCGP
+     * expression has to be computed (doubles, gduals or strings)
+     *
+     * @return The value of the function (an std::vector)
+     */
+    template <typename U, functor_enabler<U> = 0>
+    std::vector<U> operator()(const std::initializer_list<U> &in) const
+    {
+        std::vector<U> dummy(in);
+        return (*this)(dummy);
     }
 
     /// Overloaded stream operator
@@ -572,7 +543,6 @@ public:
         audi::stream(os, "\tNumber of columns:\t\t", d.m_c, '\n');
         audi::stream(os, "\tNumber of levels-back allowed:\t", d.m_l, '\n');
         audi::stream(os, "\tBasis function arity:\t\t", d.m_arity, '\n');
-        audi::stream(os, "\tStart of the gene expressing the node:\t\t", d.m_gene_idx, '\n');
         audi::stream(os, "\n\tResulting lower bounds:\t", d.m_lb);
         audi::stream(os, "\n\tResulting upper bounds:\t", d.m_ub, '\n');
         audi::stream(os, "\n\tCurrent expression (encoded):\t", d.m_x, '\n');
@@ -606,14 +576,6 @@ public:
     }
 
 protected:
-    // the public method checks are significantly impacting speed, thus this protected method is used in the
-    // class methods instead but use carefully as it may result in invalid reads
-    unsigned _get_arity(unsigned node_id) const
-    {
-        assert(node_id >= m_n && node_id < m_n + m_r * m_c);
-        unsigned col = (node_id - m_n) / m_r;
-        return m_arity[col];
-    }
     /// Updates the class data that depend on the chromosome
     /**
      * Some of the expression data depend on the chromosome. This is the case, for example,
@@ -622,7 +584,7 @@ protected:
      * can add more of these chromosome dependant data, and will thus need to override this method, making sure to still
      * have it called by the new method and adding there the new data book-keeping.
      */
-
+    //
     virtual void update_data_structures()
     {
         assert(m_x.size() == m_lb.size());
@@ -630,21 +592,19 @@ protected:
         // First we update the active nodes
         std::vector<unsigned> current(m_m), next;
         m_active_nodes.clear();
-
-        // At the beginning, current contains only the node connected to the output nodes
+        // At the beginning, current contains only the output nodes connections
         for (auto i = 0u; i < m_m; ++i) {
-            current[i] = m_x[m_x.size() - m_m + i];
+            current[i] = m_x[(m_arity + 1) * m_r * m_c + i];
         }
         do {
             m_active_nodes.insert(m_active_nodes.end(), current.begin(), current.end());
 
             for (auto node_id : current) {
-                if (node_id >= m_n) // we skip the input nodes as they do
-                                    // not have any connection
+                if (node_id >= m_n) // we insert the input nodes connections as they do
+                                    // not have any
                 {
-                    auto node_arity = _get_arity(node_id);
-                    for (auto i = 1u; i <= node_arity; ++i) {
-                        next.push_back(m_x[m_gene_idx[node_id] + i]);
+                    for (auto i = 1u; i <= m_arity; ++i) {
+                        next.push_back(m_x[(node_id - m_n) * (m_arity + 1) + i]);
                     }
                 } else {
                     m_active_nodes.push_back(node_id);
@@ -665,87 +625,19 @@ protected:
         // Then the active genes
         m_active_genes.clear();
         for (auto i = 0u; i < m_active_nodes.size(); ++i) {
-            auto node_id = m_active_nodes[i];
-            if (node_id >= m_n) {
-                for (auto j = 0u; j <= _get_arity(node_id); ++j) {
-                    m_active_genes.push_back(m_gene_idx[node_id] + j);
+            if (m_active_nodes[i] >= m_n) {
+                unsigned idx = (m_active_nodes[i] - m_n) * (m_arity + 1);
+                for (auto j = 0u; j <= m_arity; ++j) {
+                    m_active_genes.push_back(idx + j);
                 }
             }
         }
-        // Output genes are always active
         for (auto i = 0u; i < m_m; ++i) {
-            m_active_genes.push_back(static_cast<unsigned>(m_x.size()) - m_m + i);
+            m_active_genes.push_back(m_r * m_c * (m_arity + 1) + i);
         }
     }
 
 private:
-    void sanity_checks()
-    {
-        if (m_n == 0) throw std::invalid_argument("Number of inputs is 0");
-        if (m_m == 0) throw std::invalid_argument("Number of outputs is 0");
-        if (m_c == 0) throw std::invalid_argument("Number of columns is 0");
-        if (m_r == 0) throw std::invalid_argument("Number of rows is 0");
-        if (m_l == 0) throw std::invalid_argument("Number of level-backs is 0");
-        if (m_arity.size() != m_c)
-            throw std::invalid_argument("The arity vector size (" + std::to_string(m_arity.size())
-                                        + ") must be the same as the number of columns (" + std::to_string(m_c) + ")");
-        if (std::any_of(m_arity.begin(), m_arity.end(), [](unsigned a) { return a == 0; })) {
-            throw std::invalid_argument("Basis functions arity cannot be zero");
-        }
-        if (m_f.size() == 0) throw std::invalid_argument("Number of basis functions is 0");
-    }
-    void init_bounds_and_chromosome()
-    {
-        // Chromosome size is r*c + sum(arity)*r + m
-        unsigned size = m_r * m_c + m_r * std::accumulate(m_arity.begin(), m_arity.end(), 0u) + m_m;
-        // Allocate bounds and chromosome and gene position
-        m_x = std::vector<unsigned>(size, 0u);
-        m_lb = std::vector<unsigned>(size, 0u);
-        m_ub = std::vector<unsigned>(size, 0u);
-        m_gene_idx = std::vector<unsigned>(m_r * m_c + m_n, 0u);
-
-        // We loop over all nodes and set function and connection genes
-        unsigned k = 0u;
-        for (auto i = 0u; i < m_c; ++i) {     // column first
-            for (auto j = 0u; j < m_r; ++j) { // then rows
-                // Function gene (lower bounds are all 0u)
-                m_ub[k] = static_cast<unsigned>(m_f.size() - 1u);
-                k++;
-                // Connections genes
-                for (auto l = 0u; l < m_arity[i]; ++l) {
-                    m_ub[k] = m_n + i * m_r - 1u;
-                    if (i >= m_l) { // only if level-backs allow a lower bound exists
-                        m_lb[k] = m_n + m_r * (i - m_l);
-                    }
-                    k++;
-                }
-            }
-        }
-        // Bounds for the output genes
-        for (auto i = size - m_m; i < size; ++i) {
-            m_ub[i] = m_n + m_r * m_c - 1u;
-            if (m_l <= m_c) {
-                m_lb[i] = m_n + m_r * (m_c - m_l);
-            }
-        }
-        // We compute the position of genes expressing a given node
-        for (auto node_id = 0u; node_id < m_gene_idx.size(); ++node_id) {
-            if (node_id < m_n) {
-                m_gene_idx[node_id]
-                    = 0u; // We put some unused values for the input nodes as they have no gene representation
-            } else {
-                unsigned col = (node_id - m_n) / m_r;
-                unsigned row = (node_id - m_n) % m_r;
-                unsigned acc = 0u;
-                for (auto j = 0u; j < col; ++j) {
-                    acc = acc + m_arity[j];
-                }
-                acc *= m_r;
-                m_gene_idx[node_id] = acc + row * m_arity[col] + (node_id - m_n);
-            }
-        }
-    }
-
     // number of inputs
     unsigned m_n;
     // number of outputs
@@ -770,8 +662,6 @@ private:
     std::vector<unsigned> m_active_genes;
     // the encoded chromosome
     std::vector<unsigned> m_x;
-    // The starting index in the chromosome of the genes expressing a node
-    std::vector<unsigned> m_gene_idx;
     // the random engine for the class
     std::default_random_engine m_e;
     // The expression type

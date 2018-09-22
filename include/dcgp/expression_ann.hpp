@@ -2,7 +2,8 @@
 #define DCGP_EXPRESSION_ANN_H
 
 #include <algorithm>
-#include <audi/audi.hpp>
+#include <audi/io.hpp>
+#include <functional>
 #include <initializer_list>
 #include <iostream>
 #include <map>
@@ -40,20 +41,88 @@ private:
     using enable_double = typename std::enable_if<std::is_same<U, double>::value, int>::type;
 
 public:
-    // loss types: Mean Sqrae Error or Cross Entropy
+    // loss types: Mean Squared Error or Cross Entropy
     enum class loss_type { MSE, CE };
+    // loss types: Mean Squared Error or Cross Entropy
+    enum class kernel_type { SIG, TANH, RELU, ELU, ISRU, SUM };
 
     /// Constructor
-    /** Constructs a dCGP expression
+    /** Constructs a dCGPANN expression
      *
-     * @param[in] n number of inputs (independent variables)
-     * @param[in] m number of outputs (dependent variables)
-     * @param[in] r number of rows of the dCGP
-     * @param[in] c number of columns of the dCGP
-     * @param[in] l number of levels-back allowed for the dCGP
-     * @param[in] arity arity of the basis functions
-     * @param[in] f function set. An std::vector of dcgp::kernel<expression::type>
-     * @param[in] seed seed for the random number generator (initial expression and mutations depend on this)
+     * @param[in] n number of inputs (independent variables).
+     * @param[in] m number of outputs (dependent variables).
+     * @param[in] r number of rows of the dCGPANN.
+     * @param[in] c number of columns of the dCGPANN.
+     * @param[in] l number of levels-back allowed for the dCGPANN.
+     * @param[in] arity arities of the basis functions for each column.
+     * @param[in] f function set. An std::vector of dcgp::kernel<expression::type>.
+     * @param[in] seed seed for the random number generator (initial expression and mutations depend on this).
+     */
+    expression_ann(unsigned n,                  // n. inputs
+                   unsigned m,                  // n. outputs
+                   unsigned r,                  // n. rows
+                   unsigned c,                  // n. columns
+                   unsigned l,                  // n. levels-back
+                   std::vector<unsigned> arity, // basis functions' arity
+                   std::vector<kernel<T>> f,    // functions
+                   unsigned seed                // seed for the pseudo-random numbers
+                   )
+        : expression<T>(n, m, r, c, l, arity, f, seed), m_biases(r * c, T(0.)), m_kernel_map(f.size())
+
+    {
+        // Sanity checks
+        for (const auto &ker : f) {
+            if (ker.get_name() != "tanh" && ker.get_name() != "sig" && ker.get_name() != "ReLu"
+                && ker.get_name() != "ELU" && ker.get_name() != "ISRU" && ker.get_name() != "sum") {
+                throw std::invalid_argument(
+                    "Only tanh, sig, ReLu, ELU, ISRU and sum Kernels are valid for dCGP-ANN expressions");
+            }
+        }
+        // Initialize the kernel map
+        for (decltype(f.size()) i = 0u; i < f.size(); ++i) {
+            if (f[i].get_name() == "sig") {
+                m_kernel_map[i] = kernel_type::SIG;
+            } else if (f[i].get_name() == "tanh") {
+                m_kernel_map[i] = kernel_type::TANH;
+            } else if (f[i].get_name() == "ReLu") {
+                m_kernel_map[i] = kernel_type::RELU;
+            } else if (f[i].get_name() == "ELU") {
+                m_kernel_map[i] = kernel_type::ELU;
+            } else if (f[i].get_name() == "ISRU") {
+                m_kernel_map[i] = kernel_type::ISRU;
+            } else if (f[i].get_name() == "sum") {
+                m_kernel_map[i] = kernel_type::SUM;
+            }
+        }
+        // Default initialization of weights to 1.
+        unsigned n_connections = std::accumulate(this->get_arity().begin(), this->get_arity().end(), 0u) * r;
+        m_weights = std::vector<T>(n_connections, T(1.));
+
+        // Filling in the symbols for the weights and biases
+        for (auto node_id = n; node_id < r * c + n; ++node_id) {
+            for (auto j = 0u; j < this->_get_arity(node_id); ++j) {
+                m_weights_symbols.push_back("w" + std::to_string(node_id) + "_" + std::to_string(j));
+            }
+        }
+        for (auto node_id = n; node_id < r * c + n; ++node_id) {
+            m_biases_symbols.push_back("b" + std::to_string(node_id));
+        }
+        // This will call the derived class method (not the base class) where the base class method is also called.
+        // As a consequence data members of both classes will be updated.
+        update_data_structures();
+    }
+
+    /// Constructor
+    /** Constructs a dCGPANN expression
+     *
+     * @param[in] n number of inputs (independent variables).
+     * @param[in] m number of outputs (dependent variables).
+     * @param[in] r number of rows of the dCGPANN.
+     * @param[in] c number of columns of the dCGPANN.
+     * @param[in] l number of levels-back allowed for the dCGPANN.
+     * @param[in] arity uniform arity for all basis functions.
+     * @param[in] f function set. An std::vector of dcgp::kernel<expression::type>.
+     * @param[in] seed seed for the random number generator (initial expression and mutations depend on this).
      */
     expression_ann(unsigned n,               // n. inputs
                    unsigned m,               // n. outputs
@@ -64,22 +133,46 @@ public:
                    std::vector<kernel<T>> f, // functions
                    unsigned seed             // seed for the pseudo-random numbers
                    )
-        : expression<T>(n, m, r, c, l, arity, f, seed), m_weights(r * c * arity, T(1.)), m_biases(r * c, T(0.))
+        : expression<T>(n, m, r, c, l, std::vector<unsigned>(c, arity), f, seed), m_biases(r * c, T(0.)),
+          m_kernel_map(f.size())
+
     {
+        // Sanity checks
         for (const auto &ker : f) {
             if (ker.get_name() != "tanh" && ker.get_name() != "sig" && ker.get_name() != "ReLu"
-                && ker.get_name() != "ELU" && ker.get_name() != "ISRU") {
+                && ker.get_name() != "ELU" && ker.get_name() != "ISRU" && ker.get_name() != "sum") {
                 throw std::invalid_argument(
-                    "Only tanh, sig, ReLu, ELU and ISRU Kernels are valid for dCGP-ANN expressions");
+                    "Only tanh, sig, ReLu, ELU, ISRU and sum Kernels are valid for dCGP-ANN expressions");
             }
         }
-        for (auto i = 0u; i < r * c; ++i) {
-            for (auto j = 0u; j < arity; ++j) {
-                m_weights_symbols.push_back("w" + std::to_string(i + n) + "_" + std::to_string(j));
+        // Initialize the kernel map
+        for (decltype(f.size()) i = 0u; i < f.size(); ++i) {
+            if (f[i].get_name() == "sig") {
+                m_kernel_map[i] = kernel_type::SIG;
+            } else if (f[i].get_name() == "tanh") {
+                m_kernel_map[i] = kernel_type::TANH;
+            } else if (f[i].get_name() == "ReLu") {
+                m_kernel_map[i] = kernel_type::RELU;
+            } else if (f[i].get_name() == "ELU") {
+                m_kernel_map[i] = kernel_type::ELU;
+            } else if (f[i].get_name() == "ISRU") {
+                m_kernel_map[i] = kernel_type::ISRU;
+            } else if (f[i].get_name() == "sum") {
+                m_kernel_map[i] = kernel_type::SUM;
             }
         }
-        for (auto i = 0u; i < r * c; ++i) {
-            m_biases_symbols.push_back("b" + std::to_string(i + n));
+        // Default initialization of weights to 1.
+        unsigned n_connections = std::accumulate(this->get_arity().begin(), this->get_arity().end(), 0u) * r;
+        m_weights = std::vector<T>(n_connections, T(1.));
+
+        // Filling in the symbols for the weights and biases
+        for (auto node_id = n; node_id < r * c + n; ++node_id) {
+            for (auto j = 0u; j < this->_get_arity(node_id); ++j) {
+                m_weights_symbols.push_back("w" + std::to_string(node_id) + "_" + std::to_string(j));
+            }
+        }
+        for (auto node_id = n; node_id < r * c + n; ++node_id) {
+            m_biases_symbols.push_back("b" + std::to_string(node_id));
         }
         // This will call the derived class method (not the base class) where the base class method is also called.
         // As a consequence data members of both classes will be updated.
@@ -104,20 +197,20 @@ public:
         std::vector<U> retval(this->get_m());
         auto node = fill_nodes(point);
         for (auto i = 0u; i < this->get_m(); ++i) {
-            retval[i] = node[this->get()[(this->get_rows() * this->get_cols()) * (this->get_arity() + 1) + i]];
+            retval[i] = node[this->get()[this->get().size() - this->get_m() + i]];
         }
         return retval;
     }
 
-    /// Evaluates the  dCGP-ANN  expression (initializer list)
+    /// Evaluates the dCGP-ANN expression
     /**
      * This evaluates the dCGP-ANN expression. According to the template parameter
      * it will compute the value (T) or a symbolic
      * representation (std::string). Any other type will result in a compilation-time
      * error.
      *
-     * @param[point] in is an initializer list containing the values where the dCGP expression has
-     * to be computed (T, or strings)
+     * @param[point] in an initialzer list containing the values where the dCGP-ANN expression has
+     * to be computed (doubles or strings)
      *
      * @return The value of the output (an std::vector)
      */
@@ -138,8 +231,7 @@ public:
      * (classification)
      * @return the mse
      */
-    double loss(const std::vector<double> &point, const std::vector<double> &prediction,
-                loss_type loss_e)
+    double loss(const std::vector<double> &point, const std::vector<double> &prediction, loss_type loss_e)
     {
         if (point.size() != this->get_n()) {
             throw std::invalid_argument("When computing the loss the point dimension (input) seemed wrong, it was: "
@@ -156,25 +248,30 @@ public:
         auto outputs = this->operator()(point);
         switch (loss_e) {
             // Mean Square Error
-            case loss_type::MSE:
+            case loss_type::MSE: {
                 for (decltype(outputs.size()) i = 0u; i < outputs.size(); ++i) {
                     retval += (outputs[i] - prediction[i]) * (outputs[i] - prediction[i]);
                 }
+                retval /= static_cast<double>(outputs.size());
                 break; // and exits the switch
+            }
             // Cross Entropy
-            case loss_type::CE:
-                // exp(a_i)
-                std::transform(outputs.begin(), outputs.end(), outputs.begin(), [](double a) { return std::exp(a); });
-                // sum exp(a_i)
+            case loss_type::CE: {
+                // We guard from numerical instabilities subtracting the max element
+                auto max = *std::max_element(outputs.begin(), outputs.end());
+                // exp(a_i - max)
+                std::transform(outputs.begin(), outputs.end(), outputs.begin(),
+                               [max](double a) { return std::exp(a - max); });
+                // sum exp(a_i - max)
                 double cumsum = std::accumulate(outputs.begin(), outputs.end(), 0.);
                 // log(p_i) * y_i
                 std::transform(outputs.begin(), outputs.end(), prediction.begin(), outputs.begin(),
                                [cumsum](double a, double y) { return std::log(a / cumsum) * y; });
                 // - sum log(p_i) y_i
-                retval = - std::accumulate(outputs.begin(), outputs.end(), 0.);
+                retval = -std::accumulate(outputs.begin(), outputs.end(), 0.);
                 break;
+            }
         }
-
         return retval;
     }
 
@@ -189,7 +286,7 @@ public:
      * @return the loss
      */
     double loss(const std::vector<std::vector<double>> &points, const std::vector<std::vector<double>> &labels,
-                std::string loss_s)
+                const std::string &loss_s)
     {
         if (points.size() != labels.size()) {
             throw std::invalid_argument("Data and label size mismatch data size is: " + std::to_string(points.size())
@@ -199,7 +296,7 @@ public:
             throw std::invalid_argument("Data size cannot be zero");
         }
         loss_type loss_e;
-        if (loss_s == "MSE") { // Mean Square Error
+        if (loss_s == "MSE") { // Mean Squared Error
             loss_e = loss_type::MSE;
         } else if (loss_s == "CE") {
             loss_e = loss_type::CE; // Cross Entropy
@@ -215,14 +312,13 @@ public:
      *
      * @param[point] The input data (single point)
      * @param[prediction] The predicted output (single point)
-     * @param[loss_e] The loss type. Must be loss_type::MSE for Mean Square Error (regression) or loss_type::CE for Cross
-     * Entropy (classification)
+     * @param[loss_e] The loss type. Must be loss_type::MSE for Mean Square Error (regression) or loss_type::CE for
+     * Cross Entropy (classification)
      * @return the loss, the gradient of the loss w.r.t. all weights (also inactive) and the gradient of the loss w.r.t
      * all biases
      */
-    template <typename U, enable_double<U> = 0>
-    std::tuple<U, std::vector<U>, std::vector<U>> d_loss(const std::vector<U> &point, const std::vector<U> &prediction,
-                                                         const loss_type loss_e)
+    std::tuple<double, std::vector<double>, std::vector<double>>
+    d_loss(const std::vector<double> &point, const std::vector<double> &prediction, const loss_type loss_e)
     {
         if (point.size() != this->get_n()) {
             throw std::invalid_argument("When computing the mse the point dimension (input) seemed wrong, it was: "
@@ -234,40 +330,45 @@ public:
                 "When computing the mse the prediction dimension (output) seemed wrong, it was: "
                 + std::to_string(prediction.size()) + " while I expected: " + std::to_string(this->get_m()));
         }
-        U value(U(0.));
-        std::vector<U> gweights(m_weights.size(), U(0.));
-        std::vector<U> gbiases(m_biases.size(), U(0.));
+        double value = 0.;
+        std::vector<double> gweights(m_weights.size(), 0.);
+        std::vector<double> gbiases(m_biases.size(), 0.);
 
         // ------------------------------------------ Forward pass (takes roughly half of the time) --------------------
         // All active nodes outputs get computed as well as
         // the activation function derivatives
-        auto n_nodes = this->get_n() + this->get_rows() * this->get_cols();
-        std::vector<U> node(n_nodes, 0.), d_node(n_nodes, 0.);
+        auto n_nodes = this->get_n() + this->get_r() * this->get_c();
+        std::vector<double> node(n_nodes, 0.), d_node(n_nodes, 0.);
         fill_nodes(point, node, d_node); // here is where the computations happen.
 
         // We add to node_d some virtual nodes containing the derivative of the loss with respect to the outputs
         // (dL/do_i)
         switch (loss_e) {
             // Mean Square Error
-            case loss_type::MSE:
+            case loss_type::MSE: {
                 for (decltype(this->get_m()) i = 0u; i < this->get_m(); ++i) {
                     auto node_idx = this->get()[this->get().size() - this->get_m() + i];
                     auto dummy = (node[node_idx] - prediction[i]);
-                    d_node.push_back(2 * dummy);
+                    d_node.push_back(2. * dummy / prediction.size());
                     value += dummy * dummy;
                 }
+                value /= prediction.size();
                 break; // and exits the switch
+            }
             // Cross Entropy
-            case loss_type::CE:
+            case loss_type::CE: {
                 std::vector<double> ps(this->get_m(), 0.);
-                double cumsum = 0.;
-                // We compute exp(a_i) and sum exp(a_i) for softmax
+                // We store output values in ps
                 for (decltype(this->get_m()) i = 0u; i < this->get_m(); ++i) {
                     auto node_idx = this->get()[this->get().size() - this->get_m() + i];
-                    ps[i] = std::exp(node[node_idx]);
-                    cumsum += ps[i];
+                    ps[i] = node[node_idx];
                 }
-                // We compute the probabilities p_i = a_i / sum a_i
+                // We guard from numerical instabilities subtracting the max
+                auto max = *std::max_element(ps.begin(), ps.end());
+                std::transform(ps.begin(), ps.end(), ps.begin(), [max](double a) { return std::exp(a - max); });
+                // We compute the sum of exp(o_i - max)
+                double cumsum = std::accumulate(ps.begin(), ps.end(), 0.);
+                // We transform to probabilities p_i
                 std::transform(ps.begin(), ps.end(), ps.begin(), [cumsum](double a) { return a / cumsum; });
                 // We add the derivatives of the loss w.r.t. to outputs
                 for (decltype(ps.size()) i = 0u; i < ps.size(); ++i) {
@@ -277,8 +378,9 @@ public:
                 std::transform(ps.begin(), ps.end(), prediction.begin(), ps.begin(),
                                [](double p, double y) { return std::log(p) * y; });
                 // - sum log(p_i) y_i
-                value = - std::accumulate(ps.begin(), ps.end(), 0.);
+                value = -std::accumulate(ps.begin(), ps.end(), 0.);
                 break;
+            }
         }
 
         // ------------------------------------------ Backward pass (takes roughly the remaining half)
@@ -286,34 +388,34 @@ public:
         // gradient information at each node for the incoming weights and relative bias
         for (auto it = this->get_active_nodes().rbegin(); it != this->get_active_nodes().rend(); ++it) {
             if (*it < this->get_n()) continue;
-            // index of the node in the bias vector
-            auto b_idx = *it - this->get_n();
-            // index of the node in the weight vector
-            auto w_idx = this->get_arity() * (*it - this->get_n());
-            // index of the node in the chromosome
-            auto c_idx = (*it - this->get_n()) * (this->get_arity() + 1);
             // index in the node/d_node vectors
-            auto n_idx = *it;
+            auto node_id = *it;
+            // index of the node in the bias vector
+            auto b_idx = node_id - this->get_n();
+            // index of the node in the chromosome
+            auto c_idx = this->get_gene_idx()[node_id];
+            // index of the node in the weight vector
+            auto w_idx = c_idx - (node_id - this->get_n());
+
             // We update the d_node information
-            U cum = 0.;
-            for (auto i = 0u; i < m_connected[*it].size(); ++i) {
+            double cum = 0.;
+            for (auto i = 0u; i < m_connected[node_id].size(); ++i) {
                 // If the node is not "virtual", that is not one of the m virtual nodes we added computing (x-x_i)^2
-                if (m_connected[*it][i].first < this->get_n() + this->get_rows() * this->get_cols()) {
-                    cum += m_weights[m_connected[*it][i].second] * d_node[m_connected[*it][i].first];
+                if (m_connected[node_id][i].first < this->get_n() + this->get_r() * this->get_c()) {
+                    cum += m_weights[m_connected[node_id][i].second] * d_node[m_connected[node_id][i].first];
                 } else {
-                    auto n_out = m_connected[*it][i].first - (this->get_n() + this->get_rows() * this->get_cols());
+                    auto n_out = m_connected[node_id][i].first - (this->get_n() + this->get_r() * this->get_c());
                     cum += d_node[d_node.size() - this->get_m() + n_out];
                 }
             }
-            d_node[n_idx] *= cum;
+            d_node[node_id] *= cum;
 
             // fill gradients for weights and biases info
-            for (auto i = 0u; i < this->get_arity(); ++i) {
-                gweights[w_idx + i] = d_node[n_idx] * node[this->get()[c_idx + 1 + i]];
+            for (auto i = 0u; i < this->_get_arity(node_id); ++i) {
+                gweights[w_idx + i] = d_node[node_id] * node[this->get()[c_idx + 1 + i]];
             }
-            gbiases[b_idx] = d_node[n_idx];
+            gbiases[b_idx] = d_node[node_id];
         }
-
         return std::make_tuple(std::move(value), std::move(gweights), std::move(gbiases));
     }
 
@@ -323,15 +425,14 @@ public:
      *
      * @param[points] The input data (a batch).
      * @param[labels] The predicted outputs (a batch).
-     * @param[loss_e] The loss type. Must be loss_type::MSE for Mean Square Error (regression) or loss_type::CE for Cross
-     * Entropy (classification)
+     * @param[loss_e] The loss type. Must be loss_type::MSE for Mean Square Error (regression) or loss_type::CE for
+     * Cross Entropy (classification)
      * @return the loss, the gradient of the loss w.r.t. all weights (also inactive) and the gradient of the loss w.r.t
      * all biases.
      */
-    template <typename U, enable_double<U> = 0>
-    std::tuple<U, std::vector<U>, std::vector<U>> d_loss(const std::vector<std::vector<U>> &points,
-                                                         const std::vector<std::vector<U>> &labels,
-                                                         loss_type loss_e)
+    std::tuple<double, std::vector<double>, std::vector<double>> d_loss(const std::vector<std::vector<double>> &points,
+                                                                        const std::vector<std::vector<double>> &labels,
+                                                                        loss_type loss_e)
     {
         if (points.size() != labels.size()) {
             throw std::invalid_argument("Data and label size mismatch data size is: " + std::to_string(points.size())
@@ -340,7 +441,7 @@ public:
         if (points.size() == 0) {
             throw std::invalid_argument("Data size cannot be zero");
         }
-        return d_loss<U>(points.begin(), points.end(), labels.begin(), loss_e);
+        return d_loss(points.begin(), points.end(), labels.begin(), loss_e);
     }
 
     /// Stochastic gradient descent
@@ -349,16 +450,19 @@ public:
      *
      * @param[points] The input data (a batch).
      * @param[labels] The predicted outputs (a batch).
-     * @param[l_rate] The learning rate.
+     * @param[lr] The learning rate.
      * @param[batch_size] The batch size.
      *
-     * @throws std::invalid_argument if the *data* and *label* size do not match or is zero, or if *l_rate* is not
+     * @return The average error across the batches. Note: this will not be equal to the error on the whole data set
+     * as weights get updated after each batch. It is an indicator, though, and its free to compute.
+     *
+     * @throws std::invalid_argument if the *data* and *label* size do not match or is zero, or if *lr* is not
      * positive.
      */
-    template <typename U, enable_double<U> = 0>
-    void sgd(const std::vector<std::vector<U>> &points, const std::vector<std::vector<U>> &labels, double l_rate,
-             unsigned batch_size, std::string loss_s)
+    double sgd(const std::vector<std::vector<double>> &points, const std::vector<std::vector<double>> &labels,
+               double lr, unsigned batch_size, const std::string &loss_s)
     {
+        // Sanity checks for the inputs
         if (points.size() != labels.size()) {
             throw std::invalid_argument("Data and label size mismatch data size is: " + std::to_string(points.size())
                                         + " while label size is: " + std::to_string(labels.size()));
@@ -366,11 +470,12 @@ public:
         if (points.size() == 0) {
             throw std::invalid_argument("Data size cannot be zero");
         }
-        if (l_rate <= 0) {
-            throw std::invalid_argument("The learning rate must be a positive number, while: " + std::to_string(l_rate)
+        if (lr <= 0) {
+            throw std::invalid_argument("The learning rate must be a positive number, while: " + std::to_string(lr)
                                         + " was detected.");
         }
 
+        // Decoding the loss from string to the enum type (loss_s -> loss_e)
         loss_type loss_e;
         if (loss_s == "MSE") {
             loss_e = loss_type::MSE;
@@ -383,16 +488,21 @@ public:
         auto dfirst = points.begin();
         auto dlast = points.end();
         auto lfirst = labels.begin();
+        double retval = 0.;
+        double counter = 0.;
         while (dfirst != dlast) {
             if (dfirst + batch_size > dlast) {
-                update_weights<U>(dfirst, dlast, lfirst, l_rate, loss_e);
+                retval += update_weights(dfirst, dlast, lfirst, lr, loss_e);
                 dfirst = dlast;
+                counter++;
             } else {
-                update_weights<U>(dfirst, dfirst + batch_size, lfirst, l_rate, loss_e);
+                retval += update_weights(dfirst, dfirst + batch_size, lfirst, lr, loss_e);
                 dfirst += batch_size;
                 lfirst += batch_size;
+                counter++;
             }
         }
+        return retval / counter;
     }
 
     /// Sets the output nonlinearities
@@ -402,15 +512,61 @@ public:
      * [-1 1] and hence the output layer should have some sigmoid or tanh nonlinearity.
      *
      *
-     * @param[in] f_id the id of the kernel (nonlinearity)
+     * @param[in] name the name of the kernel (nonlinearity)
      *
-     * @throw std::invalid_argument if *f_id* is invalid.
+     * @throw std::invalid_argument if *name* is invalid.
      */
-    void set_output_f(unsigned f_id)
+    void set_output_f(const std::string &name)
     {
-        for (decltype(this->get_m()) i = 0u; i < this->get_m(); ++i) {
-            this->set_f_gene(this->get()[this->get().size() - 1 - i], f_id);
+        typename std::vector<kernel_type>::iterator it;
+        if (name == "sig") {
+            it = std::find(m_kernel_map.begin(), m_kernel_map.end(), kernel_type::SIG);
+        } else if (name == "tanh") {
+            it = std::find(m_kernel_map.begin(), m_kernel_map.end(), kernel_type::TANH);
+        } else if (name == "ReLu") {
+            it = std::find(m_kernel_map.begin(), m_kernel_map.end(), kernel_type::RELU);
+        } else if (name == "ELU") {
+            it = std::find(m_kernel_map.begin(), m_kernel_map.end(), kernel_type::ELU);
+        } else if (name == "ISRU") {
+            it = std::find(m_kernel_map.begin(), m_kernel_map.end(), kernel_type::ISRU);
+        } else if (name == "sum") {
+            it = std::find(m_kernel_map.begin(), m_kernel_map.end(), kernel_type::SUM);
         }
+
+        if (it == m_kernel_map.end()) {
+            throw std::invalid_argument("The nonlinearity " + name + " is not a Kernel for this dCGP expression");
+        } else {
+            unsigned f_id = static_cast<unsigned>(it - m_kernel_map.begin());
+            for (decltype(this->get_m()) i = 0u; i < this->get_m(); ++i) {
+                this->set_f_gene(this->get()[this->get().size() - 1 - i], f_id);
+            }
+        }
+    }
+    /// Computes the number of weights influencing the result
+    /**
+     * Computes the number of weights influencing the result. This will also be the number
+     * of weights that are updated when calling sgd. The number of active weights, as well as
+     * the number of active nodes, define the complexity of the expression expressed by the chromosome.
+     *
+     * @param[in] unique when true weights are counted only once if connecting the same two nodes.
+     */
+    unsigned n_active_weights(bool unique = false) const
+    {
+        unsigned retval = 0u;
+        for (auto node_id : this->get_active_nodes()) {
+            if (node_id < this->get_n()) continue;
+            if (!unique) {
+                retval += this->_get_arity(node_id);
+            } else {
+                auto g_idx = this->get_gene_idx()[node_id];
+                auto arity = this->_get_arity(node_id);
+                std::vector<unsigned> con_id(this->get().begin() + g_idx + 1u,
+                                             this->get().begin() + g_idx + 1u + arity);
+                std::sort(con_id.begin(), con_id.end());
+                retval += static_cast<unsigned>(std::unique(con_id.begin(), con_id.end()) - con_id.begin());
+            }
+        }
+        return retval;
     }
 
     /// Overloaded stream operator
@@ -425,9 +581,9 @@ public:
         audi::stream(os, "d-CGP Expression:\n");
         audi::stream(os, "\tNumber of inputs:\t\t", d.get_n(), '\n');
         audi::stream(os, "\tNumber of outputs:\t\t", d.get_m(), '\n');
-        audi::stream(os, "\tNumber of rows:\t\t\t", d.get_rows(), '\n');
-        audi::stream(os, "\tNumber of columns:\t\t", d.get_cols(), '\n');
-        audi::stream(os, "\tNumber of levels-back allowed:\t", d.get_levels_back(), '\n');
+        audi::stream(os, "\tNumber of rows:\t\t\t", d.get_r(), '\n');
+        audi::stream(os, "\tNumber of columns:\t\t", d.get_c(), '\n');
+        audi::stream(os, "\tNumber of levels-back allowed:\t", d.get_l(), '\n');
         audi::stream(os, "\tBasis function arity:\t\t", d.get_arity(), '\n');
         audi::stream(os, "\n\tResulting lower bounds:\t", d.get_lb());
         audi::stream(os, "\n\tResulting upper bounds:\t", d.get_ub(), '\n');
@@ -459,13 +615,14 @@ public:
      */
     void set_weight(typename std::vector<T>::size_type node_id, typename std::vector<T>::size_type input_id, const T &w)
     {
-        if (node_id < this->get_n() || node_id >= this->get_n() + this->get_rows() * this->get_cols()) {
+        if (node_id < this->get_n() || node_id >= this->get_n() + this->get_r() * this->get_c()) {
             throw std::invalid_argument("Requested node id does not exist");
         }
-        if (input_id >= this->get_arity()) {
+        if (input_id >= this->_get_arity(node_id)) {
             throw std::invalid_argument("Requested input exceeds the function arity");
         }
-        auto idx = (node_id - this->get_n()) * this->get_arity() + input_id;
+        // index of the node in the weight vector
+        auto idx = this->get_gene_idx()[node_id] - (node_id - this->get_n()) + input_id;
         m_weights[idx] = w;
     }
 
@@ -489,7 +646,7 @@ public:
      *
      * @param[in] ws an std::vector containing all the weights to set
      *
-     * @throws std::invalid_argument if the input vector dimension is not valid (r*c*arity)
+     * @throws std::invalid_argument if the input vector dimension is not valid.
      */
     void set_weights(const std::vector<T> &ws)
     {
@@ -505,7 +662,7 @@ public:
      *
      * @param[in] node_id the id of the node (convention adopted for node numbering
      * http://ppsn2014.ijs.si/files/slides/ppsn2014-tutorial3-miller.pdf)
-     * @param[in] input_id the id of the node input (0 for the first one up to arity-1)
+     * @param[in] input_id the id of the node input (0 up to node arity-1)
      *
      * @return the value of the weight
      *
@@ -513,14 +670,15 @@ public:
      */
     T get_weight(typename std::vector<T>::size_type node_id, typename std::vector<T>::size_type input_id) const
     {
-        if (node_id < this->get_n() || node_id >= this->get_n() + this->get_rows() * this->get_cols()) {
+        if (node_id < this->get_n() || node_id >= this->get_n() + this->get_r() * this->get_c()) {
             throw std::invalid_argument(
                 "Requested node id does not exist or does not have a weight (e.g. input nodes)");
         }
-        if (input_id >= this->get_arity()) {
+        if (input_id >= this->_get_arity(node_id)) {
             throw std::invalid_argument("Requested input exceeds the function arity");
         }
-        auto idx = (node_id - this->get_n()) * this->get_arity() + input_id;
+
+        auto idx = this->get_gene_idx()[node_id] - (node_id - this->get_n()) + input_id;
         return m_weights[idx];
     }
 
@@ -649,11 +807,11 @@ public:
 
 private:
     // For numeric computations
-    template <typename U, enable_double<U> = 0>
-    U kernel_call(std::vector<U> &function_in, unsigned idx, unsigned weight_idx, unsigned bias_idx) const
+    double kernel_call(std::vector<double> &function_in, unsigned idx, unsigned arity, unsigned weight_idx,
+                       unsigned bias_idx) const
     {
         // Weights (we transform the inputs a,b,c,d,e in w_1 a, w_2 b, w_3 c, etc...)
-        for (auto j = 0u; j < this->get_arity(); ++j) {
+        for (auto j = 0u; j < arity; ++j) {
             function_in[j] = function_in[j] * m_weights[weight_idx + j];
         }
         // Biases (we add to the first input a bias so that a,b,c,d,e goes in c, etc...))
@@ -664,11 +822,11 @@ private:
     }
 
     // For the symbolic expression
-    template <typename U, typename std::enable_if<std::is_same<U, std::string>::value, int>::type = 0>
-    U kernel_call(std::vector<U> &function_in, unsigned idx, unsigned weight_idx, unsigned bias_idx) const
+    std::string kernel_call(std::vector<std::string> &function_in, unsigned idx, unsigned arity, unsigned weight_idx,
+                            unsigned bias_idx) const
     {
         // Weights
-        for (auto j = 0u; j < this->get_arity(); ++j) {
+        for (auto j = 0u; j < arity; ++j) {
             function_in[j] = m_weights_symbols[weight_idx + j] + "*" + function_in[j];
         }
         // Biases
@@ -683,73 +841,83 @@ private:
         if (in.size() != this->get_n()) {
             throw std::invalid_argument("Input size is incompatible");
         }
-        std::vector<U> node(this->get_n() + this->get_rows() * this->get_cols());
-        std::vector<U> function_in(this->get_arity());
-        for (auto i : this->get_active_nodes()) {
-            if (i < this->get_n()) {
-                node[i] = in[i];
+        std::vector<U> node(this->get_n() + this->get_r() * this->get_c());
+        std::vector<U> function_in;
+        for (auto node_id : this->get_active_nodes()) {
+            if (node_id < this->get_n()) {
+                node[node_id] = in[node_id];
             } else {
+                unsigned arity = this->_get_arity(node_id);
+                function_in.resize(arity);
                 // position in the chromosome of the current node
-                unsigned idx = (i - this->get_n()) * (this->get_arity() + 1);
+                unsigned g_idx = this->get_gene_idx()[node_id];
                 // starting position in m_weights of the weights relative to the node
-                unsigned weight_idx = (i - this->get_n()) * this->get_arity();
+                unsigned w_idx = g_idx - (node_id - this->get_n());
                 // starting position in m_biases of the node bias
-                unsigned bias_idx = i - this->get_n();
-                for (auto j = 0u; j < this->get_arity(); ++j) {
-                    function_in[j] = node[this->get()[idx + j + 1]];
+                unsigned b_idx = node_id - this->get_n();
+                for (auto j = 0u; j < arity; ++j) {
+                    function_in[j] = node[this->get()[g_idx + j + 1]];
                 }
-                node[i] = kernel_call(function_in, idx, weight_idx, bias_idx);
+                node[node_id] = kernel_call(function_in, g_idx, arity, w_idx, b_idx);
             }
         }
         return node;
     }
 
     // computes node and node_d to start backprop
-    template <typename U, enable_double<U> = 0>
-    void fill_nodes(const std::vector<U> &in, std::vector<U> &node, std::vector<U> &d_node) const
+    void fill_nodes(const std::vector<double> &in, std::vector<double> &node, std::vector<double> &d_node) const
     {
         if (in.size() != this->get_n()) {
             throw std::invalid_argument("Input size is incompatible");
         }
         // Start
-        std::vector<U> function_in(this->get_arity());
-        for (auto i : this->get_active_nodes()) {
-            if (i < this->get_n()) {
-                node[i] = in[i];
+        std::vector<double> function_in;
+        for (auto node_id : this->get_active_nodes()) {
+            if (node_id < this->get_n()) {
+                node[node_id] = in[node_id];
                 // We need d_node to have the same structure of node, hence we also
                 // put some bogus entries fot the input nodes that actually do not have an activation function
                 // hence no need/use/meaning for a derivative
-                d_node[i] = 0.;
+                d_node[node_id] = 0.;
             } else {
+                unsigned arity = this->_get_arity(node_id);
+                function_in.resize(arity);
                 // position in the chromosome of the current node
-                unsigned idx = (i - this->get_n()) * (this->get_arity() + 1);
+                unsigned g_idx = this->get_gene_idx()[node_id];
                 // starting position in m_weights of the weights relative to the node
-                unsigned weight_idx = (i - this->get_n()) * this->get_arity();
+                unsigned w_idx = g_idx - (node_id - this->get_n());
                 // starting position in m_biases of the node bias
-                unsigned bias_idx = i - this->get_n();
-                for (auto j = 0u; j < this->get_arity(); ++j) {
-                    function_in[j] = node[this->get()[idx + j + 1]];
+                unsigned b_idx = node_id - this->get_n();
+                for (auto j = 0u; j < arity; ++j) {
+                    function_in[j] = node[this->get()[g_idx + j + 1]];
                 }
-                node[i] = kernel_call(function_in, idx, weight_idx, bias_idx);
+                node[node_id] = kernel_call(function_in, g_idx, arity, w_idx, b_idx);
                 // take cares of d_node
                 // sigmoid derivative is sig(1-sig)
-                if (this->get_f()[this->get()[idx]].get_name() == "sig") {
-                    d_node[i] = node[i] * (1. - node[i]);
-                    // tanh derivative is 1 - tanh**2
-                } else if (this->get_f()[this->get()[idx]].get_name() == "tanh") {
-                    d_node[i] = 1. - node[i] * node[i];
-                    // Relu derivative is 0 if relu<0, 1 otherwise
-                } else if (this->get_f()[this->get()[idx]].get_name() == "ReLu") {
-                    d_node[i] = (node[i] > 0.) ? 1. : 0.;
-                } else if (this->get_f()[this->get()[idx]].get_name() == "ELU") {
-                    d_node[i] = (node[i] > 0.) ? 1. : node[i] + 1.;
-                } else if (this->get_f()[this->get()[idx]].get_name() == "ISRU") {
-                    auto cumin = std::accumulate(function_in.begin(), function_in.end(), 0.);
-                    d_node[i] = node[i] * node[i] * node[i] / cumin / cumin / cumin;
+                switch (m_kernel_map[this->get()[g_idx]]) {
+                    case kernel_type::SIG:
+                        d_node[node_id] = node[node_id] * (1. - node[node_id]);
+                        break;
+                    case kernel_type::TANH:
+                        d_node[node_id] = 1. - node[node_id] * node[node_id];
+                        break;
+                    case kernel_type::SUM:
+                        d_node[node_id] = 1.;
+                        break;
+                    case kernel_type::RELU:
+                        d_node[node_id] = (node[node_id] > 0.) ? 1. : 0.;
+                        break;
+                    case kernel_type::ELU:
+                        d_node[node_id] = (node[node_id] > 0.) ? 1. : node[node_id] + 1.;
+                        break;
+                    case kernel_type::ISRU: {
+                        auto cumin = std::accumulate(function_in.begin(), function_in.end(), 0.);
+                        d_node[node_id] = node[node_id] * node[node_id] * node[node_id] / cumin / cumin / cumin;
+                        break;
+                    }
                 }
             }
         }
-        return;
     }
 
     // This overrides the base class update_data_structures and updates also the m_connected (as well as
@@ -758,16 +926,17 @@ private:
     {
         expression<T>::update_data_structures();
         m_connected.clear();
-        m_connected.resize(this->get_n() + this->get_m() + this->get_rows() * this->get_cols());
+        m_connected.resize(this->get_n() + this->get_m() + this->get_r() * this->get_c());
         for (auto node_id : this->get_active_nodes()) {
             if (node_id >= this->get_n()) { // not for input nodes
-                // position in the chromosome of the current node
-                unsigned idx = (node_id - this->get_n()) * (this->get_arity() + 1);
+                // start in the chromosome of the genes expressing the node_id connections
+                unsigned idx = this->get_gene_idx()[node_id] + 1u;
+                // start in the weight vector of the genes expressing the node_id connections
+                unsigned w_idx = (idx - 1u) - (node_id - this->get_n());
                 // loop over the genes representing connections
-                for (auto i = idx + 1; i < idx + 1 + this->get_arity(); ++i) {
-                    if (this->is_active(this->get()[i])) {
-                        m_connected[this->get()[i]].push_back(
-                            {node_id, (node_id - this->get_n()) * this->get_arity() + i - idx - 1});
+                for (auto i = 0u; i < this->_get_arity(node_id); ++i) {
+                    if (this->is_active(this->get()[idx + i])) {
+                        m_connected[this->get()[idx + i]].push_back({node_id, w_idx + i});
                     }
                 }
             }
@@ -775,7 +944,7 @@ private:
         // We now add the output nodes with ids starting from n + r * c. In this case the weight is not
         // relevant, hence we use the arbitrary value 0u as index in the weight vector.
         for (auto i = 0u; i < this->get_m(); ++i) {
-            auto virtual_idx = this->get_n() + this->get_rows() * this->get_cols() + i;
+            auto virtual_idx = this->get_n() + this->get_r() * this->get_c() + i;
             auto node_idx = this->get()[this->get().size() - this->get_m() + i];
             m_connected[node_idx].push_back({virtual_idx, 0u});
         }
@@ -790,43 +959,42 @@ private:
      * @param[lfirst] Start range for the labels
      * @param[lr] The learning rate
      *
+     * @ return the
+     *
      * @throws std::invalid_argument if the *data* and *label* size do not match or are zero, or if *lr* is not
      * positive.
      */
-    template <typename U, enable_double<U> = 0>
-    void update_weights(typename std::vector<std::vector<U>>::const_iterator dfirst,
-                        typename std::vector<std::vector<U>>::const_iterator dlast,
-                        typename std::vector<std::vector<U>>::const_iterator lfirst, U lr,
-                        loss_type loss_e)
+    double update_weights(typename std::vector<std::vector<double>>::const_iterator dfirst,
+                          typename std::vector<std::vector<double>>::const_iterator dlast,
+                          typename std::vector<std::vector<double>>::const_iterator lfirst, double lr, loss_type loss_e)
     {
-        U coeff(lr / static_cast<U>(dlast - dfirst));
-        while (dfirst != dlast) {
-            auto mse_out = d_loss(*dfirst++, *lfirst++, loss_e);
-            std::transform(m_weights.begin(), m_weights.end(), std::get<1>(mse_out).begin(), m_weights.begin(),
-                           [coeff](U a, U b) { return a - coeff * b; });
-            std::transform(m_biases.begin(), m_biases.end(), std::get<2>(mse_out).begin(), m_biases.begin(),
-                           [coeff](U a, U b) { return a - coeff * b; });
-        }
+        auto err = d_loss(dfirst, dlast, lfirst, loss_e);
+
+        // We now update the weights with the stochastic gradient descent update rule
+        std::transform(m_weights.begin(), m_weights.end(), std::get<1>(err).begin(), m_weights.begin(),
+                       [&lr](double a, double b) { return a - lr * b; });
+        std::transform(m_biases.begin(), m_biases.end(), std::get<2>(err).begin(), m_biases.begin(),
+                       [&lr](double a, double b) { return a - lr * b; });
+        return std::get<0>(err);
     }
 
-    template <typename U, enable_double<U> = 0>
-    std::tuple<U, std::vector<U>, std::vector<U>> d_loss(typename std::vector<std::vector<U>>::const_iterator dfirst,
-                                                         typename std::vector<std::vector<U>>::const_iterator dlast,
-                                                         typename std::vector<std::vector<U>>::const_iterator lfirst,
-                                                         loss_type loss_e)
+    std::tuple<double, std::vector<double>, std::vector<double>>
+    d_loss(typename std::vector<std::vector<double>>::const_iterator dfirst,
+           typename std::vector<std::vector<double>>::const_iterator dlast,
+           typename std::vector<std::vector<double>>::const_iterator lfirst, loss_type loss_e)
     {
-        U value(U(0.));
-        std::vector<U> gweights(m_weights.size(), U(0.));
-        std::vector<U> gbiases(m_biases.size(), U(0.));
-        U dim = static_cast<U>(dlast - dfirst);
+        double value = 0.;
+        std::vector<double> gweights(m_weights.size(), 0.);
+        std::vector<double> gbiases(m_biases.size(), 0.);
+        double dim = static_cast<double>(dlast - dfirst);
 
         while (dfirst != dlast) {
-            auto mse_out = d_loss(*dfirst++, *lfirst++, loss_e);
-            value += std::get<0>(mse_out);
-            std::transform(gweights.begin(), gweights.end(), std::get<1>(mse_out).begin(), gweights.begin(),
-                           [dim](U a, U b) { return a + b / dim; });
-            std::transform(gbiases.begin(), gbiases.end(), std::get<2>(mse_out).begin(), gbiases.begin(),
-                           [dim](U a, U b) { return a + b / dim; });
+            auto err = d_loss(*dfirst++, *lfirst++, loss_e);
+            value += std::get<0>(err);
+            std::transform(gweights.begin(), gweights.end(), std::get<1>(err).begin(), gweights.begin(),
+                           [&dim](double a, double b) { return a + b / dim; });
+            std::transform(gbiases.begin(), gbiases.end(), std::get<2>(err).begin(), gbiases.begin(),
+                           [&dim](double a, double b) { return a + b / dim; });
         }
         value /= dim;
 
@@ -840,8 +1008,8 @@ private:
         double retval(0.);
         double dim = static_cast<double>(dlast - dfirst);
         while (dfirst != dlast) {
-            double mse_out = loss(*dfirst++, *lfirst++, loss_e);
-            retval += mse_out;
+            double err = loss(*dfirst++, *lfirst++, loss_e);
+            retval += err;
         }
         retval /= dim;
 
@@ -860,6 +1028,8 @@ private:
     // (and weights) it feeds into. We also need to add some virtual nodes (to keep track of output nodes dependencies)
     // The assigned virtual ids starting from n + r * c
     std::vector<std::vector<std::pair<unsigned, unsigned>>> m_connected;
+    // Kernel map (this is here to avoid string comparisons)
+    std::vector<kernel_type> m_kernel_map;
 }; // namespace dcgp
 
 } // end of namespace dcgp
