@@ -184,10 +184,10 @@ public:
 
     /// Evaluates the dCGP-ANN expression
     /**
-     * This evaluates the dCGP-ANN expression. According to the template parameter
-     * it will compute the value (T) or a symbolic
-     * representation (std::string). Any other type will result in a compilation-time
-     * error.
+     * This evaluates the dCGP-ANN expression. This template can be instantiated
+     * with type *U* double, in which case the algorithm computes the numerical value of the inputs
+     * or with *U* being a string, in which case the instantiated method will produce a symbolic representation of the
+     * output.
      *
      * @param[point] in an std::vector containing the values where the dCGP-ANN expression has
      * to be computed (doubles or strings)
@@ -207,10 +207,10 @@ public:
 
     /// Evaluates the dCGP-ANN expression
     /**
-     * This evaluates the dCGP-ANN expression. According to the template parameter
-     * it will compute the value (T) or a symbolic
-     * representation (std::string). Any other type will result in a compilation-time
-     * error.
+     * This evaluates the dCGP-ANN expression. This template can be instantiated
+     * with type *U* double, in which case the algorithm computes the numerical value of the inputs
+     * or with *U* being a string, in which case the instantiated method will produce a symbolic representation of the
+     * output.
      *
      * @param[point] in an initialzer list containing the values where the dCGP-ANN expression has
      * to be computed (doubles or strings)
@@ -994,47 +994,22 @@ private:
         value = 0.;
         std::vector<double> gweights(m_weights.size(), 0.);
         std::vector<double> gbiases(m_biases.size(), 0.);
-        // The task task_group.
-        tbb::task_group g;
+
         // The mutex that will protect read write access to value, gweights, gbiases.
         tbb::spin_mutex mutex_weights_updates;
-        // For some reason cannot use *dfirst directly inside run, so these copy its content.
-        std::vector<double> point;
-        std::vector<double> prediction;
         // This loops over all points, predictions in the mini-batch
         tbb::parallel_for(size_t(0), static_cast<size_t>(batch_dim), size_t(1), [&](size_t i) {
+            // The loss and its gradient get computed
             auto err = d_loss(*(dfirst + i), *(lfirst + i), loss_e);
+            // We acquire the lock on the mutex
             tbb::spin_mutex::scoped_lock lock(mutex_weights_updates);
+            // We update the cumulative loss and gradient
             value += std::get<0>(err);
-
             std::transform(gweights.begin(), gweights.end(), std::get<1>(err).begin(), gweights.begin(),
                            [&batch_dim](double a, double b) { return a + b / batch_dim; });
             std::transform(gbiases.begin(), gbiases.end(), std::get<2>(err).begin(), gbiases.begin(),
                            [&batch_dim](double a, double b) { return a + b / batch_dim; });
         });
-
-        // while (dfirst != dlast) {
-        //    point = *dfirst;
-        //    prediction = *lfirst;
-        //
-        //    // Thats the parallel task
-        //    g.run([&] {
-        //        // 1 - Compute the error on the sample (this should be the most computationally intense)
-        //        auto err = d_loss(point, prediction, loss_e);
-        //        // 2 - Acquire the lock on the mutex
-        //        tbb::spin_mutex::scoped_lock lock(mutex_weights_updates);
-        //        // 3 - update loss, weights and biases
-        //        value += std::get<0>(err);
-        //        std::transform(gweights.begin(), gweights.end(), std::get<1>(err).begin(), gweights.begin(),
-        //                       [&batch_dim](double a, double b) { return a + b / batch_dim; });
-        //        std::transform(gbiases.begin(), gbiases.end(), std::get<2>(err).begin(), gbiases.begin(),
-        //                       [&batch_dim](double a, double b) { return a + b / batch_dim; });
-        //    });
-        //    // Increment the iterators
-        //    dfirst++;
-        //    lfirst++;
-        //}
-        // g.wait();
         value /= batch_dim;
         return std::make_tuple(std::move(value), std::move(gweights), std::move(gbiases));
     }
@@ -1044,12 +1019,19 @@ private:
                 typename std::vector<std::vector<double>>::const_iterator lfirst, loss_type loss_e) const
     {
         double retval(0.);
-        double dim = static_cast<double>(dlast - dfirst);
-        while (dfirst != dlast) {
+        double batch_dim = static_cast<double>(dlast - dfirst);
+        // The mutex that will protect read/write access to retval
+        tbb::spin_mutex mutex_weights_updates;
+        // This loops over all points, predictions in the mini-batch
+        tbb::parallel_for(size_t(0), static_cast<size_t>(batch_dim), size_t(1), [&](size_t i) {
+            // The loss gets computed
             double err = loss(*dfirst++, *lfirst++, loss_e);
+            // We acquire the lock on the mutex
+            tbb::spin_mutex::scoped_lock lock(mutex_weights_updates);
+            // We update the cumulative loss and gradient
             retval += err;
-        }
-        retval /= dim;
+        });
+        retval /= batch_dim;
 
         return retval;
     }
