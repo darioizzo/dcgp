@@ -12,6 +12,8 @@
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include <tbb/spin_mutex.h>
+#include <tbb/task_group.h>
 #include <vector>
 
 #include <dcgp/expression.hpp>
@@ -321,13 +323,13 @@ public:
     d_loss(const std::vector<double> &point, const std::vector<double> &prediction, const loss_type loss_e)
     {
         if (point.size() != this->get_n()) {
-            throw std::invalid_argument("When computing the mse the point dimension (input) seemed wrong, it was: "
+            throw std::invalid_argument("When computing the loss the point dimension (input) seemed wrong, it was: "
                                         + std::to_string(point.size())
                                         + " while I expected: " + std::to_string(this->get_n()));
         }
         if (prediction.size() != this->get_m()) {
             throw std::invalid_argument(
-                "When computing the mse the prediction dimension (output) seemed wrong, it was: "
+                "When computing the loss the prediction dimension (output) seemed wrong, it was: "
                 + std::to_string(prediction.size()) + " while I expected: " + std::to_string(this->get_m()));
         }
         double value = 0.;
@@ -346,13 +348,14 @@ public:
         switch (loss_e) {
             // Mean Square Error
             case loss_type::MSE: {
+                auto n_samples = static_cast<double>(prediction.size());
                 for (decltype(this->get_m()) i = 0u; i < this->get_m(); ++i) {
                     auto node_idx = this->get()[this->get().size() - this->get_m() + i];
                     auto dummy = (node[node_idx] - prediction[i]);
-                    d_node.push_back(2. * dummy / prediction.size());
+                    d_node.push_back(2. * dummy / n_samples);
                     value += dummy * dummy;
                 }
-                value /= prediction.size();
+                value /= n_samples;
                 break; // and exits the switch
             }
             // Cross Entropy
@@ -988,16 +991,34 @@ private:
         std::vector<double> gbiases(m_biases.size(), 0.);
         double dim = static_cast<double>(dlast - dfirst);
 
+        tbb::task_group g;
+        tbb::spin_mutex mutex_weights_updates;
+
+        std::vector<double> point;
+        std::vector<double> prediction;
+
         while (dfirst != dlast) {
-            auto err = d_loss(*dfirst++, *lfirst++, loss_e);
-            value += std::get<0>(err);
-            std::transform(gweights.begin(), gweights.end(), std::get<1>(err).begin(), gweights.begin(),
-                           [&dim](double a, double b) { return a + b / dim; });
-            std::transform(gbiases.begin(), gbiases.end(), std::get<2>(err).begin(), gbiases.begin(),
-                           [&dim](double a, double b) { return a + b / dim; });
+            point = *dfirst;
+            prediction = *lfirst;
+
+            g.run([&] {
+                // 1 - Compute the error on the sample (this should be the most computationally intense)
+                auto err = d_loss(point, prediction, loss_e);
+
+                // 2 - Acquire the lock on the mutex
+                // tbb::spin_mutex::scoped_lock lock(mutex_weights_updates);
+                // 3 - update error and weights
+                value += std::get<0>(err);
+                std::transform(gweights.begin(), gweights.end(), std::get<1>(err).begin(), gweights.begin(),
+                               [&dim](double a, double b) { return a + b / dim; });
+                std::transform(gbiases.begin(), gbiases.end(), std::get<2>(err).begin(), gbiases.begin(),
+                               [&dim](double a, double b) { return a + b / dim; });
+            }); // spawn a task
+            dfirst++;
+            lfirst++;
         }
         value /= dim;
-
+        g.wait();
         return std::make_tuple(std::move(value), std::move(gweights), std::move(gbiases));
     }
 

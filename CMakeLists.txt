@@ -148,12 +148,17 @@ if(DCGP_BUILD_DCGP)
     # Audi setup
     find_package(audi REQUIRED)
     message(STATUS "AUDI header only library found.")
-    message(STATUS "AUDI include dir is: ${AUDI_INCLUDE_DIR}")
+    message(STATUS "AUDI include dir is: ${AUDI_INCLUDE_DIRS}")
+
+    # TBB setup
+    find_package(TBB REQUIRED)
+    message(STATUS "TBB include dir is: ${TBB_INCLUDE_DIRS}")
+    message(STATUS "TBB library is: ${TBB_LIBRARIES}")
 
     # Setup of the header-only dcgp library.
     add_library(dcgp INTERFACE)
     target_link_libraries(dcgp INTERFACE Threads::Threads Boost::boost Boost::serialization)    
-    target_link_libraries(dcgp INTERFACE Eigen3::eigen3 MPFR::MPFR GMP::GMP Audi::audi)
+    target_link_libraries(dcgp INTERFACE Eigen3::eigen3 MPFR::MPFR GMP::GMP Audi::audi tbb)
     
     # This sets up the include directory to be different if we build
     target_include_directories(dcgp INTERFACE
