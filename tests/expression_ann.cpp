@@ -46,7 +46,6 @@ void test_against_numerical_derivatives(unsigned n, unsigned m, unsigned r, unsi
     // We check the loss is equal when computed in both ways
     BOOST_CHECK_EQUAL(std::get<0>(bp), loss);
 
-
     // We check against numerical diff
     // first the weights
     ex.set_weights(orig_w);
@@ -249,13 +248,13 @@ BOOST_AUTO_TEST_CASE(sgd)
         label[i][0] = 1. / 5. * std::cos(data[i][0] + data[i][1] + data[i][2]) - data[i][0] * data[i][1];
         label[i][1] = data[i][0] * data[i][1] * data[i][2];
     }
-    double tmp_start = ex.loss(data, label, "MSE");
+    double tmp_start = ex.loss(data, label, "CE");
     double tmp_end = 0.;
     print("Start: ", tmp_start, "\n");
     for (auto j = 0u; j < 20; ++j) {
-        ex.sgd(data, label, 0.001, 32, "MSE");
-        tmp_end = ex.loss(data, label, "MSE");
-        print("Then (", j, "): ", tmp_end, "\n");
+        auto loss = ex.sgd(data, label, 0.001, 32, "CE");
+        tmp_end = ex.loss(data, label, "CE");
+        print("Loss (", j, ") real: ", tmp_end, " proxy: ", loss, "\n");
     }
     BOOST_CHECK(tmp_end <= tmp_start);
 }
@@ -299,7 +298,6 @@ BOOST_AUTO_TEST_CASE(d_loss)
     test_against_numerical_derivatives(5, 1, 5, 5, 2, {2, 1, 3, 1, 7}, random_seed(gen), loss_t::MSE);
     test_against_numerical_derivatives(5, 1, 6, 6, 2, {1, 1, 1, 1, 1, 1}, random_seed(gen), loss_t::CE);
 }
-
 
 BOOST_AUTO_TEST_CASE(n_active_weights)
 {
