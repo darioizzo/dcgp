@@ -452,8 +452,8 @@ public:
     /**
      * Performs one "epoch" of stochastic gradient descent using mean square error
      *
-     * @param[points] The input data (a batch).
-     * @param[labels] The predicted outputs (a batch).
+     * @param[points] The input data (a batch). Will be randomly shuffled (with labels) after a call to sgd.
+     * @param[labels] The predicted outputs (a batch). Will be randomly shuffled (with points) after a call to sgd.
      * @param[lr] The learning rate.
      * @param[batch_size] The batch size.
      *
@@ -463,8 +463,8 @@ public:
      * @throws std::invalid_argument if the *data* and *label* size do not match or is zero, or if *lr* is not
      * positive.
      */
-    double sgd(const std::vector<std::vector<double>> &points, const std::vector<std::vector<double>> &labels,
-               double lr, unsigned batch_size, const std::string &loss_s)
+    double sgd(std::vector<std::vector<double>> &points, std::vector<std::vector<double>> &labels, double lr,
+               unsigned batch_size, const std::string &loss_s)
     {
         // Sanity checks for the inputs
         if (points.size() != labels.size()) {
@@ -489,6 +489,15 @@ public:
             throw std::invalid_argument("The requested loss was: " + loss_s + " while only MSE and CE are allowed");
         }
 
+        // Creating a shuffle
+        // Create two random engines with the same state
+        auto seed = std::random_device{}();
+        std::mt19937 eng1(seed);
+        auto eng2 = eng1;
+        std::shuffle(points.begin(), points.end(), eng1);
+        std::shuffle(labels.begin(), labels.end(), eng2);
+
+        // Starting the iteration
         auto dfirst = points.begin();
         auto dlast = points.end();
         auto lfirst = labels.begin();

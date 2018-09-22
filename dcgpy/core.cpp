@@ -401,7 +401,9 @@ void expose_expression_ann(std::string type)
         .def("sgd",
              +[](expression_ann<T> &instance, const bp::object &points, const bp::object &predictions, double l_rate,
                  unsigned batch_size, const std::string &loss) {
-                 return instance.sgd(to_vvd(points), to_vvd(predictions), l_rate, batch_size, loss);
+                 auto d = to_vvd(points);
+                 auto l = to_vvd(predictions);
+                 return instance.sgd(d, l, l_rate, batch_size, loss);
              },
              expression_ann_sgd_doc().c_str(),
              (bp::arg("points"), bp::arg("predictions"), bp::arg("lr"), bp::arg("batch_size"), bp::arg("loss")))
