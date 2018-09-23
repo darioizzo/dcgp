@@ -28,7 +28,6 @@ namespace dcgp
 template <typename T>
 class expression
 {
-
 private:
     // Static checks.
     static_assert(std::is_same<T, double>::value || is_gdual<T>::value,
@@ -37,6 +36,8 @@ private:
     template <typename U>
     using functor_enabler = typename std::enable_if<
         std::is_same<U, double>::value || is_gdual<T>::value || std::is_same<U, std::string>::value, int>::type;
+    // Loss types: Mean Squared Error, Mean Average Error
+    enum class loss_type { MSE, MAE };
 
 public:
     /// Constructor

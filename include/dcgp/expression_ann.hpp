@@ -42,13 +42,12 @@ private:
         typename std::enable_if<std::is_same<U, double>::value || std::is_same<U, std::string>::value, int>::type;
     template <typename U>
     using enable_double = typename std::enable_if<std::is_same<U, double>::value, int>::type;
-
-public:
     // loss types: Mean Squared Error or Cross Entropy
     enum class loss_type { MSE, CE };
-    // loss types: Mean Squared Error or Cross Entropy
+    // allowed kernels (for backpropagation to work)
     enum class kernel_type { SIG, TANH, RELU, ELU, ISRU, SUM };
 
+public:
     /// Constructor
     /** Constructs a dCGPANN expression
      *
