@@ -42,6 +42,15 @@ cd
 mkdir install
 cd install
 
+# Install tbb (headers will be in include, libraries in build/release build/debug)
+curl -L https://github.com/01org/tbb/archive/2019.tar.gz >tbb-2019.tar.gz
+tar xvf tbb-2019.tar.gz
+cd tbb-2019
+make
+cd build
+mv *_release release
+mv *_debug debug
+
 # Install Boost
 curl -L http://dl.bintray.com/boostorg/release/${BOOST_VERSION}/source/boost_`echo ${BOOST_VERSION}|tr "." "_"`.tar.bz2 > boost_`echo ${BOOST_VERSION}|tr "." "_"`.tar.bz2
 tar xjf boost_`echo ${BOOST_VERSION}|tr "." "_"`.tar.bz2
@@ -114,7 +123,7 @@ sleep 20
 cd /dcgp
 mkdir build_dcgp
 cd build_dcgp
-cmake -DDCGP_BUILD_DCGP=yes -DDCGP_BUILD_TESTS=no -DCMAKE_BUILD_TYPE=Release ../
+cmake -DDCGP_BUILD_DCGP=yes -DDCGP_BUILD_TESTS=no -DCMAKE_BUILD_TYPE=Release -DTBB_ROOT_DIR=../tbb-2019 -DTBB_LIBRARY=../tbb-2019/build/release/ ../
 make install
 
 # Compile and install dcgpy (build directory is created by .travis.yml)
