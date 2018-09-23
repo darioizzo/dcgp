@@ -50,7 +50,7 @@ make > /dev/null 2>&1
 cd build
 mv *_release release
 mv *_debug debug
-cd ..
+cd ../../
 
 # Install Boost
 curl -L http://dl.bintray.com/boostorg/release/${BOOST_VERSION}/source/boost_`echo ${BOOST_VERSION}|tr "." "_"`.tar.bz2 > boost_`echo ${BOOST_VERSION}|tr "." "_"`.tar.bz2
