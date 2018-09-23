@@ -44,12 +44,13 @@ cd install
 
 # Install tbb (headers will be in include, libraries in build/release build/debug)
 curl -L https://github.com/01org/tbb/archive/2019.tar.gz >tbb-2019.tar.gz
-tar xvf tbb-2019.tar.gz
+tar xvf tbb-2019.tar.gz > /dev/null 2>&1
 cd tbb-2019
-make
+make > /dev/null 2>&1
 cd build
 mv *_release release
 mv *_debug debug
+cd ..
 
 # Install Boost
 curl -L http://dl.bintray.com/boostorg/release/${BOOST_VERSION}/source/boost_`echo ${BOOST_VERSION}|tr "." "_"`.tar.bz2 > boost_`echo ${BOOST_VERSION}|tr "." "_"`.tar.bz2
