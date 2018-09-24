@@ -72,8 +72,8 @@ run_command(r'7z x -aoa -oC:\\ gmp.7z', verbose=False)
 run_command(r'7z x -aoa -oC:\\ mpfr.7z', verbose=False)
 run_command(r'7z x -aoa -oC:\\ boost.7z', verbose=False)
 run_command(r'7z x -aoa -oC:\\ eigen3.7z', verbose=False)
-
-run_command(r'ls C:\\local\\lib', verbose=False)
+os.chdir('C:\\local\\lib')
+run_command(r'ls', verbose=False)
 run_command(r'halt', verbose=False)
 
 
