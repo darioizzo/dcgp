@@ -74,6 +74,12 @@ run_command(r'7z x -aoa -oC:\\ mpfr.7z', verbose=False)
 run_command(r'7z x -aoa -oC:\\ boost.7z', verbose=False)
 run_command(r'7z x -aoa -oC:\\ eigen3.7z', verbose=False)
 
+# Make the TBB libraries
+wget(r'https://github.com/01org/tbb/archive/2019.zip', 'tbb-2019.zip')
+run_command(r'unzip tbb-2019.zip', verbose=True)
+os.chdir('tbb2019_20180718oss')
+run_command(r'make', verbose=True)
+
 
 # Download piranha 0.11 https://github.com/bluescarni/piranha/archive/v0.11.zip
 wget(r'https://github.com/bluescarni/piranha/archive/v0.11.zip', 'piranhav11.zip')
