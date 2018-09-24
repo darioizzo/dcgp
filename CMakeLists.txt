@@ -166,7 +166,7 @@ if(DCGP_BUILD_DCGP)
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
     $<INSTALL_INTERFACE:include>)
 
-    # These lines are temporary with piranha v0.10, will be simplified when this is updated
+    # These lines are temporary with piranha v0.10, may be simplified when this is updated
     target_include_directories(dcgp INTERFACE ${Piranha_INCLUDE_DIR})
 
     # Build main
@@ -201,7 +201,7 @@ if(DCGP_BUILD_DCGP)
     install(FILES "${CMAKE_CURRENT_BINARY_DIR}/dcgp-config.cmake" DESTINATION "lib/cmake/dcgp")
     install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/FindGMP.cmake" "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/FindMPFR.cmake"
             "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/FindPiranha.cmake" "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/DCGPFindBoost.cmake"
-            "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/FindAudi.cmake" "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/FindEigen3.cmake" DESTINATION "lib/cmake/dcgp")
+            "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/FindAudi.cmake" "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/FindEigen3.cmake" "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/FindTBB.cmake" DESTINATION "lib/cmake/dcgp")
     install(EXPORT dcgp_export NAMESPACE Dcgp:: DESTINATION lib/cmake/dcgp)
     # Take care of versioning.
     include(CMakePackageConfigHelpers)
