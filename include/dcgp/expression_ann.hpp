@@ -288,7 +288,7 @@ public:
      * @return the loss
      */
     double loss(const std::vector<std::vector<double>> &points, const std::vector<std::vector<double>> &labels,
-                const std::string &loss_s) const
+                const std::string &loss_s, bool parallel = true) const
     {
         if (points.size() != labels.size()) {
             throw std::invalid_argument("Data and label size mismatch data size is: " + std::to_string(points.size())
@@ -305,7 +305,7 @@ public:
         } else {
             throw std::invalid_argument("The requested loss was: " + loss_s + " while only MSE and CE are allowed");
         }
-        return loss(points.begin(), points.end(), labels.begin(), loss_e);
+        return loss(points.begin(), points.end(), labels.begin(), loss_e, parallel);
     }
 
     /// Evaluates the loss and its gradient (on a single point)
@@ -422,9 +422,9 @@ public:
         return std::make_tuple(std::move(value), std::move(gweights), std::move(gbiases));
     }
 
-    /// Evaluates the mean square error and its gradient  (on a batch)
+    /// Evaluates the loss and its gradient  (on a batch)
     /**
-     * Returns the mean squared error and its gradient with respect to weights and biases.
+     * Returns the loss and its gradient with respect to weights and biases.
      *
      * @param[points] The input data (a batch).
      * @param[labels] The predicted outputs (a batch).
@@ -435,7 +435,7 @@ public:
      */
     std::tuple<double, std::vector<double>, std::vector<double>> d_loss(const std::vector<std::vector<double>> &points,
                                                                         const std::vector<std::vector<double>> &labels,
-                                                                        loss_type loss_e)
+                                                                        loss_type loss_e, bool parallel)
     {
         if (points.size() != labels.size()) {
             throw std::invalid_argument("Data and label size mismatch data size is: " + std::to_string(points.size())
@@ -444,7 +444,7 @@ public:
         if (points.size() == 0) {
             throw std::invalid_argument("Data size cannot be zero");
         }
-        return d_loss(points.begin(), points.end(), labels.begin(), loss_e);
+        return d_loss(points.begin(), points.end(), labels.begin(), loss_e, parallel);
     }
 
     /// Stochastic gradient descent
@@ -463,7 +463,7 @@ public:
      * positive.
      */
     double sgd(std::vector<std::vector<double>> &points, std::vector<std::vector<double>> &labels, double lr,
-               unsigned batch_size, const std::string &loss_s)
+               unsigned batch_size, const std::string &loss_s, bool parallel = true)
     {
         // Sanity checks for the inputs
         if (points.size() != labels.size()) {
@@ -504,11 +504,11 @@ public:
         double counter = 0.;
         while (dfirst != dlast) {
             if (dfirst + batch_size > dlast) {
-                retval += update_weights(dfirst, dlast, lfirst, lr, loss_e);
+                retval += update_weights(dfirst, dlast, lfirst, lr, loss_e, parallel);
                 dfirst = dlast;
                 counter++;
             } else {
-                retval += update_weights(dfirst, dfirst + batch_size, lfirst, lr, loss_e);
+                retval += update_weights(dfirst, dfirst + batch_size, lfirst, lr, loss_e, parallel);
                 dfirst += batch_size;
                 lfirst += batch_size;
                 counter++;
@@ -978,9 +978,10 @@ private:
      */
     double update_weights(typename std::vector<std::vector<double>>::const_iterator dfirst,
                           typename std::vector<std::vector<double>>::const_iterator dlast,
-                          typename std::vector<std::vector<double>>::const_iterator lfirst, double lr, loss_type loss_e)
+                          typename std::vector<std::vector<double>>::const_iterator lfirst, double lr, loss_type loss_e,
+                          bool parallel)
     {
-        auto err = d_loss(dfirst, dlast, lfirst, loss_e);
+        auto err = d_loss(dfirst, dlast, lfirst, loss_e, parallel);
 
         // We now update the weights with the stochastic gradient descent update rule
         std::transform(m_weights.begin(), m_weights.end(), std::get<1>(err).begin(), m_weights.begin(),
@@ -993,7 +994,7 @@ private:
     std::tuple<double, std::vector<double>, std::vector<double>>
     d_loss(typename std::vector<std::vector<double>>::const_iterator dfirst,
            typename std::vector<std::vector<double>>::const_iterator dlast,
-           typename std::vector<std::vector<double>>::const_iterator lfirst, loss_type loss_e) const
+           typename std::vector<std::vector<double>>::const_iterator lfirst, loss_type loss_e, bool parallel) const
     {
         // Batch dimension
         const double batch_dim = static_cast<double>(dlast - dfirst);
@@ -1003,42 +1004,64 @@ private:
         std::vector<double> gweights(m_weights.size(), 0.);
         std::vector<double> gbiases(m_biases.size(), 0.);
 
-        // The mutex that will protect read write access to value, gweights, gbiases.
-        tbb::spin_mutex mutex_weights_updates;
-        // This loops over all points, predictions in the mini-batch
-        tbb::parallel_for(size_t(0), static_cast<size_t>(batch_dim), size_t(1), [&](size_t i) {
-            // The loss and its gradient get computed
-            auto err = d_loss(*(dfirst + i), *(lfirst + i), loss_e);
-            // We acquire the lock on the mutex
-            tbb::spin_mutex::scoped_lock lock(mutex_weights_updates);
-            // We update the cumulative loss and gradient
-            value += std::get<0>(err);
-            std::transform(gweights.begin(), gweights.end(), std::get<1>(err).begin(), gweights.begin(),
-                           [&batch_dim](double a, double b) { return a + b / batch_dim; });
-            std::transform(gbiases.begin(), gbiases.end(), std::get<2>(err).begin(), gbiases.begin(),
-                           [&batch_dim](double a, double b) { return a + b / batch_dim; });
-        });
+        if (parallel) {
+            // The mutex that will protect read write access to value, gweights, gbiases.
+            tbb::spin_mutex mutex_weights_updates;
+            // This loops over all points, predictions in the mini-batch
+            tbb::parallel_for(size_t(0), static_cast<size_t>(batch_dim), size_t(1), [&](size_t i) {
+                // The loss and its gradient get computed
+                auto err = d_loss(*(dfirst + i), *(lfirst + i), loss_e);
+                // We acquire the lock on the mutex
+                tbb::spin_mutex::scoped_lock lock(mutex_weights_updates);
+                // We update the cumulative loss and gradient
+                value += std::get<0>(err);
+                std::transform(gweights.begin(), gweights.end(), std::get<1>(err).begin(), gweights.begin(),
+                               [&batch_dim](double a, double b) { return a + b / batch_dim; });
+                std::transform(gbiases.begin(), gbiases.end(), std::get<2>(err).begin(), gbiases.begin(),
+                               [&batch_dim](double a, double b) { return a + b / batch_dim; });
+            });
+        } else {
+            for (auto i = 0u; i < static_cast<size_t>(batch_dim); ++i) {
+                // The loss and its gradient get computed
+                auto err = d_loss(*(dfirst + i), *(lfirst + i), loss_e);
+                // We update the cumulative loss and gradient
+                value += std::get<0>(err);
+                std::transform(gweights.begin(), gweights.end(), std::get<1>(err).begin(), gweights.begin(),
+                               [&batch_dim](double a, double b) { return a + b / batch_dim; });
+                std::transform(gbiases.begin(), gbiases.end(), std::get<2>(err).begin(), gbiases.begin(),
+                               [&batch_dim](double a, double b) { return a + b / batch_dim; });
+            }
+        }
         value /= batch_dim;
         return std::make_tuple(std::move(value), std::move(gweights), std::move(gbiases));
     }
 
     double loss(typename std::vector<std::vector<double>>::const_iterator dfirst,
                 typename std::vector<std::vector<double>>::const_iterator dlast,
-                typename std::vector<std::vector<double>>::const_iterator lfirst, loss_type loss_e) const
+                typename std::vector<std::vector<double>>::const_iterator lfirst, loss_type loss_e, bool parallel) const
     {
         double retval(0.);
         double batch_dim = static_cast<double>(dlast - dfirst);
-        // The mutex that will protect read/write access to retval
-        tbb::spin_mutex mutex_weights_updates;
-        // This loops over all points, predictions in the mini-batch
-        tbb::parallel_for(size_t(0), static_cast<size_t>(batch_dim), size_t(1), [&](size_t i) {
-            // The loss gets computed
-            double err = loss(*dfirst++, *lfirst++, loss_e);
-            // We acquire the lock on the mutex
-            tbb::spin_mutex::scoped_lock lock(mutex_weights_updates);
-            // We update the cumulative loss and gradient
-            retval += err;
-        });
+        if (parallel) {
+            // The mutex that will protect read/write access to retval
+            tbb::spin_mutex mutex_weights_updates;
+            // This loops over all points, predictions in the mini-batch
+            tbb::parallel_for(size_t(0), static_cast<size_t>(batch_dim), size_t(1), [&](size_t i) {
+                // The loss gets computed
+                double err = loss(*dfirst++, *lfirst++, loss_e);
+                // We acquire the lock on the mutex
+                tbb::spin_mutex::scoped_lock lock(mutex_weights_updates);
+                // We update the cumulative loss and gradient
+                retval += err;
+            });
+        } else {
+            for (auto i = 0u; i < static_cast<size_t>(batch_dim); ++i) {
+                // The loss gets computed
+                double err = loss(*dfirst++, *lfirst++, loss_e);
+                // We update the cumulative loss and gradient
+                retval += err;
+            }
+        }
         retval /= batch_dim;
 
         return retval;

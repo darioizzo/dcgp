@@ -326,7 +326,7 @@ Args:
 
 std::string expression_ann_sgd_doc()
 {
-    return R"(sgd(points, predictions, lr, batch_size, loss_type)
+    return R"(sgd(points, predictions, lr, batch_size, loss_type, parallel = True)
 
 Performs one epoch of mini-batch (stochastic) gradient descent updating the weights and biases using the 
 *points* and *predictions* to decrease the loss.
@@ -337,6 +337,7 @@ Args:
     lr (a ``float``): the learning generate
     batch_size (an ``int``): the batch size
     loss_type (a ``str``): the loss, one of "MSE" for Mean Square Error and "CE" for Cross-Entropy.
+    parallel (a ``bool``): activates the use of parallelism.
 
 Returns:
     The average error across the batches a (``float``). Note: this is only a proxy for the real loss on the whole data set.
@@ -348,7 +349,7 @@ Raises:
 
 std::string expression_ann_loss_doc()
 {
-    return R"(loss(points, predictions, loss_type)
+    return R"(loss(points, predictions, loss_type, parallel=True)
 
 Computes the loss of the dCGPANN on the data
 
@@ -356,6 +357,7 @@ Args:
     points (2D NumPy float array or ``list of lists`` of ``float``): the input data
     predictions (2D NumPy float array or ``list of lists`` of ``float``): the output predictions (supervised signal)
     loss_type (a ``str``): the loss, one of "MSE" for Mean Square Error and "CE" for Cross-Entropy.
+    parallel (a ``bool``): activates the use of parallelism.
 
 Raises:
     ValueError: if *points* or *predictions* are malformed or if *loss_type* is not one of the available types.
