@@ -42,7 +42,7 @@ cd
 mkdir install
 cd install
 
-# Install tbb (headers will be in include, libraries in build/release build/debug)
+# Install tbb (files will also be copied in /usr/lib64 and /usr/include)
 curl -L https://github.com/01org/tbb/archive/2019.tar.gz >tbb-2019.tar.gz
 tar xvf tbb-2019.tar.gz > /dev/null 2>&1
 cd tbb-2019
@@ -50,6 +50,13 @@ make > /dev/null 2>&1
 cd build
 mv *_release release
 mv *_debug debug
+cd release
+cp libtbb* /usr/lib64/
+cd ../debug
+cp libtbb* /usr/lib64/
+ldconfig
+cd ../../include/
+cp -r tbb /usr/local/include/
 cd ../../
 
 # Install Boost
@@ -124,13 +131,13 @@ sleep 20
 cd /dcgp
 mkdir build_dcgp
 cd build_dcgp
-cmake -DDCGP_BUILD_DCGP=yes -DDCGP_BUILD_TESTS=no -DCMAKE_BUILD_TYPE=Release -DTBB_ROOT_DIR=/root/install/tbb-2019 -DTBB_LIBRARY=/root/install/tbb-2019/build/release/ ../
+cmake -DDCGP_BUILD_DCGP=yes -DDCGP_BUILD_TESTS=no -DCMAKE_BUILD_TYPE=Release ../
 make install
 
 # Compile and install dcgpy (build directory is created by .travis.yml)
 cd /dcgp
 cd build
-cmake -DCMAKE_BUILD_TYPE=Release -DDCGP_BUILD_DCGP=no -DDCGP_BUILD_DCGPY=yes -DPYTHON_EXECUTABLE=/opt/python/${PYTHON_DIR}/bin/python -DTBB_ROOT_DIR=/root/install/tbb-2019 -DTBB_LIBRARY=/root/install/tbb-2019/build/release/ ../;
+cmake -DCMAKE_BUILD_TYPE=Release -DDCGP_BUILD_DCGP=no -DDCGP_BUILD_DCGPY=yes -DPYTHON_EXECUTABLE=/opt/python/${PYTHON_DIR}/bin/python ../;
 make -j2 install
 
 
