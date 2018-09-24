@@ -77,6 +77,7 @@ run_command(r'7z x -aoa -oC:\\ eigen3.7z', verbose=False)
 # Make the TBB libraries
 wget(r'https://github.com/01org/tbb/archive/2019.zip', 'tbb-2019.zip')
 run_command(r'unzip tbb-2019.zip', verbose=True)
+run_command(r'ls', verbose=True)
 os.chdir('tbb2019_20180718oss')
 run_command(r'make', verbose=True)
 
