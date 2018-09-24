@@ -74,10 +74,11 @@ run_command(r'7z x -aoa -oC:\\ mpfr.7z', verbose=False)
 run_command(r'7z x -aoa -oC:\\ boost.7z', verbose=False)
 run_command(r'7z x -aoa -oC:\\ eigen3.7z', verbose=False)
 
-# Make the TBB libraries
+# Make the TBB libraries (instructions from http://pklab.net/index.php?lang=EN&id=356)
 wget(r'https://github.com/01org/tbb/archive/2019.zip', 'tbb-2019.zip')
 run_command(r'unzip tbb-2019.zip', verbose=True)
 os.chdir('tbb-2019/build')
+os.chdir('pwd')
 run_command(r'generate_tbbvars.bat', verbose=True)
 run_command(r'tbbvars.bat', verbose=True)
 os.chdir('../')
