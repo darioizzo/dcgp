@@ -124,13 +124,13 @@ sleep 20
 cd /dcgp
 mkdir build_dcgp
 cd build_dcgp
-cmake -DDCGP_BUILD_DCGP=yes -DDCGP_BUILD_TESTS=no -DCMAKE_BUILD_TYPE=Release -DTBB_ROOT_DIR=/install/tbb-2019 -DTBB_LIBRARY=/install/tbb-2019/build/release/ ../
+cmake -DDCGP_BUILD_DCGP=yes -DDCGP_BUILD_TESTS=no -DCMAKE_BUILD_TYPE=Release -DTBB_ROOT_DIR=/root/install/tbb-2019 -DTBB_LIBRARY=/root/install/tbb-2019/build/release/ ../
 make install
 
 # Compile and install dcgpy (build directory is created by .travis.yml)
 cd /dcgp
 cd build
-cmake -DCMAKE_BUILD_TYPE=Release -DDCGP_BUILD_DCGP=no -DDCGP_BUILD_DCGPY=yes -DPYTHON_EXECUTABLE=/opt/python/${PYTHON_DIR}/bin/python ../;
+cmake -DCMAKE_BUILD_TYPE=Release -DDCGP_BUILD_DCGP=no -DDCGP_BUILD_DCGPY=yes -DPYTHON_EXECUTABLE=/opt/python/${PYTHON_DIR}/bin/python -DTBB_ROOT_DIR=/root/install/tbb-2019 -DTBB_LIBRARY=/root/install/tbb-2019/build/release/ ../;
 make -j2 install
 
 
