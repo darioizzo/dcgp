@@ -84,8 +84,13 @@ run_command(r'generate_tbbvars.bat', verbose=False)
 run_command(r'tbbvars.bat', verbose=False)
 os.chdir('../')
 run_command(r'mingw32-make compiler=gcc VERBOSE=1', verbose=True)
-run_command(r'ls build/', verbose=True)
-run_command(r'ls include/', verbose=True)
+run_command(r'ls build/windows_intel64_gcc_mingw6.2.0_release', verbose=True)
+#run_command(r'cp -r build/windows_intel64_gcc_mingw6.2.0_release/tbb /local/include/tbb', verbose=True)
+run_command(r'cp -r include/ttb /local/include/tbb', verbose=True)
+
+#windows_intel64_gcc_mingw6.2.0_debug
+#windows_intel64_gcc_mingw6.2.0_release
+#c:\local\lib\libboost_python-mgw62-mt-1_63.dll
 
 os.chdir('../')
 
