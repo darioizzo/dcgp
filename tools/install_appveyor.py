@@ -79,7 +79,6 @@ wget(r'https://github.com/01org/tbb/archive/2019.zip', 'tbb-2019.zip')
 run_command(r'unzip tbb-2019.zip', verbose=True)
 os.chdir('tbb-2019')
 run_command(r'ls', verbose=True)
-os.chdir('tbb2019_20180718oss')
 run_command(r'make', verbose=True)
 
 
