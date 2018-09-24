@@ -55,7 +55,6 @@ if is_release_build:
           os.environ['APPVEYOR_REPO_TAG_NAME'] + "'")
 is_python_build = 'Python' in BUILD_TYPE
 
-
 # Get mingw and set the path.
 wget(r'https://github.com/bluescarni/binary_deps/raw/master/x86_64-6.2.0-release-posix-seh-rt_v5-rev1.7z', 'mw64.7z')
 run_command(r'7z x -oC:\\ mw64.7z', verbose=False)
@@ -78,15 +77,15 @@ run_command(r'7z x -aoa -oC:\\ eigen3.7z', verbose=False)
 wget(r'https://github.com/01org/tbb/archive/2019.zip', 'tbb-2019.zip')
 run_command(r'unzip tbb-2019.zip', verbose=True)
 os.chdir('tbb-2019')
-cwd = os.getcwd()
+#cwd = os.getcwd()
 os.chdir('build')
 run_command(r'generate_tbbvars.bat', verbose=True)
 # os.environ["TBB30_INSTALL_DIR"] = cwd
 run_command(r'tbbvars.bat', verbose=True)
 os.chdir('../')
 run_command(r'mingw32-make compiler=gcc VERBOSE=1', verbose=True)
-
-
+run_command(r'ls', verbose=True)
+os.chdir('../')
 
 # Download piranha 0.11 https://github.com/bluescarni/piranha/archive/v0.11.zip
 wget(r'https://github.com/bluescarni/piranha/archive/v0.11.zip', 'piranhav11.zip')
