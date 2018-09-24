@@ -73,18 +73,20 @@ run_command(r'7z x -aoa -oC:\\ mpfr.7z', verbose=False)
 run_command(r'7z x -aoa -oC:\\ boost.7z', verbose=False)
 run_command(r'7z x -aoa -oC:\\ eigen3.7z', verbose=False)
 
-# Make the TBB libraries (instructions from http://pklab.net/index.php?lang=EN&id=356)
+# Make the Thread Building Block libraries 
 wget(r'https://github.com/01org/tbb/archive/2019.zip', 'tbb-2019.zip')
-run_command(r'unzip tbb-2019.zip', verbose=True)
+run_command(r'unzip tbb-2019.zip', verbose=False)
 os.chdir('tbb-2019')
 #cwd = os.getcwd()
 os.chdir('build')
-run_command(r'generate_tbbvars.bat', verbose=True)
+run_command(r'generate_tbbvars.bat', verbose=False)
 # os.environ["TBB30_INSTALL_DIR"] = cwd
-run_command(r'tbbvars.bat', verbose=True)
+run_command(r'tbbvars.bat', verbose=False)
 os.chdir('../')
 run_command(r'mingw32-make compiler=gcc VERBOSE=1', verbose=True)
-run_command(r'ls', verbose=True)
+run_command(r'ls build/', verbose=True)
+run_command(r'ls include/', verbose=True)
+
 os.chdir('../')
 
 # Download piranha 0.11 https://github.com/bluescarni/piranha/archive/v0.11.zip
