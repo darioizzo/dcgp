@@ -78,8 +78,7 @@ run_command(r'7z x -aoa -oC:\\ eigen3.7z', verbose=False)
 wget(r'https://github.com/01org/tbb/archive/2019.zip', 'tbb-2019.zip')
 run_command(r'unzip tbb-2019.zip', verbose=True)
 os.chdir('tbb-2019')
-run_command(r'ls', verbose=True)
-run_command(r'make', verbose=True)
+run_command(r'gmake', verbose=True)
 
 
 # Download piranha 0.11 https://github.com/bluescarni/piranha/archive/v0.11.zip
