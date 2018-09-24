@@ -81,8 +81,8 @@ os.chdir('tbb-2019')
 cwd = os.getcwd()
 os.chdir('build')
 run_command(r'generate_tbbvars.bat', verbose=True)
-#os.environ["TBB30_INSTALL_DIR"] = cwd
-run_command(r'SET TBB30_INSTALL_DIR='+cwd, verbose=True)
+os.environ["TBB30_INSTALL_DIR"] = cwd
+#run_command(r'SET TBB30_INSTALL_DIR='+cwd, verbose=True)
 run_command(r'tbbvars.bat', verbose=True)
 os.chdir('../')
 run_command(r'mingw32-make compiler=gcc VERBOSE=1', verbose=False)
