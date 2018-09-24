@@ -73,6 +73,11 @@ run_command(r'7z x -aoa -oC:\\ mpfr.7z', verbose=False)
 run_command(r'7z x -aoa -oC:\\ boost.7z', verbose=False)
 run_command(r'7z x -aoa -oC:\\ eigen3.7z', verbose=False)
 
+run_command(r'ls C:\\local\\lib', verbose=False)
+run_command(r'halt', verbose=False)
+
+
+
 # Build the Thread Building Block libraries 
 wget(r'https://github.com/01org/tbb/archive/2019.zip', 'tbb-2019.zip')
 run_command(r'unzip tbb-2019.zip', verbose=False)
