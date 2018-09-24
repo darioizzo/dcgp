@@ -220,3 +220,19 @@ BOOST_AUTO_TEST_CASE(mutate)
         }
     }
 }
+
+BOOST_AUTO_TEST_CASE(loss)
+{
+    // Random seed
+    std::random_device rd;
+    kernel_set<double> basic_set({"sum", "diff", "mul", "div"});
+    expression<double> ex(2, 2, 2, 2, 3, 2, basic_set(), rd());
+    // 2xy, 2x
+    ex.set({0, 1, 1, 0, 0, 0, 2, 0, 2, 2, 0, 2, 4, 3});
+    auto loss = ex.loss({1., 1.}, {2., 2.}, expression<double>::loss_type::MSE);
+    BOOST_CHECK_EQUAL(loss, 0.);
+    loss = ex.loss({1., 1.}, {0., 0.}, expression<double>::loss_type::MSE);
+    BOOST_CHECK_EQUAL(loss, 4.);
+    loss = ex.loss({1., 0.}, {0., 0.}, expression<double>::loss_type::MSE);
+    BOOST_CHECK_EQUAL(loss, 2.);
+}

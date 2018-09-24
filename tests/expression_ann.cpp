@@ -248,12 +248,12 @@ BOOST_AUTO_TEST_CASE(sgd)
         label[i][0] = 1. / 5. * std::cos(data[i][0] + data[i][1] + data[i][2]) - data[i][0] * data[i][1];
         label[i][1] = data[i][0] * data[i][1] * data[i][2];
     }
-    double tmp_start = ex.loss(data, label, "CE");
+    double tmp_start = ex.loss(data, label, "MSE");
     double tmp_end = 0.;
     print("Start: ", tmp_start, "\n");
     for (auto j = 0u; j < 20; ++j) {
-        auto loss = ex.sgd(data, label, 0.001, 32, "CE");
-        tmp_end = ex.loss(data, label, "CE");
+        auto loss = ex.sgd(data, label, 0.1, 32, "MSE");
+        tmp_end = ex.loss(data, label, "MSE");
         print("Loss (", j, ") real: ", tmp_end, " proxy: ", loss, "\n");
     }
     BOOST_CHECK(tmp_end <= tmp_start);

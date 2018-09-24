@@ -13,7 +13,6 @@
 #include <stdexcept>
 #include <string>
 #include <tbb/spin_mutex.h>
-#include <tbb/task_group.h>
 #include <tbb/tbb.h>
 #include <vector>
 
@@ -42,12 +41,12 @@ private:
         typename std::enable_if<std::is_same<U, double>::value || std::is_same<U, std::string>::value, int>::type;
     template <typename U>
     using enable_double = typename std::enable_if<std::is_same<U, double>::value, int>::type;
+
+public:
     // loss types: Mean Squared Error or Cross Entropy
     enum class loss_type { MSE, CE };
     // allowed kernels (for backpropagation to work)
     enum class kernel_type { SIG, TANH, RELU, ELU, ISRU, SUM };
-
-public:
     /// Constructor
     /** Constructs a dCGPANN expression
      *
@@ -1008,7 +1007,7 @@ private:
             // The mutex that will protect read write access to value, gweights, gbiases.
             tbb::spin_mutex mutex_weights_updates;
             // This loops over all points, predictions in the mini-batch
-            tbb::parallel_for(size_t(0), static_cast<size_t>(batch_dim), size_t(1), [&](size_t i) {
+            tbb::parallel_for(long(0), static_cast<long>(batch_dim), long(1), [&](long i) {
                 // The loss and its gradient get computed
                 auto err = d_loss(*(dfirst + i), *(lfirst + i), loss_e);
                 // We acquire the lock on the mutex
@@ -1021,7 +1020,7 @@ private:
                                [&batch_dim](double a, double b) { return a + b / batch_dim; });
             });
         } else {
-            for (auto i = 0u; i < static_cast<size_t>(batch_dim); ++i) {
+            for (long i = 0; i < static_cast<long>(batch_dim); ++i) {
                 // The loss and its gradient get computed
                 auto err = d_loss(*(dfirst + i), *(lfirst + i), loss_e);
                 // We update the cumulative loss and gradient
@@ -1046,18 +1045,18 @@ private:
             // The mutex that will protect read/write access to retval
             tbb::spin_mutex mutex_weights_updates;
             // This loops over all points, predictions in the mini-batch
-            tbb::parallel_for(size_t(0), static_cast<size_t>(batch_dim), size_t(1), [&](size_t i) {
+            tbb::parallel_for(long(0), static_cast<long>(batch_dim), long(1), [&](long i) {
                 // The loss gets computed
-                double err = loss(*dfirst++, *lfirst++, loss_e);
+                double err = loss(*(dfirst + i), *(lfirst + i), loss_e);
                 // We acquire the lock on the mutex
                 tbb::spin_mutex::scoped_lock lock(mutex_weights_updates);
                 // We update the cumulative loss and gradient
                 retval += err;
             });
         } else {
-            for (auto i = 0u; i < static_cast<size_t>(batch_dim); ++i) {
+            for (long i = 0; i < static_cast<long>(batch_dim); ++i) {
                 // The loss gets computed
-                double err = loss(*dfirst++, *lfirst++, loss_e);
+                double err = loss(*(dfirst + i), *(lfirst + i), loss_e);
                 // We update the cumulative loss and gradient
                 retval += err;
             }

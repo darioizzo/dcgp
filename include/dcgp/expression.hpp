@@ -9,6 +9,8 @@
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include <tbb/spin_mutex.h>
+#include <tbb/tbb.h>
 #include <vector>
 
 #include <dcgp/kernel.hpp>
@@ -36,10 +38,11 @@ private:
     template <typename U>
     using functor_enabler = typename std::enable_if<
         std::is_same<U, double>::value || is_gdual<T>::value || std::is_same<U, std::string>::value, int>::type;
-    // Loss types: Mean Squared Error, Mean Average Error
-    enum class loss_type { MSE, MAE };
 
 public:
+    // Loss types: Mean Squared Error, Mean Average Error
+    enum class loss_type { MSE };
+
     /// Constructor
     /** Constructs a dCGP expression with variable arity
      *
@@ -174,6 +177,71 @@ public:
     {
         std::vector<U> dummy(in);
         return (*this)(dummy);
+    }
+
+    /// Evaluates the loss (single data point)
+    /**
+     * Returns the loss over a single point of data of the CGP output.
+     *
+     * @param[point] The input data (single point)
+     * @param[prediction] The predicted output (single point)
+     * @param[loss_e] The loss type. Can be "MSE" for Mean Square Error (regression).
+     * @return the loss
+     */
+    T loss(const std::vector<T> &point, const std::vector<T> &prediction, loss_type loss_e) const
+    {
+        if (point.size() != this->get_n()) {
+            throw std::invalid_argument("When computing the loss the point dimension (input) seemed wrong, it was: "
+                                        + std::to_string(point.size())
+                                        + " while I expected: " + std::to_string(this->get_n()));
+        }
+        if (prediction.size() != this->get_m()) {
+            throw std::invalid_argument(
+                "When computing the loss the prediction dimension (output) seemed wrong, it was: "
+                + std::to_string(prediction.size()) + " while I expected: " + std::to_string(this->get_m()));
+        }
+        T retval(0.);
+
+        auto outputs = this->operator()(point);
+        switch (loss_e) {
+            // Mean Square Error
+            case loss_type::MSE: {
+                for (decltype(outputs.size()) i = 0u; i < outputs.size(); ++i) {
+                    retval += (outputs[i] - prediction[i]) * (outputs[i] - prediction[i]);
+                }
+                retval /= static_cast<double>(outputs.size());
+                break; // and exits the switch
+            }
+        }
+        return retval;
+    }
+
+    /// Evaluates the model loss (on a batch)
+    /**
+     * Evaluates the model loss over a batch.
+     *
+     * @param[points] The input data (a batch).
+     * @param[labels] The predicted outputs (a batch).
+     * @param[loss_e] The loss type. Can be "MSE" for Mean Square Error.
+     * @return the loss
+     */
+    T loss(const std::vector<std::vector<T>> &points, const std::vector<std::vector<T>> &labels, std::string &loss_s,
+           bool parallel = true) const
+    {
+        if (points.size() != labels.size()) {
+            throw std::invalid_argument("Data and label size mismatch data size is: " + std::to_string(points.size())
+                                        + " while label size is: " + std::to_string(labels.size()));
+        }
+        if (points.size() == 0) {
+            throw std::invalid_argument("Data size cannot be zero");
+        }
+        loss_type loss_e;
+        if (loss_s == "MSE") { // Mean Squared Error
+            loss_e = loss_type::MSE;
+        } else {
+            throw std::invalid_argument("The requested loss was: " + loss_s + " while only MSE is allowed");
+        }
+        return loss(points.begin(), points.end(), labels.begin(), loss_e, parallel);
     }
 
     /// Sets the chromosome
@@ -745,6 +813,37 @@ private:
                 m_gene_idx[node_id] = acc + row * m_arity[col] + (node_id - m_n);
             }
         }
+    }
+
+    T loss(typename std::vector<std::vector<T>>::const_iterator dfirst,
+           typename std::vector<std::vector<T>>::const_iterator dlast,
+           typename std::vector<std::vector<T>>::const_iterator lfirst, loss_type loss_e, bool parallel) const
+    {
+        T retval(0.);
+        double batch_dim = static_cast<double>(dlast - dfirst);
+        if (parallel) {
+            // The mutex that will protect read/write access to retval
+            tbb::spin_mutex mutex_weights_updates;
+            // This loops over all points, predictions in the mini-batch
+            tbb::parallel_for(long(0), static_cast<long>(batch_dim), long(1), [&](long i) {
+                // The loss gets computed
+                T err = loss(*(dfirst + i), *(lfirst + i), loss_e);
+                // We acquire the lock on the mutex
+                tbb::spin_mutex::scoped_lock lock(mutex_weights_updates);
+                // We update the cumulative loss and gradient
+                retval += err;
+            });
+        } else {
+            for (long i = 0; i < static_cast<long>(batch_dim); ++i) {
+                // The loss gets computed
+                T err = loss(*(dfirst + i), *(lfirst + i), loss_e);
+                // We update the cumulative loss and gradient
+                retval += err;
+            }
+        }
+        retval /= batch_dim;
+
+        return retval;
     }
 
     // number of inputs
