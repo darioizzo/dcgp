@@ -73,20 +73,18 @@ run_command(r'7z x -aoa -oC:\\ mpfr.7z', verbose=False)
 run_command(r'7z x -aoa -oC:\\ boost.7z', verbose=False)
 run_command(r'7z x -aoa -oC:\\ eigen3.7z', verbose=False)
 
-# Make the Thread Building Block libraries 
+# Build the Thread Building Block libraries 
 wget(r'https://github.com/01org/tbb/archive/2019.zip', 'tbb-2019.zip')
 run_command(r'unzip tbb-2019.zip', verbose=False)
 os.chdir('tbb-2019')
-#cwd = os.getcwd()
 os.chdir('build')
 run_command(r'generate_tbbvars.bat', verbose=False)
-# os.environ["TBB30_INSTALL_DIR"] = cwd
 run_command(r'tbbvars.bat', verbose=False)
 os.chdir('../')
 run_command(r'mingw32-make compiler=gcc VERBOSE=1', verbose=True)
-run_command(r'ls build/windows_intel64_gcc_mingw6.2.0_release', verbose=True)
-#run_command(r'cp -r build/windows_intel64_gcc_mingw6.2.0_release/tbb /local/include/tbb', verbose=True)
-run_command(r'cp -r include/ttb /local/include/tbb', verbose=True)
+# Install the TBB libraries
+run_command(r'cp -r build/windows_intel64_gcc_mingw6.2.0_release/tbb* /local/lib/', verbose=True)
+run_command(r'cp -r include/tbb /local/include/tbb', verbose=True)
 
 #windows_intel64_gcc_mingw6.2.0_debug
 #windows_intel64_gcc_mingw6.2.0_release
