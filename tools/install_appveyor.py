@@ -71,7 +71,9 @@ wget(r'https://github.com/bluescarni/binary_deps/raw/master/eigen3.7z', 'eigen3.
 run_command(r'7z x -aoa -oC:\\ gmp.7z', verbose=False)
 run_command(r'7z x -aoa -oC:\\ mpfr.7z', verbose=False)
 run_command(r'7z x -aoa -oC:\\ boost.7z', verbose=False)
-run_command(r'7z x -aoa -oC:\\ eigen3.7z', verbose=False)
+run_command(r'7z x -aoa -oC:\\ eigen3.7z', verbose=True)
+import time
+time.sleep(5)
 os.chdir('C:\\local\\lib')
 run_command(r'ls', verbose=False)
 run_command(r'halt', verbose=False)
