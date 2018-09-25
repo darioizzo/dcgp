@@ -257,14 +257,14 @@ public:
                 auto max = *std::max_element(outputs.begin(), outputs.end());
                 // exp(a_i - max)
                 std::transform(outputs.begin(), outputs.end(), outputs.begin(),
-                               [max](T a) { return std::exp(a - max); });
+                               [max](T a) { return audi::exp(a - max); });
                 // sum exp(a_i - max)
-                T cumsum = std::accumulate(outputs.begin(), outputs.end(), 0.);
+                T cumsum = std::accumulate(outputs.begin(), outputs.end(), T(0.));
                 // log(p_i) * y_i
                 std::transform(outputs.begin(), outputs.end(), prediction.begin(), outputs.begin(),
-                               [cumsum](T a, T y) { return std::log(a / cumsum) * y; });
+                               [cumsum](T a, T y) { return audi::log(a / cumsum) * y; });
                 // - sum log(p_i) y_i
-                retval = -std::accumulate(outputs.begin(), outputs.end(), 0.);
+                retval = -std::accumulate(outputs.begin(), outputs.end(), T(0.));
                 break;
             }
         }
