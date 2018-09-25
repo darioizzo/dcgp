@@ -39,7 +39,7 @@ void es(const std::vector<std::vector<double>> &in, const std::vector<std::vecto
                 }
                 ex.mutate(tbm);
             }
-            newfits[i] = quadratic_error(ex, in, out);
+            newfits[i] = ex.loss(in, out, "MSE", true);
             newchromosomes[i] = ex.get();
         }
 
