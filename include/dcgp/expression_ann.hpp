@@ -43,8 +43,6 @@ private:
     using enable_double = typename std::enable_if<std::is_same<U, double>::value, int>::type;
 
 public:
-    // loss types: Mean Squared Error or Cross Entropy
-    enum class loss_type { MSE, CE };
     // allowed kernels (for backpropagation to work)
     enum class kernel_type { SIG, TANH, RELU, ELU, ISRU, SUM };
     /// Constructor
@@ -182,20 +180,35 @@ public:
 
     /// Evaluates the dCGP-ANN expression
     /**
-     * This evaluates the dCGP-ANN expression. This template can be instantiated
-     * with type *U* double, in which case the algorithm computes the numerical value of the inputs
-     * or with *U* being a string, in which case the instantiated method will produce a symbolic representation of the
-     * output.
+     * This evaluates the dCGP-ANN expression. This method overrides the base class
+     * method. NOTE we cannot template this and the following function as they are virtual in the base class.
      *
      * @param[point] in an std::vector containing the values where the dCGP-ANN expression has
-     * to be computed (doubles or strings)
+     * to be computed
      *
      * @return The value of the output (an std::vector)
      */
-    template <typename U, enable_double_string<U> = 0>
-    std::vector<U> operator()(const std::vector<U> &point) const
+    std::vector<double> operator()(const std::vector<double> &point) const
     {
-        std::vector<U> retval(this->get_m());
+        std::vector<double> retval(this->get_m());
+        auto node = fill_nodes(point);
+        for (auto i = 0u; i < this->get_m(); ++i) {
+            retval[i] = node[this->get()[this->get().size() - this->get_m() + i]];
+        }
+        return retval;
+    }
+    /// Evaluates the dCGP-ANN expression
+    /**
+     * This evaluates the dCGP-ANN expression. This method overrides the base class
+     * method.
+     *
+     * @param[point] in an std::vector containing the symbol names.
+     *
+     * @return The symbolic value of the output (an std::vector)
+     */
+    std::vector<std::string> operator()(const std::vector<std::string> &point) const
+    {
+        std::vector<std::string> retval(this->get_m());
         auto node = fill_nodes(point);
         for (auto i = 0u; i < this->get_m(); ++i) {
             retval[i] = node[this->get()[this->get().size() - this->get_m() + i]];
@@ -222,91 +235,6 @@ public:
         return (*this)(dummy);
     }
 
-    /// Evaluates the loss (single data point)
-    /**
-     * Returns the loss over a single point of data of the dCGPANN output.
-     *
-     * @param[point] The input data (single point)
-     * @param[prediction] The predicted output (single point)
-     * @param[loss_e] The loss type. Can be "MSE" for Mean Square Error (regression) or "CE" for Cross Entropy
-     * (classification)
-     * @return the mse
-     */
-    double loss(const std::vector<double> &point, const std::vector<double> &prediction, loss_type loss_e) const
-    {
-        if (point.size() != this->get_n()) {
-            throw std::invalid_argument("When computing the loss the point dimension (input) seemed wrong, it was: "
-                                        + std::to_string(point.size())
-                                        + " while I expected: " + std::to_string(this->get_n()));
-        }
-        if (prediction.size() != this->get_m()) {
-            throw std::invalid_argument(
-                "When computing the loss the prediction dimension (output) seemed wrong, it was: "
-                + std::to_string(prediction.size()) + " while I expected: " + std::to_string(this->get_m()));
-        }
-        double retval(0.);
-
-        auto outputs = this->operator()(point);
-        switch (loss_e) {
-            // Mean Square Error
-            case loss_type::MSE: {
-                for (decltype(outputs.size()) i = 0u; i < outputs.size(); ++i) {
-                    retval += (outputs[i] - prediction[i]) * (outputs[i] - prediction[i]);
-                }
-                retval /= static_cast<double>(outputs.size());
-                break; // and exits the switch
-            }
-            // Cross Entropy
-            case loss_type::CE: {
-                // We guard from numerical instabilities subtracting the max element
-                auto max = *std::max_element(outputs.begin(), outputs.end());
-                // exp(a_i - max)
-                std::transform(outputs.begin(), outputs.end(), outputs.begin(),
-                               [max](double a) { return std::exp(a - max); });
-                // sum exp(a_i - max)
-                double cumsum = std::accumulate(outputs.begin(), outputs.end(), 0.);
-                // log(p_i) * y_i
-                std::transform(outputs.begin(), outputs.end(), prediction.begin(), outputs.begin(),
-                               [cumsum](double a, double y) { return std::log(a / cumsum) * y; });
-                // - sum log(p_i) y_i
-                retval = -std::accumulate(outputs.begin(), outputs.end(), 0.);
-                break;
-            }
-        }
-        return retval;
-    }
-
-    /// Evaluates the model loss (on a batch)
-    /**
-     * Evaluates the model loss over a batch.
-     *
-     * @param[points] The input data (a batch).
-     * @param[labels] The predicted outputs (a batch).
-     * @param[loss_e] The loss type. Can be "MSE" for Mean Square Error (regression) or "CE" for Cross Entropy
-     * (classification)
-     * @return the loss
-     */
-    double loss(const std::vector<std::vector<double>> &points, const std::vector<std::vector<double>> &labels,
-                const std::string &loss_s, bool parallel = true) const
-    {
-        if (points.size() != labels.size()) {
-            throw std::invalid_argument("Data and label size mismatch data size is: " + std::to_string(points.size())
-                                        + " while label size is: " + std::to_string(labels.size()));
-        }
-        if (points.size() == 0) {
-            throw std::invalid_argument("Data size cannot be zero");
-        }
-        loss_type loss_e;
-        if (loss_s == "MSE") { // Mean Squared Error
-            loss_e = loss_type::MSE;
-        } else if (loss_s == "CE") {
-            loss_e = loss_type::CE; // Cross Entropy
-        } else {
-            throw std::invalid_argument("The requested loss was: " + loss_s + " while only MSE and CE are allowed");
-        }
-        return loss(points.begin(), points.end(), labels.begin(), loss_e, parallel);
-    }
-
     /// Evaluates the loss and its gradient (on a single point)
     /**
      * Returns the loss and its gradient with respect to weights and biases.
@@ -319,7 +247,7 @@ public:
      * all biases
      */
     std::tuple<double, std::vector<double>, std::vector<double>>
-    d_loss(const std::vector<double> &point, const std::vector<double> &prediction, const loss_type loss_e) const
+    d_loss(const std::vector<double> &point, const std::vector<double> &prediction, const expression<double>::loss_type loss_e) const
     {
         if (point.size() != this->get_n()) {
             throw std::invalid_argument("When computing the loss the point dimension (input) seemed wrong, it was: "
@@ -346,7 +274,7 @@ public:
         // (dL/do_i)
         switch (loss_e) {
             // Mean Square Error
-            case loss_type::MSE: {
+            case expression<double>::loss_type::MSE: {
                 auto n_samples = static_cast<double>(prediction.size());
                 for (decltype(this->get_m()) i = 0u; i < this->get_m(); ++i) {
                     auto node_idx = this->get()[this->get().size() - this->get_m() + i];
@@ -358,7 +286,7 @@ public:
                 break; // and exits the switch
             }
             // Cross Entropy
-            case loss_type::CE: {
+            case expression<double>::loss_type::CE: {
                 std::vector<double> ps(this->get_m(), 0.);
                 // We store output values in ps
                 for (decltype(this->get_m()) i = 0u; i < this->get_m(); ++i) {
@@ -434,7 +362,7 @@ public:
      */
     std::tuple<double, std::vector<double>, std::vector<double>> d_loss(const std::vector<std::vector<double>> &points,
                                                                         const std::vector<std::vector<double>> &labels,
-                                                                        loss_type loss_e, bool parallel)
+                                                                        expression<double>::loss_type loss_e, bool parallel)
     {
         if (points.size() != labels.size()) {
             throw std::invalid_argument("Data and label size mismatch data size is: " + std::to_string(points.size())
@@ -478,11 +406,11 @@ public:
         }
 
         // Decoding the loss from string to the enum type (loss_s -> loss_e)
-        loss_type loss_e;
+        expression<double>::loss_type loss_e;
         if (loss_s == "MSE") {
-            loss_e = loss_type::MSE;
+            loss_e = expression<double>::loss_type::MSE;
         } else if (loss_s == "CE") {
-            loss_e = loss_type::CE;
+            loss_e = expression<double>::loss_type::CE;
         } else {
             throw std::invalid_argument("The requested loss was: " + loss_s + " while only MSE and CE are allowed");
         }
@@ -977,7 +905,7 @@ private:
      */
     double update_weights(typename std::vector<std::vector<double>>::const_iterator dfirst,
                           typename std::vector<std::vector<double>>::const_iterator dlast,
-                          typename std::vector<std::vector<double>>::const_iterator lfirst, double lr, loss_type loss_e,
+                          typename std::vector<std::vector<double>>::const_iterator lfirst, double lr, expression<double>::loss_type loss_e,
                           bool parallel)
     {
         auto err = d_loss(dfirst, dlast, lfirst, loss_e, parallel);
@@ -993,7 +921,7 @@ private:
     std::tuple<double, std::vector<double>, std::vector<double>>
     d_loss(typename std::vector<std::vector<double>>::const_iterator dfirst,
            typename std::vector<std::vector<double>>::const_iterator dlast,
-           typename std::vector<std::vector<double>>::const_iterator lfirst, loss_type loss_e, bool parallel) const
+           typename std::vector<std::vector<double>>::const_iterator lfirst, expression<double>::loss_type loss_e, bool parallel) const
     {
         // Batch dimension
         const double batch_dim = static_cast<double>(dlast - dfirst);
@@ -1033,37 +961,6 @@ private:
         }
         value /= batch_dim;
         return std::make_tuple(std::move(value), std::move(gweights), std::move(gbiases));
-    }
-
-    double loss(typename std::vector<std::vector<double>>::const_iterator dfirst,
-                typename std::vector<std::vector<double>>::const_iterator dlast,
-                typename std::vector<std::vector<double>>::const_iterator lfirst, loss_type loss_e, bool parallel) const
-    {
-        double retval(0.);
-        double batch_dim = static_cast<double>(dlast - dfirst);
-        if (parallel) {
-            // The mutex that will protect read/write access to retval
-            tbb::spin_mutex mutex_weights_updates;
-            // This loops over all points, predictions in the mini-batch
-            tbb::parallel_for(long(0), static_cast<long>(batch_dim), long(1), [&](long i) {
-                // The loss gets computed
-                double err = loss(*(dfirst + i), *(lfirst + i), loss_e);
-                // We acquire the lock on the mutex
-                tbb::spin_mutex::scoped_lock lock(mutex_weights_updates);
-                // We update the cumulative loss and gradient
-                retval += err;
-            });
-        } else {
-            for (long i = 0; i < static_cast<long>(batch_dim); ++i) {
-                // The loss gets computed
-                double err = loss(*(dfirst + i), *(lfirst + i), loss_e);
-                // We update the cumulative loss and gradient
-                retval += err;
-            }
-        }
-        retval /= batch_dim;
-
-        return retval;
     }
 
 private:

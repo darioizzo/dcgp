@@ -103,6 +103,23 @@ Args:
     )";
 }
 
+std::string expression_loss_doc()
+{
+    return R"(loss(points, predictions, loss_type, parallel=True)
+
+Computes the loss of the model on the data
+
+Args:
+    points (2D NumPy float array or ``list of lists`` of ``float``): the input data
+    predictions (2D NumPy float array or ``list of lists`` of ``float``): the output predictions (supervised signal)
+    loss_type (a ``str``): the loss, one of "MSE" for Mean Square Error and "CE" for Cross-Entropy.
+    parallel (a ``bool``): activates the use of parallelism.
+
+Raises:
+    ValueError: if *points* or *predictions* are malformed or if *loss_type* is not one of the available types.
+    )";
+}
+
 std::string expression_set_doc()
 {
     return R"(set(chromosome)
@@ -341,23 +358,6 @@ Args:
 
 Returns:
     The average error across the batches a (``float``). Note: this is only a proxy for the real loss on the whole data set.
-
-Raises:
-    ValueError: if *points* or *predictions* are malformed or if *loss_type* is not one of the available types.
-    )";
-}
-
-std::string expression_ann_loss_doc()
-{
-    return R"(loss(points, predictions, loss_type, parallel=True)
-
-Computes the loss of the dCGPANN on the data
-
-Args:
-    points (2D NumPy float array or ``list of lists`` of ``float``): the input data
-    predictions (2D NumPy float array or ``list of lists`` of ``float``): the output predictions (supervised signal)
-    loss_type (a ``str``): the loss, one of "MSE" for Mean Square Error and "CE" for Cross-Entropy.
-    parallel (a ``bool``): activates the use of parallelism.
 
 Raises:
     ValueError: if *points* or *predictions* are malformed or if *loss_type* is not one of the available types.

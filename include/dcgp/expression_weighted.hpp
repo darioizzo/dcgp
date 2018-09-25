@@ -107,27 +107,63 @@ public:
         }
     }
 
-    /// Evaluates the dCGP expression
+    /// Evaluates the dCGP-weighted expression
     /**
-     * This evaluates the dCGP expression. According to the template parameter
-     * it will compute the value (double) the Taylor expansion (gdual) or a symbolic
-     * representation (std::string). Any other type will result in a compilation-time
-     * error (SFINAE).
+     * This evaluates the dCGP-weighted expression. This method overrides the base class
+     * method. NOTE we cannot template this and the following function as they are virtual in the base class.
      *
-     * @param[in] in an std::vector containing the values where the dCGP expression has
-     * to be computed (doubles, gduals or strings)
+     * @param[point] in an std::vector containing the values where the dCGP-weighted expression has
+     * to be computed
      *
-     * @return The value of the function (an std::vector)
+     * @return The value of the output (an std::vector)
      */
-    template <typename U, functor_enabler<U> = 0>
-    std::vector<U> operator()(const std::vector<U> &in) const
+    std::vector<T> operator()(const std::vector<T> &in) const
     {
         if (in.size() != this->get_n()) {
             throw std::invalid_argument("Input size is incompatible");
         }
-        std::vector<U> retval(this->get_m());
-        std::vector<U> node(this->get_n() + this->get_r() * this->get_c());
-        std::vector<U> function_in;
+        std::vector<T> retval(this->get_m());
+        std::vector<T> node(this->get_n() + this->get_r() * this->get_c());
+        std::vector<T> function_in;
+        for (auto node_id : this->get_active_nodes()) {
+            if (node_id < this->get_n()) {
+                node[node_id] = in[node_id];
+            } else {
+                unsigned arity = this->_get_arity(node_id);
+                function_in.resize(arity);
+                // position in the chromosome of the current node
+                unsigned g_idx = this->get_gene_idx()[node_id];
+                // starting position in m_weights of the weights relative to the node
+                unsigned w_idx = g_idx - (node_id - this->get_n());
+                for (unsigned j = 0u; j < this->_get_arity(node_id); ++j) {
+                    function_in[j] = node[this->get()[g_idx + j + 1]];
+                }
+                node[node_id] = kernel_call(function_in, g_idx, node_id, w_idx);
+            }
+        }
+        for (auto i = 0u; i < this->get_m(); ++i) {
+            retval[i] = node[this->get()[this->get().size() - this->get_m() + i]];
+        }
+        return retval;
+    }
+
+    /// Evaluates the dCGP-weighted expression
+    /**
+     * This evaluates the dCGP-weighted expression. This method overrides the base class
+     * method.
+     *
+     * @param[point] in an std::vector containing the symbol names.
+     *
+     * @return The symbolic value of the output (an std::vector)
+     */
+    std::vector<std::string> operator()(const std::vector<std::string> &in) const
+    {
+        if (in.size() != this->get_n()) {
+            throw std::invalid_argument("Input size is incompatible");
+        }
+        std::vector<std::string> retval(this->get_m());
+        std::vector<std::string> node(this->get_n() + this->get_r() * this->get_c());
+        std::vector<std::string> function_in;
         for (auto node_id : this->get_active_nodes()) {
             if (node_id < this->get_n()) {
                 node[node_id] = in[node_id];

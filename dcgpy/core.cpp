@@ -205,7 +205,13 @@ void expose_expression(std::string type)
         .def(
             "mutate_active_fgene", &expression<T>::mutate_active_fgene,
             "mutate_active_fgene(N = 1)\nMutates N randomly selected active function genes within their allowed bounds",
-            (bp::arg("N") = 1));
+            (bp::arg("N") = 1))
+        .def("loss",
+             +[](expression<T> &instance, const bp::object &points, const bp::object &predictions,
+                 const std::string &loss,
+                 bool parallel) { return instance.loss(to_vvd(points), to_vvd(predictions), loss, parallel); },
+             expression_loss_doc().c_str(),
+             (bp::arg("points"), bp::arg("predictions"), bp::arg("loss"), bp::arg("parallel") = true));
 }
 
 template <typename T>
@@ -407,13 +413,7 @@ void expose_expression_ann(std::string type)
              },
              expression_ann_sgd_doc().c_str(),
              (bp::arg("points"), bp::arg("predictions"), bp::arg("lr"), bp::arg("batch_size"), bp::arg("loss"),
-              bp::arg("parallel") = true))
-        .def("loss",
-             +[](expression_ann<T> &instance, const bp::object &points, const bp::object &predictions,
-                 const std::string &loss,
-                 bool parallel) { return instance.loss(to_vvd(points), to_vvd(predictions), loss, parallel); },
-             expression_ann_loss_doc().c_str(),
-             (bp::arg("points"), bp::arg("predictions"), bp::arg("loss"), bp::arg("parallel") = true));
+              bp::arg("parallel") = true));
 }
 
 BOOST_PYTHON_MODULE(core)

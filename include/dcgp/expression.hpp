@@ -40,8 +40,8 @@ private:
         std::is_same<U, double>::value || is_gdual<T>::value || std::is_same<U, std::string>::value, int>::type;
 
 public:
-    // Loss types: Mean Squared Error, Mean Average Error
-    enum class loss_type { MSE };
+    // loss types: Mean Squared Error or Cross Entropy
+    enum class loss_type { MSE, CE };
 
     /// Constructor
     /** Constructs a dCGP expression with variable arity
@@ -120,25 +120,25 @@ public:
 
     /// Evaluates the dCGP expression
     /**
-     * This evaluates the dCGP expression. According to the template parameter
-     * it will compute the value (double) the Taylor expansion (gdual) or a
-     * symbolic representation (std::string). Any other type will result in a
-     * compilation-time error (SFINAE).
+     * This evaluates the dCGP expression. This method overrides the base class
+     * method. NOTE we cannot template this and the following function as they are virtual.
+     *
+     * @param[point] in an std::vector containing the values where the dCGP expression has
+     * to be computed
      *
      * @param[point] an std::vector containing the values where the dCGP
      * expression has to be computed (doubles, gduals or strings)
      *
      * @return The value of the function (an std::vector)
      */
-    template <typename U, functor_enabler<U> = 0>
-    std::vector<U> operator()(const std::vector<U> &point) const
+    virtual std::vector<T> operator()(const std::vector<T> &point) const
     {
         if (point.size() != m_n) {
             throw std::invalid_argument("Input size is incompatible");
         }
-        std::vector<U> retval(m_m);
-        std::vector<U> node(m_n + m_r * m_c);
-        std::vector<U> function_in;
+        std::vector<T> retval(m_m);
+        std::vector<T> node(m_n + m_r * m_c);
+        std::vector<T> function_in;
 
         for (auto node_id : m_active_nodes) {
             if (node_id < m_n) {
@@ -161,11 +161,49 @@ public:
 
     /// Evaluates the dCGP expression
     /**
-     * This evaluates the dCGP expression. According to the template parameter
-     * it will compute the value (double) the Taylor expansion (gdual) or a
-     * symbolic representation (std::string). Any other type will result in a
-     * compilation-time error (SFINAE). This is identical to the other overload
-     * and is provided only for convenience
+     * This evaluates the dCGP expression. The method can be overriden in the derived classes.
+     *
+     * NOTE we cannot template this and the following function as they are virtual.
+     *
+     * @param[point] in an std::vector containing the values where the dCGP expression has
+     * to be computed
+     *
+     * @param[point] an std::vector containing the values where the dCGP
+     * expression has to be computed (doubles, gduals or strings)
+     *
+     * @return The value of the function (an std::vector)
+     */
+    virtual std::vector<std::string> operator()(const std::vector<std::string> &point) const
+    {
+        if (point.size() != m_n) {
+            throw std::invalid_argument("Input size is incompatible");
+        }
+        std::vector<std::string> retval(m_m);
+        std::vector<std::string> node(m_n + m_r * m_c);
+        std::vector<std::string> function_in;
+
+        for (auto node_id : m_active_nodes) {
+            if (node_id < m_n) {
+                node[node_id] = point[node_id];
+            } else {
+                unsigned arity = _get_arity(node_id);
+                function_in.resize(arity);
+                unsigned idx = m_gene_idx[node_id]; // position in the chromosome of the current node
+                for (auto j = 0u; j < arity; ++j) {
+                    function_in[j] = node[m_x[idx + j + 1u]];
+                }
+                node[node_id] = m_f[m_x[idx]](function_in);
+            }
+        }
+        for (auto i = 0u; i < m_m; ++i) {
+            retval[i] = node[m_x[m_x.size() - m_m + i]];
+        }
+        return retval;
+    }
+
+    /// Evaluates the dCGP expression
+    /**
+     * This evaluates the dCGP expression from an initializer list.
      *
      * @param[in] in an initializer list containing the values where the dCGP
      * expression has to be computed (doubles, gduals or strings)
@@ -179,14 +217,15 @@ public:
         return (*this)(dummy);
     }
 
-    /// Evaluates the loss (single data point)
+    /// Evaluates the model loss (single data point)
     /**
-     * Returns the loss over a single point of data of the CGP output.
+     * Returns the model loss over a single point of data of the dCGP output.
      *
      * @param[point] The input data (single point)
      * @param[prediction] The predicted output (single point)
-     * @param[loss_e] The loss type. Can be "MSE" for Mean Square Error (regression).
-     * @return the loss
+     * @param[loss_e] The loss type. Can be "MSE" for Mean Square Error (regression) or "CE" for Cross Entropy
+     * (classification)
+     * @return the mse
      */
     T loss(const std::vector<T> &point, const std::vector<T> &prediction, loss_type loss_e) const
     {
@@ -212,6 +251,22 @@ public:
                 retval /= static_cast<double>(outputs.size());
                 break; // and exits the switch
             }
+            // Cross Entropy
+            case loss_type::CE: {
+                // We guard from numerical instabilities subtracting the max element
+                auto max = *std::max_element(outputs.begin(), outputs.end());
+                // exp(a_i - max)
+                std::transform(outputs.begin(), outputs.end(), outputs.begin(),
+                               [max](T a) { return std::exp(a - max); });
+                // sum exp(a_i - max)
+                T cumsum = std::accumulate(outputs.begin(), outputs.end(), 0.);
+                // log(p_i) * y_i
+                std::transform(outputs.begin(), outputs.end(), prediction.begin(), outputs.begin(),
+                               [cumsum](T a, T y) { return std::log(a / cumsum) * y; });
+                // - sum log(p_i) y_i
+                retval = -std::accumulate(outputs.begin(), outputs.end(), 0.);
+                break;
+            }
         }
         return retval;
     }
@@ -222,11 +277,12 @@ public:
      *
      * @param[points] The input data (a batch).
      * @param[labels] The predicted outputs (a batch).
-     * @param[loss_e] The loss type. Can be "MSE" for Mean Square Error.
+     * @param[loss_e] The loss type. Can be "MSE" for Mean Square Error (regression) or "CE" for Cross Entropy
+     * (classification)
      * @return the loss
      */
-    T loss(const std::vector<std::vector<T>> &points, const std::vector<std::vector<T>> &labels, std::string &loss_s,
-           bool parallel = true) const
+    T loss(const std::vector<std::vector<T>> &points, const std::vector<std::vector<T>> &labels,
+                const std::string &loss_s, bool parallel = true) const
     {
         if (points.size() != labels.size()) {
             throw std::invalid_argument("Data and label size mismatch data size is: " + std::to_string(points.size())
@@ -238,8 +294,10 @@ public:
         loss_type loss_e;
         if (loss_s == "MSE") { // Mean Squared Error
             loss_e = loss_type::MSE;
+        } else if (loss_s == "CE") {
+            loss_e = loss_type::CE; // Cross Entropy
         } else {
-            throw std::invalid_argument("The requested loss was: " + loss_s + " while only MSE is allowed");
+            throw std::invalid_argument("The requested loss was: " + loss_s + " while only MSE and CE are allowed");
         }
         return loss(points.begin(), points.end(), labels.begin(), loss_e, parallel);
     }
@@ -747,6 +805,37 @@ protected:
         }
     }
 
+    T loss(typename std::vector<std::vector<T>>::const_iterator dfirst,
+           typename std::vector<std::vector<T>>::const_iterator dlast,
+           typename std::vector<std::vector<T>>::const_iterator lfirst, loss_type loss_e, bool parallel) const
+    {
+        T retval(0.);
+        double batch_dim = static_cast<double>(dlast - dfirst);
+        if (parallel) {
+            // The mutex that will protect read/write access to retval
+            tbb::spin_mutex mutex_weights_updates;
+            // This loops over all points, predictions in the mini-batch
+            tbb::parallel_for(long(0), static_cast<long>(batch_dim), long(1), [&](long i) {
+                // The loss gets computed
+                T err = loss(*(dfirst + i), *(lfirst + i), loss_e);
+                // We acquire the lock on the mutex
+                tbb::spin_mutex::scoped_lock lock(mutex_weights_updates);
+                // We update the cumulative loss and gradient
+                retval += err;
+            });
+        } else {
+            for (long i = 0; i < static_cast<long>(batch_dim); ++i) {
+                // The loss gets computed
+                T err = loss(*(dfirst + i), *(lfirst + i), loss_e);
+                // We update the cumulative loss and gradient
+                retval += err;
+            }
+        }
+        retval /= batch_dim;
+
+        return retval;
+    }
+
 private:
     void sanity_checks()
     {
@@ -813,37 +902,6 @@ private:
                 m_gene_idx[node_id] = acc + row * m_arity[col] + (node_id - m_n);
             }
         }
-    }
-
-    T loss(typename std::vector<std::vector<T>>::const_iterator dfirst,
-           typename std::vector<std::vector<T>>::const_iterator dlast,
-           typename std::vector<std::vector<T>>::const_iterator lfirst, loss_type loss_e, bool parallel) const
-    {
-        T retval(0.);
-        double batch_dim = static_cast<double>(dlast - dfirst);
-        if (parallel) {
-            // The mutex that will protect read/write access to retval
-            tbb::spin_mutex mutex_weights_updates;
-            // This loops over all points, predictions in the mini-batch
-            tbb::parallel_for(long(0), static_cast<long>(batch_dim), long(1), [&](long i) {
-                // The loss gets computed
-                T err = loss(*(dfirst + i), *(lfirst + i), loss_e);
-                // We acquire the lock on the mutex
-                tbb::spin_mutex::scoped_lock lock(mutex_weights_updates);
-                // We update the cumulative loss and gradient
-                retval += err;
-            });
-        } else {
-            for (long i = 0; i < static_cast<long>(batch_dim); ++i) {
-                // The loss gets computed
-                T err = loss(*(dfirst + i), *(lfirst + i), loss_e);
-                // We update the cumulative loss and gradient
-                retval += err;
-            }
-        }
-        retval /= batch_dim;
-
-        return retval;
     }
 
     // number of inputs

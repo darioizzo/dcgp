@@ -229,10 +229,25 @@ BOOST_AUTO_TEST_CASE(loss)
     expression<double> ex(2, 2, 2, 2, 3, 2, basic_set(), rd());
     // 2xy, 2x
     ex.set({0, 1, 1, 0, 0, 0, 2, 0, 2, 2, 0, 2, 4, 3});
+    // MSE
     auto loss = ex.loss({1., 1.}, {2., 2.}, expression<double>::loss_type::MSE);
     BOOST_CHECK_EQUAL(loss, 0.);
     loss = ex.loss({1., 1.}, {0., 0.}, expression<double>::loss_type::MSE);
     BOOST_CHECK_EQUAL(loss, 4.);
     loss = ex.loss({1., 0.}, {0., 0.}, expression<double>::loss_type::MSE);
     BOOST_CHECK_EQUAL(loss, 2.);
+    // CE
+    loss = ex.loss({1., 1.}, {0.5, 0.5}, expression<double>::loss_type::CE);
+    BOOST_CHECK_CLOSE(loss, 0.69314718055994529, 1e-12);
+    loss = ex.loss({1., 1.}, {0.0, 1.0}, expression<double>::loss_type::CE);
+    BOOST_CHECK_CLOSE(loss, 0.69314718055994529, 1e-12);
+    loss = ex.loss({1., 0.}, {0., 1.}, expression<double>::loss_type::CE);
+    BOOST_CHECK_CLOSE(loss, 0.12692801104297263, 1e-12);
+    // On a batch (first sequential then parallel)
+    auto loss_b = ex.loss({{1., 1.}, {1.,0.}}, {{2., 2.}, {0.,0.}}, "MSE", false);
+    BOOST_CHECK_EQUAL(loss_b, 1.);
+    loss_b = ex.loss({{1., 1.}, {1.,0.}}, {{2., 2.}, {0.,0.}}, "MSE", true);
+    BOOST_CHECK_EQUAL(loss_b, 1.);
+
+
 }
