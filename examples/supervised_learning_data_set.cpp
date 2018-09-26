@@ -9,7 +9,6 @@
 #include <vector>
 
 #include <dcgp/expression.hpp>
-#include <dcgp/fitness_functions.hpp>
 #include <dcgp/kernel_set.hpp>
 
 #include "detail/es.hpp"
