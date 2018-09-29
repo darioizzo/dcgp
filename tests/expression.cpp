@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <audi/audi.hpp>
 #include <random>
 #include <string>
@@ -12,7 +13,6 @@
 #include "helpers.hpp"
 
 using namespace dcgp;
-
 
 double test_loss(unsigned int n, unsigned int m, unsigned int r, unsigned int c, unsigned int l, unsigned int a,
                  unsigned int N) // number of samples
@@ -39,7 +39,7 @@ double test_loss(unsigned int n, unsigned int m, unsigned int r, unsigned int c,
 }
 
 audi::gdual_d test_loss2(unsigned int n, unsigned int m, unsigned int r, unsigned int c, unsigned int l, unsigned int a,
-                       unsigned int N) // number of samples
+                         unsigned int N) // number of samples
 {
     dcgp::kernel_set<gdual_d> basic_set({"sum", "diff", "mul", "div"});
     dcgp::expression<gdual_d> ex(n, m, r, c, l, a, basic_set(), 123);
@@ -67,7 +67,6 @@ audi::gdual_d test_loss2(unsigned int n, unsigned int m, unsigned int r, unsigne
     // computes the loss
     return ex.loss(in, out, "MSE", true);
 }
-
 
 BOOST_AUTO_TEST_CASE(construction)
 {
@@ -316,4 +315,21 @@ BOOST_AUTO_TEST_CASE(loss)
     // derivative of the quadratic error is zero w.r.t. one of the inputs (a weight)
     BOOST_CHECK_EQUAL(test_loss2(3, 1, 1, 20, 21, 2, 20), audi::gdual_d(0));
     BOOST_CHECK_EQUAL(test_loss2(2, 2, 3, 10, 11, 2, 20), audi::gdual_d(0));
+
+    std::mt19937 mersenne_engine{rd()}; // Generates random integers
+    std::uniform_real_distribution<double> dist{-1., 1.};
+
+    // We test that the parallel and the sequantial algorithms both return the same result
+    for (auto i = 0u; i < 100; ++i) {
+        auto in = std::vector<std::vector<double>>(100, {0., 0.});
+        auto out = std::vector<std::vector<double>>(100, {0., 0.});
+        std::generate(in.begin(), in.end(), [&mersenne_engine, &dist]() {
+            return std::vector<double>{dist(mersenne_engine), dist(mersenne_engine)};
+        });
+        std::generate(out.begin(), out.end(), [&mersenne_engine, &dist]() {
+            return std::vector<double>{dist(mersenne_engine), dist(mersenne_engine)};
+        });
+        BOOST_CHECK_CLOSE(ex.loss(in, out, "MSE", true), ex.loss(in, out, "MSE", false), 1e-8);
+        BOOST_CHECK_CLOSE(ex.loss(in, out, "CE", true), ex.loss(in, out, "CE", false), 1e-8);
+    }
 }

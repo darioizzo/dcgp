@@ -27,7 +27,6 @@ ENDMACRO(ADD_DCGP_PERFORMANCE_TESTCASE)
 
 ADD_DCGP_TESTCASE(expression)
 ADD_DCGP_TESTCASE(differentiate)
-ADD_DCGP_TESTCASE(quadratic_error)
 ADD_DCGP_TESTCASE(expression_ann)
 
 
