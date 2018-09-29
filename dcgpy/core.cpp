@@ -209,7 +209,7 @@ void expose_expression(std::string type)
         .def("loss",
              +[](expression<T> &instance, const bp::object &points, const bp::object &predictions,
                  const std::string &loss,
-                 bool parallel) { return instance.loss(to_vvd<T>(points), to_vvd<T>(predictions), loss, parallel); },
+                 bool parallel) { return instance.loss(to_vv<T>(points), to_vv<T>(predictions), loss, parallel); },
              expression_loss_doc().c_str(),
              (bp::arg("points"), bp::arg("predictions"), bp::arg("loss"), bp::arg("parallel") = true));
 }
@@ -407,8 +407,8 @@ void expose_expression_ann(std::string type)
         .def("sgd",
              +[](expression_ann<T> &instance, const bp::object &points, const bp::object &predictions, double l_rate,
                  unsigned batch_size, const std::string &loss, bool parallel) {
-                 auto d = to_vvd<T>(points);
-                 auto l = to_vvd<T>(predictions);
+                 auto d = to_vv<T>(points);
+                 auto l = to_vv<T>(predictions);
                  return instance.sgd(d, l, l_rate, batch_size, loss, parallel);
              },
              expression_ann_sgd_doc().c_str(),
