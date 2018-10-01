@@ -8,30 +8,30 @@ env:
   # Twine env variable
   - secure: aEdXByDIGucKP4PhkSLnuM0cyWtXqu1xu2N+/hT1HkaUBtRurhY3/QtOTPYg7BxLDp9HUJeOrIDfPW0RD5yHadiQMbQpqnfSoTBEj4jKK9TE6c9Vw/ZURmhueUsGM4og4weIbgm8JF9dJQeu+3GBBW8JJYkYQMYhmr0gV+gPwBVYPzr0c5joUH+ZUA/WqIMJBgmR1qN42C615xX1cWkhLf2kDDL5zM8T+P7ZIesz9gHvWwptkleaGPppkqliIOHWsD/LLLajk89yVh290FHVxaFThoTk3sdQJteTt2qq6g4Y2H+IP0vseQ4JmWHSRWFOSZts21ZZVeUchfCiPEbYyHJxRI+vSXrkAOktujkfWum3OmiVEZczTQ9mJ+Mn6sgGvvu6935H44vvV6Nn5qnkoUMJmXdkrPDFxPtAuS2sI+is8NWMRpgfjhHEA05BQw/CTAQW5RjnI4qYNRaLPgHeQc4rbfg5Xgg5VkI2miFN7zqSEO4WDlqbHe6GbumpnuMMInOZZurOm1WpBCDZrbAiWwiuopygr6vPMwBw2fE0kGUBQJTnBgd6a+ZQik1Fgj5mcFmYLYZ8RY8wuqhaJc9Ndye8vG7dTSx2XYjw/6JP4fbsTJg+SLWKIs1i/llKgMkmxh3aACaWG3B8VGXijkEvYzqAkmM/Z9NwZlLd9kBjyUE=
 
-#matrix:
-#  include:
-#  - env: DCGP_BUILD="manylinux64Py37" DOCKER_IMAGE="quay.io/pypa/manylinux1_x86_64"
-#    sudo: required
-#    services:
-#    - docker
-#  - env: DCGP_BUILD="manylinux64Py36" DOCKER_IMAGE="quay.io/pypa/manylinux1_x86_64"
-#    sudo: required
-#    services:
-#    - docker
-#  - env: DCGP_BUILD="manylinux64Py35" DOCKER_IMAGE="quay.io/pypa/manylinux1_x86_64"
-#    sudo: required
-#    services:
-#    - docker
-#  - env: DCGP_BUILD="manylinux64Py27" DOCKER_IMAGE="quay.io/pypa/manylinux1_x86_64"
-#    sudo: required
-#    services:
-#    - docker
-#install:
-#- docker pull $DOCKER_IMAGE
-#script:
-#- mkdir build
-#- cd build
-#- bash ../tools/install_travis.sh
-#notifications:
-#  email: false
+matrix:
+  include:
+  - env: DCGP_BUILD="manylinux64Py37" DOCKER_IMAGE="quay.io/pypa/manylinux1_x86_64"
+    sudo: required
+    services:
+    - docker
+  - env: DCGP_BUILD="manylinux64Py36" DOCKER_IMAGE="quay.io/pypa/manylinux1_x86_64"
+    sudo: required
+    services:
+    - docker
+  - env: DCGP_BUILD="manylinux64Py35" DOCKER_IMAGE="quay.io/pypa/manylinux1_x86_64"
+    sudo: required
+    services:
+    - docker
+  - env: DCGP_BUILD="manylinux64Py27" DOCKER_IMAGE="quay.io/pypa/manylinux1_x86_64"
+    sudo: required
+    services:
+    - docker
+install:
+- docker pull $DOCKER_IMAGE
+script:
+- mkdir build
+- cd build
+- bash ../tools/install_travis.sh
+notifications:
+  email: false
 

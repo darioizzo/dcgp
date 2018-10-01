@@ -158,7 +158,7 @@ if(DCGP_BUILD_DCGP)
     # Setup of the header-only dcgp library.
     add_library(dcgp INTERFACE)
     target_link_libraries(dcgp INTERFACE Threads::Threads Boost::boost Boost::serialization)    
-    target_link_libraries(dcgp INTERFACE Eigen3::eigen3 MPFR::MPFR GMP::GMP Audi::audi tbb)
+    target_link_libraries(dcgp INTERFACE Eigen3::eigen3 MPFR::MPFR GMP::GMP Audi::audi TBB::tbb)
     
     # This sets up the include directory to be different if we build
     target_include_directories(dcgp INTERFACE
