@@ -106,11 +106,11 @@ run_command(r'mingw32-make install VERBOSE=1', verbose=False)
 os.chdir('../../')
 print("Piranha sucessfully installed .. continuing")
 
-# Download audi 1.5 https://github.com/darioizzo/audi/archive/v1.5.zip
-wget(r'https://github.com/darioizzo/audi/archive/v1.5.zip', 'audiv15.zip')
-run_command(r'unzip audiv15.zip', verbose=False)
+# Download audi 1.6 https://github.com/darioizzo/audi/archive/v1.6.zip
+wget(r'https://github.com/darioizzo/audi/archive/v1.6.zip', 'audiv16.zip')
+run_command(r'unzip audiv16.zip', verbose=False)
 # Move to the directory created and make audi install its headers
-os.chdir('audi-1.5')
+os.chdir('audi-1.6')
 os.makedirs('build')
 os.chdir('build')
 print("Installing audi")
