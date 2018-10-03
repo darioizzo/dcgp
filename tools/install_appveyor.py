@@ -83,6 +83,7 @@ run_command(r'tbbvars.bat', verbose=False)
 os.chdir('../') 
 run_command(r'mingw32-make compiler=gcc VERBOSE=1', verbose=True)
 # Install the TBB libraries
+run_command(r'ls build/windows_intel64_gcc_mingw6.2.0_release/tbb* c:\\local\\lib', verbose=True)
 run_command(r'cp -r build/windows_intel64_gcc_mingw6.2.0_release/tbb* c:\\local\\lib', verbose=True)
 run_command(r'cp -r include/tbb c:\\local\\include\\tbb', verbose=True)
 
