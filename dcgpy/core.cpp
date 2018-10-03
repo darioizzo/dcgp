@@ -205,7 +205,13 @@ void expose_expression(std::string type)
         .def(
             "mutate_active_fgene", &expression<T>::mutate_active_fgene,
             "mutate_active_fgene(N = 1)\nMutates N randomly selected active function genes within their allowed bounds",
-            (bp::arg("N") = 1));
+            (bp::arg("N") = 1))
+        .def("loss",
+             +[](expression<T> &instance, const bp::object &points, const bp::object &predictions,
+                 const std::string &loss,
+                 bool parallel) { return instance.loss(to_vv<T>(points), to_vv<T>(predictions), loss, parallel); },
+             expression_loss_doc().c_str(),
+             (bp::arg("points"), bp::arg("predictions"), bp::arg("loss"), bp::arg("parallel") = true));
 }
 
 template <typename T>
@@ -400,15 +406,14 @@ void expose_expression_ann(std::string type)
              (bp::arg("mean") = 0., bp::arg("std") = 0.1))
         .def("sgd",
              +[](expression_ann<T> &instance, const bp::object &points, const bp::object &predictions, double l_rate,
-                 unsigned batch_size, const std::string &loss) {
-                 return instance.sgd(to_vvd(points), to_vvd(predictions), l_rate, batch_size, loss);
+                 unsigned batch_size, const std::string &loss, bool parallel) {
+                 auto d = to_vv<T>(points);
+                 auto l = to_vv<T>(predictions);
+                 return instance.sgd(d, l, l_rate, batch_size, loss, parallel);
              },
              expression_ann_sgd_doc().c_str(),
-             (bp::arg("points"), bp::arg("predictions"), bp::arg("lr"), bp::arg("batch_size"), bp::arg("loss")))
-        .def("loss",
-             +[](expression_ann<T> &instance, const bp::object &points, const bp::object &predictions,
-                 const std::string &loss) { return instance.loss(to_vvd(points), to_vvd(predictions), loss); },
-             expression_ann_loss_doc().c_str(), (bp::arg("points"), bp::arg("predictions"), bp::arg("loss")));
+             (bp::arg("points"), bp::arg("predictions"), bp::arg("lr"), bp::arg("batch_size"), bp::arg("loss"),
+              bp::arg("parallel") = true));
 }
 
 BOOST_PYTHON_MODULE(core)

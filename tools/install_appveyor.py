@@ -55,7 +55,6 @@ if is_release_build:
           os.environ['APPVEYOR_REPO_TAG_NAME'] + "'")
 is_python_build = 'Python' in BUILD_TYPE
 
-
 # Get mingw and set the path.
 wget(r'https://github.com/bluescarni/binary_deps/raw/master/x86_64-6.2.0-release-posix-seh-rt_v5-rev1.7z', 'mw64.7z')
 run_command(r'7z x -oC:\\ mw64.7z', verbose=False)
@@ -74,6 +73,25 @@ run_command(r'7z x -aoa -oC:\\ mpfr.7z', verbose=False)
 run_command(r'7z x -aoa -oC:\\ boost.7z', verbose=False)
 run_command(r'7z x -aoa -oC:\\ eigen3.7z', verbose=False)
 
+# Build the Thread Building Block libraries 
+wget(r'https://github.com/01org/tbb/archive/2019.zip', 'tbb-2019.zip')
+run_command(r'unzip tbb-2019.zip', verbose=False)
+os.chdir('tbb-2019')
+os.chdir('build')
+run_command(r'generate_tbbvars.bat', verbose=False)
+run_command(r'tbbvars.bat', verbose=False)
+os.chdir('../') 
+run_command(r'mingw32-make compiler=gcc VERBOSE=1', verbose=True)
+# Install the TBB libraries
+# run_command(r'ls build/windows_intel64_gcc_mingw6.2.0_release/tbb* c:\\local\\lib', verbose=True)
+run_command(r'cp -r build/windows_intel64_gcc_mingw6.2.0_release/tbb* c:\\local\\lib', verbose=True)
+run_command(r'cp -r include/tbb c:\\local\\include\\tbb', verbose=True)
+
+#windows_intel64_gcc_mingw6.2.0_debug
+#windows_intel64_gcc_mingw6.2.0_release
+#c:\local\lib\libboost_python-mgw62-mt-1_63.dll
+
+os.chdir('../')
 
 # Download piranha 0.11 https://github.com/bluescarni/piranha/archive/v0.11.zip
 wget(r'https://github.com/bluescarni/piranha/archive/v0.11.zip', 'piranhav11.zip')
@@ -89,11 +107,11 @@ run_command(r'mingw32-make install VERBOSE=1', verbose=False)
 os.chdir('../../')
 print("Piranha sucessfully installed .. continuing")
 
-# Download audi 1.5 https://github.com/darioizzo/audi/archive/v1.5.zip
-wget(r'https://github.com/darioizzo/audi/archive/v1.5.zip', 'audiv15.zip')
-run_command(r'unzip audiv15.zip', verbose=False)
+# Download audi 1.6 https://github.com/darioizzo/audi/archive/v1.6.zip
+wget(r'https://github.com/darioizzo/audi/archive/v1.6.zip', 'audiv16.zip')
+run_command(r'unzip audiv16.zip', verbose=False)
 # Move to the directory created and make audi install its headers
-os.chdir('audi-1.5')
+os.chdir('audi-1.6')
 os.makedirs('build')
 os.chdir('build')
 print("Installing audi")

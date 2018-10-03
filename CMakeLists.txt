@@ -148,12 +148,17 @@ if(DCGP_BUILD_DCGP)
     # Audi setup
     find_package(audi REQUIRED)
     message(STATUS "AUDI header only library found.")
-    message(STATUS "AUDI include dir is: ${AUDI_INCLUDE_DIR}")
+    message(STATUS "AUDI include dir is: ${AUDI_INCLUDE_DIRS}")
+
+    # TBB setup
+    find_package(TBB REQUIRED)
+    message(STATUS "TBB include dir is: ${TBB_INCLUDE_DIRS}")
+    message(STATUS "TBB library is: ${TBB_LIBRARIES}")
 
     # Setup of the header-only dcgp library.
     add_library(dcgp INTERFACE)
     target_link_libraries(dcgp INTERFACE Threads::Threads Boost::boost Boost::serialization)    
-    target_link_libraries(dcgp INTERFACE Eigen3::eigen3 MPFR::MPFR GMP::GMP Audi::audi)
+    target_link_libraries(dcgp INTERFACE Eigen3::eigen3 MPFR::MPFR GMP::GMP Audi::audi TBB::tbb)
     
     # This sets up the include directory to be different if we build
     target_include_directories(dcgp INTERFACE
@@ -161,7 +166,7 @@ if(DCGP_BUILD_DCGP)
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
     $<INSTALL_INTERFACE:include>)
 
-    # These lines are temporary with piranha v0.10, will be simplified when this is updated
+    # These lines are temporary with piranha v0.10, may be simplified when this is updated
     target_include_directories(dcgp INTERFACE ${Piranha_INCLUDE_DIR})
 
     # Build main
@@ -196,7 +201,7 @@ if(DCGP_BUILD_DCGP)
     install(FILES "${CMAKE_CURRENT_BINARY_DIR}/dcgp-config.cmake" DESTINATION "lib/cmake/dcgp")
     install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/FindGMP.cmake" "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/FindMPFR.cmake"
             "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/FindPiranha.cmake" "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/DCGPFindBoost.cmake"
-            "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/FindAudi.cmake" "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/FindEigen3.cmake" DESTINATION "lib/cmake/dcgp")
+            "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/FindAudi.cmake" "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/FindEigen3.cmake" "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/FindTBB.cmake" DESTINATION "lib/cmake/dcgp")
     install(EXPORT dcgp_export NAMESPACE Dcgp:: DESTINATION lib/cmake/dcgp)
     # Take care of versioning.
     include(CMakePackageConfigHelpers)

@@ -12,7 +12,7 @@
 using namespace dcgp;
 
 void perform_sgd(unsigned int rows, unsigned int columns, unsigned int levels_back, const std::vector<unsigned> &arity,
-                 unsigned int N, unsigned bs, std::vector<dcgp::kernel<double>> kernel_set)
+                 unsigned int N, unsigned bs, std::vector<dcgp::kernel<double>> kernel_set, bool parallel)
 {
     // Dimensions in and out are fixed
     unsigned in = 3u;
@@ -42,7 +42,7 @@ void perform_sgd(unsigned int rows, unsigned int columns, unsigned int levels_ba
     std::cout << "One epoch of sgd:  rows:" << rows << " columns:" << columns << std::endl;
     {
         boost::timer::auto_cpu_timer t;
-        ex.sgd(data, label, 0.01, bs, "MSE");
+        ex.sgd(data, label, 0.01, bs, "MSE", parallel);
     }
 }
 
@@ -51,12 +51,20 @@ void perform_sgd(unsigned int rows, unsigned int columns, unsigned int levels_ba
 BOOST_AUTO_TEST_CASE(evaluation_speed)
 {
     unsigned int N = 1024;
-
     dcgp::kernel_set<double> kernel_set1({"sig", "tanh", "ReLu", "ISRU", "ELU"});
-    dcgp::stream(std::cout, "Function set ", kernel_set1(), "\n");
-    perform_sgd(10, 10, 1, {100, 100, 100, 100, 100, 100, 100, 100, 100, 100}, N, 32, kernel_set1());
-    perform_sgd(10, 100, 1, std::vector<unsigned>(100, 10), N, 32, kernel_set1());
-    perform_sgd(100, 10, 1, {100, 10, 100, 10, 100, 10, 100, 10, 100, 10}, N, 32, kernel_set1());
-    perform_sgd(100, 10, 1, {100, 100, 100, 100, 100, 100, 100, 100, 100, 100}, N, 32, kernel_set1());
-    perform_sgd(200, 10, 1, {100, 100, 100, 100, 100, 100, 100, 100, 100, 100}, N, 32, kernel_set1());
+    audi::print("Function set ", kernel_set1(), "\n");
+    audi::print("Non parallel\n");
+    perform_sgd(50, 3, 1, {3, 50, 20}, N, 32, kernel_set1(), false);
+    perform_sgd(10, 10, 1, {100, 100, 100, 100, 100, 100, 100, 100, 100, 100}, N, 32, kernel_set1(), false);
+    perform_sgd(10, 100, 1, std::vector<unsigned>(100, 10), N, 32, kernel_set1(), false);
+    perform_sgd(100, 10, 1, {100, 10, 100, 10, 100, 10, 100, 10, 100, 10}, N, 32, kernel_set1(), false);
+    perform_sgd(100, 10, 1, {100, 100, 100, 100, 100, 100, 100, 100, 100, 100}, N, 32, kernel_set1(), false);
+    perform_sgd(200, 10, 1, {100, 100, 100, 100, 100, 100, 100, 100, 100, 100}, N, 32, kernel_set1(), false);
+    audi::print("Parallel\n");
+    perform_sgd(50, 3, 1, {3, 50, 20}, N, 32, kernel_set1(), false);
+    perform_sgd(10, 10, 1, {100, 100, 100, 100, 100, 100, 100, 100, 100, 100}, N, 32, kernel_set1(), true);
+    perform_sgd(10, 100, 1, std::vector<unsigned>(100, 10), N, 32, kernel_set1(), true);
+    perform_sgd(100, 10, 1, {100, 10, 100, 10, 100, 10, 100, 10, 100, 10}, N, 32, kernel_set1(), true);
+    perform_sgd(100, 10, 1, {100, 100, 100, 100, 100, 100, 100, 100, 100, 100}, N, 32, kernel_set1(), true);
+    perform_sgd(200, 10, 1, {100, 100, 100, 100, 100, 100, 100, 100, 100, 100}, N, 32, kernel_set1(), true);
 }

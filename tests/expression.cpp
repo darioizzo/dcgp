@@ -1,3 +1,5 @@
+#include <algorithm>
+#include <audi/audi.hpp>
 #include <random>
 #include <string>
 #include <vector>
@@ -11,6 +13,60 @@
 #include "helpers.hpp"
 
 using namespace dcgp;
+
+double test_loss(unsigned int n, unsigned int m, unsigned int r, unsigned int c, unsigned int l, unsigned int a,
+                 unsigned int N) // number of samples
+{
+    dcgp::kernel_set<double> basic_set({"sum", "diff", "mul", "div"});
+    dcgp::expression<double> ex(n, m, r, c, l, a, basic_set(), 123);
+
+    // creates N data points
+    std::default_random_engine re;
+    std::vector<std::vector<double>> in;
+    std::vector<std::vector<double>> out;
+    std::vector<double> in_point(n);
+    std::vector<double> out_point(m);
+    for (auto i = 0u; i < N; ++i) {
+        for (auto j = 0u; j < n; ++j) {
+            in_point[j] = std::uniform_real_distribution<double>(-1, 1)(re);
+        }
+        out_point = ex(in_point);
+        in.push_back(in_point);
+        out.push_back(out_point);
+    }
+    // computes the loss
+    return ex.loss(in, out, "MSE", true);
+}
+
+audi::gdual_d test_loss2(unsigned int n, unsigned int m, unsigned int r, unsigned int c, unsigned int l, unsigned int a,
+                         unsigned int N) // number of samples
+{
+    dcgp::kernel_set<gdual_d> basic_set({"sum", "diff", "mul", "div"});
+    dcgp::expression<gdual_d> ex(n, m, r, c, l, a, basic_set(), 123);
+
+    // creates N data points
+    std::default_random_engine re;
+    std::vector<std::vector<audi::gdual_d>> in;
+    std::vector<std::vector<audi::gdual_d>> out;
+    std::vector<audi::gdual_d> in_point(n);
+    std::vector<audi::gdual_d> out_point(m);
+
+    for (auto i = 0u; i < N; ++i) {
+        // We only define the first node as a weight and we compute the derivative of the objfun wrt this.
+        in_point[0] = audi::gdual_d(3, "w", 1);
+        for (auto j = 1u; j < n; ++j) {
+            in_point[j] = audi::gdual_d(std::uniform_real_distribution<double>(-1, 1)(re));
+        }
+        out_point = ex(in_point);
+        for (auto &k : out_point) {
+            k = audi::gdual_d(k.constant_cf());
+        }
+        in.push_back(in_point);
+        out.push_back(out_point);
+    }
+    // computes the loss
+    return ex.loss(in, out, "MSE", true);
+}
 
 BOOST_AUTO_TEST_CASE(construction)
 {
@@ -218,5 +274,62 @@ BOOST_AUTO_TEST_CASE(mutate)
             // was it an output gene?
             BOOST_CHECK(idx >= x.size() - ex.get_m());
         }
+    }
+}
+
+BOOST_AUTO_TEST_CASE(loss)
+{
+    // Random seed
+    std::random_device rd;
+    kernel_set<double> basic_set({"sum", "diff", "mul", "div"});
+    expression<double> ex(2, 2, 2, 2, 3, 2, basic_set(), rd());
+    // 2xy, 2x
+    ex.set({0, 1, 1, 0, 0, 0, 2, 0, 2, 2, 0, 2, 4, 3});
+    // MSE
+    auto loss = ex.loss({1., 1.}, {2., 2.}, expression<double>::loss_type::MSE);
+    BOOST_CHECK_EQUAL(loss, 0.);
+    loss = ex.loss({1., 1.}, {0., 0.}, expression<double>::loss_type::MSE);
+    BOOST_CHECK_EQUAL(loss, 4.);
+    loss = ex.loss({1., 0.}, {0., 0.}, expression<double>::loss_type::MSE);
+    BOOST_CHECK_EQUAL(loss, 2.);
+    // CE
+    loss = ex.loss({1., 1.}, {0.5, 0.5}, expression<double>::loss_type::CE);
+    BOOST_CHECK_CLOSE(loss, 0.69314718055994529, 1e-12);
+    loss = ex.loss({1., 1.}, {0.0, 1.0}, expression<double>::loss_type::CE);
+    BOOST_CHECK_CLOSE(loss, 0.69314718055994529, 1e-12);
+    loss = ex.loss({1., 0.}, {0., 1.}, expression<double>::loss_type::CE);
+    BOOST_CHECK_CLOSE(loss, 0.12692801104297263, 1e-12);
+    // On a batch (first sequential then parallel)
+    auto loss_b = ex.loss({{1., 1.}, {1., 0.}}, {{2., 2.}, {0., 0.}}, "MSE", false);
+    BOOST_CHECK_EQUAL(loss_b, 1.);
+    loss_b = ex.loss({{1., 1.}, {1., 0.}}, {{2., 2.}, {0., 0.}}, "MSE", true);
+    BOOST_CHECK_EQUAL(loss_b, 1.);
+    // Identities
+    // We test that a d-CGP expression computed on 20 points
+    // has a zero quadratic error w.r.t. itself (its a perfect fit of itself)
+    BOOST_CHECK_EQUAL(test_loss(3, 1, 1, 20, 21, 2, 20), 0);
+    BOOST_CHECK_EQUAL(test_loss(2, 2, 3, 10, 11, 2, 20), 0);
+
+    // We test that a d-CGP expression computed on 20 points
+    // has a zero quadratic error w.r.t. itself, and that the
+    // derivative of the quadratic error is zero w.r.t. one of the inputs (a weight)
+    BOOST_CHECK_EQUAL(test_loss2(3, 1, 1, 20, 21, 2, 20), audi::gdual_d(0));
+    BOOST_CHECK_EQUAL(test_loss2(2, 2, 3, 10, 11, 2, 20), audi::gdual_d(0));
+
+    std::mt19937 mersenne_engine{rd()}; // Generates random integers
+    std::uniform_real_distribution<double> dist{-1., 1.};
+
+    // We test that the parallel and the sequantial algorithms both return the same result
+    for (auto i = 0u; i < 100; ++i) {
+        auto in = std::vector<std::vector<double>>(100, {0., 0.});
+        auto out = std::vector<std::vector<double>>(100, {0., 0.});
+        std::generate(in.begin(), in.end(), [&mersenne_engine, &dist]() {
+            return std::vector<double>{dist(mersenne_engine), dist(mersenne_engine)};
+        });
+        std::generate(out.begin(), out.end(), [&mersenne_engine, &dist]() {
+            return std::vector<double>{dist(mersenne_engine), dist(mersenne_engine)};
+        });
+        BOOST_CHECK_CLOSE(ex.loss(in, out, "MSE", true), ex.loss(in, out, "MSE", false), 1e-8);
+        BOOST_CHECK_CLOSE(ex.loss(in, out, "CE", true), ex.loss(in, out, "CE", false), 1e-8);
     }
 }

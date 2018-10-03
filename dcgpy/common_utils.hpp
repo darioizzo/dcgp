@@ -68,29 +68,28 @@ inline std::vector<T> l_to_v(const bp::object &iterable)
     return std::vector<T>(begin, end);
 }
 
-// Convert a numpy array of double to a vector_double.
 inline std::vector<double> ad_to_vd(PyArrayObject *o)
 {
     assert(PyArray_TYPE(o) == NPY_DOUBLE);
     using size_type = std::vector<double>::size_type;
     if (!PyArray_ISCARRAY_RO(o)) {
         throw std::runtime_error("cannot convert NumPy array to a vector of doubles: "
-                                        "data must be C-style contiguous, aligned, and in machine byte-order");
+                                 "data must be C-style contiguous, aligned, and in machine byte-order");
     }
     if (PyArray_NDIM(o) != 1) {
         throw std::runtime_error("cannot convert NumPy array to a vector of doubles: "
-                                       "the array must be unidimensional, but the dimension is "
-                                       + std::to_string(PyArray_NDIM(o)) + " instead");
+                                 "the array must be unidimensional, but the dimension is "
+                                 + std::to_string(PyArray_NDIM(o)) + " instead");
     }
     if (PyArray_STRIDES(o)[0] != sizeof(double)) {
         throw std::runtime_error("cannot convert NumPy array to a vector of doubles: "
-                                         "the stride value must be "
-                                         + std::to_string(sizeof(double)));
+                                 "the stride value must be "
+                                 + std::to_string(sizeof(double)));
     }
     if (PyArray_ITEMSIZE(o) != sizeof(double)) {
         throw std::runtime_error("cannot convert NumPy array to a vector of doubles: "
-                                         "the size of the scalar type must be "
-                                         + std::to_string(sizeof(double)));
+                                 "the size of the scalar type must be "
+                                 + std::to_string(sizeof(double)));
     }
     // NOTE: not sure if this special casing is needed. We make sure
     // the array contains something in order to avoid messing around
@@ -103,8 +102,17 @@ inline std::vector<double> ad_to_vd(PyArrayObject *o)
     return std::vector<double>{};
 }
 
-// Convert an arbitrary python object to a vector_double.
-inline std::vector<double> to_vd(const bp::object &o)
+// Converts an arbitrary python iterable to a vector<T>. Works for NumpyArray too, but not efficient.
+template <typename T>
+inline std::vector<T> to_v(const bp::object &o)
+{
+    bp::stl_input_iterator<T> begin(o), end;
+    return std::vector<T>(begin, end);
+}
+
+// Template specialization for the case of doubles where we distinguish the case of NumpyArray
+template <>
+inline std::vector<double> to_v<double>(const bp::object &o)
 {
     bp::object a = bp::import("numpy").attr("ndarray");
     if (isinstance(o, a)) {
@@ -124,13 +132,14 @@ inline std::vector<double> to_vd(const bp::object &o)
     return std::vector<double>(begin, end);
 }
 
-// Convert a numpy array to a vector of vector_double.
-inline std::vector<std::vector<double>> a_to_vvd(PyArrayObject *o)
+// Converts a 2-D Numpy array of doubles to a vector<vector<double>>.
+inline std::vector<std::vector<double>> ad_to_vvd(PyArrayObject *o)
 {
     using size_type = std::vector<std::vector<double>>::size_type;
     if (!PyArray_ISCARRAY_RO(o)) {
-        throw std::runtime_error("cannot convert NumPy array to a vector of vector_double: data must be C-style contiguous, "
-                           "aligned, and in machine byte-order");
+        throw std::runtime_error(
+            "cannot convert NumPy array to a vector of vector_double: data must be C-style contiguous, "
+            "aligned, and in machine byte-order");
     }
     if (PyArray_NDIM(o) != 2) {
         throw std::invalid_argument(
@@ -157,8 +166,21 @@ inline std::vector<std::vector<double>> a_to_vvd(PyArrayObject *o)
     return retval;
 }
 
-// Convert an arbitrary Python object to a vector of vector_double.
-inline std::vector<std::vector<double>> to_vvd(const bp::object &o)
+// Convert an arbitrary Python object to a vector of vectors.
+template <typename T>
+inline std::vector<std::vector<T>> to_vv(const bp::object &o)
+{
+    bp::stl_input_iterator<bp::object> begin(o), end;
+    std::vector<std::vector<T>> retval;
+    for (; begin != end; ++begin) {
+        retval.push_back(to_v<T>(*begin));
+    }
+    return retval;
+}
+
+// Template specialization for the case of doubles where we distinguish the case of NumpyArray.
+template <>
+inline std::vector<std::vector<double>> to_vv<double>(const bp::object &o)
 {
     bp::object l = builtin().attr("list");
     bp::object a = bp::import("numpy").attr("ndarray");
@@ -166,7 +188,7 @@ inline std::vector<std::vector<double>> to_vvd(const bp::object &o)
         bp::stl_input_iterator<bp::object> begin(o), end;
         std::vector<std::vector<double>> retval;
         for (; begin != end; ++begin) {
-            retval.push_back(to_vd(*begin));
+            retval.push_back(to_v<double>(*begin));
         }
         return retval;
     } else if (isinstance(o, a)) {
@@ -174,11 +196,12 @@ inline std::vector<std::vector<double>> to_vvd(const bp::object &o)
         if (!n) {
             bp::throw_error_already_set();
         }
-        return a_to_vvd(reinterpret_cast<PyArrayObject *>(bp::object(bp::handle<>(n)).ptr()));
+        return ad_to_vvd(reinterpret_cast<PyArrayObject *>(bp::object(bp::handle<>(n)).ptr()));
     }
-    throw std::invalid_argument("cannot convert the type '" + str(type(o)) + "' to a vector of vector_double: only lists of doubles and NumPy arrays of doubles are supported");
+    throw std::invalid_argument(
+        "cannot convert the type '" + str(type(o))
+        + "' to a vector of vector_double: only lists of doubles and NumPy arrays of doubles are supported");
 }
-
 
 } // namespace dcgpy
 

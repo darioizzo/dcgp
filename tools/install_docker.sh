@@ -8,8 +8,8 @@ set -e
 
 CMAKE_VERSION="3.11.1"
 EIGEN3_VERSION="3.3.4"
-BOOST_VERSION="1.67.0"
-AUDI_VERSION="1.5"
+BOOST_VERSION="1.68.0"
+AUDI_VERSION="1.6"
 PIRANHA_VERSION="0.11"
 
 
@@ -41,6 +41,23 @@ fi
 cd
 mkdir install
 cd install
+
+# Install tbb (files will also be copied in /usr/lib64 and /usr/include)
+curl -L https://github.com/01org/tbb/archive/2019.tar.gz >tbb-2019.tar.gz
+tar xvf tbb-2019.tar.gz > /dev/null 2>&1
+cd tbb-2019
+make > /dev/null 2>&1
+cd build
+mv *_release release
+mv *_debug debug
+cd release
+cp libtbb* /usr/lib64/
+cd ../debug
+cp libtbb* /usr/lib64/
+ldconfig
+cd ../../include/
+cp -r tbb /usr/local/include/
+cd ../../
 
 # Install Boost
 curl -L http://dl.bintray.com/boostorg/release/${BOOST_VERSION}/source/boost_`echo ${BOOST_VERSION}|tr "." "_"`.tar.bz2 > boost_`echo ${BOOST_VERSION}|tr "." "_"`.tar.bz2
