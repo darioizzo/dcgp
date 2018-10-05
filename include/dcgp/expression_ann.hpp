@@ -935,7 +935,7 @@ private:
             // The mutex that will protect read write access to value, gweights, gbiases.
             tbb::spin_mutex mutex_weights_updates;
             // This loops over all points, predictions in the mini-batch
-            tbb::parallel_for(long(0), static_cast<long>(batch_dim), long(1), [&](long i) {
+            tbb::parallel_for(0u, static_cast<unsigned>(batch_dim), 1u, [&](unsigned i) {
                 // The loss and its gradient get computed
                 auto err = d_loss(*(dfirst + i), *(lfirst + i), loss_e);
                 // We acquire the lock on the mutex
@@ -948,7 +948,7 @@ private:
                                [&batch_dim](double a, double b) { return a + b / batch_dim; });
             });
         } else {
-            for (long i = 0; i < static_cast<long>(batch_dim); ++i) {
+            for (unsigned i = 0u; i < static_cast<unsigned>(batch_dim); ++i) {
                 // The loss and its gradient get computed
                 auto err = d_loss(*(dfirst + i), *(lfirst + i), loss_e);
                 // We update the cumulative loss and gradient

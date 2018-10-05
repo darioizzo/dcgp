@@ -670,6 +670,14 @@ public:
         mutate(idx);
     }
 
+    /// Sets the internal seed 
+    /**
+     * Sets the internal seed used to perform mutations and other things.
+     */
+    void seed(long seed) {
+        m_e.seed(seed);
+    }
+
     /// Checks if a given node is active
     /**
      *

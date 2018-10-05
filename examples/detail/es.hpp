@@ -1,6 +1,7 @@
 #include <iostream>
 #include <random>
 #include <vector>
+#include <tbb/tbb.h>
 
 #include <dcgp/expression.hpp>
 
@@ -28,20 +29,22 @@ void es(const std::vector<std::vector<double>> &in, const std::vector<std::vecto
 
     do {
         gen++;
-        for (auto i = 0u; i < newfits.size(); ++i) {
-            ex.set(best_chromosome);
+        std::vector<dcgp::expression<double>> exs(newfits.size(), ex);
+        tbb::parallel_for(long(0u), static_cast<long>(newfits.size()), [&](long i) {
+            exs[i].seed(re());
+            exs[i].set(best_chromosome);
             if (p.m_mutation_type == "active") {
-                ex.mutate_active(p.m_n);
+                exs[i].mutate_active(p.m_n);
             } else {
                 std::vector<unsigned int> tbm;
                 for (auto j = 0u; j < best_chromosome.size(); ++j) {
                     if (std::uniform_real_distribution<double>(0, 1)(re) < p.m_mut_prob) tbm.push_back(j);
                 }
-                ex.mutate(tbm);
+                exs[i].mutate(tbm);
             }
-            newfits[i] = ex.loss(in, out, "MSE", true);
-            newchromosomes[i] = ex.get();
-        }
+            newfits[i] = exs[i].loss(in, out, "MSE", true);
+            newchromosomes[i] = exs[i].get();
+        });
 
         for (auto i = 0u; i < newfits.size(); ++i) {
             if (newfits[i] <= best_fit) {
