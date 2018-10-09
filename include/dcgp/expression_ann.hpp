@@ -235,9 +235,9 @@ public:
         return (*this)(dummy);
     }
 
-    /// Evaluates the loss and its gradient (on a single point)
+    /// Cumulates the loss and its gradient (on a single point)
     /**
-     * Returns the loss and its gradient with respect to weights and biases.
+     * Cumulates the loss and its gradient with respect to weights and biases.
      *
      * @param[point] The input data (single point)
      * @param[prediction] The predicted output (single point)
@@ -246,8 +246,9 @@ public:
      * @return the loss, the gradient of the loss w.r.t. all weights (also inactive) and the gradient of the loss w.r.t
      * all biases
      */
-    std::tuple<double, std::vector<double>, std::vector<double>>
-    d_loss(const std::vector<double> &point, const std::vector<double> &prediction, const expression<double>::loss_type loss_e) const
+    void d_loss(double &value, std::vector<double> &gweights, std::vector<double> &gbiases,
+                const std::vector<double> &point, const std::vector<double> &prediction,
+                const expression<double>::loss_type loss_e) const
     {
         if (point.size() != this->get_n()) {
             throw std::invalid_argument("When computing the loss the point dimension (input) seemed wrong, it was: "
@@ -259,9 +260,15 @@ public:
                 "When computing the loss the prediction dimension (output) seemed wrong, it was: "
                 + std::to_string(prediction.size()) + " while I expected: " + std::to_string(this->get_m()));
         }
-        double value = 0.;
-        std::vector<double> gweights(m_weights.size(), 0.);
-        std::vector<double> gbiases(m_biases.size(), 0.);
+        if (gweights.size() != m_weights.size()) {
+            throw std::invalid_argument("The size of the return value gweights is: " + std::to_string(gweights.size())
+                                        + " while I expected: " + std::to_string(m_weights.size()));
+        }
+
+        if (gbiases.size() != m_biases.size()) {
+            throw std::invalid_argument("The size of the return value gweights is: " + std::to_string(gbiases.size())
+                                        + " while I expected: " + std::to_string(m_biases.size()));
+        }
 
         // ------------------------------------------ Forward pass (takes roughly half of the time) --------------------
         // All active nodes outputs get computed as well as
@@ -275,14 +282,13 @@ public:
         switch (loss_e) {
             // Mean Square Error
             case expression<double>::loss_type::MSE: {
-                auto n_samples = static_cast<double>(prediction.size());
+                auto sample_dim = static_cast<double>(prediction.size());
                 for (decltype(this->get_m()) i = 0u; i < this->get_m(); ++i) {
                     auto node_idx = this->get()[this->get().size() - this->get_m() + i];
                     auto dummy = (node[node_idx] - prediction[i]);
-                    d_node.push_back(2. * dummy / n_samples);
-                    value += dummy * dummy;
+                    d_node.push_back(2. * dummy / sample_dim);
+                    value += dummy * dummy / sample_dim;
                 }
-                value /= n_samples;
                 break; // and exits the switch
             }
             // Cross Entropy
@@ -308,7 +314,7 @@ public:
                 std::transform(ps.begin(), ps.end(), prediction.begin(), ps.begin(),
                                [](double p, double y) { return std::log(p) * y; });
                 // - sum log(p_i) y_i
-                value = -std::accumulate(ps.begin(), ps.end(), 0.);
+                value += -std::accumulate(ps.begin(), ps.end(), 0.);
                 break;
             }
         }
@@ -342,11 +348,10 @@ public:
 
             // fill gradients for weights and biases info
             for (auto i = 0u; i < this->_get_arity(node_id); ++i) {
-                gweights[w_idx + i] = d_node[node_id] * node[this->get()[c_idx + 1 + i]];
+                gweights[w_idx + i] += d_node[node_id] * node[this->get()[c_idx + 1 + i]];
             }
-            gbiases[b_idx] = d_node[node_id];
+            gbiases[b_idx] += d_node[node_id];
         }
-        return std::make_tuple(std::move(value), std::move(gweights), std::move(gbiases));
     }
 
     /// Evaluates the loss and its gradient  (on a batch)
@@ -362,7 +367,8 @@ public:
      */
     std::tuple<double, std::vector<double>, std::vector<double>> d_loss(const std::vector<std::vector<double>> &points,
                                                                         const std::vector<std::vector<double>> &labels,
-                                                                        expression<double>::loss_type loss_e, bool parallel)
+                                                                        expression<double>::loss_type loss_e,
+                                                                        bool parallel)
     {
         if (points.size() != labels.size()) {
             throw std::invalid_argument("Data and label size mismatch data size is: " + std::to_string(points.size())
@@ -390,7 +396,7 @@ public:
      * positive.
      */
     double sgd(std::vector<std::vector<double>> &points, std::vector<std::vector<double>> &labels, double lr,
-               unsigned batch_size, const std::string &loss_s, bool parallel = true)
+               unsigned batch_size, const std::string &loss_s, unsigned parallel = 0u)
     {
         // Sanity checks for the inputs
         if (points.size() != labels.size()) {
@@ -905,8 +911,8 @@ private:
      */
     double update_weights(typename std::vector<std::vector<double>>::const_iterator dfirst,
                           typename std::vector<std::vector<double>>::const_iterator dlast,
-                          typename std::vector<std::vector<double>>::const_iterator lfirst, double lr, expression<double>::loss_type loss_e,
-                          bool parallel)
+                          typename std::vector<std::vector<double>>::const_iterator lfirst, double lr,
+                          expression<double>::loss_type loss_e, unsigned parallel)
     {
         auto err = d_loss(dfirst, dlast, lfirst, loss_e, parallel);
 
@@ -921,45 +927,52 @@ private:
     std::tuple<double, std::vector<double>, std::vector<double>>
     d_loss(typename std::vector<std::vector<double>>::const_iterator dfirst,
            typename std::vector<std::vector<double>>::const_iterator dlast,
-           typename std::vector<std::vector<double>>::const_iterator lfirst, expression<double>::loss_type loss_e, bool parallel) const
+           typename std::vector<std::vector<double>>::const_iterator lfirst, expression<double>::loss_type loss_e,
+           unsigned parallel) const
     {
         // Batch dimension
-        const double batch_dim = static_cast<double>(dlast - dfirst);
+        const unsigned batch_size = static_cast<unsigned>(dlast - dfirst);
         // These variables need to be read/written by all tasks.
-        double value;
-        value = 0.;
+        double value = 0.;
         std::vector<double> gweights(m_weights.size(), 0.);
         std::vector<double> gbiases(m_biases.size(), 0.);
 
-        if (parallel) {
+        if (parallel > 0u) {
+            if (batch_size % parallel !=0) {
+                throw std::invalid_argument("The batch size is: " + std::to_string(batch_size) + " and cannot be divided into " + std::to_string(parallel) + "parts.");
+            }
+            unsigned inner_batch_size = batch_size / parallel;
             // The mutex that will protect read write access to value, gweights, gbiases.
             tbb::spin_mutex mutex_weights_updates;
             // This loops over all points, predictions in the mini-batch
-            tbb::parallel_for(0u, static_cast<unsigned>(batch_dim), 1u, [&](unsigned i) {
+            tbb::parallel_for(0u, batch_size, inner_batch_size, [&](unsigned i) {
+                double value2 = 0.;
+                std::vector<double> gweights2(m_weights.size(), 0.);
+                std::vector<double> gbiases2(m_biases.size(), 0.);
                 // The loss and its gradient get computed
-                auto err = d_loss(*(dfirst + i), *(lfirst + i), loss_e);
+                for (auto j = 0u; j < inner_batch_size; ++j) {
+                    d_loss(value2, gweights2, gbiases2, *(dfirst + i + j), *(lfirst + i + j), loss_e);
+                }
                 // We acquire the lock on the mutex
                 tbb::spin_mutex::scoped_lock lock(mutex_weights_updates);
                 // We update the cumulative loss and gradient
-                value += std::get<0>(err);
-                std::transform(gweights.begin(), gweights.end(), std::get<1>(err).begin(), gweights.begin(),
-                               [&batch_dim](double a, double b) { return a + b / batch_dim; });
-                std::transform(gbiases.begin(), gbiases.end(), std::get<2>(err).begin(), gbiases.begin(),
-                               [&batch_dim](double a, double b) { return a + b / batch_dim; });
+                value += value2;
+                std::transform(gweights.begin(), gweights.end(), gweights2.begin(), gweights.begin(),
+                               [](double a, double b) { return a + b; });
+                std::transform(gbiases.begin(), gbiases.end(), gbiases2.begin(), gbiases.begin(),
+                               [](double a, double b) { return a + b; });
             });
         } else {
-            for (unsigned i = 0u; i < static_cast<unsigned>(batch_dim); ++i) {
-                // The loss and its gradient get computed
-                auto err = d_loss(*(dfirst + i), *(lfirst + i), loss_e);
-                // We update the cumulative loss and gradient
-                value += std::get<0>(err);
-                std::transform(gweights.begin(), gweights.end(), std::get<1>(err).begin(), gweights.begin(),
-                               [&batch_dim](double a, double b) { return a + b / batch_dim; });
-                std::transform(gbiases.begin(), gbiases.end(), std::get<2>(err).begin(), gbiases.begin(),
-                               [&batch_dim](double a, double b) { return a + b / batch_dim; });
+            for (unsigned i = 0u; i < batch_size; ++i) {
+                // The loss and its gradient get computed and cumulated in value, gweights, gbiases
+                d_loss(value, gweights, gbiases, *(dfirst + i), *(lfirst + i), loss_e);
             }
         }
-        value /= batch_dim;
+        std::transform(gweights.begin(), gweights.end(), gweights.begin(),
+                       [&batch_size](double a) { return a / batch_size; });
+        std::transform(gbiases.begin(), gbiases.end(), gbiases.begin(),
+                       [&batch_size](double a) { return a / batch_size; });
+        value /= batch_size;
         return std::make_tuple(std::move(value), std::move(gweights), std::move(gbiases));
     }
 

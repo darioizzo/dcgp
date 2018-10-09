@@ -282,7 +282,7 @@ public:
      * @return the loss
      */
     T loss(const std::vector<std::vector<T>> &points, const std::vector<std::vector<T>> &labels,
-                const std::string &loss_s, bool parallel = true) const
+           const std::string &loss_s, unsigned parallel = 0u) const
     {
         if (points.size() != labels.size()) {
             throw std::invalid_argument("Data and label size mismatch data size is: " + std::to_string(points.size())
@@ -670,11 +670,12 @@ public:
         mutate(idx);
     }
 
-    /// Sets the internal seed 
+    /// Sets the internal seed
     /**
      * Sets the internal seed used to perform mutations and other things.
      */
-    void seed(long seed) {
+    void seed(long seed)
+    {
         m_e.seed(seed);
     }
 
@@ -815,31 +816,37 @@ protected:
 
     T loss(typename std::vector<std::vector<T>>::const_iterator dfirst,
            typename std::vector<std::vector<T>>::const_iterator dlast,
-           typename std::vector<std::vector<T>>::const_iterator lfirst, loss_type loss_e, bool parallel) const
+           typename std::vector<std::vector<T>>::const_iterator lfirst, loss_type loss_e, unsigned parallel) const
     {
         T retval(0.);
-        double batch_dim = static_cast<double>(dlast - dfirst);
-        if (parallel) {
+        unsigned batch_size = static_cast<unsigned>(dlast - dfirst);
+        if (parallel > 0u) {
+            if (batch_size % parallel != 0) {
+                throw std::invalid_argument("The batch size is: " + std::to_string(batch_size)
+                                            + " and cannot be divided into " + std::to_string(parallel) + "parts.");
+            }
+            unsigned inner_batch_size = batch_size / parallel;
             // The mutex that will protect read/write access to retval
             tbb::spin_mutex mutex_weights_updates;
             // This loops over all points, predictions in the mini-batch
-            tbb::parallel_for(long(0), static_cast<long>(batch_dim), long(1), [&](long i) {
+            tbb::parallel_for(0u, batch_size, inner_batch_size, [&](unsigned i) {
+                T err(0.);
                 // The loss gets computed
-                T err = loss(*(dfirst + i), *(lfirst + i), loss_e);
+                for (auto j = 0u; j < inner_batch_size; ++j) {
+                    err += loss(*(dfirst + i + j), *(lfirst + i + j), loss_e);
+                }
                 // We acquire the lock on the mutex
                 tbb::spin_mutex::scoped_lock lock(mutex_weights_updates);
                 // We update the cumulative loss and gradient
                 retval += err;
             });
         } else {
-            for (long i = 0; i < static_cast<long>(batch_dim); ++i) {
+            for (long i = 0; i < batch_size; ++i) {
                 // The loss gets computed
-                T err = loss(*(dfirst + i), *(lfirst + i), loss_e);
-                // We update the cumulative loss and gradient
-                retval += err;
+                retval += loss(*(dfirst + i), *(lfirst + i), loss_e);
             }
         }
-        retval /= batch_dim;
+        retval /= batch_size;
 
         return retval;
     }

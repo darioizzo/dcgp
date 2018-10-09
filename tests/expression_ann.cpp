@@ -40,11 +40,14 @@ void test_against_numerical_derivatives(unsigned n, unsigned m, unsigned r, unsi
     }
 
     // Compute the loss and the gradients
-    auto bp = ex.d_loss(in, out, loss_e);
+    double value = 0.;
+    std::vector<double> gweights(ex.get_weights().size(), 0.);
+    std::vector<double> gbiases(ex.get_biases().size(), 0.);
+    ex.d_loss(value, gweights, gbiases, in, out, loss_e);
     // Compute only the loss
     auto loss = ex.loss(in, out, loss_e);
     // We check the loss is equal when computed in both ways
-    BOOST_CHECK_EQUAL(std::get<0>(bp), loss);
+    BOOST_CHECK_CLOSE(value, loss, 1e-12);
 
     // We check against numerical diff
     // first the weights
@@ -60,8 +63,8 @@ void test_against_numerical_derivatives(unsigned n, unsigned m, unsigned r, unsi
         ex.set_weight(i, tmp - h);
         auto val2 = ex.loss(in, out, loss_e);
 
-        auto abs_diff = std::abs(((val - val2) / 2. / h - std::get<1>(bp)[i]));
-        auto rel_diff = abs_diff / std::abs(std::get<1>(bp)[i]);
+        auto abs_diff = std::abs(((val - val2) / 2. / h - gweights[i]));
+        auto rel_diff = abs_diff / std::abs(gweights[i]);
 
         // Since numerical differentiation sucks we look (brute force) for a better step for numerical
         // differentiation
@@ -78,8 +81,8 @@ void test_against_numerical_derivatives(unsigned n, unsigned m, unsigned r, unsi
                 val = ex.loss(in, out, loss_e);
                 ex.set_weight(i, tmp - h);
                 val2 = ex.loss(in, out, loss_e);
-                abs_diff = std::abs(((val - val2) / 2. / h - std::get<1>(bp)[i]));
-                rel_diff = abs_diff / std::abs(std::get<1>(bp)[i]);
+                abs_diff = std::abs(((val - val2) / 2. / h - gweights[i]));
+                rel_diff = abs_diff / std::abs(gweights[i]);
 
                 if (rel_diff < best) {
                     best = rel_diff;
@@ -97,7 +100,7 @@ void test_against_numerical_derivatives(unsigned n, unsigned m, unsigned r, unsi
         if (bval != bval2) {
             BOOST_CHECK(best < 0.05 || abs_diff < 1e-8);
         } else {
-            BOOST_CHECK(std::abs(std::get<1>(bp)[i]) < 1.);
+            BOOST_CHECK(std::abs(gweights[i]) < 1.);
         }
     }
 
@@ -113,8 +116,8 @@ void test_against_numerical_derivatives(unsigned n, unsigned m, unsigned r, unsi
         ex.set_bias(i, tmp - h);
         auto val2 = ex.loss(in, out, loss_e);
 
-        auto abs_diff = std::abs(((val - val2) / 2. / h - std::get<2>(bp)[i]));
-        auto rel_diff = abs_diff / std::abs(std::get<2>(bp)[i]);
+        auto abs_diff = std::abs(((val - val2) / 2. / h - gbiases[i]));
+        auto rel_diff = abs_diff / std::abs(gbiases[i]);
 
         // Since numerical differentiation sucks we look (brute force) for a better step for numerical
         // differentiation
@@ -131,8 +134,8 @@ void test_against_numerical_derivatives(unsigned n, unsigned m, unsigned r, unsi
                 val = ex.loss(in, out, loss_e);
                 ex.set_bias(i, tmp - h);
                 val2 = ex.loss(in, out, loss_e);
-                abs_diff = std::abs(((val - val2) / 2. / h - std::get<2>(bp)[i]));
-                rel_diff = abs_diff / std::abs(std::get<2>(bp)[i]);
+                abs_diff = std::abs(((val - val2) / 2. / h - gbiases[i]));
+                rel_diff = abs_diff / std::abs(gbiases[i]);
 
                 if (rel_diff < best) {
                     best = rel_diff;
@@ -150,7 +153,7 @@ void test_against_numerical_derivatives(unsigned n, unsigned m, unsigned r, unsi
             BOOST_CHECK(best < 0.05 || abs_diff < 1e-8);
         } else {
             // Numercially there is no difference, the analytical results must be something small
-            BOOST_CHECK(std::abs(std::get<2>(bp)[i]) < 1.);
+            BOOST_CHECK(std::abs(gbiases[i]) < 1.);
         }
     }
 }
