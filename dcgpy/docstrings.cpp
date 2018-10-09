@@ -113,7 +113,7 @@ Args:
     points (2D NumPy float array or ``list of lists`` of ``float``): the input data
     predictions (2D NumPy float array or ``list of lists`` of ``float``): the output predictions (supervised signal)
     loss_type (a ``str``): the loss, one of "MSE" for Mean Square Error and "CE" for Cross-Entropy.
-    parallel (a ``bool``): activates the use of parallelism.
+    parallel (a ``int``): sets the grain for parallelism. 0 -> no parallelism n -> divides the data into n parts and processes them in parallel threads 
 
 Raises:
     ValueError: if *points* or *predictions* are malformed or if *loss_type* is not one of the available types.
@@ -354,7 +354,7 @@ Args:
     lr (a ``float``): the learning generate
     batch_size (an ``int``): the batch size
     loss_type (a ``str``): the loss, one of "MSE" for Mean Square Error and "CE" for Cross-Entropy.
-    parallel (a ``bool``): activates the use of parallelism.
+    parallel (a ``int``): sets the grain for parallelism. 0 -> no parallelism n -> divides the data into n parts and processes them in parallel threads 
 
 Returns:
     The average error across the batches a (``float``). Note: this is only a proxy for the real loss on the whole data set.

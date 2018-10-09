@@ -235,16 +235,18 @@ public:
         return (*this)(dummy);
     }
 
-    /// Cumulates the loss and its gradient (on a single point)
+    /// Cumulates the loss and its gradient (of a single point)
     /**
-     * Cumulates the loss and its gradient with respect to weights and biases.
+     * Cumulates the loss and its gradient with respect to weights and biases. The values are cumulated into the inputs.
+     * If called in a loop with many data points will cumulate the total batch values.
      *
+     * @param[value] The initial loss
+     * @param[gweights] The initial loss gradient w.r.t. weights
+     * @param[gbiases] The initial loss gradient w.r.t. biases
      * @param[point] The input data (single point)
      * @param[prediction] The predicted output (single point)
      * @param[loss_e] The loss type. Must be loss_type::MSE for Mean Square Error (regression) or loss_type::CE for
      * Cross Entropy (classification)
-     * @return the loss, the gradient of the loss w.r.t. all weights (also inactive) and the gradient of the loss w.r.t
-     * all biases
      */
     void d_loss(double &value, std::vector<double> &gweights, std::vector<double> &gbiases,
                 const std::vector<double> &point, const std::vector<double> &prediction,
@@ -362,13 +364,14 @@ public:
      * @param[labels] The predicted outputs (a batch).
      * @param[loss_e] The loss type. Must be loss_type::MSE for Mean Square Error (regression) or loss_type::CE for
      * Cross Entropy (classification)
+     * @param[parallel] sets the grain for parallelism. 0 -> no parallelism n -> divides the data into n parts and processes them in parallel threads 
      * @return the loss, the gradient of the loss w.r.t. all weights (also inactive) and the gradient of the loss w.r.t
      * all biases.
      */
     std::tuple<double, std::vector<double>, std::vector<double>> d_loss(const std::vector<std::vector<double>> &points,
                                                                         const std::vector<std::vector<double>> &labels,
                                                                         expression<double>::loss_type loss_e,
-                                                                        bool parallel)
+                                                                        unsigned parallel)
     {
         if (points.size() != labels.size()) {
             throw std::invalid_argument("Data and label size mismatch data size is: " + std::to_string(points.size())
@@ -388,6 +391,7 @@ public:
      * @param[labels] The predicted outputs (a batch). Will be randomly shuffled (with points) after a call to sgd.
      * @param[lr] The learning rate.
      * @param[batch_size] The batch size.
+     * @param[parallel] sets the grain for parallelism. 0 -> no parallelism n -> divides the data into n parts and processes them in parallel threads 
      *
      * @return The average error across the batches. Note: this will not be equal to the error on the whole data set
      * as weights get updated after each batch. It is an indicator, though, and its free to compute.
@@ -904,10 +908,8 @@ private:
      * @param[lfirst] Start range for the labels
      * @param[lr] The learning rate
      *
-     * @ return the
+     * @return the loss before the weight update
      *
-     * @throws std::invalid_argument if the *data* and *label* size do not match or are zero, or if *lr* is not
-     * positive.
      */
     double update_weights(typename std::vector<std::vector<double>>::const_iterator dfirst,
                           typename std::vector<std::vector<double>>::const_iterator dlast,

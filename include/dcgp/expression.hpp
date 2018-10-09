@@ -277,8 +277,9 @@ public:
      *
      * @param[points] The input data (a batch).
      * @param[labels] The predicted outputs (a batch).
-     * @param[loss_e] The loss type. Can be "MSE" for Mean Square Error (regression) or "CE" for Cross Entropy
+     * @param[loss_s] The loss type. Can be "MSE" for Mean Square Error (regression) or "CE" for Cross Entropy
      * (classification)
+     * @param[parallel] sets the grain for parallelism. 0 -> no parallelism n -> divides the data into n parts and evaluates them in parallel threads 
      * @return the loss
      */
     T loss(const std::vector<std::vector<T>> &points, const std::vector<std::vector<T>> &labels,

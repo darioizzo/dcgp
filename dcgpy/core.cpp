@@ -209,9 +209,9 @@ void expose_expression(std::string type)
         .def("loss",
              +[](expression<T> &instance, const bp::object &points, const bp::object &predictions,
                  const std::string &loss,
-                 bool parallel) { return instance.loss(to_vv<T>(points), to_vv<T>(predictions), loss, parallel); },
+                 unsigned parallel) { return instance.loss(to_vv<T>(points), to_vv<T>(predictions), loss, parallel); },
              expression_loss_doc().c_str(),
-             (bp::arg("points"), bp::arg("predictions"), bp::arg("loss"), bp::arg("parallel") = true));
+             (bp::arg("points"), bp::arg("predictions"), bp::arg("loss"), bp::arg("parallel") = 0u));
 }
 
 template <typename T>
@@ -406,14 +406,14 @@ void expose_expression_ann(std::string type)
              (bp::arg("mean") = 0., bp::arg("std") = 0.1))
         .def("sgd",
              +[](expression_ann<T> &instance, const bp::object &points, const bp::object &predictions, double l_rate,
-                 unsigned batch_size, const std::string &loss, bool parallel) {
+                 unsigned batch_size, const std::string &loss, unsigned parallel) {
                  auto d = to_vv<T>(points);
                  auto l = to_vv<T>(predictions);
                  return instance.sgd(d, l, l_rate, batch_size, loss, parallel);
              },
              expression_ann_sgd_doc().c_str(),
              (bp::arg("points"), bp::arg("predictions"), bp::arg("lr"), bp::arg("batch_size"), bp::arg("loss"),
-              bp::arg("parallel") = true));
+              bp::arg("parallel") = 0u));
 }
 
 BOOST_PYTHON_MODULE(core)
