@@ -207,11 +207,10 @@ void expose_expression(std::string type)
             "mutate_active_fgene(N = 1)\nMutates N randomly selected active function genes within their allowed bounds",
             (bp::arg("N") = 1))
         .def("loss",
-             +[](expression<T> &instance, const bp::object &points, const bp::object &predictions,
-                 const std::string &loss,
-                 unsigned parallel) { return instance.loss(to_vv<T>(points), to_vv<T>(predictions), loss, parallel); },
+             +[](expression<T> &instance, const bp::object &points, const bp::object &labels, const std::string &loss,
+                 unsigned parallel) { return instance.loss(to_vv<T>(points), to_vv<T>(labels), loss, parallel); },
              expression_loss_doc().c_str(),
-             (bp::arg("points"), bp::arg("predictions"), bp::arg("loss"), bp::arg("parallel") = 0u));
+             (bp::arg("points"), bp::arg("labels"), bp::arg("loss"), bp::arg("parallel") = 0u));
 }
 
 template <typename T>
@@ -405,15 +404,15 @@ void expose_expression_ann(std::string type)
              },
              (bp::arg("mean") = 0., bp::arg("std") = 0.1))
         .def("sgd",
-             +[](expression_ann<T> &instance, const bp::object &points, const bp::object &predictions, double l_rate,
-                 unsigned batch_size, const std::string &loss, unsigned parallel) {
+             +[](expression_ann<T> &instance, const bp::object &points, const bp::object &labels, double l_rate,
+                 unsigned batch_size, const std::string &loss, unsigned parallel, bool shuffle) {
                  auto d = to_vv<T>(points);
-                 auto l = to_vv<T>(predictions);
-                 return instance.sgd(d, l, l_rate, batch_size, loss, parallel);
+                 auto l = to_vv<T>(labels);
+                 return instance.sgd(d, l, l_rate, batch_size, loss, parallel, shuffle);
              },
              expression_ann_sgd_doc().c_str(),
-             (bp::arg("points"), bp::arg("predictions"), bp::arg("lr"), bp::arg("batch_size"), bp::arg("loss"),
-              bp::arg("parallel") = 0u));
+             (bp::arg("points"), bp::arg("labels"), bp::arg("lr"), bp::arg("batch_size"), bp::arg("loss"),
+              bp::arg("parallel") = 0u, bp::arg("shuffle") = true));
 }
 
 BOOST_PYTHON_MODULE(core)

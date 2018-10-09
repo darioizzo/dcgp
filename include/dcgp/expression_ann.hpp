@@ -364,7 +364,8 @@ public:
      * @param[labels] The predicted outputs (a batch).
      * @param[loss_e] The loss type. Must be loss_type::MSE for Mean Square Error (regression) or loss_type::CE for
      * Cross Entropy (classification)
-     * @param[parallel] sets the grain for parallelism. 0 -> no parallelism n -> divides the data into n parts and processes them in parallel threads 
+     * @param[parallel] sets the grain for parallelism. 0 -> no parallelism n -> divides the data into n parts and
+     * processes them in parallel threads
      * @return the loss, the gradient of the loss w.r.t. all weights (also inactive) and the gradient of the loss w.r.t
      * all biases.
      */
@@ -391,7 +392,9 @@ public:
      * @param[labels] The predicted outputs (a batch). Will be randomly shuffled (with points) after a call to sgd.
      * @param[lr] The learning rate.
      * @param[batch_size] The batch size.
-     * @param[parallel] sets the grain for parallelism. 0 -> no parallelism n -> divides the data into n parts and processes them in parallel threads 
+     * @param[parallel] sets the grain for parallelism. 0 -> no parallelism n -> divides the data into n parts and
+     * processes them in parallel threads
+     * @param[shuffle] when true it shuffles the points and labels before performing one epoch of training.
      *
      * @return The average error across the batches. Note: this will not be equal to the error on the whole data set
      * as weights get updated after each batch. It is an indicator, though, and its free to compute.
@@ -400,7 +403,7 @@ public:
      * positive.
      */
     double sgd(std::vector<std::vector<double>> &points, std::vector<std::vector<double>> &labels, double lr,
-               unsigned batch_size, const std::string &loss_s, unsigned parallel = 0u)
+               unsigned batch_size, const std::string &loss_s, unsigned parallel = 0u, bool shuffle = true)
     {
         // Sanity checks for the inputs
         if (points.size() != labels.size()) {
@@ -425,13 +428,15 @@ public:
             throw std::invalid_argument("The requested loss was: " + loss_s + " while only MSE and CE are allowed");
         }
 
-        // Creating a shuffle
-        // Create two random engines with the same state
-        auto seed = std::random_device{}();
-        std::mt19937 eng1(seed);
-        auto eng2 = eng1;
-        std::shuffle(points.begin(), points.end(), eng1);
-        std::shuffle(labels.begin(), labels.end(), eng2);
+        if (shuffle) {
+            // Creating a shuffle
+            // Create two random engines with the same state
+            auto seed = std::random_device{}();
+            std::mt19937 eng1(seed);
+            auto eng2 = eng1;
+            std::shuffle(points.begin(), points.end(), eng1);
+            std::shuffle(labels.begin(), labels.end(), eng2);
+        }
 
         // Starting the iteration
         auto dfirst = points.begin();
@@ -940,8 +945,9 @@ private:
         std::vector<double> gbiases(m_biases.size(), 0.);
 
         if (parallel > 0u) {
-            if (batch_size % parallel !=0) {
-                throw std::invalid_argument("The batch size is: " + std::to_string(batch_size) + " and cannot be divided into " + std::to_string(parallel) + "parts.");
+            if (batch_size % parallel != 0) {
+                throw std::invalid_argument("The batch size is: " + std::to_string(batch_size)
+                                            + " and cannot be divided into " + std::to_string(parallel) + "parts.");
             }
             unsigned inner_batch_size = batch_size / parallel;
             // The mutex that will protect read write access to value, gweights, gbiases.

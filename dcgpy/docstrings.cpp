@@ -105,18 +105,18 @@ Args:
 
 std::string expression_loss_doc()
 {
-    return R"(loss(points, predictions, loss_type, parallel=True)
+    return R"(loss(points, labels, loss_type, parallel=True)
 
 Computes the loss of the model on the data
 
 Args:
     points (2D NumPy float array or ``list of lists`` of ``float``): the input data
-    predictions (2D NumPy float array or ``list of lists`` of ``float``): the output predictions (supervised signal)
+    labels (2D NumPy float array or ``list of lists`` of ``float``): the output labels (supervised signal)
     loss_type (a ``str``): the loss, one of "MSE" for Mean Square Error and "CE" for Cross-Entropy.
     parallel (a ``int``): sets the grain for parallelism. 0 -> no parallelism n -> divides the data into n parts and processes them in parallel threads 
 
 Raises:
-    ValueError: if *points* or *predictions* are malformed or if *loss_type* is not one of the available types.
+    ValueError: if *points* or *labels* are malformed or if *loss_type* is not one of the available types.
     )";
 }
 
@@ -343,24 +343,26 @@ Args:
 
 std::string expression_ann_sgd_doc()
 {
-    return R"(sgd(points, predictions, lr, batch_size, loss_type, parallel = True)
+    return R"(sgd(points, labels, lr, batch_size, loss_type, parallel = 0, shuffle = True)
 
 Performs one epoch of mini-batch (stochastic) gradient descent updating the weights and biases using the 
-*points* and *predictions* to decrease the loss.
+*points* and *labels* to decrease the loss.
 
 Args:
     points (2D NumPy float array or ``list of lists`` of ``float``): the input data
-    predictions (2D NumPy float array or ``list of lists`` of ``float``): the output predictions (supervised signal)
+    labels (2D NumPy float array or ``list of lists`` of ``float``): the output labels (supervised signal)
     lr (a ``float``): the learning generate
     batch_size (an ``int``): the batch size
     loss_type (a ``str``): the loss, one of "MSE" for Mean Square Error and "CE" for Cross-Entropy.
     parallel (a ``int``): sets the grain for parallelism. 0 -> no parallelism n -> divides the data into n parts and processes them in parallel threads 
+    shuffle (a ``bool``): when True it shuffles the points and labels before performing one epoch of training.
+
 
 Returns:
     The average error across the batches a (``float``). Note: this is only a proxy for the real loss on the whole data set.
 
 Raises:
-    ValueError: if *points* or *predictions* are malformed or if *loss_type* is not one of the available types.
+    ValueError: if *points* or *labels* are malformed or if *loss_type* is not one of the available types.
     )";
 }
 
