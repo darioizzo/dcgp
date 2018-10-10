@@ -1,4 +1,4 @@
-def _dcgpann_visualize(self, show_connections = True, fill_color = 'w', legend = False, active_connection_alpha = 0.1, inactive_connection_alpha = 0.01, legend = True, axes = None, show_inactive = False):
+def _dcgpann_visualize(self, show_connections = True, fill_color = 'w', active_connection_alpha = 0.1, inactive_connection_alpha = 0.01, legend = True, axes = None, show_inactive = False):
     """visualize(show_connections = True, fill_color = 'w', show_nonlinearities = False, active_connection_alpha = 0.1, inactive_connection_alpha = 0.01, legend = True)
 
     Visualizes the dCGPANN expression
@@ -18,8 +18,7 @@ def _dcgpann_visualize(self, show_connections = True, fill_color = 'w', legend =
 
     >>> from dcgpy import *
     >>> nonlinearities = dcgpy.kernel_set_double(["sig", "ReLu", "tanh"])
-    >>> dcgpann = dcgpy.expression_ann_double(inputs=3, outputs=4, rows=15, cols=8, 
-                                      levels_back=2, arity=4, kernels=nonlinearities(), seed=32)
+    >>> dcgpann = dcgpy.expression_ann_double(inputs=3, outputs=4, rows=15, cols=8, levels_back=2, arity=4, kernels=nonlinearities(), seed=32)
     >>> dcgpann.randomise_weights()
     >>> dcgpann.visualize(show_nonlinearities=False)
     """

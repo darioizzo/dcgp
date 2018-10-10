@@ -292,7 +292,7 @@ template <typename T>
 void expose_expression_ann(std::string type)
 {
     std::string class_name = "expression_ann_" + type;
-    bp::class_<expression_ann<T>, bp::bases<expression<T>>>(class_name.c_str(), bp::no_init)
+    bp::class_<expression_ann, bp::bases<expression<T>>>(class_name.c_str(), bp::no_init)
         // Constructor with seed
         .def("__init__",
              bp::make_constructor(
@@ -302,10 +302,10 @@ void expose_expression_ann(std::string type)
                      bp::extract<unsigned> is_int(arity);
                      if (is_int.check()) { // arity is passed as an integer
                          unsigned ar = bp::extract<unsigned>(arity);
-                         return ::new expression_ann<T>(in, out, rows, cols, levelsback, ar, kernels_v, seed);
+                         return ::new expression_ann(in, out, rows, cols, levelsback, ar, kernels_v, seed);
                      } else { // arity is passed as something else, a list is assumed
                          auto varity = l_to_v<unsigned>(arity);
-                         return ::new expression_ann<T>(in, out, rows, cols, levelsback, varity, kernels_v, seed);
+                         return ::new expression_ann(in, out, rows, cols, levelsback, varity, kernels_v, seed);
                      }
                  },
                  bp::default_call_policies(),
@@ -317,15 +317,15 @@ void expose_expression_ann(std::string type)
              bp::make_constructor(
                  +[](unsigned in, unsigned out, unsigned rows, unsigned cols, unsigned levelsback,
                      const bp::object &arity, const bp::object &kernels) {
-                     auto kernels_v = l_to_v<kernel<T>>(kernels);
+                     auto kernels_v = l_to_v<kernel<double>>(kernels);
                      bp::extract<unsigned> is_int(arity);
                      if (is_int.check()) { // arity is passed as an integer
                          unsigned ar = bp::extract<unsigned>(arity);
-                         return ::new expression_ann<T>(in, out, rows, cols, levelsback, ar, kernels_v,
+                         return ::new expression_ann(in, out, rows, cols, levelsback, ar, kernels_v,
                                                         std::random_device()());
                      } else { // arity is passed as something else, a list is assumed
                          auto varity = l_to_v<unsigned>(arity);
-                         return ::new expression_ann<T>(in, out, rows, cols, levelsback, varity, kernels_v,
+                         return ::new expression_ann(in, out, rows, cols, levelsback, varity, kernels_v,
                                                         std::random_device()());
                      }
                  },
@@ -334,15 +334,15 @@ void expose_expression_ann(std::string type)
                   bp::arg("arity"), bp::arg("kernels"))),
              expression_init_doc(type).c_str())
         .def("__repr__",
-             +[](const expression_ann<T> &instance) -> std::string {
+             +[](const expression_ann &instance) -> std::string {
                  std::ostringstream oss;
                  oss << instance;
                  return oss.str();
              })
         .def("__call__",
-             +[](const expression_ann<T> &instance, const bp::object &in) {
+             +[](const expression_ann &instance, const bp::object &in) {
                  try {
-                     auto v = l_to_v<T>(in);
+                     auto v = l_to_v<double>(in);
                      return v_to_l(instance(v));
                  } catch (...) {
                      PyErr_Clear();
@@ -350,64 +350,64 @@ void expose_expression_ann(std::string type)
                      return v_to_l(instance(v));
                  }
              })
-        .def("set_bias", &expression_ann<T>::set_bias, expression_ann_set_bias_doc().c_str(),
+        .def("set_bias", &expression_ann::set_bias, expression_ann_set_bias_doc().c_str(),
              (bp::arg("node_id"), bp::arg("bias")))
         .def("set_biases",
-             +[](expression_ann<T> &instance, const bp::object &biases) { instance.set_biases(l_to_v<T>(biases)); },
+             +[](expression_ann &instance, const bp::object &biases) { instance.set_biases(l_to_v<double>(biases)); },
              expression_ann_set_biases_doc().c_str(), (bp::arg("biases")))
-        .def("get_bias", &expression_ann<T>::get_bias, expression_ann_get_bias_doc().c_str(), (bp::arg("node_id")))
-        .def("get_biases", +[](expression_ann<T> &instance) { return v_to_l(instance.get_biases()); },
+        .def("get_bias", &expression_ann::get_bias, expression_ann_get_bias_doc().c_str(), (bp::arg("node_id")))
+        .def("get_biases", +[](expression_ann &instance) { return v_to_l(instance.get_biases()); },
              "Gets all biases")
-        .def("set_weight", +[](expression_ann<T> &instance, unsigned idx, T w) { instance.set_weight(idx, w); },
+        .def("set_weight", +[](expression_ann &instance, unsigned idx, double w) { instance.set_weight(idx, w); },
              (bp::arg("idx"), bp::arg("value")))
         .def("set_weight",
-             +[](expression_ann<T> &instance, unsigned node_id, unsigned input_id, T w) {
+             +[](expression_ann &instance, unsigned node_id, unsigned input_id, double w) {
                  instance.set_weight(node_id, input_id, w);
              },
              expression_ann_set_weight_doc().c_str(), (bp::arg("node_id"), bp::arg("input_id"), bp::arg("value")))
         .def("set_weights",
-             +[](expression_ann<T> &instance, const bp::object &weights) { instance.set_weights(l_to_v<T>(weights)); },
+             +[](expression_ann &instance, const bp::object &weights) { instance.set_weights(l_to_v<T>(weights)); },
              expression_weighted_set_weights_doc().c_str(), (bp::arg("weights")))
-        .def("set_output_f", &expression_ann<T>::set_output_f, expression_ann_set_output_f_doc().c_str(),
+        .def("set_output_f", &expression_ann::set_output_f, expression_ann_set_output_f_doc().c_str(),
              (bp::arg("f_id")))
-        .def("get_weight", +[](expression_ann<T> &instance, unsigned idx) { return instance.get_weight(idx); },
+        .def("get_weight", +[](expression_ann &instance, unsigned idx) { return instance.get_weight(idx); },
              (bp::arg("idx")))
         .def("get_weight",
-             +[](expression_ann<T> &instance, unsigned node_id, unsigned input_id) {
+             +[](expression_ann &instance, unsigned node_id, unsigned input_id) {
                  return instance.get_weight(node_id, input_id);
              },
              expression_ann_get_weight_doc().c_str(), (bp::arg("node_id"), bp::arg("input_id")))
-        .def("get_weights", +[](expression_ann<T> &instance) { return v_to_l(instance.get_weights()); },
+        .def("get_weights", +[](expression_ann &instance) { return v_to_l(instance.get_weights()); },
              "Gets all weights")
-        .def("n_active_weights", &expression_ann<T>::n_active_weights, expression_ann_n_active_weights_doc().c_str(),
+        .def("n_active_weights", &expression_ann::n_active_weights, expression_ann_n_active_weights_doc().c_str(),
              bp::arg("unique") = false)
         .def("randomise_weights",
-             +[](expression_ann<T> &instance, double mean, double std, unsigned seed) {
+             +[](expression_ann &instance, double mean, double std, unsigned seed) {
                  return instance.randomise_weights(mean, std, seed);
              },
              expression_ann_randomise_weights_doc().c_str(),
              (bp::arg("mean") = 0., bp::arg("std") = 0.1, bp::arg("seed")))
         .def("randomise_weights",
-             +[](expression_ann<T> &instance, double mean, double std) {
+             +[](expression_ann &instance, double mean, double std) {
                  return instance.randomise_weights(mean, std, std::random_device()());
              },
              (bp::arg("mean") = 0., bp::arg("std") = 0.1))
         .def("randomise_biases",
-             +[](expression_ann<T> &instance, double mean, double std, unsigned seed) {
+             +[](expression_ann &instance, double mean, double std, unsigned seed) {
                  return instance.randomise_biases(mean, std, seed);
              },
              expression_ann_randomise_biases_doc().c_str(),
              (bp::arg("mean") = 0., bp::arg("std") = 0.1, bp::arg("seed")))
         .def("randomise_biases",
-             +[](expression_ann<T> &instance, double mean, double std) {
+             +[](expression_ann &instance, double mean, double std) {
                  return instance.randomise_biases(mean, std, std::random_device()());
              },
              (bp::arg("mean") = 0., bp::arg("std") = 0.1))
         .def("sgd",
-             +[](expression_ann<T> &instance, const bp::object &points, const bp::object &labels, double l_rate,
+             +[](expression_ann &instance, const bp::object &points, const bp::object &labels, double l_rate,
                  unsigned batch_size, const std::string &loss, unsigned parallel, bool shuffle) {
-                 auto d = to_vv<T>(points);
-                 auto l = to_vv<T>(labels);
+                 auto d = to_vv<double>(points);
+                 auto l = to_vv<double>(labels);
                  return instance.sgd(d, l, l_rate, batch_size, loss, parallel, shuffle);
              },
              expression_ann_sgd_doc().c_str(),
