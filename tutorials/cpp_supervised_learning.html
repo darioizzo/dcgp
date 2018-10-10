@@ -174,8 +174,7 @@
 42
 43
 44
-45
-46</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1">// reading a text file</span>
+45</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1">// reading a text file</span>
 <span class="cp">#include</span> <span class="cpf">&lt;audi/back_compatibility.hpp&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;audi/io.hpp&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;fstream&gt;</span><span class="cp"></span>
@@ -186,7 +185,6 @@
 <span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
 
 <span class="cp">#include</span> <span class="cpf">&lt;dcgp/expression.hpp&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;dcgp/fitness_functions.hpp&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;dcgp/kernel_set.hpp&gt;</span><span class="cp"></span>
 
 <span class="cp">#include</span> <span class="cpf">&quot;detail/es.hpp&quot;</span><span class="cp"></span>
@@ -213,12 +211,12 @@
 
     <span class="c1">// We use a simple ES(1+4) to evolve an expression that represents our target.</span>
     <span class="c1">// Mutation only mutates 2 active genes</span>
-    <span class="n">es_params</span> <span class="n">params</span><span class="p">{</span><span class="mi">4</span><span class="p">,</span> <span class="s">&quot;active&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1000</span><span class="p">};</span>
+    <span class="n">es_params</span> <span class="n">params</span><span class="p">{</span><span class="mi">4</span><span class="p">,</span> <span class="s">&quot;active&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">100000</span><span class="p">};</span>
     <span class="n">es</span><span class="p">(</span><span class="n">in</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="n">ex</span><span class="p">,</span> <span class="n">params</span><span class="p">);</span>
 
     <span class="c1">// We print out the final expression</span>
-    <span class="n">audi</span><span class="o">::</span><span class="n">stream</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="p">,</span> <span class="s">&quot;Final expression: &quot;</span><span class="p">,</span> <span class="n">ex</span><span class="p">(</span><span class="n">in_sym</span><span class="p">),</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
-    <span class="n">audi</span><span class="o">::</span><span class="n">stream</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="p">,</span> <span class="s">&quot;Final value: &quot;</span><span class="p">,</span> <span class="n">quadratic_error</span><span class="p">(</span><span class="n">ex</span><span class="p">,</span> <span class="n">in</span><span class="p">,</span> <span class="n">out</span><span class="p">),</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+    <span class="n">audi</span><span class="o">::</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;Final expression: &quot;</span><span class="p">,</span> <span class="n">ex</span><span class="p">(</span><span class="n">in_sym</span><span class="p">),</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+    <span class="n">audi</span><span class="o">::</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;Final value: &quot;</span><span class="p">,</span> <span class="n">ex</span><span class="p">.</span><span class="n">loss</span><span class="p">(</span><span class="n">in</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="s">&quot;MSE&quot;</span><span class="p">,</span> <span class="nb">true</span><span class="p">),</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
     <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
 <span class="p">}</span>
 </pre></div>

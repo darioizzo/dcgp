@@ -16,6 +16,6 @@ an arbitrary number of template instantiations indicating in the class name, aft
 ------------------------------------------------
 
 .. toctree::
-  :maxdepth: 2
+  :maxdepth: 3
 
   python_docs

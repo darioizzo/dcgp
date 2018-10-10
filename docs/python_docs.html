@@ -134,43 +134,34 @@
 <p class="topic-title first">Contents</p>
 <ul class="simple">
 <li><a class="reference internal" href="#python-documentation" id="id1">Python Documentation</a><ul>
-<li><a class="reference internal" href="#classes" id="id2">Classes</a><ul>
-<li><a class="reference internal" href="#expression" id="id3">expression</a><ul>
-<li><a class="reference internal" href="#expression-double" id="id4">expression_double</a></li>
-<li><a class="reference internal" href="#expression-gdual-double" id="id5">expression_gdual_double</a></li>
-<li><a class="reference internal" href="#expression-gdual-vdouble" id="id6">expression_gdual_vdouble</a></li>
+<li><a class="reference internal" href="#types-of-dcgps" id="id2">Types of dCGPs</a><ul>
+<li><a class="reference internal" href="#expression-double" id="id3">expression_double</a></li>
+<li><a class="reference internal" href="#expression-gdual-double" id="id4">expression_gdual_double</a></li>
+<li><a class="reference internal" href="#expression-gdual-vdouble" id="id5">expression_gdual_vdouble</a></li>
+<li><a class="reference internal" href="#expression-weighted-double" id="id6">expression_weighted_double</a></li>
+<li><a class="reference internal" href="#expression-weighted-gdual-double" id="id7">expression_weighted_gdual_double</a></li>
+<li><a class="reference internal" href="#expression-weighted-gdual-vdouble" id="id8">expression_weighted_gdual_vdouble</a></li>
+<li><a class="reference internal" href="#expression-ann-double" id="id9">expression_ann_double</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#expression-weighted" id="id7">expression_weighted</a><ul>
-<li><a class="reference internal" href="#expression-weighted-double" id="id8">expression_weighted_double</a></li>
-<li><a class="reference internal" href="#expression-weighted-gdual-double" id="id9">expression_weighted_gdual_double</a></li>
-<li><a class="reference internal" href="#expression-weighted-gdual-vdouble" id="id10">expression_weighted_gdual_vdouble</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#kernel" id="id11">kernel</a><ul>
-<li><a class="reference internal" href="#kernel-double" id="id12">kernel_double</a></li>
-<li><a class="reference internal" href="#kernel-gdual-double" id="id13">kernel_gdual_double</a></li>
-<li><a class="reference internal" href="#kernel-gdual-vdouble" id="id14">kernel_gdual_vdouble</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#kernel-set" id="id15">kernel_set</a><ul>
-<li><a class="reference internal" href="#kernel-set-double" id="id16">kernel_set_double</a></li>
-<li><a class="reference internal" href="#kernel-set-gdual-double" id="id17">kernel_set_gdual_double</a></li>
-<li><a class="reference internal" href="#kernel-set-gdual-vdouble" id="id18">kernel_set_gdual_vdouble</a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#non-linearities" id="id10">Non linearities</a><ul>
+<li><a class="reference internal" href="#kernel-double" id="id11">kernel_double</a></li>
+<li><a class="reference internal" href="#kernel-gdual-double" id="id12">kernel_gdual_double</a></li>
+<li><a class="reference internal" href="#kernel-gdual-vdouble" id="id13">kernel_gdual_vdouble</a></li>
+<li><a class="reference internal" href="#kernel-set" id="id14">kernel_set</a></li>
+<li><a class="reference internal" href="#kernel-set-double" id="id15">kernel_set_double</a></li>
+<li><a class="reference internal" href="#kernel-set-gdual-double" id="id16">kernel_set_gdual_double</a></li>
+<li><a class="reference internal" href="#kernel-set-gdual-vdouble" id="id17">kernel_set_gdual_vdouble</a></li>
 </ul>
 </li>
 </ul>
 </li>
 </ul>
 </div>
-<div class="section" id="classes">
-<h2><a class="toc-backref" href="#id2">Classes</a><a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="expression">
-<h3><a class="toc-backref" href="#id3">expression</a><a class="headerlink" href="#expression" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="types-of-dcgps">
+<h2><a class="toc-backref" href="#id2">Types of dCGPs</a><a class="headerlink" href="#types-of-dcgps" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="expression-double">
-<h4><a class="toc-backref" href="#id4">expression_double</a><a class="headerlink" href="#expression-double" title="Permalink to this headline">¶</a></h4>
+<h3><a class="toc-backref" href="#id3">expression_double</a><a class="headerlink" href="#expression-double" title="Permalink to this headline">¶</a></h3>
 <dl class="class">
 <dt id="dcgpy.expression_double">
 <em class="property">class </em><code class="descclassname">dcgpy.</code><code class="descname">expression_double</code><span class="sig-paren">(</span><em>inputs</em>, <em>outputs</em>, <em>rows</em>, <em>columns</em>, <em>levels_back</em>, <em>arity</em>, <em>kernels</em>, <em>seed = randint</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_double" title="Permalink to this definition">¶</a></dt>
@@ -283,6 +274,29 @@ Gets the arity of the basis functions of the dCGP expression. Either the whole v
 <dt id="dcgpy.expression_double.get_ub">
 <code class="descname">get_ub</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_double.get_ub" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the upper bounds of the chromosome</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dcgpy.expression_double.loss">
+<code class="descname">loss</code><span class="sig-paren">(</span><em>points</em>, <em>labels</em>, <em>loss_type</em>, <em>parallel=True</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_double.loss" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the loss of the model on the data</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>points</strong> (2D NumPy float array or <code class="docutils literal notranslate"><span class="pre">list</span> <span class="pre">of</span> <span class="pre">lists</span></code> of <code class="docutils literal notranslate"><span class="pre">float</span></code>) – the input data</li>
+<li><strong>labels</strong> (2D NumPy float array or <code class="docutils literal notranslate"><span class="pre">list</span> <span class="pre">of</span> <span class="pre">lists</span></code> of <code class="docutils literal notranslate"><span class="pre">float</span></code>) – the output labels (supervised signal)</li>
+<li><strong>loss_type</strong> (a <code class="docutils literal notranslate"><span class="pre">str</span></code>) – the loss, one of “MSE” for Mean Square Error and “CE” for Cross-Entropy.</li>
+<li><strong>parallel</strong> (a <code class="docutils literal notranslate"><span class="pre">int</span></code>) – sets the grain for parallelism. 0 -&gt; no parallelism n -&gt; divides the data into n parts and processes them in parallel threads</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValueError</span></code> – if <em>points</em> or <em>labels</em> are malformed or if <em>loss_type</em> is not one of the available types.</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -447,7 +461,7 @@ Visualizes the graph of the d-CGP expression
 
 </div>
 <div class="section" id="expression-gdual-double">
-<h4><a class="toc-backref" href="#id5">expression_gdual_double</a><a class="headerlink" href="#expression-gdual-double" title="Permalink to this headline">¶</a></h4>
+<h3><a class="toc-backref" href="#id4">expression_gdual_double</a><a class="headerlink" href="#expression-gdual-double" title="Permalink to this headline">¶</a></h3>
 <dl class="class">
 <dt id="dcgpy.expression_gdual_double">
 <em class="property">class </em><code class="descclassname">dcgpy.</code><code class="descname">expression_gdual_double</code><span class="sig-paren">(</span><em>inputs</em>, <em>outputs</em>, <em>rows</em>, <em>columns</em>, <em>levels_back</em>, <em>arity</em>, <em>kernels</em>, <em>seed = randint</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_double" title="Permalink to this definition">¶</a></dt>
@@ -560,6 +574,29 @@ Gets the arity of the basis functions of the dCGP expression. Either the whole v
 <dt id="dcgpy.expression_gdual_double.get_ub">
 <code class="descname">get_ub</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_double.get_ub" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the upper bounds of the chromosome</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dcgpy.expression_gdual_double.loss">
+<code class="descname">loss</code><span class="sig-paren">(</span><em>points</em>, <em>labels</em>, <em>loss_type</em>, <em>parallel=True</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_double.loss" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the loss of the model on the data</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>points</strong> (2D NumPy float array or <code class="docutils literal notranslate"><span class="pre">list</span> <span class="pre">of</span> <span class="pre">lists</span></code> of <code class="docutils literal notranslate"><span class="pre">float</span></code>) – the input data</li>
+<li><strong>labels</strong> (2D NumPy float array or <code class="docutils literal notranslate"><span class="pre">list</span> <span class="pre">of</span> <span class="pre">lists</span></code> of <code class="docutils literal notranslate"><span class="pre">float</span></code>) – the output labels (supervised signal)</li>
+<li><strong>loss_type</strong> (a <code class="docutils literal notranslate"><span class="pre">str</span></code>) – the loss, one of “MSE” for Mean Square Error and “CE” for Cross-Entropy.</li>
+<li><strong>parallel</strong> (a <code class="docutils literal notranslate"><span class="pre">int</span></code>) – sets the grain for parallelism. 0 -&gt; no parallelism n -&gt; divides the data into n parts and processes them in parallel threads</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValueError</span></code> – if <em>points</em> or <em>labels</em> are malformed or if <em>loss_type</em> is not one of the available types.</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -724,7 +761,7 @@ Visualizes the graph of the d-CGP expression
 
 </div>
 <div class="section" id="expression-gdual-vdouble">
-<h4><a class="toc-backref" href="#id6">expression_gdual_vdouble</a><a class="headerlink" href="#expression-gdual-vdouble" title="Permalink to this headline">¶</a></h4>
+<h3><a class="toc-backref" href="#id5">expression_gdual_vdouble</a><a class="headerlink" href="#expression-gdual-vdouble" title="Permalink to this headline">¶</a></h3>
 <dl class="class">
 <dt id="dcgpy.expression_gdual_vdouble">
 <em class="property">class </em><code class="descclassname">dcgpy.</code><code class="descname">expression_gdual_vdouble</code><span class="sig-paren">(</span><em>inputs</em>, <em>outputs</em>, <em>rows</em>, <em>columns</em>, <em>levels_back</em>, <em>arity</em>, <em>kernels</em>, <em>seed = randint</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_vdouble" title="Permalink to this definition">¶</a></dt>
@@ -837,6 +874,29 @@ Gets the arity of the basis functions of the dCGP expression. Either the whole v
 <dt id="dcgpy.expression_gdual_vdouble.get_ub">
 <code class="descname">get_ub</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_vdouble.get_ub" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the upper bounds of the chromosome</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dcgpy.expression_gdual_vdouble.loss">
+<code class="descname">loss</code><span class="sig-paren">(</span><em>points</em>, <em>labels</em>, <em>loss_type</em>, <em>parallel=True</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_vdouble.loss" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the loss of the model on the data</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>points</strong> (2D NumPy float array or <code class="docutils literal notranslate"><span class="pre">list</span> <span class="pre">of</span> <span class="pre">lists</span></code> of <code class="docutils literal notranslate"><span class="pre">float</span></code>) – the input data</li>
+<li><strong>labels</strong> (2D NumPy float array or <code class="docutils literal notranslate"><span class="pre">list</span> <span class="pre">of</span> <span class="pre">lists</span></code> of <code class="docutils literal notranslate"><span class="pre">float</span></code>) – the output labels (supervised signal)</li>
+<li><strong>loss_type</strong> (a <code class="docutils literal notranslate"><span class="pre">str</span></code>) – the loss, one of “MSE” for Mean Square Error and “CE” for Cross-Entropy.</li>
+<li><strong>parallel</strong> (a <code class="docutils literal notranslate"><span class="pre">int</span></code>) – sets the grain for parallelism. 0 -&gt; no parallelism n -&gt; divides the data into n parts and processes them in parallel threads</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValueError</span></code> – if <em>points</em> or <em>labels</em> are malformed or if <em>loss_type</em> is not one of the available types.</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -1000,11 +1060,8 @@ Visualizes the graph of the d-CGP expression
 </dd></dl>
 
 </div>
-</div>
-<div class="section" id="expression-weighted">
-<h3><a class="toc-backref" href="#id7">expression_weighted</a><a class="headerlink" href="#expression-weighted" title="Permalink to this headline">¶</a></h3>
 <div class="section" id="expression-weighted-double">
-<h4><a class="toc-backref" href="#id8">expression_weighted_double</a><a class="headerlink" href="#expression-weighted-double" title="Permalink to this headline">¶</a></h4>
+<h3><a class="toc-backref" href="#id6">expression_weighted_double</a><a class="headerlink" href="#expression-weighted-double" title="Permalink to this headline">¶</a></h3>
 <dl class="class">
 <dt id="dcgpy.expression_weighted_double">
 <em class="property">class </em><code class="descclassname">dcgpy.</code><code class="descname">expression_weighted_double</code><span class="sig-paren">(</span><em>inputs</em>, <em>outputs</em>, <em>rows</em>, <em>columns</em>, <em>levels_back</em>, <em>arity</em>, <em>kernels</em>, <em>seed = randint</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_weighted_double" title="Permalink to this definition">¶</a></dt>
@@ -1116,7 +1173,7 @@ Visualizes the graph of the d-CGP expression
 
 </div>
 <div class="section" id="expression-weighted-gdual-double">
-<h4><a class="toc-backref" href="#id9">expression_weighted_gdual_double</a><a class="headerlink" href="#expression-weighted-gdual-double" title="Permalink to this headline">¶</a></h4>
+<h3><a class="toc-backref" href="#id7">expression_weighted_gdual_double</a><a class="headerlink" href="#expression-weighted-gdual-double" title="Permalink to this headline">¶</a></h3>
 <dl class="class">
 <dt id="dcgpy.expression_weighted_gdual_double">
 <em class="property">class </em><code class="descclassname">dcgpy.</code><code class="descname">expression_weighted_gdual_double</code><span class="sig-paren">(</span><em>inputs</em>, <em>outputs</em>, <em>rows</em>, <em>columns</em>, <em>levels_back</em>, <em>arity</em>, <em>kernels</em>, <em>seed = randint</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_weighted_gdual_double" title="Permalink to this definition">¶</a></dt>
@@ -1228,7 +1285,7 @@ Visualizes the graph of the d-CGP expression
 
 </div>
 <div class="section" id="expression-weighted-gdual-vdouble">
-<h4><a class="toc-backref" href="#id10">expression_weighted_gdual_vdouble</a><a class="headerlink" href="#expression-weighted-gdual-vdouble" title="Permalink to this headline">¶</a></h4>
+<h3><a class="toc-backref" href="#id8">expression_weighted_gdual_vdouble</a><a class="headerlink" href="#expression-weighted-gdual-vdouble" title="Permalink to this headline">¶</a></h3>
 <dl class="class">
 <dt id="dcgpy.expression_weighted_gdual_vdouble">
 <em class="property">class </em><code class="descclassname">dcgpy.</code><code class="descname">expression_weighted_gdual_vdouble</code><span class="sig-paren">(</span><em>inputs</em>, <em>outputs</em>, <em>rows</em>, <em>columns</em>, <em>levels_back</em>, <em>arity</em>, <em>kernels</em>, <em>seed = randint</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_weighted_gdual_vdouble" title="Permalink to this definition">¶</a></dt>
@@ -1339,11 +1396,340 @@ Visualizes the graph of the d-CGP expression
 </dd></dl>
 
 </div>
+<div class="section" id="expression-ann-double">
+<h3><a class="toc-backref" href="#id9">expression_ann_double</a><a class="headerlink" href="#expression-ann-double" title="Permalink to this headline">¶</a></h3>
+<div class="admonition important">
+<p class="first admonition-title">Important</p>
+<p class="last">This Cartesian Genetic Program is able to encode an Artificial Neural Network. Extra
+methods allow to perform backpropagation, to visualize the network and more …</p>
 </div>
-<div class="section" id="kernel">
-<h3><a class="toc-backref" href="#id11">kernel</a><a class="headerlink" href="#kernel" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="dcgpy.expression_ann_double">
+<em class="property">class </em><code class="descclassname">dcgpy.</code><code class="descname">expression_ann_double</code><span class="sig-paren">(</span><em>inputs</em>, <em>outputs</em>, <em>rows</em>, <em>columns</em>, <em>levels_back</em>, <em>arity</em>, <em>kernels</em>, <em>seed = randint</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_ann_double" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a CGP expression operating on double</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>inputs</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – number of inputs</li>
+<li><strong>outputs</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – number of outputs</li>
+<li><strong>rows</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – number of rows in the cartesian program</li>
+<li><strong>columns</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – number of columns in the cartesian program</li>
+<li><strong>levels_back</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – number of levels-back in the cartesian program</li>
+<li><strong>arity</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code> on <code class="docutils literal notranslate"><span class="pre">list</span></code>) – arity of the kernels. Assumed equal for all columns unless its specified by a list. The list must contain a number of entries equal to the number of columns.</li>
+<li><strong>kernels</strong> (<code class="docutils literal notranslate"><span class="pre">List[dcgpy.kernel_double]</span></code>) – kernel functions</li>
+<li><strong>seed</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – random seed to generate mutations and chromosomes</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Examples:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dcgpy</span> <span class="k">import</span> <span class="o">*</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dcgp</span> <span class="o">=</span> <span class="n">expression_double</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">kernel_set</span><span class="p">([</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span><span class="s2">&quot;diff&quot;</span><span class="p">,</span><span class="s2">&quot;mul&quot;</span><span class="p">,</span><span class="s2">&quot;div&quot;</span><span class="p">])(),</span> <span class="mi">32</span><span class="n">u</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">dcgp</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">num_out</span> <span class="o">=</span> <span class="n">dcgp</span><span class="p">([</span><span class="ow">in</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sym_out</span> <span class="o">=</span> <span class="n">dcgp</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="dcgpy.expression_ann_double.get_bias">
+<code class="descname">get_bias</code><span class="sig-paren">(</span><em>node_id</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_ann_double.get_bias" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a bias.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Convention adopted for node numbering: <a class="reference external" href="http://ppsn2014.ijs.si/files/slides/ppsn2014-tutorial3-miller.pdf">http://ppsn2014.ijs.si/files/slides/ppsn2014-tutorial3-miller.pdf</a></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>node_id</strong> (an <code class="docutils literal notranslate"><span class="pre">int</span></code>) – the id of the node</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The value of the bias (a <code class="docutils literal notranslate"><span class="pre">float</span></code>)</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValueError</span></code> – if <em>node_id</em> is not valid</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="dcgpy.expression_ann_double.get_biases">
+<code class="descname">get_biases</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_ann_double.get_biases" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all biases</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dcgpy.expression_ann_double.get_weight">
+<code class="descname">get_weight</code><span class="sig-paren">(</span><em>node_id</em>, <em>input_id</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_ann_double.get_weight" title="Permalink to this definition">¶</a></dt>
+<dd><p>get_weight(idx)</p>
+<p>Gets a weight. Two overloads are available. You can get the weight specifying the node and the input id (that needs
+to be less than the arity), or directly specifying its position in the weight vector.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Convention adopted for node numbering: <a class="reference external" href="http://ppsn2014.ijs.si/files/slides/ppsn2014-tutorial3-miller.pdf">http://ppsn2014.ijs.si/files/slides/ppsn2014-tutorial3-miller.pdf</a></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>node_id</strong> (an <code class="docutils literal notranslate"><span class="pre">int</span></code>) – the id of the node</li>
+<li><strong>input_id</strong> (an <code class="docutils literal notranslate"><span class="pre">int</span></code>) – the id of the node input (0 for the first one up to arity-1)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The value of the weight (a <code class="docutils literal notranslate"><span class="pre">float</span></code>)</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValueError</span></code> – if <em>node_id</em> or <em>input_id</em> or <em>idx</em> are not valid</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="dcgpy.expression_ann_double.get_weights">
+<code class="descname">get_weights</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_ann_double.get_weights" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all weights</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dcgpy.expression_ann_double.n_active_weights">
+<code class="descname">n_active_weights</code><span class="sig-paren">(</span><em>unique = False</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_ann_double.n_active_weights" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the number of weights influencing the result. This will also be the number
+of weights that are updated when calling sgd. The number of active weights, as well as
+the number of active nodes, define the complexity of the expression expressed by the chromosome.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>unique</strong> (a <code class="docutils literal notranslate"><span class="pre">bool</span></code>) – when True weights are counted only once if connecting the same two nodes.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="dcgpy.expression_ann_double.randomise_biases">
+<code class="descname">randomise_biases</code><span class="sig-paren">(</span><em>mean = 0</em>, <em>std = 0.1</em>, <em>seed = randomint</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_ann_double.randomise_biases" title="Permalink to this definition">¶</a></dt>
+<dd><p>Randomises all the values for the biases using a normal distribution.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>mean</strong> (a <code class="docutils literal notranslate"><span class="pre">float</span></code>) – the mean of the normal distribution.</li>
+<li><strong>std</strong> (a <code class="docutils literal notranslate"><span class="pre">float</span></code>) – the standard deviation of the normal distribution.</li>
+<li><strong>seed</strong> (an <code class="docutils literal notranslate"><span class="pre">int</span></code>) – the random seed to use.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="dcgpy.expression_ann_double.randomise_weights">
+<code class="descname">randomise_weights</code><span class="sig-paren">(</span><em>mean = 0</em>, <em>std = 0.1</em>, <em>seed = randomint</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_ann_double.randomise_weights" title="Permalink to this definition">¶</a></dt>
+<dd><p>Randomises all the values for the weights using a normal distribution.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>mean</strong> (a <code class="docutils literal notranslate"><span class="pre">float</span></code>) – the mean of the normal distribution.</li>
+<li><strong>std</strong> (a <code class="docutils literal notranslate"><span class="pre">float</span></code>) – the standard deviation of the normal distribution.</li>
+<li><strong>seed</strong> (an <code class="docutils literal notranslate"><span class="pre">int</span></code>) – the random seed to use.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="dcgpy.expression_ann_double.set_bias">
+<code class="descname">set_bias</code><span class="sig-paren">(</span><em>node_id</em>, <em>bias</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_ann_double.set_bias" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets a bias.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Convention adopted for node numbering: <a class="reference external" href="http://ppsn2014.ijs.si/files/slides/ppsn2014-tutorial3-miller.pdf">http://ppsn2014.ijs.si/files/slides/ppsn2014-tutorial3-miller.pdf</a></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>node_id</strong> (an <code class="docutils literal notranslate"><span class="pre">int</span></code>) – the id of the node whose weight is being set</li>
+<li><strong>weight</strong> (a <code class="docutils literal notranslate"><span class="pre">float</span></code>) – the new value of the weight</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValueError</span></code> – if <em>node_id</em> is not valid</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="dcgpy.expression_ann_double.set_biases">
+<code class="descname">set_biases</code><span class="sig-paren">(</span><em>biases</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_ann_double.set_biases" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets all biases.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>biases</strong> (a <code class="docutils literal notranslate"><span class="pre">List[float]</span></code>) – the new values of the biases</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValueError</span></code> – if the input vector dimension is not valid (r*c)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="dcgpy.expression_ann_double.set_output_f">
+<code class="descname">set_output_f</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_ann_double.set_output_f" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the nonlinearities of all nodes connected to the output nodes.
+This is useful when, for example, the dCGPANN is used for a regression task where output values are expected in [-1 1]
+and hence the output layer should have some sigmoid or tanh nonlinearity, or in a classification task when one wants to have a softmax
+layer by having a sum in all output neurons.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (a <code class="docutils literal notranslate"><span class="pre">string</span></code>) – the kernel name</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValueError</span></code> – if <em>name</em> is not one of the kernels in the expression.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="dcgpy.expression_ann_double.set_weight">
+<code class="descname">set_weight</code><span class="sig-paren">(</span><em>node_id</em>, <em>input_id</em>, <em>weight</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_ann_double.set_weight" title="Permalink to this definition">¶</a></dt>
+<dd><p>set_weight(idx, weight)</p>
+<p>Sets a weight. Two overloads are available. You can set the weight specifying the node and the input id (that needs
+to be less than the arity), or directly specifying its position in the weight vector.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Convention adopted for node numbering: <a class="reference external" href="http://ppsn2014.ijs.si/files/slides/ppsn2014-tutorial3-miller.pdf">http://ppsn2014.ijs.si/files/slides/ppsn2014-tutorial3-miller.pdf</a></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>node_id</strong> (an <code class="docutils literal notranslate"><span class="pre">int</span></code>) – the id of the node whose weight is being set</li>
+<li><strong>input_id</strong> (an <code class="docutils literal notranslate"><span class="pre">int</span></code>) – the id of the node input (0 for the first one up to arity-1)</li>
+<li><strong>weight</strong> (a <code class="docutils literal notranslate"><span class="pre">float</span></code>) – the new value of the weight</li>
+<li><strong>idx</strong> (an <code class="docutils literal notranslate"><span class="pre">int</span></code>) – the idx of weight to be set</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValueError</span></code> – if <em>node_id</em> or <em>input_id</em> or <em>idx</em> are not valid</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="dcgpy.expression_ann_double.set_weights">
+<code class="descname">set_weights</code><span class="sig-paren">(</span><em>weights</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_ann_double.set_weights" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets all weights.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>weights</strong> (a <code class="docutils literal notranslate"><span class="pre">List[float]</span></code>) – the new values of the weights</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValueError</span></code> – if the input vector dimension is not valid (r*c*arity)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="dcgpy.expression_ann_double.sgd">
+<code class="descname">sgd</code><span class="sig-paren">(</span><em>points</em>, <em>labels</em>, <em>lr</em>, <em>batch_size</em>, <em>loss_type</em>, <em>parallel = 0</em>, <em>shuffle = True</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_ann_double.sgd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs one epoch of mini-batch (stochastic) gradient descent updating the weights and biases using the
+<em>points</em> and <em>labels</em> to decrease the loss.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>points</strong> (2D NumPy float array or <code class="docutils literal notranslate"><span class="pre">list</span> <span class="pre">of</span> <span class="pre">lists</span></code> of <code class="docutils literal notranslate"><span class="pre">float</span></code>) – the input data</li>
+<li><strong>labels</strong> (2D NumPy float array or <code class="docutils literal notranslate"><span class="pre">list</span> <span class="pre">of</span> <span class="pre">lists</span></code> of <code class="docutils literal notranslate"><span class="pre">float</span></code>) – the output labels (supervised signal)</li>
+<li><strong>lr</strong> (a <code class="docutils literal notranslate"><span class="pre">float</span></code>) – the learning generate</li>
+<li><strong>batch_size</strong> (an <code class="docutils literal notranslate"><span class="pre">int</span></code>) – the batch size</li>
+<li><strong>loss_type</strong> (a <code class="docutils literal notranslate"><span class="pre">str</span></code>) – the loss, one of “MSE” for Mean Square Error and “CE” for Cross-Entropy.</li>
+<li><strong>parallel</strong> (a <code class="docutils literal notranslate"><span class="pre">int</span></code>) – sets the grain for parallelism. 0 -&gt; no parallelism n -&gt; divides the data into n parts and processes them in parallel threads</li>
+<li><strong>shuffle</strong> (a <code class="docutils literal notranslate"><span class="pre">bool</span></code>) – when True it shuffles the points and labels before performing one epoch of training.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">this is only a proxy for the real loss on the whole data set.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">The average error across the batches a (<code class="docutils literal notranslate"><span class="pre">float</span></code>). Note</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValueError</span></code> – if <em>points</em> or <em>labels</em> are malformed or if <em>loss_type</em> is not one of the available types.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="dcgpy.expression_ann_double.visualize">
+<code class="descname">visualize</code><span class="sig-paren">(</span><em>show_connections = True</em>, <em>fill_color = 'w'</em>, <em>show_nonlinearities = False</em>, <em>active_connection_alpha = 0.1</em>, <em>inactive_connection_alpha = 0.01</em>, <em>legend = True</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_ann_double.visualize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Visualizes the dCGPANN expression</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>show_connections</strong> (<code class="docutils literal notranslate"><span class="pre">bool</span></code>) – shows active connections between nodes</li>
+<li><strong>show_inactive</strong> (<code class="docutils literal notranslate"><span class="pre">`bool`</span></code>) – shows also inactive connections between nodes</li>
+<li><strong>active_connection_alpha</strong> (<code class="docutils literal notranslate"><span class="pre">bool</span></code>) – the alpha used to show active connections</li>
+<li><strong>inactive_connection_alpha</strong> (<code class="docutils literal notranslate"><span class="pre">bool</span></code>) – the alpha used to show inactive connections</li>
+<li><strong>fill_color</strong> (<code class="docutils literal notranslate"><span class="pre">str</span></code> or <code class="docutils literal notranslate"><span class="pre">`RGB</span> <span class="pre">values`</span></code>) – the fill color of all nodes</li>
+<li><strong>show_nonlinearities</strong> (<code class="docutils literal notranslate"><span class="pre">bool</span></code>) – color codes the nodes with the contained nonlinearity</li>
+<li><strong>legend</strong> (<code class="docutils literal notranslate"><span class="pre">bool</span></code>) – shows a legend (only when show_nonlinearities is also True)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Examples:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dcgpy</span> <span class="k">import</span> <span class="o">*</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nonlinearities</span> <span class="o">=</span> <span class="n">dcgpy</span><span class="o">.</span><span class="n">kernel_set_double</span><span class="p">([</span><span class="s2">&quot;sig&quot;</span><span class="p">,</span> <span class="s2">&quot;ReLu&quot;</span><span class="p">,</span> <span class="s2">&quot;tanh&quot;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dcgpann</span> <span class="o">=</span> <span class="n">dcgpy</span><span class="o">.</span><span class="n">expression_ann_double</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">rows</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+<span class="go">                                  levels_back=2, arity=4, kernels=nonlinearities(), seed=32)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dcgpann</span><span class="o">.</span><span class="n">randomise_weights</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dcgpann</span><span class="o">.</span><span class="n">visualize</span><span class="p">(</span><span class="n">show_nonlinearities</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="non-linearities">
+<h2><a class="toc-backref" href="#id10">Non linearities</a><a class="headerlink" href="#non-linearities" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="kernel-double">
-<h4><a class="toc-backref" href="#id12">kernel_double</a><a class="headerlink" href="#kernel-double" title="Permalink to this headline">¶</a></h4>
+<h3><a class="toc-backref" href="#id11">kernel_double</a><a class="headerlink" href="#kernel-double" title="Permalink to this headline">¶</a></h3>
 <dl class="class">
 <dt id="dcgpy.kernel_double">
 <em class="property">class </em><code class="descclassname">dcgpy.</code><code class="descname">kernel_double</code><span class="sig-paren">(</span><em>callable_f</em>, <em>callable_s</em>, <em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.kernel_double" title="Permalink to this definition">¶</a></dt>
@@ -1376,7 +1762,7 @@ Visualizes the graph of the d-CGP expression
 
 </div>
 <div class="section" id="kernel-gdual-double">
-<h4><a class="toc-backref" href="#id13">kernel_gdual_double</a><a class="headerlink" href="#kernel-gdual-double" title="Permalink to this headline">¶</a></h4>
+<h3><a class="toc-backref" href="#id12">kernel_gdual_double</a><a class="headerlink" href="#kernel-gdual-double" title="Permalink to this headline">¶</a></h3>
 <dl class="class">
 <dt id="dcgpy.kernel_gdual_double">
 <em class="property">class </em><code class="descclassname">dcgpy.</code><code class="descname">kernel_gdual_double</code><span class="sig-paren">(</span><em>callable_f</em>, <em>callable_s</em>, <em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.kernel_gdual_double" title="Permalink to this definition">¶</a></dt>
@@ -1409,7 +1795,7 @@ Visualizes the graph of the d-CGP expression
 
 </div>
 <div class="section" id="kernel-gdual-vdouble">
-<h4><a class="toc-backref" href="#id14">kernel_gdual_vdouble</a><a class="headerlink" href="#kernel-gdual-vdouble" title="Permalink to this headline">¶</a></h4>
+<h3><a class="toc-backref" href="#id13">kernel_gdual_vdouble</a><a class="headerlink" href="#kernel-gdual-vdouble" title="Permalink to this headline">¶</a></h3>
 <dl class="class">
 <dt id="dcgpy.kernel_gdual_vdouble">
 <em class="property">class </em><code class="descclassname">dcgpy.</code><code class="descname">kernel_gdual_vdouble</code><span class="sig-paren">(</span><em>callable_f</em>, <em>callable_s</em>, <em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.kernel_gdual_vdouble" title="Permalink to this definition">¶</a></dt>
@@ -1441,12 +1827,12 @@ Visualizes the graph of the d-CGP expression
 </dd></dl>
 
 </div>
-</div>
 <div class="section" id="kernel-set">
-<h3><a class="toc-backref" href="#id15">kernel_set</a><a class="headerlink" href="#kernel-set" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id14">kernel_set</a><a class="headerlink" href="#kernel-set" title="Permalink to this headline">¶</a></h3>
 <p>For a list of the available kernels see <a class="reference internal" href="kernel_set.html#kernels"><span class="std std-ref">kernels</span></a>.</p>
+</div>
 <div class="section" id="kernel-set-double">
-<h4><a class="toc-backref" href="#id16">kernel_set_double</a><a class="headerlink" href="#kernel-set-double" title="Permalink to this headline">¶</a></h4>
+<h3><a class="toc-backref" href="#id15">kernel_set_double</a><a class="headerlink" href="#kernel-set-double" title="Permalink to this headline">¶</a></h3>
 <dl class="class">
 <dt id="dcgpy.kernel_set_double">
 <em class="property">class </em><code class="descclassname">dcgpy.</code><code class="descname">kernel_set_double</code><span class="sig-paren">(</span><em>kernels</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.kernel_set_double" title="Permalink to this definition">¶</a></dt>
@@ -1496,7 +1882,7 @@ functions can be then retrieved via the call operator.</p>
 
 </div>
 <div class="section" id="kernel-set-gdual-double">
-<h4><a class="toc-backref" href="#id17">kernel_set_gdual_double</a><a class="headerlink" href="#kernel-set-gdual-double" title="Permalink to this headline">¶</a></h4>
+<h3><a class="toc-backref" href="#id16">kernel_set_gdual_double</a><a class="headerlink" href="#kernel-set-gdual-double" title="Permalink to this headline">¶</a></h3>
 <dl class="class">
 <dt id="dcgpy.kernel_set_gdual_double">
 <em class="property">class </em><code class="descclassname">dcgpy.</code><code class="descname">kernel_set_gdual_double</code><span class="sig-paren">(</span><em>kernels</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.kernel_set_gdual_double" title="Permalink to this definition">¶</a></dt>
@@ -1546,7 +1932,7 @@ functions can be then retrieved via the call operator.</p>
 
 </div>
 <div class="section" id="kernel-set-gdual-vdouble">
-<h4><a class="toc-backref" href="#id18">kernel_set_gdual_vdouble</a><a class="headerlink" href="#kernel-set-gdual-vdouble" title="Permalink to this headline">¶</a></h4>
+<h3><a class="toc-backref" href="#id17">kernel_set_gdual_vdouble</a><a class="headerlink" href="#kernel-set-gdual-vdouble" title="Permalink to this headline">¶</a></h3>
 <dl class="class">
 <dt id="dcgpy.kernel_set_gdual_vdouble">
 <em class="property">class </em><code class="descclassname">dcgpy.</code><code class="descname">kernel_set_gdual_vdouble</code><span class="sig-paren">(</span><em>kernels</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.kernel_set_gdual_vdouble" title="Permalink to this definition">¶</a></dt>
@@ -1594,7 +1980,6 @@ functions can be then retrieved via the call operator.</p>
 
 </dd></dl>
 
-</div>
 </div>
 </div>
 </div>

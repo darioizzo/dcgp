@@ -135,9 +135,12 @@
  | <a href="#E"><strong>E</strong></a>
  | <a href="#G"><strong>G</strong></a>
  | <a href="#K"><strong>K</strong></a>
+ | <a href="#L"><strong>L</strong></a>
  | <a href="#M"><strong>M</strong></a>
+ | <a href="#N"><strong>N</strong></a>
  | <a href="#O"><strong>O</strong></a>
  | <a href="#P"><strong>P</strong></a>
+ | <a href="#R"><strong>R</strong></a>
  | <a href="#S"><strong>S</strong></a>
  | <a href="#V"><strong>V</strong></a>
  
@@ -147,7 +150,9 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="docs/expression.html#_CPPv3N4dcgp10expressionE">dcgp::expression (C++ class)</a>
 </li>
-      <li><a href="docs/expression.html#_CPPv3N4dcgp10expression10expressionEjjjjjjNSt6vectorI6kernelI1TEEEj">dcgp::expression::expression (C++ function)</a>
+      <li><a href="docs/expression.html#_CPPv3N4dcgp10expression2CEE">dcgp::expression::CE (C++ enumerator)</a>
+</li>
+      <li><a href="docs/expression.html#_CPPv3N4dcgp10expression10expressionEjjjjjNSt6vectorIjEENSt6vectorI6kernelI1TEEEj">dcgp::expression::expression (C++ function)</a>, <a href="docs/expression.html#_CPPv3N4dcgp10expression10expressionEjjjjjjNSt6vectorI6kernelI1TEEEj">[1]</a>
 </li>
       <li><a href="docs/expression.html#_CPPv3NK4dcgp10expression3getEv">dcgp::expression::get (C++ function)</a>
 </li>
@@ -155,27 +160,35 @@
 </li>
       <li><a href="docs/expression.html#_CPPv3NK4dcgp10expression16get_active_nodesEv">dcgp::expression::get_active_nodes (C++ function)</a>
 </li>
-      <li><a href="docs/expression.html#_CPPv3NK4dcgp10expression9get_arityEv">dcgp::expression::get_arity (C++ function)</a>
+      <li><a href="docs/expression.html#_CPPv3NK4dcgp10expression9get_arityEj">dcgp::expression::get_arity (C++ function)</a>, <a href="docs/expression.html#_CPPv3NK4dcgp10expression9get_arityEv">[1]</a>
 </li>
-      <li><a href="docs/expression.html#_CPPv3NK4dcgp10expression8get_colsEv">dcgp::expression::get_cols (C++ function)</a>
+      <li><a href="docs/expression.html#_CPPv3NK4dcgp10expression5get_cEv">dcgp::expression::get_c (C++ function)</a>
 </li>
       <li><a href="docs/expression.html#_CPPv3NK4dcgp10expression5get_fEv">dcgp::expression::get_f (C++ function)</a>
 </li>
-      <li><a href="docs/expression.html#_CPPv3NK4dcgp10expression6get_lbEv">dcgp::expression::get_lb (C++ function)</a>
+      <li><a href="docs/expression.html#_CPPv3NK4dcgp10expression12get_gene_idxEv">dcgp::expression::get_gene_idx (C++ function)</a>
 </li>
-      <li><a href="docs/expression.html#_CPPv3NK4dcgp10expression15get_levels_backEv">dcgp::expression::get_levels_back (C++ function)</a>
+      <li><a href="docs/expression.html#_CPPv3NK4dcgp10expression5get_lEv">dcgp::expression::get_l (C++ function)</a>
+</li>
+      <li><a href="docs/expression.html#_CPPv3NK4dcgp10expression6get_lbEv">dcgp::expression::get_lb (C++ function)</a>
 </li>
       <li><a href="docs/expression.html#_CPPv3NK4dcgp10expression5get_mEv">dcgp::expression::get_m (C++ function)</a>
 </li>
       <li><a href="docs/expression.html#_CPPv3NK4dcgp10expression5get_nEv">dcgp::expression::get_n (C++ function)</a>
 </li>
-      <li><a href="docs/expression.html#_CPPv3NK4dcgp10expression8get_rowsEv">dcgp::expression::get_rows (C++ function)</a>
+      <li><a href="docs/expression.html#_CPPv3NK4dcgp10expression5get_rEv">dcgp::expression::get_r (C++ function)</a>
 </li>
       <li><a href="docs/expression.html#_CPPv3NK4dcgp10expression6get_ubEv">dcgp::expression::get_ub (C++ function)</a>
 </li>
       <li><a href="docs/expression.html#_CPPv3NK4dcgp10expression9is_activeEKj">dcgp::expression::is_active (C++ function)</a>
 </li>
       <li><a href="docs/expression.html#_CPPv3NK4dcgp10expression8is_validERKNSt6vectorIjEE">dcgp::expression::is_valid (C++ function)</a>
+</li>
+      <li><a href="docs/expression.html#_CPPv3NK4dcgp10expression4lossERKNSt6vectorI1TEERKNSt6vectorI1TEE9loss_type">dcgp::expression::loss (C++ function)</a>, <a href="docs/expression.html#_CPPv3NK4dcgp10expression4lossERKNSt6vectorINSt6vectorI1TEEEERKNSt6vectorINSt6vectorI1TEEEERKNSt6stringEj">[1]</a>
+</li>
+      <li><a href="docs/expression.html#_CPPv3N4dcgp10expression9loss_typeE">dcgp::expression::loss_type (C++ type)</a>
+</li>
+      <li><a href="docs/expression.html#_CPPv3N4dcgp10expression3MSEE">dcgp::expression::MSE (C++ enumerator)</a>
 </li>
       <li><a href="docs/expression.html#_CPPv3N4dcgp10expression6mutateENSt6vectorIjEE">dcgp::expression::mutate (C++ function)</a>, <a href="docs/expression.html#_CPPv3N4dcgp10expression6mutateEj">[1]</a>
 </li>
@@ -189,57 +202,75 @@
 </li>
       <li><a href="docs/expression.html#_CPPv3N4dcgp10expression13mutate_randomEj">dcgp::expression::mutate_random (C++ function)</a>
 </li>
-      <li><a href="docs/expression.html#_CPPv3NK4dcgp10expressionclERKNSt16initializer_listI1UEE">dcgp::expression::operator() (C++ function)</a>, <a href="docs/expression.html#_CPPv3NK4dcgp10expressionclERKNSt6vectorI1UEE">[1]</a>
+      <li><a href="docs/expression.html#_CPPv3NK4dcgp10expressionclERKNSt16initializer_listI1UEE">dcgp::expression::operator() (C++ function)</a>, <a href="docs/expression.html#_CPPv3NK4dcgp10expressionclERKNSt6vectorI1TEE">[1]</a>, <a href="docs/expression.html#_CPPv3NK4dcgp10expressionclERKNSt6vectorINSt6stringEEE">[2]</a>
+</li>
+      <li><a href="docs/expression.html#_CPPv3N4dcgp10expression4seedEl">dcgp::expression::seed (C++ function)</a>
 </li>
       <li><a href="docs/expression.html#_CPPv3N4dcgp10expression3setERKNSt6vectorIjEE">dcgp::expression::set (C++ function)</a>
 </li>
       <li><a href="docs/expression.html#_CPPv3N4dcgp10expression10set_f_geneEjj">dcgp::expression::set_f_gene (C++ function)</a>
 </li>
+      <li><a href="docs/expression.html#_CPPv3N4dcgp10expressionD0Ev">dcgp::expression::~expression (C++ function)</a>
+</li>
       <li><a href="docs/expression_ann.html#_CPPv3N4dcgp14expression_annE">dcgp::expression_ann (C++ class)</a>
 </li>
-      <li><a href="docs/expression_ann.html#_CPPv3N4dcgp14expression_ann5d_mseERKNSt6vectorI1UEERKNSt6vectorI1UEE">dcgp::expression_ann::d_mse (C++ function)</a>, <a href="docs/expression_ann.html#_CPPv3N4dcgp14expression_ann5d_mseERKNSt6vectorINSt6vectorI1UEEEERKNSt6vectorINSt6vectorI1UEEEE">[1]</a>
+      <li><a href="docs/expression_ann.html#_CPPv3N4dcgp14expression_ann6d_lossERKNSt6vectorINSt6vectorIdEEEERKNSt6vectorINSt6vectorIdEEEEN10expressionIdE9loss_typeEj">dcgp::expression_ann::d_loss (C++ function)</a>, <a href="docs/expression_ann.html#_CPPv3NK4dcgp14expression_ann6d_lossERdRNSt6vectorIdEERNSt6vectorIdEERKNSt6vectorIdEERKNSt6vectorIdEEKN10expressionIdE9loss_typeE">[1]</a>
 </li>
-      <li><a href="docs/expression_ann.html#_CPPv3N4dcgp14expression_ann14expression_annEjjjjjjNSt6vectorI6kernelI1TEEEj">dcgp::expression_ann::expression_ann (C++ function)</a>
+      <li><a href="docs/expression_ann.html#_CPPv3N4dcgp14expression_ann3ELUE">dcgp::expression_ann::ELU (C++ enumerator)</a>
 </li>
-      <li><a href="docs/expression_ann.html#_CPPv3NK4dcgp14expression_ann8get_biasENSt6vectorI1TE9size_typeE">dcgp::expression_ann::get_bias (C++ function)</a>
+      <li><a href="docs/expression_ann.html#_CPPv3N4dcgp14expression_ann14expression_annEjjjjjNSt6vectorIjEENSt6vectorI6kernelIdEEEj">dcgp::expression_ann::expression_ann (C++ function)</a>, <a href="docs/expression_ann.html#_CPPv3N4dcgp14expression_ann14expression_annEjjjjjjNSt6vectorI6kernelIdEEEj">[1]</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="docs/expression_ann.html#_CPPv3NK4dcgp14expression_ann8get_biasENSt6vectorIdE9size_typeE">dcgp::expression_ann::get_bias (C++ function)</a>
+</li>
       <li><a href="docs/expression_ann.html#_CPPv3NK4dcgp14expression_ann10get_biasesEv">dcgp::expression_ann::get_biases (C++ function)</a>
 </li>
-      <li><a href="docs/expression_ann.html#_CPPv3NK4dcgp14expression_ann10get_weightENSt6vectorI1TE9size_typeE">dcgp::expression_ann::get_weight (C++ function)</a>, <a href="docs/expression_ann.html#_CPPv3NK4dcgp14expression_ann10get_weightENSt6vectorI1TE9size_typeENSt6vectorI1TE9size_typeE">[1]</a>
+      <li><a href="docs/expression_ann.html#_CPPv3NK4dcgp14expression_ann10get_weightENSt6vectorIdE9size_typeE">dcgp::expression_ann::get_weight (C++ function)</a>, <a href="docs/expression_ann.html#_CPPv3NK4dcgp14expression_ann10get_weightENSt6vectorIdE9size_typeENSt6vectorIdE9size_typeE">[1]</a>
 </li>
       <li><a href="docs/expression_ann.html#_CPPv3NK4dcgp14expression_ann11get_weightsEv">dcgp::expression_ann::get_weights (C++ function)</a>
 </li>
-      <li><a href="docs/expression_ann.html#_CPPv3N4dcgp14expression_ann3mseERKNSt6vectorINSt6vectorIdEEEERKNSt6vectorINSt6vectorIdEEEE">dcgp::expression_ann::mse (C++ function)</a>, <a href="docs/expression_ann.html#_CPPv3N4dcgp14expression_ann3mseERKNSt6vectorIdEERKNSt6vectorIdEE">[1]</a>
+      <li><a href="docs/expression_ann.html#_CPPv3N4dcgp14expression_ann4ISRUE">dcgp::expression_ann::ISRU (C++ enumerator)</a>
 </li>
-      <li><a href="docs/expression_ann.html#_CPPv3NK4dcgp14expression_annclERKNSt16initializer_listI1UEE">dcgp::expression_ann::operator() (C++ function)</a>, <a href="docs/expression_ann.html#_CPPv3NK4dcgp14expression_annclERKNSt6vectorI1UEE">[1]</a>
+      <li><a href="docs/expression_ann.html#_CPPv3N4dcgp14expression_ann11kernel_typeE">dcgp::expression_ann::kernel_type (C++ type)</a>
+</li>
+      <li><a href="docs/expression_ann.html#_CPPv3NK4dcgp14expression_ann16n_active_weightsEb">dcgp::expression_ann::n_active_weights (C++ function)</a>
+</li>
+      <li><a href="docs/expression_ann.html#_CPPv3NK4dcgp14expression_annclERKNSt16initializer_listI1UEE">dcgp::expression_ann::operator() (C++ function)</a>, <a href="docs/expression_ann.html#_CPPv3NK4dcgp14expression_annclERKNSt6vectorINSt6stringEEE">[1]</a>, <a href="docs/expression_ann.html#_CPPv3NK4dcgp14expression_annclERKNSt6vectorIdEE">[2]</a>
 </li>
       <li><a href="docs/expression_ann.html#_CPPv3N4dcgp14expression_ann16randomise_biasesEddNSt13random_device11result_typeE">dcgp::expression_ann::randomise_biases (C++ function)</a>
 </li>
       <li><a href="docs/expression_ann.html#_CPPv3N4dcgp14expression_ann17randomise_weightsEddNSt13random_device11result_typeE">dcgp::expression_ann::randomise_weights (C++ function)</a>
 </li>
-      <li><a href="docs/expression_ann.html#_CPPv3N4dcgp14expression_ann8set_biasENSt6vectorI1TE9size_typeERK1T">dcgp::expression_ann::set_bias (C++ function)</a>
+      <li><a href="docs/expression_ann.html#_CPPv3N4dcgp14expression_ann4RELUE">dcgp::expression_ann::RELU (C++ enumerator)</a>
 </li>
-      <li><a href="docs/expression_ann.html#_CPPv3N4dcgp14expression_ann10set_biasesERKNSt6vectorI1TEE">dcgp::expression_ann::set_biases (C++ function)</a>
+      <li><a href="docs/expression_ann.html#_CPPv3N4dcgp14expression_ann8set_biasENSt6vectorIdE9size_typeERKd">dcgp::expression_ann::set_bias (C++ function)</a>
 </li>
-      <li><a href="docs/expression_ann.html#_CPPv3N4dcgp14expression_ann12set_output_fEj">dcgp::expression_ann::set_output_f (C++ function)</a>
+      <li><a href="docs/expression_ann.html#_CPPv3N4dcgp14expression_ann10set_biasesERKNSt6vectorIdEE">dcgp::expression_ann::set_biases (C++ function)</a>
 </li>
-      <li><a href="docs/expression_ann.html#_CPPv3N4dcgp14expression_ann10set_weightENSt6vectorI1TE9size_typeENSt6vectorI1TE9size_typeERK1T">dcgp::expression_ann::set_weight (C++ function)</a>, <a href="docs/expression_ann.html#_CPPv3N4dcgp14expression_ann10set_weightENSt6vectorI1TE9size_typeERK1T">[1]</a>
+      <li><a href="docs/expression_ann.html#_CPPv3N4dcgp14expression_ann12set_output_fERKNSt6stringE">dcgp::expression_ann::set_output_f (C++ function)</a>
 </li>
-      <li><a href="docs/expression_ann.html#_CPPv3N4dcgp14expression_ann11set_weightsERKNSt6vectorI1TEE">dcgp::expression_ann::set_weights (C++ function)</a>
+      <li><a href="docs/expression_ann.html#_CPPv3N4dcgp14expression_ann10set_weightENSt6vectorIdE9size_typeENSt6vectorIdE9size_typeERKd">dcgp::expression_ann::set_weight (C++ function)</a>, <a href="docs/expression_ann.html#_CPPv3N4dcgp14expression_ann10set_weightENSt6vectorIdE9size_typeERKd">[1]</a>
 </li>
-      <li><a href="docs/expression_ann.html#_CPPv3N4dcgp14expression_ann3sgdERKNSt6vectorINSt6vectorI1UEEEERKNSt6vectorINSt6vectorI1UEEEEdj">dcgp::expression_ann::sgd (C++ function)</a>
+      <li><a href="docs/expression_ann.html#_CPPv3N4dcgp14expression_ann11set_weightsERKNSt6vectorIdEE">dcgp::expression_ann::set_weights (C++ function)</a>
+</li>
+      <li><a href="docs/expression_ann.html#_CPPv3N4dcgp14expression_ann3sgdERNSt6vectorINSt6vectorIdEEEERNSt6vectorINSt6vectorIdEEEEdjRKNSt6stringEjb">dcgp::expression_ann::sgd (C++ function)</a>
+</li>
+      <li><a href="docs/expression_ann.html#_CPPv3N4dcgp14expression_ann3SIGE">dcgp::expression_ann::SIG (C++ enumerator)</a>
+</li>
+      <li><a href="docs/expression_ann.html#_CPPv3N4dcgp14expression_ann3SUME">dcgp::expression_ann::SUM (C++ enumerator)</a>
+</li>
+      <li><a href="docs/expression_ann.html#_CPPv3N4dcgp14expression_ann4TANHE">dcgp::expression_ann::TANH (C++ enumerator)</a>
 </li>
       <li><a href="docs/expression_weighted.html#_CPPv3N4dcgp19expression_weightedE">dcgp::expression_weighted (C++ class)</a>
 </li>
-      <li><a href="docs/expression_weighted.html#_CPPv3N4dcgp19expression_weighted19expression_weightedEjjjjjjNSt6vectorI6kernelI1TEEEj">dcgp::expression_weighted::expression_weighted (C++ function)</a>
+      <li><a href="docs/expression_weighted.html#_CPPv3N4dcgp19expression_weighted19expression_weightedEjjjjjNSt6vectorIjEENSt6vectorI6kernelI1TEEEj">dcgp::expression_weighted::expression_weighted (C++ function)</a>, <a href="docs/expression_weighted.html#_CPPv3N4dcgp19expression_weighted19expression_weightedEjjjjjjNSt6vectorI6kernelI1TEEEj">[1]</a>
 </li>
-      <li><a href="docs/expression_weighted.html#_CPPv3N4dcgp19expression_weighted10get_weightENSt6vectorI1TE9size_typeENSt6vectorI1TE9size_typeE">dcgp::expression_weighted::get_weight (C++ function)</a>
+      <li><a href="docs/expression_weighted.html#_CPPv3NK4dcgp19expression_weighted10get_weightENSt6vectorI1TE9size_typeENSt6vectorI1TE9size_typeE">dcgp::expression_weighted::get_weight (C++ function)</a>
 </li>
       <li><a href="docs/expression_weighted.html#_CPPv3NK4dcgp19expression_weighted11get_weightsEv">dcgp::expression_weighted::get_weights (C++ function)</a>
 </li>
-      <li><a href="docs/expression_weighted.html#_CPPv3NK4dcgp19expression_weightedclERKNSt16initializer_listI1UEE">dcgp::expression_weighted::operator() (C++ function)</a>, <a href="docs/expression_weighted.html#_CPPv3NK4dcgp19expression_weightedclERKNSt6vectorI1UEE">[1]</a>
+      <li><a href="docs/expression_weighted.html#_CPPv3NK4dcgp19expression_weightedclERKNSt16initializer_listI1UEE">dcgp::expression_weighted::operator() (C++ function)</a>, <a href="docs/expression_weighted.html#_CPPv3NK4dcgp19expression_weightedclERKNSt6vectorI1TEE">[1]</a>, <a href="docs/expression_weighted.html#_CPPv3NK4dcgp19expression_weightedclERKNSt6vectorINSt6stringEEE">[2]</a>
 </li>
       <li><a href="docs/expression_weighted.html#_CPPv3N4dcgp19expression_weighted10set_weightENSt6vectorI1TE9size_typeENSt6vectorI1TE9size_typeERK1T">dcgp::expression_weighted::set_weight (C++ function)</a>
 </li>
@@ -271,14 +302,16 @@
 <h2 id="E">E</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="docs/python_docs.html#dcgpy.expression_ann_double">expression_ann_double (class in dcgpy)</a>
+</li>
       <li><a href="docs/python_docs.html#dcgpy.expression_double">expression_double (class in dcgpy)</a>
 </li>
       <li><a href="docs/python_docs.html#dcgpy.expression_gdual_double">expression_gdual_double (class in dcgpy)</a>
 </li>
-      <li><a href="docs/python_docs.html#dcgpy.expression_gdual_vdouble">expression_gdual_vdouble (class in dcgpy)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="docs/python_docs.html#dcgpy.expression_gdual_vdouble">expression_gdual_vdouble (class in dcgpy)</a>
+</li>
       <li><a href="docs/python_docs.html#dcgpy.expression_weighted_double">expression_weighted_double (class in dcgpy)</a>
 </li>
       <li><a href="docs/python_docs.html#dcgpy.expression_weighted_gdual_double">expression_weighted_gdual_double (class in dcgpy)</a>
@@ -323,6 +356,10 @@
         <li><a href="docs/python_docs.html#dcgpy.expression_gdual_vdouble.get_arity">(dcgpy.expression_gdual_vdouble method)</a>
 </li>
       </ul></li>
+      <li><a href="docs/python_docs.html#dcgpy.expression_ann_double.get_bias">get_bias() (dcgpy.expression_ann_double method)</a>
+</li>
+      <li><a href="docs/python_docs.html#dcgpy.expression_ann_double.get_biases">get_biases() (dcgpy.expression_ann_double method)</a>
+</li>
       <li><a href="docs/python_docs.html#dcgpy.expression_double.get_cols">get_cols() (dcgpy.expression_double method)</a>
 
       <ul>
@@ -397,17 +434,21 @@
         <li><a href="docs/python_docs.html#dcgpy.expression_gdual_vdouble.get_ub">(dcgpy.expression_gdual_vdouble method)</a>
 </li>
       </ul></li>
-      <li><a href="docs/python_docs.html#dcgpy.expression_weighted_double.get_weight">get_weight() (dcgpy.expression_weighted_double method)</a>
+      <li><a href="docs/python_docs.html#dcgpy.expression_ann_double.get_weight">get_weight() (dcgpy.expression_ann_double method)</a>
 
       <ul>
+        <li><a href="docs/python_docs.html#dcgpy.expression_weighted_double.get_weight">(dcgpy.expression_weighted_double method)</a>
+</li>
         <li><a href="docs/python_docs.html#dcgpy.expression_weighted_gdual_double.get_weight">(dcgpy.expression_weighted_gdual_double method)</a>
 </li>
         <li><a href="docs/python_docs.html#dcgpy.expression_weighted_gdual_vdouble.get_weight">(dcgpy.expression_weighted_gdual_vdouble method)</a>
 </li>
       </ul></li>
-      <li><a href="docs/python_docs.html#dcgpy.expression_weighted_double.get_weights">get_weights() (dcgpy.expression_weighted_double method)</a>
+      <li><a href="docs/python_docs.html#dcgpy.expression_ann_double.get_weights">get_weights() (dcgpy.expression_ann_double method)</a>
 
       <ul>
+        <li><a href="docs/python_docs.html#dcgpy.expression_weighted_double.get_weights">(dcgpy.expression_weighted_double method)</a>
+</li>
         <li><a href="docs/python_docs.html#dcgpy.expression_weighted_gdual_double.get_weights">(dcgpy.expression_weighted_gdual_double method)</a>
 </li>
         <li><a href="docs/python_docs.html#dcgpy.expression_weighted_gdual_vdouble.get_weights">(dcgpy.expression_weighted_gdual_vdouble method)</a>
@@ -433,6 +474,20 @@
 </li>
       <li><a href="docs/python_docs.html#dcgpy.kernel_set_gdual_vdouble">kernel_set_gdual_vdouble (class in dcgpy)</a>
 </li>
+  </ul></td>
+</tr></table>
+
+<h2 id="L">L</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="docs/python_docs.html#dcgpy.expression_double.loss">loss() (dcgpy.expression_double method)</a>
+
+      <ul>
+        <li><a href="docs/python_docs.html#dcgpy.expression_gdual_double.loss">(dcgpy.expression_gdual_double method)</a>
+</li>
+        <li><a href="docs/python_docs.html#dcgpy.expression_gdual_vdouble.loss">(dcgpy.expression_gdual_vdouble method)</a>
+</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -492,6 +547,14 @@
   </ul></td>
 </tr></table>
 
+<h2 id="N">N</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="docs/python_docs.html#dcgpy.expression_ann_double.n_active_weights">n_active_weights() (dcgpy.expression_ann_double method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
 <h2 id="O">O</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -514,6 +577,18 @@
   </ul></td>
 </tr></table>
 
+<h2 id="R">R</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="docs/python_docs.html#dcgpy.expression_ann_double.randomise_biases">randomise_biases() (dcgpy.expression_ann_double method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="docs/python_docs.html#dcgpy.expression_ann_double.randomise_weights">randomise_weights() (dcgpy.expression_ann_double method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
 <h2 id="S">S</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -525,6 +600,10 @@
         <li><a href="docs/python_docs.html#dcgpy.expression_gdual_vdouble.set">(dcgpy.expression_gdual_vdouble method)</a>
 </li>
       </ul></li>
+      <li><a href="docs/python_docs.html#dcgpy.expression_ann_double.set_bias">set_bias() (dcgpy.expression_ann_double method)</a>
+</li>
+      <li><a href="docs/python_docs.html#dcgpy.expression_ann_double.set_biases">set_biases() (dcgpy.expression_ann_double method)</a>
+</li>
       <li><a href="docs/python_docs.html#dcgpy.expression_double.set_f_gene">set_f_gene() (dcgpy.expression_double method)</a>
 
       <ul>
@@ -533,9 +612,13 @@
         <li><a href="docs/python_docs.html#dcgpy.expression_gdual_vdouble.set_f_gene">(dcgpy.expression_gdual_vdouble method)</a>
 </li>
       </ul></li>
-      <li><a href="docs/python_docs.html#dcgpy.expression_weighted_double.set_weight">set_weight() (dcgpy.expression_weighted_double method)</a>
+      <li><a href="docs/python_docs.html#dcgpy.expression_ann_double.set_output_f">set_output_f() (dcgpy.expression_ann_double method)</a>
+</li>
+      <li><a href="docs/python_docs.html#dcgpy.expression_ann_double.set_weight">set_weight() (dcgpy.expression_ann_double method)</a>
 
       <ul>
+        <li><a href="docs/python_docs.html#dcgpy.expression_weighted_double.set_weight">(dcgpy.expression_weighted_double method)</a>
+</li>
         <li><a href="docs/python_docs.html#dcgpy.expression_weighted_gdual_double.set_weight">(dcgpy.expression_weighted_gdual_double method)</a>
 </li>
         <li><a href="docs/python_docs.html#dcgpy.expression_weighted_gdual_vdouble.set_weight">(dcgpy.expression_weighted_gdual_vdouble method)</a>
@@ -543,14 +626,18 @@
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="docs/python_docs.html#dcgpy.expression_weighted_double.set_weights">set_weights() (dcgpy.expression_weighted_double method)</a>
+      <li><a href="docs/python_docs.html#dcgpy.expression_ann_double.set_weights">set_weights() (dcgpy.expression_ann_double method)</a>
 
       <ul>
+        <li><a href="docs/python_docs.html#dcgpy.expression_weighted_double.set_weights">(dcgpy.expression_weighted_double method)</a>
+</li>
         <li><a href="docs/python_docs.html#dcgpy.expression_weighted_gdual_double.set_weights">(dcgpy.expression_weighted_gdual_double method)</a>
 </li>
         <li><a href="docs/python_docs.html#dcgpy.expression_weighted_gdual_vdouble.set_weights">(dcgpy.expression_weighted_gdual_vdouble method)</a>
 </li>
       </ul></li>
+      <li><a href="docs/python_docs.html#dcgpy.expression_ann_double.sgd">sgd() (dcgpy.expression_ann_double method)</a>
+</li>
       <li><a href="docs/python_docs.html#dcgpy.expression_double.simplify">simplify() (dcgpy.expression_double method)</a>
 
       <ul>
@@ -565,9 +652,11 @@
 <h2 id="V">V</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="docs/python_docs.html#dcgpy.expression_double.visualize">visualize() (dcgpy.expression_double method)</a>
+      <li><a href="docs/python_docs.html#dcgpy.expression_ann_double.visualize">visualize() (dcgpy.expression_ann_double method)</a>
 
       <ul>
+        <li><a href="docs/python_docs.html#dcgpy.expression_double.visualize">(dcgpy.expression_double method)</a>
+</li>
         <li><a href="docs/python_docs.html#dcgpy.expression_gdual_double.visualize">(dcgpy.expression_gdual_double method)</a>
 </li>
         <li><a href="docs/python_docs.html#dcgpy.expression_gdual_vdouble.visualize">(dcgpy.expression_gdual_vdouble method)</a>

@@ -381,7 +381,7 @@ chromosome. The utility <em>encode_ffnn</em> selects one for you returning the
 expression.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [31]:
+<span></span>In [3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -413,7 +413,7 @@ expression.</p>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Starting error: 0.35239972571856065
+Starting error: 0.3763343357065135
 Net complexity (number of active weights): 1120
 Net complexity (number of unique active weights): 1120
 Net complexity (number of active nodes): 73
@@ -421,11 +421,11 @@ Net complexity (number of active nodes): 73
 </div>
 <div class="nboutput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>Out[31]:
+<span></span>Out[3]:
 </pre></div>
 </div>
 <div class="output_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>&lt;matplotlib.axes._subplots.AxesSubplot at 0x7fe9d991d908&gt;
+<span></span>&lt;matplotlib.axes._subplots.AxesSubplot at 0x7f9d8f34dd30&gt;
 </pre></div>
 </div>
 </div>
@@ -448,7 +448,7 @@ Net complexity (number of active nodes): 73
 <span class="n">lr0</span> <span class="o">=</span> <span class="mf">0.3</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">5000</span><span class="p">)):</span>
     <span class="n">lr</span> <span class="o">=</span> <span class="n">lr0</span> <span class="c1">#* np.exp(-0.0001 * i)</span>
-    <span class="n">loss</span> <span class="o">=</span> <span class="n">dcgpann</span><span class="o">.</span><span class="n">sgd</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">,</span> <span class="n">lr</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="s2">&quot;MSE&quot;</span><span class="p">)</span>
+    <span class="n">loss</span> <span class="o">=</span> <span class="n">dcgpann</span><span class="o">.</span><span class="n">sgd</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">,</span> <span class="n">lr</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="s2">&quot;MSE&quot;</span><span class="p">,</span> <span class="n">parallel</span> <span class="o">=</span> <span class="mi">4</span><span class="p">)</span>
     <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loss</span><span class="p">)</span>
 <span class="n">elapsed</span> <span class="o">=</span> <span class="n">timeit</span><span class="o">.</span><span class="n">default_timer</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
 
@@ -464,7 +464,7 @@ Net complexity (number of active nodes): 73
 </div>
 <div class="stderr output_area docutils container">
 <div class="highlight"><pre>
-100%|██████████| 5000/5000 [00:46&lt;00:00, 107.05it/s]
+100%|██████████| 5000/5000 [00:36&lt;00:00, 136.65it/s]
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
@@ -472,8 +472,8 @@ Net complexity (number of active nodes): 73
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Time (s):  46.713195841992274
-End MSE:  0.01170405870904784
+Time (s):  36.5959761259146
+End MSE:  0.014714415025762751
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -508,7 +508,7 @@ Using TensorFlow backend.
 </div>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [32]:
+<span></span>In [6]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -575,9 +575,9 @@ Using TensorFlow backend.
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Time (s):  81.31114947097376
-800/800 [==============================] - 0s 32us/step
-End MSE:  0.013548739179968834
+Time (s):  95.618946922943
+800/800 [==============================] - 0s 42us/step
+End MSE:  0.023254886977374555
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -608,7 +608,7 @@ End MSE:  0.013548739179968834
 <h2>Repeating ten times the same comparison<a class="headerlink" href="#Repeating-ten-times-the-same-comparison" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [34]:
+<span></span>In [12]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -621,7 +621,7 @@ End MSE:  0.013548739179968834
     <span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">epochs</span><span class="p">)):</span>
         <span class="n">lr</span> <span class="o">=</span> <span class="n">lr0</span> <span class="c1">#* np.exp(-0.0001 * i)</span>
-        <span class="n">loss</span> <span class="o">=</span> <span class="n">dcgpann</span><span class="o">.</span><span class="n">sgd</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">,</span> <span class="n">lr</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="s2">&quot;MSE&quot;</span><span class="p">)</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="n">dcgpann</span><span class="o">.</span><span class="n">sgd</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">,</span> <span class="n">lr</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="s2">&quot;MSE&quot;</span><span class="p">,</span> <span class="n">parallel</span> <span class="o">=</span> <span class="mi">4</span><span class="p">)</span>
         <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loss</span><span class="p">)</span>
     <span class="c1"># Keras</span>
     <span class="n">model</span> <span class="o">=</span> <span class="n">Sequential</span><span class="p">([</span>
@@ -648,16 +648,16 @@ End MSE:  0.013548739179968834
 </div>
 <div class="stderr output_area docutils container">
 <div class="highlight"><pre>
-100%|██████████| 5000/5000 [00:43&lt;00:00, 114.71it/s]
-100%|██████████| 5000/5000 [00:41&lt;00:00, 119.48it/s]
-100%|██████████| 5000/5000 [00:42&lt;00:00, 118.14it/s]
-100%|██████████| 5000/5000 [00:44&lt;00:00, 111.63it/s]
-100%|██████████| 5000/5000 [00:41&lt;00:00, 120.47it/s]
-100%|██████████| 5000/5000 [00:42&lt;00:00, 116.87it/s]
-100%|██████████| 5000/5000 [00:42&lt;00:00, 117.14it/s]
-100%|██████████| 5000/5000 [00:43&lt;00:00, 115.88it/s]
-100%|██████████| 5000/5000 [00:48&lt;00:00, 102.50it/s]
-100%|██████████| 5000/5000 [00:45&lt;00:00, 109.91it/s]
+100%|██████████| 5000/5000 [00:30&lt;00:00, 163.77it/s]
+100%|██████████| 5000/5000 [00:22&lt;00:00, 218.28it/s]
+100%|██████████| 5000/5000 [00:33&lt;00:00, 148.84it/s]
+100%|██████████| 5000/5000 [00:27&lt;00:00, 181.35it/s]
+100%|██████████| 5000/5000 [00:22&lt;00:00, 218.70it/s]
+100%|██████████| 5000/5000 [00:26&lt;00:00, 186.03it/s]
+100%|██████████| 5000/5000 [00:28&lt;00:00, 177.42it/s]
+100%|██████████| 5000/5000 [00:23&lt;00:00, 209.11it/s]
+100%|██████████| 5000/5000 [00:23&lt;00:00, 212.32it/s]
+100%|██████████| 5000/5000 [00:25&lt;00:00, 195.39it/s]
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
