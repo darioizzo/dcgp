@@ -1,15 +1,16 @@
-def _dcgpann_visualize(self, show_connections = True, fill_color = 'w', show_nonlinearities = False, active_connection_alpha = 0.1, inactive_connection_alpha = 0.01, legend = True, axes = None, show_inactive = False):
+def _dcgpann_visualize(self, show_connections = True, fill_color = 'w', legend = False, active_connection_alpha = 0.1, inactive_connection_alpha = 0.01, legend = True, axes = None, show_inactive = False):
     """visualize(show_connections = True, fill_color = 'w', show_nonlinearities = False, active_connection_alpha = 0.1, inactive_connection_alpha = 0.01, legend = True)
 
     Visualizes the dCGPANN expression
 
     Args:
-        show_connections (``bool``): shows all the connections between nodes (for large dCGPANN can be quite time consuming and cluttered)
-        fill_color (``bool``): the fill color of all nodes
-        show_nonlinearities (``bool``): shows also what nonlinearity is where and adds a legend
+        show_connections (``bool``): shows active connections between nodes
+        show_inactive (```bool```): shows also inactive connections between nodes
         active_connection_alpha (``bool``): the alpha used to show active connections
         inactive_connection_alpha (``bool``): the alpha used to show inactive connections
-        legend (``bool``): shows a legend when show_nonlinearities is also True
+        fill_color (``str`` or ```RGB values```): the fill color of all nodes
+        show_nonlinearities (``bool``): color codes the nodes with the contained nonlinearity
+        legend (``bool``): shows a legend (only when show_nonlinearities is also True)
 
 
 
