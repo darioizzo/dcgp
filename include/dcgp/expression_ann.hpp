@@ -26,13 +26,11 @@ namespace dcgp
 /// A dCGP-ANN expression
 /**
  * This class represents an artificial neural network as a differentiable Cartesian Genetic
- * program. It add weights, biases and backward automated differentiation to the class
+ * program. It adds weights, biases and backward automated differentiation to the class
  * dcgp::expression.
  *
- * @tparam T expression type. Can only be a float type
  */
-template <typename T>
-class expression_ann : public expression<T>
+class expression_ann : public expression<double>
 {
 
 private:
@@ -43,8 +41,20 @@ private:
     using enable_double = typename std::enable_if<std::is_same<U, double>::value, int>::type;
 
 public:
-    // allowed kernels (for backpropagation to work)
-    enum class kernel_type { SIG, TANH, RELU, ELU, ISRU, SUM };
+    /// Allowed kernels (for backpropagation to work)
+    enum class kernel_type { 
+        /// sigmoid 
+        SIG, 
+        /// Hyperbolic tangent
+        TANH, 
+        /// Rectified linear unit
+        RELU, 
+        /// Exponential linear unit
+        ELU,
+        /// ISRU 
+        ISRU, 
+        /// Simple sum of inputs
+        SUM };
     /// Constructor
     /** Constructs a dCGPANN expression
      *
@@ -54,7 +64,7 @@ public:
      * @param[in] c number of columns of the dCGPANN.
      * @param[in] l number of levels-back allowed for the dCGPANN.
      * @param[in] arity arities of the basis functions for each column.
-     * @param[in] f function set. An std::vector of dcgp::kernel<expression::type>.
+     * @param[in] f function set. An std::vector of dcgp::kernel<expression::type>. Can only contain allowed functions.
      * @param[in] seed seed for the random number generator (initial expression and mutations depend on this).
      */
     expression_ann(unsigned n,                  // n. inputs
@@ -63,10 +73,10 @@ public:
                    unsigned c,                  // n. columns
                    unsigned l,                  // n. levels-back
                    std::vector<unsigned> arity, // basis functions' arity
-                   std::vector<kernel<T>> f,    // functions
+                   std::vector<kernel<double>> f,    // functions
                    unsigned seed                // seed for the pseudo-random numbers
                    )
-        : expression<T>(n, m, r, c, l, arity, f, seed), m_biases(r * c, T(0.)), m_kernel_map(f.size())
+        : expression<double>(n, m, r, c, l, arity, f, seed), m_biases(r * c, 0.), m_kernel_map(f.size())
 
     {
         // Sanity checks
@@ -95,7 +105,7 @@ public:
         }
         // Default initialization of weights to 1.
         unsigned n_connections = std::accumulate(this->get_arity().begin(), this->get_arity().end(), 0u) * r;
-        m_weights = std::vector<T>(n_connections, T(1.));
+        m_weights = std::vector<double>(n_connections, 1.);
 
         // Filling in the symbols for the weights and biases
         for (auto node_id = n; node_id < r * c + n; ++node_id) {
@@ -120,7 +130,7 @@ public:
      * @param[in] c number of columns of the dCGPANN.
      * @param[in] l number of levels-back allowed for the dCGPANN.
      * @param[in] arity uniform arity for all basis functions.
-     * @param[in] f function set. An std::vector of dcgp::kernel<expression::type>.
+     * @param[in] f function set. An std::vector of dcgp::kernel<expression::type>. Can only contain allowed functions.
      * @param[in] seed seed for the random number generator (initial expression and mutations depend on this).
      */
     expression_ann(unsigned n,               // n. inputs
@@ -129,10 +139,10 @@ public:
                    unsigned c,               // n. columns
                    unsigned l,               // n. levels-back
                    unsigned arity,           // basis functions' arity
-                   std::vector<kernel<T>> f, // functions
+                   std::vector<kernel<double>> f, // functions
                    unsigned seed             // seed for the pseudo-random numbers
                    )
-        : expression<T>(n, m, r, c, l, std::vector<unsigned>(c, arity), f, seed), m_biases(r * c, T(0.)),
+        : expression<double>(n, m, r, c, l, std::vector<unsigned>(c, arity), f, seed), m_biases(r * c, 0.),
           m_kernel_map(f.size())
 
     {
@@ -162,7 +172,7 @@ public:
         }
         // Default initialization of weights to 1.
         unsigned n_connections = std::accumulate(this->get_arity().begin(), this->get_arity().end(), 0u) * r;
-        m_weights = std::vector<T>(n_connections, T(1.));
+        m_weights = std::vector<double>(n_connections, 1.);
 
         // Filling in the symbols for the weights and biases
         for (auto node_id = n; node_id < r * c + n; ++node_id) {
@@ -392,6 +402,7 @@ public:
      * @param[labels] The predicted outputs (a batch). Will be randomly shuffled (with points) after a call to sgd.
      * @param[lr] The learning rate.
      * @param[batch_size] The batch size.
+     * @param[loss_s] A string defining the loss type. Can be one of "MSE" (mean squared error) or "CE" (cross-entropy)
      * @param[parallel] sets the grain for parallelism. 0 -> no parallelism n -> divides the data into n parts and
      * processes them in parallel threads
      * @param[shuffle] when true it shuffles the points and labels before performing one epoch of training.
@@ -567,7 +578,7 @@ public:
      *
      * @throws std::invalid_argument if the node_id or input_id are not valid
      */
-    void set_weight(typename std::vector<T>::size_type node_id, typename std::vector<T>::size_type input_id, const T &w)
+    void set_weight(std::vector<double>::size_type node_id, std::vector<double>::size_type input_id, const double &w)
     {
         if (node_id < this->get_n() || node_id >= this->get_n() + this->get_r() * this->get_c()) {
             throw std::invalid_argument("Requested node id does not exist");
@@ -589,7 +600,7 @@ public:
      *
      * @throws std::invalid_argument if the node_id or input_id are not valid
      */
-    void set_weight(typename std::vector<T>::size_type idx, const T &w)
+    void set_weight(std::vector<double>::size_type idx, const double &w)
     {
         m_weights[idx] = w;
     }
@@ -602,7 +613,7 @@ public:
      *
      * @throws std::invalid_argument if the input vector dimension is not valid.
      */
-    void set_weights(const std::vector<T> &ws)
+    void set_weights(const std::vector<double> &ws)
     {
         if (ws.size() != m_weights.size()) {
             throw std::invalid_argument("The vector of weights has the wrong dimension");
@@ -622,7 +633,7 @@ public:
      *
      * @throws std::invalid_argument if the node_id or input_id are not valid
      */
-    T get_weight(typename std::vector<T>::size_type node_id, typename std::vector<T>::size_type input_id) const
+    double get_weight(std::vector<double>::size_type node_id, std::vector<double>::size_type input_id) const
     {
         if (node_id < this->get_n() || node_id >= this->get_n() + this->get_r() * this->get_c()) {
             throw std::invalid_argument(
@@ -643,7 +654,7 @@ public:
      * @param[in] idx index of the weight
      *
      */
-    T get_weight(typename std::vector<T>::size_type idx) const
+    double get_weight(std::vector<double>::size_type idx) const
     {
         return m_weights[idx];
     }
@@ -654,7 +665,7 @@ public:
      *
      * @return an std::vector containing all the weights
      */
-    const std::vector<T> &get_weights() const
+    const std::vector<double> &get_weights() const
     {
         return m_weights;
     }
@@ -673,7 +684,7 @@ public:
                            std::random_device::result_type seed = std::random_device{}())
     {
         std::mt19937 gen{seed};
-        std::normal_distribution<T> nd{mean, std};
+        std::normal_distribution<double> nd{mean, std};
         for (auto &w : m_weights) {
             w = nd(gen);
         }
@@ -690,7 +701,7 @@ public:
      * @param[w] value of the new bias.
      *
      */
-    void set_bias(typename std::vector<T>::size_type idx, const T &w)
+    void set_bias(typename std::vector<double>::size_type idx, const double &w)
     {
         m_biases[idx] = w;
     }
@@ -703,7 +714,7 @@ public:
      *
      * @throws std::invalid_argument if the input vector dimension is not valid (r*c)
      */
-    void set_biases(const std::vector<T> &bs)
+    void set_biases(const std::vector<double> &bs)
     {
         if (bs.size() != m_biases.size()) {
             throw std::invalid_argument("The vector of biases has the wrong dimension");
@@ -718,7 +729,7 @@ public:
      * @param[in] idx index of the bias
      *
      */
-    T get_bias(typename std::vector<T>::size_type idx) const
+    double get_bias(typename std::vector<double>::size_type idx) const
     {
         return m_biases[idx];
     }
@@ -729,7 +740,7 @@ public:
      *
      * @return an std::vector containing all the biases
      */
-    const std::vector<T> &get_biases() const
+    const std::vector<double> &get_biases() const
     {
         return m_biases;
     }
@@ -748,7 +759,7 @@ public:
                           std::random_device::result_type seed = std::random_device{}())
     {
         std::mt19937 gen{seed};
-        std::normal_distribution<T> nd{mean, std};
+        std::normal_distribution<double> nd{mean, std};
         for (auto &b : m_biases) {
             b = nd(gen);
         }
@@ -878,7 +889,7 @@ private:
     // m_active_nodes and genes). It is called upon construction and each time active genes are changed.
     void update_data_structures()
     {
-        expression<T>::update_data_structures();
+        expression<double>::update_data_structures();
         m_connected.clear();
         m_connected.resize(this->get_n() + this->get_m() + this->get_r() * this->get_c());
         for (auto node_id : this->get_active_nodes()) {
@@ -912,7 +923,10 @@ private:
      * @param[dlast] End range for the data
      * @param[lfirst] Start range for the labels
      * @param[lr] The learning rate
-     *
+     * @param[loss_e] The loss type
+     * @param[parallel] sets the grain for parallelism. 0 -> no parallelism n -> divides the data into n parts and
+     * processes them in parallel threads
+     * 
      * @return the loss before the weight update
      *
      */
@@ -985,10 +999,10 @@ private:
     }
 
 private:
-    std::vector<T> m_weights;
+    std::vector<double> m_weights;
     std::vector<std::string> m_weights_symbols;
 
-    std::vector<T> m_biases;
+    std::vector<double> m_biases;
     std::vector<std::string> m_biases_symbols;
 
     // In order to be able to perform backpropagation on the dCGPANN program, we need to add

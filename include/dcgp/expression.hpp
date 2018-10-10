@@ -40,8 +40,12 @@ private:
         std::is_same<U, double>::value || is_gdual<T>::value || std::is_same<U, std::string>::value, int>::type;
 
 public:
-    // loss types: Mean Squared Error or Cross Entropy
-    enum class loss_type { MSE, CE };
+    /// Loss types
+    enum class loss_type { 
+        /// Mean Squared Error
+        MSE, 
+        // Cross-Entropy
+        CE };
 
     /// Constructor
     /** Constructs a dCGP expression with variable arity
@@ -743,8 +747,13 @@ public:
     }
 
 protected:
-    // the public method checks are significantly impacting speed, thus this protected method is used in the
-    // class methods instead but use carefully as it may result in invalid reads
+    /// Unchecked get arity
+    /**
+     * The public method get_arity, has some checks thet are significantly impacting speed if used in performance critical code sections
+     * (such as the operator(). Thus this protected method should be used instead but use carefully as it may result in invalid reads
+     *
+     * @param[node_id] chromosome
+     */
     unsigned _get_arity(unsigned node_id) const
     {
         assert(node_id >= m_n && node_id < m_n + m_r * m_c);
@@ -815,6 +824,17 @@ protected:
         }
     }
 
+    /// Evaluates the model loss (on a batch)
+    /**
+     * Evaluates the model loss over a batch.
+     *
+     * @param[dfirst] Begin of data.
+     * @param[dlast] End of data.
+     * @param[lfirst] Begin of labels.
+     * @param[loss_e] The loss type.
+     * @param[parallel] sets the grain for parallelism. 0 -> no parallelism n -> divides the data into n parts and evaluates them in parallel threads 
+     * @return the loss
+     */
     T loss(typename std::vector<std::vector<T>>::const_iterator dfirst,
            typename std::vector<std::vector<T>>::const_iterator dlast,
            typename std::vector<std::vector<T>>::const_iterator lfirst, loss_type loss_e, unsigned parallel) const

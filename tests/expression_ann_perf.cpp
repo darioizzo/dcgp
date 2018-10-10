@@ -23,7 +23,7 @@ void perform_sgd(unsigned int rows, unsigned int columns, unsigned int levels_ba
     std::normal_distribution<> norm(0., 1.);
 
     // Instatiate the expression
-    expression_ann<double> ex(in, out, rows, columns, levels_back, arity, kernel_set, 123);
+    expression_ann ex(in, out, rows, columns, levels_back, arity, kernel_set, 123);
     // We create the input data upfront and we do not time it.
     ex.randomise_weights(0., 1., 123u);
     ex.randomise_biases(0., 1., 123u);

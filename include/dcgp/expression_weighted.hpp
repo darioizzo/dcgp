@@ -112,7 +112,7 @@ public:
      * This evaluates the dCGP-weighted expression. This method overrides the base class
      * method. NOTE we cannot template this and the following function as they are virtual in the base class.
      *
-     * @param[point] in an std::vector containing the values where the dCGP-weighted expression has
+     * @param[in] in std::vector containing the values where the dCGP-weighted expression has
      * to be computed
      *
      * @return The value of the output (an std::vector)
@@ -152,7 +152,7 @@ public:
      * This evaluates the dCGP-weighted expression. This method overrides the base class
      * method.
      *
-     * @param[point] in an std::vector containing the symbol names.
+     * @param[in] in an std::vector containing the symbol names.
      *
      * @return The symbolic value of the output (an std::vector)
      */
