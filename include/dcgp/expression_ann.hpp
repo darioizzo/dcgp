@@ -287,7 +287,7 @@ public:
         // the activation function derivatives
         auto n_nodes = this->get_n() + this->get_r() * this->get_c();
         std::vector<double> node(n_nodes, 0.), d_node(n_nodes, 0.);
-        fill_nodes(point, node, d_node); // here is where the computations happen.
+        fill_nodes(point, node, d_node); // here is where the computatinal graph is computed.
 
         // We add to node_d some virtual nodes containing the derivative of the loss with respect to the outputs
         // (dL/do_i)

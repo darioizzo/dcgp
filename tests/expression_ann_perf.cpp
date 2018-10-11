@@ -75,8 +75,4 @@ BOOST_AUTO_TEST_CASE(evaluation_speed)
     perform_sgd(100, 10, 1, {100, 100, 100, 100, 100, 100, 100, 100, 100, 100}, N, 32u, kernel_set1(), 8u);
     perform_sgd(100, 10, 1, {100, 100, 100, 100, 100, 100, 100, 100, 100, 100}, N, 32u, kernel_set1(), 16u);
     perform_sgd(100, 10, 1, {100, 100, 100, 100, 100, 100, 100, 100, 100, 100}, N, 32u, kernel_set1(), 32u);
-
-
-
-
 }

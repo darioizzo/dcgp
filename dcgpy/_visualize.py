@@ -1,4 +1,4 @@
-def _dcgpann_visualize(self, show_connections = True, fill_color = 'w', active_connection_alpha = 0.1, inactive_connection_alpha = 0.01, legend = True, axes = None, show_inactive = False):
+def _dcgpann_visualize(self, show_connections = True, fill_color = 'w', active_connection_alpha = 0.1, inactive_connection_alpha = 0.01, legend = True, axes = None, show_inactive = False, show_nonlinearities = False):
     """visualize(show_connections = True, fill_color = 'w', show_nonlinearities = False, active_connection_alpha = 0.1, inactive_connection_alpha = 0.01, legend = True)
 
     Visualizes the dCGPANN expression
