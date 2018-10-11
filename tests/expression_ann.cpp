@@ -12,7 +12,7 @@ using namespace dcgp;
 
 void test_against_numerical_derivatives(unsigned n, unsigned m, unsigned r, unsigned c, unsigned lb,
                                         std::vector<unsigned> arity, unsigned seed,
-                                        expression_ann<double>::loss_type loss_e)
+                                        expression_ann::loss_type loss_e)
 {
     std::mt19937 gen(seed);
     // Random distributions
@@ -21,7 +21,7 @@ void test_against_numerical_derivatives(unsigned n, unsigned m, unsigned r, unsi
     // Kernel functions
     kernel_set<double> ann_set({"sig", "tanh", "ReLu", "ELU", "ISRU", "sum"});
     // a random dCGPANN
-    expression_ann<double> ex(n, m, r, c, lb, arity, ann_set(), random_seed(gen));
+    expression_ann ex(n, m, r, c, lb, arity, ann_set(), random_seed(gen));
     // Since weights and biases are, by default, set to ones, we randomize them
     ex.randomise_weights(0, 1., random_seed(gen));
     ex.randomise_biases(0, 1., random_seed(gen));
@@ -33,7 +33,7 @@ void test_against_numerical_derivatives(unsigned n, unsigned m, unsigned r, unsi
     auto in = std::vector<double>(ex.get_n(), norm(gen));
     // Output value desired (supervised signal)
     auto out = std::vector<double>(ex.get_m(), norm(gen));
-    if (loss_e == expression_ann<double>::loss_type::CE) {
+    if (loss_e == expression_ann::loss_type::CE) {
         // we normalize to probabilities
         double cumout = std::accumulate(out.begin(), out.end(), 0.);
         std::transform(out.begin(), out.end(), out.begin(), [cumout](double x) { return x / cumout; });
@@ -164,7 +164,7 @@ BOOST_AUTO_TEST_CASE(construction)
     std::random_device rd;
     // Kernel functions
     kernel_set<double> ann_set({"tanh"});
-    expression_ann<double> ex(1, 1, 1, 2, 1, 1, ann_set(), rd());
+    expression_ann ex(1, 1, 1, 2, 1, 1, ann_set(), rd());
     // We test that all weights are set to 1 and biases to 0
     auto ws = ex.get_weights();
     auto bs = ex.get_biases();
@@ -175,9 +175,9 @@ BOOST_AUTO_TEST_CASE(construction)
     kernel_set<double> ann_set_malformed2({"cos", "sig"});
     kernel_set<double> ann_set_malformed3({"ReLu", "diff"});
 
-    BOOST_CHECK_THROW((expression_ann<double>{1, 1, 1, 2, 1, 1, ann_set_malformed1(), rd()}), std::invalid_argument);
-    BOOST_CHECK_THROW((expression_ann<double>{1, 1, 1, 2, 1, 1, ann_set_malformed2(), rd()}), std::invalid_argument);
-    BOOST_CHECK_THROW((expression_ann<double>{1, 1, 1, 2, 1, 1, ann_set_malformed3(), rd()}), std::invalid_argument);
+    BOOST_CHECK_THROW((expression_ann{1, 1, 1, 2, 1, 1, ann_set_malformed1(), rd()}), std::invalid_argument);
+    BOOST_CHECK_THROW((expression_ann{1, 1, 1, 2, 1, 1, ann_set_malformed2(), rd()}), std::invalid_argument);
+    BOOST_CHECK_THROW((expression_ann{1, 1, 1, 2, 1, 1, ann_set_malformed3(), rd()}), std::invalid_argument);
 }
 
 BOOST_AUTO_TEST_CASE(parenthesis)
@@ -188,7 +188,7 @@ BOOST_AUTO_TEST_CASE(parenthesis)
         std::random_device rd;
         // Kernel functions
         kernel_set<double> ann_set({"tanh"});
-        expression_ann<double> ex(1, 1, 1, 2, 1, 1, ann_set(), rd());
+        expression_ann ex(1, 1, 1, 2, 1, 1, ann_set(), rd());
         ex.set_weights({0.1, 0.2});
         ex.set_biases({0.3, 0.4});
         auto res = ex({0.23})[0];
@@ -201,7 +201,7 @@ BOOST_AUTO_TEST_CASE(parenthesis)
         std::random_device rd;
         // Kernel functions
         kernel_set<double> ann_set({"tanh"});
-        expression_ann<double> ex(1, 1, 1, 2, 1, 2, ann_set(), rd());
+        expression_ann ex(1, 1, 1, 2, 1, 2, ann_set(), rd());
         ex.set_weights({0.1, 0.2, 0.3, 0.4});
         ex.set_biases({0.5, 0.6});
         auto res = ex({0.23})[0];
@@ -215,7 +215,7 @@ BOOST_AUTO_TEST_CASE(parenthesis)
         std::random_device rd;
         // Kernel functions
         kernel_set<double> ann_set({"tanh"});
-        expression_ann<double> ex(1, 1, 2, 2, 1, 2, ann_set(), rd());
+        expression_ann ex(1, 1, 2, 2, 1, 2, ann_set(), rd());
         ex.set_weights({0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8});
         ex.set_biases({0.9, 1.1, 1.2, 1.3});
         ex.set({0, 0, 0, 0, 0, 0, 0, 1, 2, 0, 1, 2, 3});
@@ -239,7 +239,7 @@ BOOST_AUTO_TEST_CASE(sgd)
 
     // Kernel functions
     kernel_set<double> ann_set({"sig", "tanh", "ReLu"});
-    expression_ann<double> ex(3, 2, 100, 3, 1, 10, ann_set(), rd());
+    expression_ann ex(3, 2, 100, 3, 1, 10, ann_set(), rd());
     ex.randomise_weights();
     ex.randomise_biases();
     std::vector<std::vector<double>> data(200, {0., 0., 0.});
@@ -265,7 +265,7 @@ BOOST_AUTO_TEST_CASE(sgd)
 BOOST_AUTO_TEST_CASE(d_loss)
 {
     print("Testing against numerical derivatives\n");
-    using loss_t = expression_ann<double>::loss_type;
+    using loss_t = expression_ann::loss_type;
 
     // Random distributions
     std::mt19937 gen(std::random_device{}());
@@ -312,7 +312,7 @@ BOOST_AUTO_TEST_CASE(n_active_weights)
     // Kernel functions
     kernel_set<double> ann_set({"sig", "tanh", "ReLu"});
     {
-        expression_ann<double> ex(2, 2, 2, 2, 5, 2, ann_set(), rd());
+        expression_ann ex(2, 2, 2, 2, 5, 2, ann_set(), rd());
         ex.set({0, 0, 1, 0, 0, 1, 0, 2, 3, 0, 2, 3, 4, 5});
         BOOST_CHECK(ex.n_active_weights() == 8u);
         BOOST_CHECK(ex.n_active_weights(false) == 8u);

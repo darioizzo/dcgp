@@ -578,7 +578,7 @@ public:
      *
      * @throws std::invalid_argument if the node_id or input_id are not valid
      */
-    void set_weight(std::vector<double>::size_type node_id, std::vector<double>::size_type input_id, const double &w)
+    void set_weight(unsigned node_id, unsigned input_id, const double &w)
     {
         if (node_id < this->get_n() || node_id >= this->get_n() + this->get_r() * this->get_c()) {
             throw std::invalid_argument("Requested node id does not exist");
@@ -633,7 +633,7 @@ public:
      *
      * @throws std::invalid_argument if the node_id or input_id are not valid
      */
-    double get_weight(std::vector<double>::size_type node_id, std::vector<double>::size_type input_id) const
+    double get_weight(unsigned node_id, unsigned input_id) const
     {
         if (node_id < this->get_n() || node_id >= this->get_n() + this->get_r() * this->get_c()) {
             throw std::invalid_argument(
