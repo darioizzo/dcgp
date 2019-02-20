@@ -146,7 +146,7 @@ if(DCGP_BUILD_DCGP)
     message(STATUS "MPFR version is ok.")
 
     # Audi setup
-    find_package(audi REQUIRED)
+    find_package(Audi REQUIRED)
     message(STATUS "AUDI header only library found.")
     message(STATUS "AUDI include dir is: ${AUDI_INCLUDE_DIRS}")
 
