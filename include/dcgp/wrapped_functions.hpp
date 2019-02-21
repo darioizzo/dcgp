@@ -88,11 +88,18 @@ template <typename T, typename std::enable_if<std::is_same<T, double>::value, in
 T my_pdiv(const std::vector<T> &in)
 {
     T retval(in[0]);
-    for (auto i = 1u; i < in.size(); ++i) {
-        if (in[i] == 0.) {
-            retval /= in[i];
-        }
+    T tmpval(in[1]);
+
+    for (auto i = 2u; i < in.size(); ++i) {
+        tmpval *= in[i];
     }
+
+    if (tmpval == 0.) {
+        return 1.;
+    }
+
+    retval /= tmpval;
+
     return retval;
 }
 
