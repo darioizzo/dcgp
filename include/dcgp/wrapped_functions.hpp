@@ -3,6 +3,7 @@
 
 #include <audi/audi.hpp>
 #include <audi/functions.hpp>
+#include <cmath>
 #include <string>
 #include <vector>
 
@@ -94,13 +95,13 @@ T my_pdiv(const std::vector<T> &in)
         tmpval *= in[i];
     }
 
-    if (tmpval == 0.) {
-        return 1.;
-    }
-
     retval /= tmpval;
 
-    return retval;
+    if (std::isfinite(retval)) {
+        return retval;
+    }
+    
+    return 1.;
 }
 
 // protected division (gdual overload):
