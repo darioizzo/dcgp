@@ -36,7 +36,6 @@
 /doc/doxygen/xml
 /doc/sphinx/_build
 .vscode
-venv
 /doc/sphinx/notebooks/.ipynb_checkpoints
 /examples/.ipynb_checkpoints/
 
