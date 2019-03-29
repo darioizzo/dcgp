@@ -1,6 +1,8 @@
 #ifndef DCGP_EXPRESSION_H
 #define DCGP_EXPRESSION_H
 
+#include "config.hpp"
+
 #include <algorithm>
 #include <audi/audi.hpp>
 #include <initializer_list>
@@ -9,12 +11,15 @@
 #include <sstream>
 #include <stdexcept>
 #include <string>
-#include <tbb/spin_mutex.h>
-#include <tbb/tbb.h>
 #include <vector>
 
-#include <dcgp/kernel.hpp>
-#include <dcgp/type_traits.hpp>
+#ifndef DCGP_SINGLE_THREAD
+#include <tbb/spin_mutex.h>
+#include <tbb/tbb.h>
+#endif
+
+#include "kernel.hpp"
+#include "type_traits.hpp"
 
 namespace dcgp
 {
@@ -41,9 +46,9 @@ private:
 
 public:
     /// Loss types
-    enum class loss_type { 
+    enum class loss_type {
         /// Mean Squared Error
-        MSE, 
+        MSE,
         // Cross-Entropy
         CE };
 
@@ -283,7 +288,7 @@ public:
      * @param[labels] The predicted outputs (a batch).
      * @param[loss_s] The loss type. Can be "MSE" for Mean Square Error (regression) or "CE" for Cross Entropy
      * (classification)
-     * @param[parallel] sets the grain for parallelism. 0 -> no parallelism n -> divides the data into n parts and evaluates them in parallel threads 
+     * @param[parallel] sets the grain for parallelism. 0 -> no parallelism n -> divides the data into n parts and evaluates them in parallel threads
      * @return the loss
      */
     T loss(const std::vector<std::vector<T>> &points, const std::vector<std::vector<T>> &labels,
@@ -832,7 +837,7 @@ protected:
      * @param[dlast] End of data.
      * @param[lfirst] Begin of labels.
      * @param[loss_e] The loss type.
-     * @param[parallel] sets the grain for parallelism. 0 -> no parallelism n -> divides the data into n parts and evaluates them in parallel threads 
+     * @param[parallel] sets the grain for parallelism. 0 -> no parallelism n -> divides the data into n parts and evaluates them in parallel threads
      * @return the loss
      */
     T loss(typename std::vector<std::vector<T>>::const_iterator dfirst,

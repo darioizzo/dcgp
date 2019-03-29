@@ -1,11 +1,13 @@
 #ifndef DCGP_kernel_set_H
 #define DCGP_kernel_set_H
 
+#include "config.hpp"
+
 #include <audi/gdual.hpp>
 #include <vector>
 
-#include <dcgp/kernel.hpp>
-#include <dcgp/wrapped_functions.hpp>
+#include "kernel.hpp"
+#include "wrapped_functions.hpp"
 
 namespace dcgp
 {

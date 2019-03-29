@@ -1,6 +1,8 @@
 #ifndef DCGP_EXPRESSION_ANN_H
 #define DCGP_EXPRESSION_ANN_H
 
+#include "config.hpp"
+
 #include <algorithm>
 #include <audi/io.hpp>
 #include <functional>
@@ -12,13 +14,16 @@
 #include <sstream>
 #include <stdexcept>
 #include <string>
-#include <tbb/spin_mutex.h>
-#include <tbb/tbb.h>
 #include <vector>
 
-#include <dcgp/expression.hpp>
-#include <dcgp/kernel.hpp>
-#include <dcgp/type_traits.hpp>
+#ifndef DCGP_SINGLE_THREAD
+#include <tbb/spin_mutex.h>
+#include <tbb/tbb.h>
+#endif
+
+#include "expression.hpp"
+#include "kernel.hpp"
+#include "type_traits.hpp"
 
 namespace dcgp
 {
@@ -42,17 +47,17 @@ private:
 
 public:
     /// Allowed kernels (for backpropagation to work)
-    enum class kernel_type { 
-        /// sigmoid 
-        SIG, 
+    enum class kernel_type {
+        /// sigmoid
+        SIG,
         /// Hyperbolic tangent
-        TANH, 
+        TANH,
         /// Rectified linear unit
-        RELU, 
+        RELU,
         /// Exponential linear unit
         ELU,
-        /// ISRU 
-        ISRU, 
+        /// ISRU
+        ISRU,
         /// Simple sum of inputs
         SUM };
     /// Constructor
@@ -926,7 +931,7 @@ private:
      * @param[loss_e] The loss type
      * @param[parallel] sets the grain for parallelism. 0 -> no parallelism n -> divides the data into n parts and
      * processes them in parallel threads
-     * 
+     *
      * @return the loss before the weight update
      *
      */
@@ -949,7 +954,7 @@ private:
     d_loss(typename std::vector<std::vector<double>>::const_iterator dfirst,
            typename std::vector<std::vector<double>>::const_iterator dlast,
            typename std::vector<std::vector<double>>::const_iterator lfirst, expression<double>::loss_type loss_e,
-           unsigned parallel) const
+           unsigned parallel = 0u) const
     {
         // Batch dimension
         const unsigned batch_size = static_cast<unsigned>(dlast - dfirst);
@@ -958,6 +963,7 @@ private:
         std::vector<double> gweights(m_weights.size(), 0.);
         std::vector<double> gbiases(m_biases.size(), 0.);
 
+#ifndef DCGP_SINGLE_THREAD
         if (parallel > 0u) {
             if (batch_size % parallel != 0) {
                 throw std::invalid_argument("The batch size is: " + std::to_string(batch_size)
@@ -985,11 +991,14 @@ private:
                                [](double a, double b) { return a + b; });
             });
         } else {
+#endif
             for (unsigned i = 0u; i < batch_size; ++i) {
                 // The loss and its gradient get computed and cumulated in value, gweights, gbiases
                 d_loss(value, gweights, gbiases, *(dfirst + i), *(lfirst + i), loss_e);
             }
+#ifndef DCGP_SINGLE_THREAD
         }
+#endif
         std::transform(gweights.begin(), gweights.end(), gweights.begin(),
                        [&batch_size](double a) { return a / batch_size; });
         std::transform(gbiases.begin(), gbiases.end(), gbiases.begin(),

@@ -1,6 +1,8 @@
 #ifndef DCGP_KERNEL_H
 #define DCGP_KERNEL_H
 
+#include "config.hpp"
+
 #include <audi/gdual.hpp>
 #include <functional> // std::function
 #include <iostream>

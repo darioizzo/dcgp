@@ -1,6 +1,8 @@
 #ifndef DCGP_EXPRESSION_WEIGHTED_H
 #define DCGP_EXPRESSION_WEIGHTED_H
 
+#include "config.hpp"
+
 #include <audi/audi.hpp>
 #include <initializer_list>
 #include <iostream>
@@ -10,9 +12,9 @@
 #include <string>
 #include <vector>
 
-#include <dcgp/expression.hpp>
-#include <dcgp/kernel.hpp>
-#include <dcgp/type_traits.hpp>
+#include "expression.hpp"
+#include "kernel.hpp"
+#include "type_traits.hpp"
 
 namespace dcgp
 {

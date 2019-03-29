@@ -1,13 +1,15 @@
 #ifndef DCGP_WRAPPED_FUNCTIONS_H
 #define DCGP_WRAPPED_FUNCTIONS_H
 
+#include "config.hpp"
+
 #include <audi/audi.hpp>
 #include <audi/functions.hpp>
 #include <cmath>
 #include <string>
 #include <vector>
 
-#include <dcgp/type_traits.hpp>
+#include "type_traits.hpp"
 
 using namespace audi;
 
@@ -100,7 +102,7 @@ inline T my_pdiv(const std::vector<T> &in)
     if (std::isfinite(retval)) {
         return retval;
     }
-    
+
     return 1.;
 }
 
