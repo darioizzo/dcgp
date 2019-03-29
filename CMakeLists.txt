@@ -49,6 +49,7 @@ if(DCGP_BUILD_DCGP)
     # application to be single threaded you also need to install
     # piranha single threaded.
     option(DCGP_SINGLE_THREAD "Build dcgp single threaded." OFF)
+    mark_as_advanced(DCGP_SINGLE_THREAD)
 
 else()
     # Initial setup of a dcgpy build.
