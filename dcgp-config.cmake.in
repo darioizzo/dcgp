@@ -11,7 +11,7 @@ find_package(GMP REQUIRED)
 find_package(MPFR REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_package(audi REQUIRED)
-if(NOT ${DCGP_SINGLE_THREAD})
+if(NOT @DCGP_SINGLE_THREAD@)
 find_package(TBB REQUIRED)
 endif()
 
