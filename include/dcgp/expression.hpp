@@ -288,7 +288,9 @@ public:
      * @param[labels] The predicted outputs (a batch).
      * @param[loss_s] The loss type. Can be "MSE" for Mean Square Error (regression) or "CE" for Cross Entropy
      * (classification)
-     * @param[parallel] sets the grain for parallelism. 0 -> no parallelism n -> divides the data into n parts and evaluates them in parallel threads
+     * @param[parallel] sets the grain for parallelism. 0 -> no parallelism n -> divides the data into n parts and
+     * evaluates them in parallel threads. Note: if dcgp is configured with DCGP_SINGLE_THREAD this argument has no
+     * effect.
      * @return the loss
      */
     T loss(const std::vector<std::vector<T>> &points, const std::vector<std::vector<T>> &labels,
@@ -837,15 +839,18 @@ protected:
      * @param[dlast] End of data.
      * @param[lfirst] Begin of labels.
      * @param[loss_e] The loss type.
-     * @param[parallel] sets the grain for parallelism. 0 -> no parallelism n -> divides the data into n parts and evaluates them in parallel threads
+     * @param[parallel] sets the grain for parallelism. 0 -> no parallelism n -> divides the data into n parts and
+     * evaluates them in parallel threads. Note: if dcgp is configured with DCGP_SINGLE_THREAD this argument has no
+     * effect.
      * @return the loss
      */
     T loss(typename std::vector<std::vector<T>>::const_iterator dfirst,
            typename std::vector<std::vector<T>>::const_iterator dlast,
-           typename std::vector<std::vector<T>>::const_iterator lfirst, loss_type loss_e, unsigned parallel) const
+           typename std::vector<std::vector<T>>::const_iterator lfirst, loss_type loss_e, unsigned parallel = 0u) const
     {
         T retval(0.);
         unsigned batch_size = static_cast<unsigned>(dlast - dfirst);
+#ifndef DCGP_SINGLE_THREAD
         if (parallel > 0u) {
             if (batch_size % parallel != 0) {
                 throw std::invalid_argument("The batch size is: " + std::to_string(batch_size)
@@ -867,11 +872,14 @@ protected:
                 retval += err;
             });
         } else {
+#endif
             for (long i = 0; i < batch_size; ++i) {
                 // The loss gets computed
                 retval += loss(*(dfirst + i), *(lfirst + i), loss_e);
             }
+#ifndef DCGP_SINGLE_THREAD
         }
+#endif
         retval /= batch_size;
 
         return retval;
