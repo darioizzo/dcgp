@@ -1,10 +1,10 @@
 #ifndef DCGP_H
 #define DCGP_H
 
-#include "config.hpp"
-#include "expression.hpp"
-#include "expression_ann.hpp"
-#include "expression_weighted.hpp"
-#include "kernel_set.hpp"
+#include <dcgp/config.hpp>
+#include <dcgp/expression.hpp>
+#include <dcgp/expression_ann.hpp>
+#include <dcgp/expression_weighted.hpp>
+#include <dcgp/kernel_set.hpp>
 
 #endif // DCGP_H

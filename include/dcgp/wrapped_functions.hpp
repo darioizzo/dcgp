@@ -1,7 +1,6 @@
 #ifndef DCGP_WRAPPED_FUNCTIONS_H
 #define DCGP_WRAPPED_FUNCTIONS_H
 
-#include "config.hpp"
 
 #include <audi/audi.hpp>
 #include <audi/functions.hpp>
@@ -9,7 +8,8 @@
 #include <string>
 #include <vector>
 
-#include "type_traits.hpp"
+#include <dcgp/config.hpp>
+#include <dcgp/type_traits.hpp>
 
 using namespace audi;
 

@@ -1,8 +1,6 @@
 #ifndef DCGP_EXPRESSION_ANN_H
 #define DCGP_EXPRESSION_ANN_H
 
-#include "config.hpp"
-
 #include <algorithm>
 #include <audi/io.hpp>
 #include <functional>
@@ -16,14 +14,16 @@
 #include <string>
 #include <vector>
 
+#include <dcgp/config.hpp>
+
 #ifndef DCGP_SINGLE_THREAD
 #include <tbb/spin_mutex.h>
 #include <tbb/tbb.h>
 #endif
 
-#include "expression.hpp"
-#include "kernel.hpp"
-#include "type_traits.hpp"
+#include <dcgp/expression.hpp>
+#include <dcgp/kernel.hpp>
+#include <dcgp/type_traits.hpp>
 
 namespace dcgp
 {

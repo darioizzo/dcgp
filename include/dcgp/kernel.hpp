@@ -1,14 +1,14 @@
 #ifndef DCGP_KERNEL_H
 #define DCGP_KERNEL_H
 
-#include "config.hpp"
-
 #include <audi/gdual.hpp>
 #include <functional> // std::function
 #include <iostream>
 #include <string>
 #include <utility> // std::forward
 #include <vector>
+
+#include <dcgp/config.hpp>
 
 using namespace audi;
 using gdual_d = audi::gdual<double>;

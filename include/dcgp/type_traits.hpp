@@ -1,7 +1,7 @@
 #ifndef DCGP_TYPE_TRAITS_H
 #define DCGP_TYPE_TRAITS_H
 
-#include "config.hpp"
+#include <dcgp/config.hpp>
 
 /// Type is a gdual
 /**
