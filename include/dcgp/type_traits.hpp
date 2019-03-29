@@ -1,6 +1,8 @@
 #ifndef DCGP_TYPE_TRAITS_H
 #define DCGP_TYPE_TRAITS_H
 
+#include <dcgp/config.hpp>
+
 /// Type is a gdual
 /**
  * Checks whether T is a gdual type. Provides the member constant value which is

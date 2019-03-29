@@ -8,6 +8,8 @@
 #include <utility> // std::forward
 #include <vector>
 
+#include <dcgp/config.hpp>
+
 using namespace audi;
 using gdual_d = audi::gdual<double>;
 

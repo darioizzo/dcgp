@@ -10,6 +10,7 @@
 #include <string>
 #include <vector>
 
+#include <dcgp/config.hpp>
 #include <dcgp/expression.hpp>
 #include <dcgp/kernel.hpp>
 #include <dcgp/type_traits.hpp>

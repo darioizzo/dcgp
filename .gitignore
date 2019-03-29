@@ -39,7 +39,7 @@
 /doc/sphinx/notebooks/.ipynb_checkpoints
 /examples/.ipynb_checkpoints/
 
-# temp files	
+# temp files
 /dcgpy/_version.py
 /doc/doxygen/Doxyfile
 /doc/sphinx/conf.py

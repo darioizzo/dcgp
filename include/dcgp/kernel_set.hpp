@@ -4,6 +4,7 @@
 #include <audi/gdual.hpp>
 #include <vector>
 
+#include <dcgp/config.hpp>
 #include <dcgp/kernel.hpp>
 #include <dcgp/wrapped_functions.hpp>
 
