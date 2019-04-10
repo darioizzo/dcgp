@@ -121,7 +121,12 @@ inline T my_pdiv(const std::vector<T> &in)
 
 inline std::string print_my_pdiv(const std::vector<std::string> &in)
 {
-    return "(" + in[0] + "/" + in[1] + ")";
+    std::string retval(in[0]);
+    for (auto i = 1u; i < in.size(); ++i) {
+        retval += "/" + in[i];
+    }
+
+    return "(" + retval + ")";
 }
 
 /*--------------------------------------------------------------------------
