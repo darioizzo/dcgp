@@ -1,17 +1,15 @@
 #ifndef DCGP_WRAPPED_FUNCTIONS_H
 #define DCGP_WRAPPED_FUNCTIONS_H
 
-
 #include <audi/audi.hpp>
 #include <audi/functions.hpp>
 #include <cmath>
 #include <string>
+#include <type_traits>
 #include <vector>
 
 #include <dcgp/config.hpp>
 #include <dcgp/type_traits.hpp>
-
-using namespace audi;
 
 namespace dcgp
 {
@@ -21,9 +19,6 @@ namespace dcgp
 // double and a gdual type Complex could also be allowed.
 template <typename T>
 using f_enabler = typename std::enable_if<std::is_same<T, double>::value || is_gdual<T>::value, int>::type;
-
-// Allows to overload in templates std functions with audi functions
-using namespace audi;
 
 /*--------------------------------------------------------------------------
  *                              N-ARITY FUNCTIONS
@@ -86,7 +81,7 @@ inline std::string print_my_div(const std::vector<std::string> &in)
     return "(" + retval + ")";
 }
 
-// protected division (double overload):
+// Protected divide function (double overload):
 template <typename T, typename std::enable_if<std::is_same<T, double>::value, int>::type = 0>
 inline T my_pdiv(const std::vector<T> &in)
 {
@@ -106,17 +101,14 @@ inline T my_pdiv(const std::vector<T> &in)
     return 1.;
 }
 
-// protected division (gdual overload):
+// Protected divide function (gdual overload):
+// this will throw a compiler error when used.
+// The pdiv is only available as a double type, for use in CGP.
+// Because the gradients created when using gdual are mathematically invalid.
 template <typename T, typename std::enable_if<is_gdual<T>::value, int>::type = 0>
 inline T my_pdiv(const std::vector<T> &in)
 {
-    T retval(in[0]);
-    for (auto i = 1u; i < in.size(); ++i) {
-        if (in[i].constant_cf() == typename T::cf_type(0.)) {
-            retval /= in[i];
-        }
-    }
-    return retval;
+    throw std::invalid_argument("The protected division is not supported for gdual types.");
 }
 
 inline std::string print_my_pdiv(const std::vector<std::string> &in)

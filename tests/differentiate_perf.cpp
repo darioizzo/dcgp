@@ -1,5 +1,5 @@
 #define BOOST_TEST_MODULE dcgp_evaluation_perf
-#include <audi/gdual.hpp>
+#include <audi/audi.hpp>
 #include <boost/test/unit_test.hpp>
 #include <boost/timer/timer.hpp>
 #include <iostream>
@@ -7,7 +7,7 @@
 #include <dcgp/expression.hpp>
 #include <dcgp/kernel_set.hpp>
 
-using namespace audi;
+using gdual_d = audi::gdual_d;
 
 void perform_evaluations(unsigned int in, unsigned int out, unsigned int rows, unsigned int columns,
                          unsigned int levels_back, unsigned int arity, unsigned int N,
@@ -45,7 +45,7 @@ BOOST_AUTO_TEST_CASE(evaluation_speed)
     unsigned int N = 1000;
 
     dcgp::kernel_set<gdual_d> kernel_set1({"sum", "diff", "mul", "div"});
-    dcgp::stream(std::cout, "Function set ", kernel_set1(), "\n");
+    audi::stream(std::cout, "Function set ", kernel_set1(), "\n");
     perform_evaluations(2, 4, 2, 3, 4, 2, N, kernel_set1());
     perform_evaluations(2, 4, 10, 10, 11, 2, N, kernel_set1());
     perform_evaluations(2, 4, 20, 20, 21, 2, N, kernel_set1());
@@ -54,7 +54,7 @@ BOOST_AUTO_TEST_CASE(evaluation_speed)
     perform_evaluations(1, 1, 3, 100, 101, 2, N, kernel_set1());
 
     dcgp::kernel_set<gdual_d> kernel_set2({"sum", "mul", "sig"});
-    dcgp::stream(std::cout, "Function set ", kernel_set2(), "\n");
+    audi::stream(std::cout, "Function set ", kernel_set2(), "\n");
     perform_evaluations(2, 4, 2, 3, 4, 2, N, kernel_set2());
     perform_evaluations(2, 4, 10, 10, 11, 2, N, kernel_set2());
     perform_evaluations(2, 4, 20, 20, 21, 2, N, kernel_set2());
