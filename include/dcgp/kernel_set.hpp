@@ -1,6 +1,7 @@
 #ifndef DCGP_kernel_set_H
 #define DCGP_kernel_set_H
 
+#include <audi/audi.hpp>
 #include <type_traits>
 #include <vector>
 
@@ -126,7 +127,7 @@ public:
      */
     friend std::ostream &operator<<(std::ostream &os, const kernel_set<T> &d)
     {
-        stream(os, d());
+        audi::stream(os, d());
         return os;
     }
 
