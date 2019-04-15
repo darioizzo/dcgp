@@ -1,7 +1,6 @@
 #ifndef DCGP_KERNEL_H
 #define DCGP_KERNEL_H
 
-#include <audi/gdual.hpp>
 #include <functional> // std::function
 #include <iostream>
 #include <string>
@@ -9,9 +8,6 @@
 #include <vector>
 
 #include <dcgp/config.hpp>
-
-using namespace audi;
-using gdual_d = audi::gdual<double>;
 
 namespace dcgp
 {

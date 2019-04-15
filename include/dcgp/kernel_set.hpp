@@ -1,7 +1,8 @@
 #ifndef DCGP_kernel_set_H
 #define DCGP_kernel_set_H
 
-#include <audi/gdual.hpp>
+#include <audi/audi.hpp>
+#include <type_traits>
 #include <vector>
 
 #include <dcgp/config.hpp>
@@ -61,7 +62,8 @@ public:
             m_kernels.emplace_back(my_mul<T>, print_my_mul, kernel_name);
         else if (kernel_name == "div")
             m_kernels.emplace_back(my_div<T>, print_my_div, kernel_name);
-        else if (kernel_name == "pdiv")
+        //  pdiv is only available when class type is double
+        else if (kernel_name == "pdiv" && std::is_same<T, double>::value)
             m_kernels.emplace_back(my_pdiv<T>, print_my_pdiv, kernel_name);
         else if (kernel_name == "sig")
             m_kernels.emplace_back(my_sig<T>, print_my_sig, kernel_name);
@@ -125,7 +127,7 @@ public:
      */
     friend std::ostream &operator<<(std::ostream &os, const kernel_set<T> &d)
     {
-        stream(os, d());
+        audi::stream(os, d());
         return os;
     }
 

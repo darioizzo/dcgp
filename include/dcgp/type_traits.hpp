@@ -1,6 +1,8 @@
 #ifndef DCGP_TYPE_TRAITS_H
 #define DCGP_TYPE_TRAITS_H
 
+#include <audi/gdual.hpp>
+
 #include <dcgp/config.hpp>
 
 /// Type is a gdual
