@@ -873,7 +873,7 @@ protected:
             });
         } else {
 #endif
-            for (long i = 0; i < batch_size; ++i) {
+            for (decltype(batch_size) i = 0; i < batch_size; ++i) {
                 // The loss gets computed
                 retval += loss(*(dfirst + i), *(lfirst + i), loss_e);
             }

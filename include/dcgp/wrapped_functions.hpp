@@ -106,7 +106,7 @@ inline T my_pdiv(const std::vector<T> &in)
 // The pdiv is only available as a double type, for use in CGP.
 // Because the gradients created when using gdual are mathematically invalid.
 template <typename T, typename std::enable_if<is_gdual<T>::value, int>::type = 0>
-inline T my_pdiv(const std::vector<T> &in)
+inline T my_pdiv(const std::vector<T> &)
 {
     throw std::invalid_argument("The protected division is not supported for gdual types.");
 }

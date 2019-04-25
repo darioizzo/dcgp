@@ -92,11 +92,11 @@ BOOST_AUTO_TEST_CASE(my_gaussian_test)
     // test with arity of 2
     {
         std::vector<double> v({0.132, 0.34});
-        BOOST_CHECK_CLOSE(my_gaussian(v), 0.98272692007, 1e-8);
+        BOOST_CHECK_CLOSE(my_gaussian(v), 0.98272692007, 1e-4);
     }
     // test with arity 5
     {
         std::vector<double> v({0.132, 0.4, 0.2, 0.2, 0.1});
-        BOOST_CHECK_CLOSE(my_gaussian(v), 0.98272692007, 1e-8);
+        BOOST_CHECK_CLOSE(my_gaussian(v), 0.98272692007, 1e-4);
     }
 }
