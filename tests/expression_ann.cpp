@@ -230,7 +230,7 @@ BOOST_AUTO_TEST_CASE(parenthesis)
 
 BOOST_AUTO_TEST_CASE(sgd)
 {
-    print("Calling Stochastic Gradient Descent\n");
+    audi::print("Calling Stochastic Gradient Descent\n");
 
     // Random numbers stuff
     std::random_device rd;
@@ -253,18 +253,18 @@ BOOST_AUTO_TEST_CASE(sgd)
     }
     double tmp_start = ex.loss(data, label, "MSE");
     double tmp_end = 0.;
-    print("Start: ", tmp_start, "\n");
+    audi::print("Start: ", tmp_start, "\n");
     for (auto j = 0u; j < 20; ++j) {
         auto loss = ex.sgd(data, label, 0.001, 32, "MSE");
         tmp_end = ex.loss(data, label, "MSE");
-        print("Loss (", j, ") real: ", tmp_end, " proxy: ", loss, "\n");
+        audi::print("Loss (", j, ") real: ", tmp_end, " proxy: ", loss, "\n");
     }
     BOOST_CHECK(tmp_end <= tmp_start);
 }
 
 BOOST_AUTO_TEST_CASE(d_loss)
 {
-    print("Testing against numerical derivatives\n");
+    audi::print("Testing against numerical derivatives\n");
     using loss_t = expression_ann::loss_type;
 
     // Random distributions

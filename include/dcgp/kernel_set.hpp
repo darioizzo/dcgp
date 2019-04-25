@@ -83,8 +83,12 @@ public:
             m_kernels.emplace_back(my_log<T>, print_my_log, kernel_name);
         else if (kernel_name == "exp")
             m_kernels.emplace_back(my_exp<T>, print_my_exp, kernel_name);
+        else if (kernel_name == "gaussian")
+            m_kernels.emplace_back(my_gaussian<T>, print_my_gaussian, kernel_name);
+        else if (kernel_name == "sqrt")
+            m_kernels.emplace_back(my_sqrt<T>, print_my_sqrt, kernel_name);
         else
-            throw std::invalid_argument("Unimplemented function " + kernel_name);
+            throw std::invalid_argument("Unimplemented function " + kernel_name + " for this type");
     }
 
     /// Adds a kernel to the set

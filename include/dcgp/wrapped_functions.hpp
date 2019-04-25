@@ -322,6 +322,32 @@ inline std::string print_my_exp(const std::vector<std::string> &in)
     return "exp(" + in[0] + ")";
 }
 
+// gaussian (unary)
+// This gaussian discards all inputs except the first one
+template <typename T, f_enabler<T> = 0>
+inline T my_gaussian(const std::vector<T> &in)
+{
+    return audi::exp(-in[0]*in[0]);
+}
+
+inline std::string print_my_gaussian(const std::vector<std::string> &in)
+{
+    return "exp(-" + in[0] + "**2)";
+}
+
+// sqrt (unary)
+// This square root discards all inputs except the first one
+template <typename T, f_enabler<T> = 0>
+inline T my_sqrt(const std::vector<T> &in)
+{
+    return audi::sqrt(in[0]);
+}
+
+inline std::string print_my_sqrt(const std::vector<std::string> &in)
+{
+    return "sqrt(" + in[0] + ")";
+}
+
 } // namespace dcgp
 
 #endif // DCGP_WRAPPED_FUNCTIONS_H
