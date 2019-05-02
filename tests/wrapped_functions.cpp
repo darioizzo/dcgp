@@ -70,6 +70,7 @@ BOOST_AUTO_TEST_CASE(my_sqrt_test)
 
         v[0] = -1.2e-38;
         v[1] = 1.;
+        std::cout << "Res: " << my_sqrt(v) << std::endl;
         BOOST_CHECK(!std::isfinite(my_sqrt(v)));
     }
     // test with arity 5
