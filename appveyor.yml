@@ -17,10 +17,6 @@ install:
 build_script:
 - C:\Python36-x64\python.exe tools\install_appveyor.py
 
-artifacts:
-  - path: build\wheel\dist
-    name: wheels
- 
 # Enable this to be able to login to the build worker. You can use the
 # `remmina` program in Ubuntu, or Microsoft Remote Desktop app in osx
 #  use the login information that the line below prints into the log.
