@@ -66,26 +66,30 @@ wget(r'https://github.com/bluescarni/binary_deps/raw/master/gmp_mingw_64.7z', 'g
 wget(r'https://github.com/bluescarni/binary_deps/raw/master/mpfr_mingw_64.7z', 'mpfr.7z')
 wget(r'https://github.com/bluescarni/binary_deps/raw/master/boost_mingw_64.7z', 'boost.7z')
 wget(r'https://github.com/bluescarni/binary_deps/raw/master/eigen3.7z', 'eigen3.7z')
+get(r'https://github.com/bluescarni/binary_deps/raw/master/tbb_2019_mgw62.7z', 'tbb.7z')
 
 # Extract them.
 run_command(r'7z x -aoa -oC:\\ gmp.7z', verbose=False)
 run_command(r'7z x -aoa -oC:\\ mpfr.7z', verbose=False)
 run_command(r'7z x -aoa -oC:\\ boost.7z', verbose=False)
 run_command(r'7z x -aoa -oC:\\ eigen3.7z', verbose=False)
+run_command(r'7z x -aoa -oC:\\ tbb.7z', verbose=False)
 
 # Build the Thread Building Block libraries 
-wget(r'https://github.com/01org/tbb/archive/2019.zip', 'tbb-2019.zip')
-run_command(r'unzip tbb-2019.zip', verbose=False)
-os.chdir('tbb-2019')
-os.chdir('build')
-run_command(r'generate_tbbvars.bat', verbose=False)
-run_command(r'tbbvars.bat', verbose=False)
-os.chdir('../') 
-run_command(r'mingw32-make compiler=gcc VERBOSE=1', verbose=True)
+#wget(r'https://github.com/01org/tbb/archive/2019.zip', 'tbb-2019.zip')
+#run_command(r'unzip tbb-2019.zip', verbose=False)
+#os.chdir('tbb-2019')
+#os.chdir('build')
+#run_command(r'generate_tbbvars.bat', verbose=False)
+#run_command(r'tbbvars.bat', verbose=False)
+#os.chdir('../') 
+#run_command(r'mingw32-make compiler=gcc VERBOSE=1', verbose=True)
 # Install the TBB libraries
 # run_command(r'ls build/windows_intel64_gcc_mingw6.2.0_release/tbb* c:\\local\\lib', verbose=True)
-run_command(r'cp -r build/windows_intel64_gcc_mingw6.2.0_release/tbb* c:\\local\\lib', verbose=True)
-run_command(r'cp -r include/tbb c:\\local\\include\\tbb', verbose=True)
+#run_command(r'cp -r build/windows_intel64_gcc_mingw6.2.0_release/tbb* c:\\local\\lib', verbose=True)
+#run_command(r'cp -r include/tbb c:\\local\\include\\tbb', verbose=True)
+
+
 
 #windows_intel64_gcc_mingw6.2.0_debug
 #windows_intel64_gcc_mingw6.2.0_release
