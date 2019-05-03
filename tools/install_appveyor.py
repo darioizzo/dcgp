@@ -66,7 +66,7 @@ wget(r'https://github.com/bluescarni/binary_deps/raw/master/gmp_mingw_64.7z', 'g
 wget(r'https://github.com/bluescarni/binary_deps/raw/master/mpfr_mingw_64.7z', 'mpfr.7z')
 wget(r'https://github.com/bluescarni/binary_deps/raw/master/boost_mingw_64.7z', 'boost.7z')
 wget(r'https://github.com/bluescarni/binary_deps/raw/master/eigen3.7z', 'eigen3.7z')
-get(r'https://github.com/bluescarni/binary_deps/raw/master/tbb_2019_mgw62.7z', 'tbb.7z')
+wget(r'https://github.com/bluescarni/binary_deps/raw/master/tbb_2019_mgw62.7z', 'tbb.7z')
 
 # Extract them.
 run_command(r'7z x -aoa -oC:\\ gmp.7z', verbose=False)
