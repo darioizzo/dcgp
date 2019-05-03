@@ -62,10 +62,16 @@ ORIGINAL_PATH = os.environ['PATH']
 os.environ['PATH'] = r'C:\\mingw64\\bin;' + os.environ['PATH']
 
 # Download common deps.
+print("Download common deps")
+print("1 - gmp")
 wget(r'https://github.com/bluescarni/binary_deps/raw/master/gmp_mingw_64.7z', 'gmp.7z')
+print("2 - mpfr")
 wget(r'https://github.com/bluescarni/binary_deps/raw/master/mpfr_mingw_64.7z', 'mpfr.7z')
+print("3 - boost")
 wget(r'https://github.com/bluescarni/binary_deps/raw/master/boost_mingw_64.7z', 'boost.7z')
+print("4 - eigen3")
 wget(r'https://github.com/bluescarni/binary_deps/raw/master/eigen3.7z', 'eigen3.7z')
+print("5 - tbb")
 wget(r'https://github.com/bluescarni/binary_deps/raw/master/tbb_2019_mgw62.7z', 'tbb.7z')
 
 # Extract them.
@@ -85,17 +91,10 @@ run_command(r'7z x -aoa -oC:\\ tbb.7z', verbose=False)
 #os.chdir('../') 
 #run_command(r'mingw32-make compiler=gcc VERBOSE=1', verbose=True)
 # Install the TBB libraries
-# run_command(r'ls build/windows_intel64_gcc_mingw6.2.0_release/tbb* c:\\local\\lib', verbose=True)
+#run_command(r'ls build/windows_intel64_gcc_mingw6.2.0_release/tbb* c:\\local\\lib', verbose=True)
 #run_command(r'cp -r build/windows_intel64_gcc_mingw6.2.0_release/tbb* c:\\local\\lib', verbose=True)
 #run_command(r'cp -r include/tbb c:\\local\\include\\tbb', verbose=True)
-
-
-
-#windows_intel64_gcc_mingw6.2.0_debug
-#windows_intel64_gcc_mingw6.2.0_release
-#c:\local\lib\libboost_python-mgw62-mt-1_63.dll
-
-os.chdir('../')
+#os.chdir('../')
 
 # Download piranha 0.11 https://github.com/bluescarni/piranha/archive/v0.11.zip
 wget(r'https://github.com/bluescarni/piranha/archive/v0.11.zip', 'piranhav11.zip')
