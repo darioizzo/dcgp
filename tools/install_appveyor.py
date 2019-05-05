@@ -189,7 +189,7 @@ elif BUILD_TYPE in ['Release', 'Debug']:
         r' -DDCGP_BUILD_TESTS=yes ' + common_cmake_opts
     run_command(r'cmake -G "MinGW Makefiles" .. ' + cmake_opts)
     run_command(r'mingw32-make install VERBOSE=1 -j2')
-    run_command(r'ctest -VV')
+    run_command(r'ctest')
 else:
     raise RuntimeError('Unsupported build type: ' + BUILD_TYPE)
 
