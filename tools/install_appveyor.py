@@ -86,8 +86,6 @@ print("4 - eigen3")
 run_command(r'7z x -aoa -oC:\\ eigen3.7z', verbose=False)
 print("5 - tbb")
 run_command(r'7z x -aoa -oC:\\ tbb.7z', verbose=False)
-run_command(r'cp c:\\local\\lib\\tbb_2019_mgw62.dll c:\\local\\lib\\tbb.dll', verbose=True)
-
 
 # Build the Thread Building Block libraries 
 #wget(r'https://github.com/01org/tbb/archive/2019.zip', 'tbb-2019.zip')
