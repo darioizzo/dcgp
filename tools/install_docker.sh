@@ -47,7 +47,7 @@ tar xvf v${PIRANHA_VERSION} > /dev/null 2>&1
 cd piranha-${PIRANHA_VERSION}
 mkdir build
 cd build
-cmake ../ > /dev/null
+cmake -DBoost_NO_BOOST_CMAKE=ON ../ > /dev/null
 make install > /dev/null 2>&1
 cd ..
 
@@ -57,7 +57,7 @@ tar xvf v${AUDI_VERSION} > /dev/null 2>&1
 cd audi-${AUDI_VERSION}
 mkdir build
 cd build
-cmake -DAUDI_BUILD_AUDI=yes -DAUDI_BUILD_TESTS=no -DCMAKE_BUILD_TYPE=Release ../
+cmake -DBoost_NO_BOOST_CMAKE=ON -DAUDI_BUILD_AUDI=yes -DAUDI_BUILD_TESTS=no -DCMAKE_BUILD_TYPE=Release ../
 make install > /dev/null 2>&1
 
 # Python deps
@@ -68,13 +68,13 @@ sleep 20
 cd /dcgp
 mkdir build_dcgp
 cd build_dcgp
-cmake -DDCGP_BUILD_DCGP=yes -DDCGP_BUILD_TESTS=no -DCMAKE_BUILD_TYPE=Release ../
+cmake -DBoost_NO_BOOST_CMAKE=ON -DDCGP_BUILD_DCGP=yes -DDCGP_BUILD_TESTS=no -DCMAKE_BUILD_TYPE=Release ../
 make install
 
 # Compile and install dcgpy (build directory is created by .travis.yml)
 cd /dcgp
 cd build
-cmake -DCMAKE_BUILD_TYPE=Release -DDCGP_BUILD_DCGP=no -DDCGP_BUILD_DCGPY=yes -DPYTHON_EXECUTABLE=/opt/python/${PYTHON_DIR}/bin/python ../;
+cmake -DBoost_NO_BOOST_CMAKE=ON -DCMAKE_BUILD_TYPE=Release -DDCGP_BUILD_DCGP=no -DDCGP_BUILD_DCGPY=yes -DPYTHON_EXECUTABLE=/opt/python/${PYTHON_DIR}/bin/python ../;
 make -j2 install
 
 
