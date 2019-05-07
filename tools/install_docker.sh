@@ -42,68 +42,6 @@ cd
 mkdir install
 cd install
 
-# Install tbb (files will also be copied in /usr/lib64 and /usr/include)
-curl -L https://github.com/01org/tbb/archive/2019.tar.gz >tbb-2019.tar.gz
-tar xvf tbb-2019.tar.gz > /dev/null 2>&1
-cd tbb-2019
-make > /dev/null 2>&1
-cd build
-mv *_release release
-mv *_debug debug
-cd release
-cp libtbb* /usr/lib64/
-cd ../debug
-cp libtbb* /usr/lib64/
-ldconfig
-cd ../../include/
-cp -r tbb /usr/local/include/
-cd ../../
-
-# Install Boost
-curl -L http://dl.bintray.com/boostorg/release/${BOOST_VERSION}/source/boost_`echo ${BOOST_VERSION}|tr "." "_"`.tar.bz2 > boost_`echo ${BOOST_VERSION}|tr "." "_"`.tar.bz2
-tar xjf boost_`echo ${BOOST_VERSION}|tr "." "_"`.tar.bz2
-cd boost_`echo ${BOOST_VERSION}|tr "." "_"`
-sh bootstrap.sh --with-python=/opt/python/${PYTHON_DIR}/bin/python > /dev/null
-./bjam --toolset=gcc link=shared threading=multi cxxflags="-std=c++11" variant=release --with-python --with-serialization --with-iostreams --with-regex --with-chrono --with-timer --with-test --with-system -j2 install > /dev/null
-cd ..
-
-# Install gmp (before mpfr as its used by it)
-curl -L https://gmplib.org/download/gmp/gmp-6.1.2.tar.bz2 > gmp-6.1.2.tar.bz2
-tar xvf gmp-6.1.2.tar.bz2  > /dev/null 2>&1
-cd gmp-6.1.2 > /dev/null 2>&1
-./configure --enable-fat > /dev/null 2>&1
-make > /dev/null 2>&1
-make install > /dev/null 2>&1
-cd ..
-
-# Install mpfr
-curl -L http://www.mpfr.org/mpfr-3.1.6/mpfr-3.1.6.tar.gz > mpfr-3.1.6.tar.gz
-tar xvf mpfr-3.1.6.tar.gz > /dev/null 2>&1
-cd mpfr-3.1.6
-./configure > /dev/null 2>&1
-make > /dev/null 2>&1
-make install > /dev/null 2>&1
-cd ..
-
-# Install CMake
-curl -L https://github.com/Kitware/CMake/archive/v${CMAKE_VERSION}.tar.gz > v${CMAKE_VERSION}
-tar xzf v${CMAKE_VERSION} > /dev/null 2>&1
-cd CMake-${CMAKE_VERSION}/
-./configure > /dev/null
-gmake -j2 > /dev/null
-gmake install > /dev/null
-cd ..
-
-# Install Eigen
-curl -L http://bitbucket.org/eigen/eigen/get/${EIGEN3_VERSION}.tar.gz > ${EIGEN3_VERSION}
-tar xzf ${EIGEN3_VERSION} > /dev/null 2>&1
-cd eigen*
-mkdir build
-cd build
-cmake ../ > /dev/null
-make install > /dev/null
-cd ..
-
 # Install piranha
 curl -L https://github.com/bluescarni/piranha/archive/v${PIRANHA_VERSION}.tar.gz > v${PIRANHA_VERSION}
 tar xvf v${PIRANHA_VERSION} > /dev/null 2>&1
