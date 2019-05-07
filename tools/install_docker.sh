@@ -13,15 +13,19 @@ PIRANHA_VERSION="0.11"
 if [[ ${DCGP_BUILD} == *37 ]]; then
 	PYTHON_DIR="cp37-cp37m"
 	BOOST_PYTHON_LIBRARY_NAME="libboost_python37.so"
+	PYTHON_VERSION="37"
 elif [[ ${DCGP_BUILD} == *36 ]]; then
 	PYTHON_DIR="cp36-cp36m"
 	BOOST_PYTHON_LIBRARY_NAME="libboost_python36.so"
+	PYTHON_VERSION="36"
 elif [[ ${DCGP_BUILD} == *27mu ]]; then
 	PYTHON_DIR="cp27-cp27mu"
 	BOOST_PYTHON_LIBRARY_NAME="libboost_python27mu.so"
+	PYTHON_VERSION="27"
 elif [[ ${DCGP_BUILD} == *27 ]]; then
 	PYTHON_DIR="cp27-cp27m"
 	BOOST_PYTHON_LIBRARY_NAME="libboost_python27.so"
+	PYTHON_VERSION="27"
 else
 	echo "Invalid build type: ${DCGP_BUILD}"
 	exit 1
@@ -75,7 +79,7 @@ make install
 # Compile and install dcgpy (build directory is created by .travis.yml)
 cd /dcgp
 cd build
-cmake -DBoost_NO_BOOST_CMAKE=ON -DBoost_PYTHON_LIBRARY_RELEASE=/usr/local/lib/${BOOST_PYTHON_LIBRARY_NAME} -DCMAKE_BUILD_TYPE=Release -DDCGP_BUILD_DCGP=no -DDCGP_BUILD_DCGPY=yes -DPYTHON_EXECUTABLE=/opt/python/${PYTHON_DIR}/bin/python ../;
+cmake -DBoost_NO_BOOST_CMAKE=ON -DBoost_PYTHON${PYTHON_VERSION}_LIBRARY_RELEASE=/usr/local/lib/${BOOST_PYTHON_LIBRARY_NAME} -DCMAKE_BUILD_TYPE=Release -DDCGP_BUILD_DCGP=no -DDCGP_BUILD_DCGPY=yes -DPYTHON_EXECUTABLE=/opt/python/${PYTHON_DIR}/bin/python ../;
 make -j2 install
 
 
