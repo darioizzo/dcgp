@@ -9,7 +9,6 @@ set -e
 AUDI_VERSION="1.6"
 PIRANHA_VERSION="0.11"
 
-
 if [[ ${DCGP_BUILD} == *37 ]]; then
 	PYTHON_DIR="cp37-cp37m"
 	BOOST_PYTHON_LIBRARY_NAME="libboost_python37.so"

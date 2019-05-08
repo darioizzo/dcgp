@@ -1,5 +1,6 @@
-import unittest as _ut
+from __future__ import absolute_import as _ai
 
+import unittest as _ut
 
 class test_kernel(_ut.TestCase):
 
@@ -46,6 +47,11 @@ class test_kernel(_ut.TestCase):
 
 
 class test_kernel_set(_ut.TestCase):
+    def runTest(self):
+            self.test_double()
+            self.test_gdual_double()
+            self.test_gdual_vdouble()
+
     def my_sum(self, x):
         return sum(x)
 
@@ -103,6 +109,14 @@ class test_kernel_set(_ut.TestCase):
 
 
 class test_expression(_ut.TestCase):
+
+    def runTest(self):
+            self.test_double()
+            self.test_gdual_double()
+            self.test_gdual_vdouble()
+            self.test_loss_double()
+            self.test_loss_gdual_double()
+            self.test_loss_gdual_vdouble()
 
     def test_double(self):
         from dcgpy import expression_double as expression
@@ -182,12 +196,12 @@ def run_test_suite():
     This function will raise an exception if at least one test fails.
     """
     retval = 0
-    suite_kernel = _ut.TestLoader().loadTestsFromTestCase(test_kernel)
-    suite_kernel_set = _ut.TestLoader().loadTestsFromTestCase(test_kernel_set)
-    suite_expression = _ut.TestLoader().loadTestsFromTestCase(test_expression)
-    print("\nRunning tests on kernel function")
-    test_result = _ut.TextTestRunner(verbosity=2).run(suite_kernel)
-    print("\nRunning tests on kernel_set construction")
-    test_result = _ut.TextTestRunner(verbosity=2).run(suite_kernel_set)
-    print("\nRunning tests on CGP expressions")
-    test_result = _ut.TextTestRunner(verbosity=2).run(suite_expression)
+    suite = _ut.TestLoader().loadTestsFromTestCase(test_kernel)
+    suite.addTest(test_kernel_set())
+    suite.addTest(test_expression())
+
+    test_result = _ut.TextTestRunner(verbosity=2).run(suite)
+    if len(test_result.failures) > 0 or len(test_result.errors) > 0:
+        retval = 1
+    if retval != 0:
+        raise RuntimeError('One or more tests failed.')
