@@ -1,5 +1,5 @@
 # Main dcgp/dcgpy project version.
-set(DCGP_PROJECT_VERSION 1.2)
+set(DCGP_PROJECT_VERSION 1.2.1)
 
 # CMake version check.
 cmake_minimum_required(VERSION 3.2)
