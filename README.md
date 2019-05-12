@@ -19,6 +19,8 @@ Izzo, Dario, Francesco Biscani, and Alessio Mereta. "Differentiable Genetic Prog
 
 Preliminary documentation can be found at http://darioizzo.github.io/dcgp/
 
+A web based version of dCGP can be found here: https://esa.github.io/dcgp-web/ thanks to Mike Heddes!
+
 ## dcgpy
 If you have a win 64bit system or a linux based system (32 or 64 bits), the python package dcgpy (python binding of the C++ code) can be installed via:
 
