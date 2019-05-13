@@ -184,7 +184,7 @@ elif BUILD_TYPE in ['Release', 'Debug']:
     os.makedirs('build_dcgp')
     os.chdir('build_dcgp')
     cmake_opts = r'-DCMAKE_BUILD_TYPE=' + BUILD_TYPE + \
-        r' -DDCGP_BUILD_TESTS=yes ' \ 
+        r' -DDCGP_BUILD_TESTS=yes ' \
         + common_cmake_opts
     run_command(r'cmake -G "MinGW Makefiles" .. ' + cmake_opts)
     run_command(r'mingw32-make install VERBOSE=1 -j2')
