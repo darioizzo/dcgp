@@ -174,7 +174,7 @@ if is_python_build:
             r'-DDCGPY_INSTALL_PATH=c:\\local ' + \
             r'-DDCGP_BUILD_DCGP=no ' + \
             r'-DDCGP_BUILD_DCGPY=yes ' + \
-            r'-DCMAKE_BUILD_TYPE=Release ' + \ 
+            r'-DCMAKE_BUILD_TYPE=Release ' + \
             r'-DBoost_PYTHON' + python_version + r'_LIBRARY_RELEASE=c:\\local\\lib\\libboost_python' + python_version + r'-mgw81-mt-x64-1_70.dll ' + \
             r'-DPYTHON_INCLUDE_DIR=C:\\' + python_folder + r'\\include ' + \
             r'-DPYTHON_EXECUTABLE=C:\\' + python_folder + r'\\python.exe ' + \
