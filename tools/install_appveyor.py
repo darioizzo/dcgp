@@ -94,7 +94,7 @@ os.chdir('audi-1.6')
 os.makedirs('build')
 os.chdir('build')
 print("Installing audi")
-run_command(r'cmake -G "MinGW Makefiles" .. ' + \ 
+run_command(r'cmake -G "MinGW Makefiles" .. ' + \
     r'-DAUDI_BUILD_AUDI=yes ' + \
     r'-DAUDI_BUILD_PYAUDI=no ' + \
     r'-DAUDI_BUILD_TEST=no ' + \
