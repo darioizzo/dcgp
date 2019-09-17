@@ -1,3 +1,4 @@
+#include <audi/io.hpp>
 #include <iostream>
 
 #include <dcgp/expression.hpp>
@@ -71,6 +72,6 @@ int main()
             }
         }
     } while (best_fit > 1e-3 && gen < 3000);
-    dcgp::stream(std::cout, "Number of generations: ", gen, "\n");
-    dcgp::stream(std::cout, "Expression: ", ex(in_sym), "\n");
+    audi::stream(std::cout, "Number of generations: ", gen, "\n");
+    audi::stream(std::cout, "Expression: ", ex(in_sym), "\n");
 }

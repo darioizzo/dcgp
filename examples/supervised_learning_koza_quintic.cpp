@@ -42,7 +42,7 @@ bool kq(unsigned int r, unsigned int c, unsigned int l, unsigned int a,
     es_params params{4, "active", 2, 0, 1000};
     es(in, out, ex, params);
 
-    dcgp::stream(std::cout, "Final expression: ", ex(in_sym), "\n");
+    audi::stream(std::cout, "Final expression: ", ex(in_sym), "\n");
     return false;
 }
 

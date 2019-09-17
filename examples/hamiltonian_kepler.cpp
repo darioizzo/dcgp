@@ -83,7 +83,7 @@ int main()
         for (auto i = 0u; i < newfits.size(); ++i) {
             if (newfits[i] <= best_fit) {
                 if (newfits[i] != best_fit) {
-                    stream(std::cout, "New best found: gen: ", std::setw(7), gen, "\t value: ", newfits[i], "\n");
+                    audi::stream(std::cout, "New best found: gen: ", std::setw(7), gen, "\t value: ", newfits[i], "\n");
                     // std::cout << "Expression: " << ex(in_sym), "\n");
                 }
                 best_fit = newfits[i];
@@ -93,9 +93,9 @@ int main()
         }
     } while (best_fit > 1e-12 && gen < 10000);
 
-    stream(std::cout, "Number of generations: ", gen, "\n");
-    stream(std::cout, "Expression: ", ex, "\n");
-    stream(std::cout, "Expression: ", ex(in_sym), "\n");
-    stream(std::cout, "Point: ", in[2], "\n");
-    stream(std::cout, "Taylor: ", ex(in[2]), "\n");
+    audi::stream(std::cout, "Number of generations: ", gen, "\n");
+    audi::stream(std::cout, "Expression: ", ex, "\n");
+    audi::stream(std::cout, "Expression: ", ex(in_sym), "\n");
+    audi::stream(std::cout, "Point: ", in[2], "\n");
+    audi::stream(std::cout, "Taylor: ", ex(in[2]), "\n");
 }
