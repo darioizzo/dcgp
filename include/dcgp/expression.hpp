@@ -234,7 +234,7 @@ public:
      * @param[prediction] The predicted output (single point)
      * @param[loss_e] The loss type. Can be "MSE" for Mean Square Error (regression) or "CE" for Cross Entropy
      * (classification)
-     * @return the mse
+     * @return the computed loss
      */
     T loss(const std::vector<T> &point, const std::vector<T> &prediction, loss_type loss_e) const
     {
