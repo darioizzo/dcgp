@@ -18,7 +18,10 @@
 #include <tbb/tbb.h>
 #endif
 
+#include <dcgp/detail/s11n_wrappers.hpp>
 #include <dcgp/kernel.hpp>
+#include <dcgp/rng.hpp>
+#include <dcgp/s11n.hpp>
 #include <dcgp/type_traits.hpp>
 
 namespace dcgp
@@ -50,7 +53,8 @@ public:
         /// Mean Squared Error
         MSE,
         // Cross-Entropy
-        CE };
+        CE
+    };
 
     /// Constructor
     /** Constructs a dCGP expression with variable arity
@@ -72,8 +76,7 @@ public:
                unsigned l,                  // n. levels-back
                std::vector<unsigned> arity, // basis functions' arity
                std::vector<kernel<T>> f,    // functions
-               unsigned seed                // seed for the pseudo-random numbers
-               )
+               unsigned seed = dcgp::random_device::next())
         : m_n(n), m_m(m), m_r(r), m_c(c), m_l(l), m_arity(arity), m_f(f), m_e(seed)
     {
         // Sanity checks
@@ -756,8 +759,9 @@ public:
 protected:
     /// Unchecked get arity
     /**
-     * The public method get_arity, has some checks thet are significantly impacting speed if used in performance critical code sections
-     * (such as the operator(). Thus this protected method should be used instead but use carefully as it may result in invalid reads
+     * The public method get_arity, has some checks thet are significantly impacting speed if used in performance
+     * critical code sections (such as the operator(). Thus this protected method should be used instead but use
+     * carefully as it may result in invalid reads
      *
      * @param[node_id] chromosome
      */
@@ -885,6 +889,14 @@ protected:
         return retval;
     }
 
+    // Object serialization
+    template <typename Archive>
+    void serialize(Archive &ar, unsigned)
+    {
+        detail::archive(ar, m_n, m_m, m_r, m_c, m_l, m_arity, m_f, m_lb, m_ub, m_active_nodes, m_active_genes, m_x,
+                        m_gene_idx, m_e);
+    }
+
 private:
     void sanity_checks()
     {
@@ -980,7 +992,7 @@ private:
     // The starting index in the chromosome of the genes expressing a node
     std::vector<unsigned> m_gene_idx;
     // the random engine for the class
-    std::default_random_engine m_e;
+    detail::random_engine_type m_e;
     // The expression type
     using type = T;
 };
