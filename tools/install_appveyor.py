@@ -74,6 +74,15 @@ run_command(r'7z x -aoa -oC:\\ boost.7z', verbose=False)
 run_command(r'7z x -aoa -oC:\\ eigen3.7z', verbose=False)
 run_command(r'7z x -aoa -oC:\\ tbb.7z', verbose=False)
 
+# Options common to all builds (pagmo and ppnf related)
+# NOTE: at the moment boost 1.70 seems to have problem to autodetect
+# the mingw library (with CMake 3.13 currently installed in appveyor)
+# Thus we manually point to the boost libs.
+common_cmake_opts = r'-DCMAKE_PREFIX_PATH=c:\\local ' + \
+                    r'-DCMAKE_INSTALL_PREFIX=c:\\local ' + \
+                    r'-DBoost_INCLUDE_DIR=c:\\local\\include ' + \
+                    r'-DBoost_SERIALIZATION_LIBRARY_RELEASE=c:\\local\\lib\\libboost_serialization-mgw81-mt-x64-1_70.dll '
+
 ## ------------------------------ INSTALL C/C++ DEPENDENCIES -------------------------------------##
 # Download piranha 0.11 https://github.com/bluescarni/piranha/archive/v0.11.zip
 wget(r'https://github.com/bluescarni/piranha/archive/v0.11.zip', 'piranhav11.zip')
@@ -102,9 +111,7 @@ run_command(r'cmake -G "MinGW Makefiles" .. ' + \
     r'-DAUDI_BUILD_PYAUDI=no ' + \
     r'-DAUDI_BUILD_TEST=no ' + \
     r'-DAUDI_WITH_MPPP=no ' + \
-    r'-DCMAKE_INSTALL_PREFIX=c:\\local ' + \
-    r'-DBoost_INCLUDE_DIR=c:\\local\\include ' + \
-    r'-DBoost_SERIALIZATION_LIBRARY_RELEASE=c:\\local\\lib\\libboost_serialization-mgw81-mt-x64-1_70.dll ' + \
+    common_cmake_opts +
     r'-DBoost_CHRONO_LIBRARY_RELEASE=c:\\local\\lib\\libboost_chrono-mgw81-mt-x64-1_70.dll ' + \
     r'-DBoost_SYSTEM_LIBRARY_RELEASE=c:\\local\\lib\\libboost_system-mgw81-mt-x64-1_70.dll ' + \
     r'-DBoost_UNIT_TEST_FRAMEWORK_LIBRARY_RELEASE=c:\\local\\lib\\libboost_unit_test_framework-mgw81-mt-x64-1_70.dll ' + \
