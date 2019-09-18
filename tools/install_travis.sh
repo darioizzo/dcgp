@@ -19,13 +19,13 @@ if [[ "${DCGP_BUILD}" == "ReleaseGCC" ]]; then
 elif [[ "${DCGP_BUILD}" == "DebugGCC" ]]; then
     cmake -DCMAKE_PREFIX_PATH=$deps_dir -DBoost_NO_BOOST_CMAKE=ON -DCMAKE_BUILD_TYPE=Debug -DDCGP_BUILD_DCGP=yes -DDCGP_BUILD_TESTS=yes -DDCGP_BUILD_EXAMPLES=no -DCMAKE_CXX_FLAGS="-fsanitize=address -fuse-ld=gold" ../;
     make -j2 VERBOSE=1;
-    ctest -VV;
+    LSAN_OPTIONS=suppressions=/home/travis/build/darioizzo/dcgp/tools/lsan.supp ctest -VV;
 elif [[ "${DCGP_BUILD}" == "CoverageGCC" ]]; then
     cmake -DCMAKE_PREFIX_PATH=$deps_dir -DBoost_NO_BOOST_CMAKE=ON -DCMAKE_BUILD_TYPE=Debug -DDCGP_BUILD_DCGP=yes -DDCGP_BUILD_TESTS=yes -DDCGP_BUILD_EXAMPLES=no -DCMAKE_CXX_FLAGS="--coverage -fuse-ld=gold" ../;
     make -j2 VERBOSE=1;
     ctest -VV;
     bash <(curl -s https://codecov.io/bash) -x gcov-5;
-elif [[ "${PAGMO_PLUGINS_NONFREE_BUILD}" == "DebugClang" ]]; then
+elif [[ "${DCGP_BUILD}" == "DebugClang" ]]; then
     CXX=clang++-7 CC=clang-7 cmake -DCMAKE_PREFIX_PATH=$deps_dir -DBoost_NO_BOOST_CMAKE=ON -DCMAKE_BUILD_TYPE=Debug --DCMAKE_BUILD_TYPE=Debug -DDCGP_BUILD_DCGP=yes -DDCGP_BUILD_TESTS=yes ../;
     make -j2 VERBOSE=1;
     ctest -VV;
