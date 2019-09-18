@@ -6,6 +6,12 @@ set -x
 # Exit on error.
 set -e
 
+if [[ "${DCGP_BUILD}" != manylinux* ]]; then
+    export deps_dir=$HOME/local
+    export PATH="$HOME/miniconda/bin:$PATH"
+    export PATH="$deps_dir/bin:$PATH"
+fi
+
 if [[ "${DCGP_BUILD}" == "ReleaseGCC" ]]; then
     cmake -DCMAKE_PREFIX_PATH=$deps_dir -DBoost_NO_BOOST_CMAKE=ON -DCMAKE_BUILD_TYPE=Release -DDCGP_BUILD_DCGP=yes -DCGP_BUILD_TESTS=yes -DCGP_BUILD_EXAMPLES=yes -DCMAKE_CXX_FLAGS="-fuse-ld=gold" ../;
     make -j2 VERBOSE=1;
