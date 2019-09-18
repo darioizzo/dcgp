@@ -61,6 +61,7 @@ os.environ['PATH'] = os.environ['PATH'] + r';c:\\local\\lib'
 # Download common deps.
 wget(r'https://github.com/bluescarni/binary_deps/raw/master/gmp_mingw81_64.7z', 'gmp.7z')
 wget(r'https://github.com/bluescarni/binary_deps/raw/master/mpfr_mingw81_64.7z', 'mpfr.7z')
+wget(r'https://github.com/bluescarni/binary_deps/raw/master/nlopt_mingw81_64.7z', 'nlopt.7z')
 wget(r'https://github.com/bluescarni/binary_deps/raw/master/boost_mgw81-mt-x64-1_70.7z', 'boost.7z')
 wget(r'https://github.com/bluescarni/binary_deps/raw/master/eigen3.7z', 'eigen3.7z')
 wget(r'https://github.com/bluescarni/binary_deps/raw/master/tbb_2019_mgw81.7z', 'tbb.7z')
@@ -68,10 +69,12 @@ wget(r'https://github.com/bluescarni/binary_deps/raw/master/tbb_2019_mgw81.7z', 
 # Extract them.
 run_command(r'7z x -aoa -oC:\\ gmp.7z', verbose=False)
 run_command(r'7z x -aoa -oC:\\ mpfr.7z', verbose=False)
+run_command(r'7z x -aoa -oC:\\ nlopt.7z', verbose=False)
 run_command(r'7z x -aoa -oC:\\ boost.7z', verbose=False)
 run_command(r'7z x -aoa -oC:\\ eigen3.7z', verbose=False)
 run_command(r'7z x -aoa -oC:\\ tbb.7z', verbose=False)
 
+## ------------------------------ INSTALL C/C++ DEPENDENCIES -------------------------------------##
 # Download piranha 0.11 https://github.com/bluescarni/piranha/archive/v0.11.zip
 wget(r'https://github.com/bluescarni/piranha/archive/v0.11.zip', 'piranhav11.zip')
 run_command(r'unzip piranhav11.zip', verbose=False)
@@ -109,6 +112,23 @@ run_command(r'cmake -G "MinGW Makefiles" .. ' + \
 run_command(r'mingw32-make install VERBOSE=1', verbose=False)
 os.chdir('../../')
 print("Audi sucessfully installed .. continuing")
+
+# Get pagmo from git, install the headers and the library
+wget(r'https://github.com/esa/pagmo2/archive/v2.11.3.tar.gz', 'pagmo.tar.gz')
+run_command(r'7z x -aoa -oC:\\projects pagmo.tar.gz', verbose=False)
+run_command(r'7z x -aoa -oC:\\projects C:\\projects\\pagmo.tar', verbose=False)
+os.chdir('c:\\projects\\pagmo2-2.11.3')
+os.makedirs('build_pagmo')
+os.chdir('build_pagmo')
+run_command(r'cmake -G "MinGW Makefiles" .. ' +
+            common_cmake_opts +
+            r'-DPAGMO_WITH_EIGEN3=yes ' +
+            r'-DPAGMO_WITH_NLOPT=yes ' +
+            r'-DCMAKE_BUILD_TYPE=Release ')
+run_command(r'mingw32-make install VERBOSE=1 -j2')
+os.environ['PATH'] = os.getcwd() + ";" + os.environ['PATH']
+os.chdir('..')
+## -------------------------- END INSTALL C/C++ DEPENDENCIES -------------------------------------##
 
 # Setup of the Python build variables (python version based)
 if is_python_build:
