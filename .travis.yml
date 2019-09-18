@@ -16,6 +16,8 @@ matrix:
       os: linux
       addons:
         apt:
+          sources:
+          - ubuntu-toolchain-r-test
           packages:
           - binutils-gold
     - env: DCGP_BUILD="ReleaseGCC"
@@ -24,14 +26,18 @@ matrix:
       os: linux
       addons:
         apt:
+          sources:
+          - ubuntu-toolchain-r-test
           packages:
           - binutils-gold
     - env: DCGP_BUILD="CoverageGCC"
       dist: bionic
-      compiler: gcc 
+      compiler: gcc
       os: linux
       addons:
         apt:
+          sources:
+          - ubuntu-toolchain-r-test
           packages:
           - binutils-gold
     - env: DCGP_BUILD="manylinux64Py37" DOCKER_IMAGE="pagmo2/manylinux1_x86_64_with_deps"
