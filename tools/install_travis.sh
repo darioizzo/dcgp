@@ -34,7 +34,7 @@ elif [[ "${DCGP_BUILD}" == "OSXRelease" ]]; then
     CXX=clang++ CC=clang cmake -DCMAKE_PREFIX_PATH=$deps_dir -DBoost_NO_BOOST_CMAKE=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_BUILD_TYPE=Debug -DDCGP_BUILD_DCGP=yes -DCGP_BUILD_TESTS=yes -DCGP_BUILD_EXAMPLES=yes ../;
     make -j2 VERBOSE=1;
     ctest -VV;
-if [[ "${DCGP_BUILD}" == manylinux* ]]; then
+elif [[ "${DCGP_BUILD}" == manylinux* ]]; then
     cd ..;
     docker pull ${DOCKER_IMAGE};
     docker run --rm -e TWINE_PASSWORD -e DCGP_BUILD -e TRAVIS_TAG -v `pwd`:/dcgp $DOCKER_IMAGE bash /dcgp/tools/install_docker.sh
