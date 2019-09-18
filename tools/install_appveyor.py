@@ -133,8 +133,11 @@ run_command(r'cmake -G "MinGW Makefiles" .. ' +
             r'-DPAGMO_WITH_NLOPT=yes ' +
             r'-DCMAKE_BUILD_TYPE=Release ')
 run_command(r'mingw32-make install VERBOSE=1 -j2')
+# We add this so that the pagmo dll is found
 os.environ['PATH'] = os.getcwd() + ";" + os.environ['PATH']
-os.chdir('..')
+os.chdir('../../')
+print("Pagmo sucessfully installed .. continuing")
+
 ## -------------------------- END INSTALL C/C++ DEPENDENCIES -------------------------------------##
 
 # Setup of the Python build variables (python version based)
@@ -175,7 +178,7 @@ if is_python_build:
         run_command(pip + ' install twine')
 
 # Set the path so that the precompiled libs can be found.
-os.environ['PATH'] = os.environ['PATH'] + r';c:\\local\\lib'
+#os.environ['PATH'] = os.environ['PATH'] + r';c:\\local\\lib'
 
 # Proceed to the build. The following arguments will be used for all build cases.
 common_cmake_opts = r'-DCMAKE_PREFIX_PATH=c:\\local ' + \
@@ -208,8 +211,8 @@ if is_python_build:
             r'-DPYTHON_LIBRARY=' + python_library)
     run_command(r'mingw32-make install VERBOSE=1 -j2')
 elif BUILD_TYPE in ['Release', 'Debug']:
-    os.makedirs('build_dcgp')
-    os.chdir('build_dcgp')
+    os.makedirs('build')
+    os.chdir('build')
     cmake_opts = r'-DCMAKE_BUILD_TYPE=' + BUILD_TYPE + \
         r' -DDCGP_BUILD_TESTS=yes ' \
         + common_cmake_opts
