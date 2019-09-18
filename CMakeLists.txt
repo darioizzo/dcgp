@@ -157,8 +157,8 @@ if(DCGP_BUILD_DCGP)
     message(STATUS "AUDI include dir is: ${AUDI_INCLUDE_DIRS}")
 
     # Pagmo setup
-    find_package(Pagmo REQUIRED)
-    message(STATUS "Pagmo dir is: ${Pagmo_DIR}")
+    #find_package(Pagmo REQUIRED)
+    #message(STATUS "Pagmo dir is: ${Pagmo_DIR}")
 
     if(NOT DCGP_SINGLE_THREAD)
         # TBB setup
@@ -171,9 +171,9 @@ if(DCGP_BUILD_DCGP)
     add_library(dcgp INTERFACE)
     target_link_libraries(dcgp INTERFACE Threads::Threads Boost::boost Boost::serialization)
     if(DCGP_SINGLE_THREAD)
-        target_link_libraries(dcgp INTERFACE Eigen3::eigen3 MPFR::MPFR GMP::GMP Audi::audi Pagmo::pagmo)
+        target_link_libraries(dcgp INTERFACE Eigen3::eigen3 MPFR::MPFR GMP::GMP Audi::audi)
     else()
-        target_link_libraries(dcgp INTERFACE Eigen3::eigen3 MPFR::MPFR GMP::GMP Audi::audi TBB::tbb Pagmo::pagmo)
+        target_link_libraries(dcgp INTERFACE Eigen3::eigen3 MPFR::MPFR GMP::GMP Audi::audi TBB::tbb)
     endif()
 
 
