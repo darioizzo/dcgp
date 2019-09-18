@@ -56,13 +56,11 @@ matrix:
     sudo: required
     services:
     - docker
-
-install:
-- docker pull $DOCKER_IMAGE
 script:
 - mkdir build
 - cd build
-- bash ../tools/install_travis.sh
+- source ../tools/install_travis.sh
 notifications:
   email: false
+
 
