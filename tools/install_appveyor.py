@@ -61,6 +61,7 @@ os.environ['PATH'] = os.environ['PATH'] + r';c:\\local\\lib'
 # Download common deps.
 wget(r'https://github.com/bluescarni/binary_deps/raw/master/gmp_mingw81_64.7z', 'gmp.7z')
 wget(r'https://github.com/bluescarni/binary_deps/raw/master/mpfr_mingw81_64.7z', 'mpfr.7z')
+wget(r'https://github.com/bluescarni/binary_deps/raw/master/nlopt_mingw81_64.7z', 'nlopt.7z')
 wget(r'https://github.com/bluescarni/binary_deps/raw/master/boost_mgw81-mt-x64-1_70.7z', 'boost.7z')
 wget(r'https://github.com/bluescarni/binary_deps/raw/master/eigen3.7z', 'eigen3.7z')
 wget(r'https://github.com/bluescarni/binary_deps/raw/master/tbb_2019_mgw81.7z', 'tbb.7z')
@@ -68,10 +69,21 @@ wget(r'https://github.com/bluescarni/binary_deps/raw/master/tbb_2019_mgw81.7z', 
 # Extract them.
 run_command(r'7z x -aoa -oC:\\ gmp.7z', verbose=False)
 run_command(r'7z x -aoa -oC:\\ mpfr.7z', verbose=False)
+run_command(r'7z x -aoa -oC:\\ nlopt.7z', verbose=False)
 run_command(r'7z x -aoa -oC:\\ boost.7z', verbose=False)
 run_command(r'7z x -aoa -oC:\\ eigen3.7z', verbose=False)
 run_command(r'7z x -aoa -oC:\\ tbb.7z', verbose=False)
 
+# Options common to all builds (pagmo and ppnf related)
+# NOTE: at the moment boost 1.70 seems to have problem to autodetect
+# the mingw library (with CMake 3.13 currently installed in appveyor)
+# Thus we manually point to the boost libs.
+common_cmake_opts = r'-DCMAKE_PREFIX_PATH=c:\\local ' + \
+                    r'-DCMAKE_INSTALL_PREFIX=c:\\local ' + \
+                    r'-DBoost_INCLUDE_DIR=c:\\local\\include ' + \
+                    r'-DBoost_SERIALIZATION_LIBRARY_RELEASE=c:\\local\\lib\\libboost_serialization-mgw81-mt-x64-1_70.dll '
+
+## ------------------------------ INSTALL C/C++ DEPENDENCIES -------------------------------------##
 # Download piranha 0.11 https://github.com/bluescarni/piranha/archive/v0.11.zip
 wget(r'https://github.com/bluescarni/piranha/archive/v0.11.zip', 'piranhav11.zip')
 run_command(r'unzip piranhav11.zip', verbose=False)
@@ -99,9 +111,7 @@ run_command(r'cmake -G "MinGW Makefiles" .. ' + \
     r'-DAUDI_BUILD_PYAUDI=no ' + \
     r'-DAUDI_BUILD_TEST=no ' + \
     r'-DAUDI_WITH_MPPP=no ' + \
-    r'-DCMAKE_INSTALL_PREFIX=c:\\local ' + \
-    r'-DBoost_INCLUDE_DIR=c:\\local\\include ' + \
-    r'-DBoost_SERIALIZATION_LIBRARY_RELEASE=c:\\local\\lib\\libboost_serialization-mgw81-mt-x64-1_70.dll ' + \
+    common_cmake_opts +
     r'-DBoost_CHRONO_LIBRARY_RELEASE=c:\\local\\lib\\libboost_chrono-mgw81-mt-x64-1_70.dll ' + \
     r'-DBoost_SYSTEM_LIBRARY_RELEASE=c:\\local\\lib\\libboost_system-mgw81-mt-x64-1_70.dll ' + \
     r'-DBoost_UNIT_TEST_FRAMEWORK_LIBRARY_RELEASE=c:\\local\\lib\\libboost_unit_test_framework-mgw81-mt-x64-1_70.dll ' + \
@@ -109,6 +119,26 @@ run_command(r'cmake -G "MinGW Makefiles" .. ' + \
 run_command(r'mingw32-make install VERBOSE=1', verbose=False)
 os.chdir('../../')
 print("Audi sucessfully installed .. continuing")
+
+# Get pagmo from git, install the headers and the library
+wget(r'https://github.com/esa/pagmo2/archive/v2.11.3.tar.gz', 'pagmo.tar.gz')
+run_command(r'7z x -aoa -oC:\\projects pagmo.tar.gz', verbose=False)
+run_command(r'7z x -aoa -oC:\\projects C:\\projects\\pagmo.tar', verbose=False)
+os.chdir('c:\\projects\\pagmo2-2.11.3')
+os.makedirs('build_pagmo')
+os.chdir('build_pagmo')
+run_command(r'cmake -G "MinGW Makefiles" .. ' +
+            common_cmake_opts +
+            r'-DPAGMO_WITH_EIGEN3=yes ' +
+            r'-DPAGMO_WITH_NLOPT=yes ' +
+            r'-DCMAKE_BUILD_TYPE=Release ')
+run_command(r'mingw32-make install VERBOSE=1 -j2')
+# We add this so that the pagmo dll is found
+os.environ['PATH'] = os.getcwd() + ";" + os.environ['PATH']
+os.chdir('../../')
+print("Pagmo sucessfully installed .. continuing")
+
+## -------------------------- END INSTALL C/C++ DEPENDENCIES -------------------------------------##
 
 # Setup of the Python build variables (python version based)
 if is_python_build:
@@ -148,7 +178,7 @@ if is_python_build:
         run_command(pip + ' install twine')
 
 # Set the path so that the precompiled libs can be found.
-os.environ['PATH'] = os.environ['PATH'] + r';c:\\local\\lib'
+#os.environ['PATH'] = os.environ['PATH'] + r';c:\\local\\lib'
 
 # Proceed to the build. The following arguments will be used for all build cases.
 common_cmake_opts = r'-DCMAKE_PREFIX_PATH=c:\\local ' + \
@@ -161,6 +191,7 @@ common_cmake_opts = r'-DCMAKE_PREFIX_PATH=c:\\local ' + \
         r'-DBoost_TIMER_LIBRARY_RELEASE=c:\\local\\lib\\libboost_timer-mgw81-mt-x64-1_70.dll '
 
 if is_python_build:
+    os.chdir('C:\projects\d-cgp')
     os.makedirs('build_dcgp')
     os.chdir('build_dcgp')
     run_command(
@@ -181,8 +212,9 @@ if is_python_build:
             r'-DPYTHON_LIBRARY=' + python_library)
     run_command(r'mingw32-make install VERBOSE=1 -j2')
 elif BUILD_TYPE in ['Release', 'Debug']:
-    os.makedirs('build_dcgp')
-    os.chdir('build_dcgp')
+    os.chdir('C:\projects\d-cgp')
+    os.makedirs('build')
+    os.chdir('build')
     cmake_opts = r'-DCMAKE_BUILD_TYPE=' + BUILD_TYPE + \
         r' -DDCGP_BUILD_TESTS=yes ' \
         + common_cmake_opts

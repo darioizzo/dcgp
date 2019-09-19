@@ -154,8 +154,11 @@ if(DCGP_BUILD_DCGP)
 
     # Audi setup
     find_package(Audi REQUIRED)
-    message(STATUS "AUDI header only library found.")
     message(STATUS "AUDI include dir is: ${AUDI_INCLUDE_DIRS}")
+
+    # Pagmo setup
+    #find_package(Pagmo REQUIRED)
+    #message(STATUS "Pagmo dir is: ${Pagmo_DIR}")
 
     if(NOT DCGP_SINGLE_THREAD)
         # TBB setup
