@@ -191,6 +191,7 @@ common_cmake_opts = r'-DCMAKE_PREFIX_PATH=c:\\local ' + \
         r'-DBoost_TIMER_LIBRARY_RELEASE=c:\\local\\lib\\libboost_timer-mgw81-mt-x64-1_70.dll '
 
 if is_python_build:
+    os.chdir('C:\projects\d-cgp')
     os.makedirs('build_dcgp')
     os.chdir('build_dcgp')
     run_command(
@@ -211,6 +212,7 @@ if is_python_build:
             r'-DPYTHON_LIBRARY=' + python_library)
     run_command(r'mingw32-make install VERBOSE=1 -j2')
 elif BUILD_TYPE in ['Release', 'Debug']:
+    os.chdir('C:\projects\d-cgp')
     os.makedirs('build')
     os.chdir('build')
     cmake_opts = r'-DCMAKE_BUILD_TYPE=' + BUILD_TYPE + \
