@@ -26,11 +26,11 @@ elif [[ "${DCGP_BUILD}" == "CoverageGCC" ]]; then
     ctest -VV;
     bash <(curl -s https://codecov.io/bash) -x gcov-5;
 elif [[ "${DCGP_BUILD}" == "DebugClang" ]]; then
-    CXX=clang++-7 CC=clang-7 cmake -DCMAKE_PREFIX_PATH=$deps_dir -DBoost_NO_BOOST_CMAKE=ON -DCMAKE_BUILD_TYPE=Debug --DCMAKE_BUILD_TYPE=Debug -DDCGP_BUILD_DCGP=yes -DDCGP_BUILD_TESTS=yes ../;
+    CXX=clang++-7 CC=clang-7 cmake -DCMAKE_PREFIX_PATH=$deps_dir -DBoost_NO_BOOST_CMAKE=ON -DCMAKE_BUILD_TYPE=Debug --DCMAKE_BUILD_TYPE=Debug -DDCGP_BUILD_DCGP=yes -DDCGP_BUILD_TESTS=yes -DQuadmath_INCLUDE_DIR=/usr/lib/gcc/x86_64-linux-gnu/7/include -DQuadmath_LIBRARY=/usr/lib/gcc/x86_64-linux-gnu/7/libquadmath.so ../;
     make -j2 VERBOSE=1;
     ctest -VV;
 elif [[ "${DCGP_BUILD}" == "ReleaseClang" ]]; then
-    CXX=clang++-7 CC=clang-7 cmake -DCMAKE_PREFIX_PATH=$deps_dir -DBoost_NO_BOOST_CMAKE=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_BUILD_TYPE=Release -DDCGP_BUILD_DCGP=yes -DDCGP_BUILD_TESTS=yes ../;
+    CXX=clang++-7 CC=clang-7 cmake -DCMAKE_PREFIX_PATH=$deps_dir -DBoost_NO_BOOST_CMAKE=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_BUILD_TYPE=Release -DDCGP_BUILD_DCGP=yes -DDCGP_BUILD_TESTS=yes -DQuadmath_INCLUDE_DIR=/usr/lib/gcc/x86_64-linux-gnu/7/include -DQuadmath_LIBRARY=/usr/lib/gcc/x86_64-linux-gnu/7/libquadmath.so ../;
     make -j2 VERBOSE=1;
     ctest -VV;
 elif [[ "${DCGP_BUILD}" == Python* ]]; then
@@ -43,7 +43,7 @@ elif [[ "${DCGP_BUILD}" == Python* ]]; then
     # Move out of the build dir.
     cd ../tools
     # Run the test suite
-    python -c "from dcgpy import test; test.run_test_suite(1)";
+    python -c "from dcgpy import test; test.run_test_suite()";
 elif [[ "${DCGP_BUILD}" == "OSXDebug" ]]; then
     CXX=clang++ CC=clang cmake -DCMAKE_PREFIX_PATH=$deps_dir -DBoost_NO_BOOST_CMAKE=ON -DCMAKE_BUILD_TYPE=Debug -DDCGP_BUILD_DCGP=yes -DDCGP_BUILD_TESTS=yes -DDCGP_BUILD_EXAMPLES=no -DCMAKE_CXX_FLAGS="-g0 -O2" ../;
     make -j2 VERBOSE=1;
