@@ -2,7 +2,8 @@
 #define DCGP_EXPRESSION_H
 
 #include <algorithm>
-#include <audi/audi.hpp>
+#include <audi/functions.hpp>
+#include <audi/io.hpp>
 #include <initializer_list>
 #include <iostream>
 #include <random>

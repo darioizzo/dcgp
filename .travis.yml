@@ -60,7 +60,7 @@ matrix:
           - ubuntu-toolchain-r-test
           packages:
           - clang-7
-    - env: PAGMO_PLUGINS_NONFREE_BUILD="Python37"
+    - env: DCGP_BUILD="Python37"
       dist: bionic
       compiler: gcc
       os: linux
@@ -68,7 +68,7 @@ matrix:
         apt:
           sources:
           - ubuntu-toolchain-r-test
-    - env: PAGMO_PLUGINS_NONFREE_BUILD="Python27"
+    - env: DCGP_BUILD="Python27"
       compiler: gcc
       os: linux
       addons:
