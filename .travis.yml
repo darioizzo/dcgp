@@ -10,7 +10,57 @@ env:
 
 matrix:
   include:
-    - env: DCGP_BUILD="DebugGCC"
+    #- env: DCGP_BUILD="DebugGCC"
+    #  dist: bionic
+    #  compiler: gcc
+    #  os: linux
+    #  addons:
+    #    apt:
+    #      sources:
+    #      - ubuntu-toolchain-r-test
+    #      packages:
+    #      - binutils-gold
+    #- env: DCGP_BUILD="ReleaseGCC"
+    #  dist: bionic
+    #  compiler: gcc
+    #  os: linux
+    #  addons:
+    #    apt:
+    #      sources:
+    #      - ubuntu-toolchain-r-test
+    #      packages:
+    #      - binutils-gold
+    #- env: DCGP_BUILD="CoverageGCC"
+    #  dist: bionic
+    #  compiler: gcc
+    #  os: linux
+    #  addons:
+    #    apt:
+    #      sources:
+    #      - ubuntu-toolchain-r-test
+    #      packa1ges:
+    #      - binutils-gold
+    - env: DCGP_BUILD="ReleaseClang"
+      dist: bionic
+      compiler: clang
+      os: linux
+      addons:
+        apt:
+          sources:
+          - ubuntu-toolchain-r-test
+          packages:
+          - clang-7
+    - env: DCGP_BUILD="DebugClang"
+      dist: bionic
+      compiler: clang
+      os: linux
+      addons:
+        apt:
+          sources:
+          - ubuntu-toolchain-r-test
+          packages:
+          - clang-7
+    - env: PAGMO_PLUGINS_NONFREE_BUILD="Python37"
       dist: bionic
       compiler: gcc
       os: linux
@@ -18,44 +68,29 @@ matrix:
         apt:
           sources:
           - ubuntu-toolchain-r-test
-          packages:
-          - binutils-gold
-    - env: DCGP_BUILD="ReleaseGCC"
-      dist: bionic
+    - env: PAGMO_PLUGINS_NONFREE_BUILD="Python27"
       compiler: gcc
       os: linux
       addons:
         apt:
           sources:
           - ubuntu-toolchain-r-test
-          packages:
-          - binutils-gold
-    - env: DCGP_BUILD="CoverageGCC"
-      dist: bionic
-      compiler: gcc
-      os: linux
-      addons:
-        apt:
-          sources:
-          - ubuntu-toolchain-r-test
-          packages:
-          - binutils-gold
-    - env: DCGP_BUILD="manylinux64Py37" DOCKER_IMAGE="pagmo2/manylinux1_x86_64_with_deps"
-      sudo: required
-      services:
-      - docker
-    - env: DCGP_BUILD="manylinux64Py36" DOCKER_IMAGE="pagmo2/manylinux1_x86_64_with_deps"
-      sudo: required
-      services:
-      - docker
-    - env: DCGP_BUILD="manylinux64Py27" DOCKER_IMAGE="pagmo2/manylinux1_x86_64_with_deps"
-      sudo: required
-      services:
-      - docker
-    - env: DCGP_BUILD="manylinux64Py27mu" DOCKER_IMAGE="pagmo2/manylinux1_x86_64_with_deps"
-      sudo: required
-      services:
-      - docker
+    #- env: DCGP_BUILD="manylinux64Py37" DOCKER_IMAGE="pagmo2/manylinux1_x86_64_with_deps"
+    #  sudo: required
+    #  services:
+    #  - docker
+    #- env: DCGP_BUILD="manylinux64Py36" DOCKER_IMAGE="pagmo2/manylinux1_x86_64_with_deps"
+    #  sudo: required
+    #  services:
+    #  - docker
+    #- env: DCGP_BUILD="manylinux64Py27" DOCKER_IMAGE="pagmo2/manylinux1_x86_64_with_deps"
+    #  sudo: required
+    #  services:
+    #  - docker
+    #- env: DCGP_BUILD="manylinux64Py27mu" DOCKER_IMAGE="pagmo2/manylinux1_x86_64_with_deps"
+    #  sudo: required
+    #  services:
+    #  - docker
 script:
     - mkdir build
     - cd build

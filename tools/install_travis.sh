@@ -30,17 +30,20 @@ elif [[ "${DCGP_BUILD}" == "DebugClang" ]]; then
     make -j2 VERBOSE=1;
     ctest -VV;
 elif [[ "${DCGP_BUILD}" == "ReleaseClang" ]]; then
-    CXX=clang++-7 CC=clang-7 cmake -DCMAKE_PREFIX_PATH=$deps_dir -DBoost_NO_BOOST_CMAKE=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_BUILD_TYPE=Debug -DDCGP_BUILD_DCGP=yes -DDCGP_BUILD_TESTS=yes ../;
+    CXX=clang++-7 CC=clang-7 cmake -DCMAKE_PREFIX_PATH=$deps_dir -DBoost_NO_BOOST_CMAKE=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_BUILD_TYPE=Release -DDCGP_BUILD_DCGP=yes -DDCGP_BUILD_TESTS=yes ../;
     make -j2 VERBOSE=1;
     ctest -VV;
-elif [[ "${DCGP_BUILD}" == "OSXDebug" ]]; then
-    CXX=clang++ CC=clang cmake -DCMAKE_PREFIX_PATH=$deps_dir -DBoost_NO_BOOST_CMAKE=ON -DCMAKE_BUILD_TYPE=Debug -DCMAKE_BUILD_TYPE=Debug -DDCGP_BUILD_DCGP=yes -DDCGP_BUILD_TESTS=yes -DDCGP_BUILD_EXAMPLES=no -DCMAKE_CXX_FLAGS="-g0 -O2" ../;
-    make -j2 VERBOSE=1;
-    ctest -VV;
-elif [[ "${DCGP_BUILD}" == "OSXRelease" ]]; then
-    CXX=clang++ CC=clang cmake -DCMAKE_PREFIX_PATH=$deps_dir -DBoost_NO_BOOST_CMAKE=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_BUILD_TYPE=Debug -DDCGP_BUILD_DCGP=yes -DDCGP_BUILD_TESTS=yes -DDCGP_BUILD_EXAMPLES=no ../;
-    make -j2 VERBOSE=1;
-    ctest -VV;
+elif [[ "${DCGP_BUILD}" == Python* ]]; then
+    # Install dcgp
+    cmake -DCMAKE_INSTALL_PREFIX=$deps_dir -DCMAKE_PREFIX_PATH=$deps_dir -DBoost_NO_BOOST_CMAKE=ON -DCMAKE_BUILD_TYPE=Release -DDCGP_BUILD_DCGP=yes -DDCGP_BUILD_TESTS=no ../; 
+    make install VERBOSE=1;
+    # Install dcgpy.
+    cmake -DCMAKE_INSTALL_PREFIX=$deps_dir -DCMAKE_PREFIX_PATH=$deps_dir -DBoost_NO_BOOST_CMAKE=ON -DCMAKE_BUILD_TYPE=Release -DDCGP_BUILD_DCGP=no -DDCGP_BUILD_DCGPY=yes ../; 
+    make install VERBOSE=1;
+    # Move out of the build dir.
+    cd ../tools
+    # Run the test suite
+    python -c "import dcgpy; dcgpy.test.run_test_suite(1)";
 elif [[ "${DCGP_BUILD}" == manylinux* ]]; then
     cd ..;
     docker pull ${DOCKER_IMAGE};
