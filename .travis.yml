@@ -40,26 +40,26 @@ matrix:
     #      - ubuntu-toolchain-r-test
     #      packa1ges:
     #      - binutils-gold
-    - env: DCGP_BUILD="ReleaseClang"
-      dist: bionic
-      compiler: clang
-      os: linux
-      addons:
-        apt:
-          sources:
-          - ubuntu-toolchain-r-test
-          packages:
-          - clang-7
-    - env: DCGP_BUILD="DebugClang"
-      dist: bionic
-      compiler: clang
-      os: linux
-      addons:
-        apt:
-          sources:
-          - ubuntu-toolchain-r-test
-          packages:
-          - clang-7
+    #- env: DCGP_BUILD="ReleaseClang"
+    #  dist: bionic
+    #  compiler: clang
+    #  os: linux
+    #  addons:
+    #    apt:
+    #      sources:
+    #      - ubuntu-toolchain-r-test
+    #      packages:
+    #      - clang-7
+    #- env: DCGP_BUILD="DebugClang"
+    #  dist: bionic
+    #  compiler: clang
+    #  os: linux
+    #  addons:
+    #    apt:
+    #      sources:
+    #      - ubuntu-toolchain-r-test
+    #      packages:
+    #      - clang-7
     - env: DCGP_BUILD="Python37"
       dist: bionic
       compiler: gcc
@@ -75,6 +75,10 @@ matrix:
         apt:
           sources:
           - ubuntu-toolchain-r-test
+    - env: DCGP_BUILD="OSXDebug"
+      os: osx
+    - env: DCGP_BUILD="OSXRelease"
+      os: osx
     #- env: DCGP_BUILD="manylinux64Py37" DOCKER_IMAGE="pagmo2/manylinux1_x86_64_with_deps"
     #  sudo: required
     #  services:
