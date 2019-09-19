@@ -79,6 +79,12 @@ matrix:
       os: osx
     - env: DCGP_BUILD="OSXRelease"
       os: osx
+    - env: DCGP_BUILD="OSXPython37"
+      os: osx
+      #osx_image: xcode6.4
+    - env: DCGP_BUILD="OSXPython27"
+      os: osx
+      #osx_image: xcode6.4
     #- env: DCGP_BUILD="manylinux64Py37" DOCKER_IMAGE="pagmo2/manylinux1_x86_64_with_deps"
     #  sudo: required
     #  services:
