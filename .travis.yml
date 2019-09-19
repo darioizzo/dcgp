@@ -60,25 +60,25 @@ matrix:
     #      - ubuntu-toolchain-r-test
     #      packages:
     #      - clang-7
-    - env: DCGP_BUILD="Python37"
-      dist: bionic
-      compiler: gcc
-      os: linux
-      addons:
-        apt:
-          sources:
-          - ubuntu-toolchain-r-test
-    - env: DCGP_BUILD="Python27"
-      compiler: gcc
-      os: linux
-      addons:
-        apt:
-          sources:
-          - ubuntu-toolchain-r-test
-    - env: DCGP_BUILD="OSXDebug"
-      os: osx
-    - env: DCGP_BUILD="OSXRelease"
-      os: osx
+    #- env: DCGP_BUILD="Python37"
+    #  dist: bionic
+    #  compiler: gcc
+    #  os: linux
+    #  addons:
+    #    apt:
+    #      sources:
+    #      - ubuntu-toolchain-r-test
+    #- env: DCGP_BUILD="Python27"
+    #  compiler: gcc
+    #  os: linux
+    #  addons:
+    #    apt:
+    #      sources:
+    #      - ubuntu-toolchain-r-test
+    #- env: DCGP_BUILD="OSXDebug"
+    #  os: osx
+    #- env: DCGP_BUILD="OSXRelease"
+    #  os: osx
     - env: DCGP_BUILD="OSXPython37"
       os: osx
       #osx_image: xcode6.4
