@@ -50,16 +50,16 @@ matrix:
     #      - ubuntu-toolchain-r-test
     #      packages:
     #      - clang-7
-    - env: DCGP_BUILD="DebugClang"
-      dist: bionic
-      compiler: clang
-      os: linux
-      addons:
-        apt:
-          sources:
-          - ubuntu-toolchain-r-test
-          packages:
-          - clang-7
+    #- env: DCGP_BUILD="DebugClang"
+    #  dist: bionic
+    #  compiler: clang
+    #  os: linux
+    #  addons:
+    #    apt:
+    #      sources:
+    #      - ubuntu-toolchain-r-test
+    #      packages:
+    #      - clang-7
     - env: DCGP_BUILD="Python37"
       dist: bionic
       compiler: gcc
