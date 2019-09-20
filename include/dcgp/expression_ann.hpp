@@ -3,6 +3,10 @@
 
 #include <algorithm>
 #include <audi/io.hpp>
+#include <dcgp/config.hpp>
+#include <dcgp/expression.hpp>
+#include <dcgp/kernel.hpp>
+#include <dcgp/type_traits.hpp>
 #include <functional>
 #include <initializer_list>
 #include <iostream>
@@ -12,18 +16,9 @@
 #include <sstream>
 #include <stdexcept>
 #include <string>
-#include <vector>
-
-#include <dcgp/config.hpp>
-
-#ifndef DCGP_SINGLE_THREAD
 #include <tbb/spin_mutex.h>
 #include <tbb/tbb.h>
-#endif
-
-#include <dcgp/expression.hpp>
-#include <dcgp/kernel.hpp>
-#include <dcgp/type_traits.hpp>
+#include <vector>
 
 namespace dcgp
 {
@@ -59,7 +54,8 @@ public:
         /// ISRU
         ISRU,
         /// Simple sum of inputs
-        SUM };
+        SUM
+    };
     /// Constructor
     /** Constructs a dCGPANN expression
      *
@@ -72,14 +68,14 @@ public:
      * @param[in] f function set. An std::vector of dcgp::kernel<expression::type>. Can only contain allowed functions.
      * @param[in] seed seed for the random number generator (initial expression and mutations depend on this).
      */
-    expression_ann(unsigned n,                  // n. inputs
-                   unsigned m,                  // n. outputs
-                   unsigned r,                  // n. rows
-                   unsigned c,                  // n. columns
-                   unsigned l,                  // n. levels-back
-                   std::vector<unsigned> arity, // basis functions' arity
-                   std::vector<kernel<double>> f,    // functions
-                   unsigned seed                // seed for the pseudo-random numbers
+    expression_ann(unsigned n,                    // n. inputs
+                   unsigned m,                    // n. outputs
+                   unsigned r,                    // n. rows
+                   unsigned c,                    // n. columns
+                   unsigned l,                    // n. levels-back
+                   std::vector<unsigned> arity,   // basis functions' arity
+                   std::vector<kernel<double>> f, // functions
+                   unsigned seed                  // seed for the pseudo-random numbers
                    )
         : expression<double>(n, m, r, c, l, arity, f, seed), m_biases(r * c, 0.), m_kernel_map(f.size())
 
@@ -138,14 +134,14 @@ public:
      * @param[in] f function set. An std::vector of dcgp::kernel<expression::type>. Can only contain allowed functions.
      * @param[in] seed seed for the random number generator (initial expression and mutations depend on this).
      */
-    expression_ann(unsigned n,               // n. inputs
-                   unsigned m,               // n. outputs
-                   unsigned r,               // n. rows
-                   unsigned c,               // n. columns
-                   unsigned l,               // n. levels-back
-                   unsigned arity,           // basis functions' arity
+    expression_ann(unsigned n,                    // n. inputs
+                   unsigned m,                    // n. outputs
+                   unsigned r,                    // n. rows
+                   unsigned c,                    // n. columns
+                   unsigned l,                    // n. levels-back
+                   unsigned arity,                // basis functions' arity
                    std::vector<kernel<double>> f, // functions
-                   unsigned seed             // seed for the pseudo-random numbers
+                   unsigned seed                  // seed for the pseudo-random numbers
                    )
         : expression<double>(n, m, r, c, l, std::vector<unsigned>(c, arity), f, seed), m_biases(r * c, 0.),
           m_kernel_map(f.size())
@@ -203,7 +199,7 @@ public:
      *
      * @return The value of the output (an std::vector)
      */
-    std::vector<double> operator()(const std::vector<double> &point) const
+    std::vector<double> operator()(const std::vector<double> &point) const override
     {
         std::vector<double> retval(this->get_m());
         auto node = fill_nodes(point);
@@ -221,7 +217,7 @@ public:
      *
      * @return The symbolic value of the output (an std::vector)
      */
-    std::vector<std::string> operator()(const std::vector<std::string> &point) const
+    std::vector<std::string> operator()(const std::vector<std::string> &point) const override
     {
         std::vector<std::string> retval(this->get_m());
         auto node = fill_nodes(point);
@@ -380,8 +376,7 @@ public:
      * @param[loss_e] The loss type. Must be loss_type::MSE for Mean Square Error (regression) or loss_type::CE for
      * Cross Entropy (classification)
      * @param[parallel] sets the grain for parallelism. 0 -> no parallelism n -> divides the data into n parts and
-     * processes them in parallel threads. Note: if dcgp is configured with DCGP_SINGLE_THREAD this argument has no
-     * effect.
+     * processes them in parallel threads.
      * @return the loss, the gradient of the loss w.r.t. all weights (also inactive) and the gradient of the loss w.r.t
      * all biases.
      */
@@ -410,8 +405,7 @@ public:
      * @param[batch_size] The batch size.
      * @param[loss_s] A string defining the loss type. Can be one of "MSE" (mean squared error) or "CE" (cross-entropy)
      * @param[parallel] sets the grain for parallelism. 0 -> no parallelism n -> divides the data into n parts and
-     * processes them in parallel threads. Note: if dcgp is configured with DCGP_SINGLE_THREAD this argument has no
-     * effect.
+     * processes them in parallel threads.
      * @param[shuffle] when true it shuffles the points and labels before performing one epoch of training.
      *
      * @return The average error across the batches. Note: this will not be equal to the error on the whole data set
@@ -894,7 +888,7 @@ private:
 
     // This overrides the base class update_data_structures and updates also the m_connected (as well as
     // m_active_nodes and genes). It is called upon construction and each time active genes are changed.
-    void update_data_structures()
+    void update_data_structures() override
     {
         expression<double>::update_data_structures();
         m_connected.clear();
@@ -932,8 +926,7 @@ private:
      * @param[lr] The learning rate
      * @param[loss_e] The loss type
      * @param[parallel] sets the grain for parallelism. 0 -> no parallelism n -> divides the data into n parts and
-     * processes them in parallel threads. Note: if dcgp is configured with DCGP_SINGLE_THREAD this argument has no
-     * effect.
+     * processes them in parallel threads.
      *
      * @return the loss before the weight update
      *
@@ -966,7 +959,6 @@ private:
         std::vector<double> gweights(m_weights.size(), 0.);
         std::vector<double> gbiases(m_biases.size(), 0.);
 
-#ifndef DCGP_SINGLE_THREAD
         if (parallel > 0u) {
             if (batch_size % parallel != 0) {
                 throw std::invalid_argument("The batch size is: " + std::to_string(batch_size)
@@ -994,14 +986,11 @@ private:
                                [](double a, double b) { return a + b; });
             });
         } else {
-#endif
             for (unsigned i = 0u; i < batch_size; ++i) {
                 // The loss and its gradient get computed and cumulated in value, gweights, gbiases
                 d_loss(value, gweights, gbiases, *(dfirst + i), *(lfirst + i), loss_e);
             }
-#ifndef DCGP_SINGLE_THREAD
         }
-#endif
         std::transform(gweights.begin(), gweights.end(), gweights.begin(),
                        [&batch_size](double a) { return a / batch_size; });
         std::transform(gbiases.begin(), gbiases.end(), gbiases.begin(),
