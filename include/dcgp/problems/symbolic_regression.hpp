@@ -10,16 +10,14 @@ public:
     // Constructor from std::vectors
     symbolic_regression(const std::vector<std::vector<double>> &points, const std::vector<std::vector<double>> &labels)
     {
-        if (point.size() != this->get_n()) {
-            throw std::invalid_argument("When computing the loss the point dimension (input) seemed wrong, it was: "
-                                        + std::to_string(point.size())
-                                        + " while I expected: " + std::to_string(this->get_n()));
+        if (points.size() != labels.size()) {
+            throw std::invalid_argument("The number of input data (points) is " + std::to_string(point.size())
+                                        + " while the number of labels is " + std::to_string(labels.size())
+                                        + ". They should be equal.");
         }
-        if (prediction.size() != this->get_m()) {
-            throw std::invalid_argument(
-                "When computing the loss the prediction dimension (output) seemed wrong, it was: "
-                + std::to_string(prediction.size()) + " while I expected: " + std::to_string(this->get_m()));
-        }
+        if !std::all_of(points.begin(), points.end(), [](const std::vector<double> &p) { return p.size == p_size; }) {
+
+        } 
     }
     pagmo::vector_double fitness(const pagmo::vector_double &) const
     {
