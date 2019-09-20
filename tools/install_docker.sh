@@ -8,6 +8,7 @@ set -e
 
 AUDI_VERSION="1.6"
 PIRANHA_VERSION="0.11"
+PAGMO_VERSION="2.11.3"
 
 if [[ ${DCGP_BUILD} == *37 ]]; then
 	PYTHON_DIR="cp37-cp37m"
@@ -63,6 +64,21 @@ mkdir build
 cd build
 cmake -DBoost_NO_BOOST_CMAKE=ON -DAUDI_BUILD_AUDI=yes -DAUDI_BUILD_TESTS=no -DCMAKE_BUILD_TYPE=Release ../
 make install > /dev/null 2>&1
+cd ..
+
+# Install pagmo
+curl -L  https://github.com/esa/pagmo2/archive/v${PAGMO_VERSION}.tar.gz > pagmo2.tar.gz
+tar xzf pagmo2.tar.gz
+cd pagmo2-${PAGMO_VERSION}
+mkdir build_pagmo
+cd build_pagmo
+cmake -DBoost_NO_BOOST_CMAKE=ON \
+	-DPAGMO_WITH_EIGEN3=yes \
+	-DPAGMO_WITH_NLOPT=yes \
+	-DPAGMO_WITH_IPOPT=yes \
+	-DCMAKE_BUILD_TYPE=Release ../;
+make -j2 install
+cd ../
 
 # Python deps
 /opt/python/${PYTHON_DIR}/bin/pip install numpy

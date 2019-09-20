@@ -43,14 +43,6 @@ if(DCGP_BUILD_DCGP)
 
     # Build Option: when active the file main.cpp is built.
     option(DCGP_BUILD_MAIN "Build 'main.cpp'." OFF)
-
-    # Install option: when active dcgp only uses the main thread
-    # NOTE: this only applies to dcgp's own code if you want your
-    # application to be single threaded you also need to install
-    # piranha single threaded.
-    option(DCGP_SINGLE_THREAD "Build dcgp single threaded." OFF)
-    mark_as_advanced(DCGP_SINGLE_THREAD)
-
 else()
     # Initial setup of a dcgpy build.
     project(dcgpy VERSION ${DCGP_PROJECT_VERSION})
@@ -157,24 +149,18 @@ if(DCGP_BUILD_DCGP)
     message(STATUS "AUDI include dir is: ${AUDI_INCLUDE_DIRS}")
 
     # Pagmo setup
-    #find_package(Pagmo REQUIRED)
-    #message(STATUS "Pagmo dir is: ${Pagmo_DIR}")
+    find_package(Pagmo REQUIRED)
+    message(STATUS "Pagmo dir is: ${Pagmo_DIR}")
 
-    if(NOT DCGP_SINGLE_THREAD)
-        # TBB setup
-        find_package(TBB REQUIRED)
-        message(STATUS "TBB include dir is: ${TBB_INCLUDE_DIRS}")
-        message(STATUS "TBB library is: ${TBB_LIBRARIES}")
-    endif()
+    # TBB setup (this will be invoked and found by pagmo too, can it be removed?)
+    find_package(TBB REQUIRED)
+    message(STATUS "TBB include dir is: ${TBB_INCLUDE_DIRS}")
+    message(STATUS "TBB library is: ${TBB_LIBRARIES}")
 
     # Setup of the header-only dcgp library.
     add_library(dcgp INTERFACE)
-    target_link_libraries(dcgp INTERFACE Threads::Threads Boost::boost Boost::serialization)
-    if(DCGP_SINGLE_THREAD)
-        target_link_libraries(dcgp INTERFACE Eigen3::eigen3 MPFR::MPFR GMP::GMP Audi::audi)
-    else()
-        target_link_libraries(dcgp INTERFACE Eigen3::eigen3 MPFR::MPFR GMP::GMP Audi::audi TBB::tbb)
-    endif()
+    target_link_libraries(dcgp INTERFACE Threads::Threads Boost::boost Boost::serialization Eigen3::eigen3 MPFR::MPFR GMP::GMP TBB::tbb)
+    target_link_libraries(dcgp INTERFACE Audi::audi Pagmo::pagmo)
 
 
     # This sets up the include directory to be different if we build

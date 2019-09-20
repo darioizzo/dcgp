@@ -6,6 +6,6 @@
 #define DCGP_VERSION_STRING "@dcgp_VERSION@"
 #define DCGP_VERSION_MAJOR @dcgp_VERSION_MAJOR@
 #define DCGP_VERSION_MINOR @dcgp_VERSION_MINOR@
-#cmakedefine DCGP_SINGLE_THREAD
+
 
 #endif

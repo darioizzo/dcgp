@@ -4,26 +4,21 @@
 #include <algorithm>
 #include <audi/functions.hpp>
 #include <audi/io.hpp>
+#include <dcgp/config.hpp>
+#include <dcgp/detail/s11n_wrappers.hpp>
+#include <dcgp/kernel.hpp>
+#include <dcgp/rng.hpp>
+#include <dcgp/s11n.hpp>
+#include <dcgp/type_traits.hpp>
 #include <initializer_list>
 #include <iostream>
 #include <random>
 #include <sstream>
 #include <stdexcept>
 #include <string>
-#include <vector>
-
-#include <dcgp/config.hpp>
-
-#ifndef DCGP_SINGLE_THREAD
 #include <tbb/spin_mutex.h>
 #include <tbb/tbb.h>
-#endif
-
-#include <dcgp/detail/s11n_wrappers.hpp>
-#include <dcgp/kernel.hpp>
-#include <dcgp/rng.hpp>
-#include <dcgp/s11n.hpp>
-#include <dcgp/type_traits.hpp>
+#include <vector>
 
 namespace dcgp
 {
@@ -293,8 +288,7 @@ public:
      * @param[loss_s] The loss type. Can be "MSE" for Mean Square Error (regression) or "CE" for Cross Entropy
      * (classification)
      * @param[parallel] sets the grain for parallelism. 0 -> no parallelism n -> divides the data into n parts and
-     * evaluates them in parallel threads. Note: if dcgp is configured with DCGP_SINGLE_THREAD this argument has no
-     * effect.
+     * evaluates them in parallel threads.
      * @return the loss
      */
     T loss(const std::vector<std::vector<T>> &points, const std::vector<std::vector<T>> &labels,
@@ -845,8 +839,7 @@ protected:
      * @param[lfirst] Begin of labels.
      * @param[loss_e] The loss type.
      * @param[parallel] sets the grain for parallelism. 0 -> no parallelism n -> divides the data into n parts and
-     * evaluates them in parallel threads. Note: if dcgp is configured with DCGP_SINGLE_THREAD this argument has no
-     * effect.
+     * evaluates them in parallel threads.
      * @return the loss
      */
     T loss(typename std::vector<std::vector<T>>::const_iterator dfirst,
@@ -855,7 +848,6 @@ protected:
     {
         T retval(0.);
         unsigned batch_size = static_cast<unsigned>(dlast - dfirst);
-#ifndef DCGP_SINGLE_THREAD
         if (parallel > 0u) {
             if (batch_size % parallel != 0) {
                 throw std::invalid_argument("The batch size is: " + std::to_string(batch_size)
@@ -877,14 +869,11 @@ protected:
                 retval += err;
             });
         } else {
-#endif
             for (decltype(batch_size) i = 0; i < batch_size; ++i) {
                 // The loss gets computed
                 retval += loss(*(dfirst + i), *(lfirst + i), loss_e);
             }
-#ifndef DCGP_SINGLE_THREAD
         }
-#endif
         retval /= batch_size;
 
         return retval;
