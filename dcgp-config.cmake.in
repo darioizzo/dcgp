@@ -11,6 +11,7 @@ find_package(GMP REQUIRED)
 find_package(MPFR REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_package(audi REQUIRED)
+find_package(Pagmo REQUIRED)
 find_package(TBB REQUIRED)
 
 

@@ -1,3 +1,5 @@
+skip_branch_with_pr: true
+
 environment:
   TWINE_PASSWORD:
     secure: M+qvYgRh05fEw6G9aglK4g==

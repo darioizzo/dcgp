@@ -152,12 +152,10 @@ if(DCGP_BUILD_DCGP)
     find_package(Pagmo REQUIRED)
     message(STATUS "Pagmo dir is: ${Pagmo_DIR}")
 
-  
-    # TBB setup
+    # TBB setup (this will be invoked and found by pagmo too, can it be removed?)
     find_package(TBB REQUIRED)
     message(STATUS "TBB include dir is: ${TBB_INCLUDE_DIRS}")
     message(STATUS "TBB library is: ${TBB_LIBRARIES}")
-
 
     # Setup of the header-only dcgp library.
     add_library(dcgp INTERFACE)
