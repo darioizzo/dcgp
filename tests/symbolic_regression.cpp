@@ -8,7 +8,7 @@ using namespace dcgp;
 
 BOOST_AUTO_TEST_CASE(symbolic_regression_set)
 {
-    symbolic_regression udp{};
+    symbolic_regression udp({{1.,2.}, {0.3,-0.32}},{{2.3}, {-3.3}});
     BOOST_CHECK(udp.fitness({1.,2.}) == pagmo::vector_double{1.});
 
 }
