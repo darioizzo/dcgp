@@ -94,4 +94,3 @@ BOOST_AUTO_TEST_CASE(rng_serialization_test)
         BOOST_CHECK(r_copy == r);
     }
 }
-

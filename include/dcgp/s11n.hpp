@@ -1,4 +1,5 @@
 #ifndef DCGP_S11N_HPP
+#define DCGP_S11N_HPP
 
 #include <cstddef>
 #include <locale>

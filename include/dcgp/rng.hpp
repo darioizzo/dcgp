@@ -1,4 +1,5 @@
 #ifndef DCGP_RNG_HPP
+#define DCGP_RNG_HPP
 
 #include <mutex>
 #include <random>
