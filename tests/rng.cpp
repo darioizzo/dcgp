@@ -4,11 +4,11 @@
 #include <algorithm>
 #include <iostream>
 #include <iterator>
+#include <pagmo/s11n.hpp>
 #include <thread>
 #include <vector>
 
 #include <dcgp/rng.hpp>
-#include <dcgp/s11n.hpp>
 
 using namespace dcgp;
 
