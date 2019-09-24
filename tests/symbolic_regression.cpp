@@ -6,9 +6,6 @@
 #include <pagmo/problem.hpp>
 #include <pagmo/algorithms/sga.hpp>
 #include <pagmo/algorithms/gaco.hpp>
-
-
-#include <dcgp/kernel_set.hpp>
 #include <dcgp/problems/symbolic_regression.hpp>
 
 using namespace dcgp;

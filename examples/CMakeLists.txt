@@ -10,6 +10,7 @@ ENDMACRO(ADD_EXAMPLE)
 # Supervised learning examples
 ADD_EXAMPLE(supervised_learning_koza_quintic)
 ADD_EXAMPLE(supervised_learning_data_set)
+ADD_EXAMPLE(supervised_learning_data_set_udp)
 
 # Solving differential equations examples
 ADD_EXAMPLE(tsoulos_ode1)

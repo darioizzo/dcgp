@@ -1,5 +1,8 @@
 #ifndef DCGP_SYMBOLIC_REGRESSION_H
 #define DCGP_SYMBOLIC_REGRESSION_H
+#include <boost/numeric/conversion/cast.hpp>
+#include <boost/range/algorithm/transform.hpp>
+#include <pagmo/io.hpp>
 #include <pagmo/types.hpp>
 #include <vector>
 
@@ -70,12 +73,13 @@ public:
     pagmo::vector_double fitness(const pagmo::vector_double &x) const
     {
         // We need to make a copy of the chromosome as to represents its genes as unsigned
-        std::vector<unsigned> xu(x.begin(), x.end());
+        std::vector<unsigned> xu(x.size());
+        std::transform(x.begin(), x.end(), xu.begin(), [](double a) { return boost::numeric_cast<unsigned>(a); });
         m_cgp.set(xu);
         // We initialize the fitness
         std::vector<double> f(1, 0);
         // We compute the MSE loss in parallel (i.e. the loss is a parallel for over the data)
-        f[0] = m_cgp.loss(m_points, m_labels, "MSE", true);
+        f[0] = m_cgp.loss(m_points, m_labels, "MSE", false);
         return f;
     }
     /// Box-bounds
@@ -131,7 +135,9 @@ public:
      */
     std::string pretty(const pagmo::vector_double &x) const
     {
-        std::vector<unsigned> xu(x.begin(), x.end());
+        // We need to make a copy of the chromosome as to represents its genes as unsigned
+        std::vector<unsigned> xu(x.size());
+        std::transform(x.begin(), x.end(), xu.begin(), [](double a) { return boost::numeric_cast<unsigned>(a); });
         m_cgp.set(xu);
         std::ostringstream ss;
         std::vector<std::string> symbols;
