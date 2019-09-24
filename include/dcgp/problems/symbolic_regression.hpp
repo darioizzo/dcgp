@@ -148,6 +148,11 @@ public:
         return ss.str();
     }
 
+    const expression<double>& get_cgp() const
+    {
+        return m_cgp;
+    }
+
 private:
     std::vector<std::vector<double>> m_points;
     std::vector<std::vector<double>> m_labels;

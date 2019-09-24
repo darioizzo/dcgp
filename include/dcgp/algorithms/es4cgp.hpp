@@ -36,8 +36,8 @@ public:
      *
      * @throws std::invalid_argument if limit equals 0
      */
-    es4cgp(unsigned gen = 1, std::string mutation_type = "active", unsigned mut_n = 2,
-           double mut_fraction = 0.1, unsigned seed = random_device::next())
+    es4cgp(unsigned gen = 1, std::string mutation_type = "active", unsigned mut_n = 2, double mut_fraction = 0.1,
+           unsigned seed = random_device::next())
         : m_gen(gen), m_mutation_type(mutation_type), m_mut_n(mut_n), m_mut_fraction(mut_fraction), m_e(seed),
           m_seed(seed), m_verbosity(0u)
     {
@@ -76,6 +76,7 @@ public:
 
         // No throws, all valid: we clear the logs
         m_log.clear();
+        // Main loop.
         for (decltype(m_gen) gen = 1u; gen <= m_gen; ++gen) {
             // Logs and prints (verbosity modes > 1: a line is added every m_verbosity generations)
             if (m_verbosity > 0u) {
@@ -87,16 +88,33 @@ public:
                     // Every 50 lines print the column names
                     if (count % 50u == 1u) {
                         pagmo::print("\n", std::setw(7), "Gen:", std::setw(15), "Fevals:", std::setw(15),
-                              "Best:", std::setw(15), "Current Best:\n");
+                                     "Best:", std::setw(15), "Current Best:\n");
                     }
                     pagmo::print(std::setw(7), gen, std::setw(15), prob.get_fevals() - fevals0, std::setw(15),
-                          pop.champion_f()[0], std::setw(15), pop.get_f()[worst_idx][0] - pop.get_f()[best_idx][0],
-                          '\n');
+                                 pop.champion_f()[0], std::setw(15),
+                                 pop.get_f()[worst_idx][0] - pop.get_f()[best_idx][0], '\n');
                     ++count;
                     // Logs
                     m_log.emplace_back(gen, prob.get_fevals() - fevals0, pop.champion_f()[0], pop.get_f()[best_idx][0]);
                 }
             }
+            // 1 - We get the best chromosome.
+            auto best_x = pop.get_x()[pop.best_idx()];
+            std::vector<unsigned> xu(best_x.size());
+            std::transform(best_x.begin(), best_x.end(), xu.begin(),
+                           [](double a) { return boost::numeric_cast<unsigned>(a); });
+            // 2 - We mutate it and record the contiguous values of the mutated chromosomes for bfe.
+            pagmo::vector_double dvs(NP * dim);
+            for (decltype(NP) i = 0u; i < NP; ++i) {
+                auto cgp = udp_ptr->get_cgp();
+                cgp.set(xu);
+                cgp.mutate_active(m_mut_n);
+                std::vector<unsigned> mutated_x = cgp.get();
+                std::transform(mutated_x.begin(), mutated_x.end() , dvs.begin() + i * dim,
+                               [](unsigned a) { return boost::numeric_cast<double>(a); });
+            }
+            // 3 - We compute their fitnesses
+            auto fs = m_bfe(prob, dvs);
         }
         return pop;
     }
