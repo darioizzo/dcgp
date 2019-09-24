@@ -10,10 +10,12 @@
 
 using namespace dcgp;
 
-BOOST_AUTO_TEST_CASE(symbolic_regression_set)
+BOOST_AUTO_TEST_CASE(symbolic_regression_test)
 {
-
+    pagmo::print("ENTER");
     symbolic_regression udp({{1., 2.}, {0.3, -0.32}}, {{3./2.}, {0.02/0.32}});
+    pagmo::print("INSTANTIATED");
+
     pagmo::problem prob{udp};
     pagmo::print(prob);
     pagmo::population pop{prob, 100};
@@ -21,7 +23,7 @@ BOOST_AUTO_TEST_CASE(symbolic_regression_set)
     pagmo::algorithm algo{uda};
     pagmo::print(algo);
     algo.set_verbosity(1u);
-    pop = algo.evolve(pop);
+    //pop = algo.evolve(pop);
     pagmo::print("Final Error: ", pop.champion_f(), "\n");
     pagmo::print("Expression: ", udp.pretty(pop.champion_x()));
 }
