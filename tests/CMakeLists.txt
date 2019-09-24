@@ -31,7 +31,7 @@ ADD_DCGP_TESTCASE(expression_ann)
 ADD_DCGP_TESTCASE(wrapped_functions)
 ADD_DCGP_TESTCASE(rng)
 ADD_DCGP_TESTCASE(symbolic_regression)
-
+ADD_DCGP_TESTCASE(es4cgp)
 
 
 ADD_DCGP_PERFORMANCE_TESTCASE(function_calls)
