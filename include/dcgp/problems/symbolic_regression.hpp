@@ -78,8 +78,8 @@ public:
         m_cgp.set(xu);
         // We initialize the fitness
         std::vector<double> f(1, 0);
-        // We compute the MSE loss in parallel (i.e. the loss is a parallel for over the data)
-        f[0] = m_cgp.loss(m_points, m_labels, "MSE", false);
+        // We compute the MSE loss splitting the data in n batches (if possible).
+        f[0] = m_cgp.loss(m_points, m_labels, "MSE", 0u);
         return f;
     }
     /// Box-bounds
