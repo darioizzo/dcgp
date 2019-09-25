@@ -15,10 +15,11 @@ BOOST_AUTO_TEST_CASE(dcgp_es4cgp_test)
     symbolic_regression udp({{1., 2.}, {0.3, -0.32}}, {{3. / 2.}, {0.02 / 0.32}});
     pagmo::problem prob{udp};
     pagmo::print(prob);
-    pagmo::population pop{prob, 10};
-    dcgp::es4cgp uda(100);
+    pagmo::population pop{prob, 4};
+    dcgp::es4cgp uda(1000);
     pagmo::algorithm algo{uda};
     pagmo::print(algo);
     algo.set_verbosity(1u);
     pop = algo.evolve(pop);
+    pagmo::print(pop);
 }

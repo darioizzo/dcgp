@@ -2,6 +2,7 @@
 #define DCGP_ES4CGP_H
 
 #include <pagmo/bfe.hpp>
+#include <pagmo/detail/custom_comparisons.hpp>
 #include <pagmo/io.hpp>
 #include <pagmo/population.hpp>
 #include <sstream>
@@ -17,8 +18,8 @@ namespace dcgp
 class es4cgp
 {
 public:
-    /// Single entry of the log (gen, fevals, best, df)
-    typedef std::tuple<unsigned, unsigned long long, double, double> log_line_type;
+    /// Single entry of the log (gen, fevals, best)
+    typedef std::tuple<unsigned, unsigned long long, double> log_line_type;
     /// The log
     typedef std::vector<log_line_type> log_type;
 
@@ -30,16 +31,16 @@ public:
      * @param mutation_type one of "active" or "any". If "active" only active genes will be mutated, otherwise all genes
      * can be mutated.
      * @param mut_n number of active genes to be mutated (when *mutation_type* is "any" this parameter has no effect).
-     * @param mut_fraction fraction of the genes to be mutated. The number of genes mutated will be determined rounding
+     * @param ftol the algorithm will exit when the loss is below this tolerance
      * up to the nearest integer >= 1 (when *mutation_type* is "active" this parameter has no effect)..
      * @param seed seed used by the internal random number generator (default is random)
      *
      * @throws std::invalid_argument if limit equals 0
      */
-    es4cgp(unsigned gen = 1, std::string mutation_type = "active", unsigned mut_n = 2, double mut_fraction = 0.1,
+    es4cgp(unsigned gen = 1, std::string mutation_type = "active", unsigned mut_n = 2, double ftol = 1e-4,
            unsigned seed = random_device::next())
-        : m_gen(gen), m_mutation_type(mutation_type), m_mut_n(mut_n), m_mut_fraction(mut_fraction), m_e(seed),
-          m_seed(seed), m_verbosity(0u)
+        : m_gen(gen), m_mutation_type(mutation_type), m_mut_n(mut_n), m_ftol(ftol), m_e(seed), m_seed(seed),
+          m_verbosity(0u)
     {
         // TODO: add checks
     }
@@ -49,8 +50,6 @@ public:
         const auto &prob = pop.get_problem();
         auto dim = prob.get_nx();
         const auto bounds = prob.get_bounds();
-        const auto &lb = bounds.first;
-        const auto &ub = bounds.second;
         auto NP = pop.size();
         auto fevals0 = prob.get_fevals(); // fevals already made
         auto count = 1u;                  // regulates the screen output
@@ -76,45 +75,86 @@ public:
 
         // No throws, all valid: we clear the logs
         m_log.clear();
-        // Main loop.
+
+        // We make a copy of the cgp which we will use to make mutations.
+        auto cgp = udp_ptr->get_cgp();
+        // We get the best chromosome in the population.
+        auto best_x = pop.get_x()[pop.best_idx()];
+        double best_f = pop.get_f()[pop.best_idx()][0];
+        // ... and we transform it into unsigned
+        std::vector<unsigned> best_xu(best_x.size());
+        std::transform(best_x.begin(), best_x.end(), best_xu.begin(),
+                       [](double a) { return boost::numeric_cast<unsigned>(a); });
+        // Contiguous vector of chromosomes for pagmo::bfe input\output allocated here
+        pagmo::vector_double dvs(NP * dim);
+        pagmo::vector_double fs(NP);
+        // Main loop
         for (decltype(m_gen) gen = 1u; gen <= m_gen; ++gen) {
             // Logs and prints (verbosity modes > 1: a line is added every m_verbosity generations)
             if (m_verbosity > 0u) {
                 // Every m_verbosity generations print a log line
                 if (gen % m_verbosity == 1u || m_verbosity == 1u) {
-                    auto best_idx = pop.best_idx();
-                    auto worst_idx = pop.worst_idx();
-
                     // Every 50 lines print the column names
                     if (count % 50u == 1u) {
-                        pagmo::print("\n", std::setw(7), "Gen:", std::setw(15), "Fevals:", std::setw(15),
-                                     "Best:", std::setw(15), "Current Best:\n");
+                        pagmo::print("\n", std::setw(7), "Gen:", std::setw(15), "Fevals:", std::setw(15), "Best:\n");
                     }
-                    pagmo::print(std::setw(7), gen, std::setw(15), prob.get_fevals() - fevals0, std::setw(15),
-                                 pop.champion_f()[0], std::setw(15),
-                                 pop.get_f()[worst_idx][0] - pop.get_f()[best_idx][0], '\n');
+                    pagmo::print(std::setw(7), gen - 1, std::setw(15), prob.get_fevals() - fevals0, std::setw(15),
+                                 best_f, '\n');
                     ++count;
                     // Logs
-                    m_log.emplace_back(gen, prob.get_fevals() - fevals0, pop.champion_f()[0], pop.get_f()[best_idx][0]);
+                    m_log.emplace_back(gen - 1, prob.get_fevals() - fevals0, best_f);
                 }
             }
-            // 1 - We get the best chromosome.
-            auto best_x = pop.get_x()[pop.best_idx()];
-            std::vector<unsigned> xu(best_x.size());
-            std::transform(best_x.begin(), best_x.end(), xu.begin(),
-                           [](double a) { return boost::numeric_cast<unsigned>(a); });
-            // 2 - We mutate it and record the contiguous values of the mutated chromosomes for bfe.
-            pagmo::vector_double dvs(NP * dim);
+
+            // 1 - We generate new NP individuals mutating the best and we write on the dvs for pagmo::bfe to evaluate
+            // their fitnesses.
             for (decltype(NP) i = 0u; i < NP; ++i) {
-                auto cgp = udp_ptr->get_cgp();
-                cgp.set(xu);
+                // To mutate active chromosomes we use a copy of the cgp of the UDP.
+                cgp.set(best_xu);
                 cgp.mutate_active(m_mut_n);
                 std::vector<unsigned> mutated_x = cgp.get();
-                std::transform(mutated_x.begin(), mutated_x.end() , dvs.begin() + i * dim,
+                std::transform(mutated_x.begin(), mutated_x.end(), dvs.begin() + i * dim,
                                [](unsigned a) { return boost::numeric_cast<double>(a); });
             }
-            // 3 - We compute their fitnesses
-            auto fs = m_bfe(prob, dvs);
+            // 3 - We compute their fitnesses calling the bfe
+            fs = m_bfe(prob, dvs);
+            // Check if ftol exit condition is met
+            if (best_f < m_ftol) {
+                if (m_verbosity > 0u) {
+                    pagmo::print(std::setw(7), gen, std::setw(15), prob.get_fevals() - fevals0, std::setw(15), best_f,
+                                 '\n');
+                    ++count;
+                    // Logs
+                    m_log.emplace_back(gen, prob.get_fevals() - fevals0, best_f);
+
+                    pagmo::print("Exit condition -- ftol < ", m_ftol, "\n");
+                }
+                update_pop(pop, dvs, fs, best_f, best_xu, NP, dim);
+                return pop;
+            }
+            // 4 - We reinsert the mutated individuals in the population if their fitness is
+            // less than, or equal, to the one from the parent.
+            for (decltype(NP) i = 0u; i < NP; ++i) {
+                if (pagmo::detail::less_than_f(fs[i], best_f)) {
+                    best_f = fs[i];
+                    // best_xu is updated here
+                    std::transform(dvs.begin() + i * dim, dvs.begin() + (i + 1) * dim, best_xu.begin(),
+                                   [](double a) { return boost::numeric_cast<unsigned>(a); });
+                }
+            }
+        }
+        // Evolution has terminated and we now update into the pagmo::pop.
+        update_pop(pop, dvs, fs, best_f, best_xu, NP, dim);
+        // At the end, the pagmo::population will contain the best individual together with its best NP-1 mutants.
+        // We log the last iteration
+        if (m_verbosity > 0u) {
+            pagmo::print(std::setw(7), m_gen, std::setw(15), prob.get_fevals() - fevals0, std::setw(15), best_f, '\n');
+            ++count;
+            // Logs
+            m_log.emplace_back(m_gen, prob.get_fevals() - fevals0, best_f);
+        }
+        if (m_verbosity) {
+            pagmo::print("Exit condition -- generations = ", m_gen, '\n');
         }
         return pop;
     }
@@ -144,12 +184,13 @@ public:
      *
      * Example (verbosity 100):
      * @code{.unparsed}
-     *     Gen:        Fevals:          Best:  Current Best:
-     *        1             40         261363         261363
-     *      101           4040        112.237        267.969
-     *      201           8040        20.8885        265.122
-     *      301          12040        20.6076        20.6076
-     *      401          16040         18.252        140.079
+     *  Gen:        Fevals:         Best:
+     *     1              0       0.922363
+     *     2              4       0.153203
+     *     3              8       0.125378
+     *     4             12       0.125378
+     *     5             16       0.125378
+     *     6             20       0.125378
      * @endcode
      * Gen is the generation number, Fevals the number of function evaluation used, , Best is the best fitness found,
      * Current best is the best fitness currently in the population.
@@ -177,7 +218,7 @@ public:
         pagmo::stream(ss, "\tMaximum number of generations: ", m_gen);
         pagmo::stream(ss, "\n\tMutation type: ", m_mutation_type);
         pagmo::stream(ss, "\n\tNumber of active mutations: ", m_mut_n);
-        pagmo::stream(ss, "\n\tMutation fraction: ", m_mut_fraction);
+        pagmo::stream(ss, "\n\tExit condition of the final loss (ftol): ", m_ftol);
         pagmo::stream(ss, "\n\tVerbosity: ", m_verbosity);
         pagmo::stream(ss, "\n\tSeed: ", m_seed);
         return ss.str();
@@ -198,15 +239,36 @@ public:
     }
 
 private:
+    void update_pop(pagmo::population &pop, const pagmo::vector_double &dvs, const pagmo::vector_double &fs,
+                    double best_f, const std::vector<unsigned> &best_xu, pagmo::vector_double::size_type NP,
+                    pagmo::vector_double::size_type dim) const
+    {
+        pagmo::vector_double best_x(dim);
+        // First, the latest generation of mutants (if better)
+        for (decltype(NP) i = 0u; i < NP; ++i) {
+            if (pagmo::detail::less_than_f(pop.get_f()[i][0], fs[i])) {
+                pop.set_xf(i, pagmo::vector_double(dvs.begin() + i * dim, dvs.begin() + (i + 1) * dim),
+                           pagmo::vector_double(1, fs[i]));
+            }
+        }
+        auto worst_idx = pop.worst_idx();
+        double worst_f_in_pop = pop.get_f()[worst_idx][0];
+        // Then the best in place of the worst
+        if (pagmo::detail::less_than_f(best_f, worst_f_in_pop)) {
+            std::transform(best_xu.begin(), best_xu.end(), best_x.begin(),
+                           [](unsigned a) { return boost::numeric_cast<double>(a); });
+            pop.set_xf(worst_idx, best_x, pagmo::vector_double(1, best_f));
+        }
+    }
     unsigned m_gen;
     std::string m_mutation_type;
     unsigned m_mut_n;
-    double m_mut_fraction;
+    double m_ftol;
     mutable detail::random_engine_type m_e;
     unsigned m_seed;
     unsigned m_verbosity;
     mutable log_type m_log;
     pagmo::bfe m_bfe;
-};
+}; // namespace dcgp
 } // namespace dcgp
 #endif
