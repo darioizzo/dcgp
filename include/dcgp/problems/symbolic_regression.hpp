@@ -21,7 +21,9 @@ public:
      * It constructs a list of 1 empty points/labels vector and a dummy cgp member.
      * It is then guaranteed that m_points[0] and m_labels[0] can be accessed.
      */
-    symbolic_regression() : m_points(1), m_labels(1), m_cgp(1u, 1u, 1u, 1u, 1u, 2u, kernel_set<double>({"sum"})(), 0u)
+    symbolic_regression()
+        : m_points(1), m_labels(1), m_r(1), m_c(1), m_l(1), m_arity(2), m_f(kernel_set<double>({"sum"})()),
+          m_parallel_batches(0u), m_cgp(1u, 1u, 1u, 1u, 1u, 2u, kernel_set<double>({"sum"})(), 0u)
     {
     }
 
@@ -31,10 +33,27 @@ public:
      *
      * @param[in] points number of inputs (independent variables).
      * @param[in] labels number of outputs (dependent variables).
+     * @param[in] r number of rows of the dCGP.
+     * @param[in] c number of columns of the dCGP.
+     * @param[in] l number of levels-back allowed in the dCGP.
+     * @param[in] arity arity of the basis functions.
+     * @param[in] f function set. An std::vector of dcgp::kernel<expression::type>.
+     * @param[in] parallel_batches number of parallel batches.
+     *
+     * @throws std::invalid_argument if points and labels are not consistent
      */
-    explicit symbolic_regression(const std::vector<std::vector<double>> &points,
-                                 const std::vector<std::vector<double>> &labels)
-        : m_points(points), m_labels(labels), m_cgp(1u, 1u, 1u, 1u, 1u, 2u, kernel_set<double>({"sum"})(), 0u)
+    symbolic_regression(const std::vector<std::vector<double>> &points,
+                                 const std::vector<std::vector<double>> &labels,
+                                 unsigned r = 1,     // n. rows
+                                 unsigned c = 10,    // n. columns
+                                 unsigned l = 11,    // n. levels-back
+                                 unsigned arity = 2, // basis functions' arity
+                                 std::vector<kernel<double>> f
+                                 = kernel_set<double>({"sum", "diff", "mul", "pdiv"})(), // functions
+                                 unsigned parallel_batches = 0u                          // number of parallel batches
+                                 )
+        : m_points(points), m_labels(labels), m_r(r), m_c(c), m_l(l), m_arity(arity), m_f(f),
+          m_parallel_batches(parallel_batches), m_cgp(1u, 1u, 1u, 1u, 1u, 2u, kernel_set<double>({"sum"})(), 0u)
     {
         // 1 - We check that points is not an empty vector.
         if (points.size() == 0) {
@@ -59,9 +78,9 @@ public:
                                         "dimension, while I detect differences.");
         }
         // We initialize the dcgp expression
-        kernel_set<double> basic_set({"sum", "diff", "mul", "div"});
-        m_cgp = expression<double>(n, m, 2, 10, 10, 2, basic_set(), random_device::next());
+        m_cgp = expression<double>(n, m, m_r, m_c, m_l, m_arity, m_f, random_device::next());
     }
+
     /// Fitness computation
     /**
      * Computes the fitness for this UDP
@@ -79,9 +98,10 @@ public:
         // We initialize the fitness
         std::vector<double> f(1, 0);
         // We compute the MSE loss splitting the data in n batches (if possible).
-        f[0] = m_cgp.loss(m_points, m_labels, "MSE", 0u);
+        f[0] = m_cgp.loss(m_points, m_labels, "MSE", m_parallel_batches);
         return f;
     }
+
     /// Box-bounds
     /**
      *
@@ -95,6 +115,7 @@ public:
         std::vector<double> ub(m_cgp.get_ub().begin(), m_cgp.get_ub().end());
         return {lb, ub};
     }
+
     /// Integer dimension
     /**
      * It returns the integer dimension of the problem.
@@ -105,6 +126,7 @@ public:
     {
         return m_cgp.get_lb().size();
     }
+
     /// Problem name
     /**
      * @return a string containing the problem name
@@ -113,6 +135,7 @@ public:
     {
         return "CGP symbolic regressor";
     }
+
     /// Extra info
     /**
      * @return a string containing extra problem information.
@@ -148,7 +171,11 @@ public:
         return ss.str();
     }
 
-    const expression<double>& get_cgp() const
+    /// Getter for the CGP
+    /**
+     * @return the internal dcgp::expression<double> data member.
+     */
+    const expression<double> &get_cgp() const
     {
         return m_cgp;
     }
@@ -156,6 +183,12 @@ public:
 private:
     std::vector<std::vector<double>> m_points;
     std::vector<std::vector<double>> m_labels;
+    unsigned m_r;
+    unsigned m_c;
+    unsigned m_l;
+    unsigned m_arity;
+    std::vector<kernel<double>> m_f;
+    unsigned m_parallel_batches;
     mutable expression<double> m_cgp;
 };
 } // namespace dcgp

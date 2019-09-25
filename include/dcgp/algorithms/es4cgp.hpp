@@ -28,19 +28,14 @@ public:
      * Constructs an evolutionary strategy algorithm for use with a cgp::symbolic_regression UDP.
      *
      * @param gen number of generations.
-     * @param mutation_type one of "active" or "any". If "active" only active genes will be mutated, otherwise all genes
-     * can be mutated.
-     * @param mut_n number of active genes to be mutated (when *mutation_type* is "any" this parameter has no effect).
+     * @param mut_n number of active genes to be mutated.
      * @param ftol the algorithm will exit when the loss is below this tolerance
-     * up to the nearest integer >= 1 (when *mutation_type* is "active" this parameter has no effect)..
      * @param seed seed used by the internal random number generator (default is random)
      *
      * @throws std::invalid_argument if limit equals 0
      */
-    es4cgp(unsigned gen = 1, std::string mutation_type = "active", unsigned mut_n = 2, double ftol = 1e-4,
-           unsigned seed = random_device::next())
-        : m_gen(gen), m_mutation_type(mutation_type), m_mut_n(mut_n), m_ftol(ftol), m_e(seed), m_seed(seed),
-          m_verbosity(0u)
+    es4cgp(unsigned gen = 1, unsigned mut_n = 2, double ftol = 1e-4, unsigned seed = random_device::next())
+        : m_gen(gen), m_mut_n(mut_n), m_ftol(ftol), m_e(seed), m_seed(seed), m_verbosity(0u)
     {
         // TODO: add checks
     }
@@ -49,6 +44,7 @@ public:
     {
         const auto &prob = pop.get_problem();
         auto dim = prob.get_nx();
+        auto n_obj = prob.get_nobj();
         const auto bounds = prob.get_bounds();
         auto NP = pop.size();
         auto fevals0 = prob.get_fevals(); // fevals already made
@@ -75,7 +71,6 @@ public:
 
         // No throws, all valid: we clear the logs
         m_log.clear();
-
         // We make a copy of the cgp which we will use to make mutations.
         auto cgp = udp_ptr->get_cgp();
         // We get the best chromosome in the population.
@@ -85,9 +80,9 @@ public:
         std::vector<unsigned> best_xu(best_x.size());
         std::transform(best_x.begin(), best_x.end(), best_xu.begin(),
                        [](double a) { return boost::numeric_cast<unsigned>(a); });
-        // Contiguous vector of chromosomes for pagmo::bfe input\output allocated here
+        // A contiguous vector of chromosomes/fitness vectors for pagmo::bfe input\output is allocated here.
         pagmo::vector_double dvs(NP * dim);
-        pagmo::vector_double fs(NP);
+        pagmo::vector_double fs(NP * n_obj);
         // Main loop
         for (decltype(m_gen) gen = 1u; gen <= m_gen; ++gen) {
             // Logs and prints (verbosity modes > 1: a line is added every m_verbosity generations)
@@ -216,7 +211,6 @@ public:
     {
         std::ostringstream ss;
         pagmo::stream(ss, "\tMaximum number of generations: ", m_gen);
-        pagmo::stream(ss, "\n\tMutation type: ", m_mutation_type);
         pagmo::stream(ss, "\n\tNumber of active mutations: ", m_mut_n);
         pagmo::stream(ss, "\n\tExit condition of the final loss (ftol): ", m_ftol);
         pagmo::stream(ss, "\n\tVerbosity: ", m_verbosity);
@@ -261,7 +255,6 @@ private:
         }
     }
     unsigned m_gen;
-    std::string m_mutation_type;
     unsigned m_mut_n;
     double m_ftol;
     mutable detail::random_engine_type m_e;

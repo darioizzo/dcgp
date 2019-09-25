@@ -1,7 +1,6 @@
+#include <dcgp/algorithms/es4cgp.hpp>
 #include <dcgp/problems/symbolic_regression.hpp>
 #include <pagmo/algorithm.hpp>
-#include <pagmo/algorithms/gaco.hpp>
-#include <pagmo/algorithms/sga.hpp>
 #include <pagmo/io.hpp>
 #include <pagmo/population.hpp>
 #include <pagmo/problem.hpp>
@@ -19,15 +18,12 @@ int main()
     symbolic_regression udp(X, Y);
     pagmo::problem prob{udp};
     pagmo::print(prob);
-    pagmo::population pop{prob, 10};
-    // A Genetic algorithm without crossover and with only mutation
-    pagmo::sga uda(500, 0., 1., 0.1);
+    pagmo::population pop{prob, 4};
+    dcgp::es4cgp uda(10000);
     pagmo::algorithm algo{uda};
     pagmo::print(algo);
-    algo.set_verbosity(1u);
+    algo.set_verbosity(100u);
     pop = algo.evolve(pop);
-    // We print out the final expression
-    audi::print("Final expression: ",  udp.pretty(pop.champion_x()), "\n");
-    audi::print("Final value: ", pop.get_f()[pop.best_idx()], "\n");
+    pagmo::print(pop);
     return false;
 }
