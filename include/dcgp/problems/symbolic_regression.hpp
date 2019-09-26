@@ -19,7 +19,7 @@ public:
     /**
      * A default constructor is needed by the pagmo UDP interface, but it should not be used.
      * It constructs a list of 1 empty points/labels vector and a dummy cgp member.
-     * It is then guaranteed that m_points[0] and m_labels[0] can be accessed.
+     * It is guaranteed that m_points[0] and m_labels[0] can be accessed.
      */
     symbolic_regression()
         : m_points(1), m_labels(1), m_r(1), m_c(1), m_l(1), m_arity(2), m_f(kernel_set<double>({"sum"})()),
@@ -40,43 +40,25 @@ public:
      * @param[in] f function set. An std::vector of dcgp::kernel<expression::type>.
      * @param[in] parallel_batches number of parallel batches.
      *
-     * @throws std::invalid_argument if points and labels are not consistent
+     * @throws std::invalid_argument if points and labels are not consistent.
+     * @throws std::invalid_argument if the CGP related parameters (i.e. *r*, *c*, etc...) are malformed.
      */
-    symbolic_regression(const std::vector<std::vector<double>> &points,
-                                 const std::vector<std::vector<double>> &labels,
-                                 unsigned r = 1,     // n. rows
-                                 unsigned c = 10,    // n. columns
-                                 unsigned l = 11,    // n. levels-back
-                                 unsigned arity = 2, // basis functions' arity
-                                 std::vector<kernel<double>> f
-                                 = kernel_set<double>({"sum", "diff", "mul", "pdiv"})(), // functions
-                                 unsigned parallel_batches = 0u                          // number of parallel batches
-                                 )
+    symbolic_regression(const std::vector<std::vector<double>> &points, const std::vector<std::vector<double>> &labels,
+                        unsigned r = 1,     // n. rows
+                        unsigned c = 10,    // n. columns
+                        unsigned l = 11,    // n. levels-back
+                        unsigned arity = 2, // basis functions' arity
+                        std::vector<kernel<double>> f
+                        = kernel_set<double>({"sum", "diff", "mul", "pdiv"})(), // functions
+                        unsigned parallel_batches = 0u                          // number of parallel batches
+                        )
         : m_points(points), m_labels(labels), m_r(r), m_c(c), m_l(l), m_arity(arity), m_f(f),
           m_parallel_batches(parallel_batches), m_cgp(1u, 1u, 1u, 1u, 1u, 2u, kernel_set<double>({"sum"})(), 0u)
     {
-        // 1 - We check that points is not an empty vector.
-        if (points.size() == 0) {
-            throw std::invalid_argument("The size of the input data (points) is zero.");
-        }
-        // 2 - We check labels and points have the same (non-empty) size
-        if (points.size() != labels.size()) {
-            throw std::invalid_argument("The number of input data (points) is " + std::to_string(points.size())
-                                        + " while the number of labels is " + std::to_string(labels.size())
-                                        + ". They should be equal.");
-        }
-        // 3 - We check that all p in points have the same size
-        unsigned n = static_cast<unsigned>(points[0].size());
-        if (!std::all_of(points.begin(), points.end(), [n](const std::vector<double> &p) { return p.size() == n; })) {
-            throw std::invalid_argument("The input data (points) is inconsistent: all points must have the same "
-                                        "dimension, while I detect differences.");
-        }
-        // 4 - We check that all l in labels have the same size
-        unsigned m = static_cast<unsigned>(labels[0].size());
-        if (!std::all_of(labels.begin(), labels.end(), [m](const std::vector<double> &l) { return l.size() == m; })) {
-            throw std::invalid_argument("The labels are inconsistent: all labels must have the same "
-                                        "dimension, while I detect differences.");
-        }
+        unsigned n = static_cast<unsigned>(m_points[0].size());
+        unsigned m = static_cast<unsigned>(m_labels[0].size());
+        // We check the inputs.
+        sanity_checks(n, m);
         // We initialize the dcgp expression
         m_cgp = expression<double>(n, m, m_r, m_c, m_l, m_arity, m_f, random_device::next());
     }
@@ -173,7 +155,7 @@ public:
 
     /// Getter for the CGP
     /**
-     * @return the internal dcgp::expression<double> data member.
+     * @return a const reference to the internal dcgp::expression<double> data member.
      */
     const expression<double> &get_cgp() const
     {
@@ -181,6 +163,35 @@ public:
     }
 
 private:
+    inline void sanity_checks(unsigned n, unsigned m) const
+    {
+        // 1 - We check that points is not an empty vector.
+        if (m_points.size() == 0) {
+            throw std::invalid_argument("The size of the input data (points) is zero.");
+        }
+        // 2 - We check labels and points have the same (non-empty) size
+        if (m_points.size() != m_labels.size()) {
+            throw std::invalid_argument("The number of input data (points) is " + std::to_string(m_points.size())
+                                        + " while the number of labels is " + std::to_string(m_labels.size())
+                                        + ". They should be equal.");
+        }
+        // 3 - We check that all p in points have the same size
+        if (!std::all_of(m_points.begin(), m_points.end(), [n](const std::vector<double> &p) { return p.size() == n; })) {
+            throw std::invalid_argument("The input data (points) is inconsistent: all points must have the same "
+                                        "dimension, while I detect differences.");
+        }
+        // 4 - We check that all l in labels have the same size
+        if (!std::all_of(m_labels.begin(), m_labels.end(), [m](const std::vector<double> &l) { return l.size() == m; })) {
+            throw std::invalid_argument("The labels are inconsistent: all labels must have the same "
+                                        "dimension, while I detect differences.");
+        }
+        if (m_c == 0) throw std::invalid_argument("Number of columns is 0");
+        if (m_r == 0) throw std::invalid_argument("Number of rows is 0");
+        if (m_l == 0) throw std::invalid_argument("Number of level-backs is 0");
+        if (m_arity < 2) throw std::invalid_argument("Arity must me at least 2.");
+        if (m_f.size() == 0) throw std::invalid_argument("Number of basis functions is 0");
+    }
+
     std::vector<std::vector<double>> m_points;
     std::vector<std::vector<double>> m_labels;
     unsigned m_r;

@@ -59,6 +59,11 @@ public:
                                         + get_name()
                                         + " can only be used on problems of the type dcgp::symbolic_regression ");
         }
+        if (n_obj > 1) {
+            throw std::invalid_argument(prob.get_name() + " has multiple objectives. "
+                                        + get_name()
+                                        + " can only be used on problems that are single objective.");
+        }
         if (NP < 2u) {
             throw std::invalid_argument(prob.get_name() + " needs at least 2 individuals in the population, "
                                         + std::to_string(NP) + " detected");
@@ -187,8 +192,7 @@ public:
      *     5             16       0.125378
      *     6             20       0.125378
      * @endcode
-     * Gen is the generation number, Fevals the number of function evaluation used, , Best is the best fitness found,
-     * Current best is the best fitness currently in the population.
+     * Gen is the generation number, Fevals the number of function evaluation used, Best is the best fitness found.
      *
      * @param level verbosity level
      */
