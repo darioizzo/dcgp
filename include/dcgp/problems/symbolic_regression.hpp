@@ -115,7 +115,7 @@ public:
      */
     std::string get_name() const
     {
-        return "CGP symbolic regressor";
+        return "a CGP symbolic regression problem";
     }
 
     /// Extra info

@@ -29,15 +29,20 @@ public:
      *
      * @param gen number of generations.
      * @param mut_n number of active genes to be mutated.
-     * @param ftol the algorithm will exit when the loss is below this tolerance
-     * @param seed seed used by the internal random number generator (default is random)
+     * @param ftol the algorithm will exit when the loss is below this tolerance.
+     * @param seed seed used by the internal random number generator (default is random).
      *
-     * @throws std::invalid_argument if limit equals 0
+     * @throws std::invalid_argument if *mut_n* is 0 or *ftol* is negative
      */
-    es4cgp(unsigned gen = 1, unsigned mut_n = 2, double ftol = 1e-4, unsigned seed = random_device::next())
+    es4cgp(unsigned gen = 1u, unsigned mut_n = 2u, double ftol = 1e-4, unsigned seed = random_device::next())
         : m_gen(gen), m_mut_n(mut_n), m_ftol(ftol), m_e(seed), m_seed(seed), m_verbosity(0u)
     {
-        // TODO: add checks
+        if (mut_n == 0u) {
+            throw std::invalid_argument("The number of active mutations is zero, it must be at least 1.");
+        }
+        if (ftol < 0.) {
+            throw std::invalid_argument("The ftol is negative, it must be positive or zero.");
+        }
     }
     // Algorithm evolve method
     pagmo::population evolve(pagmo::population pop) const
@@ -55,17 +60,16 @@ public:
         // If the UDP in pop is not a symbolic_regression UDP, udp_ptr will be NULL
         auto udp_ptr = prob.extract<symbolic_regression>();
         if (!udp_ptr) {
-            throw std::invalid_argument(prob.get_name() + " does not seem to be a symbolic regression problem."
+            throw std::invalid_argument(prob.get_name() + " does not seem to be a symbolic regression problem. "
                                         + get_name()
                                         + " can only be used on problems of the type dcgp::symbolic_regression ");
         }
         if (n_obj > 1) {
-            throw std::invalid_argument(prob.get_name() + " has multiple objectives. "
-                                        + get_name()
+            throw std::invalid_argument(prob.get_name() + " has multiple objectives. " + get_name()
                                         + " can only be used on problems that are single objective.");
         }
         if (NP < 2u) {
-            throw std::invalid_argument(prob.get_name() + " needs at least 2 individuals in the population, "
+            throw std::invalid_argument(get_name() + " needs at least 2 individuals in the population, "
                                         + std::to_string(NP) + " detected");
         }
         // Get out if there is nothing to do.
@@ -199,6 +203,15 @@ public:
     void set_verbosity(unsigned level)
     {
         m_verbosity = level;
+    }
+
+    /// Gets the verbosity level
+    /**
+     * @return the verbosity level
+     */
+    unsigned get_verbosity() const
+    {
+        return m_verbosity;
     }
 
     /// Algorithm name
