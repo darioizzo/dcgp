@@ -55,8 +55,8 @@ public:
         : m_points(points), m_labels(labels), m_r(r), m_c(c), m_l(l), m_arity(arity), m_f(f),
           m_parallel_batches(parallel_batches), m_cgp(1u, 1u, 1u, 1u, 1u, 2u, kernel_set<double>({"sum"})(), 0u)
     {
-        unsigned n = static_cast<unsigned>(m_points[0].size());
-        unsigned m = static_cast<unsigned>(m_labels[0].size());
+        unsigned n;
+        unsigned m;
         // We check the inputs.
         sanity_checks(n, m);
         // We initialize the dcgp expression
@@ -163,12 +163,14 @@ public:
     }
 
 private:
-    inline void sanity_checks(unsigned n, unsigned m) const
+    inline void sanity_checks(unsigned &n, unsigned &m) const
     {
         // 1 - We check that points is not an empty vector.
         if (m_points.size() == 0) {
             throw std::invalid_argument("The size of the input data (points) is zero.");
         }
+        n = static_cast<unsigned>(m_points[0].size());
+        m = static_cast<unsigned>(m_labels[0].size());
         // 2 - We check labels and points have the same (non-empty) size
         if (m_points.size() != m_labels.size()) {
             throw std::invalid_argument("The number of input data (points) is " + std::to_string(m_points.size())
