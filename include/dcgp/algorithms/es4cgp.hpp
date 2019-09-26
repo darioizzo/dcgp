@@ -108,7 +108,7 @@ public:
                 cgp.set(best_xu);
                 cgp.mutate_active(m_mut_n);
                 std::vector<unsigned> mutated_x = cgp.get();
-                std::transform(mutated_x.begin(), mutated_x.end(), dvs.begin() + i * dim,
+                std::transform(mutated_x.begin(), mutated_x.end(), dvs.data() + i * dim,
                                [](unsigned a) { return boost::numeric_cast<double>(a); });
             }
             // 3 - We compute their fitnesses calling the bfe
@@ -133,7 +133,7 @@ public:
                 if (pagmo::detail::less_than_f(fs[i], best_f)) {
                     best_f = fs[i];
                     // best_xu is updated here
-                    std::transform(dvs.begin() + i * dim, dvs.begin() + (i + 1) * dim, best_xu.begin(),
+                    std::transform(dvs.data() + i * dim, dvs.data() + (i + 1) * dim, best_xu.begin(),
                                    [](double a) { return boost::numeric_cast<unsigned>(a); });
                 }
             }
@@ -241,7 +241,7 @@ private:
         // First, the latest generation of mutants (if better)
         for (decltype(NP) i = 0u; i < NP; ++i) {
             if (pagmo::detail::less_than_f(pop.get_f()[i][0], fs[i])) {
-                pop.set_xf(i, pagmo::vector_double(dvs.begin() + i * dim, dvs.begin() + (i + 1) * dim),
+                pop.set_xf(i, pagmo::vector_double(dvs.data() + i * dim, dvs.data() + (i + 1) * dim),
                            pagmo::vector_double(1, fs[i]));
             }
         }
