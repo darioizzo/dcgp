@@ -77,7 +77,7 @@ public:
                    std::vector<kernel<double>> f, // functions
                    unsigned seed                  // seed for the pseudo-random numbers
                    )
-        : expression<double>(n, m, r, c, l, arity, f, seed), m_biases(r * c, 0.), m_kernel_map(f.size())
+        : expression<double>(n, m, r, c, l, arity, f, 0u, seed), m_biases(r * c, 0.), m_kernel_map(f.size())
 
     {
         // Sanity checks
@@ -143,7 +143,7 @@ public:
                    std::vector<kernel<double>> f, // functions
                    unsigned seed                  // seed for the pseudo-random numbers
                    )
-        : expression<double>(n, m, r, c, l, std::vector<unsigned>(c, arity), f, seed), m_biases(r * c, 0.),
+        : expression<double>(n, m, r, c, l, std::vector<unsigned>(c, arity), f, 0u, seed), m_biases(r * c, 0.),
           m_kernel_map(f.size())
 
     {

@@ -59,7 +59,7 @@ public:
                         std::vector<kernel<T>> f, // functions
                         unsigned seed             // seed for the pseudo-random numbers
                         )
-        : expression<T>(n, m, r, c, l, std::vector<unsigned>(c, arity), f, seed)
+        : expression<T>(n, m, r, c, l, std::vector<unsigned>(c, arity), f, 0u, seed)
     {
         // Default initialization of weights to 1.
         unsigned n_connections = std::accumulate(this->get_arity().begin(), this->get_arity().end(), 0u) * r;
@@ -94,7 +94,7 @@ public:
                         std::vector<kernel<T>> f,    // functions
                         unsigned seed                // seed for the pseudo-random numbers
                         )
-        : expression<T>(n, m, r, c, l, arity, f, seed)
+        : expression<T>(n, m, r, c, l, arity, f, 0u, seed)
     {
         // Default initialization of weights to 1.
         unsigned n_connections = std::accumulate(this->get_arity().begin(), this->get_arity().end(), 0u) * r;

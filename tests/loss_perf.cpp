@@ -12,7 +12,7 @@ void evaluate_loss(unsigned int in, unsigned int out, unsigned int rows, unsigne
     // Random numbers engine
     std::default_random_engine re(123);
     // Instatiate the expression
-    dcgp::expression<double> ex(in, out, rows, columns, levels_back, arity, kernel_set, 123);
+    dcgp::expression<double> ex(in, out, rows, columns, levels_back, arity, kernel_set, 0u, 123u);
     // We create the input data upfront and we do not time it.
     std::vector<double> dumb(in);
     std::vector<double> dumb2(out);
@@ -34,8 +34,6 @@ void evaluate_loss(unsigned int in, unsigned int out, unsigned int rows, unsigne
     }
 }
 
-/// This torture test is passed whenever it completes. It is meant to check for
-/// the code stability when large number of mutations are performed
 BOOST_AUTO_TEST_CASE(evaluation_speed)
 {
     unsigned int N = 100000;

@@ -23,7 +23,7 @@ public:
      */
     symbolic_regression()
         : m_points(1), m_labels(1), m_r(1), m_c(1), m_l(1), m_arity(2), m_f(kernel_set<double>({"sum"})()),
-          m_parallel_batches(0u), m_cgp(1u, 1u, 1u, 1u, 1u, 2u, kernel_set<double>({"sum"})(), 0u)
+          m_parallel_batches(0u), m_cgp(1u, 1u, 1u, 1u, 1u, 2u, kernel_set<double>({"sum"})(), 0u, 123u)
     {
     }
 
@@ -53,14 +53,14 @@ public:
                         unsigned parallel_batches = 0u                          // number of parallel batches
                         )
         : m_points(points), m_labels(labels), m_r(r), m_c(c), m_l(l), m_arity(arity), m_f(f),
-          m_parallel_batches(parallel_batches), m_cgp(1u, 1u, 1u, 1u, 1u, 2u, kernel_set<double>({"sum"})(), 0u)
+          m_parallel_batches(parallel_batches), m_cgp(1u, 1u, 1u, 1u, 1u, 2u, kernel_set<double>({"sum"})(), 0u, 123u)
     {
         unsigned n;
         unsigned m;
         // We check the inputs.
         sanity_checks(n, m);
         // We initialize the dcgp expression
-        m_cgp = expression<double>(n, m, m_r, m_c, m_l, m_arity, m_f, random_device::next());
+        m_cgp = expression<double>(n, m, m_r, m_c, m_l, m_arity, m_f, 0u, random_device::next());
     }
 
     /// Fitness computation
@@ -178,12 +178,14 @@ private:
                                         + ". They should be equal.");
         }
         // 3 - We check that all p in points have the same size
-        if (!std::all_of(m_points.begin(), m_points.end(), [n](const std::vector<double> &p) { return p.size() == n; })) {
+        if (!std::all_of(m_points.begin(), m_points.end(),
+                         [n](const std::vector<double> &p) { return p.size() == n; })) {
             throw std::invalid_argument("The input data (points) is inconsistent: all points must have the same "
                                         "dimension, while I detect differences.");
         }
         // 4 - We check that all l in labels have the same size
-        if (!std::all_of(m_labels.begin(), m_labels.end(), [m](const std::vector<double> &l) { return l.size() == m; })) {
+        if (!std::all_of(m_labels.begin(), m_labels.end(),
+                         [m](const std::vector<double> &l) { return l.size() == m; })) {
             throw std::invalid_argument("The labels are inconsistent: all labels must have the same "
                                         "dimension, while I detect differences.");
         }
