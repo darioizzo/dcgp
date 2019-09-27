@@ -134,8 +134,8 @@ public:
 
     /// Evaluates the dCGP expression
     /**
-     * This evaluates the dCGP expression. This method overrides the base class
-     * method. NOTE we cannot template this and the following function as they are virtual.
+     * This evaluates the dCGP expression. 
+     * NOTE we cannot template this and the following function as they are virtual :(
      *
      * @param[point] in an std::vector containing the values where the dCGP expression has
      * to be computed

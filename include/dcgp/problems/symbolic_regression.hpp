@@ -202,6 +202,9 @@ private:
     unsigned m_arity;
     std::vector<kernel<double>> m_f;
     unsigned m_parallel_batches;
+    // The fact that this is mutable may hamper the performances of the bfe as the thread safetly level
+    // of the UDP in pagmo will force copies of the UDP to be made in all threads. This can in principle be
+    // avoided, but likely resulting in prepature optimization. (see https://github.com/darioizzo/dcgp/pull/42)
     mutable expression<double> m_cgp;
 };
 } // namespace dcgp

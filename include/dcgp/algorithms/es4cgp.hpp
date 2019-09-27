@@ -83,8 +83,9 @@ public:
         // We make a copy of the cgp which we will use to make mutations.
         auto cgp = udp_ptr->get_cgp();
         // We get the best chromosome in the population.
-        auto best_x = pop.get_x()[pop.best_idx()];
-        double best_f = pop.get_f()[pop.best_idx()][0];
+        auto best_idx = pop.best_idx();
+        auto best_x = pop.get_x()[best_idx];
+        double best_f = pop.get_f()[best_idx][0];
         // ... and we transform it into unsigned
         std::vector<unsigned> best_xu(best_x.size());
         std::transform(best_x.begin(), best_x.end(), best_xu.begin(),
@@ -250,6 +251,8 @@ public:
     }
 
 private:
+    // Used to update the population from the dvs, fs used via the bfe. Typically done at the end of the evolve when an
+    // exit condition is met.
     void update_pop(pagmo::population &pop, const pagmo::vector_double &dvs, const pagmo::vector_double &fs,
                     double best_f, const std::vector<unsigned> &best_xu, pagmo::vector_double::size_type NP,
                     pagmo::vector_double::size_type dim) const
