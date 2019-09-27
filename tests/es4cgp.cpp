@@ -31,7 +31,6 @@ BOOST_AUTO_TEST_CASE(evolve_test)
         BOOST_CHECK_THROW(uda.evolve(pop), std::invalid_argument);
     }
     { // zero gen
-        es4cgp uda(0u, 2u, 1e-4, 0u);
         pagmo::population pop{symbolic_regression({{1., 2.}, {0.3, -0.32}}, {{3. / 2.}, {0.02 / 0.32}}), 4u};
         BOOST_CHECK(es4cgp{0u}.evolve(pop).get_x()[0] == pop.get_x()[0]);
     }
