@@ -888,7 +888,7 @@ private:
 
     // This overrides the base class update_data_structures and updates also the m_connected (as well as
     // m_active_nodes and genes). It is called upon construction and each time active genes are changed.
-    void update_data_structures() override
+    void update_data_structures() 
     {
         expression<double>::update_data_structures();
         m_connected.clear();

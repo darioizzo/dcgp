@@ -300,9 +300,9 @@ BOOST_AUTO_TEST_CASE(loss)
     loss = ex.loss({1., 0.}, {0., 1.}, expression<double>::loss_type::CE);
     BOOST_CHECK_CLOSE(loss, 0.12692801104297263, 1e-12);
     // On a batch (first sequential then parallel)
-    auto loss_b = ex.loss({{1., 1.}, {1., 0.}}, {{2., 2.}, {0., 0.}}, "MSE", false);
+    auto loss_b = ex.loss({{1., 1.}, {1., 0.}}, {{2., 2.}, {0., 0.}}, "MSE", 0u);
     BOOST_CHECK_EQUAL(loss_b, 1.);
-    loss_b = ex.loss({{1., 1.}, {1., 0.}}, {{2., 2.}, {0., 0.}}, "MSE", true);
+    loss_b = ex.loss({{1., 1.}, {1., 0.}}, {{2., 2.}, {0., 0.}}, "MSE", 1u);
     BOOST_CHECK_EQUAL(loss_b, 1.);
     // Identities
     // We test that a d-CGP expression computed on 20 points

@@ -9,10 +9,8 @@
 #include <boost/test/unit_test.hpp>
 
 #include <dcgp/expression.hpp>
-#include <dcgp/kernel_set.hpp>
 #include <dcgp/fitness_functions.hpp>
-
-
+#include <dcgp/kernel_set.hpp>
 
 double test_qe(unsigned int n, unsigned int m, unsigned int r, unsigned int c, unsigned int l, unsigned int a,
                unsigned int N) // number of samples

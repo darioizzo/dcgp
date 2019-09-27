@@ -5,13 +5,13 @@
 #include <audi/functions.hpp>
 #include <audi/io.hpp>
 #include <dcgp/config.hpp>
-#include <dcgp/detail/s11n_wrappers.hpp>
 #include <dcgp/kernel.hpp>
 #include <dcgp/rng.hpp>
-#include <dcgp/s11n.hpp>
 #include <dcgp/type_traits.hpp>
 #include <initializer_list>
 #include <iostream>
+#include <pagmo/detail/s11n_wrappers.hpp>
+#include <pagmo/s11n.hpp>
 #include <random>
 #include <sstream>
 #include <stdexcept>
@@ -123,13 +123,19 @@ public:
         update_data_structures();
     }
 
-    /// Virtual destructor (necessary for inheritance?)
+    /// Virtual destructor
     virtual ~expression(){};
+    /// Defualts default copy ctor, copy assignment operator, move ctor and move assignment operator
+    /// are ok since all our members are trivial. They are needed to silence a warning since the destructor is present.
+    expression(const expression &) = default;
+    expression(expression &&) = default;
+    expression &operator=(const expression &) = default;
+    expression &operator=(expression &&) = default;
 
     /// Evaluates the dCGP expression
     /**
-     * This evaluates the dCGP expression. This method overrides the base class
-     * method. NOTE we cannot template this and the following function as they are virtual.
+     * This evaluates the dCGP expression. 
+     * NOTE we cannot template this and the following function as they are virtual :(
      *
      * @param[point] in an std::vector containing the values where the dCGP expression has
      * to be computed
@@ -170,8 +176,6 @@ public:
     /// Evaluates the dCGP expression
     /**
      * This evaluates the dCGP expression. The method can be overriden in the derived classes.
-     *
-     * NOTE we cannot template this and the following function as they are virtual.
      *
      * @param[point] in an std::vector containing the values where the dCGP expression has
      * to be computed
@@ -775,7 +779,7 @@ protected:
      * have it called by the new method and adding there the new data book-keeping.
      */
 
-    virtual void update_data_structures()
+    void update_data_structures()
     {
         assert(m_x.size() == m_lb.size());
 
@@ -883,7 +887,7 @@ protected:
     template <typename Archive>
     void serialize(Archive &ar, unsigned)
     {
-        detail::archive(ar, m_n, m_m, m_r, m_c, m_l, m_arity, m_f, m_lb, m_ub, m_active_nodes, m_active_genes, m_x,
+        pagmo::detail::archive(ar, m_n, m_m, m_r, m_c, m_l, m_arity, m_f, m_lb, m_ub, m_active_nodes, m_active_genes, m_x,
                         m_gene_idx, m_e);
     }
 
