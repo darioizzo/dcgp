@@ -123,7 +123,7 @@ class test_expression(_ut.TestCase):
         from dcgpy import kernel_set_double as kernel_set
 
         ex = expression(1, 1, 1, 6, 6, 2, kernel_set(
-            ["sum", "mul", "div", "diff"])(), 33)
+            ["sum", "mul", "div", "diff"])(), 0, 33)
         self.assertEqual(ex([1.]), [0.5])
         self.assertEqual(ex([2.]), [1.])
         self.assertEqual(ex([-1.]), [-0.5])
@@ -135,7 +135,7 @@ class test_expression(_ut.TestCase):
         from pyaudi import gdual_double as gdual
 
         ex = expression(1, 1, 1, 6, 6, 2, kernel_set(
-            ["sum", "mul", "div", "diff"])(), 20)
+            ["sum", "mul", "div", "diff"])(), 0, 20)
         self.assertEqual(ex([gdual(1, "x", 2)]), [gdual(0.)])
         self.assertEqual(ex([gdual(2, "x", 2)]), [gdual(0.)])
         self.assertEqual(ex([gdual(-1, "x", 2)]), [gdual(0.)])
@@ -147,7 +147,7 @@ class test_expression(_ut.TestCase):
         from pyaudi import gdual_vdouble as gdual
 
         ex = expression(1, 1, 1, 6, 6, 2, kernel_set(
-            ["sum", "mul", "div", "diff"])(), 20)
+            ["sum", "mul", "div", "diff"])(), 0, 20)
         self.assertEqual(ex([gdual([1, 2, -1, 2], "x", 2)]),
                          [gdual([0, 0, 0, 0])])
 
@@ -157,7 +157,7 @@ class test_expression(_ut.TestCase):
         import numpy as np
 
         ex = expression(1, 1, 1, 6, 6, 2, kernel_set(
-            ["sum", "mul", "div", "diff"])(), 33)
+            ["sum", "mul", "div", "diff"])(), 0, 33)
         x = 1.
         loss_list = ex.loss([[x]], [ex([x])], "MSE")
         loss_array = ex.loss(np.array([[x]]), np.array([ex([x])]), "MSE")
@@ -170,7 +170,7 @@ class test_expression(_ut.TestCase):
         import numpy as np
 
         ex = expression(1, 1, 1, 6, 6, 2, kernel_set(
-            ["sum", "mul", "div", "diff"])(), 33)
+            ["sum", "mul", "div", "diff"])(), 0, 33)
         x = gdual(1., "x", 3)
         loss_list = ex.loss([[x]], [ex([x])], "MSE")
         loss_array = ex.loss(np.array([[x]]), np.array([ex([x])]), "MSE")
@@ -184,7 +184,7 @@ class test_expression(_ut.TestCase):
         import numpy as np
 
         ex = expression(1, 1, 1, 6, 6, 2, kernel_set(
-            ["sum", "mul", "div", "diff"])(), 33)
+            ["sum", "mul", "div", "diff"])(), 0, 33)
         x = gdual([1., 2.], "x", 3)
         loss_list = ex.loss([[x]], [ex([x])], "MSE")
         loss_array = ex.loss(np.array([[x]]), np.array([ex([x])]), "MSE")

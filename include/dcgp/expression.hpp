@@ -10,8 +10,6 @@
 #include <dcgp/type_traits.hpp>
 #include <initializer_list>
 #include <iostream>
-#include <pagmo/detail/s11n_wrappers.hpp>
-#include <pagmo/s11n.hpp>
 #include <random>
 #include <sstream>
 #include <stdexcept>
@@ -62,6 +60,8 @@ public:
      * @param[in] l number of levels-back allowed in the dCGP.
      * @param[in] arity arities of the basis functions for each column.
      * @param[in] f function set. An std::vector of dcgp::kernel<expression::type>.
+     * @param[in] n_eph Number of ephemeral constants. Their values and their symbols can be set via the dedicate
+     * methods.
      * @param[in] seed seed for the random number generator (initial expression
      * and mutations depend on this).
      */
@@ -105,6 +105,8 @@ public:
      * @param[in] l number of levels-back allowed in the dCGP.
      * @param[in] arity arity of the basis functions.
      * @param[in] f function set. An std::vector of dcgp::kernel<expression::type>.
+     * @param[in] n_eph Number of ephemeral constants. Their values and their symbols can be set via the dedicate
+     * methods.
      * @param[in] seed seed for the random number generator (initial expression
      * and mutations depend on this).
      */
@@ -249,7 +251,8 @@ public:
         std::vector<std::string> dummy(in);
         return (*this)(dummy);
     }
-    // NOTE PER BLUESCARNI: I could not get these two as a template. Ambiguous calls and conversion problems between const char* and strings
+    // NOTE PER BLUESCARNI: I could not get these two as a template. Ambiguous calls and conversion problems between
+    // const char* and strings
     std::vector<double> operator()(const std::initializer_list<double> &in) const
     {
         std::vector<double> dummy(in);
@@ -385,22 +388,25 @@ public:
         m_x[gene_idx] = f_id;
     }
 
-    void set_eph_val(const std::vector<T> &eph_val) {
+    void set_eph_val(const std::vector<T> &eph_val)
+    {
         m_eph_val = eph_val;
     }
 
-    void set_eph_symb(const std::vector<std::string> &eph_symb) {
+    void set_eph_symb(const std::vector<std::string> &eph_symb)
+    {
         m_eph_symb = eph_symb;
     }
 
-    const std::vector<T>& get_eph_val() const {
+    const std::vector<T> &get_eph_val() const
+    {
         return m_eph_val;
     }
 
-    const std::vector<std::string>& get_eph_symb() const {
+    const std::vector<std::string> &get_eph_symb() const
+    {
         return m_eph_symb;
     }
-
 
     /// Gets the chromosome
     /**
@@ -925,14 +931,6 @@ protected:
         retval /= batch_size;
 
         return retval;
-    }
-
-    // Object serialization
-    template <typename Archive>
-    void serialize(Archive &ar, unsigned)
-    {
-        pagmo::detail::archive(ar, m_n, m_m, m_r, m_c, m_l, m_arity, m_f, m_lb, m_ub, m_active_nodes, m_active_genes,
-                               m_x, m_gene_idx, m_e);
     }
 
 private:
