@@ -52,7 +52,7 @@ Examples:
 
 std::string expression_init_doc(const std::string &type)
 {
-    return R"(__init__(inputs, outputs, rows, columns, levels_back, arity, kernels, seed = randint)
+    return R"(__init__(inputs, outputs, rows, columns, levels_back, arity, kernels, n_eph, seed = randint)
 
 Constructs a CGP expression operating on )"
            + type + R"(
@@ -66,13 +66,14 @@ Args:
     arity (``int`` on ``list``): arity of the kernels. Assumed equal for all columns unless its specified by a list. The list must contain a number of entries equal to the number of columns.
     kernels (``List[dcgpy.kernel_)"
            + type + R"(]``): kernel functions
+    n_eph (int): Number of ephemeral constants. Their values and their symbols can be set via dedicated methods.
     seed (``int``): random seed to generate mutations and chromosomes
 
 Examples:
 
 >>> from dcgpy import *
 >>> dcgp = expression_)"
-           + type + R"((1,1,1,10,11,2,kernel_set(["sum","diff","mul","div"])(), 32u)
+           + type + R"((1,1,1,10,11,2,kernel_set(["sum","diff","mul","div"])(), 0u, 32u)
 >>> print(dcgp)
 ...
 >>> num_out = dcgp([in])

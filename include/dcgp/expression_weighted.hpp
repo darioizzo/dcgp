@@ -311,10 +311,15 @@ public:
         return m_weights;
     }
 
-private:
-    // For numeric computations
-    template <typename U, typename std::enable_if<std::is_same<U, double>::value || is_gdual<U>::value, int>::type = 0>
-    U kernel_call(std::vector<U> &function_in, unsigned idx, unsigned node_id, unsigned weight_idx) const
+    // Delete ephemeral constants methods.
+    void set_eph_val(const std::vector<T> &) = delete;
+    void set_eph_symb(const std::vector<T> &) = delete;
+
+        private :
+        // For numeric computations
+        template <typename U,
+                  typename std::enable_if<std::is_same<U, double>::value || is_gdual<U>::value, int>::type = 0>
+        U kernel_call(std::vector<U> &function_in, unsigned idx, unsigned node_id, unsigned weight_idx) const
     {
         // Weights (we transform the inputs a,b,c,d,e in w_1 a, w_2 b, w_3 c, etc...)
         for (auto j = 0u; j < this->_get_arity(node_id); ++j) {

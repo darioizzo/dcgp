@@ -388,13 +388,37 @@ public:
         m_x[gene_idx] = f_id;
     }
 
+    /// Sets the values of ephemeral constants
+    /** Sets the values of ephemeral constants
+     *
+     * @param[in] eph_val the values of the ephemeral constants.
+     *
+     * @throw std::invalid_argument if the size of *eph_val* is not equal to the number of ephemeral constants.
+     */
     void set_eph_val(const std::vector<T> &eph_val)
     {
+        if (eph_val.size() != m_eph_val.size()) {
+            throw std::invalid_argument(
+                "The number of ephemeral constants in this dCGP expression is " + std::to_string(m_eph_val.size())
+                + ", while you are trying to set their values with a vector of size " + std::to_string(eph_val.size()));
+        }
         m_eph_val = eph_val;
     }
 
+    /// Sets the values of ephemeral constants
+    /** Sets the values of ephemeral constants
+     *
+     * @param[in] eph_symb the symbols to use for the ephemeral constants.
+     *
+     * @throw std::invalid_argument if the size of *eph_symb* is not equal to the number of ephemeral constants.
+     */
     void set_eph_symb(const std::vector<std::string> &eph_symb)
     {
+        if (eph_symb.size() != m_eph_symb.size()) {
+            throw std::invalid_argument(
+                "The number of ephemeral constants in this dCGP expression is " + std::to_string(m_eph_symb.size())
+                + ", while you are trying to set their symbolic names with a vector of size " + std::to_string(eph_symb.size()));
+        }
         m_eph_symb = eph_symb;
     }
 

@@ -348,12 +348,14 @@ BOOST_AUTO_TEST_CASE(ephemeral_constants_test)
         BOOST_CHECK(ex({"x", "y"})[1].compare("(c2-(x+c2))") == 0);
 
         // We check the setter/getter for ephemeral constants names
+        BOOST_CHECK_THROW(ex.set_eph_symb({"C1", "C2", "C3"}), std::invalid_argument);
         ex.set_eph_symb({"C1", "C2"});
         BOOST_CHECK(ex({"x", "y"})[0].compare("(y/C1)") == 0);
         BOOST_CHECK(ex({"x", "y"})[1].compare("(C2-(x+C2))") == 0);
         BOOST_CHECK((ex.get_eph_symb() == std::vector<std::string>{"C1", "C2"}));
 
         // We check the setter/getter for ephemeral constants values
+        BOOST_CHECK_THROW(ex.set_eph_symb({1., 2., 3.}), std::invalid_argument);
         ex.set_eph_val({1., 2.});
         BOOST_CHECK((ex({3., 4.}) == std::vector<double>{4., -3.}));
         ex.set_eph_val({2., 0.});
