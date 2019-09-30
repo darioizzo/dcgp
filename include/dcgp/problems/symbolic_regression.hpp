@@ -164,31 +164,14 @@ public:
         return ss.str();
     }
 
-    /// Human-readable representation of the inner CGP.
-    /**
-     * @param[in] x a valid chromosome.
-     *
-     * @return a string containing the mathematical expression represented by *x*.
-     */
-    std::string pretty() const
-    {
-        std::ostringstream ss;
-        std::vector<std::string> symbols;
-        for (decltype(m_points[0].size()) i = 0u; i < m_points[0].size(); ++i) {
-            symbols.push_back("x" + std::to_string(i));
-        }
-        pagmo::stream(ss, m_cgp(symbols));
-        return ss.str();
-    }
-
     /// Getter for the CGP
     /**
      * @return a const reference to the internal dcgp::expression<double> data member.
      */
-    const expression<double> &get_cgp() const
-    {
-        return m_cgp;
-    }
+    //const expression<double> &get_cgp() const
+    //{
+    //    return m_cgp;
+   // }
 
 private:
     inline void sanity_checks(unsigned &n, unsigned &m) const

@@ -69,20 +69,39 @@ BOOST_AUTO_TEST_CASE(fitness_test)
         symbolic_regression udp({{1., 1.}, {1., 0.}}, {{2., 2.}, {0., 0.}}, 2, 2, 3, 2, basic_set(), 0u, 1u);
         BOOST_CHECK_EQUAL(udp.fitness(test_x)[0], 1.);
     }
+    // c1-c2-x, c1+2y
+    pagmo::vector_double test_xeph
+        = {1., 2., 0, 0, 2, 1, 0, 1, 1, 2, 3, 0, 3, 1, 1, 6, 0, 0, 4, 1, 2, 1, 1, 1, 9, 5, 2, 3, 3, 0, 5, 0, 8, 11};
     {
-        // c1-c2-x, c1+2y
-        pagmo::vector_double test_xeph
-            = {1., 2., 0, 0, 2, 1, 0, 1, 1, 2, 3, 0, 3, 1, 1, 6, 0, 0, 4, 1, 2, 1, 1, 1, 9, 5, 2, 3, 3, 0, 5, 0, 8, 11};
         symbolic_regression udp({{1., 0.}}, {{0., 3.}}, 1, 10, 11, 2, basic_set(), 2u, 1u);
         // 1 - 2 - 1, 1
         BOOST_CHECK_EQUAL(udp.fitness(test_xeph)[0], 4.);
+    }
+    {
+        symbolic_regression udp({{1., 0.}}, {{-2., 1.}}, 1, 10, 11, 2, basic_set(), 2u, 1u);
+        // 1 - 2 - 1, 1
+        BOOST_CHECK_EQUAL(udp.fitness(test_xeph)[0], 0.);
+    }
+    {
+        symbolic_regression udp({{-1, -1}}, {{0., -1.}}, 1, 10, 11, 2, basic_set(), 2u, 1u);
+        // 1 - 2 + 1, 1 - 2
+        BOOST_CHECK_EQUAL(udp.fitness(test_xeph)[0], 0.);
+        // 1 - 2 + 1, 1 - 2
+        test_xeph[0] = 1.;
+        test_xeph[1] = 2.;
+        BOOST_CHECK_EQUAL(udp.fitness(test_xeph)[0], 0.);
+        // 3 - 3 + 1, 3 - 2
+        test_xeph[0] = 3.;
+        test_xeph[1] = 3.;
+        BOOST_CHECK_EQUAL(udp.fitness(test_xeph)[0], 2.5);
     }
 }
 
 BOOST_AUTO_TEST_CASE(get_bounds_test)
 {
-    symbolic_regression udp({{1., 2.}, {0.3, -0.32}}, {{3. / 2.}, {0.02 / 0.32}});
-    auto cgp = udp.get_cgp();
+    kernel_set<double> basic_set({"sum", "diff", "mul", "div"});
+    symbolic_regression udp({{1., 2.}, {0.3, -0.32}}, {{3. / 2.}, {0.02 / 0.32}}, 2, 2, 3, 2, basic_set(), 0u, 1u);
+    expression<double> cgp(2, 1, 2, 2, 3, 2, basic_set(), 0u, 23u);
     auto lbu = cgp.get_lb();
     std::vector<double> lb(lbu.size());
     std::transform(lbu.begin(), lbu.end(), lb.begin(), [](unsigned a) { return boost::numeric_cast<double>(a); });
@@ -97,5 +116,4 @@ BOOST_AUTO_TEST_CASE(trivial_methods_test)
     BOOST_CHECK(udp.get_extra_info().find("Input dimension") != std::string::npos);
     pagmo::vector_double test_x = {0, 1, 1, 0, 0, 0, 2, 0, 2, 2, 0, 2, 4, 3};
     BOOST_CHECK(udp.pretty(test_x).find("[(x0*(x1+x1)), (x0+x0)]") != std::string::npos);
-    BOOST_CHECK_NO_THROW(udp.get_cgp());
 }
