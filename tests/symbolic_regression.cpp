@@ -49,25 +49,33 @@ BOOST_AUTO_TEST_CASE(fitness_test)
     pagmo::vector_double test_x = {0, 1, 1, 0, 0, 0, 2, 0, 2, 2, 0, 2, 4, 3};
     // On a single point/label.
     {
-        symbolic_regression udp({{1., 1.}}, {{2., 2.}}, 2, 2, 3, 2, basic_set(), 0u);
+        symbolic_regression udp({{1., 1.}}, {{2., 2.}}, 2, 2, 3, 2, basic_set(), 0u, 0u);
         BOOST_CHECK_EQUAL(udp.fitness(test_x)[0], 0.);
     }
     {
-        symbolic_regression udp({{1., 1.}}, {{0., 0.}}, 2, 2, 3, 2, basic_set(), 0u);
+        symbolic_regression udp({{1., 1.}}, {{0., 0.}}, 2, 2, 3, 2, basic_set(), 0u, 0u);
         BOOST_CHECK_EQUAL(udp.fitness(test_x)[0], 4.);
     }
     {
-        symbolic_regression udp({{1., 0.}}, {{0., 0.}}, 2, 2, 3, 2, basic_set(), 0u);
+        symbolic_regression udp({{1., 0.}}, {{0., 0.}}, 2, 2, 3, 2, basic_set(), 0u, 0u);
         BOOST_CHECK_EQUAL(udp.fitness(test_x)[0], 2.);
     }
     // On a batch (first sequential then parallel)
     {
-        symbolic_regression udp({{1., 1.}, {1., 0.}}, {{2., 2.}, {0., 0.}}, 2, 2, 3, 2, basic_set(), 0u);
+        symbolic_regression udp({{1., 1.}, {1., 0.}}, {{2., 2.}, {0., 0.}}, 2, 2, 3, 2, basic_set(), 0u, 0u);
         BOOST_CHECK_EQUAL(udp.fitness(test_x)[0], 1.);
     }
     {
-        symbolic_regression udp({{1., 1.}, {1., 0.}}, {{2., 2.}, {0., 0.}}, 2, 2, 3, 2, basic_set(), 1u);
+        symbolic_regression udp({{1., 1.}, {1., 0.}}, {{2., 2.}, {0., 0.}}, 2, 2, 3, 2, basic_set(), 0u, 1u);
         BOOST_CHECK_EQUAL(udp.fitness(test_x)[0], 1.);
+    }
+    {
+        // c1-c2-x, c1+2y
+        pagmo::vector_double test_xeph
+            = {1., 2., 0, 0, 2, 1, 0, 1, 1, 2, 3, 0, 3, 1, 1, 6, 0, 0, 4, 1, 2, 1, 1, 1, 9, 5, 2, 3, 3, 0, 5, 0, 8, 11};
+        symbolic_regression udp({{1., 0.}}, {{0., 3.}}, 1, 10, 11, 2, basic_set(), 2u, 1u);
+        // 1 - 2 - 1, 1
+        BOOST_CHECK_EQUAL(udp.fitness(test_xeph)[0], 4.);
     }
 }
 

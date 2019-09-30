@@ -271,8 +271,8 @@ public:
      */
     T loss(const std::vector<T> &point, const std::vector<T> &prediction, loss_type loss_e) const
     {
-        if (point.size() != this->get_n()) {
-            throw std::invalid_argument("When computing the loss the point dimension (input) seemed wrong, it was: "
+        if (point.size() != this->get_n() - m_eph_val.size()) {
+            throw std::invalid_argument("When computing the loss, the point dimension (input) seemed wrong, it was: "
                                         + std::to_string(point.size())
                                         + " while I expected: " + std::to_string(this->get_n()));
         }

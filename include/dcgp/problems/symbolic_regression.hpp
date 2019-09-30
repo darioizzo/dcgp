@@ -50,9 +50,10 @@ public:
                         unsigned arity = 2, // basis functions' arity
                         std::vector<kernel<double>> f
                         = kernel_set<double>({"sum", "diff", "mul", "pdiv"})(), // functions
+                        unsigned n_eph = 0u,                                    // number of ephemeral constants
                         unsigned parallel_batches = 0u                          // number of parallel batches
                         )
-        : m_points(points), m_labels(labels), m_r(r), m_c(c), m_l(l), m_arity(arity), m_f(f),
+        : m_points(points), m_labels(labels), m_r(r), m_c(c), m_l(l), m_arity(arity), m_f(f), m_n_eph(n_eph),
           m_parallel_batches(parallel_batches), m_cgp(1u, 1u, 1u, 1u, 1u, 2u, kernel_set<double>({"sum"})(), 0u, 123u)
     {
         unsigned n;
@@ -60,7 +61,7 @@ public:
         // We check the inputs.
         sanity_checks(n, m);
         // We initialize the dcgp expression
-        m_cgp = expression<double>(n, m, m_r, m_c, m_l, m_arity, m_f, 0u, random_device::next());
+        m_cgp = expression<double>(n, m, m_r, m_c, m_l, m_arity, m_f, m_n_eph, random_device::next());
     }
 
     /// Fitness computation
@@ -73,15 +74,20 @@ public:
      */
     pagmo::vector_double fitness(const pagmo::vector_double &x) const
     {
-        // We need to make a copy of the chromosome as to represents its genes as unsigned
-        std::vector<unsigned> xu(x.size());
-        std::transform(x.begin(), x.end(), xu.begin(), [](double a) { return boost::numeric_cast<unsigned>(a); });
+        std::vector<double> retval(1, 0);
+        // The chromosome has a floating point part (the ephemeral constants) and an integer part (the encoded CGP).
+        // 1 - We extract the integer part and represent it as an unsigned vector to set the CGP expression.
+        std::vector<unsigned> xu(x.size() - m_n_eph);
+        std::transform(x.data() + m_n_eph, x.data() + x.size(), xu.data(),
+                       [](double a) { return boost::numeric_cast<unsigned>(a); });
         m_cgp.set(xu);
-        // We initialize the fitness
-        std::vector<double> f(1, 0);
-        // We compute the MSE loss splitting the data in n batches (if possible).
-        f[0] = m_cgp.loss(m_points, m_labels, "MSE", m_parallel_batches);
-        return f;
+        // 2 - We set the floating point part as ephemeral constants.
+        std::vector<double> eph_val(x.data(), x.data() + m_n_eph);
+        m_cgp.set_eph_val(eph_val);
+        // 3 - We compute the MSE loss splitting the data in n batches.
+        // TODO: make this work also when m_parallel_batches does not divide exactly the data size.
+        retval[0] = m_cgp.loss(m_points, m_labels, "MSE", m_parallel_batches);
+        return retval;
     }
 
     /// Box-bounds
@@ -106,7 +112,7 @@ public:
      */
     pagmo::vector_double::size_type get_nix() const
     {
-        return m_cgp.get_lb().size();
+        return m_cgp.get_lb().size() - m_n_eph;
     }
 
     /// Problem name
@@ -141,9 +147,31 @@ public:
     std::string pretty(const pagmo::vector_double &x) const
     {
         // We need to make a copy of the chromosome as to represents its genes as unsigned
-        std::vector<unsigned> xu(x.size());
-        std::transform(x.begin(), x.end(), xu.begin(), [](double a) { return boost::numeric_cast<unsigned>(a); });
+        std::vector<unsigned> xu(x.size() - m_n_eph);
+        std::transform(x.data() + m_n_eph, x.data() + x.size(), xu.data(),
+                       [](double a) { return boost::numeric_cast<unsigned>(a); });
         m_cgp.set(xu);
+        // 2 - We set the floating point part as ephemeral constants.
+        std::vector<double> eph_val(x.data(), x.data() + m_n_eph);
+        m_cgp.set_eph_val(eph_val);
+
+        std::ostringstream ss;
+        std::vector<std::string> symbols;
+        for (decltype(m_points[0].size()) i = 0u; i < m_points[0].size(); ++i) {
+            symbols.push_back("x" + std::to_string(i));
+        }
+        pagmo::stream(ss, m_cgp(symbols));
+        return ss.str();
+    }
+
+    /// Human-readable representation of the inner CGP.
+    /**
+     * @param[in] x a valid chromosome.
+     *
+     * @return a string containing the mathematical expression represented by *x*.
+     */
+    std::string pretty() const
+    {
         std::ostringstream ss;
         std::vector<std::string> symbols;
         for (decltype(m_points[0].size()) i = 0u; i < m_points[0].size(); ++i) {
@@ -203,6 +231,7 @@ private:
     unsigned m_l;
     unsigned m_arity;
     std::vector<kernel<double>> m_f;
+    unsigned m_n_eph;
     unsigned m_parallel_batches;
     // The fact that this is mutable may hamper the performances of the bfe as the thread safetly level
     // of the UDP in pagmo will force copies of the UDP to be made in all threads. This can in principle be
