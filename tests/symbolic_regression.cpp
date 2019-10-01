@@ -116,4 +116,5 @@ BOOST_AUTO_TEST_CASE(trivial_methods_test)
     BOOST_CHECK(udp.get_extra_info().find("Input dimension") != std::string::npos);
     pagmo::vector_double test_x = {0, 1, 1, 0, 0, 0, 2, 0, 2, 2, 0, 2, 4, 3};
     BOOST_CHECK(udp.pretty(test_x).find("[(x0*(x1+x1)), (x0+x0)]") != std::string::npos);
+    BOOST_CHECK_NO_THROW(udp.get_cgp());
 }

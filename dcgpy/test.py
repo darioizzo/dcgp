@@ -122,12 +122,22 @@ class test_expression(_ut.TestCase):
         from dcgpy import expression_double as expression
         from dcgpy import kernel_set_double as kernel_set
 
+        # Construction
         ex = expression(1, 1, 1, 6, 6, 2, kernel_set(
             ["sum", "mul", "div", "diff"])(), 0, 33)
         self.assertEqual(ex([1.]), [0.5])
         self.assertEqual(ex([2.]), [1.])
         self.assertEqual(ex([-1.]), [-0.5])
         self.assertEqual(ex([-2.]), [-1.])
+        ex = expression(1, 1, 1, 6, 6, 2, kernel_set(
+            ["sum", "mul", "div", "diff"])(), 2, 33)
+        # Ephemeral value attributes tests
+        self.assertEqual(ex.eph_val, [1, 2])
+        self.assertEqual(ex.eph_symb, ["c1", "c2"])
+        ex.eph_val = [-0.2, 0.3]
+        self.assertEqual(ex.eph_val, [-0.2, 0.3])
+        ex.eph_symb = ["d1", "d2"]
+        self.assertEqual(ex.eph_symb, ["d1", "d2"])
 
     def test_gdual_double(self):
         from dcgpy import expression_gdual_double as expression

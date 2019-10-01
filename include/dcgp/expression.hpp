@@ -352,14 +352,11 @@ public:
      *
      * @param[in] x the new cromosome
      *
-     * @throw std::invalid_argument if the chromosome is incompatible with
-     * the expression (n.inputs, n.outputs, levels-back, etc.)
+     * @throw std::invalid_argument if the chromosome is out of bounds or has the wrong size.
      */
     void set(const std::vector<unsigned> &x)
     {
-        if (!is_valid(x)) {
-            throw std::invalid_argument("Chromosome is incompatible");
-        }
+        check_chromosome(x);
         m_x = x;
         update_data_structures();
     }
@@ -415,18 +412,33 @@ public:
     void set_eph_symb(const std::vector<std::string> &eph_symb)
     {
         if (eph_symb.size() != m_eph_symb.size()) {
-            throw std::invalid_argument(
-                "The number of ephemeral constants in this dCGP expression is " + std::to_string(m_eph_symb.size())
-                + ", while you are trying to set their symbolic names with a vector of size " + std::to_string(eph_symb.size()));
+            throw std::invalid_argument("The number of ephemeral constants in this dCGP expression is "
+                                        + std::to_string(m_eph_symb.size())
+                                        + ", while you are trying to set their symbolic names with a vector of size "
+                                        + std::to_string(eph_symb.size()));
         }
         m_eph_symb = eph_symb;
     }
 
+    /// Gets the values of ephemeral constants
+    /**
+     * Gets the values of ephemeral constants
+     *
+     * @return the values of ephemeral constants.
+     *
+     */
     const std::vector<T> &get_eph_val() const
     {
         return m_eph_val;
     }
 
+    /// Gets the symbols of ephemeral constants
+    /**
+     * Gets the symbols of ephemeral constants
+     *
+     * @return the symbols of ephemeral constants.
+     *
+     */
     const std::vector<std::string> &get_eph_symb() const
     {
         return m_eph_symb;
@@ -803,9 +815,13 @@ public:
         audi::stream(os, "\tActive nodes:\t\t\t", d.m_active_nodes, '\n');
         audi::stream(os, "\tActive genes:\t\t\t", d.m_active_genes, '\n');
         audi::stream(os, "\n\tFunction set:\t\t\t", d.m_f, '\n');
+        audi::stream(os, "\tNumber of ephemeral constants:\t\t\t", d.get_eph_val().size(), '\n');
+        audi::stream(os, "\tEphemeral constants names:\t\t\t", d.get_eph_symb(), '\n');
+        audi::stream(os, "\tEphemeral constants values:\t\t\t", d.get_eph_val(), '\n');
         return os;
     }
 
+protected:
     /// Validity of a chromosome
     /**
      * Checks if a chromosome (i.e. a sequence of integers) is a valid expression
@@ -813,23 +829,25 @@ public:
      *
      * @param[in] x chromosome
      */
-    bool is_valid(const std::vector<unsigned> &x) const
+    bool check_chromosome(const std::vector<unsigned> &x) const
     {
         // Checking for length
         if (x.size() != m_lb.size()) {
-            return false;
+            throw std::invalid_argument("Inconsistent chromosome: length of the chromosome is : "
+                                        + std::to_string(x.size())
+                                        + ", while the length of the lower bounds is: " + std::to_string(m_lb.size()));
         }
-
         // Checking for bounds on all genes
         for (auto i = 0u; i < x.size(); ++i) {
             if ((x[i] > m_ub[i]) || (x[i] < m_lb[i])) {
-                return false;
+                throw std::invalid_argument("Inconsistent chromosome: out of bounds. The component " + std::to_string(i)
+                                            + " of the chromosome is " + std::to_string(i) + " while the bounds are: ["
+                                            + std::to_string(m_lb[i]) + " " + ", " + std::to_string(m_ub[i]) + "]");
             }
         }
         return true;
     }
 
-protected:
     /// Unchecked get arity
     /**
      * The public method get_arity, has some checks thet are significantly impacting speed if used in performance

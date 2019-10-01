@@ -13,6 +13,7 @@
 #include "helpers.hpp"
 
 using namespace dcgp;
+using namespace audi;
 
 double test_loss(unsigned int n, unsigned int m, unsigned int r, unsigned int c, unsigned int l, unsigned int a,
                  unsigned int N) // number of samples
@@ -38,28 +39,28 @@ double test_loss(unsigned int n, unsigned int m, unsigned int r, unsigned int c,
     return ex.loss(in, out, "MSE", true);
 }
 
-audi::gdual_d test_loss2(unsigned int n, unsigned int m, unsigned int r, unsigned int c, unsigned int l, unsigned int a,
-                         unsigned int N) // number of samples
+gdual_d test_loss2(unsigned int n, unsigned int m, unsigned int r, unsigned int c, unsigned int l, unsigned int a,
+                   unsigned int N) // number of samples
 {
     dcgp::kernel_set<gdual_d> basic_set({"sum", "diff", "mul", "div"});
     dcgp::expression<gdual_d> ex(n, m, r, c, l, a, basic_set(), 0u, 123u);
 
     // creates N data points
     std::default_random_engine re;
-    std::vector<std::vector<audi::gdual_d>> in;
-    std::vector<std::vector<audi::gdual_d>> out;
-    std::vector<audi::gdual_d> in_point(n);
-    std::vector<audi::gdual_d> out_point(m);
+    std::vector<std::vector<gdual_d>> in;
+    std::vector<std::vector<gdual_d>> out;
+    std::vector<gdual_d> in_point(n);
+    std::vector<gdual_d> out_point(m);
 
     for (auto i = 0u; i < N; ++i) {
         // We only define the first node as a weight and we compute the derivative of the objfun wrt this.
-        in_point[0] = audi::gdual_d(3, "w", 1);
+        in_point[0] = gdual_d(3, "w", 1);
         for (auto j = 1u; j < n; ++j) {
-            in_point[j] = audi::gdual_d(std::uniform_real_distribution<double>(-1, 1)(re));
+            in_point[j] = gdual_d(std::uniform_real_distribution<double>(-1, 1)(re));
         }
         out_point = ex(in_point);
         for (auto &k : out_point) {
-            k = audi::gdual_d(k.constant_cf());
+            k = gdual_d(k.constant_cf());
         }
         in.push_back(in_point);
         out.push_back(out_point);
@@ -101,9 +102,6 @@ BOOST_AUTO_TEST_CASE(construction)
     BOOST_CHECK(ex.get_l() == 4u);
     BOOST_CHECK(ex.get_f().size() == 4u);
     BOOST_CHECK(ex.get_arity() == arity);
-
-    // Checking validity of randomly produced chromosome
-    BOOST_CHECK_NO_THROW(ex.is_valid(ex.get()));
 }
 
 BOOST_AUTO_TEST_CASE(compute)
@@ -313,8 +311,8 @@ BOOST_AUTO_TEST_CASE(loss)
     // We test that a d-CGP expression computed on 20 points
     // has a zero quadratic error w.r.t. itself, and that the
     // derivative of the quadratic error is zero w.r.t. one of the inputs (a weight)
-    BOOST_CHECK_EQUAL(test_loss2(3, 1, 1, 20, 21, 2, 20), audi::gdual_d(0));
-    BOOST_CHECK_EQUAL(test_loss2(2, 2, 3, 10, 11, 2, 20), audi::gdual_d(0));
+    BOOST_CHECK_EQUAL(test_loss2(3, 1, 1, 20, 21, 2, 20), gdual_d(0));
+    BOOST_CHECK_EQUAL(test_loss2(2, 2, 3, 10, 11, 2, 20), gdual_d(0));
 
     std::mt19937 mersenne_engine{rd()}; // Generates random integers
     std::uniform_real_distribution<double> dist{-1., 1.};
@@ -362,12 +360,28 @@ BOOST_AUTO_TEST_CASE(ephemeral_constants_test)
         BOOST_CHECK((ex({3., 4.}) == std::vector<double>{2., -3.}));
         BOOST_CHECK((ex.get_eph_val() == std::vector<double>{2., 0.}));
     }
-    // Lastly we check (a bit randomly) that this works with gduals and a loss
+    // More on Setters and getters
     {
-        kernel_set<audi::gdual_d> basic_set({"sum", "diff", "mul", "div"});
-        expression<audi::gdual_d> ex(2, 2, 1, 10, 11, 2, basic_set(), 2u, 123u);
+        kernel_set<double> basic_set({"sum", "diff", "mul", "div"});
+        expression<double> ex(2, 2, 1, 10, 11, 2, basic_set(), 2u, 123u);
+        BOOST_CHECK((ex.get_eph_val() == std::vector<double>{1., 2.}));
+        ex.set_eph_val({3.1, -1.2});
+        BOOST_CHECK((ex.get_eph_val() == std::vector<double>{3.1, -1.2}));
+        BOOST_CHECK((ex.get_eph_symb() == std::vector<std::string>{"c1", "c2"}));
+        ex.set_eph_symb({"x", "y"});
+        BOOST_CHECK((ex.get_eph_symb() == std::vector<std::string>{"x", "y"}));
+    }
+    // Lastly we check (a bit randomly) that this works with gduals and a loss (the basis for grad descent)
+    {
+        kernel_set<gdual_d> basic_set({"sum", "diff", "mul", "div"});
+        expression<gdual_d> ex(2, 2, 1, 10, 11, 2, basic_set(), 2u, 123u);
         ex.set(test_x);
-        ex.set_eph_val({audi::gdual_d(1., "c1", 3), audi::gdual_d(2., "c2", 3)});
-        std::cout << ex({audi::gdual_d(3.), audi::gdual_d(4.)})[0] << std::endl;
+        ex.set_eph_val({gdual_d(1., "c1", 3), gdual_d(2., "c2", 3)});
+        gdual_d c1(0., "c1", 3);
+        BOOST_CHECK_EQUAL(4. - 4. * c1 + 4 * c1 * c1 - 4 * c1 * c1 * c1, ex({gdual_d(3.), gdual_d(4.)})[0]);
+        BOOST_CHECK_EQUAL(gdual_d(-3), ex({gdual_d(3.), gdual_d(4.)})[1]);
+        std::vector<std::vector<gdual_d>> in = {{gdual_d(-1.), gdual_d(1.)}, {gdual_d(-0.5), gdual_d(0.01)}};
+        std::vector<std::vector<gdual_d>> out = {{gdual_d(0.), gdual_d(0.)}, {gdual_d(-2.), gdual_d(3.)}};
+        BOOST_CHECK_CLOSE(ex.loss(in, out, "MSE", true).get_derivative({{"dc1", 1u}}), -0.51005, 1e-3);
     }
 }

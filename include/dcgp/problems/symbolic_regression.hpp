@@ -3,6 +3,7 @@
 #include <boost/numeric/conversion/cast.hpp>
 #include <boost/range/algorithm/transform.hpp>
 #include <pagmo/io.hpp>
+#include <pagmo/population.hpp>
 #include <pagmo/types.hpp>
 #include <vector>
 
@@ -164,14 +165,16 @@ public:
         return ss.str();
     }
 
-    /// Getter for the CGP
+    /// Gets the inner CGP
     /**
-     * @return a const reference to the internal dcgp::expression<double> data member.
+     * The access to the inner CGP is offered in the public interface to allow evolve methods in UDAs 
+     * to reuse the same object and perform mutations via it. This is a hack to interface pagmo with 
+     * dCGP. Alternatives would be a friendship relation (uughhh) or construct a new CGP object within
+     * the evolve each time (seems expensive). So here it is, FOR USE ONLY IN udas::evolve methods.
      */
-    //const expression<double> &get_cgp() const
-    //{
-    //    return m_cgp;
-   // }
+    const expression<double>& get_cgp() const {
+        return m_cgp;
+    }
 
 private:
     inline void sanity_checks(unsigned &n, unsigned &m) const

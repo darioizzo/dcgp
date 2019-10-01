@@ -225,10 +225,19 @@ void expose_expression(std::string type)
             (bp::arg("N") = 1))
         .def(
             "loss",
-            +[](expression<T> &instance, const bp::object &points, const bp::object &labels, const std::string &loss,
+            +[](const expression<T> &instance, const bp::object &points, const bp::object &labels,
+                const std::string &loss,
                 unsigned parallel) { return instance.loss(to_vv<T>(points), to_vv<T>(labels), loss, parallel); },
             expression_loss_doc().c_str(),
-            (bp::arg("points"), bp::arg("labels"), bp::arg("loss"), bp::arg("parallel") = 0u));
+            (bp::arg("points"), bp::arg("labels"), bp::arg("loss"), bp::arg("parallel") = 0u))
+        .add_property(
+            "eph_val", +[](const expression<T> &instance) { return v_to_l(instance.get_eph_val()); },
+            +[](expression<T> &instance, const bp::object &eph_val) { instance.set_eph_val(l_to_v<T>(eph_val)); })
+        .add_property(
+            "eph_symb", +[](const expression<T> &instance) { return v_to_l(instance.get_eph_symb()); },
+            +[](expression<T> &instance, const bp::object &eph_symb) {
+                instance.set_eph_symb(l_to_v<std::string>(eph_symb));
+            });
 }
 
 template <typename T>

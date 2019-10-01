@@ -69,6 +69,10 @@ Args:
     n_eph (int): Number of ephemeral constants. Their values and their symbols can be set via dedicated methods.
     seed (``int``): random seed to generate mutations and chromosomes
 
+Attributes:
+    eph_val (list(```))" + type + R"(```): Values of the ephemeral constants.
+    eph_symb (list(``str``)): Symbols used for the ephemeral constants.
+
 Examples:
 
 >>> from dcgpy import *
