@@ -44,6 +44,7 @@ public:
             throw std::invalid_argument("The ftol is negative, it must be positive or zero.");
         }
     }
+    
     // Algorithm evolve method
     pagmo::population evolve(pagmo::population pop) const
     {
@@ -282,6 +283,6 @@ private:
     unsigned m_verbosity;
     mutable log_type m_log;
     pagmo::bfe m_bfe;
-}; // namespace dcgp
+};
 } // namespace dcgp
 #endif
