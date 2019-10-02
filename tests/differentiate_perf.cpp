@@ -16,7 +16,7 @@ void perform_evaluations(unsigned int in, unsigned int out, unsigned int rows, u
     // Random numbers engine
     std::default_random_engine re(123);
     // Instatiate the expression
-    dcgp::expression<gdual_d> ex(in, out, rows, columns, levels_back, arity, kernel_set, 123);
+    dcgp::expression<gdual_d> ex(in, out, rows, columns, levels_back, arity, kernel_set, 0u, 123u);
     // We create the input data upfront and we do not time it.
     std::vector<gdual_d> dumb(in);
     std::vector<std::vector<gdual_d>> in_num(N, dumb);

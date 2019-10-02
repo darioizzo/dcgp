@@ -11,7 +11,7 @@ void perform_active_mutations(unsigned int in, unsigned int out, unsigned int ro
                               std::vector<dcgp::kernel<double>> kernel_set)
 {
     // Instatiate the expression
-    dcgp::expression<double> ex(in, out, rows, columns, levels_back, arity, kernel_set, 123);
+    dcgp::expression<double> ex(in, out, rows, columns, levels_back, arity, kernel_set, 0u, 123u);
     std::cout << "Performing " << N << " mutations, in:" << in << " out:" << out << " rows:" << rows
               << " columns:" << columns << std::endl;
     {

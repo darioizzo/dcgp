@@ -10,8 +10,6 @@
 #include <dcgp/type_traits.hpp>
 #include <initializer_list>
 #include <iostream>
-#include <pagmo/detail/s11n_wrappers.hpp>
-#include <pagmo/s11n.hpp>
 #include <random>
 #include <sstream>
 #include <stdexcept>
@@ -62,6 +60,8 @@ public:
      * @param[in] l number of levels-back allowed in the dCGP.
      * @param[in] arity arities of the basis functions for each column.
      * @param[in] f function set. An std::vector of dcgp::kernel<expression::type>.
+     * @param[in] n_eph Number of ephemeral constants. Their values and their symbols can be set via the dedicate
+     * methods.
      * @param[in] seed seed for the random number generator (initial expression
      * and mutations depend on this).
      */
@@ -72,8 +72,9 @@ public:
                unsigned l,                  // n. levels-back
                std::vector<unsigned> arity, // basis functions' arity
                std::vector<kernel<T>> f,    // functions
+               unsigned n_eph,              // number of ephemeral constants
                unsigned seed = dcgp::random_device::next())
-        : m_n(n), m_m(m), m_r(r), m_c(c), m_l(l), m_arity(arity), m_f(f), m_e(seed)
+        : m_n(n + n_eph), m_m(m), m_r(r), m_c(c), m_l(l), m_arity(arity), m_f(f), m_e(seed)
     {
         // Sanity checks
         sanity_checks();
@@ -82,6 +83,14 @@ public:
         // We generate a random chromosome (expression)
         for (auto i = 0u; i < m_x.size(); ++i) {
             m_x[i] = std::uniform_int_distribution<unsigned>(m_lb[i], m_ub[i])(m_e);
+        }
+        // We init the ephemeral constants with 1,2,3,4,5 ...
+        for (auto i = 1u; i <= n_eph; ++i) {
+            m_eph_val.push_back(static_cast<T>(i));
+        }
+        // We init the ephemeral constants with c1,c2,c3,c4,c5 ...
+        for (auto i = 1u; i <= n_eph; ++i) {
+            m_eph_symb.emplace_back("c" + std::to_string(i));
         }
         update_data_structures();
     }
@@ -96,6 +105,8 @@ public:
      * @param[in] l number of levels-back allowed in the dCGP.
      * @param[in] arity arity of the basis functions.
      * @param[in] f function set. An std::vector of dcgp::kernel<expression::type>.
+     * @param[in] n_eph Number of ephemeral constants. Their values and their symbols can be set via the dedicate
+     * methods.
      * @param[in] seed seed for the random number generator (initial expression
      * and mutations depend on this).
      */
@@ -106,9 +117,9 @@ public:
                unsigned l,               // n. levels-back
                unsigned arity,           // basis functions' arity
                std::vector<kernel<T>> f, // functions
-               unsigned seed             // seed for the pseudo-random numbers
-               )
-        : m_n(n), m_m(m), m_r(r), m_c(c), m_l(l), m_f(f), m_e(seed)
+               unsigned n_eph,           // number of ephemeral constants
+               unsigned seed = dcgp::random_device::next())
+        : m_n(n + n_eph), m_m(m), m_r(r), m_c(c), m_l(l), m_f(f), m_e(seed)
     {
         // We fill the arity vector with the same number (uniform arity)
         m_arity = std::vector<unsigned>(m_c, arity);
@@ -120,12 +131,20 @@ public:
         for (auto i = 0u; i < m_x.size(); ++i) {
             m_x[i] = std::uniform_int_distribution<unsigned>(m_lb[i], m_ub[i])(m_e);
         }
+        // We init the ephemeral constants with 1, 2, 3, 4, 5 ...
+        for (auto i = 1u; i <= n_eph; ++i) {
+            m_eph_val.push_back(static_cast<T>(i));
+        }
+        // We init the ephemeral constants with c1, c2, c3, c4, c5 ...
+        for (auto i = 1u; i <= n_eph; ++i) {
+            m_eph_symb.emplace_back("c" + std::to_string(i));
+        }
         update_data_structures();
     }
 
     /// Virtual destructor
     virtual ~expression(){};
-    /// Defualts default copy ctor, copy assignment operator, move ctor and move assignment operator
+    /// Defaults default copy ctor, copy assignment operator, move ctor and move assignment operator
     /// are ok since all our members are trivial. They are needed to silence a warning since the destructor is present.
     expression(const expression &) = default;
     expression(expression &&) = default;
@@ -134,7 +153,7 @@ public:
 
     /// Evaluates the dCGP expression
     /**
-     * This evaluates the dCGP expression. 
+     * This evaluates the dCGP expression.
      * NOTE we cannot template this and the following function as they are virtual :(
      *
      * @param[point] in an std::vector containing the values where the dCGP expression has
@@ -145,8 +164,11 @@ public:
      *
      * @return The value of the function (an std::vector)
      */
-    virtual std::vector<T> operator()(const std::vector<T> &point) const
+    virtual std::vector<T> operator()(const std::vector<T> &in) const
     {
+        std::vector<T> point(in);
+        point.insert(point.end(), m_eph_val.begin(), m_eph_val.end());
+
         if (point.size() != m_n) {
             throw std::invalid_argument("Input size is incompatible");
         }
@@ -183,10 +205,12 @@ public:
      * @param[point] an std::vector containing the values where the dCGP
      * expression has to be computed (doubles, gduals or strings)
      *
-     * @return The value of the function (an std::vector)
+     * @return The symbolic value of the function
      */
-    virtual std::vector<std::string> operator()(const std::vector<std::string> &point) const
+    virtual std::vector<std::string> operator()(const std::vector<std::string> &in) const
     {
+        std::vector<std::string> point(in);
+        point.insert(point.end(), m_eph_symb.begin(), m_eph_symb.end());
         if (point.size() != m_n) {
             throw std::invalid_argument("Input size is incompatible");
         }
@@ -222,10 +246,16 @@ public:
      *
      * @return The value of the function (an std::vector)
      */
-    template <typename U, functor_enabler<U> = 0>
-    std::vector<U> operator()(const std::initializer_list<U> &in) const
+    std::vector<std::string> operator()(const std::initializer_list<std::string> &in) const
     {
-        std::vector<U> dummy(in);
+        std::vector<std::string> dummy(in);
+        return (*this)(dummy);
+    }
+    // NOTE PER BLUESCARNI: I could not get these two as a template. Ambiguous calls and conversion problems between
+    // const char* and strings
+    std::vector<double> operator()(const std::initializer_list<double> &in) const
+    {
+        std::vector<double> dummy(in);
         return (*this)(dummy);
     }
 
@@ -241,8 +271,8 @@ public:
      */
     T loss(const std::vector<T> &point, const std::vector<T> &prediction, loss_type loss_e) const
     {
-        if (point.size() != this->get_n()) {
-            throw std::invalid_argument("When computing the loss the point dimension (input) seemed wrong, it was: "
+        if (point.size() != this->get_n() - m_eph_val.size()) {
+            throw std::invalid_argument("When computing the loss, the point dimension (input) seemed wrong, it was: "
                                         + std::to_string(point.size())
                                         + " while I expected: " + std::to_string(this->get_n()));
         }
@@ -322,14 +352,11 @@ public:
      *
      * @param[in] x the new cromosome
      *
-     * @throw std::invalid_argument if the chromosome is incompatible with
-     * the expression (n.inputs, n.outputs, levels-back, etc.)
+     * @throw std::invalid_argument if the chromosome is out of bounds or has the wrong size.
      */
     void set(const std::vector<unsigned> &x)
     {
-        if (!is_valid(x)) {
-            throw std::invalid_argument("Chromosome is incompatible");
-        }
+        check_chromosome(x);
         m_x = x;
         update_data_structures();
     }
@@ -356,6 +383,65 @@ public:
         }
         auto gene_idx = m_gene_idx[node_id];
         m_x[gene_idx] = f_id;
+    }
+
+    /// Sets the values of ephemeral constants
+    /** Sets the values of ephemeral constants
+     *
+     * @param[in] eph_val the values of the ephemeral constants.
+     *
+     * @throw std::invalid_argument if the size of *eph_val* is not equal to the number of ephemeral constants.
+     */
+    void set_eph_val(const std::vector<T> &eph_val)
+    {
+        if (eph_val.size() != m_eph_val.size()) {
+            throw std::invalid_argument(
+                "The number of ephemeral constants in this dCGP expression is " + std::to_string(m_eph_val.size())
+                + ", while you are trying to set their values with a vector of size " + std::to_string(eph_val.size()));
+        }
+        m_eph_val = eph_val;
+    }
+
+    /// Sets the values of ephemeral constants
+    /** Sets the values of ephemeral constants
+     *
+     * @param[in] eph_symb the symbols to use for the ephemeral constants.
+     *
+     * @throw std::invalid_argument if the size of *eph_symb* is not equal to the number of ephemeral constants.
+     */
+    void set_eph_symb(const std::vector<std::string> &eph_symb)
+    {
+        if (eph_symb.size() != m_eph_symb.size()) {
+            throw std::invalid_argument("The number of ephemeral constants in this dCGP expression is "
+                                        + std::to_string(m_eph_symb.size())
+                                        + ", while you are trying to set their symbolic names with a vector of size "
+                                        + std::to_string(eph_symb.size()));
+        }
+        m_eph_symb = eph_symb;
+    }
+
+    /// Gets the values of ephemeral constants
+    /**
+     * Gets the values of ephemeral constants
+     *
+     * @return the values of ephemeral constants.
+     *
+     */
+    const std::vector<T> &get_eph_val() const
+    {
+        return m_eph_val;
+    }
+
+    /// Gets the symbols of ephemeral constants
+    /**
+     * Gets the symbols of ephemeral constants
+     *
+     * @return the symbols of ephemeral constants.
+     *
+     */
+    const std::vector<std::string> &get_eph_symb() const
+    {
+        return m_eph_symb;
     }
 
     /// Gets the chromosome
@@ -729,9 +815,13 @@ public:
         audi::stream(os, "\tActive nodes:\t\t\t", d.m_active_nodes, '\n');
         audi::stream(os, "\tActive genes:\t\t\t", d.m_active_genes, '\n');
         audi::stream(os, "\n\tFunction set:\t\t\t", d.m_f, '\n');
+        audi::stream(os, "\tNumber of ephemeral constants:\t\t\t", d.get_eph_val().size(), '\n');
+        audi::stream(os, "\tEphemeral constants names:\t\t\t", d.get_eph_symb(), '\n');
+        audi::stream(os, "\tEphemeral constants values:\t\t\t", d.get_eph_val(), '\n');
         return os;
     }
 
+protected:
     /// Validity of a chromosome
     /**
      * Checks if a chromosome (i.e. a sequence of integers) is a valid expression
@@ -739,23 +829,25 @@ public:
      *
      * @param[in] x chromosome
      */
-    bool is_valid(const std::vector<unsigned> &x) const
+    bool check_chromosome(const std::vector<unsigned> &x) const
     {
         // Checking for length
         if (x.size() != m_lb.size()) {
-            return false;
+            throw std::invalid_argument("Inconsistent chromosome: length of the chromosome is : "
+                                        + std::to_string(x.size())
+                                        + ", while the length of the lower bounds is: " + std::to_string(m_lb.size()));
         }
-
         // Checking for bounds on all genes
         for (auto i = 0u; i < x.size(); ++i) {
             if ((x[i] > m_ub[i]) || (x[i] < m_lb[i])) {
-                return false;
+                throw std::invalid_argument("Inconsistent chromosome: out of bounds. The component " + std::to_string(i)
+                                            + " of the chromosome is " + std::to_string(i) + " while the bounds are: ["
+                                            + std::to_string(m_lb[i]) + " " + ", " + std::to_string(m_ub[i]) + "]");
             }
         }
         return true;
     }
 
-protected:
     /// Unchecked get arity
     /**
      * The public method get_arity, has some checks thet are significantly impacting speed if used in performance
@@ -883,14 +975,6 @@ protected:
         return retval;
     }
 
-    // Object serialization
-    template <typename Archive>
-    void serialize(Archive &ar, unsigned)
-    {
-        pagmo::detail::archive(ar, m_n, m_m, m_r, m_c, m_l, m_arity, m_f, m_lb, m_ub, m_active_nodes, m_active_genes, m_x,
-                        m_gene_idx, m_e);
-    }
-
 private:
     void sanity_checks()
     {
@@ -974,6 +1058,10 @@ private:
 
     // the functions allowed
     std::vector<kernel<T>> m_f;
+    // the ephemeral constants values
+    std::vector<T> m_eph_val;
+    // the ephemeral constants names
+    std::vector<std::string> m_eph_symb;
     // lower and upper bounds on all genes
     std::vector<unsigned> m_lb;
     std::vector<unsigned> m_ub;

@@ -77,7 +77,7 @@ public:
                    std::vector<kernel<double>> f, // functions
                    unsigned seed                  // seed for the pseudo-random numbers
                    )
-        : expression<double>(n, m, r, c, l, arity, f, seed), m_biases(r * c, 0.), m_kernel_map(f.size())
+        : expression<double>(n, m, r, c, l, arity, f, 0u, seed), m_biases(r * c, 0.), m_kernel_map(f.size())
 
     {
         // Sanity checks
@@ -143,7 +143,7 @@ public:
                    std::vector<kernel<double>> f, // functions
                    unsigned seed                  // seed for the pseudo-random numbers
                    )
-        : expression<double>(n, m, r, c, l, std::vector<unsigned>(c, arity), f, seed), m_biases(r * c, 0.),
+        : expression<double>(n, m, r, c, l, std::vector<unsigned>(c, arity), f, 0u, seed), m_biases(r * c, 0.),
           m_kernel_map(f.size())
 
     {
@@ -771,6 +771,10 @@ public:
 
     /*@}*/
 
+    // Delete ephemeral constants methods.
+    void set_eph_val(const std::vector<double> &) = delete;
+    void set_eph_symb(const std::vector<double> &) = delete;
+
 private:
     // For numeric computations
     double kernel_call(std::vector<double> &function_in, unsigned idx, unsigned arity, unsigned weight_idx,
@@ -888,7 +892,7 @@ private:
 
     // This overrides the base class update_data_structures and updates also the m_connected (as well as
     // m_active_nodes and genes). It is called upon construction and each time active genes are changed.
-    void update_data_structures() 
+    void update_data_structures()
     {
         expression<double>::update_data_structures();
         m_connected.clear();

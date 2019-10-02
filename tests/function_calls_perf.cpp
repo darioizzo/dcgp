@@ -49,7 +49,7 @@ BOOST_AUTO_TEST_CASE(function_calls)
 
     std::cout << "Testing " << N << " std::function calls to the sigmoid function via dcgp::expression" << std::endl;
     dcgp::kernel_set<double> only_one_sigmoid({"sig"});
-    dcgp::expression<double> ex(2, 1, 1, 1, 1, 2, only_one_sigmoid(), 0);
+    dcgp::expression<double> ex(2, 1, 1, 1, 1, 2, only_one_sigmoid(), 0u, 0u);
     ex.set({0, 0, 1, 2});
     {
         boost::timer::auto_cpu_timer t; // Sets up a timer

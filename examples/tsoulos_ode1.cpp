@@ -1,4 +1,5 @@
 #include <audi/io.hpp>
+#include <audi/back_compatibility.hpp>
 #include <iostream>
 
 #include <dcgp/expression.hpp>

@@ -3,6 +3,7 @@
 #include <boost/numeric/conversion/cast.hpp>
 #include <boost/range/algorithm/transform.hpp>
 #include <pagmo/io.hpp>
+#include <pagmo/population.hpp>
 #include <pagmo/types.hpp>
 #include <vector>
 
@@ -23,7 +24,7 @@ public:
      */
     symbolic_regression()
         : m_points(1), m_labels(1), m_r(1), m_c(1), m_l(1), m_arity(2), m_f(kernel_set<double>({"sum"})()),
-          m_parallel_batches(0u), m_cgp(1u, 1u, 1u, 1u, 1u, 2u, kernel_set<double>({"sum"})(), 0u)
+          m_parallel_batches(0u), m_cgp(1u, 1u, 1u, 1u, 1u, 2u, kernel_set<double>({"sum"})(), 0u, 123u)
     {
     }
 
@@ -50,17 +51,18 @@ public:
                         unsigned arity = 2, // basis functions' arity
                         std::vector<kernel<double>> f
                         = kernel_set<double>({"sum", "diff", "mul", "pdiv"})(), // functions
+                        unsigned n_eph = 0u,                                    // number of ephemeral constants
                         unsigned parallel_batches = 0u                          // number of parallel batches
                         )
-        : m_points(points), m_labels(labels), m_r(r), m_c(c), m_l(l), m_arity(arity), m_f(f),
-          m_parallel_batches(parallel_batches), m_cgp(1u, 1u, 1u, 1u, 1u, 2u, kernel_set<double>({"sum"})(), 0u)
+        : m_points(points), m_labels(labels), m_r(r), m_c(c), m_l(l), m_arity(arity), m_f(f), m_n_eph(n_eph),
+          m_parallel_batches(parallel_batches), m_cgp(1u, 1u, 1u, 1u, 1u, 2u, kernel_set<double>({"sum"})(), 0u, 123u)
     {
         unsigned n;
         unsigned m;
         // We check the inputs.
         sanity_checks(n, m);
         // We initialize the dcgp expression
-        m_cgp = expression<double>(n, m, m_r, m_c, m_l, m_arity, m_f, random_device::next());
+        m_cgp = expression<double>(n, m, m_r, m_c, m_l, m_arity, m_f, m_n_eph, random_device::next());
     }
 
     /// Fitness computation
@@ -73,15 +75,20 @@ public:
      */
     pagmo::vector_double fitness(const pagmo::vector_double &x) const
     {
-        // We need to make a copy of the chromosome as to represents its genes as unsigned
-        std::vector<unsigned> xu(x.size());
-        std::transform(x.begin(), x.end(), xu.begin(), [](double a) { return boost::numeric_cast<unsigned>(a); });
+        std::vector<double> retval(1, 0);
+        // The chromosome has a floating point part (the ephemeral constants) and an integer part (the encoded CGP).
+        // 1 - We extract the integer part and represent it as an unsigned vector to set the CGP expression.
+        std::vector<unsigned> xu(x.size() - m_n_eph);
+        std::transform(x.data() + m_n_eph, x.data() + x.size(), xu.data(),
+                       [](double a) { return boost::numeric_cast<unsigned>(a); });
         m_cgp.set(xu);
-        // We initialize the fitness
-        std::vector<double> f(1, 0);
-        // We compute the MSE loss splitting the data in n batches (if possible).
-        f[0] = m_cgp.loss(m_points, m_labels, "MSE", m_parallel_batches);
-        return f;
+        // 2 - We set the floating point part as ephemeral constants.
+        std::vector<double> eph_val(x.data(), x.data() + m_n_eph);
+        m_cgp.set_eph_val(eph_val);
+        // 3 - We compute the MSE loss splitting the data in n batches.
+        // TODO: make this work also when m_parallel_batches does not divide exactly the data size.
+        retval[0] = m_cgp.loss(m_points, m_labels, "MSE", m_parallel_batches);
+        return retval;
     }
 
     /// Box-bounds
@@ -106,7 +113,7 @@ public:
      */
     pagmo::vector_double::size_type get_nix() const
     {
-        return m_cgp.get_lb().size();
+        return m_cgp.get_lb().size() - m_n_eph;
     }
 
     /// Problem name
@@ -141,9 +148,14 @@ public:
     std::string pretty(const pagmo::vector_double &x) const
     {
         // We need to make a copy of the chromosome as to represents its genes as unsigned
-        std::vector<unsigned> xu(x.size());
-        std::transform(x.begin(), x.end(), xu.begin(), [](double a) { return boost::numeric_cast<unsigned>(a); });
+        std::vector<unsigned> xu(x.size() - m_n_eph);
+        std::transform(x.data() + m_n_eph, x.data() + x.size(), xu.data(),
+                       [](double a) { return boost::numeric_cast<unsigned>(a); });
         m_cgp.set(xu);
+        // 2 - We set the floating point part as ephemeral constants.
+        std::vector<double> eph_val(x.data(), x.data() + m_n_eph);
+        m_cgp.set_eph_val(eph_val);
+
         std::ostringstream ss;
         std::vector<std::string> symbols;
         for (decltype(m_points[0].size()) i = 0u; i < m_points[0].size(); ++i) {
@@ -153,12 +165,14 @@ public:
         return ss.str();
     }
 
-    /// Getter for the CGP
+    /// Gets the inner CGP
     /**
-     * @return a const reference to the internal dcgp::expression<double> data member.
+     * The access to the inner CGP is offered in the public interface to allow evolve methods in UDAs 
+     * to reuse the same object and perform mutations via it. This is a hack to interface pagmo with 
+     * dCGP. Alternatives would be a friendship relation (uughhh) or construct a new CGP object within
+     * the evolve each time (seems expensive). So here it is, FOR USE ONLY IN udas::evolve methods.
      */
-    const expression<double> &get_cgp() const
-    {
+    const expression<double>& get_cgp() const {
         return m_cgp;
     }
 
@@ -178,12 +192,14 @@ private:
                                         + ". They should be equal.");
         }
         // 3 - We check that all p in points have the same size
-        if (!std::all_of(m_points.begin(), m_points.end(), [n](const std::vector<double> &p) { return p.size() == n; })) {
+        if (!std::all_of(m_points.begin(), m_points.end(),
+                         [n](const std::vector<double> &p) { return p.size() == n; })) {
             throw std::invalid_argument("The input data (points) is inconsistent: all points must have the same "
                                         "dimension, while I detect differences.");
         }
         // 4 - We check that all l in labels have the same size
-        if (!std::all_of(m_labels.begin(), m_labels.end(), [m](const std::vector<double> &l) { return l.size() == m; })) {
+        if (!std::all_of(m_labels.begin(), m_labels.end(),
+                         [m](const std::vector<double> &l) { return l.size() == m; })) {
             throw std::invalid_argument("The labels are inconsistent: all labels must have the same "
                                         "dimension, while I detect differences.");
         }
@@ -201,6 +217,7 @@ private:
     unsigned m_l;
     unsigned m_arity;
     std::vector<kernel<double>> m_f;
+    unsigned m_n_eph;
     unsigned m_parallel_batches;
     // The fact that this is mutable may hamper the performances of the bfe as the thread safetly level
     // of the UDP in pagmo will force copies of the UDP to be made in all threads. This can in principle be
