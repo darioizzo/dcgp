@@ -1,6 +1,13 @@
 #ifndef DCGP_GD4CGP_H
 #define DCGP_GD4CGP_H
 
+#include <stdexcept>
+#include <vector>
+#include <pagmo/population.hpp>
+#include <pagmo/io.hpp>
+
+#include <dcgp/problems/symbolic_regression.hpp>
+
 namespace dcgp
 {
 class gd4cgp
@@ -29,7 +36,8 @@ public:
             throw std::invalid_argument("The minimum learning rate must be strictly positive.");
         }
         if (lr_min >= lr) {
-            throw std::invalid_argument("The minimum learning rate must be strictly smaller than the initial learning rate.");
+            throw std::invalid_argument(
+                "The minimum learning rate must be strictly smaller than the initial learning rate.");
         }
     }
     // Algorithm evolve method
@@ -52,16 +60,21 @@ public:
                                         + get_name()
                                         + " can only be used on problems of the type dcgp::symbolic_regression ");
         }
+        if (udp_ptr->get_eph_val().size() == 0u) {
+            throw std::invalid_argument(prob.get_name() + " does not seem to be a symbolic regression problem. "
+                                        + get_name()
+                                        + " can only be used on problems of the type dcgp::symbolic_regression ");
+        }
         if (n_obj > 1) {
             throw std::invalid_argument(prob.get_name() + " has multiple objectives. " + get_name()
                                         + " can only be used on problems that are single objective.");
         }
-        if (NP < 2u) {
+        if (NP < 1u) {
             throw std::invalid_argument(get_name() + " needs at least 2 individuals in the population, "
                                         + std::to_string(NP) + " detected");
         }
         // Get out if there is nothing to do.
-        if (m_gen == 0u) {
+        if (m_max_iter == 0u) {
             return pop;
         }
         // ---------------------------------------------------------------------------------------------------------
@@ -151,11 +164,11 @@ public:
     }
 
 private:
-    unsigned m_iter;
-    unsigned m_lr;
+    unsigned m_max_iter;
+    double m_lr;
     double m_lr_min;
     unsigned m_verbosity;
     mutable log_type m_log;
-}; 
+};
 } // namespace dcgp
 #endif

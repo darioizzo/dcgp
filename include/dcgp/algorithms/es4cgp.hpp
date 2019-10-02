@@ -44,7 +44,7 @@ public:
             throw std::invalid_argument("The ftol is negative, it must be positive or zero.");
         }
     }
-    
+
     // Algorithm evolve method
     pagmo::population evolve(pagmo::population pop) const
     {
@@ -55,11 +55,10 @@ public:
         auto NP = pop.size();
         auto fevals0 = prob.get_fevals(); // fevals already made
         auto count = 1u;                  // regulates the screen output
-
+        auto udp_ptr = prob.extract<symbolic_regression>();
         // PREAMBLE-------------------------------------------------------------------------------------------------
         // Check whether the problem is suitable for es4cgp
         // If the UDP in pop is not a symbolic_regression UDP, udp_ptr will be NULL
-        auto udp_ptr = prob.extract<symbolic_regression>();
         if (!udp_ptr) {
             throw std::invalid_argument(prob.get_name() + " does not seem to be a symbolic regression problem. "
                                         + get_name()
@@ -83,17 +82,25 @@ public:
         m_log.clear();
         // We make a copy of the cgp which we will use to make mutations.
         auto cgp = udp_ptr->get_cgp();
+        // How many ephemeral constants? And their values?
+        auto eph_val = cgp.get_eph_val();
+        auto n_eph = eph_val.size();
         // We get the best chromosome in the population.
         auto best_idx = pop.best_idx();
         auto best_x = pop.get_x()[best_idx];
         double best_f = pop.get_f()[best_idx][0];
         // ... and we transform it into unsigned
-        std::vector<unsigned> best_xu(best_x.size());
-        std::transform(best_x.begin(), best_x.end(), best_xu.begin(),
+        std::vector<unsigned> best_xu(best_x.size() - n_eph);
+        std::transform(best_x.data() + n_eph, best_x.data() + best_x.size(), best_xu.begin(),
                        [](double a) { return boost::numeric_cast<unsigned>(a); });
         // A contiguous vector of chromosomes/fitness vectors for pagmo::bfe input\output is allocated here.
         pagmo::vector_double dvs(NP * dim);
         pagmo::vector_double fs(NP * n_obj);
+        // We fill in the chromosomes the ephemeral constant values (they will not change anymore during this evolve)
+        for (decltype(NP) i = 0u; i < NP; ++i) {
+            std::transform(eph_val.begin(), eph_val.end(), dvs.data() + dim * i);
+        }
+
         // Main loop
         for (decltype(m_gen) gen = 1u; gen <= m_gen; ++gen) {
             // Logs and prints (verbosity modes > 1: a line is added every m_verbosity generations)
@@ -119,7 +126,7 @@ public:
                 cgp.set(best_xu);
                 cgp.mutate_active(m_mut_n);
                 std::vector<unsigned> mutated_x = cgp.get();
-                std::transform(mutated_x.begin(), mutated_x.end(), dvs.data() + i * dim,
+                std::transform(mutated_x.begin(), mutated_x.end(), dvs.data() + i * dim + n_eph,
                                [](unsigned a) { return boost::numeric_cast<double>(a); });
             }
             // 3 - We compute their fitnesses calling the bfe
@@ -144,7 +151,7 @@ public:
                 if (pagmo::detail::less_than_f(fs[i], best_f)) {
                     best_f = fs[i];
                     // best_xu is updated here
-                    std::transform(dvs.data() + i * dim, dvs.data() + (i + 1) * dim, best_xu.begin(),
+                    std::transform(dvs.data() + i * dim + n_eph, dvs.data() + (i + 1) * dim, best_xu.begin(),
                                    [](double a) { return boost::numeric_cast<unsigned>(a); });
                 }
             }
