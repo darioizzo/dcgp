@@ -60,7 +60,7 @@ public:
                                         + get_name()
                                         + " can only be used on problems of the type dcgp::symbolic_regression.");
         }
-        if (udp_ptr->get_eph_val().size() == 0u) {
+        if (udp_ptr->get_cgp().get_eph_val().size() == 0u) {
             throw std::invalid_argument(prob.get_name() + " does not seem to have any ephemeral constants. "
                                         + get_name()
                                         + " only acts on ephemeral constants and needs at least one to be present.");
