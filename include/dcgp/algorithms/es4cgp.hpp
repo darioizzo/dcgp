@@ -98,7 +98,7 @@ public:
         pagmo::vector_double fs(NP * n_obj);
         // We fill in the chromosomes the ephemeral constant values (they will not change anymore during this evolve)
         for (decltype(NP) i = 0u; i < NP; ++i) {
-            std::transform(eph_val.begin(), eph_val.end(), dvs.data() + dim * i);
+            std::copy(eph_val.begin(), eph_val.end(), dvs.data() + dim * i);
         }
 
         // Main loop
@@ -142,7 +142,7 @@ public:
 
                     pagmo::print("Exit condition -- ftol < ", m_ftol, "\n");
                 }
-                update_pop(pop, dvs, fs, best_f, best_xu, NP, dim);
+                update_pop(pop, dvs, fs, best_f, best_xu, NP, dim, eph_val);
                 return pop;
             }
             // 4 - We reinsert the mutated individuals in the population if their fitness is
@@ -157,7 +157,7 @@ public:
             }
         }
         // Evolution has terminated and we now update into the pagmo::pop.
-        update_pop(pop, dvs, fs, best_f, best_xu, NP, dim);
+        update_pop(pop, dvs, fs, best_f, best_xu, NP, dim, eph_val);
         // At the end, the pagmo::population will contain the best individual together with its best NP-1 mutants.
         // We log the last iteration
         if (m_verbosity > 0u) {
@@ -263,21 +263,22 @@ private:
     // exit condition is met.
     void update_pop(pagmo::population &pop, const pagmo::vector_double &dvs, const pagmo::vector_double &fs,
                     double best_f, const std::vector<unsigned> &best_xu, pagmo::vector_double::size_type NP,
-                    pagmo::vector_double::size_type dim) const
+                    pagmo::vector_double::size_type dim, const std::vector<double>& eph_val) const
     {
         pagmo::vector_double best_x(dim);
         // First, the latest generation of mutants (if better)
         for (decltype(NP) i = 0u; i < NP; ++i) {
-            if (pagmo::detail::less_than_f(pop.get_f()[i][0], fs[i])) {
+            if (pagmo::detail::less_than_f(fs[i], pop.get_f()[i][0])) {
                 pop.set_xf(i, pagmo::vector_double(dvs.data() + i * dim, dvs.data() + (i + 1) * dim),
-                           pagmo::vector_double(1, fs[i]));
+                           pagmo::vector_double(1., fs[i]));
             }
         }
         auto worst_idx = pop.worst_idx();
         double worst_f_in_pop = pop.get_f()[worst_idx][0];
         // Then the best in place of the worst
         if (pagmo::detail::less_than_f(best_f, worst_f_in_pop)) {
-            std::transform(best_xu.begin(), best_xu.end(), best_x.begin(),
+            std::copy(eph_val.begin(), eph_val.end(), best_x.begin());
+            std::transform(best_xu.begin(), best_xu.end(), best_x.data() + eph_val.size(),
                            [](unsigned a) { return boost::numeric_cast<double>(a); });
             pop.set_xf(worst_idx, best_x, pagmo::vector_double(1, best_f));
         }

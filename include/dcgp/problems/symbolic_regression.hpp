@@ -79,7 +79,7 @@ public:
         // The chromosome has a floating point part (the ephemeral constants) and an integer part (the encoded CGP).
         // 1 - We extract the integer part and represent it as an unsigned vector to set the CGP expression.
         std::vector<unsigned> xu(x.size() - m_n_eph);
-        std::transform(x.data() + m_n_eph, x.data() + x.size(), xu.data(),
+        std::transform(x.data() + m_n_eph, x.data() + x.size(), xu.begin(),
                        [](double a) { return boost::numeric_cast<unsigned>(a); });
         m_cgp.set(xu);
         // 2 - We set the floating point part as ephemeral constants.
@@ -100,8 +100,12 @@ public:
      */
     std::pair<pagmo::vector_double, pagmo::vector_double> get_bounds() const
     {
-        std::vector<double> lb(m_cgp.get_lb().begin(), m_cgp.get_lb().end());
-        std::vector<double> ub(m_cgp.get_ub().begin(), m_cgp.get_ub().end());
+        // Bounds on ephemeral constants are -10, 10;
+        std::vector<double> lb(m_cgp.get_lb().size() + m_n_eph, -10.);
+        std::vector<double> ub(m_cgp.get_ub().size() + m_n_eph, 10.);
+        // Bounds on the CGP encoding are derived from the dcgp::expression
+        std::copy(m_cgp.get_lb().begin(), m_cgp.get_lb().end(), lb.data() + m_n_eph);
+        std::copy(m_cgp.get_ub().begin(), m_cgp.get_ub().end(), ub.data() + m_n_eph);
         return {lb, ub};
     }
 
@@ -167,12 +171,13 @@ public:
 
     /// Gets the inner CGP
     /**
-     * The access to the inner CGP is offered in the public interface to allow evolve methods in UDAs 
-     * to reuse the same object and perform mutations via it. This is a hack to interface pagmo with 
+     * The access to the inner CGP is offered in the public interface to allow evolve methods in UDAs
+     * to reuse the same object and perform mutations via it. This is a hack to interface pagmo with
      * dCGP. Alternatives would be a friendship relation (uughhh) or construct a new CGP object within
      * the evolve each time (seems expensive). So here it is, FOR USE ONLY IN udas::evolve methods.
      */
-    const expression<double>& get_cgp() const {
+    const expression<double> &get_cgp() const
+    {
         return m_cgp;
     }
 

@@ -58,12 +58,12 @@ public:
         if (!udp_ptr) {
             throw std::invalid_argument(prob.get_name() + " does not seem to be a symbolic regression problem. "
                                         + get_name()
-                                        + " can only be used on problems of the type dcgp::symbolic_regression ");
+                                        + " can only be used on problems of the type dcgp::symbolic_regression.");
         }
         if (udp_ptr->get_eph_val().size() == 0u) {
-            throw std::invalid_argument(prob.get_name() + " does not seem to be a symbolic regression problem. "
+            throw std::invalid_argument(prob.get_name() + " does not seem to have any ephemeral constants. "
                                         + get_name()
-                                        + " can only be used on problems of the type dcgp::symbolic_regression ");
+                                        + " only acts on ephemeral constants and needs at least one to be present.");
         }
         if (n_obj > 1) {
             throw std::invalid_argument(prob.get_name() + " has multiple objectives. " + get_name()
@@ -71,7 +71,7 @@ public:
         }
         if (NP < 1u) {
             throw std::invalid_argument(get_name() + " needs at least 2 individuals in the population, "
-                                        + std::to_string(NP) + " detected");
+                                        + std::to_string(NP) + " detected.");
         }
         // Get out if there is nothing to do.
         if (m_max_iter == 0u) {
