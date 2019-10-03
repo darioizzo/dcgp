@@ -16,10 +16,10 @@ int main()
     // We read the data from file
     std::vector<std::vector<double>> X, Y;
     read_data(X, Y, "../../examples/data/symbolic.data");
-    symbolic_regression udp(X, Y, 2, 100, 101, 2, kernel_set<double>({"sum", "diff", "mul", "pdiv"})(), 2u);
+    symbolic_regression udp(X, Y, 1, 20, 21, 2, kernel_set<double>({"sum", "diff", "mul", "pdiv"})(), 1u);
     pagmo::problem prob{udp};
     pagmo::population pop{prob, 4};
-    dcgp::es4cgp uda(2);
+    dcgp::es4cgp uda(10000, 2u);
     pagmo::algorithm algo{uda};
     algo.set_verbosity(100u);
     pop = algo.evolve(pop);
@@ -28,7 +28,6 @@ int main()
     pagmo::print(udp.pretty(pop.get_x()[idx]), "\n");
     return false;
 }
-
 
 
 
