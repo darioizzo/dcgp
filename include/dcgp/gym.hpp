@@ -29,7 +29,7 @@ void generate_1Ddata(std::vector<std::vector<double>> &points, std::vector<std::
     points.clear();
     labels.clear();
     for (unsigned i = 0u; i < N; ++i) {
-        double x = lb + i / (N-1) * (ub - lb);
+        double x = lb + i / (N - 1) * (ub - lb);
         points.push_back({x});
         labels.push_back({f(x)});
     }

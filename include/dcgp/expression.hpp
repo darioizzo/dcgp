@@ -18,6 +18,7 @@
 #include <tbb/tbb.h>
 #include <vector>
 
+#include <dcgp/kernel_set.hpp>
 namespace dcgp
 {
 
@@ -110,14 +111,15 @@ public:
      * @param[in] seed seed for the random number generator (initial expression
      * and mutations depend on this).
      */
-    expression(unsigned n,               // n. inputs
-               unsigned m,               // n. outputs
-               unsigned r,               // n. rows
-               unsigned c,               // n. columns
-               unsigned l,               // n. levels-back
-               unsigned arity,           // basis functions' arity
-               std::vector<kernel<T>> f, // functions
-               unsigned n_eph,           // number of ephemeral constants
+
+    expression(unsigned n = 1u,                                     // n. inputs
+               unsigned m = 1u,                                     // n. outputs
+               unsigned r = 1u,                                     // n. rows
+               unsigned c = 1u,                                     // n. columns
+               unsigned l = 1u,                                     // n. levels-back
+               unsigned arity = 1u,                                 // basis functions' arity
+               std::vector<kernel<T>> f = kernel_set<T>({"sum"})(), // functions
+               unsigned n_eph = 0u,                                 // number of ephemeral constants
                unsigned seed = dcgp::random_device::next())
         : m_n(n + n_eph), m_m(m), m_r(r), m_c(c), m_l(l), m_f(f), m_e(seed)
     {
@@ -274,7 +276,7 @@ public:
         if (point.size() != this->get_n() - m_eph_val.size()) {
             throw std::invalid_argument("When computing the loss, the point dimension (input) seemed wrong, it was: "
                                         + std::to_string(point.size())
-                                        + " while I expected: " + std::to_string(this->get_n()));
+                                        + " while I expected: " + std::to_string(this->get_n() - m_eph_val.size()));
         }
         if (prediction.size() != this->get_m()) {
             throw std::invalid_argument(
@@ -948,7 +950,7 @@ protected:
         if (parallel > 0u) {
             if (batch_size % parallel != 0) {
                 throw std::invalid_argument("The batch size is: " + std::to_string(batch_size)
-                                            + " and cannot be divided into " + std::to_string(parallel) + "parts.");
+                                            + " and cannot be divided into " + std::to_string(parallel) + " parts.");
             }
             unsigned inner_batch_size = batch_size / parallel;
             // The mutex that will protect read/write access to retval

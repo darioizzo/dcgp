@@ -1,12 +1,14 @@
 #define BOOST_TEST_MODULE dcgp_symbolic_regression_test
 #include <boost/test/unit_test.hpp>
-#include <dcgp/problems/symbolic_regression.hpp>
 #include <pagmo/algorithm.hpp>
 #include <pagmo/algorithms/gaco.hpp>
 #include <pagmo/algorithms/sga.hpp>
 #include <pagmo/io.hpp>
 #include <pagmo/population.hpp>
 #include <pagmo/problem.hpp>
+
+#include <dcgp/gym.hpp>
+#include <dcgp/problems/symbolic_regression.hpp>
 
 using namespace dcgp;
 
@@ -117,4 +119,18 @@ BOOST_AUTO_TEST_CASE(trivial_methods_test)
     pagmo::vector_double test_x = {0, 1, 1, 0, 0, 0, 2, 0, 2, 2, 0, 2, 4, 3};
     BOOST_CHECK(udp.pretty(test_x).find("[(x0*(x1+x1)), (x0+x0)]") != std::string::npos);
     BOOST_CHECK_NO_THROW(udp.get_cgp());
+}
+
+BOOST_AUTO_TEST_CASE(gradient_test)
+{
+    kernel_set<double> basic_set({"sum", "diff", "mul", "div"});
+    std::vector<std::vector<double>> points, labels;
+    gym::generate_koza_quintic(points, labels);
+    symbolic_regression udp(points, labels, 2, 2, 3, 2, basic_set(), 5u, 0u);
+    BOOST_CHECK_EQUAL(udp.gradient_sparsity().size(), 5u);
+    BOOST_CHECK((udp.gradient_sparsity() == pagmo::sparsity_pattern{{0, 0}, {0, 1}, {0, 2}, {0, 3}, {0, 4}}));
+    pagmo::population pop(udp, 10u);
+    pagmo::print(udp.fitness(pop.get_x()[0]));
+    audi::print(udp.gradient(pop.get_x()[0]));
+
 }

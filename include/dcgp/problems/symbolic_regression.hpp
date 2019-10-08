@@ -1,5 +1,6 @@
 #ifndef DCGP_SYMBOLIC_REGRESSION_H
 #define DCGP_SYMBOLIC_REGRESSION_H
+#include <audi/gdual.hpp>
 #include <boost/numeric/conversion/cast.hpp>
 #include <boost/range/algorithm/transform.hpp>
 #include <pagmo/io.hpp>
@@ -24,7 +25,7 @@ public:
      */
     symbolic_regression()
         : m_points(1), m_labels(1), m_r(1), m_c(1), m_l(1), m_arity(2), m_f(kernel_set<double>({"sum"})()),
-          m_parallel_batches(0u), m_cgp(1u, 1u, 1u, 1u, 1u, 2u, kernel_set<double>({"sum"})(), 0u, 123u)
+          m_parallel_batches(0u)
     {
     }
 
@@ -55,14 +56,50 @@ public:
                         unsigned parallel_batches = 0u                          // number of parallel batches
                         )
         : m_points(points), m_labels(labels), m_r(r), m_c(c), m_l(l), m_arity(arity), m_f(f), m_n_eph(n_eph),
-          m_parallel_batches(parallel_batches), m_cgp(1u, 1u, 1u, 1u, 1u, 2u, kernel_set<double>({"sum"})(), 0u, 123u)
+          m_parallel_batches(parallel_batches)
     {
         unsigned n;
         unsigned m;
         // We check the inputs.
         sanity_checks(n, m);
+        // We initialize the cgp expression
+        auto seed = random_device::next();
+        m_cgp = expression<double>(n, m, m_r, m_c, m_l, m_arity, m_f, m_n_eph, seed);
         // We initialize the dcgp expression
-        m_cgp = expression<double>(n, m, m_r, m_c, m_l, m_arity, m_f, m_n_eph, random_device::next());
+        kernel_set<audi::gdual_d> f_g;
+        for (const auto &ker : f) {
+            auto name = ker.get_name();
+            // If protected division is used in the cgp the unprotected one will be used in the dCGP
+            // as to keep derivative sanity
+            if (name.compare("pdiv") == 0) {
+                f_g.push_back("div");
+            } else {
+                f_g.push_back(ker.get_name());
+            }
+        }
+        m_dcgp = expression<gdual_d>(n, m, m_r, m_c, m_l, m_arity, f_g(), m_n_eph, seed);
+        // We initialize the dpoints/dduals
+        m_dpoints.clear();
+        m_dlabels.clear();
+        for (const auto &point : m_points) {
+            std::vector<audi::gdual_d> point_gdual;
+            for (const auto &item : point) {
+                point_gdual.emplace_back(item);
+            }
+            m_dpoints.push_back(point_gdual);
+        }
+        for (const auto &label : m_labels) {
+            std::vector<audi::gdual_d> label_gdual;
+            for (const auto &item : label) {
+                label_gdual.emplace_back(item);
+            }
+            m_dlabels.push_back(label_gdual);
+        }
+        // We create the symbol set of the differentials here for efficiency.
+        // They are used in the gradient computation.
+        for (const auto &symb : m_dcgp.get_eph_symb()) {
+            m_deph_symb.push_back("d" + symb);
+        }
     }
 
     /// Fitness computation
@@ -91,10 +128,64 @@ public:
         return retval;
     }
 
+    /// Gradient computation
+    /**
+     * Computes the gradient for the continuous part of this UDP
+     *
+     * @param x the decision vector.
+     *
+     * @return the gradient of \p x.
+     */
+    pagmo::vector_double gradient(const pagmo::vector_double &x) const
+    {
+        std::vector<double> retval(m_n_eph, 0);
+        // The chromosome has a floating point part (the ephemeral constants) and an integer part (the encoded CGP).
+        // 1 - We extract the integer part and represent it as an unsigned vector to set the CGP expression.
+        std::vector<unsigned> xu(x.size() - m_n_eph);
+        std::transform(x.data() + m_n_eph, x.data() + x.size(), xu.begin(),
+                       [](double a) { return boost::numeric_cast<unsigned>(a); });
+        m_dcgp.set(xu);
+        // 2 - We use the floating point part of the chromosome to set ephemeral constants.
+        std::vector<audi::gdual_d> eph_val;
+        for (decltype(m_n_eph) i = 0u; i < m_n_eph; ++i) {
+            eph_val.emplace_back(x[i], m_dcgp.get_eph_symb()[i], 1u); // Only first derivative is needed
+        }
+        m_dcgp.set_eph_val(eph_val);
+        // 3 - We compute the MSE loss splitting the data in n batches.
+        // TODO: make this work also when m_parallel_batches does not divide exactly the data size.
+        auto loss = m_dcgp.loss(m_dpoints, m_dlabels, "MSE", m_parallel_batches);
+        loss.extend_symbol_set(m_deph_symb);
+        if (!(loss.get_order() == 0u)) { // this happens when input terminals of the eph constants are inactive
+                                         // (gradient is then zero)
+            for (decltype(m_n_eph) i = 0u; i < m_n_eph; ++i) {
+                std::vector<double> coeff(m_n_eph, 0.);
+                coeff[i] = 1.;
+                retval[i] = loss.get_derivative(coeff);
+            }
+        }
+        return retval;
+    }
+
+    /// Sparsity pattern
+    /**
+     * Returns the sparsity pattern. The sparsity patter is dense in the continuous part of the chromosome.
+     * We assume all eph constants are in the expression. If not, we deal with a vanishing gradient later.
+     *
+     * @return the sparsity pattern.
+     */
+    pagmo::sparsity_pattern gradient_sparsity() const
+    {
+        pagmo::sparsity_pattern retval;
+        for (decltype(m_n_eph) i = 0u; i < m_n_eph; ++i) {
+            retval.push_back({0u, i});
+        }
+        return retval;
+    }
+
     /// Box-bounds
     /**
      *
-     * It returns the box-bounds for this UDP.
+     * Returns the box-bounds for this UDP.
      *
      * @return the lower and upper bounds for each of the decision vector components
      */
@@ -181,6 +272,19 @@ public:
         return m_cgp;
     }
 
+    const std::vector<std::vector<double>> &get_points() const
+    {
+        return m_points;
+    }
+    const std::vector<std::vector<double>> &get_labels() const
+    {
+        return m_labels;
+    }
+    const unsigned &get_parallel_batches() const
+    {
+        return m_parallel_batches;
+    }
+
 private:
     inline void sanity_checks(unsigned &n, unsigned &m) const
     {
@@ -217,6 +321,9 @@ private:
 
     std::vector<std::vector<double>> m_points;
     std::vector<std::vector<double>> m_labels;
+    std::vector<std::vector<gdual_d>> m_dpoints;
+    std::vector<std::vector<gdual_d>> m_dlabels;
+    std::vector<std::string> m_deph_symb;
     unsigned m_r;
     unsigned m_c;
     unsigned m_l;
@@ -228,6 +335,7 @@ private:
     // of the UDP in pagmo will force copies of the UDP to be made in all threads. This can in principle be
     // avoided, but likely resulting in prepature optimization. (see https://github.com/darioizzo/dcgp/pull/42)
     mutable expression<double> m_cgp;
+    mutable expression<gdual_d> m_dcgp;
 };
 } // namespace dcgp
 #endif
