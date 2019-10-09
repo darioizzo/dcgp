@@ -112,20 +112,24 @@ public:
      */
     pagmo::vector_double fitness(const pagmo::vector_double &x) const
     {
-        std::vector<double> retval(1, 0);
-        // The chromosome has a floating point part (the ephemeral constants) and an integer part (the encoded CGP).
-        // 1 - We extract the integer part and represent it as an unsigned vector to set the CGP expression.
-        std::vector<unsigned> xu(x.size() - m_n_eph);
-        std::transform(x.data() + m_n_eph, x.data() + x.size(), xu.begin(),
-                       [](double a) { return boost::numeric_cast<unsigned>(a); });
-        m_cgp.set(xu);
-        // 2 - We set the floating point part as ephemeral constants.
-        std::vector<double> eph_val(x.data(), x.data() + m_n_eph);
-        m_cgp.set_eph_val(eph_val);
-        // 3 - We compute the MSE loss splitting the data in n batches.
-        // TODO: make this work also when m_parallel_batches does not divide exactly the data size.
-        retval[0] = m_cgp.loss(m_points, m_labels, "MSE", m_parallel_batches);
-        return retval;
+        if (x == m_cache.first) {
+            return m_cache.second;
+        } else {
+            std::vector<double> retval(1, 0);
+            // The chromosome has a floating point part (the ephemeral constants) and an integer part (the encoded CGP).
+            // 1 - We extract the integer part and represent it as an unsigned vector to set the CGP expression.
+            std::vector<unsigned> xu(x.size() - m_n_eph);
+            std::transform(x.data() + m_n_eph, x.data() + x.size(), xu.begin(),
+                           [](double a) { return boost::numeric_cast<unsigned>(a); });
+            m_cgp.set(xu);
+            // 2 - We set the floating point part as ephemeral constants.
+            std::vector<double> eph_val(x.data(), x.data() + m_n_eph);
+            m_cgp.set_eph_val(eph_val);
+            // 3 - We compute the MSE loss splitting the data in n batches.
+            // TODO: make this work also when m_parallel_batches does not divide exactly the data size.
+            retval[0] = m_cgp.loss(m_points, m_labels, "MSE", m_parallel_batches);
+            return retval;
+        }
     }
 
     /// Gradient computation
@@ -154,6 +158,7 @@ public:
         // 3 - We compute the MSE loss splitting the data in n batches.
         // TODO: make this work also when m_parallel_batches does not divide exactly the data size.
         auto loss = m_dcgp.loss(m_dpoints, m_dlabels, "MSE", m_parallel_batches);
+        m_cache = decltype(m_cache){x, loss.constant_cf()};
         loss.extend_symbol_set(m_deph_symb);
         if (!(loss.get_order() == 0u)) { // this happens when input terminals of the eph constants are inactive
                                          // (gradient is then zero)
@@ -336,6 +341,7 @@ private:
     // avoided, but likely resulting in prepature optimization. (see https://github.com/darioizzo/dcgp/pull/42)
     mutable expression<double> m_cgp;
     mutable expression<gdual_d> m_dcgp;
+    mutable std::pair<pagmo::vector_double, pagmo::vector_double> m_cache;
 };
 } // namespace dcgp
 #endif
