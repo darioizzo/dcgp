@@ -158,6 +158,8 @@ public:
         // 3 - We compute the MSE loss splitting the data in n batches.
         // TODO: make this work also when m_parallel_batches does not divide exactly the data size.
         auto loss = m_dcgp.loss(m_dpoints, m_dlabels, "MSE", m_parallel_batches);
+        // since we have also computed the loss value, we store it in a cache so that fitness can be called and
+        // not cause reavaluation of a cgp.
         m_cache = decltype(m_cache){x, pagmo::vector_double{loss.constant_cf()}};
         loss.extend_symbol_set(m_deph_symb);
         if (!(loss.get_order() == 0u)) { // this happens when input terminals of the eph constants are inactive
@@ -275,19 +277,6 @@ public:
     const expression<double> &get_cgp() const
     {
         return m_cgp;
-    }
-
-    const std::vector<std::vector<double>> &get_points() const
-    {
-        return m_points;
-    }
-    const std::vector<std::vector<double>> &get_labels() const
-    {
-        return m_labels;
-    }
-    const unsigned &get_parallel_batches() const
-    {
-        return m_parallel_batches;
     }
 
 private:

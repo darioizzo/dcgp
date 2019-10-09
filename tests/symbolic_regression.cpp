@@ -126,13 +126,23 @@ BOOST_AUTO_TEST_CASE(gradient_test)
     kernel_set<double> basic_set({"sum", "diff", "mul", "div"});
     std::vector<std::vector<double>> points, labels;
     gym::generate_koza_quintic(points, labels);
-    symbolic_regression udp(points, labels, 2, 2, 3, 2, basic_set(), 5u, 0u);
+    symbolic_regression udp(points, labels, 5, 10, 3, 2, basic_set(), 5u, 0u);
     BOOST_CHECK_EQUAL(udp.gradient_sparsity().size(), 5u);
     BOOST_CHECK((udp.gradient_sparsity() == pagmo::sparsity_pattern{{0, 0}, {0, 1}, {0, 2}, {0, 3}, {0, 4}}));
-    pagmo::population pop(udp, 10u);
-    pagmo::print(udp.fitness(pop.get_x()[0]));
-    audi::print(udp.gradient(pop.get_x()[0]));
-
+    for (unsigned j = 0u; j < 10u; ++j) {
+        pagmo::population pop(udp, 1u, 123u + j);
+        auto x = pop.get_x()[0];
+        auto f1 = udp.fitness(x);
+        auto g1 = udp.gradient(x);
+        double loss_gradient_norm
+            = std::sqrt(std::inner_product(g1.begin(), g1.end(), g1.begin(), 0.));
+        for (unsigned i = 0u; i < 5u; ++i) {
+            x[i] = x[i] - 1e-8 * g1[i] / loss_gradient_norm;
+        }
+        if (std::isfinite(f1[0]) && std::isfinite(loss_gradient_norm) && (loss_gradient_norm !=0.)) {
+            BOOST_CHECK(f1[0] - udp.fitness(x)[0] >= 0);
+        }
+    }
 }
 
 BOOST_AUTO_TEST_CASE(cache_test)
