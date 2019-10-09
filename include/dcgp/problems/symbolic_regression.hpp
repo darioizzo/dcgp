@@ -158,7 +158,7 @@ public:
         // 3 - We compute the MSE loss splitting the data in n batches.
         // TODO: make this work also when m_parallel_batches does not divide exactly the data size.
         auto loss = m_dcgp.loss(m_dpoints, m_dlabels, "MSE", m_parallel_batches);
-        m_cache = decltype(m_cache){x, loss.constant_cf()};
+        m_cache = decltype(m_cache){x, pagmo::vector_double{loss.constant_cf()}};
         loss.extend_symbol_set(m_deph_symb);
         if (!(loss.get_order() == 0u)) { // this happens when input terminals of the eph constants are inactive
                                          // (gradient is then zero)

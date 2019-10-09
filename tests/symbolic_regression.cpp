@@ -134,3 +134,18 @@ BOOST_AUTO_TEST_CASE(gradient_test)
     audi::print(udp.gradient(pop.get_x()[0]));
 
 }
+
+BOOST_AUTO_TEST_CASE(cache_test)
+{
+    // NOTE: this is not testing whether the cache is hit, but assuming it is
+    // it tests that it returns the correct result.
+    kernel_set<double> basic_set({"sum", "diff", "mul", "div"});
+    std::vector<std::vector<double>> points, labels;
+    gym::generate_koza_quintic(points, labels);
+    symbolic_regression udp(points, labels, 2, 2, 3, 2, basic_set(), 5u, 0u);
+    pagmo::population pop(udp, 1u);
+    auto f1 = udp.fitness(pop.get_x()[0]);
+    auto g1 = udp.gradient(pop.get_x()[0]);
+    auto f2 = udp.fitness(pop.get_x()[0]);
+    BOOST_CHECK_CLOSE(f1[0], f2[0], 1e-12);
+}
