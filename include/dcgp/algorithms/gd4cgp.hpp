@@ -4,6 +4,8 @@
 #include <audi/gdual.hpp>
 #include <numeric>
 #include <pagmo/algorithms/not_population_based.hpp>
+#include <pagmo/detail/custom_comparisons.hpp>
+
 #include <pagmo/io.hpp>
 #include <pagmo/population.hpp>
 #include <stdexcept>
@@ -20,7 +22,7 @@ class gd4cgp : public pagmo::not_population_based
 {
 public:
     /// Single entry of the log (iter, fevals, gevals, lr, best)
-    typedef std::tuple<unsigned, unsigned long long, unsigned long long, double, double> log_line_type;
+    typedef std::tuple<unsigned, unsigned long long, unsigned long long, double, double, double> log_line_type;
     /// The log
     typedef std::vector<log_line_type> log_type;
 
@@ -90,31 +92,14 @@ public:
         // 1 - We select the chromosome in the population.
         auto sel_xf = select_individual(pop);
         pagmo::vector_double x0(std::move(sel_xf.first)), fit0(std::move(sel_xf.second));
+        pagmo::vector_double x1(x0);
+        auto fit1 = fit0;
 
         // 2 - Gradient Descent iterations
         double lr = m_lr;
-
-        if (m_verbosity > 0u) {
-            pagmo::print("\n", std::setw(7), "Iter:", std::setw(15), "Fevals:", std::setw(15), "Gevals:", std::setw(15),
-                         "lr:", std::setw(15), "Best:\n");
-            pagmo::print(std::setw(7), 0u, std::setw(15), prob.get_fevals() - fevals0, std::setw(15),
-                         prob.get_gevals() - gevals0, std::setw(15), lr, std::setw(15), fit0[0], '\n');
-            ++count;
-            // Logs
-            m_log.emplace_back(0u, prob.get_fevals() - fevals0, prob.get_gevals() - gevals0, lr, fit0[0]);
-        }
+        double loss_gradient_norm = 0;
 
         for (unsigned iter = 1u; iter <= m_max_iter; ++iter) {
-            auto grad = prob.gradient(x0);
-            fit0 = prob.fitness(x0);
-
-            double loss_gradient_norm = std::sqrt(std::inner_product(grad.begin(), grad.end(), grad.begin(), 0.));
-            if (loss_gradient_norm == 0. || !std::isfinite(loss_gradient_norm)) { // nothing to do for GD
-                return pop;
-            }
-            // The SGD update rule
-            std::transform(grad.begin(), grad.end(), x0.data(), x0.data(),
-                           [lr, loss_gradient_norm](double a, double b) { return b - a / loss_gradient_norm * lr; });
             // The log
             if (m_verbosity > 0u) {
                 // Every m_verbosity generations print a log line
@@ -122,16 +107,53 @@ public:
                     // Every 50 lines print the column names
                     if (count % 50u == 1u) {
                         pagmo::print("\n", std::setw(7), "Iter:", std::setw(15), "Fevals:", std::setw(15),
-                                     "Gevals:", std::setw(15), "lr:", std::setw(15), "Best:\n");
+                                     "Gevals:", std::setw(15), "grad norm:", std::setw(15), "lr:", std::setw(15),
+                                     "Best:\n");
                     }
-                    pagmo::print(std::setw(7), iter, std::setw(15), prob.get_fevals() - fevals0, std::setw(15),
-                                 prob.get_gevals() - gevals0, std::setw(15), lr, std::setw(15), fit0[0], '\n');
+                    pagmo::print(std::setw(7), iter - 1, std::setw(15), prob.get_fevals() - fevals0, std::setw(15),
+                                 prob.get_gevals() - gevals0, std::setw(15), loss_gradient_norm, std::setw(15), lr,
+                                 std::setw(15), fit0[0], '\n');
                     ++count;
                     // Logs
-                    m_log.emplace_back(iter, prob.get_fevals() - fevals0, prob.get_gevals() - gevals0, lr,
-                                       fit0[0]);
+                    m_log.emplace_back(iter - 1, prob.get_fevals() - fevals0, prob.get_gevals() - gevals0,
+                                       loss_gradient_norm, lr, fit0[0]);
                 }
             }
+            auto grad = prob.gradient(x0);
+            loss_gradient_norm = std::sqrt(std::inner_product(grad.begin(), grad.end(), grad.begin(), 0.));
+            if (loss_gradient_norm < 1e-13 || !std::isfinite(loss_gradient_norm)) { // nothing to do for GD
+                if (m_verbosity > 0u) {
+
+                    pagmo::print(std::setw(7), iter, std::setw(15), prob.get_fevals() - fevals0, std::setw(15),
+                                 prob.get_gevals() - gevals0, std::setw(15), loss_gradient_norm, std::setw(15), lr,
+                                 std::setw(15), fit0[0], '\n');
+                    m_log.emplace_back(iter - 1, prob.get_fevals() - fevals0, prob.get_gevals() - gevals0,
+                                       loss_gradient_norm, lr, fit0[0]);
+                    pagmo::print("Exit condition -- vanishing or nan/inf gradient", '\n');
+                }
+                return pop;
+            }
+            // The SGD update rule
+            std::transform(grad.begin(), grad.end(), x1.data(), x1.data(),
+                           [lr, loss_gradient_norm](double a, double b) { return b - a / loss_gradient_norm * lr; });
+            fit1 = prob.fitness(x1);
+            if (pagmo::detail::less_than_f(fit1[0], fit0[0])) {
+                x0 = x1;
+                fit0 = fit1;
+                lr = lr * 3.;
+            } else {
+                lr = lr / 4.;
+                x1 = x0;
+            }
+        }
+        if (m_verbosity > 0u) {
+
+            pagmo::print(std::setw(7), m_max_iter, std::setw(15), prob.get_fevals() - fevals0, std::setw(15),
+                         prob.get_gevals() - gevals0, std::setw(15), loss_gradient_norm, std::setw(15), lr,
+                         std::setw(15), fit0[0], '\n');
+            m_log.emplace_back(m_max_iter - 1, prob.get_fevals() - fevals0, prob.get_gevals() - gevals0,
+                               loss_gradient_norm, lr, fit0[0]);
+            pagmo::print("Exit condition -- max iterations = ", m_max_iter, '\n');
         }
 
         return pop;

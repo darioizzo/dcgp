@@ -26,7 +26,7 @@ BOOST_AUTO_TEST_CASE(evolve_test)
     symbolic_regression udp({{1., 1.}, {1., 0.}}, {{2., 2.}, {0., 0.}}, 1, 10, 3, 2, basic_set(), 2u, 0u);
     pagmo::problem prob{udp};
     pagmo::population pop1{prob, 5u};
-    gd4cgp uda1{1, 0.1, 1e-3};
+    gd4cgp uda1{10, 0.1, 1e-3};
     uda1.set_verbosity(1u);
     pop1 = uda1.evolve(pop1);
 }
