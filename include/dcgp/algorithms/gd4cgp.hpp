@@ -21,7 +21,7 @@ namespace dcgp
 class gd4cgp : public pagmo::not_population_based
 {
 public:
-    /// Single entry of the log (iter, fevals, gevals, lr, best)
+    /// Single entry of the log (iter, fevals, gevals, gradient_magnitude, lr, best)
     typedef std::tuple<unsigned, unsigned long long, unsigned long long, double, double, double> log_line_type;
     /// The log
     typedef std::vector<log_line_type> log_type;
@@ -60,7 +60,7 @@ public:
         auto count = 1u;                  // regulates the screen output
 
         // PREAMBLE-------------------------------------------------------------------------------------------------
-        // Check whether the problem is suitable for es4cgp
+        // Check whether the problem is suitable for gd4cgp
         // If the UDP in pop is not a symbolic_regression UDP, udp_ptr will be NULL
         auto udp_ptr = prob.extract<symbolic_regression>();
         if (!udp_ptr) {
@@ -93,14 +93,14 @@ public:
         auto sel_xf = select_individual(pop);
         pagmo::vector_double x0(std::move(sel_xf.first)), fit0(std::move(sel_xf.second));
         pagmo::vector_double x1(x0);
-        auto fit1 = fit0;
+        pagmo::vector_double fit1(fit0);
 
         // 2 - Gradient Descent iterations
         double lr = m_lr;
-        double loss_gradient_norm = 0;
+        double loss_gradient_norm = 0.;
 
         for (unsigned iter = 1u; iter <= m_max_iter; ++iter) {
-            // The log
+            // We log
             if (m_verbosity > 0u) {
                 // Every m_verbosity generations print a log line
                 if (iter % m_verbosity == 1u || m_verbosity == 1u) {
@@ -110,27 +110,18 @@ public:
                                      "Gevals:", std::setw(15), "grad norm:", std::setw(15), "lr:", std::setw(15),
                                      "Best:\n");
                     }
-                    pagmo::print(std::setw(7), iter - 1, std::setw(15), prob.get_fevals() - fevals0, std::setw(15),
-                                 prob.get_gevals() - gevals0, std::setw(15), loss_gradient_norm, std::setw(15), lr,
-                                 std::setw(15), fit0[0], '\n');
+                    log_single_line(iter, prob, fevals0, gevals0, loss_gradient_norm, lr, fit0);
                     ++count;
-                    // Logs
-                    m_log.emplace_back(iter - 1, prob.get_fevals() - fevals0, prob.get_gevals() - gevals0,
-                                       loss_gradient_norm, lr, fit0[0]);
                 }
             }
             auto grad = prob.gradient(x0);
             loss_gradient_norm = std::sqrt(std::inner_product(grad.begin(), grad.end(), grad.begin(), 0.));
             if (loss_gradient_norm < 1e-13 || !std::isfinite(loss_gradient_norm)) { // nothing to do for GD
                 if (m_verbosity > 0u) {
-
-                    pagmo::print(std::setw(7), iter, std::setw(15), prob.get_fevals() - fevals0, std::setw(15),
-                                 prob.get_gevals() - gevals0, std::setw(15), loss_gradient_norm, std::setw(15), lr,
-                                 std::setw(15), fit0[0], '\n');
-                    m_log.emplace_back(iter - 1, prob.get_fevals() - fevals0, prob.get_gevals() - gevals0,
-                                       loss_gradient_norm, lr, fit0[0]);
-                    pagmo::print("Exit condition -- vanishing or nan/inf gradient", '\n');
+                    log_single_line(iter, prob, fevals0, gevals0, loss_gradient_norm, lr, fit0);
+                    pagmo::print("Exit condition -- vanishing or nan/inf gradient = ", loss_gradient_norm, '\n');
                 }
+                replace_individual(pop, x0, fit0);
                 return pop;
             }
             // The SGD update rule
@@ -144,18 +135,21 @@ public:
             } else {
                 lr = lr / 4.;
                 x1 = x0;
+                if (lr < m_lr_min) {
+                    if (m_verbosity > 0u) {
+                        log_single_line(iter, prob, fevals0, gevals0, loss_gradient_norm, lr, fit0);
+                        pagmo::print("Exit condition -- vanishing learning rate = ", lr, '\n');
+                    }
+                    replace_individual(pop, x0, fit0);
+                    return pop;
+                }
             }
         }
         if (m_verbosity > 0u) {
-
-            pagmo::print(std::setw(7), m_max_iter, std::setw(15), prob.get_fevals() - fevals0, std::setw(15),
-                         prob.get_gevals() - gevals0, std::setw(15), loss_gradient_norm, std::setw(15), lr,
-                         std::setw(15), fit0[0], '\n');
-            m_log.emplace_back(m_max_iter - 1, prob.get_fevals() - fevals0, prob.get_gevals() - gevals0,
-                               loss_gradient_norm, lr, fit0[0]);
+            log_single_line(m_max_iter, prob, fevals0, gevals0, loss_gradient_norm, lr, fit0);
             pagmo::print("Exit condition -- max iterations = ", m_max_iter, '\n');
         }
-
+        replace_individual(pop, x0, fit0);
         return pop;
     }
 
@@ -229,6 +223,18 @@ public:
     }
 
 private:
+    // This prints to screen and logs one single line.
+    inline void log_single_line(unsigned iter, const pagmo::problem &prob, unsigned long long fevals0,
+                                unsigned long long gevals0, double loss_gradient_norm, double lr,
+                                vector_double fit0) const
+    {
+        pagmo::print(std::setw(7), iter, std::setw(15), prob.get_fevals() - fevals0, std::setw(15),
+                     prob.get_gevals() - gevals0, std::setw(15), loss_gradient_norm, std::setw(15), lr, std::setw(15),
+                     fit0[0], '\n');
+        m_log.emplace_back(iter - 1, prob.get_fevals() - fevals0, prob.get_gevals() - gevals0, loss_gradient_norm, lr,
+                           fit0[0]);
+    }
+
     unsigned m_max_iter;
     double m_lr;
     double m_lr_min;
