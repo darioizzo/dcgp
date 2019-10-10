@@ -50,7 +50,6 @@ public:
     pagmo::population evolve(pagmo::population pop) const
     {
         const auto &prob = pop.get_problem();
-        auto ncx = prob.get_nx() - prob.get_nix();
         auto n_obj = prob.get_nobj();
         const auto bounds = prob.get_bounds();
         auto NP = pop.size();
@@ -107,7 +106,7 @@ public:
 
         for (unsigned iter = 1u; iter <= m_max_iter; ++iter) {
             auto grad = prob.gradient(x0);
-            auto fit0 = prob.fitness(x0);
+            fit0 = prob.fitness(x0);
 
             double loss_gradient_norm = std::sqrt(std::inner_product(grad.begin(), grad.end(), grad.begin(), 0.));
             if (loss_gradient_norm == 0. || !std::isfinite(loss_gradient_norm)) { // nothing to do for GD
