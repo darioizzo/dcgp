@@ -7,6 +7,7 @@
 #include <pagmo/problems/rosenbrock.hpp>
 
 #include <dcgp/algorithms/gd4cgp.hpp>
+#include <dcgp/gym.hpp>
 #include <dcgp/problems/symbolic_regression.hpp>
 
 using namespace dcgp;
@@ -23,11 +24,30 @@ BOOST_AUTO_TEST_CASE(construction_test)
 BOOST_AUTO_TEST_CASE(evolve_test)
 {
     kernel_set<double> basic_set({"sum", "diff", "mul", "div"});
-    symbolic_regression udp({{1., 1.}, {1., 0.}}, {{2., 2.}, {0., 0.}}, 1, 10, 3, 2, basic_set(), 2u, 0u);
-    pagmo::problem prob{udp};
-    pagmo::population pop1{prob, 5u};
-    gd4cgp uda1{10, 1., 1e-3};
-    uda1.set_verbosity(1u);
-    pop1 = uda1.evolve(pop1);
+    std::vector<std::vector<double>> points, labels;
+    gym::generate_koza_quintic(points, labels);
+    // We test that the evolve fails on UDPs that are not suitable.
+    gd4cgp uda(10u, 1u, 1e-4);
+    { // wrong problem (not symbolic)
+        pagmo::population pop{pagmo::rosenbrock(10), 4};
+        BOOST_CHECK_THROW(uda.evolve(pop), std::invalid_argument);
+    }
+    { // no eph constants
+        pagmo::population pop(symbolic_regression(points, labels, 2, 2, 3, 2, basic_set(), 0u, 0u), 1u);
+        BOOST_CHECK_THROW(uda.evolve(pop), std::invalid_argument);
+    }
+    { // zero iters
+        pagmo::population pop{symbolic_regression(points, labels, 2, 2, 3, 2, basic_set(), 2u, 0u), 4u};
+        BOOST_CHECK(gd4cgp{0u}.evolve(pop).get_x()[0] == pop.get_x()[0]);
+    }
 }
 
+BOOST_AUTO_TEST_CASE(trivial_methods_test)
+{
+    gd4cgp uda(10u, 1u, 1e-4);
+    uda.set_verbosity(11u);
+    BOOST_CHECK(uda.get_verbosity() == 11u);
+    BOOST_CHECK(uda.get_name().find("gradient descent") != std::string::npos);
+    BOOST_CHECK(uda.get_extra_info().find("Minimum learning rate") != std::string::npos);
+    BOOST_CHECK_NO_THROW(uda.get_log());
+}

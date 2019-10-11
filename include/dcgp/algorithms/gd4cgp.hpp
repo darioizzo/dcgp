@@ -54,7 +54,6 @@ public:
         const auto &prob = pop.get_problem();
         auto n_obj = prob.get_nobj();
         const auto bounds = prob.get_bounds();
-        auto NP = pop.size();
         auto fevals0 = prob.get_fevals(); // fevals already made
         auto gevals0 = prob.get_gevals(); // gevals already made
         auto count = 1u;                  // regulates the screen output
@@ -77,10 +76,6 @@ public:
             throw std::invalid_argument(prob.get_name() + " has multiple objectives. " + get_name()
                                         + " can only be used on problems that are single objective.");
         }
-        if (NP < 1u) {
-            throw std::invalid_argument(get_name() + " needs at least 2 individuals in the population, "
-                                        + std::to_string(NP) + " detected.");
-        }
         // Get out if there is nothing to do.
         if (m_max_iter == 0u) {
             if (m_verbosity > 0u) {
@@ -92,7 +87,7 @@ public:
         // No throws, all valid: we clear the logs
         m_log.clear();
 
-        // 1 - We select the chromosome in the population.
+        // 1 - We select a chromosome in the population.
         auto sel_xf = select_individual(pop);
         pagmo::vector_double x0(std::move(sel_xf.first)), fit0(std::move(sel_xf.second));
         pagmo::vector_double x1(x0);
@@ -106,7 +101,7 @@ public:
             return pop;
         }
 
-        // 2 - Gradient Descent iterations
+        // 2 - We iterate an adaptive line search in the gradient direction.
         double lr = m_lr;
         double loss_gradient_norm = 0.;
 
@@ -125,8 +120,10 @@ public:
                     ++count;
                 }
             }
+            // Compute the gradient direction
             auto grad = prob.gradient(x0);
             loss_gradient_norm = std::sqrt(std::inner_product(grad.begin(), grad.end(), grad.begin(), 0.));
+            // If the gradient has vanished or its not finite get out.
             if (loss_gradient_norm < 1e-13 || !std::isfinite(loss_gradient_norm)) { // nothing to do for GD
                 if (m_verbosity > 0u) {
                     log_single_line(iter, prob, fevals0, gevals0, loss_gradient_norm, lr, fit0);
@@ -135,10 +132,11 @@ public:
                 replace_individual(pop, x0, fit0);
                 return pop;
             }
-            // The SGD update rule
+            // Move in the direction of the gradient by lr
             std::transform(grad.begin(), grad.end(), x1.data(), x1.data(),
                            [lr, loss_gradient_norm](double a, double b) { return b - a / loss_gradient_norm * lr; });
             fit1 = prob.fitness(x1);
+            // Adapt the learning rate (or line search parameter).
             if (pagmo::detail::less_than_f(fit1[0], fit0[0])) {
                 x0 = x1;
                 fit0 = fit1;
