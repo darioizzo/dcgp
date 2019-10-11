@@ -124,7 +124,7 @@ public:
             for (decltype(NP) i = 0u; i < NP; ++i) {
                 // To mutate active chromosomes we use a copy of the cgp of the UDP.
                 cgp.set(best_xu);
-                cgp.mutate_active(m_mut_n + 1); //TODO: check if this is good
+                cgp.mutate_active(m_mut_n); //TODO: check if this is good
                 //cgp.mutate(m_mut_n + i);
                 std::vector<unsigned> mutated_x = cgp.get();
                 std::transform(mutated_x.begin(), mutated_x.end(), dvs.data() + i * dim + n_eph,
