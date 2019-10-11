@@ -160,7 +160,9 @@ public:
         auto loss = m_dcgp.loss(m_dpoints, m_dlabels, "MSE", m_parallel_batches);
         // since we have also computed the loss value, we store it in a cache so that fitness can be called and
         // not cause reavaluation of a cgp.
-        m_cache = decltype(m_cache){x, pagmo::vector_double{loss.constant_cf()}};
+        m_cache.first = x;
+        m_cache.second.resize(1);
+        m_cache.second[0] = loss.constant_cf();
         loss.extend_symbol_set(m_deph_symb);
         if (!(loss.get_order() == 0u)) { // this happens when input terminals of the eph constants are inactive
                                          // (gradient is then zero)
