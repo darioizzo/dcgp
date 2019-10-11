@@ -1,12 +1,14 @@
 #define BOOST_TEST_MODULE dcgp_symbolic_regression_test
 #include <boost/test/unit_test.hpp>
-#include <dcgp/problems/symbolic_regression.hpp>
 #include <pagmo/algorithm.hpp>
 #include <pagmo/algorithms/gaco.hpp>
 #include <pagmo/algorithms/sga.hpp>
 #include <pagmo/io.hpp>
 #include <pagmo/population.hpp>
 #include <pagmo/problem.hpp>
+
+#include <dcgp/gym.hpp>
+#include <dcgp/problems/symbolic_regression.hpp>
 
 using namespace dcgp;
 
@@ -117,4 +119,43 @@ BOOST_AUTO_TEST_CASE(trivial_methods_test)
     pagmo::vector_double test_x = {0, 1, 1, 0, 0, 0, 2, 0, 2, 2, 0, 2, 4, 3};
     BOOST_CHECK(udp.pretty(test_x).find("[(x0*(x1+x1)), (x0+x0)]") != std::string::npos);
     BOOST_CHECK_NO_THROW(udp.get_cgp());
+}
+
+BOOST_AUTO_TEST_CASE(gradient_test)
+{
+    kernel_set<double> basic_set({"sum", "diff", "mul", "div"});
+    std::vector<std::vector<double>> points, labels;
+    gym::generate_koza_quintic(points, labels);
+    symbolic_regression udp(points, labels, 5, 10, 3, 2, basic_set(), 5u, 0u);
+    BOOST_CHECK_EQUAL(udp.gradient_sparsity().size(), 5u);
+    BOOST_CHECK((udp.gradient_sparsity() == pagmo::sparsity_pattern{{0, 0}, {0, 1}, {0, 2}, {0, 3}, {0, 4}}));
+    for (unsigned j = 0u; j < 10u; ++j) {
+        pagmo::population pop(udp, 1u, 123u + j);
+        auto x = pop.get_x()[0];
+        auto f1 = udp.fitness(x);
+        auto g1 = udp.gradient(x);
+        double loss_gradient_norm
+            = std::sqrt(std::inner_product(g1.begin(), g1.end(), g1.begin(), 0.));
+        for (unsigned i = 0u; i < 5u; ++i) {
+            x[i] = x[i] - 1e-8 * g1[i] / loss_gradient_norm;
+        }
+        if (std::isfinite(f1[0]) && std::isfinite(loss_gradient_norm) && (loss_gradient_norm !=0.)) {
+            BOOST_CHECK(f1[0] - udp.fitness(x)[0] >= 0);
+        }
+    }
+}
+
+BOOST_AUTO_TEST_CASE(cache_test)
+{
+    // NOTE: this is not testing whether the cache is hit, but assuming it is
+    // it tests that it returns the correct result.
+    kernel_set<double> basic_set({"sum", "diff", "mul", "div"});
+    std::vector<std::vector<double>> points, labels;
+    gym::generate_koza_quintic(points, labels);
+    symbolic_regression udp(points, labels, 2, 2, 3, 2, basic_set(), 5u, 0u);
+    pagmo::population pop(udp, 1u);
+    auto f1 = udp.fitness(pop.get_x()[0]);
+    auto g1 = udp.gradient(pop.get_x()[0]);
+    auto f2 = udp.fitness(pop.get_x()[0]);
+    BOOST_CHECK_CLOSE(f1[0], f2[0], 1e-12);
 }

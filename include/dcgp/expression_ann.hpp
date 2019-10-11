@@ -966,7 +966,7 @@ private:
         if (parallel > 0u) {
             if (batch_size % parallel != 0) {
                 throw std::invalid_argument("The batch size is: " + std::to_string(batch_size)
-                                            + " and cannot be divided into " + std::to_string(parallel) + "parts.");
+                                            + " and cannot be divided into " + std::to_string(parallel) + " parts.");
             }
             unsigned inner_batch_size = batch_size / parallel;
             // The mutex that will protect read write access to value, gweights, gbiases.

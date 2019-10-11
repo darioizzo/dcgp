@@ -18,6 +18,7 @@
 #include <tbb/tbb.h>
 #include <vector>
 
+#include <dcgp/kernel_set.hpp>
 namespace dcgp
 {
 
@@ -110,14 +111,15 @@ public:
      * @param[in] seed seed for the random number generator (initial expression
      * and mutations depend on this).
      */
-    expression(unsigned n,               // n. inputs
-               unsigned m,               // n. outputs
-               unsigned r,               // n. rows
-               unsigned c,               // n. columns
-               unsigned l,               // n. levels-back
-               unsigned arity,           // basis functions' arity
-               std::vector<kernel<T>> f, // functions
-               unsigned n_eph,           // number of ephemeral constants
+
+    expression(unsigned n = 1u,                                     // n. inputs
+               unsigned m = 1u,                                     // n. outputs
+               unsigned r = 1u,                                     // n. rows
+               unsigned c = 1u,                                     // n. columns
+               unsigned l = 1u,                                     // n. levels-back
+               unsigned arity = 1u,                                 // basis functions' arity
+               std::vector<kernel<T>> f = kernel_set<T>({"sum"})(), // functions
+               unsigned n_eph = 0u,                                 // number of ephemeral constants
                unsigned seed = dcgp::random_device::next())
         : m_n(n + n_eph), m_m(m), m_r(r), m_c(c), m_l(l), m_f(f), m_e(seed)
     {
@@ -274,7 +276,7 @@ public:
         if (point.size() != this->get_n() - m_eph_val.size()) {
             throw std::invalid_argument("When computing the loss, the point dimension (input) seemed wrong, it was: "
                                         + std::to_string(point.size())
-                                        + " while I expected: " + std::to_string(this->get_n()));
+                                        + " while I expected: " + std::to_string(this->get_n() - m_eph_val.size()));
         }
         if (prediction.size() != this->get_m()) {
             throw std::invalid_argument(
@@ -354,10 +356,10 @@ public:
      *
      * @throw std::invalid_argument if the chromosome is out of bounds or has the wrong size.
      */
-    void set(const std::vector<unsigned> &x)
+    void set(const std::vector<unsigned> &xu)
     {
-        check_chromosome(x);
-        m_x = x;
+        check_cgp_encoding(xu);
+        m_x = xu;
         update_data_structures();
     }
 
@@ -822,27 +824,28 @@ public:
     }
 
 protected:
-    /// Validity of a chromosome
+    /// Validity of the CGP encoding
     /**
-     * Checks if a chromosome (i.e. a sequence of integers) is a valid expression
+     * Checks if a CGP encoding (i.e. a sequence of integers) is a valid expression
      * by verifying its length and the bounds
      *
      * @param[in] x chromosome
      */
-    bool check_chromosome(const std::vector<unsigned> &x) const
+    bool check_cgp_encoding(const std::vector<unsigned> &xu) const
     {
         // Checking for length
-        if (x.size() != m_lb.size()) {
+        if (xu.size() != m_lb.size()) {
             throw std::invalid_argument("Inconsistent chromosome: length of the chromosome is : "
-                                        + std::to_string(x.size())
-                                        + ", while the length of the lower bounds is: " + std::to_string(m_lb.size()));
+                                        + std::to_string(xu.size())
+                                        + ", while it should be: " + std::to_string(m_lb.size()));
         }
         // Checking for bounds on all genes
-        for (auto i = 0u; i < x.size(); ++i) {
-            if ((x[i] > m_ub[i]) || (x[i] < m_lb[i])) {
+        for (auto i = 0u; i < xu.size(); ++i) {
+            if ((xu[i] > m_ub[i]) || (xu[i] < m_lb[i])) {
                 throw std::invalid_argument("Inconsistent chromosome: out of bounds. The component " + std::to_string(i)
-                                            + " of the chromosome is " + std::to_string(i) + " while the bounds are: ["
-                                            + std::to_string(m_lb[i]) + " " + ", " + std::to_string(m_ub[i]) + "]");
+                                            + " of the chromosome is " + std::to_string(xu[i])
+                                            + " while the bounds are: [" + std::to_string(m_lb[i]) + " " + ", "
+                                            + std::to_string(m_ub[i]) + "]");
             }
         }
         return true;
@@ -947,7 +950,7 @@ protected:
         if (parallel > 0u) {
             if (batch_size % parallel != 0) {
                 throw std::invalid_argument("The batch size is: " + std::to_string(batch_size)
-                                            + " and cannot be divided into " + std::to_string(parallel) + "parts.");
+                                            + " and cannot be divided into " + std::to_string(parallel) + " parts.");
             }
             unsigned inner_batch_size = batch_size / parallel;
             // The mutex that will protect read/write access to retval
