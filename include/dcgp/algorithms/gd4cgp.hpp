@@ -37,7 +37,7 @@ public:
      *
      * @throws std::invalid_argument if *lr_min* is not in (0, *lr*)
      */
-    gd4cgp(unsigned max_iter = 1u, double lr = 0.1, double lr_min = 1e-3)
+    gd4cgp(unsigned max_iter = 1u, double lr = 1., double lr_min = 1e-3)
         : m_max_iter(max_iter), m_lr(lr), m_lr_min(lr_min), m_verbosity(0u)
     {
         if (lr_min <= 0.) {
@@ -83,6 +83,9 @@ public:
         }
         // Get out if there is nothing to do.
         if (m_max_iter == 0u) {
+            if (m_verbosity > 0u) {
+                pagmo::print("Exit condition -- maximum number of iteration is zero.", '\n');
+            }
             return pop;
         }
         // ---------------------------------------------------------------------------------------------------------
@@ -94,6 +97,14 @@ public:
         pagmo::vector_double x0(std::move(sel_xf.first)), fit0(std::move(sel_xf.second));
         pagmo::vector_double x1(x0);
         pagmo::vector_double fit1(fit0);
+
+        // Get out if there is nothing to do.
+        if (!std::isfinite(fit0[0])) {
+            if (m_verbosity > 0u) {
+                pagmo::print("Exit condition -- population best is not finite: ", fit0[0], '\n');
+            }
+            return pop;
+        }
 
         // 2 - Gradient Descent iterations
         double lr = m_lr;
@@ -110,7 +121,7 @@ public:
                                      "Gevals:", std::setw(15), "grad norm:", std::setw(15), "lr:", std::setw(15),
                                      "Best:\n");
                     }
-                    log_single_line(iter, prob, fevals0, gevals0, loss_gradient_norm, lr, fit0);
+                    log_single_line(iter-1, prob, fevals0, gevals0, loss_gradient_norm, lr, fit0);
                     ++count;
                 }
             }
@@ -131,7 +142,7 @@ public:
             if (pagmo::detail::less_than_f(fit1[0], fit0[0])) {
                 x0 = x1;
                 fit0 = fit1;
-                lr = lr * 3.;
+                lr = lr * 1.5;
             } else {
                 lr = lr / 4.;
                 x1 = x0;
@@ -226,7 +237,7 @@ private:
     // This prints to screen and logs one single line.
     inline void log_single_line(unsigned iter, const pagmo::problem &prob, unsigned long long fevals0,
                                 unsigned long long gevals0, double loss_gradient_norm, double lr,
-                                vector_double fit0) const
+                                pagmo::vector_double fit0) const
     {
         pagmo::print(std::setw(7), iter, std::setw(15), prob.get_fevals() - fevals0, std::setw(15),
                      prob.get_gevals() - gevals0, std::setw(15), loss_gradient_norm, std::setw(15), lr, std::setw(15),
