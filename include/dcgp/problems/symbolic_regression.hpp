@@ -281,8 +281,12 @@ public:
         for (decltype(m_points[0].size()) i = 0u; i < m_points[0].size(); ++i) {
             symbols.push_back("x" + std::to_string(i));
         }
-        SymEngine::Expression ex(m_cgp(symbols)[0]);
-        pagmo::stream(ss, ex);
+        auto raws = m_cgp(symbols);
+        std::vector<SymEngine::Expression> exs;
+        for (auto const &raw : raws) {
+            exs.emplace_back(raw);
+        }
+        pagmo::stream(ss, exs);
         return ss.str();
     }
 
