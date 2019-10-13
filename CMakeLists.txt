@@ -158,15 +158,17 @@ if(DCGP_BUILD_DCGP)
     message(STATUS "TBB library is: ${TBB_LIBRARIES}")
 
     # Symengine setup
-    find_package(SYMENGINE REQUIRED)
+    find_package(SymEngine REQUIRED) 
     message(STATUS "Symengine library found.")
     message(STATUS "Symengine include dir is: ${SYMENGINE_INCLUDE_DIRS}")
     message(STATUS "Symengine library is: ${SYMENGINE_LIBRARIES}")
+    include_directories(${SYMENGINE_INCLUDE_DIRS})
+
 
     # Setup of the header-only dcgp library.
     add_library(dcgp INTERFACE)
-    target_link_libraries(dcgp INTERFACE Threads::Threads Boost::boost Boost::serialization Eigen3::eigen3 MPFR::MPFR SymEngine::symengine GMP::GMP TBB::tbb)
-    target_link_libraries(dcgp INTERFACE Audi::audi Pagmo::pagmo)
+    target_link_libraries(dcgp INTERFACE Threads::Threads Boost::boost Boost::serialization Eigen3::eigen3 MPFR::MPFR GMP::GMP TBB::tbb)
+    target_link_libraries(dcgp INTERFACE Audi::audi Pagmo::pagmo ${SYMENGINE_LIBRARIES})
 
 
     # This sets up the include directory to be different if we build
@@ -215,7 +217,6 @@ if(DCGP_BUILD_DCGP)
                   "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/FindAudi.cmake"
                   "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/FindEigen3.cmake"
                   "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/FindTBB.cmake"
-                  "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/FindSYMENGINE.cmake" 
                   DESTINATION "lib/cmake/dcgp")
     install(EXPORT dcgp_export NAMESPACE Dcgp:: DESTINATION lib/cmake/dcgp)
     # Take care of versioning.
