@@ -6,6 +6,7 @@
 #include <pagmo/io.hpp>
 #include <pagmo/population.hpp>
 #include <pagmo/types.hpp>
+#include <symengine/expression.h>
 #include <vector>
 
 #include <dcgp/expression.hpp>
@@ -116,16 +117,9 @@ public:
             return m_cache.second;
         } else {
             std::vector<double> retval(1, 0);
-            // The chromosome has a floating point part (the ephemeral constants) and an integer part (the encoded CGP).
-            // 1 - We extract the integer part and represent it as an unsigned vector to set the CGP expression.
-            std::vector<unsigned> xu(x.size() - m_n_eph);
-            std::transform(x.data() + m_n_eph, x.data() + x.size(), xu.begin(),
-                           [](double a) { return boost::numeric_cast<unsigned>(a); });
-            m_cgp.set(xu);
-            // 2 - We set the floating point part as ephemeral constants.
-            std::vector<double> eph_val(x.data(), x.data() + m_n_eph);
-            m_cgp.set_eph_val(eph_val);
-            // 3 - We compute the MSE loss splitting the data in n batches.
+            // Here we set the CGP member from the chromosome
+            set_cgp(x);
+            // And we compute the MSE loss splitting the data in n batches.
             // TODO: make this work also when m_parallel_batches does not divide exactly the data size.
             retval[0] = m_cgp.loss(m_points, m_labels, "MSE", m_parallel_batches);
             return retval;
@@ -245,20 +239,18 @@ public:
 
     /// Human-readable representation of a decision vector.
     /**
+     * A human readable representation of the chromosome is here obtained by calling directly
+     * the expression::operator() assuming as inputs variables names \f$x_1, x_2, ...\f$ and
+     * as ephemeral constants names \f$c_1, c_2, ...\f$
+     *
      * @param[in] x a valid chromosome.
      *
      * @return a string containing the mathematical expression represented by *x*.
      */
     std::string pretty(const pagmo::vector_double &x) const
     {
-        // We need to make a copy of the chromosome as to represents its genes as unsigned
-        std::vector<unsigned> xu(x.size() - m_n_eph);
-        std::transform(x.data() + m_n_eph, x.data() + x.size(), xu.data(),
-                       [](double a) { return boost::numeric_cast<unsigned>(a); });
-        m_cgp.set(xu);
-        // 2 - We set the floating point part as ephemeral constants.
-        std::vector<double> eph_val(x.data(), x.data() + m_n_eph);
-        m_cgp.set_eph_val(eph_val);
+        // Here we set the CGP data member from the chromosome
+        set_cgp(x);
 
         std::ostringstream ss;
         std::vector<std::string> symbols;
@@ -266,6 +258,31 @@ public:
             symbols.push_back("x" + std::to_string(i));
         }
         pagmo::stream(ss, m_cgp(symbols));
+        return ss.str();
+    }
+
+    /// Human-readable representation of a decision vector.
+    /**
+     * A human readable representation of the chromosome is here obtained by using symengine
+     * the expression::operator() assuming as inputs variables names \f$x_1, x_2, ...\f$ and
+     * as ephemeral constants names \f$c_1, c_2, ...\f$
+     *
+     * @param[in] x a valid chromosome.
+     *
+     * @return a string containing the mathematical expression represented by *x*.
+     */
+    std::string prettier(const pagmo::vector_double &x) const
+    {
+        // Here we set the CGP data member from the chromosome
+        set_cgp(x);
+
+        std::ostringstream ss;
+        std::vector<std::string> symbols;
+        for (decltype(m_points[0].size()) i = 0u; i < m_points[0].size(); ++i) {
+            symbols.push_back("x" + std::to_string(i));
+        }
+        SymEngine::Expression ex(m_cgp(symbols)[0]);
+        pagmo::stream(ss, ex);
         return ss.str();
     }
 
@@ -282,7 +299,20 @@ public:
     }
 
 private:
-    inline void sanity_checks(unsigned &n, unsigned &m) const
+    // This setter can be marked const as m_cgp is mutable
+    void set_cgp(const pagmo::vector_double &x) const
+    {
+        // We need to make a copy of the chromosome as to represents its genes as unsigned
+        std::vector<unsigned> xu(x.size() - m_n_eph);
+        std::transform(x.data() + m_n_eph, x.data() + x.size(), xu.data(),
+                       [](double a) { return boost::numeric_cast<unsigned>(a); });
+        m_cgp.set(xu);
+        // 2 - We set the floating point part as ephemeral constants.
+        std::vector<double> eph_val(x.data(), x.data() + m_n_eph);
+        m_cgp.set_eph_val(eph_val);
+    }
+
+    void sanity_checks(unsigned &n, unsigned &m) const
     {
         // 1 - We check that points is not an empty vector.
         if (m_points.size() == 0) {
