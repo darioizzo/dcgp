@@ -19,10 +19,15 @@ int main()
     // We read the data from file
     std::vector<std::vector<double>> X, Y;
     gym::generate_P1(X, Y);
-    // read_data(X, Y, "../../examples/data/symbolic.data");
+
     symbolic_regression udp(X, Y, 1, 20, 21, 2, kernel_set<double>({"sum", "diff", "mul", "pdiv"})(), 1u);
     pagmo::problem prob{udp};
-    pagmo::population pop{prob, 4};
+    pagmo::population pop{prob};
+    for (unsigned i = 0u; i< 4u;++i) {
+        auto x = pop.random_decision_vector();
+        x[0] = 1;
+        pop.push_back(x);
+    }
     dcgp::es4cgp uda(10000, 2u, 1e-8);
     pagmo::algorithm algo{uda};
     algo.set_verbosity(100u);
