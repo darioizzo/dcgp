@@ -29,6 +29,6 @@ int main()
     pop = algo.evolve(pop);
     auto idx = pop.best_idx();
     pagmo::print(pop.get_f()[idx], "\n");
-    pagmo::print(udp.pretty(pop.get_x()[idx]), "\n");
+    pagmo::print(udp.prettier(pop.get_x()[idx]), "\n");
     return false;
 }
