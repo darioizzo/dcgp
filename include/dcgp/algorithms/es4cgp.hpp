@@ -123,7 +123,7 @@ public:
             for (decltype(NP) i = 0u; i < NP; ++i) {
                 // To mutate active chromosomes we use a copy of the cgp of the UDP.
                 cgp.set(best_xu);
-                cgp.mutate_active(m_mut_n + i); // TODO: check if this is good (crop it to some value or create a distribution)
+                cgp.mutate_active(m_mut_n + static_cast<unsigned>(i)); // TODO: check if this is good (crop it to some value or create a distribution)
                 std::vector<unsigned> mutated_x = cgp.get();
                 std::transform(mutated_x.begin(), mutated_x.end(), dvs.data() + i * dim + n_eph,
                                [](unsigned a) { return boost::numeric_cast<double>(a); });
