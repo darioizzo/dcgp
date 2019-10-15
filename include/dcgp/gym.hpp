@@ -38,26 +38,26 @@ multivariate P7 = [](const std::vector<double> &x) { return std::cos(pi * x[0]) 
 // programming." IEEE Transactions on Evolutionary Computation 13.2 (2008): 333-349. Generates data to test symbolic
 // regression on 1D input-output cases.
 multivariate vladi1 = [](const std::vector<double> &x) {
-    return std::exp(-(x[0] - 1) * (x[0] - 1) / (1.2 + (x[1] - 2.5) * (x[1] - 2.5)));
+    return std::exp(-(x[0] - 1.) * (x[0] - 1.) / (1.2 + (x[1] - 2.5) * (x[1] - 2.5)));
 };
 multivariate vladi2 = [](const std::vector<double> &x) {
     return std::exp(-x[0]) * x[0] * x[0] * x[0] * std::cos(x[0]) * std::sin(x[0])
-           * (std::cos(x[0]) * std::sin(x[0]) * std::sin(x[0]) - 1);
+           * (std::cos(x[0]) * std::sin(x[0]) * std::sin(x[0]) - 1.);
 };
 multivariate vladi3 = [](const std::vector<double> &x) { return vladi2(x) * (x[1] - 5.); };
 multivariate vladi4 = [](const std::vector<double> &x) {
     return 10.
-           / (5
-              + std::pow((x[0] - 3), 2) * std::pow((x[1] - 3), 2) * std::pow((x[2] - 3), 2) * std::pow((x[3] - 3), 2)
-                    * std::pow((x[4] - 3), 2));
+           / (5.
+              + std::pow((x[0] - 3.), 2) * std::pow((x[1] - 3.), 2) * std::pow((x[2] - 3.), 2) * std::pow((x[3] - 3.), 2)
+                    * std::pow((x[4] - 3.), 2));
 };
 multivariate vladi5
-    = [](const std::vector<double> &x) { return 30. * (x[0] - 1) * (x[2] - 1) / (x[1] * x[1] * (x[0] - 10.)); };
-multivariate vladi6 = [](const std::vector<double> &x) { return 6 * std::cos(x[0] * std::sin(x[1])); };
+    = [](const std::vector<double> &x) { return 30. * (x[0] - 1.) * (x[2] - 1.) / (x[1] * x[1] * (x[0] - 10.)); };
+multivariate vladi6 = [](const std::vector<double> &x) { return 6. * std::cos(x[0] * std::sin(x[1])); };
 multivariate vladi7
-    = [](const std::vector<double> &x) { return (x[0] - 3) * (x[1] - 3) + 2 * std::sin((x[0] - 4) * (x[1] - 4)); };
+    = [](const std::vector<double> &x) { return (x[0] - 3.) * (x[1] - 3.) + 2 * std::sin((x[0] - 4.) * (x[1] - 4.)); };
 multivariate vladi8 = [](const std::vector<double> &x) {
-    return (std::pow(x[0] - 3, 4) + std::pow(x[1] - 3, 3) - (x[1] - 3)) / (std::pow(x[1] - 2, 4) + 10);
+    return (std::pow(x[0] - 3., 4) + std::pow(x[1] - 3., 3) - (x[1] - 3.)) / (std::pow(x[1] - 2, 4.) + 10.);
 };
 
 void generate_1Ddata(std::vector<std::vector<double>> &points, std::vector<std::vector<double>> &labels, multivariate f,
@@ -66,7 +66,7 @@ void generate_1Ddata(std::vector<std::vector<double>> &points, std::vector<std::
     points.clear();
     labels.clear();
     for (unsigned i = 0u; i < N; ++i) {
-        double x = lb + i / (N - 1) * (ub - lb);
+        double x = lb + (i * (ub - lb)) / (N - 1);
         points.push_back({x});
         labels.push_back({f({x})});
     }
