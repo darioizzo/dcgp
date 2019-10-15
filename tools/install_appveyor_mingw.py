@@ -84,6 +84,21 @@ common_cmake_opts = r'-DCMAKE_PREFIX_PATH=c:\\local ' + \
                     r'-DBoost_SERIALIZATION_LIBRARY_RELEASE=c:\\local\\lib\\libboost_serialization-mgw81-mt-x64-1_70.dll '
 
 ## ------------------------------ INSTALL C/C++ DEPENDENCIES -------------------------------------##
+# Download symengine 0.5.0 https://github.com/symengine/symengine/archive/v0.5.0.zip
+wget(r'https://github.com/symengine/symengine/archive/v0.5.0.zip', 'SymEngine.zip')
+run_command(r'unzip SymEngine.zip', verbose=False)
+# Move to the directory created and make piranha install its headers
+os.chdir('symengine-0.5.0')
+os.makedirs('build')
+os.chdir('build')
+print("Installing SymEngine")
+run_command(
+    r'cmake -G "MinGW Makefiles" .. -DCMAKE_INSTALL_PREFIX=c:\\local, verbose=False)
+run_command(r'mingw32-make install VERBOSE=1', verbose=False)
+os.chdir('../../')
+print("SymEngine sucessfully installed .. continuing")
+
+
 # Download piranha 0.11 https://github.com/bluescarni/piranha/archive/v0.11.zip
 wget(r'https://github.com/bluescarni/piranha/archive/v0.11.zip', 'piranhav11.zip')
 run_command(r'unzip piranhav11.zip', verbose=False)
