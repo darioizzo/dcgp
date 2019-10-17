@@ -330,6 +330,8 @@ public:
     T loss(const std::vector<std::vector<T>> &points, const std::vector<std::vector<T>> &labels,
            const std::string &loss_s, unsigned parallel = 0u) const
     {
+        // A specialization of this method should probably be provided for T = gdual<double>, in which case a vectorized_gdual
+        // should be assembled and used to compute the loss (in which case parallel should always be 0)
         if (points.size() != labels.size()) {
             throw std::invalid_argument("Data and label size mismatch data size is: " + std::to_string(points.size())
                                         + " while label size is: " + std::to_string(labels.size()));

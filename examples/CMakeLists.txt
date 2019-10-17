@@ -7,10 +7,8 @@ MACRO(ADD_EXAMPLE arg1)
     set_property(TARGET ${arg1} PROPERTY CXX_STANDARD_REQUIRED YES)
 ENDMACRO(ADD_EXAMPLE)
 
-# Supervised learning examples
-ADD_EXAMPLE(supervised_learning_koza_quintic)
-ADD_EXAMPLE(supervised_learning_data_set)
-ADD_EXAMPLE(supervised_learning_data_set_udp)
+# Symbolic regression examples
+ADD_EXAMPLE(symbolic_regression_1)
 
 # Solving differential equations examples
 ADD_EXAMPLE(tsoulos_ode1)

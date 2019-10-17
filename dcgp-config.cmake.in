@@ -13,6 +13,7 @@ find_package(Eigen3 REQUIRED)
 find_package(audi REQUIRED)
 find_package(Pagmo REQUIRED)
 find_package(TBB REQUIRED)
+find_package(SymEngine REQUIRED) 
 
 
 #Restore original module path.

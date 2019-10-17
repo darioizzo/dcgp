@@ -18,8 +18,8 @@ namespace dcgp
 class es4cgp
 {
 public:
-    /// Single entry of the log (gen, fevals, best)
-    typedef std::tuple<unsigned, unsigned long long, double> log_line_type;
+    /// Single entry of the log (gen, fevals, best, formula)
+    typedef std::tuple<unsigned, unsigned long long, double, std::string> log_line_type;
     /// The log
     typedef std::vector<log_line_type> log_type;
 
@@ -109,13 +109,12 @@ public:
                 if (gen % m_verbosity == 1u || m_verbosity == 1u) {
                     // Every 50 lines print the column names
                     if (count % 50u == 1u) {
-                        pagmo::print("\n", std::setw(7), "Gen:", std::setw(15), "Fevals:", std::setw(15), "Best:\n");
+                        pagmo::print("\n", std::setw(7), "Gen:", std::setw(15), "Fevals:", std::setw(15),
+                                     "Best:", "\tFormula:\n");
                     }
-                    pagmo::print(std::setw(7), gen - 1, std::setw(15), prob.get_fevals() - fevals0, std::setw(15),
-                                 best_f, '\n');
+                    auto formula = udp_ptr->prettier(best_x);
+                    log_single_line(gen - 1, prob.get_fevals() - fevals0, best_f, formula);
                     ++count;
-                    // Logs
-                    m_log.emplace_back(gen - 1, prob.get_fevals() - fevals0, best_f);
                 }
             }
 
@@ -124,23 +123,19 @@ public:
             for (decltype(NP) i = 0u; i < NP; ++i) {
                 // To mutate active chromosomes we use a copy of the cgp of the UDP.
                 cgp.set(best_xu);
-                cgp.mutate_active(m_mut_n); //TODO: check if this is good
-                //cgp.mutate(m_mut_n + i);
+                cgp.mutate_active(m_mut_n + static_cast<unsigned>(i)); // TODO: check if this is good (crop it to some value or create a distribution)
                 std::vector<unsigned> mutated_x = cgp.get();
                 std::transform(mutated_x.begin(), mutated_x.end(), dvs.data() + i * dim + n_eph,
                                [](unsigned a) { return boost::numeric_cast<double>(a); });
             }
-            // 3 - We compute their fitnesses calling the bfe
+            // 2 - We compute their fitnesses calling the bfe
             fs = m_bfe(prob, dvs);
             // Check if ftol exit condition is met
             if (best_f < m_ftol) {
                 if (m_verbosity > 0u) {
-                    pagmo::print(std::setw(7), gen, std::setw(15), prob.get_fevals() - fevals0, std::setw(15), best_f,
-                                 '\n');
+                    auto formula = udp_ptr->prettier(best_x);
+                    log_single_line(gen, prob.get_fevals() - fevals0, best_f, formula);
                     ++count;
-                    // Logs
-                    m_log.emplace_back(gen, prob.get_fevals() - fevals0, best_f);
-
                     pagmo::print("Exit condition -- ftol < ", m_ftol, "\n");
                 }
                 update_pop(pop, dvs, fs, best_f, best_xu, NP, dim, eph_val);
@@ -151,6 +146,7 @@ public:
             for (decltype(NP) i = 0u; i < NP; ++i) {
                 if (pagmo::detail::less_than_f(fs[i], best_f)) {
                     best_f = fs[i];
+                    std::copy(dvs.data() + i * dim, dvs.data() + (i + 1) * dim, best_x.begin());
                     // best_xu is updated here
                     std::transform(dvs.data() + i * dim + n_eph, dvs.data() + (i + 1) * dim, best_xu.begin(),
                                    [](double a) { return boost::numeric_cast<unsigned>(a); });
@@ -162,12 +158,8 @@ public:
         // At the end, the pagmo::population will contain the best individual together with its best NP-1 mutants.
         // We log the last iteration
         if (m_verbosity > 0u) {
-            pagmo::print(std::setw(7), m_gen, std::setw(15), prob.get_fevals() - fevals0, std::setw(15), best_f, '\n');
-            ++count;
-            // Logs
-            m_log.emplace_back(m_gen, prob.get_fevals() - fevals0, best_f);
-        }
-        if (m_verbosity) {
+            auto formula = udp_ptr->prettier(best_x);
+            log_single_line(m_gen, prob.get_fevals() - fevals0, best_f, formula);
             pagmo::print("Exit condition -- generations = ", m_gen, '\n');
         }
         return pop;
@@ -260,11 +252,19 @@ public:
     }
 
 private:
+    // This prints to screen and logs one single line.
+    void log_single_line(unsigned gen, unsigned long long fevals, double best_f, const std::string &formula) const
+    {
+        pagmo::print(std::setw(7), gen, std::setw(15), fevals, std::setw(15), best_f, "\t",
+                     formula.substr(0, 40) + " ...", '\n');
+        m_log.emplace_back(gen, fevals, best_f, formula);
+    }
+
     // Used to update the population from the dvs, fs used via the bfe. Typically done at the end of the evolve when an
     // exit condition is met.
     void update_pop(pagmo::population &pop, const pagmo::vector_double &dvs, const pagmo::vector_double &fs,
                     double best_f, const std::vector<unsigned> &best_xu, pagmo::vector_double::size_type NP,
-                    pagmo::vector_double::size_type dim, const std::vector<double>& eph_val) const
+                    pagmo::vector_double::size_type dim, const std::vector<double> &eph_val) const
     {
         pagmo::vector_double best_x(dim);
         // First, the latest generation of mutants (if better)
