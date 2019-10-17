@@ -96,7 +96,7 @@ public:
         // A contiguous vector of chromosomes/fitness vectors for pagmo::bfe input\output is allocated here.
         pagmo::vector_double dvs(NP * dim);
         pagmo::vector_double fs(NP * n_obj);
-        // We fill in the chromosomes the ephemeral constant values (they will not change anymore during this evolve)
+        // We fill in the chromosomes the initial ephemeral constant values
         for (decltype(NP) i = 0u; i < NP; ++i) {
             std::copy(eph_val.begin(), eph_val.end(), dvs.data() + dim * i);
         }
@@ -146,6 +146,7 @@ public:
             for (decltype(NP) i = 0u; i < NP; ++i) {
                 if (pagmo::detail::less_than_f(fs[i], best_f)) {
                     best_f = fs[i];
+                    // best_x is updated here
                     std::copy(dvs.data() + i * dim, dvs.data() + (i + 1) * dim, best_x.begin());
                     // best_xu is updated here
                     std::transform(dvs.data() + i * dim + n_eph, dvs.data() + (i + 1) * dim, best_xu.begin(),

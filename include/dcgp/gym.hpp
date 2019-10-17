@@ -22,7 +22,7 @@ multivariate koza_quintic
 // Izzo, D., Biscani, F., & Mereta, A. (2017, April).
 // Differentiable genetic programming.
 // In European Conference on Genetic Programming (pp. 35-51). Springer, Cham.
-multivariate P1 = [](const std::vector<double> &x) { return std::pow(x[0], 5) - 2 * pi * std::pow(x[0], 3) + x[0]; };
+multivariate P1 = [](const std::vector<double> &x) { return std::pow(x[0], 5) - pi * std::pow(x[0], 3) + x[0]; };
 multivariate P2
     = [](const std::vector<double> &x) { return std::pow(x[0], 5) - pi * std::pow(x[0], 3) + 2. * pi / x[0]; };
 multivariate P3
