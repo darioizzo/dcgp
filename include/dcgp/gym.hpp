@@ -22,7 +22,7 @@ multivariate koza_quintic
 // Izzo, D., Biscani, F., & Mereta, A. (2017, April).
 // Differentiable genetic programming.
 // In European Conference on Genetic Programming (pp. 35-51). Springer, Cham.
-multivariate P1 = [](const std::vector<double> &x) { return std::pow(x[0], 5) - 2 * std::pow(x[0], 3) + x[0]; };
+multivariate P1 = [](const std::vector<double> &x) { return std::pow(x[0], 5) - 2 * pi * std::pow(x[0], 3) + x[0]; };
 multivariate P2
     = [](const std::vector<double> &x) { return std::pow(x[0], 5) - pi * std::pow(x[0], 3) + 2. * pi / x[0]; };
 multivariate P3
@@ -48,8 +48,8 @@ multivariate vladi3 = [](const std::vector<double> &x) { return vladi2(x) * (x[1
 multivariate vladi4 = [](const std::vector<double> &x) {
     return 10.
            / (5.
-              + std::pow((x[0] - 3.), 2) * std::pow((x[1] - 3.), 2) * std::pow((x[2] - 3.), 2) * std::pow((x[3] - 3.), 2)
-                    * std::pow((x[4] - 3.), 2));
+              + std::pow((x[0] - 3.), 2) * std::pow((x[1] - 3.), 2) * std::pow((x[2] - 3.), 2)
+                    * std::pow((x[3] - 3.), 2) * std::pow((x[4] - 3.), 2));
 };
 multivariate vladi5
     = [](const std::vector<double> &x) { return 30. * (x[0] - 1.) * (x[2] - 1.) / (x[1] * x[1] * (x[0] - 10.)); };
@@ -74,7 +74,7 @@ void generate_1Ddata(std::vector<std::vector<double>> &points, std::vector<std::
 } // namespace detail
 void generate_koza_quintic(std::vector<std::vector<double>> &points, std::vector<std::vector<double>> &labels)
 {
-    gym::detail::generate_1Ddata(points, labels, detail::koza_quintic, -1, 1, 10);
+    gym::detail::generate_1Ddata(points, labels, detail::koza_quintic, -3., 3., 10);
 }
 void generate_P1(std::vector<std::vector<double>> &points, std::vector<std::vector<double>> &labels)
 {

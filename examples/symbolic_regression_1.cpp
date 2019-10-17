@@ -25,7 +25,7 @@ int main()
 {
     // We use the problem P1 in this example.
     std::vector<std::vector<double>> X, Y;
-    gym::generate_P1(X, Y);
+    gym::generate_koza_quintic(X, Y);
 
     // We instantiate a symbolic regression problem with no ephemeral constants
     symbolic_regression udp(X, Y, 1, 20, 21, 2, kernel_set<double>({"sum", "diff", "mul", "pdiv"})(), 0u);
