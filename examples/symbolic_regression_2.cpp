@@ -36,10 +36,12 @@ int main()
     gym::generate_P1(X, Y);
 
     // We instantiate a symbolic regression problem with one ephemeral constants
-    symbolic_regression udp(X, Y, 1, 15, 16, 2, kernel_set<double>({"sum", "diff", "mul", "pdiv"})(), 2u);
+    symbolic_regression udp(X, Y, 1u, 15u, 16u, 2u, kernel_set<double>({"sum", "diff", "mul", "pdiv"})(), 1u);
 
     // We init a population with four individuals
     pagmo::population pop{udp, 4};
+
+pagmo::print(pagmo::problem{udp});
 
     // We define two different algorithms (one will evolve the model structure
     // (i.e. the integer part of the model encoding), and a second one will act

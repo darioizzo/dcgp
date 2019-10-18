@@ -47,10 +47,10 @@ public:
      * @throws std::invalid_argument if the CGP related parameters (i.e. *r*, *c*, etc...) are malformed.
      */
     symbolic_regression(const std::vector<std::vector<double>> &points, const std::vector<std::vector<double>> &labels,
-                        unsigned r = 1,     // n. rows
-                        unsigned c = 10,    // n. columns
-                        unsigned l = 11,    // n. levels-back
-                        unsigned arity = 2, // basis functions' arity
+                        unsigned r = 1u,     // n. rows
+                        unsigned c = 10u,    // n. columns
+                        unsigned l = 11u,    // n. levels-back
+                        unsigned arity = 2u, // basis functions' arity
                         std::vector<kernel<double>> f
                         = kernel_set<double>({"sum", "diff", "mul", "pdiv"})(), // functions
                         unsigned n_eph = 0u,                                    // number of ephemeral constants
@@ -211,7 +211,7 @@ public:
      */
     pagmo::vector_double::size_type get_nix() const
     {
-        return m_cgp.get_lb().size() - m_n_eph;
+        return m_cgp.get_lb().size();
     }
 
     /// Problem name
@@ -230,8 +230,8 @@ public:
     std::string get_extra_info() const
     {
         std::ostringstream ss;
-        pagmo::stream(ss, "\tInput dimension: ", m_points[0].size(), "\n");
-        pagmo::stream(ss, "\tOutput dimension: ", m_labels[0].size(), "\n");
+        pagmo::stream(ss, "\tData dimension (in): ", m_points[0].size(), "\n");
+        pagmo::stream(ss, "\tData dimension (out): ", m_labels[0].size(), "\n");
         pagmo::stream(ss, "\tData size: ", m_points.size(), "\n");
         pagmo::stream(ss, "\tKernels: ", m_cgp.get_f(), "\n");
         return ss.str();
