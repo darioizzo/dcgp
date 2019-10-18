@@ -115,7 +115,7 @@ BOOST_AUTO_TEST_CASE(trivial_methods_test)
     symbolic_regression udp({{1., 1.}}, {{2., 2.}}, 2, 2, 3, 2);
     BOOST_CHECK_EQUAL(udp.get_bounds().first.size(), udp.get_nix());
     BOOST_CHECK(udp.get_name().find("CGP") != std::string::npos);
-    BOOST_CHECK(udp.get_extra_info().find("Input dimension") != std::string::npos);
+    BOOST_CHECK(udp.get_extra_info().find("Data dimension") != std::string::npos);
     pagmo::vector_double test_x = {0, 1, 1, 0, 0, 0, 2, 0, 2, 2, 0, 2, 4, 3};
     BOOST_CHECK(udp.pretty(test_x).find("[(x0*(x1+x1)), (x0+x0)]") != std::string::npos);
     BOOST_CHECK(udp.prettier(test_x).find("[2*x0*x1, 2*x0]") != std::string::npos);

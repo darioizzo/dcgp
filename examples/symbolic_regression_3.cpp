@@ -6,8 +6,7 @@
 #include <symengine/expression.h>
 #include <vector>
 
-#include <dcgp/algorithms/es4cgp.hpp>
-#include <dcgp/algorithms/gd4cgp.hpp>
+#include <dcgp/algorithms/memetic4cgp.hpp>
 #include <dcgp/gym.hpp>
 #include <dcgp/kernel_set.hpp>
 #include <dcgp/problems/symbolic_regression.hpp>
@@ -36,7 +35,7 @@ int main()
     gym::generate_P1(X, Y);
 
     // We instantiate a symbolic regression problem with one ephemeral constants
-    symbolic_regression udp(X, Y, 1u, 15u, 16u, 2u, kernel_set<double>({"sum", "diff", "mul", "pdiv"})(), 1u);
+    symbolic_regression udp(X, Y, 1u, 15u, 16u, 2u, kernel_set<double>({"sum", "diff", "mul"})(), 1u);
 
     // We init a population with four individuals
     pagmo::population pop{udp, 4};
@@ -45,19 +44,12 @@ int main()
     // (i.e. the integer part of the model encoding), and a second one will act
     // on the model constants (i.e. the ephemeral constants). In other words one algorithm searches for the
     // model expression and the other tunes its parameters.
-    dcgp::es4cgp uda1(10000, 1u, 1e-8);
-    pagmo::algorithm algo_gobal{uda1};
-    algo_gobal.set_verbosity(100u);
+    dcgp::memetic4cgp uda(1000, 1u, 1e-8);
+    pagmo::algorithm algo_memetic{uda};
+    algo_memetic.set_verbosity(10u);
 
-    dcgp::gd4cgp uda2(100, 0.1, 1e-14);
-    pagmo::algorithm algo_local{uda2};
-    algo_local.set_verbosity(1u);
+    pop = algo_memetic.evolve(pop);
 
-    // We evolve the population in a loop, first the formula shape, then the costants and so on....
-    for (unsigned i = 0u; i < 5u; ++i) {
-        pop = algo_gobal.evolve(pop);
-        pop = algo_local.evolve(pop);
-    }
     // We print on screen the best found
     auto idx = pop.best_idx();
     auto prettier = udp.prettier(pop.get_x()[idx]);
