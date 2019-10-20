@@ -177,7 +177,7 @@ BOOST_AUTO_TEST_CASE(hessians_test)
     pagmo::vector_double test_xeph
         = {1.23, 2.34, 0, 0, 2, 1, 0, 1, 1, 2, 3, 0, 3, 1, 1, 6, 0, 0, 4, 1, 2, 1, 1, 1, 9, 5, 2, 3, 3, 0, 5, 0, 8, 11};
     symbolic_regression udp({{1., 0.}}, {{0., 3.}}, 1, 10, 11, 2, basic_set(), 2u, 1u);
-    BOOST_CHECK(udp.hessians(test_xeph) == std::vector<pagmo::vector_double>(1, pagmo::vector_double{2,-1,1}));
+    BOOST_CHECK(udp.hessians(test_xeph) == std::vector<pagmo::vector_double>(1, pagmo::vector_double{2, -1, 1}));
 }
 
 BOOST_AUTO_TEST_CASE(cache_test)
@@ -189,8 +189,21 @@ BOOST_AUTO_TEST_CASE(cache_test)
     gym::generate_koza_quintic(points, labels);
     symbolic_regression udp(points, labels, 2, 2, 3, 2, basic_set(), 5u, 0u);
     pagmo::population pop(udp, 1u);
-    auto f1 = udp.fitness(pop.get_x()[0]);
-    auto g1 = udp.gradient(pop.get_x()[0]);
-    auto f2 = udp.fitness(pop.get_x()[0]);
-    BOOST_CHECK_CLOSE(f1[0], f2[0], 1e-12);
+    // case 1: cache written by gradient
+    {
+        auto f1 = udp.fitness(pop.get_x()[0]);
+        auto g1 = udp.gradient(pop.get_x()[0]);
+        auto f2 = udp.fitness(pop.get_x()[0]);
+        BOOST_CHECK_CLOSE(f1[0], f2[0], 1e-12);
+    }
+    // case 2: cache written by hessians
+    {
+        auto f1 = udp.fitness(pop.get_x()[0]);
+        auto g1 = udp.gradient(pop.get_x()[0]);
+        auto h1 = udp.hessians(pop.get_x()[0]);
+        auto g2 = udp.gradient(pop.get_x()[0]);
+        auto f2 = udp.fitness(pop.get_x()[0]);
+        BOOST_CHECK_CLOSE(f1[0], f2[0], 1e-12);
+        BOOST_CHECK(g1 == g2);
+    }
 }

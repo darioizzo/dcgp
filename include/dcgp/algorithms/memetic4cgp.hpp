@@ -96,7 +96,7 @@ public:
                        [](double a) { return boost::numeric_cast<unsigned>(a); });
         // ... and its continuous part
         auto best_xd = std::vector<double>(best_x.data(), best_x.data() + n_eph);
-        //std::vector<pagmo::problem> probs(NP, prob);
+        // std::vector<pagmo::problem> probs(NP, prob);
 
         // Main loop
         for (decltype(m_gen) gen = 1u; gen <= m_gen; ++gen) {
@@ -131,20 +131,26 @@ public:
             // 2 - Life long learning is here obtained performing a few steps of gradient descent when a second order
             // update rule does not work.
             auto lr = 0.01;
-            //tbb::parallel_for(long(0u), static_cast<long>(NP), [&](long i) {
+            // tbb::parallel_for(long(0u), static_cast<long>(NP), [&](long i) {
             for (decltype(NP) i = 0u; i < NP; ++i) {
-                for (decltype(5u) k = 0u; k < 10u; ++k) {
-                    auto grad = prob.gradient(mutated_x[i]);
-                    auto loss_gradient_norm = std::sqrt(std::inner_product(grad.begin(), grad.end(), grad.begin(), 0.));
-                    // We only do a few steps if the gradient is not zero and finite.
-                    if (loss_gradient_norm > 1e-13 && std::isfinite(loss_gradient_norm)) {
-                        std::transform(
-                            grad.begin(), grad.end(), mutated_x[i].data(), mutated_x[i].data(),
-                            [lr, loss_gradient_norm](double a, double b) { return b - a / loss_gradient_norm * lr; });
-                    } else {
-                        break;
-                    }
-                }
+                //    for (decltype(5u) k = 0u; k < 10u; ++k) {
+                //        auto grad = prob.gradient(mutated_x[i]);
+                //        auto loss_gradient_norm = std::sqrt(std::inner_product(grad.begin(), grad.end(), grad.begin(),
+                //        0.));
+                //        // We only do a few steps if the gradient is not zero and finite.
+                //        if (loss_gradient_norm > 1e-13 && std::isfinite(loss_gradient_norm)) {
+                //            std::transform(
+                //                grad.begin(), grad.end(), mutated_x[i].data(), mutated_x[i].data(),
+                //                [lr, loss_gradient_norm](double a, double b) { return b - a / loss_gradient_norm * lr;
+                //                });
+                //        } else {
+                //            break;
+                //        }
+                //    }
+                //    mutated_f[i] = prob.fitness(mutated_x[i]);
+                auto hess = prob.hessians(mutated_x[i]);
+                auto grad = prob.gradient(mutated_x[i]);
+                mutated_x[i][0] = mutated_x[i][0] - grad[0] / hess[0][0];
                 mutated_f[i] = prob.fitness(mutated_x[i]);
             }
             //});

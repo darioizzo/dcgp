@@ -34,20 +34,18 @@ int main()
     std::vector<std::vector<double>> X, Y;
     gym::generate_P1(X, Y);
 
-    // We instantiate a symbolic regression problem with one ephemeral constants
+    // We instantiate a symbolic regression problem with one only ephemeral constants.
     symbolic_regression udp(X, Y, 1u, 15u, 16u, 2u, kernel_set<double>({"sum", "diff", "mul"})(), 1u);
 
-    // We init a population with four individuals
+    // We init a population with four individuals.
     pagmo::population pop{udp, 4};
 
-    // We define two different algorithms (one will evolve the model structure
-    // (i.e. the integer part of the model encoding), and a second one will act
-    // on the model constants (i.e. the ephemeral constants). In other words one algorithm searches for the
-    // model expression and the other tunes its parameters.
-    dcgp::memetic4cgp uda(1000, 1u, 1e-8);
+    // We instantiate the memetic solver setting 1000 maximum generation and one active mutation (minimum)
+    dcgp::memetic4cgp uda(1000u, 1u, 1e-8);
     pagmo::algorithm algo_memetic{uda};
     algo_memetic.set_verbosity(10u);
 
+    // We solve
     pop = algo_memetic.evolve(pop);
 
     // We print on screen the best found
