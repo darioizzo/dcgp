@@ -136,7 +136,7 @@ public:
             std::transform(grad.begin(), grad.end(), x1.data(), x1.data(),
                            [lr, loss_gradient_norm](double a, double b) { return b - a / loss_gradient_norm * lr; });
             fit1 = prob.fitness(x1);
-            // Adapt the learning rate (or line search parameter).
+            // Adapt the learning rate (or line search parameter). (TODO: use Barzilai-Borwein)
             if (pagmo::detail::less_than_f(fit1[0], fit0[0])) {
                 x0 = x1;
                 fit0 = fit1;

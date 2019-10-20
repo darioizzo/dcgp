@@ -1,6 +1,7 @@
 #ifndef DCGP_MEMETIC4CGP_H
 #define DCGP_MEMETIC4CGP_H
 
+#include <Eigen/Dense>
 #include <pagmo/bfe.hpp>
 #include <pagmo/detail/custom_comparisons.hpp>
 #include <pagmo/io.hpp>
@@ -96,7 +97,12 @@ public:
                        [](double a) { return boost::numeric_cast<unsigned>(a); });
         // ... and its continuous part
         auto best_xd = std::vector<double>(best_x.data(), best_x.data() + n_eph);
-        // std::vector<pagmo::problem> probs(NP, prob);
+        // The hessian will be stored in a square Eigen for inversion
+        Eigen::MatrixXd H = Eigen::MatrixXd::Zero(n_eph, n_eph);
+        // Gradient and Constants will be stored in these column vectors
+        Eigen::MatrixXd G = Eigen::MatrixXd::Zero(n_eph, 1);
+        Eigen::MatrixXd C = Eigen::MatrixXd::Zero(n_eph, 1);
+        auto hs = prob.hessians_sparsity();
 
         // Main loop
         for (decltype(m_gen) gen = 1u; gen <= m_gen; ++gen) {
@@ -148,10 +154,33 @@ public:
                 //        }
                 //    }
                 //    mutated_f[i] = prob.fitness(mutated_x[i]);
-                auto hess = prob.hessians(mutated_x[i]);
-                auto grad = prob.gradient(mutated_x[i]);
-                mutated_x[i][0] = mutated_x[i][0] - grad[0] / hess[0][0];
-                mutated_f[i] = prob.fitness(mutated_x[i]);
+                // If the number of ephemeral constants is 1-3 we apply one step of a Newton Method
+                if (n_eph == 1u) {
+                    auto hess = prob.hessians(mutated_x[i]);
+                    auto grad = prob.gradient(mutated_x[i]);
+                    mutated_x[i][0] = mutated_x[i][0] - grad[0] / hess[0][0];
+                    mutated_f[i] = prob.fitness(mutated_x[i]);
+                } else {
+                    // We compute hessians and gradients stored in the pagmo format
+                    auto hess = prob.hessians(mutated_x[i]);
+                    auto grad = prob.gradient(mutated_x[i]);
+                    // We copy them into the Eigen format
+                    for (decltype(hess.size()) j = 0u; j < hess.size(); ++j) {
+                        H(hs[0][j].first, hs[0][j].second) = hess[0][j];
+                        H(hs[0][j].second, hs[0][j].first) = hess[0][j];
+                    }
+                    for (decltype(n_eph) j = 0u; j < n_eph; ++j) {
+                        C(j, 0) = mutated_x[i][j];
+                        G(j, 0) = grad[j];
+                    }
+                    // One Newton step
+                    C = C - H.inverse() * G;
+                    // We copy back to pagmo format
+                    for (decltype(n_eph) j = 0u; j < n_eph; ++j) {
+                        mutated_x[i][j] = C(j, 0);
+                    }
+                    mutated_f[i] = prob.fitness(mutated_x[i]);
+                }
             }
             //});
 
