@@ -18,11 +18,11 @@
 
 namespace dcgp
 {
-class memetic4cgp
+class mes4cgp
 {
 public:
     /// Single entry of the log (gen, fevals, best, formula)
-    typedef std::tuple<unsigned, unsigned long long, double, std::string> log_line_type;
+    typedef std::tuple<unsigned, unsigned long long, double, pagmo::vector_double, std::string> log_line_type;
     /// The log
     typedef std::vector<log_line_type> log_type;
 
@@ -37,7 +37,7 @@ public:
      *
      * @throws std::invalid_argument if *mut_n* is 0 or *ftol* is negative
      */
-    memetic4cgp(unsigned gen = 1u, unsigned mut_n = 2u, double ftol = 1e-4, unsigned seed = random_device::next())
+    mes4cgp(unsigned gen = 1u, unsigned mut_n = 2u, double ftol = 1e-4, unsigned seed = random_device::next())
         : m_gen(gen), m_mut_n(mut_n), m_ftol(ftol), m_e(seed), m_seed(seed), m_verbosity(0u)
     {
         if (mut_n == 0u) {
@@ -134,31 +134,17 @@ public:
                                [](unsigned a) { return boost::numeric_cast<double>(a); });
             }
 
-            // 2 - Life long learning is here obtained performing a few steps of gradient descent when a second order
-            // update rule does not work.
-            auto lr = 0.01;
-            // tbb::parallel_for(long(0u), static_cast<long>(NP), [&](long i) {
+            // 2 - Life long learning is here obtained performing a single Newton iteration (favouring constants appearing linearly)
+            // and when this does not bring to an improvement, by applying a few gradient descent steps 
             for (decltype(NP) i = 0u; i < NP; ++i) {
-                //    for (decltype(5u) k = 0u; k < 10u; ++k) {
-                //        auto grad = prob.gradient(mutated_x[i]);
-                //        auto loss_gradient_norm = std::sqrt(std::inner_product(grad.begin(), grad.end(), grad.begin(),
-                //        0.));
-                //        // We only do a few steps if the gradient is not zero and finite.
-                //        if (loss_gradient_norm > 1e-13 && std::isfinite(loss_gradient_norm)) {
-                //            std::transform(
-                //                grad.begin(), grad.end(), mutated_x[i].data(), mutated_x[i].data(),
-                //                [lr, loss_gradient_norm](double a, double b) { return b - a / loss_gradient_norm * lr;
-                //                });
-                //        } else {
-                //            break;
-                //        }
-                //    }
-                //    mutated_f[i] = prob.fitness(mutated_x[i]);
-                // If the number of ephemeral constants is 1-3 we apply one step of a Newton Method
+                // For a single ephemeral constants we avoid to call the Eigen machinery as its an overkill. 
+                // I never tested if this is actually also more efficient, but it certainly is more readable.
                 if (n_eph == 1u) {
                     auto hess = prob.hessians(mutated_x[i]);
                     auto grad = prob.gradient(mutated_x[i]);
-                    mutated_x[i][0] = mutated_x[i][0] - grad[0] / hess[0][0];
+                    if (grad[0] != 0.) {
+                        mutated_x[i][0] = mutated_x[i][0] - grad[0] / hess[0][0];
+                    }
                     mutated_f[i] = prob.fitness(mutated_x[i]);
                 } else {
                     // We compute hessians and gradients stored in the pagmo format
@@ -182,22 +168,41 @@ public:
                     mutated_f[i] = prob.fitness(mutated_x[i]);
                 }
             }
-            //});
-
-            // 3 - We check if we found anything better
+            // 3 - We check if we found anything better.
             for (decltype(NP) i = 0u; i < NP; ++i) {
                 if (pagmo::detail::less_than_f(mutated_f[i][0], best_f[0])) {
                     best_f = mutated_f[i];
                     best_x = mutated_x[i];
                     std::copy(mutated_x[i].data() + n_eph, mutated_x[i].data() + mutated_x[i].size(), best_xu.begin());
                 }
+                // else some gradient descent steps
+                //    COPY FROM best_x THE EPH VALUES INTO mutated_x
+                //    for (decltype(5u) k = 0u; k < 10u; ++k) {
+                //        auto grad = prob.gradient(mutated_x[i]);
+                //        auto loss_gradient_norm = std::sqrt(std::inner_product(grad.begin(), grad.end(), grad.begin(),
+                //        0.));
+                //        // We only do a few steps if the gradient is not zero and finite.
+                //        if (loss_gradient_norm > 1e-13 && std::isfinite(loss_gradient_norm)) {
+                //            std::transform(
+                //                grad.begin(), grad.end(), mutated_x[i].data(), mutated_x[i].data(),
+                //                [lr, loss_gradient_norm](double a, double b) { return b - a / loss_gradient_norm * lr;
+                //                });
+                //        } else {
+                //            break;
+                //        }
+                //    }
+                //    mutated_f[i] = prob.fitness(mutated_x[i]);
             }
         }
-
         for (decltype(NP) i = 0u; i < NP; ++i) {
             if (pagmo::detail::less_than_f(best_f[0], pop.get_f()[best_idx][0])) {
                 pop.set_xf(i, best_x, best_f);
             }
+        }
+        if (m_verbosity > 0u) {
+            auto formula = udp_ptr->prettier(best_x);
+            log_single_line(m_gen, prob.get_fevals() - fevals0, best_f[0], formula, best_x, n_eph);
+            pagmo::print("Exit condition -- max generations = ", m_gen, '\n');
         }
         return pop;
     }
@@ -259,7 +264,7 @@ public:
      */
     std::string get_name() const
     {
-        return "ES for CGP: Evolutionary strategy for Cartesian Genetic Programming";
+        return "M-ES for CGP: A memetic Evolutionary Strategy for Cartesian Genetic Programming";
     }
 
     // Extra info
@@ -296,7 +301,7 @@ private:
         std::vector<double> eph_val(best_x.data(), best_x.data() + n_eph);
         pagmo::print(std::setw(7), gen, std::setw(15), fevals, std::setw(15), best_f, "\t", eph_val, "\t",
                      formula.substr(0, 40) + " ...", '\n');
-        m_log.emplace_back(gen, fevals, best_f, formula);
+        m_log.emplace_back(gen, fevals, best_f, eph_val, formula);
     }
 
     unsigned m_gen;

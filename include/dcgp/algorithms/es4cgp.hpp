@@ -19,8 +19,8 @@ namespace dcgp
 class es4cgp
 {
 public:
-    /// Single entry of the log (gen, fevals, best, formula)
-    typedef std::tuple<unsigned, unsigned long long, double, std::string> log_line_type;
+    /// Single entry of the log (gen, fevals, best, constants, formula)
+    typedef std::tuple<unsigned, unsigned long long, double, pagmo::vector_double, std::string> log_line_type;
     /// The log
     typedef std::vector<log_line_type> log_type;
 
@@ -36,9 +36,10 @@ public:
      *
      * @throws std::invalid_argument if *mut_n* is 0 or *ftol* is negative
      */
-    es4cgp(unsigned gen = 1u, unsigned mut_n = 2u, double ftol = 1e-4, bool learn_constants = true,
+    es4cgp(unsigned gen = 1u, unsigned mut_n = 1u, double ftol = 1e-4, bool learn_constants = true,
            unsigned seed = random_device::next())
-        : m_gen(gen), m_mut_n(mut_n), m_ftol(ftol), m_learn_constants(learn_constants), m_e(seed), m_seed(seed), m_verbosity(0u)
+        : m_gen(gen), m_mut_n(mut_n), m_ftol(ftol), m_learn_constants(learn_constants), m_e(seed), m_seed(seed),
+          m_verbosity(0u)
     {
         if (mut_n == 0u) {
             throw std::invalid_argument("The number of active mutations is zero, it must be at least 1.");
@@ -114,10 +115,10 @@ public:
                     // Every 50 lines print the column names
                     if (count % 50u == 1u) {
                         pagmo::print("\n", std::setw(7), "Gen:", std::setw(15), "Fevals:", std::setw(15),
-                                     "Best:", "\tFormula:\n");
+                                     "Best:", "\tConstants", "\tFormula:\n");
                     }
                     auto formula = udp_ptr->prettier(best_x);
-                    log_single_line(gen - 1, prob.get_fevals() - fevals0, best_f, formula);
+                    log_single_line(gen - 1, prob.get_fevals() - fevals0, best_f, best_x, formula, n_eph);
                     ++count;
                 }
             }
@@ -125,13 +126,17 @@ public:
             // 1 - We generate new NP individuals mutating the best and we write on the dvs for pagmo::bfe to evaluate
             // their fitnesses.
             for (decltype(NP) i = 0u; i < NP; ++i) {
-                // We first mutate the integer part
                 cgp.set(best_xu);
-                cgp.mutate_active(m_mut_n
-                                  + static_cast<unsigned>(i)); // TODO: (crop it to some value or create a distribution)
+                // We first mutate the integer part, but we leave an individual
+                // unmutated to allow for eph constants, instead, to be mutated.
+                if (i > 0 && n_eph > 0) {
+                    // TODO: (crop it to some value or create a distribution)
+                    cgp.mutate_active(m_mut_n + static_cast<unsigned>(i));
+                }
                 std::vector<unsigned> mutated_x = cgp.get();
                 std::transform(mutated_x.begin(), mutated_x.end(), dvs.data() + i * dim + n_eph,
                                [](unsigned a) { return boost::numeric_cast<double>(a); });
+
                 // We then mutate the continuous part if requested
                 if (m_learn_constants) {
                     for (decltype(best_xd.size()) j = 0u; j < best_xd.size(); ++j) {
@@ -147,7 +152,7 @@ public:
             if (best_f < m_ftol) {
                 if (m_verbosity > 0u) {
                     auto formula = udp_ptr->prettier(best_x);
-                    log_single_line(gen, prob.get_fevals() - fevals0, best_f, formula);
+                    log_single_line(gen, prob.get_fevals() - fevals0, best_f, best_x, formula, n_eph);
                     ++count;
                     pagmo::print("Exit condition -- ftol < ", m_ftol, "\n");
                 }
@@ -173,7 +178,7 @@ public:
         // We log the last iteration
         if (m_verbosity > 0u) {
             auto formula = udp_ptr->prettier(best_x);
-            log_single_line(m_gen, prob.get_fevals() - fevals0, best_f, formula);
+            log_single_line(m_gen, prob.get_fevals() - fevals0, best_f, best_x, formula, n_eph);
             pagmo::print("Exit condition -- generations = ", m_gen, '\n');
         }
         return pop;
@@ -267,11 +272,13 @@ public:
 
 private:
     // This prints to screen and logs one single line.
-    void log_single_line(unsigned gen, unsigned long long fevals, double best_f, const std::string &formula) const
+    void log_single_line(unsigned gen, unsigned long long fevals, double best_f, pagmo::vector_double &best_x,
+                         const std::string &formula, unsigned n_eph) const
     {
-        pagmo::print(std::setw(7), gen, std::setw(15), fevals, std::setw(15), best_f, "\t",
+        std::vector<double> eph_val(best_x.data(), best_x.data() + n_eph);
+        pagmo::print(std::setw(7), gen, std::setw(15), fevals, std::setw(15), best_f, "\t", eph_val, "\t",
                      formula.substr(0, 40) + " ...", '\n');
-        m_log.emplace_back(gen, fevals, best_f, formula);
+        m_log.emplace_back(gen, fevals, best_f, eph_val, formula);
     }
 
     // Used to update the population from the dvs, fs used via the bfe. Typically done at the end of the evolve when an

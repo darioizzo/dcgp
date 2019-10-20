@@ -6,7 +6,7 @@
 #include <symengine/expression.h>
 #include <vector>
 
-#include <dcgp/algorithms/memetic4cgp.hpp>
+#include <dcgp/algorithms/mes4cgp.hpp>
 #include <dcgp/gym.hpp>
 #include <dcgp/kernel_set.hpp>
 #include <dcgp/problems/symbolic_regression.hpp>
@@ -41,12 +41,12 @@ int main()
     pagmo::population pop{udp, 4};
 
     // We instantiate the memetic solver setting 1000 maximum generation and one active mutation (minimum)
-    dcgp::memetic4cgp uda(1000u, 1u, 1e-8);
-    pagmo::algorithm algo_memetic{uda};
-    algo_memetic.set_verbosity(10u);
+    dcgp::mes4cgp uda(1000u, 1u, 1e-8);
+    pagmo::algorithm algo{uda};
+    algo.set_verbosity(10u);
 
     // We solve
-    pop = algo_memetic.evolve(pop);
+    pop = algo.evolve(pop);
 
     // We print on screen the best found
     auto idx = pop.best_idx();
