@@ -130,20 +130,54 @@ BOOST_AUTO_TEST_CASE(gradient_test)
     symbolic_regression udp(points, labels, 5, 10, 3, 2, basic_set(), 5u, 0u);
     BOOST_CHECK_EQUAL(udp.gradient_sparsity().size(), 5u);
     BOOST_CHECK((udp.gradient_sparsity() == pagmo::sparsity_pattern{{0, 0}, {0, 1}, {0, 2}, {0, 3}, {0, 4}}));
+    // Here we test (a bit arbitrarily) that the gradient points in a direction of decreasing the loss.
     for (unsigned j = 0u; j < 10u; ++j) {
         pagmo::population pop(udp, 1u, 123u + j);
         auto x = pop.get_x()[0];
         auto f1 = udp.fitness(x);
         auto g1 = udp.gradient(x);
-        double loss_gradient_norm
-            = std::sqrt(std::inner_product(g1.begin(), g1.end(), g1.begin(), 0.));
+        double loss_gradient_norm = std::sqrt(std::inner_product(g1.begin(), g1.end(), g1.begin(), 0.));
         for (unsigned i = 0u; i < 5u; ++i) {
             x[i] = x[i] - 1e-8 * g1[i] / loss_gradient_norm;
         }
-        if (std::isfinite(f1[0]) && std::isfinite(loss_gradient_norm) && (loss_gradient_norm !=0.)) {
+        if (std::isfinite(f1[0]) && std::isfinite(loss_gradient_norm) && (loss_gradient_norm != 0.)) {
             BOOST_CHECK(f1[0] - udp.fitness(x)[0] >= 0);
         }
     }
+}
+
+BOOST_AUTO_TEST_CASE(hessians_test)
+{
+    kernel_set<double> basic_set({"sum", "diff", "mul", "div"});
+    std::vector<std::vector<double>> points, labels;
+    gym::generate_koza_quintic(points, labels);
+    // n_eph = 0
+    {
+        symbolic_regression udp(points, labels, 5, 10, 3, 2, basic_set(), 0u, 0u);
+        BOOST_CHECK_EQUAL(udp.hessians_sparsity().size(), 1u);
+        BOOST_CHECK_EQUAL(udp.hessians_sparsity()[0].size(), 0u);
+        BOOST_CHECK((udp.hessians_sparsity() == std::vector<pagmo::sparsity_pattern>{{}}));
+    }
+    // n_eph = 3
+    {
+        symbolic_regression udp(points, labels, 5, 10, 3, 2, basic_set(), 3u, 0u);
+        BOOST_CHECK_EQUAL(udp.hessians_sparsity().size(), 1u);
+        BOOST_CHECK_EQUAL(udp.hessians_sparsity()[0].size(), 6u);
+        BOOST_CHECK((udp.hessians_sparsity()
+                     == std::vector<pagmo::sparsity_pattern>{{{0, 0}, {1, 0}, {1, 1}, {2, 0}, {2, 1}, {2, 2}}}));
+    }
+    // n_eph = 10
+    {
+        symbolic_regression udp(points, labels, 5, 10, 3, 2, basic_set(), 10u, 0u);
+        BOOST_CHECK_EQUAL(udp.hessians_sparsity().size(), 1u);
+        BOOST_CHECK_EQUAL(udp.hessians_sparsity()[0].size(), 55u);
+    }
+    // 2 - We test the numerical value over a simple expression
+    // c1-c2-x, c1+2y
+    pagmo::vector_double test_xeph
+        = {1.23, 2.34, 0, 0, 2, 1, 0, 1, 1, 2, 3, 0, 3, 1, 1, 6, 0, 0, 4, 1, 2, 1, 1, 1, 9, 5, 2, 3, 3, 0, 5, 0, 8, 11};
+    symbolic_regression udp({{1., 0.}}, {{0., 3.}}, 1, 10, 11, 2, basic_set(), 2u, 1u);
+    BOOST_CHECK(udp.hessians(test_xeph) == std::vector<pagmo::vector_double>(1, pagmo::vector_double{2,-1,1}));
 }
 
 BOOST_AUTO_TEST_CASE(cache_test)
