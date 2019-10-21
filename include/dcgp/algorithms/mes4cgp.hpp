@@ -37,7 +37,7 @@ public:
      *
      * @throws std::invalid_argument if *mut_n* is 0 or *ftol* is negative
      */
-    mes4cgp(unsigned gen = 1u, unsigned mut_n = 2u, double ftol = 1e-4, unsigned seed = random_device::next())
+    mes4cgp(unsigned gen = 1u, unsigned mut_n = 1u, double ftol = 1e-4, unsigned seed = random_device::next())
         : m_gen(gen), m_mut_n(mut_n), m_ftol(ftol), m_e(seed), m_seed(seed), m_verbosity(0u)
     {
         if (mut_n == 0u) {
@@ -52,7 +52,6 @@ public:
     pagmo::population evolve(pagmo::population pop) const
     {
         const auto &prob = pop.get_problem();
-        auto dim = prob.get_nx();
         auto n_obj = prob.get_nobj();
         const auto bounds = prob.get_bounds();
         auto NP = pop.size();
@@ -153,7 +152,7 @@ public:
                     auto hess = prob.hessians(mutated_x[i]);
                     auto grad = prob.gradient(mutated_x[i]);
                     // We copy them into the Eigen format
-                    for (decltype(hess.size()) j = 0u; j < hess.size(); ++j) {
+                    for (decltype(hess[0].size()) j = 0u; j < hess[0].size(); ++j) {
                         H(hs[0][j].first, hs[0][j].second) = hess[0][j];
                         H(hs[0][j].second, hs[0][j].first) = hess[0][j];
                     }
