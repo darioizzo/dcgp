@@ -61,12 +61,12 @@ public:
     {
         unsigned n;
         unsigned m;
-        // We check the inputs.
+        // We check the input against obvious sanity criteria.
         sanity_checks(n, m);
-        // We initialize the cgp expression
+        // We initialize the inner cgp expression
         auto seed = random_device::next();
         m_cgp = expression<double>(n, m, m_r, m_c, m_l, m_arity, m_f, m_n_eph, seed);
-        // We initialize the dcgp expression
+        // We initialize the inner dcgp expression
         kernel_set<audi::gdual_d> f_g;
         for (const auto &ker : f) {
             auto name = ker.get_name();
@@ -291,7 +291,7 @@ public:
 
     /// Integer dimension
     /**
-     * It returns the integer dimension of the problem.
+     * Returns the integer dimension of the problem.
      *
      * @return the integer dimension of the problem.
      */
@@ -302,6 +302,8 @@ public:
 
     /// Problem name
     /**
+     * Returns a string containing the problem name.
+     *
      * @return a string containing the problem name
      */
     std::string get_name() const

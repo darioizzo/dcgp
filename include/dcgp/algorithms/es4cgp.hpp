@@ -129,7 +129,7 @@ public:
                 cgp.set(best_xu);
                 // We first mutate the integer part, but we leave an individual
                 // unmutated to allow for eph constants, instead, to be mutated.
-                if (i > 0 && n_eph > 0) {
+                if (i > 0 || n_eph == 0) {
                     // TODO: (crop it to some value or create a distribution)
                     cgp.mutate_active(m_mut_n + static_cast<unsigned>(i));
                 }
@@ -148,17 +148,7 @@ public:
 
             // 3 - We compute the mutants fitnesses calling the bfe
             fs = m_bfe(prob, dvs);
-            // Check if ftol exit condition is met
-            if (best_f < m_ftol) {
-                if (m_verbosity > 0u) {
-                    auto formula = udp_ptr->prettier(best_x);
-                    log_single_line(gen, prob.get_fevals() - fevals0, best_f, best_x, formula, n_eph);
-                    ++count;
-                    pagmo::print("Exit condition -- ftol < ", m_ftol, "\n");
-                }
-                update_pop(pop, dvs, fs, best_f, best_x, NP, dim);
-                return pop;
-            }
+
             // 4 - We reinsert the mutated individuals in the population if their fitness is
             // less than, or equal, to the one from the parent.
             for (decltype(NP) i = 0u; i < NP; ++i) {
@@ -170,6 +160,17 @@ public:
                     std::transform(dvs.data() + i * dim + n_eph, dvs.data() + (i + 1) * dim, best_xu.begin(),
                                    [](double a) { return boost::numeric_cast<unsigned>(a); });
                 }
+            }
+            // Check if ftol exit condition is met
+            if (best_f < m_ftol) {
+                if (m_verbosity > 0u) {
+                    auto formula = udp_ptr->prettier(best_x);
+                    log_single_line(gen, prob.get_fevals() - fevals0, best_f, best_x, formula, n_eph);
+                    ++count;
+                    pagmo::print("Exit condition -- ftol < ", m_ftol, "\n");
+                }
+                update_pop(pop, dvs, fs, best_f, best_x, NP, dim);
+                return pop;
             }
         }
         // Evolution has terminated and we now update into the pagmo::pop.

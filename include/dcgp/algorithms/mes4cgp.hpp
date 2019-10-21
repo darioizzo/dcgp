@@ -89,6 +89,7 @@ public:
         auto n_eph = prob.get_ncx();
         // We get the best chromosome in the population.
         auto best_idx = pop.best_idx();
+        auto worst_idx = pop.worst_idx();
         auto best_x = pop.get_x()[best_idx];
         auto best_f = pop.get_f()[best_idx];
         // And we split it into its integer ...
@@ -134,10 +135,11 @@ public:
                                [](unsigned a) { return boost::numeric_cast<double>(a); });
             }
 
-            // 2 - Life long learning is here obtained performing a single Newton iteration (favouring constants appearing linearly)
-            // and when this does not bring to an improvement, by applying a few gradient descent steps 
+            // 2 - Life long learning is here obtained performing a single Newton iteration (thus favouring constants
+            // appearing linearly) and when this does not bring to an improvement, by applying a few gradient descent
+            // steps
             for (decltype(NP) i = 0u; i < NP; ++i) {
-                // For a single ephemeral constants we avoid to call the Eigen machinery as its an overkill. 
+                // For a single ephemeral constants we avoid to call the Eigen machinery as its an overkill.
                 // I never tested if this is actually also more efficient, but it certainly is more readable.
                 if (n_eph == 1u) {
                     auto hess = prob.hessians(mutated_x[i]);
@@ -159,9 +161,9 @@ public:
                         C(j, 0) = mutated_x[i][j];
                         G(j, 0) = grad[j];
                     }
-                    // One Newton step
+                    // One Newton step (NOTE: here we invert an n_eph x n_eph matrix)
                     C = C - H.inverse() * G;
-                    // We copy back to pagmo format
+                    // We copy back the result into pagmo format
                     for (decltype(n_eph) j = 0u; j < n_eph; ++j) {
                         mutated_x[i][j] = C(j, 0);
                     }
@@ -175,7 +177,7 @@ public:
                     best_x = mutated_x[i];
                     std::copy(mutated_x[i].data() + n_eph, mutated_x[i].data() + mutated_x[i].size(), best_xu.begin());
                 }
-                // else some gradient descent steps
+                // TODO: else some gradient descent steps
                 //    COPY FROM best_x THE EPH VALUES INTO mutated_x
                 //    for (decltype(5u) k = 0u; k < 10u; ++k) {
                 //        auto grad = prob.gradient(mutated_x[i]);
@@ -193,12 +195,21 @@ public:
                 //    }
                 //    mutated_f[i] = prob.fitness(mutated_x[i]);
             }
-        }
-        for (decltype(NP) i = 0u; i < NP; ++i) {
-            if (pagmo::detail::less_than_f(best_f[0], pop.get_f()[best_idx][0])) {
-                pop.set_xf(i, best_x, best_f);
+            // Check if ftol exit condition is met
+            if (pagmo::detail::less_than_f(best_f[0], m_ftol)) {
+                auto formula = udp_ptr->prettier(best_x);
+                log_single_line(gen, prob.get_fevals() - fevals0, best_f[0], formula, best_x, n_eph);
+                if (pagmo::detail::less_than_f(best_f[0], pop.get_f()[best_idx][0])) {
+                    pop.set_xf(worst_idx, best_x, best_f);
+                }
+                pagmo::print("Exit condition -- ftol < ", m_ftol, "\n");
+                return pop;
             }
         }
+        if (pagmo::detail::less_than_f(best_f[0], pop.get_f()[best_idx][0])) {
+            pop.set_xf(worst_idx, best_x, best_f);
+        }
+
         if (m_verbosity > 0u) {
             auto formula = udp_ptr->prettier(best_x);
             log_single_line(m_gen, prob.get_fevals() - fevals0, best_f[0], formula, best_x, n_eph);
@@ -232,15 +243,22 @@ public:
      *
      * Example (verbosity 100):
      * @code{.unparsed}
-     *  Gen:        Fevals:         Best:
-     *     1              0       0.922363
-     *     2              4       0.153203
-     *     3              8       0.125378
-     *     4             12       0.125378
-     *     5             16       0.125378
-     *     6             20       0.125378
+     *   Gen:        Fevals:          Best:    Constants:   Formula:
+     *      0              0        2802.82    [5.35943]    [c1**2] ...
+     *     10             40        948.839    [10.9722]    [x0**2*c1] ...
+     *     20             80        823.816    [8.38173]    [(c1 + x0)*x0**2] ...
+     *     30            120        473.274    [4.48466]    [x0**3*c1] ...
+     *     40            160        338.735    [24.2287]    [-x0 + x0**2*c1 - (c1 + x0*c1) + x0**2] ...
+     *     50            200        107.126    [24.2287]    [x0**2*(-x0 - x0**2 + x0**3)] ...
+     *     60            240        10.2064    [0.844799]   [x0**2*(-(c1 + x0**2) + x0**3)] ...
+     *     70            280        10.2064    [0.844799]   [x0**2*(-(c1 + x0**2) + x0**3)] ...
+     *     80            320         6.3605    [1.03424]    [x0**2*(x0**3*c1 - (c1 + x0**2*c1))] ...
+     *     90            360         6.3605    [1.03424]    [x0**2*(x0**3*c1 - (c1 + x0**2*c1))] ...
+
      * @endcode
-     * Gen is the generation number, Fevals the number of function evaluation used, Best is the best fitness found.
+     * Gen is the generation number, Fevals the number of function evaluation used, Best is the best fitness found,
+     * Constants contains the value of the ephemeral constants and Formula peeks into the prettier expression of the
+     * underlying CGP.
      *
      * @param level verbosity level
      */
@@ -296,7 +314,7 @@ public:
 private:
     // This prints to screen and logs one single line.
     void log_single_line(unsigned gen, unsigned long long fevals, double best_f, const std::string &formula,
-                         const std::vector<double> &best_x, unsigned n_eph) const
+                         const std::vector<double> &best_x, pagmo::vector_double::size_type n_eph) const
     {
         std::vector<double> eph_val(best_x.data(), best_x.data() + n_eph);
         pagmo::print(std::setw(7), gen, std::setw(15), fevals, std::setw(15), best_f, "\t", eph_val, "\t",

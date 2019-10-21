@@ -1,7 +1,4 @@
 #include <boost/algorithm/string.hpp>
-#include <dcgp/algorithms/es4cgp.hpp>
-#include <dcgp/kernel_set.hpp>
-#include <dcgp/problems/symbolic_regression.hpp>
 #include <pagmo/algorithm.hpp>
 #include <pagmo/io.hpp>
 #include <pagmo/population.hpp>
@@ -9,7 +6,10 @@
 #include <symengine/expression.h>
 #include <vector>
 
+#include <dcgp/algorithms/es4cgp.hpp>
 #include <dcgp/gym.hpp>
+#include <dcgp/kernel_set.hpp>
+#include <dcgp/problems/symbolic_regression.hpp>
 
 using namespace dcgp;
 using namespace boost::algorithm;
@@ -19,7 +19,7 @@ using namespace boost::algorithm;
 //
 // This is the easiest case for a symbolic regression task and thus makes it for a perfect entry tutorial.
 //
-// We use the problem P1 from the dcgp::gym, that is x0 - 2*x0**3 + x0**5.
+// We use the classic problem Koza quintic polynomial from the dcgp::gym, that is x0 - 2*x0**3 + x0**5.
 
 int main()
 {
@@ -27,15 +27,16 @@ int main()
     std::vector<std::vector<double>> X, Y;
     gym::generate_koza_quintic(X, Y);
 
-    // We instantiate a symbolic regression problem with no ephemeral constants
-    symbolic_regression udp(X, Y, 1, 20, 21, 2, kernel_set<double>({"sum", "diff", "mul", "pdiv"})(), 0u);
+    // We instantiate a symbolic regression problem with no ephemeral constants.
+    auto n_eph = 0u;
+    symbolic_regression udp(X, Y, 1, 20, 21, 2, kernel_set<double>({"sum", "diff", "mul", "pdiv"})(), n_eph);
 
     // We init a population with four individuals
     pagmo::population pop{udp, 4};
 
     // And we define an evolutionary startegy with 1000 generation and 2
     // active mutations (base)
-    dcgp::es4cgp uda(10000, 2u, 1e-8);
+    dcgp::es4cgp uda(10000, 1u, 1e-8);
     pagmo::algorithm algo{uda};
     algo.set_verbosity(100u);
 
