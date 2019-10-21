@@ -23,7 +23,7 @@ using namespace boost::algorithm;
 
 int main()
 {
-    // We use the problem P1 in this example.
+    // We load the data (using problem koza_quintic from the gym)
     std::vector<std::vector<double>> X, Y;
     gym::generate_koza_quintic(X, Y);
 

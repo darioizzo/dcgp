@@ -281,7 +281,7 @@ public:
 private:
     // This prints to screen and logs one single line.
     void log_single_line(unsigned gen, unsigned long long fevals, double best_f, pagmo::vector_double &best_x,
-                         const std::string &formula, unsigned n_eph) const
+                         const std::string &formula, pagmo::vector_double::size_type n_eph) const
     {
         std::vector<double> eph_val(best_x.data(), best_x.data() + n_eph);
         pagmo::print(std::setw(7), gen, std::setw(15), fevals, std::setw(15), best_f, "\t", eph_val, "\t",

@@ -7,7 +7,6 @@
 #include <vector>
 
 #include <dcgp/algorithms/es4cgp.hpp>
-#include <dcgp/algorithms/gd4cgp.hpp>
 #include <dcgp/gym.hpp>
 #include <dcgp/kernel_set.hpp>
 #include <dcgp/problems/symbolic_regression.hpp>
@@ -31,7 +30,7 @@ using namespace boost::algorithm;
 
 int main()
 {
-    // We use the problem P2 in this example.
+    // We load the data (using problem P1 from the gym)
     std::vector<std::vector<double>> X, Y;
     gym::generate_P1(X, Y);
 

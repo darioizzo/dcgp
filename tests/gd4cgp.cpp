@@ -51,3 +51,18 @@ BOOST_AUTO_TEST_CASE(trivial_methods_test)
     BOOST_CHECK(uda.get_extra_info().find("Minimum learning rate") != std::string::npos);
     BOOST_CHECK_NO_THROW(uda.get_log());
 }
+
+BOOST_AUTO_TEST_CASE(pagmo_integration_test)
+{
+    // Here we test that the uda can be used to construct a pagmo algorithm. And we call one evolution
+    // via pagmo to make sure the interface works.
+    kernel_set<double> basic_set({"sum", "diff", "mul", "div"});
+    std::vector<std::vector<double>> points, labels;
+    gym::generate_koza_quintic(points, labels);
+    gd4cgp uda(10u, 1u, 1e-4);
+    BOOST_CHECK_NO_THROW(pagmo::algorithm{uda});
+    pagmo::algorithm algo(uda);
+    algo.set_verbosity(1u);
+    pagmo::population pop(symbolic_regression(points, labels, 1, 16, 3, 2, basic_set(), 5u, 0u), 4u);
+    pop = algo.evolve(pop);
+}

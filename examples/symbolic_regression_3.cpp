@@ -30,7 +30,7 @@ using namespace boost::algorithm;
 
 int main()
 {
-    // We use the problem P2 in this example.
+    // We load the data (using problem P1 from the gym)
     std::vector<std::vector<double>> X, Y;
     gym::generate_P1(X, Y);
 
