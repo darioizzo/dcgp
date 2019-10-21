@@ -241,7 +241,7 @@ public:
      * - 0: no verbosity
      * - >0: will print and log one line each \p level generations.
      *
-     * Example (verbosity 100):
+     * Example (verbosity 10):
      * @code{.unparsed}
      *   Gen:        Fevals:          Best:    Constants:   Formula:
      *      0              0        2802.82    [5.35943]    [c1**2] ...
@@ -300,10 +300,10 @@ public:
     /// Get log
     /**
      * A log containing relevant quantities monitoring the last call to evolve. Each element of the returned
-     * <tt>std::vector</tt> is a bee_colony::log_line_type containing: Gen, Fevals, Current best, Best as
-     * described in bee_colony::set_verbosity().
+     * <tt>std::vector</tt> is a mes4cgp::log_line_type containing: Gen, Fevals, Current best, Best as
+     * described in mes4cgp::set_verbosity().
      *
-     * @return an <tt> std::vector</tt> of bee_colony::log_line_type containing the logged values Gen, Fevals, Current
+     * @return an <tt> std::vector</tt> of mes4cgp::log_line_type containing the logged values Gen, Fevals, Current
      * best, Best
      */
     const log_type &get_log() const
@@ -329,7 +329,6 @@ private:
     unsigned m_seed;
     unsigned m_verbosity;
     mutable log_type m_log;
-    pagmo::bfe m_bfe;
 };
 } // namespace dcgp
 #endif

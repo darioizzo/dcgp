@@ -115,7 +115,7 @@ public:
                     // Every 50 lines print the column names
                     if (count % 50u == 1u) {
                         pagmo::print("\n", std::setw(7), "Gen:", std::setw(15), "Fevals:", std::setw(15),
-                                     "Best:", "\tConstants", "\tFormula:\n");
+                                     "Best:", "\tConstants:", "\tFormula:\n");
                     }
                     auto formula = udp_ptr->prettier(best_x);
                     log_single_line(gen - 1, prob.get_fevals() - fevals0, best_f, best_x, formula, n_eph);
@@ -210,16 +210,25 @@ public:
      *
      * Example (verbosity 100):
      * @code{.unparsed}
-     *  Gen:        Fevals:         Best:
-     *     1              0       0.922363
-     *     2              4       0.153203
-     *     3              8       0.125378
-     *     4             12       0.125378
-     *     5             16       0.125378
-     *     6             20       0.125378
+     *  Gen:        Fevals:          Best:    Constants:    Formula:
+     *      0              0        4087.68    [3.52114]    [0] ...
+     *    100            400        324.845    [3.61414]    [2*x0**4] ...
+     *    200            800        324.845    [3.61414]    [2*x0**4] ...
+     *    300           1200        165.212    [3.56702]    [x0**2*(-x0 + 2*x0**2)] ...
+     *    400           1600         28.814    [3.45813]    [x0*(-x0 + x0**2*(-x0 + x0**2) - (-x0 +  ...
+     *    500           2000        10.5589    [3.59501]    [x0*(-4*x0 + x0**2*(-x0 + x0**2) + x0**2 ...
+     *    600           2400         2.2459    [3.44443]    [x0*(-x0*c1 + x0**2*(-x0 + x0**2) + x0** ...
+     *    700           2800        2.24378    [3.43364]    [x0*(-x0*c1 + x0**2*(-x0 + x0**2) + x0** ...
+     *    800           3200        2.24378    [3.43364]    [x0*(-x0*c1 + x0**2*(-x0 + x0**2) + x0** ...
+     *    900           3600        2.24378    [3.43364]    [x0*(-x0*c1 + x0**2*(-x0 + x0**2) + x0** ...
+     *   1000           4000        2.24374    [3.43618]    [x0*(-x0*c1 + x0**2*(-x0 + x0**2) + x0** ...
+     *   1100           4400        2.24372    [3.43479]    [x0*(-x0*c1 + x0**2*(-x0 + x0**2) + x0** ...
+     *   1200           4800      0.0697188    [3.35616]    [x0*(x0 + x0**2*(-c1 + x0**2))] ...
+     *   1300           5200      0.0254527    [3.37625]    [x0*(x0 + x0**2*(-c1 + x0**2))] ...
      * @endcode
-     * Gen is the generation number, Fevals the number of function evaluation used, Best is the best fitness found.
-     *
+     * Gen is the generation number, Fevals the number of function evaluation used, Best is the best fitness found,
+     * Constants contains the value of the ephemeral constants and Formula peeks into the prettier expression of the
+     * underlying CGP.
      * @param level verbosity level
      */
     void set_verbosity(unsigned level)
@@ -260,11 +269,9 @@ public:
     /// Get log
     /**
      * A log containing relevant quantities monitoring the last call to evolve. Each element of the returned
-     * <tt>std::vector</tt> is a bee_colony::log_line_type containing: Gen, Fevals, Current best, Best as
-     * described in bee_colony::set_verbosity().
+     * <tt>std::vector</tt> is a es4cgp::log_line_type as described in es4cgp::set_verbosity().
      *
-     * @return an <tt> std::vector</tt> of bee_colony::log_line_type containing the logged values Gen, Fevals, Current
-     * best, Best
+     * @return an <tt> std::vector</tt> of es4cgp::log_line_type containing the logged values.
      */
     const log_type &get_log() const
     {

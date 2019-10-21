@@ -220,11 +220,9 @@ public:
     /// Get log
     /**
      * A log containing relevant quantities monitoring the last call to evolve. Each element of the returned
-     * <tt>std::vector</tt> is a bee_colony::log_line_type containing: Gen, Fevals, Current best, Best as
-     * described in bee_colony::set_verbosity().
+     * <tt>std::vector</tt> is a gd4cgp::log_line_type as described in gd4cgp::set_verbosity().
      *
-     * @return an <tt> std::vector</tt> of bee_colony::log_line_type containing the logged values Gen, Fevals, Current
-     * best, Best
+     * @return an <tt> std::vector</tt> of gd4cgp::log_line_type containing the logged values.
      */
     const log_type &get_log() const
     {
@@ -243,7 +241,6 @@ private:
         m_log.emplace_back(iter - 1, prob.get_fevals() - fevals0, prob.get_gevals() - gevals0, loss_gradient_norm, lr,
                            fit0[0]);
     }
-
     unsigned m_max_iter;
     double m_lr;
     double m_lr_min;
