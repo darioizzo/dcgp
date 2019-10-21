@@ -54,10 +54,11 @@ public:
                         std::vector<kernel<double>> f
                         = kernel_set<double>({"sum", "diff", "mul", "pdiv"})(), // functions
                         unsigned n_eph = 0u,                                    // number of ephemeral constants
+                        bool multi_objective = false,                           // when true the fitness also returns the formula complexity
                         unsigned parallel_batches = 0u                          // number of parallel batches
                         )
         : m_points(points), m_labels(labels), m_r(r), m_c(c), m_l(l), m_arity(arity), m_f(f), m_n_eph(n_eph),
-          m_parallel_batches(parallel_batches)
+          m_multi_objective(multi_objective), m_parallel_batches(parallel_batches)
     {
         unsigned n;
         unsigned m;
@@ -448,6 +449,7 @@ private:
     unsigned m_arity;
     std::vector<kernel<double>> m_f;
     unsigned m_n_eph;
+    bool m_multi_objective;
     unsigned m_parallel_batches;
     // The fact that this is mutable may hamper the performances of the bfe as the thread safetly level
     // of the UDP in pagmo will force copies of the UDP to be made in all threads. This can in principle be
