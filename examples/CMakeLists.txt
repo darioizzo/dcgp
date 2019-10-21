@@ -9,6 +9,10 @@ ENDMACRO(ADD_EXAMPLE)
 
 # Symbolic regression examples
 ADD_EXAMPLE(symbolic_regression_1)
+ADD_EXAMPLE(symbolic_regression_2)
+ADD_EXAMPLE(symbolic_regression_3)
+
+
 
 # Solving differential equations examples
 ADD_EXAMPLE(tsoulos_ode1)

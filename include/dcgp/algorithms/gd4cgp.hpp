@@ -136,7 +136,7 @@ public:
             std::transform(grad.begin(), grad.end(), x1.data(), x1.data(),
                            [lr, loss_gradient_norm](double a, double b) { return b - a / loss_gradient_norm * lr; });
             fit1 = prob.fitness(x1);
-            // Adapt the learning rate (or line search parameter).
+            // Adapt the learning rate (or line search parameter). (TODO: use Barzilai-Borwein)
             if (pagmo::detail::less_than_f(fit1[0], fit0[0])) {
                 x0 = x1;
                 fit0 = fit1;
@@ -169,17 +169,23 @@ public:
      * - 0: no verbosity
      * - >0: will print and log one line each \p level generations.
      *
-     * Example (verbosity 100):
+     * Example (verbosity 1):
      * @code{.unparsed}
-     *  Gen:        Fevals:         Best:
-     *     1              0       0.922363
-     *     2              4       0.153203
-     *     3              8       0.125378
-     *     4             12       0.125378
-     *     5             16       0.125378
-     *     6             20       0.125378
+     *  Iter:        Fevals:        Gevals:     grad norm:            lr:         Best:
+     *      0              0              0              0              1        9349.95
+     *      1              1              1        4180.21            1.5        7390.53
+     *      2              2              2         308.04          0.375        7390.53
+     *      3              3              3         308.04         0.5625        7386.77
+     *      4              4              4        312.186       0.140625        7386.77
+     *      5              5              5        312.186       0.210938        7353.28
+     *      6              6              6        169.472       0.316406        7335.08
+     *      7              7              7        186.938       0.474609        7320.24
+     *      8              8              8        269.803       0.118652        7320.24
+     *      9              9              9        269.803       0.177979        7295.06
+     *     10             10             10        168.844       0.266968        7271.23
      * @endcode
-     * Gen is the generation number, Fevals the number of function evaluation used, Best is the best fitness found.
+     * Gen is the generation number, Fevals the number of function evaluation used, Gevals the number of gradient evaluation used,
+     * lr is the current learning rate, or line search width and Best is the best fitness found.
      *
      * @param level verbosity level
      */
@@ -220,11 +226,9 @@ public:
     /// Get log
     /**
      * A log containing relevant quantities monitoring the last call to evolve. Each element of the returned
-     * <tt>std::vector</tt> is a bee_colony::log_line_type containing: Gen, Fevals, Current best, Best as
-     * described in bee_colony::set_verbosity().
+     * <tt>std::vector</tt> is a gd4cgp::log_line_type as described in gd4cgp::set_verbosity().
      *
-     * @return an <tt> std::vector</tt> of bee_colony::log_line_type containing the logged values Gen, Fevals, Current
-     * best, Best
+     * @return an <tt> std::vector</tt> of gd4cgp::log_line_type containing the logged values.
      */
     const log_type &get_log() const
     {
@@ -243,7 +247,6 @@ private:
         m_log.emplace_back(iter - 1, prob.get_fevals() - fevals0, prob.get_gevals() - gevals0, loss_gradient_norm, lr,
                            fit0[0]);
     }
-
     unsigned m_max_iter;
     double m_lr;
     double m_lr_min;

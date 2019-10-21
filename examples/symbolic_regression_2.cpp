@@ -14,34 +14,38 @@
 using namespace dcgp;
 using namespace boost::algorithm;
 
-// In this first tutorial we show how to find an exact formula for some input data that do not require
-// any real valued constant.
+// In this second tutorial we show how to find a formula for some input data whn we also
+// want to learn some constants.
 //
-// This is the easiest case for a symbolic regression task and thus makes it for a perfect entry tutorial.
+// This case is more generic and interesting than the one treated in the previous tutorial,
+// and can be considered, already, of use in industrial settings.
 //
-// We use the classic problem Koza quintic polynomial from the dcgp::gym, that is x0 - 2*x0**3 + x0**5.
+// NOTE: constants can, in general, be learned via two main techniques
+// 1) evolutionary (common practice in GP)
+// 2) memetic (this is original with dCGP)
+//
+// In this tutorial we follow the evolutionary approach 1). In the next tutorial we will follow a memetic approach 2).
+//
+// We use the problem P1 from the dcgp::gym, that is x**5 - pi*x**3 + x
 
 int main()
 {
-    // We load the data (using problem koza_quintic from the gym)
+    // We load the data (using problem P1 from the gym)
     std::vector<std::vector<double>> X, Y;
-    gym::generate_koza_quintic(X, Y);
+    gym::generate_P1(X, Y);
 
-    // We instantiate a symbolic regression problem with no ephemeral constants.
-    auto n_eph = 0u;
-    symbolic_regression udp(X, Y, 1, 20, 21, 2, kernel_set<double>({"sum", "diff", "mul", "pdiv"})(), n_eph);
+    // We instantiate a symbolic regression problem with one ephemeral constants
+    auto n_eph = 1u;
+    symbolic_regression udp(X, Y, 1u, 15u, 16u, 2u, kernel_set<double>({"sum", "diff", "mul"})(), n_eph);
 
     // We init a population with four individuals
     pagmo::population pop{udp, 4};
 
-    // And we define an evolutionary startegy with 1000 generation and 2
-    // active mutations (base)
-    dcgp::es4cgp uda(10000, 1u, 1e-8);
-    pagmo::algorithm algo{uda};
-    algo.set_verbosity(100u);
-
-    // We evolve the population
-    pop = algo.evolve(pop);
+    // We use an ES startegy also to learn constants
+    dcgp::es4cgp uda1(10000, 1u, 1e-8, true);
+    pagmo::algorithm algo_gobal{uda1};
+    algo_gobal.set_verbosity(100u);
+    pop = algo_gobal.evolve(pop);
 
     // We print on screen the best found
     auto idx = pop.best_idx();
@@ -54,6 +58,5 @@ int main()
     pagmo::print("Pretty Formula: ", udp.pretty(pop.get_x()[idx]), "\n");
     pagmo::print("Prettier Formula: ", prettier, "\n");
     pagmo::print("Expanded Formula: ", SymEngine::expand(SymEngine::Expression(prettier)), "\n");
-
     return false;
 }

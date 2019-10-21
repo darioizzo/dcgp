@@ -47,10 +47,10 @@ public:
      * @throws std::invalid_argument if the CGP related parameters (i.e. *r*, *c*, etc...) are malformed.
      */
     symbolic_regression(const std::vector<std::vector<double>> &points, const std::vector<std::vector<double>> &labels,
-                        unsigned r = 1,     // n. rows
-                        unsigned c = 10,    // n. columns
-                        unsigned l = 11,    // n. levels-back
-                        unsigned arity = 2, // basis functions' arity
+                        unsigned r = 1u,     // n. rows
+                        unsigned c = 10u,    // n. columns
+                        unsigned l = 11u,    // n. levels-back
+                        unsigned arity = 2u, // basis functions' arity
                         std::vector<kernel<double>> f
                         = kernel_set<double>({"sum", "diff", "mul", "pdiv"})(), // functions
                         unsigned n_eph = 0u,                                    // number of ephemeral constants
@@ -61,12 +61,12 @@ public:
     {
         unsigned n;
         unsigned m;
-        // We check the inputs.
+        // We check the input against obvious sanity criteria.
         sanity_checks(n, m);
-        // We initialize the cgp expression
+        // We initialize the inner cgp expression
         auto seed = random_device::next();
         m_cgp = expression<double>(n, m, m_r, m_c, m_l, m_arity, m_f, m_n_eph, seed);
-        // We initialize the dcgp expression
+        // We initialize the inner dcgp expression
         kernel_set<audi::gdual_d> f_g;
         for (const auto &ker : f) {
             auto name = ker.get_name();
@@ -113,8 +113,8 @@ public:
      */
     pagmo::vector_double fitness(const pagmo::vector_double &x) const
     {
-        if (x == m_cache.first) {
-            return m_cache.second;
+        if (x == m_cache_fitness.first) {
+            return m_cache_fitness.second;
         } else {
             std::vector<double> retval(1, 0);
             // Here we set the CGP member from the chromosome
@@ -128,11 +128,12 @@ public:
 
     /// Gradient computation
     /**
-     * Computes the gradient for the continuous part of this UDP
+     * Computes the gradient of the loss with respect to the ephemeral constants (i.e. the continuous part of the
+     * chromosome).
      *
      * @param x the decision vector.
      *
-     * @return the gradient of \p x.
+     * @return the gradient in \p x.
      */
     pagmo::vector_double gradient(const pagmo::vector_double &x) const
     {
@@ -152,16 +153,15 @@ public:
         // 3 - We compute the MSE loss splitting the data in n batches.
         // TODO: make this work also when m_parallel_batches does not divide exactly the data size.
         auto loss = m_dcgp.loss(m_dpoints, m_dlabels, "MSE", m_parallel_batches);
-        // since we have also computed the loss value, we store it in a cache so that fitness can be called and
-        // not cause reavaluation of a cgp.
-        m_cache.first = x;
-        m_cache.second.resize(1);
-        m_cache.second[0] = loss.constant_cf();
+        // Now we extract fitness and gradient and store the values in th caches or in the return value
+        m_cache_fitness.first = x;
+        m_cache_fitness.second.resize(1);
+        m_cache_fitness.second[0] = loss.constant_cf();
         loss.extend_symbol_set(m_deph_symb);
         if (!(loss.get_order() == 0u)) { // this happens when input terminals of the eph constants are inactive
                                          // (gradient is then zero)
             for (decltype(m_n_eph) i = 0u; i < m_n_eph; ++i) {
-                std::vector<double> coeff(m_n_eph, 0.);
+                std::vector<unsigned> coeff(m_n_eph, 0.);
                 coeff[i] = 1.;
                 retval[i] = loss.get_derivative(coeff);
             }
@@ -169,12 +169,13 @@ public:
         return retval;
     }
 
-    /// Sparsity pattern
+    /// Sparsity pattern (gradient)
     /**
-     * Returns the sparsity pattern. The sparsity patter is dense in the continuous part of the chromosome.
-     * We assume all eph constants are in the expression. If not, we deal with a vanishing gradient later.
+     * Returns the sparsity pattern of the gradient. The sparsity patter is dense in the continuous part of the
+     * chromosome. (this is a result of assuming all ephemeral constants are actually in the expression, if not zeros
+     * will be returned)
      *
-     * @return the sparsity pattern.
+     * @return the gradient sparsity pattern.
      */
     pagmo::sparsity_pattern gradient_sparsity() const
     {
@@ -182,6 +183,91 @@ public:
         for (decltype(m_n_eph) i = 0u; i < m_n_eph; ++i) {
             retval.push_back({0u, i});
         }
+        return retval;
+    }
+
+    /// Hessian computation
+    /**
+     * Computes the hessian of the loss with respect to the ephemeral constants (i.e. the continuous part of the
+     * chromosome).
+     *
+     * @param x the decision vector.
+     *
+     * @return the hessian in \p x.
+     */
+    std::vector<pagmo::vector_double> hessians(const pagmo::vector_double &x) const
+    {
+        // The hessian sparsity and dimension
+        auto hs = hessians_sparsity();
+        auto hd = hs[0].size();
+        // Initializing the return value (hessian) to zeros.
+        std::vector<pagmo::vector_double> retval(1, std::vector<double>(hd, 0.));
+        // Initializing the gradient to zeros.
+        m_cache_gradient.first = x;
+        m_cache_gradient.second.clear();
+        m_cache_gradient.second.resize(m_n_eph, 0.);
+
+        // The chromosome has a floating point part (the ephemeral constants) and an integer part (the encoded CGP).
+        // 1 - We extract the integer part and represent it as an unsigned vector to set the CGP expression.
+        std::vector<unsigned> xu(x.size() - m_n_eph);
+        std::transform(x.data() + m_n_eph, x.data() + x.size(), xu.begin(),
+                       [](double a) { return boost::numeric_cast<unsigned>(a); });
+        m_dcgp.set(xu);
+        // 2 - We use the floating point part of the chromosome to set the ephemeral constants values of the dcgp
+        // member.
+        std::vector<audi::gdual_d> eph_val;
+        for (decltype(m_n_eph) i = 0u; i < m_n_eph; ++i) {
+            eph_val.emplace_back(x[i], m_dcgp.get_eph_symb()[i], 2u); // First and second order derivative are needed
+        }
+        m_dcgp.set_eph_val(eph_val);
+        // 3 - We compute the MSE loss and its differentials.
+        auto loss = m_dcgp.loss(m_dpoints, m_dlabels, "MSE", m_parallel_batches);
+        // We make sure all symbols are in so that we get zeros when querying for a variable not in the gdual
+        loss.extend_symbol_set(m_deph_symb);
+
+        // Now we extract fitness, gradient and hessians from the gdual and store the values (retval or cache)
+        m_cache_fitness.first = x;
+        m_cache_fitness.second.resize(1);
+        m_cache_fitness.second[0] = loss.constant_cf();
+        // We compute the gradient and the hessian only if
+        // the loss depends on at least one ephemeral constant.
+        // Otherwise the initialization values will be returned, that is zeros.
+        if (!(loss.get_order() == 0u)) {
+            // gradient (we cache it)
+            for (decltype(m_n_eph) i = 0u; i < m_n_eph; ++i) {
+                std::vector<unsigned> coeff(m_n_eph, 0.);
+                coeff[i] = 1.;
+                m_cache_gradient.second[i] = loss.get_derivative(coeff);
+            }
+            // hessian (we return it)
+            for (decltype(hd) i = 0u; i < hd; ++i) {
+                std::vector<unsigned> coeff(m_n_eph, 0.);
+                coeff[hs[0][i].first] = 1;
+                coeff[hs[0][i].second] += 1;
+                retval[0][i] = loss.get_derivative(coeff);
+            }
+        }
+        return retval;
+    }
+
+    /// Sparsity pattern (hessian)
+    /**
+     * Returns the sparsity pattern of the hessian. The sparsity patter is dense in the continuous part of the
+     * chromosome. (this is a result of assuming all ephemeral constants are actually in the expression, if not zeros
+     * will be returned)
+     *
+     * @return the hessian sparsity pattern.
+     */
+    std::vector<pagmo::sparsity_pattern> hessians_sparsity() const
+    {
+        std::vector<pagmo::sparsity_pattern> retval;
+        pagmo::sparsity_pattern sp;
+        for (decltype(m_n_eph) i = 0u; i < m_n_eph; ++i) {
+            for (decltype(i) j = 0u; j <= i; ++j) {
+                sp.push_back({i, j});
+            }
+        }
+        retval.push_back(std::move(sp));
         return retval;
     }
 
@@ -205,17 +291,19 @@ public:
 
     /// Integer dimension
     /**
-     * It returns the integer dimension of the problem.
+     * Returns the integer dimension of the problem.
      *
      * @return the integer dimension of the problem.
      */
     pagmo::vector_double::size_type get_nix() const
     {
-        return m_cgp.get_lb().size() - m_n_eph;
+        return m_cgp.get_lb().size();
     }
 
     /// Problem name
     /**
+     * Returns a string containing the problem name.
+     *
      * @return a string containing the problem name
      */
     std::string get_name() const
@@ -230,8 +318,8 @@ public:
     std::string get_extra_info() const
     {
         std::ostringstream ss;
-        pagmo::stream(ss, "\tInput dimension: ", m_points[0].size(), "\n");
-        pagmo::stream(ss, "\tOutput dimension: ", m_labels[0].size(), "\n");
+        pagmo::stream(ss, "\tData dimension (in): ", m_points[0].size(), "\n");
+        pagmo::stream(ss, "\tData dimension (out): ", m_labels[0].size(), "\n");
         pagmo::stream(ss, "\tData size: ", m_points.size(), "\n");
         pagmo::stream(ss, "\tKernels: ", m_cgp.get_f(), "\n");
         return ss.str();
@@ -366,7 +454,8 @@ private:
     // avoided, but likely resulting in prepature optimization. (see https://github.com/darioizzo/dcgp/pull/42)
     mutable expression<double> m_cgp;
     mutable expression<gdual_d> m_dcgp;
-    mutable std::pair<pagmo::vector_double, pagmo::vector_double> m_cache;
+    mutable std::pair<pagmo::vector_double, pagmo::vector_double> m_cache_fitness;
+    mutable std::pair<pagmo::vector_double, pagmo::vector_double> m_cache_gradient;
 };
 } // namespace dcgp
 #endif
