@@ -98,10 +98,10 @@ public:
         // ... and its continuous part
         auto best_xd = std::vector<double>(best_x.data(), best_x.data() + n_eph);
         // The hessian will be stored in a square Eigen for inversion
-        Eigen::MatrixXd H = Eigen::MatrixXd::Zero(n_eph, n_eph);
+        Eigen::MatrixXd H = Eigen::MatrixXd::Zero(_(n_eph), _(n_eph));
         // Gradient and Constants will be stored in these column vectors
-        Eigen::MatrixXd G = Eigen::MatrixXd::Zero(n_eph, 1);
-        Eigen::MatrixXd C = Eigen::MatrixXd::Zero(n_eph, 1);
+        Eigen::MatrixXd G = Eigen::MatrixXd::Zero(_(n_eph), 1);
+        Eigen::MatrixXd C = Eigen::MatrixXd::Zero(_(n_eph), 1);
         auto hs = prob.hessians_sparsity();
 
         // Main loop
@@ -153,18 +153,18 @@ public:
                     auto grad = prob.gradient(mutated_x[i]);
                     // We copy them into the Eigen format
                     for (decltype(hess[0].size()) j = 0u; j < hess[0].size(); ++j) {
-                        H(hs[0][j].first, hs[0][j].second) = hess[0][j];
-                        H(hs[0][j].second, hs[0][j].first) = hess[0][j];
+                        H(_(hs[0][j].first), _(hs[0][j].second)) = hess[0][j];
+                        H(_(hs[0][j].second), _(hs[0][j].first)) = hess[0][j];
                     }
                     for (decltype(n_eph) j = 0u; j < n_eph; ++j) {
-                        C(j, 0) = mutated_x[i][j];
-                        G(j, 0) = grad[j];
+                        C(_(j), 0) = mutated_x[i][j];
+                        G(_(j), 0) = grad[j];
                     }
                     // One Newton step (NOTE: here we invert an n_eph x n_eph matrix)
                     C = C - H.inverse() * G;
                     // We copy back the result into pagmo format
                     for (decltype(n_eph) j = 0u; j < n_eph; ++j) {
-                        mutated_x[i][j] = C(j, 0);
+                        mutated_x[i][j] = C(_(j), 0);
                     }
                     mutated_f[i] = prob.fitness(mutated_x[i]);
                 }
@@ -311,6 +311,16 @@ public:
     }
 
 private:
+    // Eigen stores indexes and sizes as signed types, while dCGP (and pagmo)
+    // uses STL containers thus sizes and indexes are unsigned. To
+    // make the conversion as painless as possible this template is provided
+    // allowing, for example, syntax of the type D(_(i),_(j)) to adress an Eigen matrix
+    // when i and j are unsigned
+    template <typename I>
+    static Eigen::DenseIndex _(I n)
+    {
+        return static_cast<Eigen::DenseIndex>(n);
+    }
     // This prints to screen and logs one single line.
     void log_single_line(unsigned gen, unsigned long long fevals, double best_f, const std::string &formula,
                          const std::vector<double> &best_x, pagmo::vector_double::size_type n_eph) const
