@@ -11,6 +11,8 @@ ENDMACRO(ADD_EXAMPLE)
 ADD_EXAMPLE(symbolic_regression_1)
 ADD_EXAMPLE(symbolic_regression_2)
 ADD_EXAMPLE(symbolic_regression_3)
+ADD_EXAMPLE(symbolic_regression_4)
+
 
 
 
