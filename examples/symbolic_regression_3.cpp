@@ -14,7 +14,7 @@
 using namespace dcgp;
 using namespace boost::algorithm;
 
-// In this second tutorial we show how to find an exact formula for some input data where we also
+// In this third tutorial we show how to find a formula for some input data whn we also
 // want to learn some constants.
 //
 // This case is more generic and interesting than the one treated in the previous tutorial,
@@ -22,11 +22,11 @@ using namespace boost::algorithm;
 //
 // NOTE: constants can, in general, be learned via two main techniques
 // 1) evolutionary (common practice in GP)
-// 2) 'backpropagation' (this is original with dCGP)
+// 2) memetic (this is original with dCGP)
 //
-// In this tutorial we use 2)
+// In this tutorial we follow the memetic approach 2). 
 //
-// We use the problem P2 from the dcgp::gym, that is x**5 - pi*x**3 + 2 pi / x
+// We use the problem P1 from the dcgp::gym, that is x**5 - pi*x**3 + x
 
 int main()
 {

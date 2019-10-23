@@ -101,7 +101,7 @@ public:
                     // Every 50 lines print the column names
                     if (count % 50u == 1u) {
                         pagmo::print("\n", std::setw(7), "Gen:", std::setw(15), "Fevals:", std::setw(15),
-                                     "Best loss:", std::setw(17), "Ndf size\n");
+                                     "Best loss:", std::setw(17), "Ndf size:\n");
                     }
                     log_single_line(gen - 1, prob.get_fevals() - fevals0, pop);
                     ++count;
@@ -152,7 +152,7 @@ public:
                         mutated_x[i][0] = mutated_x[i][0] - grad[0] / hess[0][0];
                         // We use prob to evaluate the fitness so its feval counter is increased.
                         auto f = prob.fitness(mutated_x[i]);
-                        // Diversity mechanism.
+                        // Diversity mechanism. If the fitness is already present we do not insert the individual.
                         // Do I need this copy? @bluescarni? Can I use the get in the find directly? its a ref I think
                         // so yes in theory....
                         auto fs = popnew.get_f();
