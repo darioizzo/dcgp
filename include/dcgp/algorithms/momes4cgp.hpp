@@ -22,8 +22,8 @@ namespace dcgp
 class momes4cgp
 {
 public:
-    /// Single entry of the log (gen, fevals, best loss, best complexity)
-    typedef std::tuple<unsigned, unsigned long long, double, double> log_line_type;
+    /// Single entry of the log (gen, fevals, best loss, ndf size)
+    typedef std::tuple<unsigned, unsigned long long, double, unsigned long long> log_line_type;
     /// The log
     typedef std::vector<log_line_type> log_type;
 
@@ -101,7 +101,7 @@ public:
                     // Every 50 lines print the column names
                     if (count % 50u == 1u) {
                         pagmo::print("\n", std::setw(7), "Gen:", std::setw(15), "Fevals:", std::setw(15),
-                                     "Best loss:", std::setw(17), "Best Complexity\n");
+                                     "Best loss:", std::setw(17), "Ndf size\n");
                     }
                     log_single_line(gen - 1, prob.get_fevals() - fevals0, pop);
                     ++count;
@@ -140,8 +140,8 @@ public:
                                [](unsigned a) { return boost::numeric_cast<double>(a); });
             }
 
-            // 2 - Life long learning (i.e. touching the continuous part) is  obtained performing a single Newton iteration 
-            // (thus favouring constants appearing linearly)
+            // 2 - Life long learning (i.e. touching the continuous part) is  obtained performing a single Newton
+            // iteration (thus favouring constants appearing linearly)
             for (decltype(NP) i = 0u; i < NP; ++i) {
                 // For a single ephemeral constants we avoid to call the Eigen machinery as its an overkill.
                 // I never tested if this is actually also more efficient, but it certainly is more readable.
@@ -150,9 +150,15 @@ public:
                     auto grad = prob.gradient(mutated_x[i]);
                     if (grad[0] != 0.) {
                         mutated_x[i][0] = mutated_x[i][0] - grad[0] / hess[0][0];
-                        // We use prob to evaluate the fitness so its feval counter is increased
+                        // We use prob to evaluate the fitness so its feval counter is increased.
                         auto f = prob.fitness(mutated_x[i]);
-                        popnew.push_back(mutated_x[i], f);
+                        // Diversity mechanism.
+                        // Do I need this copy? @bluescarni? Can I use the get in the find directly? its a ref I think
+                        // so yes in theory....
+                        auto fs = popnew.get_f();
+                        if (std::find(fs.begin(), fs.end(), f) == fs.end() && std::isfinite(f[0])) {
+                            popnew.push_back(mutated_x[i], f);
+                        }
                     }
                 } else {
                     // TODO IMPORTANT: guard against non invertible Hessians (for exmaple when an eph constant is not
@@ -300,9 +306,10 @@ private:
     void log_single_line(unsigned gen, unsigned long long fevals, const pagmo::population &pop) const
     {
         pagmo::vector_double ideal_point = pagmo::ideal(pop.get_f());
-        pagmo::print(std::setw(7), gen, std::setw(15), fevals, std::setw(15), ideal_point[0], std::setw(17),
-                     ideal_point[1], '\n');
-        m_log.emplace_back(gen, fevals, ideal_point[0], ideal_point[1]);
+        auto ndf_size = pagmo::non_dominated_front_2d(pop.get_f()).size();
+        pagmo::print(std::setw(7), gen, std::setw(15), fevals, std::setw(15), ideal_point[0], std::setw(17), ndf_size,
+                     '\n');
+        m_log.emplace_back(gen, fevals, ideal_point[0], ndf_size);
     }
 
     unsigned m_gen;

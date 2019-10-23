@@ -3,6 +3,7 @@
 #include <pagmo/io.hpp>
 #include <pagmo/population.hpp>
 #include <pagmo/problem.hpp>
+#include <pagmo/utils/multi_objective.hpp>
 #include <symengine/expression.h>
 #include <vector>
 
@@ -36,10 +37,10 @@ int main()
 
     // We instantiate a symbolic regression problem with one only ephemeral constants.
     auto n_eph = 1u;
-    symbolic_regression udp(X, Y, 1u, 15u, 16u, 2u, kernel_set<double>({"sum", "diff", "mul"})(), n_eph, true);
+    symbolic_regression udp(X, Y, 1u, 100, 101, 2u, kernel_set<double>({"sum", "diff", "mul", "sin", "cos"})(), n_eph, true);
 
     // We init a population with four individuals.
-    pagmo::population pop{udp, 20};
+    pagmo::population pop{udp, 100};
 
     // We instantiate the memetic solver setting 1000 maximum generation and one active mutation (minimum)
     dcgp::momes4cgp uda{100, 4};
@@ -48,17 +49,16 @@ int main()
 
     // We solve
     pop = algo.evolve(pop);
+    pagmo::print("\n");
+    // We print on screen the non dominated front
+    auto ndf = pagmo::non_dominated_front_2d(pop.get_f());
+    for (decltype(ndf.size()) i = 0u; i < ndf.size(); ++i) {
+        auto idx = ndf[i];
+        auto prettier = udp.prettier(pop.get_x()[idx]);
+        trim_left_if(prettier, is_any_of("["));
+        trim_right_if(prettier, is_any_of("]"));
+        pagmo::print("Loss: ", pop.get_f()[idx][0], std::setw(15), "Complexity: ", pop.get_f()[idx][1], std::setw(10), "Formula:", prettier,"\n");
+    }
 
-    // We print on screen the best found
-    //auto idx = pop.best_idx();
-    //auto prettier = udp.prettier(pop.get_x()[idx]);
-    //trim_left_if(prettier, is_any_of("["));
-    //trim_right_if(prettier, is_any_of("]"));
-//
-    //pagmo::print("\nBest fitness: ", pop.get_f()[idx], "\n");
-    //pagmo::print("Chromosome: ", pop.get_x()[idx], "\n");
-    //pagmo::print("Pretty Formula: ", udp.pretty(pop.get_x()[idx]), "\n");
-    //pagmo::print("Prettier Formula: ", prettier, "\n");
-    //pagmo::print("Expanded Formula: ", SymEngine::expand(SymEngine::Expression(prettier)), "\n");
     return false;
 }
