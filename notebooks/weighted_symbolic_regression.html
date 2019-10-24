@@ -3,12 +3,20 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Weighted dCGP for a symbolic regression task &#8212; dCGP documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
@@ -23,7 +31,8 @@
     <link rel="prev" title="Solving differential equations with dCGP" href="solving_odes.html" />
 <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto|Comfortaa|Space+Mono">
 
-  </head><body>
+  </head>
+  <body>
 
   <div id="navbar" class="navbar navbar-inverse navbar-default navbar-fixed-top">
     <div class="container">
@@ -36,7 +45,7 @@
         </button>
         <a class="navbar-brand" href="../index.html">
           dcgp</a>
-        <span class="navbar-text navbar-version pull-left"><b>1.2</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>1.3</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -74,13 +83,8 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">C++ examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/cpp_koza_quintic.html">Finding the Koza quintic polynomial</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/cpp_supervised_learning.html">Fitting a data set with an expression</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/cpp_tsoulos_ode1.html">Solving the ODE1 problem from Tsoulos</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/cpp_tsoulos_nlode3.html">Solving the NLODE3 problem from Tsoulos</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/cpp_hamiltonian_spring_mass.html">Finding the prime integral for a spring mass system</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/cpp_hamiltonian_spring_mass_lipson.html">Finding the prime integral for a spring mass system using Lipson method</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/cpp_kepler_first_integral.html">Search for first integrals of Kepler’s problem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/index.html#symbolic-regression">Symbolic Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/index.html#other-applications">Other Applications</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="../tutorials/index.html#python-examples">Python examples</a><ul class="current">
@@ -183,18 +187,18 @@ div.nblast {
 
 /* input prompt */
 div.nbinput div.prompt pre {
-    color: #303F9F;
+    color: #307FC1;
 }
 
 /* output prompt */
 div.nboutput div.prompt pre {
-    color: #D84315;
+    color: #BF5B3D;
 }
 
 /* all prompts */
 div.nbinput div.prompt,
 div.nboutput div.prompt {
-    min-width: 9ex;
+    min-width: 7ex;
     padding-top: 0.4em;
     padding-right: 0.4em;
     text-align: right;
@@ -234,9 +238,9 @@ div.nboutput div.output_area {
 
 /* input area */
 div.nbinput div.input_area {
-    border: 1px solid #cfcfcf;
+    border: 1px solid #e0e0e0;
     border-radius: 2px;
-    background: #f7f7f7;
+    background: #f5f5f5;
 }
 
 /* override MathJax center alignment in output cells */
@@ -244,7 +248,7 @@ div.nboutput div[class*=MathJax] {
     text-align: left !important;
 }
 
-/* override sphinx.ext.pngmath center alignment in output cells */
+/* override sphinx.ext.imgmath center alignment in output cells */
 div.nboutput div.math p {
     text-align: left;
 }
@@ -293,15 +297,48 @@ div.nboutput div.output_area.stderr {
 
 .ansi-bold { font-weight: bold; }
 .ansi-underline { text-decoration: underline; }
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+div.rendered_html th {
+  font-weight: bold;
+}
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
 </style>
 <div class="section" id="Weighted-dCGP-for-a-symbolic-regression-task">
 <h1>Weighted dCGP for a symbolic regression task<a class="headerlink" href="#Weighted-dCGP-for-a-symbolic-regression-task" title="Permalink to this headline">¶</a></h1>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [1]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">pyaudi</span> <span class="kn">import</span> <span class="n">gdual_vdouble</span> <span class="k">as</span> <span class="n">gdual</span>
 <span class="kn">from</span> <span class="nn">dcgpy</span> <span class="kn">import</span> <span class="n">expression_weighted_gdual_vdouble</span> <span class="k">as</span> <span class="n">expression</span>
 <span class="kn">from</span> <span class="nn">dcgpy</span> <span class="kn">import</span> <span class="n">kernel_set_gdual_vdouble</span> <span class="k">as</span> <span class="n">kernel_set</span>
@@ -314,13 +351,12 @@ div.nboutput div.output_area.stderr {
 </div>
 </div>
 <div class="section" id="The-ES-(1+)-algorithm">
-<h2>The ES-(1+<span class="math notranslate nohighlight">\(\lambda\)</span>) algorithm<a class="headerlink" href="#The-ES-(1+)-algorithm" title="Permalink to this headline">¶</a></h2>
+<h2>The ES-(1+<span class="math">\(\lambda\)</span>) algorithm<a class="headerlink" href="#The-ES-(1+)-algorithm" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [2]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="k">def</span> <span class="nf">run_experiment</span><span class="p">(</span><span class="n">dCGP</span><span class="p">,</span> <span class="n">offsprings</span><span class="p">,</span> <span class="n">max_gen</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">yt</span><span class="p">,</span> <span class="n">newtonParams</span><span class="p">,</span> <span class="n">screen_output</span><span class="p">):</span>
     <span class="c1"># The offsprings chromosome, fitness and weights</span>
     <span class="n">chromosome</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">offsprings</span>
@@ -360,19 +396,18 @@ div.nboutput div.output_area.stderr {
 </div>
 <div class="section" id="The-test-problems">
 <h2>The test problems<a class="headerlink" href="#The-test-problems" title="Permalink to this headline">¶</a></h2>
-<p>P1: <span class="math notranslate nohighlight">\(x^5 - \pi x^3 + x\)</span></p>
-<p>P2: <span class="math notranslate nohighlight">\(x^5 - \pi x^3 + \frac{2\pi}x\)</span></p>
-<p>P3: <span class="math notranslate nohighlight">\(\frac{e x^5 + x^3}{x + 1}\)</span></p>
-<p>P4: <span class="math notranslate nohighlight">\(\sin(\pi x) + \frac 1x\)</span></p>
-<p>P5: <span class="math notranslate nohighlight">\(e x^5 - \pi x^3 + x\)</span></p>
-<p>P6: <span class="math notranslate nohighlight">\(\frac{e x^2-1}{\pi (x + 2)}\)</span></p>
-<p>P7: <span class="math notranslate nohighlight">\(\sin(e x) + \cos(\pi x)\)</span></p>
+<p>P1: <span class="math">\(x^5 - \pi x^3 + x\)</span></p>
+<p>P2: <span class="math">\(x^5 - \pi x^3 + \frac{2\pi}x\)</span></p>
+<p>P3: <span class="math">\(\frac{e x^5 + x^3}{x + 1}\)</span></p>
+<p>P4: <span class="math">\(\sin(\pi x) + \frac 1x\)</span></p>
+<p>P5: <span class="math">\(e x^5 - \pi x^3 + x\)</span></p>
+<p>P6: <span class="math">\(\frac{e x^2-1}{\pi (x + 2)}\)</span></p>
+<p>P7: <span class="math">\(\sin(e x) + \cos(\pi x)\)</span></p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [3]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="c1"># The following functions create the target values for a gridded input x for different test problems</span>
 <span class="k">def</span> <span class="nf">data_P1</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">x</span><span class="o">**</span><span class="mi">5</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">x</span><span class="o">**</span><span class="mi">3</span> <span class="o">+</span> <span class="n">x</span>
@@ -397,11 +432,10 @@ div.nboutput div.output_area.stderr {
 <div class="section" id="The-error-function">
 <h2>The error function<a class="headerlink" href="#The-error-function" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [4]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="c1"># This is used to sum over the component of a vectorized coefficient, accounting for the fact that if its dimension</span>
 <span class="c1"># is 1, then it could represent [a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a ...] with [a]</span>
 <span class="k">def</span> <span class="nf">collapse_vectorized_coefficient</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
@@ -422,11 +456,10 @@ div.nboutput div.output_area.stderr {
 <div class="section" id="Newton’s-method">
 <h2>Newton’s method<a class="headerlink" href="#Newton’s-method" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [5]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="c1"># Newton&#39;s method for minimizing the error function f w.r.t. the weights of the dCGP expression.</span>
 <span class="c1"># We take a specified amount of steps, each by choosing randomly 2 or 3 weights</span>
 <span class="k">def</span> <span class="nf">newton</span><span class="p">(</span><span class="n">ex</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">yt</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
@@ -513,13 +546,12 @@ div.nboutput div.output_area.stderr {
 </div>
 </div>
 <div class="section" id="Problem-P1:-">
-<h2>Problem P1: <span class="math notranslate nohighlight">\(x^5 - \pi x^3 + x\)</span><a class="headerlink" href="#Problem-P1:-" title="Permalink to this headline">¶</a></h2>
+<h2>Problem P1: <span class="math">\(x^5 - \pi x^3 + x\)</span><a class="headerlink" href="#Problem-P1:-" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [6]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">gdual</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 <span class="n">yt</span> <span class="o">=</span> <span class="n">data_P1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
@@ -527,11 +559,10 @@ div.nboutput div.output_area.stderr {
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [ ]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="c1"># We run nexp experiments and accumulate statistic for the ERT</span>
 <span class="n">nexp</span> <span class="o">=</span> <span class="mi">100</span>
 <span class="n">offsprings</span> <span class="o">=</span> <span class="mi">4</span>
@@ -557,11 +588,10 @@ div.nboutput div.output_area.stderr {
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [ ]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="n">mean_gen</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="o">&lt;</span><span class="p">(</span><span class="n">max_gen</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="o">*</span> <span class="n">newtonParams</span><span class="p">[</span><span class="s1">&#39;steps&#39;</span><span class="p">]</span>
 <span class="k">print</span><span class="p">(</span><span class="s2">&quot;ERT Expected run time = avg. number of dCGP evaluations needed: &quot;</span><span class="p">,</span> <span class="n">mean_gen</span> <span class="o">*</span> <span class="n">offsprings</span><span class="p">)</span>
 </pre></div>
@@ -569,13 +599,12 @@ div.nboutput div.output_area.stderr {
 </div>
 </div>
 <div class="section" id="Problem-P2:-">
-<h2>Problem P2: <span class="math notranslate nohighlight">\(x^5 - \pi x^3 + \frac{2\pi}x\)</span><a class="headerlink" href="#Problem-P2:-" title="Permalink to this headline">¶</a></h2>
+<h2>Problem P2: <span class="math">\(x^5 - \pi x^3 + \frac{2\pi}x\)</span><a class="headerlink" href="#Problem-P2:-" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [ ]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span> <span class="c1"># we include points close to zero here to favour learning of 1/x</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">gdual</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 <span class="n">yt</span> <span class="o">=</span> <span class="n">data_P2</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
@@ -583,11 +612,10 @@ div.nboutput div.output_area.stderr {
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [ ]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="c1"># We run nexp experiments and accumulate statistic for the ERT</span>
 <span class="n">nexp</span> <span class="o">=</span> <span class="mi">100</span>
 <span class="n">offsprings</span> <span class="o">=</span> <span class="mi">4</span>
@@ -614,13 +642,12 @@ div.nboutput div.output_area.stderr {
 </div>
 </div>
 <div class="section" id="Problem-P3:-">
-<h2>Problem P3: <span class="math notranslate nohighlight">\(\frac{e x^5 + x^3}{x + 1}\)</span><a class="headerlink" href="#Problem-P3:-" title="Permalink to this headline">¶</a></h2>
+<h2>Problem P3: <span class="math">\(\frac{e x^5 + x^3}{x + 1}\)</span><a class="headerlink" href="#Problem-P3:-" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [367]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[367]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">0.9</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">gdual</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 <span class="n">yt</span> <span class="o">=</span> <span class="n">data_P3</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
@@ -628,11 +655,10 @@ div.nboutput div.output_area.stderr {
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [ ]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="c1"># We run nexp experiments and accumulate statistic for the ERT</span>
 <span class="n">nexp</span> <span class="o">=</span> <span class="mi">100</span>
 <span class="n">offsprings</span> <span class="o">=</span> <span class="mi">4</span>
@@ -659,13 +685,12 @@ div.nboutput div.output_area.stderr {
 </div>
 </div>
 <div class="section" id="Problem-P4:-">
-<h2>Problem P4: <span class="math notranslate nohighlight">\(\sin(\pi x) + \frac 1x\)</span><a class="headerlink" href="#Problem-P4:-" title="Permalink to this headline">¶</a></h2>
+<h2>Problem P4: <span class="math">\(\sin(\pi x) + \frac 1x\)</span><a class="headerlink" href="#Problem-P4:-" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [ ]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">gdual</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 <span class="n">yt</span> <span class="o">=</span> <span class="n">data_P4</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
@@ -673,11 +698,10 @@ div.nboutput div.output_area.stderr {
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [ ]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="c1"># We run nexp experiments and accumulate statistic for the ERT</span>
 <span class="n">nexp</span> <span class="o">=</span> <span class="mi">100</span>
 <span class="n">offsprings</span> <span class="o">=</span> <span class="mi">4</span>
@@ -704,13 +728,12 @@ div.nboutput div.output_area.stderr {
 </div>
 </div>
 <div class="section" id="Problem-P5:-">
-<h2>Problem P5: <span class="math notranslate nohighlight">\(ex^5 - \pi x^3 + x\)</span><a class="headerlink" href="#Problem-P5:-" title="Permalink to this headline">¶</a></h2>
+<h2>Problem P5: <span class="math">\(ex^5 - \pi x^3 + x\)</span><a class="headerlink" href="#Problem-P5:-" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [6]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">gdual</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 <span class="n">yt</span> <span class="o">=</span> <span class="n">data_P5</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
@@ -718,11 +741,10 @@ div.nboutput div.output_area.stderr {
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [7]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="c1"># We run nexp experiments and accumulate statistic for the ERT</span>
 <span class="n">nexp</span> <span class="o">=</span> <span class="mi">100</span>
 <span class="n">offsprings</span> <span class="o">=</span> <span class="mi">4</span>
@@ -764,7 +786,7 @@ restart:         gen:    expression:
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
-<div class="stderr output_area docutils container">
+<div class="output_area stderr docutils container">
 <div class="highlight"><pre>
 /usr/lib/python3/dist-packages/numpy/linalg/linalg.py:1776: RuntimeWarning: invalid value encountered in det
   r = _umath_linalg.det(a, signature=signature)
@@ -817,11 +839,10 @@ restart:         gen:    expression:
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [8]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="n">mean_gen</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="o">&lt;</span><span class="p">(</span><span class="n">max_gen</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="o">*</span> <span class="n">newtonParams</span><span class="p">[</span><span class="s1">&#39;steps&#39;</span><span class="p">]</span>
 <span class="k">print</span><span class="p">(</span><span class="s2">&quot;ERT Expected run time = avg. number of dCGP evaluations needed: &quot;</span><span class="p">,</span> <span class="n">mean_gen</span> <span class="o">*</span> <span class="n">offsprings</span><span class="p">)</span>
 </pre></div>
@@ -837,13 +858,12 @@ ERT Expected run time = avg. number of dCGP evaluations needed:  122071.111111
 </div>
 </div>
 <div class="section" id="Problem-P6:-">
-<h2>Problem P6: <span class="math notranslate nohighlight">\(\frac{e x^2-1}{\pi (x + 2)}\)</span><a class="headerlink" href="#Problem-P6:-" title="Permalink to this headline">¶</a></h2>
+<h2>Problem P6: <span class="math">\(\frac{e x^2-1}{\pi (x + 2)}\)</span><a class="headerlink" href="#Problem-P6:-" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [ ]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">2.1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">gdual</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 <span class="n">yt</span> <span class="o">=</span> <span class="n">data_P6</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
@@ -851,11 +871,10 @@ ERT Expected run time = avg. number of dCGP evaluations needed:  122071.111111
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [ ]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="c1"># We run nexp experiments and accumulate statistic for the ERT</span>
 <span class="n">nexp</span> <span class="o">=</span> <span class="mi">100</span>
 <span class="n">offsprings</span> <span class="o">=</span> <span class="mi">4</span>
@@ -882,13 +901,12 @@ ERT Expected run time = avg. number of dCGP evaluations needed:  122071.111111
 </div>
 </div>
 <div class="section" id="Problem-P7:-">
-<h2>Problem P7: <span class="math notranslate nohighlight">\(\sin(e x) + \cos(\pi x)\)</span><a class="headerlink" href="#Problem-P7:-" title="Permalink to this headline">¶</a></h2>
+<h2>Problem P7: <span class="math">\(\sin(e x) + \cos(\pi x)\)</span><a class="headerlink" href="#Problem-P7:-" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [348]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[348]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">gdual</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 <span class="n">yt</span> <span class="o">=</span> <span class="n">data_P7</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
@@ -896,11 +914,10 @@ ERT Expected run time = avg. number of dCGP evaluations needed:  122071.111111
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [ ]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="c1"># We run nexp experiments and accumulate statistic for the ERT</span>
 <span class="n">nexp</span> <span class="o">=</span> <span class="mi">100</span>
 <span class="n">offsprings</span> <span class="o">=</span> <span class="mi">4</span>
@@ -941,7 +958,7 @@ ERT Expected run time = avg. number of dCGP evaluations needed:  122071.111111
     </p>
     <p>
         &copy; Copyright 2018, Dario Izzo, Francesco Biscani, Alessio Mereta.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.5.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7.<br/>
     </p>
   </div>
 </footer>

@@ -3,12 +3,20 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Representing an Artificial Neural Network as a Cartesian Genetic Program &#8212; dCGP documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
@@ -23,7 +31,8 @@
     <link rel="prev" title="Discovery of prime integrals with dCGP" href="finding_prime_integrals.html" />
 <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto|Comfortaa|Space+Mono">
 
-  </head><body>
+  </head>
+  <body>
 
   <div id="navbar" class="navbar navbar-inverse navbar-default navbar-fixed-top">
     <div class="container">
@@ -36,7 +45,7 @@
         </button>
         <a class="navbar-brand" href="../index.html">
           dcgp</a>
-        <span class="navbar-text navbar-version pull-left"><b>1.2</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>1.3</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -74,13 +83,8 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">C++ examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/cpp_koza_quintic.html">Finding the Koza quintic polynomial</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/cpp_supervised_learning.html">Fitting a data set with an expression</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/cpp_tsoulos_ode1.html">Solving the ODE1 problem from Tsoulos</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/cpp_tsoulos_nlode3.html">Solving the NLODE3 problem from Tsoulos</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/cpp_hamiltonian_spring_mass.html">Finding the prime integral for a spring mass system</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/cpp_hamiltonian_spring_mass_lipson.html">Finding the prime integral for a spring mass system using Lipson method</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/cpp_kepler_first_integral.html">Search for first integrals of Kepler’s problem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/index.html#symbolic-regression">Symbolic Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/index.html#other-applications">Other Applications</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="../tutorials/index.html#python-examples">Python examples</a><ul class="current">
@@ -183,18 +187,18 @@ div.nblast {
 
 /* input prompt */
 div.nbinput div.prompt pre {
-    color: #303F9F;
+    color: #307FC1;
 }
 
 /* output prompt */
 div.nboutput div.prompt pre {
-    color: #D84315;
+    color: #BF5B3D;
 }
 
 /* all prompts */
 div.nbinput div.prompt,
 div.nboutput div.prompt {
-    min-width: 9ex;
+    min-width: 7ex;
     padding-top: 0.4em;
     padding-right: 0.4em;
     text-align: right;
@@ -234,9 +238,9 @@ div.nboutput div.output_area {
 
 /* input area */
 div.nbinput div.input_area {
-    border: 1px solid #cfcfcf;
+    border: 1px solid #e0e0e0;
     border-radius: 2px;
-    background: #f7f7f7;
+    background: #f5f5f5;
 }
 
 /* override MathJax center alignment in output cells */
@@ -244,7 +248,7 @@ div.nboutput div[class*=MathJax] {
     text-align: left !important;
 }
 
-/* override sphinx.ext.pngmath center alignment in output cells */
+/* override sphinx.ext.imgmath center alignment in output cells */
 div.nboutput div.math p {
     text-align: left;
 }
@@ -293,25 +297,51 @@ div.nboutput div.output_area.stderr {
 
 .ansi-bold { font-weight: bold; }
 .ansi-underline { text-decoration: underline; }
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+div.rendered_html th {
+  font-weight: bold;
+}
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
 </style>
 <div class="section" id="Representing-an-Artificial-Neural-Network-as-a-Cartesian-Genetic-Program">
 <h1>Representing an Artificial Neural Network as a Cartesian Genetic Program<a class="headerlink" href="#Representing-an-Artificial-Neural-Network-as-a-Cartesian-Genetic-Program" title="Permalink to this headline">¶</a></h1>
 <p>(a.k.a dCGPANN)</p>
-<p>Neural networks (deep, shallow, convolutional or not) are, after all,
-computer programs and as such can be encoded in a chromosome and
-represented as a Genetic Program. A dCGPANN, coded in the class
-<em>expression_ann_double</em>, is exactly this: a feed forward neural network
-represented into a chromosome using a Cartesian Genetic Programming
-encoding. Derivatives with respect to weights and biases can be easily
-extracted, the underlying algorithm being backward automated
-differentiation. Unlike other dCGP expressions, higher order derivatives
-are not available (no <em>gduals</em>).</p>
+<p>Neural networks (deep, shallow, convolutional or not) are, after all, computer programs and as such can be encoded in a chromosome and represented as a Genetic Program. A dCGPANN, coded in the class <em>expression_ann_double</em>, is exactly this: a feed forward neural network represented into a chromosome using a Cartesian Genetic Programming encoding. Derivatives with respect to weights and biases can be easily extracted, the underlying algorithm being backward automated differentiation. Unlike other
+dCGP expressions, higher order derivatives are not available (no <em>gduals</em>).</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [1]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="c1"># Initial import</span>
 <span class="kn">import</span> <span class="nn">dcgpy</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
@@ -324,11 +354,10 @@ are not available (no <em>gduals</em>).</p>
 <div class="section" id="Instantiating-and-inspecting-a-dCGPANN">
 <h2>Instantiating and inspecting a dCGPANN<a class="headerlink" href="#Instantiating-and-inspecting-a-dCGPANN" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [2]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="c1"># A limited amount of kernels are available for dCGPANN. Notably the most common in deep learning literature are.</span>
 <span class="n">nonlinearities</span> <span class="o">=</span> <span class="n">dcgpy</span><span class="o">.</span><span class="n">kernel_set_double</span><span class="p">([</span><span class="s2">&quot;sig&quot;</span><span class="p">,</span> <span class="s2">&quot;ReLu&quot;</span><span class="p">,</span> <span class="s2">&quot;tanh&quot;</span><span class="p">])</span>
 <span class="c1"># After defining the possible nonlinearities, we instantiate the dCGPANN</span>
@@ -351,11 +380,10 @@ are not available (no <em>gduals</em>).</p>
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [3]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="c1"># The weights and biases can be extracted as a whole</span>
 <span class="n">w</span> <span class="o">=</span> <span class="n">dcgpann</span><span class="o">.</span><span class="n">get_weights</span><span class="p">()</span>
 <span class="n">b</span> <span class="o">=</span> <span class="n">dcgpann</span><span class="o">.</span><span class="n">get_biases</span><span class="p">()</span>
@@ -366,11 +394,10 @@ are not available (no <em>gduals</em>).</p>
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [4]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="c1"># The resulting expression can, as usual be computed both on numerical values ...</span>
 <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span><span class="o">-</span><span class="mf">0.3</span><span class="p">]</span>
 <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Value in&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="s2">&quot; is&quot;</span><span class="p">,</span> <span class="n">dcgpann</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
@@ -386,11 +413,10 @@ Value in [0.1, -0.3]  is [0.01810780934227474, -0.19396691732104818]
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [5]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="c1"># ... and symbolic names (this can get real messy so we show only 100 characters of the first output)</span>
 <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">]</span>
 <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Value in&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="s2">&quot; is&quot;</span><span class="p">,</span> <span class="n">dcgpann</span><span class="p">(</span><span class="n">x</span><span class="p">)[</span><span class="mi">0</span><span class="p">][:</span><span class="mi">150</span><span class="p">])</span>
@@ -409,11 +435,10 @@ Value in [&#39;x&#39;, &#39;y&#39;]  is ReLu(b93+w93_0*tanh(b49+w49_0*tanh(b26+w
 <div class="section" id="Mutating-a-dCGPANN">
 <h2>Mutating a dCGPANN<a class="headerlink" href="#Mutating-a-dCGPANN" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [6]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="c1"># We define a single input single output dCGPANN.</span>
 <span class="n">dcgpann</span> <span class="o">=</span> <span class="n">dcgpy</span><span class="o">.</span><span class="n">expression_ann_double</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">rows</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
                                       <span class="n">levels_back</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">arity</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">],</span> <span class="n">kernels</span><span class="o">=</span><span class="n">nonlinearities</span><span class="p">())</span>
@@ -426,11 +451,10 @@ Value in [&#39;x&#39;, &#39;y&#39;]  is ReLu(b93+w93_0*tanh(b49+w49_0*tanh(b26+w
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [7]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="c1"># As we all CGP expressions, we can now mutate producing a slightly different architecture</span>
 <span class="c1"># Note that mutation only affect the chromosome (i.e. the ANN encoding)  not any of the weights nor biases</span>
 <span class="c1"># We visualize the starting dCGPANN</span>
@@ -468,11 +492,10 @@ Value in [&#39;x&#39;, &#39;y&#39;]  is ReLu(b93+w93_0*tanh(b49+w49_0*tanh(b26+w
 <div class="section" id="Training-a-dCGPANN">
 <h2>Training a dCGPANN<a class="headerlink" href="#Training-a-dCGPANN" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [8]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="c1"># We want to train the dCGPANN in a regression task. Lets create the points</span>
 <span class="n">sample_size</span> <span class="o">=</span> <span class="mi">100</span>
 <span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="n">sample_size</span><span class="p">)</span>
@@ -493,11 +516,10 @@ Value in [&#39;x&#39;, &#39;y&#39;]  is ReLu(b93+w93_0*tanh(b49+w49_0*tanh(b26+w
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [9]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="c1"># Since the output is in [-1, 1] we force the output nonliearity to be tanh</span>
 <span class="n">dcgpann</span><span class="o">.</span><span class="n">set_output_f</span><span class="p">(</span><span class="s2">&quot;tanh&quot;</span><span class="p">)</span>
 
@@ -520,11 +542,10 @@ Net complexity (number of active nodes): 25
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [10]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="c1"># This will store the learning history</span>
 <span class="n">n_epochs</span> <span class="o">=</span> <span class="mi">50000</span>
 <span class="n">res</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_epochs</span>
@@ -542,7 +563,7 @@ Net complexity (number of active nodes): 25
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
-<div class="stderr output_area docutils container">
+<div class="output_area stderr docutils container">
 <div class="highlight"><pre>
 100%|██████████| 50000/50000 [00:09&lt;00:00, 5311.95it/s]
 </pre></div></div>
@@ -558,17 +579,16 @@ End MSE:  0.00046611457718991235
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
-<div class="stderr output_area docutils container">
+<div class="output_area stderr docutils container">
 <div class="highlight"><pre>
 
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [11]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="n">f</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
 <span class="c1"># We plot the learned function against the target</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
@@ -588,6 +608,15 @@ End MSE:  0.00046611457718991235
 <img alt="../_images/notebooks_An_intro_to_dCGPANNs_14_0.png" src="../_images/notebooks_An_intro_to_dCGPANNs_14_0.png" />
 </div>
 </div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span>
+</pre></div>
+</div>
+</div>
 </div>
 </div>
 
@@ -604,7 +633,7 @@ End MSE:  0.00046611457718991235
     </p>
     <p>
         &copy; Copyright 2018, Dario Izzo, Francesco Biscani, Alessio Mereta.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.5.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7.<br/>
     </p>
   </div>
 </footer>

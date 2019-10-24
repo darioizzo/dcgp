@@ -3,12 +3,20 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Solving differential equations with dCGP &#8212; dCGP documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
@@ -23,7 +31,8 @@
     <link rel="prev" title="Learning constants in a symbolic regression task (PART II)" href="learning_constants2.html" />
 <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto|Comfortaa|Space+Mono">
 
-  </head><body>
+  </head>
+  <body>
 
   <div id="navbar" class="navbar navbar-inverse navbar-default navbar-fixed-top">
     <div class="container">
@@ -36,7 +45,7 @@
         </button>
         <a class="navbar-brand" href="../index.html">
           dcgp</a>
-        <span class="navbar-text navbar-version pull-left"><b>1.2</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>1.3</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -74,13 +83,8 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">C++ examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/cpp_koza_quintic.html">Finding the Koza quintic polynomial</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/cpp_supervised_learning.html">Fitting a data set with an expression</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/cpp_tsoulos_ode1.html">Solving the ODE1 problem from Tsoulos</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/cpp_tsoulos_nlode3.html">Solving the NLODE3 problem from Tsoulos</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/cpp_hamiltonian_spring_mass.html">Finding the prime integral for a spring mass system</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/cpp_hamiltonian_spring_mass_lipson.html">Finding the prime integral for a spring mass system using Lipson method</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/cpp_kepler_first_integral.html">Search for first integrals of Kepler’s problem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/index.html#symbolic-regression">Symbolic Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/index.html#other-applications">Other Applications</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="../tutorials/index.html#python-examples">Python examples</a><ul class="current">
@@ -183,18 +187,18 @@ div.nblast {
 
 /* input prompt */
 div.nbinput div.prompt pre {
-    color: #303F9F;
+    color: #307FC1;
 }
 
 /* output prompt */
 div.nboutput div.prompt pre {
-    color: #D84315;
+    color: #BF5B3D;
 }
 
 /* all prompts */
 div.nbinput div.prompt,
 div.nboutput div.prompt {
-    min-width: 9ex;
+    min-width: 7ex;
     padding-top: 0.4em;
     padding-right: 0.4em;
     text-align: right;
@@ -234,9 +238,9 @@ div.nboutput div.output_area {
 
 /* input area */
 div.nbinput div.input_area {
-    border: 1px solid #cfcfcf;
+    border: 1px solid #e0e0e0;
     border-radius: 2px;
-    background: #f7f7f7;
+    background: #f5f5f5;
 }
 
 /* override MathJax center alignment in output cells */
@@ -244,7 +248,7 @@ div.nboutput div[class*=MathJax] {
     text-align: left !important;
 }
 
-/* override sphinx.ext.pngmath center alignment in output cells */
+/* override sphinx.ext.imgmath center alignment in output cells */
 div.nboutput div.math p {
     text-align: left;
 }
@@ -293,17 +297,49 @@ div.nboutput div.output_area.stderr {
 
 .ansi-bold { font-weight: bold; }
 .ansi-underline { text-decoration: underline; }
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+div.rendered_html th {
+  font-weight: bold;
+}
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
 </style>
 <div class="section" id="Solving-differential-equations-with-dCGP">
 <h1>Solving differential equations with dCGP<a class="headerlink" href="#Solving-differential-equations-with-dCGP" title="Permalink to this headline">¶</a></h1>
-<p>Lets first import dcgpy and pyaudi and set up things as to use dCGP on
-gduals defined over vectorized floats</p>
+<p>Lets first import dcgpy and pyaudi and set up things as to use dCGP on gduals defined over vectorized floats</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [1]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">dcgpy</span> <span class="kn">import</span> <span class="n">expression_gdual_vdouble</span> <span class="k">as</span> <span class="n">expression</span>
 <span class="kn">from</span> <span class="nn">dcgpy</span> <span class="kn">import</span> <span class="n">kernel_set_gdual_vdouble</span> <span class="k">as</span> <span class="n">kernel_set</span>
 <span class="kn">from</span> <span class="nn">pyaudi</span> <span class="kn">import</span> <span class="n">gdual_vdouble</span> <span class="k">as</span> <span class="n">gdual</span>
@@ -319,11 +355,10 @@ gduals defined over vectorized floats</p>
 <div class="section" id="The-kernel-functions">
 <h2>The kernel functions<a class="headerlink" href="#The-kernel-functions" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [125]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[125]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="n">kernels</span> <span class="o">=</span> <span class="n">kernel_set</span><span class="p">([</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span> <span class="s2">&quot;mul&quot;</span><span class="p">,</span> <span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="s2">&quot;diff&quot;</span><span class="p">,</span> <span class="s2">&quot;log&quot;</span><span class="p">,</span> <span class="s2">&quot;sin&quot;</span><span class="p">,</span> <span class="s2">&quot;cos&quot;</span><span class="p">,</span> <span class="s2">&quot;exp&quot;</span><span class="p">])()</span> <span class="c1"># note the call operator (returns the list of kernels)</span>
 </pre></div>
 </div>
@@ -332,21 +367,19 @@ gduals defined over vectorized floats</p>
 <div class="section" id="Instantiate-a-(1-input,-1-output)-dCGP-and-we-inspect-a-randomly-created-program">
 <h2>Instantiate a (1 input, 1 output) dCGP and we inspect a randomly created program<a class="headerlink" href="#Instantiate-a-(1-input,-1-output)-dCGP-and-we-inspect-a-randomly-created-program" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [3]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="n">dCGP_example</span> <span class="o">=</span> <span class="n">expression</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">rows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">levels_back</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">arity</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">kernels</span><span class="o">=</span><span class="n">kernels</span><span class="p">,</span> <span class="n">seed</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [4]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span><span class="mi">6</span><span class="p">]</span>
 <span class="n">dCGP_example</span><span class="o">.</span><span class="n">visualize</span><span class="p">()</span> <span class="c1">#requires pygraphwiz module installed</span>
 <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Represented expression: &quot;</span><span class="p">,</span> <span class="n">dCGP_example</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">])[</span><span class="mi">0</span><span class="p">])</span>
@@ -374,11 +407,10 @@ Simplified expression:  [2*x]
 <div class="section" id="Define-the-ES-that-will-evolve-solutions">
 <h2>Define the ES that will evolve solutions<a class="headerlink" href="#Define-the-ES-that-will-evolve-solutions" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [115]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[115]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="c1"># We run an evolutionary strategy ES(1 + offspring)</span>
 <span class="k">def</span> <span class="nf">run_experiment</span><span class="p">(</span><span class="n">max_gen</span><span class="p">,</span> <span class="n">offsprings</span><span class="p">,</span> <span class="n">quadratic_error</span><span class="p">,</span> <span class="n">initial_conditions_error</span><span class="p">,</span> <span class="n">dCGP</span><span class="p">,</span> <span class="n">screen_output</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
     <span class="n">chromosome</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">offsprings</span>
@@ -409,17 +441,14 @@ Simplified expression:  [2*x]
 </div>
 <div class="section" id="Consider-the-following-Ordinary-Differential-Equation-(ODE1):">
 <h2>Consider the following Ordinary Differential Equation (ODE1):<a class="headerlink" href="#Consider-the-following-Ordinary-Differential-Equation-(ODE1):" title="Permalink to this headline">¶</a></h2>
-<p><span class="math notranslate nohighlight">\(\frac{dy}{dx} = \frac{2x - y}{x}\)</span>, with <span class="math notranslate nohighlight">\(y(0.1) = 20.1\)</span> and
-<span class="math notranslate nohighlight">\(x \in [0.1,1]\)</span></p>
-<p>we demand its punctual validity over a grid of <span class="math notranslate nohighlight">\(N\)</span> equally spaced
-points.</p>
-<p>The solution to the ODE is <span class="math notranslate nohighlight">\(y = x + \frac 2x\)</span></p>
+<p><span class="math">\(\frac{dy}{dx} = \frac{2x - y}{x}\)</span>, with <span class="math">\(y(0.1) = 20.1\)</span> and <span class="math">\(x \in [0.1,1]\)</span></p>
+<p>we demand its punctual validity over a grid of <span class="math">\(N\)</span> equally spaced points.</p>
+<p>The solution to the ODE is <span class="math">\(y = x + \frac 2x\)</span></p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [126]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[126]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="c1"># We define the quadratic error of the dCGP in the grid points</span>
 <span class="k">def</span> <span class="nf">qe_ODE1</span><span class="p">(</span><span class="n">dCGP</span><span class="p">,</span> <span class="n">grid</span><span class="p">):</span>
     <span class="n">retval</span> <span class="o">=</span> <span class="mi">0</span>
@@ -434,11 +463,10 @@ points.</p>
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [127]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[127]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="c1"># We define a penalty term associated to the initial conditions violation</span>
 <span class="k">def</span> <span class="nf">ic_ODE1</span><span class="p">(</span><span class="n">dCGP</span><span class="p">):</span>
     <span class="n">x0</span> <span class="o">=</span> <span class="mi">1</span>
@@ -449,11 +477,10 @@ points.</p>
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [128]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[128]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="c1"># We construct the grid of points. Since the ODE only contains first order derivatives we use truncation order 1.</span>
 <span class="c1"># Since we are using vectorized gdual we can instantiate only one gdual</span>
 
@@ -463,11 +490,10 @@ points.</p>
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [135]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[135]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="c1"># We run nexp experiments to accumulate statistic for the ERT</span>
 <span class="n">nexp</span> <span class="o">=</span> <span class="mi">100</span>
 <span class="n">offsprings</span> <span class="o">=</span> <span class="mi">10</span>
@@ -539,11 +565,10 @@ restart:         gen:    expression:
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [136]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[136]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="n">ERT</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="o">&lt;</span><span class="p">(</span><span class="n">stop</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
 <span class="k">print</span><span class="p">(</span><span class="s2">&quot;ERT Expected run time - avg. number of function evaluations needed: &quot;</span><span class="p">,</span> <span class="n">ERT</span> <span class="o">*</span> <span class="n">offsprings</span><span class="p">)</span>
 <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Avg. number of function evaluations from Tsoulos paper: &quot;</span><span class="p">,</span> <span class="mi">653</span> <span class="o">*</span> <span class="mi">200</span><span class="p">)</span>
@@ -562,17 +587,14 @@ Avg. number of function evaluations from Tsoulos paper:  130600
 </div>
 <div class="section" id="Consider-the-following-Ordinary-Differential-Equation-(ODE2):">
 <h2>Consider the following Ordinary Differential Equation (ODE2):<a class="headerlink" href="#Consider-the-following-Ordinary-Differential-Equation-(ODE2):" title="Permalink to this headline">¶</a></h2>
-<p><span class="math notranslate nohighlight">\(\frac{dy}{dx} = \frac{1 - ycos(x)}{sin(x)}\)</span>, with
-<span class="math notranslate nohighlight">\(y(0.1) = \frac{2.1}{sin(0,1)}\)</span> and <span class="math notranslate nohighlight">\(x \in [0.1,1]\)</span></p>
-<p>we demand its punctual validity over a grid of <span class="math notranslate nohighlight">\(N\)</span> equally spaced
-points.</p>
-<p>NOTE: The solution to the ODE is <span class="math notranslate nohighlight">\(y = \frac{x+2}{sin(x)}\)</span></p>
+<p><span class="math">\(\frac{dy}{dx} = \frac{1 - ycos(x)}{sin(x)}\)</span>, with <span class="math">\(y(0.1) = \frac{2.1}{sin(0,1)}\)</span> and <span class="math">\(x \in [0.1,1]\)</span></p>
+<p>we demand its punctual validity over a grid of <span class="math">\(N\)</span> equally spaced points.</p>
+<p>NOTE: The solution to the ODE is <span class="math">\(y = \frac{x+2}{sin(x)}\)</span></p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [137]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[137]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="c1"># We construct the grid of points. Since the ODE only contains first order derivatives we use truncation order 1.</span>
 <span class="c1"># Since we are using vectorized gdual we can instantiate only one gdual</span>
 
@@ -582,11 +604,10 @@ points.</p>
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [138]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[138]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="c1"># We define the quadratic error of the dCGP in the grid points</span>
 <span class="k">def</span> <span class="nf">qe_ODE2</span><span class="p">(</span><span class="n">dCGP</span><span class="p">,</span> <span class="n">grid</span><span class="p">):</span>
     <span class="n">retval</span> <span class="o">=</span> <span class="mi">0</span>
@@ -601,11 +622,10 @@ points.</p>
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [139]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[139]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="c1"># We define a penalty term associated to the initial conditions violation</span>
 <span class="n">dummy</span> <span class="o">=</span> <span class="p">(</span><span class="mf">2.1</span><span class="p">)</span><span class="o">/</span><span class="n">sin</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">ic_ODE2</span><span class="p">(</span><span class="n">dCGP</span><span class="p">):</span>
@@ -617,11 +637,10 @@ points.</p>
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [140]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[140]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="c1"># We run nexp experiments to accumulate statistic for the ERT</span>
 <span class="n">nexp</span> <span class="o">=</span> <span class="mi">100</span>
 <span class="n">stop</span> <span class="o">=</span> <span class="mi">500</span>
@@ -662,11 +681,10 @@ restart:         gen:    expression:
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [141]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[141]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="n">ERT</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="o">&lt;</span><span class="p">(</span><span class="n">stop</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
 <span class="k">print</span><span class="p">(</span><span class="s2">&quot;ERT Expected run time - avg. number of function evaluations needed: &quot;</span><span class="p">,</span> <span class="n">ERT</span> <span class="o">*</span> <span class="n">offsprings</span><span class="p">)</span>
 <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Avg. number of function evaluations from Tsoulos paper: &quot;</span><span class="p">,</span> <span class="mi">742</span> <span class="o">*</span> <span class="mi">200</span><span class="p">)</span>
@@ -685,17 +703,14 @@ Avg. number of function evaluations from Tsoulos paper:  148400
 </div>
 <div class="section" id="Consider-the-following-Ordinary-Differential-Equation-(ODE5):">
 <h2>Consider the following Ordinary Differential Equation (ODE5):<a class="headerlink" href="#Consider-the-following-Ordinary-Differential-Equation-(ODE5):" title="Permalink to this headline">¶</a></h2>
-<p><span class="math notranslate nohighlight">\(\frac{d^2y}{dx^2} = 6\frac{dy}{dx} - 9y\)</span>, with <span class="math notranslate nohighlight">\(y(0) = 0\)</span>,
-<span class="math notranslate nohighlight">\(\frac{dy}{dx}(0)=2\)</span> and <span class="math notranslate nohighlight">\(x \in [0,1]\)</span></p>
-<p>we demand its punctual validity over a grid of <span class="math notranslate nohighlight">\(N\)</span> equally spaced
-points.</p>
-<p>NOTE: The solution to the ODE is <span class="math notranslate nohighlight">\(y = 2x \exp(3x)\)</span></p>
+<p><span class="math">\(\frac{d^2y}{dx^2} = 6\frac{dy}{dx} - 9y\)</span>, with <span class="math">\(y(0) = 0\)</span>, <span class="math">\(\frac{dy}{dx}(0)=2\)</span> and <span class="math">\(x \in [0,1]\)</span></p>
+<p>we demand its punctual validity over a grid of <span class="math">\(N\)</span> equally spaced points.</p>
+<p>NOTE: The solution to the ODE is <span class="math">\(y = 2x \exp(3x)\)</span></p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [142]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[142]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="c1"># We construct the grid of points. Since the ODE only contains second order derivatives we use truncation order 2.</span>
 <span class="c1"># Since we are using vectorized gdual we can instantiate only one gdual</span>
 
@@ -705,11 +720,10 @@ points.</p>
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [143]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[143]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="c1"># We define the quadratic error of the dCGP in the grid points</span>
 <span class="k">def</span> <span class="nf">qe_ODE5</span><span class="p">(</span><span class="n">dCGP</span><span class="p">,</span> <span class="n">grid</span><span class="p">):</span>
     <span class="n">retval</span> <span class="o">=</span> <span class="mi">0</span>
@@ -725,11 +739,10 @@ points.</p>
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [144]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[144]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="c1"># We define a penalty term associated to the initial conditions violation</span>
 <span class="k">def</span> <span class="nf">ic_ODE5</span><span class="p">(</span><span class="n">dCGP</span><span class="p">):</span>
     <span class="n">x0</span> <span class="o">=</span> <span class="mf">1e-16</span> <span class="c1"># avoids what seems a numerical problem with vectorized dual?</span>
@@ -743,11 +756,10 @@ points.</p>
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [145]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[145]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="c1"># We run nexp experiments to accumulate statistic for the ERT</span>
 <span class="n">nexp</span> <span class="o">=</span> <span class="mi">100</span>
 <span class="n">stop</span> <span class="o">=</span> <span class="mi">500</span>
@@ -795,11 +807,10 @@ restart:         gen:    expression:
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [146]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[146]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="n">ERT</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="o">&lt;</span><span class="p">(</span><span class="n">stop</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
 <span class="k">print</span><span class="p">(</span><span class="s2">&quot;ERT Expected run time - avg. number of function evaluations needed: &quot;</span><span class="p">,</span> <span class="n">ERT</span> <span class="o">*</span> <span class="n">offsprings</span><span class="p">)</span>
 <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Avg. number of function evaluations from Tsoulos paper: &quot;</span><span class="p">,</span> <span class="mi">441</span> <span class="o">*</span> <span class="mi">200</span><span class="p">)</span>
@@ -818,17 +829,14 @@ Avg. number of function evaluations from Tsoulos paper:  88200
 </div>
 <div class="section" id="Consider-the-following-non-linear-Ordinary-Differential-Equation-(NLODE3):">
 <h2>Consider the following non linear Ordinary Differential Equation (NLODE3):<a class="headerlink" href="#Consider-the-following-non-linear-Ordinary-Differential-Equation-(NLODE3):" title="Permalink to this headline">¶</a></h2>
-<p><span class="math notranslate nohighlight">\(\frac{d^2y}{dx^2}\frac{dy}{dx} = -\frac4{x^3}\)</span>, with
-<span class="math notranslate nohighlight">\(y(1) = 0\)</span>, and <span class="math notranslate nohighlight">\(x \in [1,2]\)</span></p>
-<p>we demand its punctual validity over a grid of <span class="math notranslate nohighlight">\(N\)</span> equally spaced
-points.</p>
-<p>NOTE: The solution to the ODE is <span class="math notranslate nohighlight">\(y = log(x^2)\)</span></p>
+<p><span class="math">\(\frac{d^2y}{dx^2}\frac{dy}{dx} = -\frac4{x^3}\)</span>, with <span class="math">\(y(1) = 0\)</span>, and <span class="math">\(x \in [1,2]\)</span></p>
+<p>we demand its punctual validity over a grid of <span class="math">\(N\)</span> equally spaced points.</p>
+<p>NOTE: The solution to the ODE is <span class="math">\(y = log(x^2)\)</span></p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [147]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[147]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="c1"># We construct the grid of points. Since the ODE only contains second order derivatives we use truncation order 2.</span>
 <span class="c1"># Since we are using vectorized gdual we can instantiate only one gdual</span>
 
@@ -838,11 +846,10 @@ points.</p>
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [148]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[148]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="c1"># We define the quadratic error of the dCGP in the grid points</span>
 <span class="k">def</span> <span class="nf">qe_NLODE3</span><span class="p">(</span><span class="n">dCGP</span><span class="p">,</span> <span class="n">grid</span><span class="p">):</span>
     <span class="n">retval</span> <span class="o">=</span> <span class="mi">0</span>
@@ -858,11 +865,10 @@ points.</p>
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [149]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[149]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="c1"># We define a penalty term associated to the initial conditions violation</span>
 <span class="k">def</span> <span class="nf">ic_NLODE3</span><span class="p">(</span><span class="n">dCGP</span><span class="p">):</span>
     <span class="n">x0</span> <span class="o">=</span> <span class="mf">1.</span>
@@ -875,11 +881,10 @@ points.</p>
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [150]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[150]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="c1"># We run nexp experiments to accumulate statistic for the ERT</span>
 <span class="n">nexp</span> <span class="o">=</span> <span class="mi">100</span>
 <span class="n">stop</span> <span class="o">=</span> <span class="mi">500</span>
@@ -997,11 +1002,10 @@ restart:         gen:    expression:
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [151]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[151]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="n">ERT</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="o">&lt;</span><span class="p">(</span><span class="n">stop</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
 <span class="k">print</span><span class="p">(</span><span class="s2">&quot;ERT Expected run time - avg. number of function evaluations needed: &quot;</span><span class="p">,</span> <span class="n">ERT</span> <span class="o">*</span> <span class="n">offsprings</span><span class="p">)</span>
 <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Avg. number of function evaluations from Tsoulos paper: &quot;</span><span class="p">,</span> <span class="mi">191</span> <span class="o">*</span> <span class="mi">200</span><span class="p">)</span>
@@ -1020,18 +1024,14 @@ Avg. number of function evaluations from Tsoulos paper:  38200
 </div>
 <div class="section" id="Consider-the-following-non-linear-Patial-Differential-Equation-(PDE2):">
 <h2>Consider the following non linear Patial Differential Equation (PDE2):<a class="headerlink" href="#Consider-the-following-non-linear-Patial-Differential-Equation-(PDE2):" title="Permalink to this headline">¶</a></h2>
-<p><span class="math notranslate nohighlight">\(\nabla^2 \psi(x,y) = -\psi(x,y)\)</span> with <span class="math notranslate nohighlight">\(x\in[0,1]\)</span>,
-<span class="math notranslate nohighlight">\(y\in[0,1]\)</span> and boundary conditions: <span class="math notranslate nohighlight">\(\psi(0,y) = 0\)</span>,
-<span class="math notranslate nohighlight">\(\psi(1,y) = \sin(1)\cos(y)\)</span></p>
-<p>we demand its punctual validity over a squared grid of <span class="math notranslate nohighlight">\(N\)</span> equally
-spaced points.</p>
-<p>NOTE: The solution to the PDE is <span class="math notranslate nohighlight">\(\psi(x,y) = \sin(x)\cos(y)\)</span></p>
+<p><span class="math">\(\nabla^2 \psi(x,y) = -\psi(x,y)\)</span> with <span class="math">\(x\in[0,1]\)</span>, <span class="math">\(y\in[0,1]\)</span> and boundary conditions: <span class="math">\(\psi(0,y) = 0\)</span>, <span class="math">\(\psi(1,y) = \sin(1)\cos(y)\)</span></p>
+<p>we demand its punctual validity over a squared grid of <span class="math">\(N\)</span> equally spaced points.</p>
+<p>NOTE: The solution to the PDE is <span class="math">\(\psi(x,y) = \sin(x)\cos(y)\)</span></p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [152]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[152]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="c1"># We construct the grid of points. Since the PDE only contains second order derivatives we use truncation order 2.</span>
 <span class="c1"># Since we are using vectorized gdual we can instantiate only one gdual</span>
 <span class="n">N</span><span class="o">=</span><span class="mi">10</span>
@@ -1043,11 +1043,10 @@ spaced points.</p>
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [153]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[153]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="c1"># We define the quadratic error of the dCGP in the grid points</span>
 <span class="k">def</span> <span class="nf">qe_PDE1</span><span class="p">(</span><span class="n">dCGP</span><span class="p">,</span> <span class="n">grid</span><span class="p">):</span>
     <span class="n">retval</span> <span class="o">=</span> <span class="mi">0</span>
@@ -1064,11 +1063,10 @@ spaced points.</p>
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [154]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[154]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="c1"># We define a penalty term associated to the initial conditions violation</span>
 <span class="n">sin1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">ic_PDE1</span><span class="p">(</span><span class="n">dCGP</span><span class="p">):</span>
@@ -1087,11 +1085,10 @@ spaced points.</p>
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [155]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[155]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="c1"># We run nexp experiments to accumulate statistic for the ERT</span>
 <span class="n">nexp</span> <span class="o">=</span> <span class="mi">100</span>
 <span class="n">stop</span> <span class="o">=</span> <span class="mi">500</span>
@@ -1138,11 +1135,10 @@ restart:         gen:    expression:
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [156]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[156]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="n">ERT</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="o">&lt;</span><span class="p">(</span><span class="n">stop</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
 <span class="k">print</span><span class="p">(</span><span class="s2">&quot;ERT Expected Run Time - avg. number of function evaluations needed: &quot;</span><span class="p">,</span> <span class="n">ERT</span> <span class="o">*</span> <span class="n">offsprings</span><span class="p">)</span>
 <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Avg. number of function evaluations from Tsoulos paper: &quot;</span><span class="p">,</span> <span class="mi">203</span> <span class="o">*</span> <span class="mi">200</span><span class="p">)</span>
@@ -1161,18 +1157,14 @@ Avg. number of function evaluations from Tsoulos paper:  40600
 </div>
 <div class="section" id="Consider-the-following-non-linear-Patial-Differential-Equation-(PDE6):">
 <h2>Consider the following non linear Patial Differential Equation (PDE6):<a class="headerlink" href="#Consider-the-following-non-linear-Patial-Differential-Equation-(PDE6):" title="Permalink to this headline">¶</a></h2>
-<p><span class="math notranslate nohighlight">\(\nabla^2 \psi(x,y) + \exp(\psi(x,y)) = 1 + x^2 + y^2 + \frac 4{(1 + x^2 + y^2)^2}\)</span>
-with <span class="math notranslate nohighlight">\(x\in[0.1,3]\)</span>, <span class="math notranslate nohighlight">\(y\in[0.1,3]\)</span> and boundary conditions:
-<span class="math notranslate nohighlight">\(\psi(0,y) = \log(1+y^2)\)</span>, <span class="math notranslate nohighlight">\(\psi(1,y) = \log(2+y^2)\)</span></p>
-<p>we demand its punctual validity over a squared grid of <span class="math notranslate nohighlight">\(N\)</span> equally
-spaced points.</p>
-<p>NOTE: The solution to the PDE is <span class="math notranslate nohighlight">\(\psi(x,y) = \log(1 + x^2 + y^2)\)</span></p>
+<p><span class="math">\(\nabla^2 \psi(x,y) + \exp(\psi(x,y)) = 1 + x^2 + y^2 + \frac 4{(1 + x^2 + y^2)^2}\)</span> with <span class="math">\(x\in[0.1,3]\)</span>, <span class="math">\(y\in[0.1,3]\)</span> and boundary conditions: <span class="math">\(\psi(0,y) = \log(1+y^2)\)</span>, <span class="math">\(\psi(1,y) = \log(2+y^2)\)</span></p>
+<p>we demand its punctual validity over a squared grid of <span class="math">\(N\)</span> equally spaced points.</p>
+<p>NOTE: The solution to the PDE is <span class="math">\(\psi(x,y) = \log(1 + x^2 + y^2)\)</span></p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [171]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[171]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="c1"># We construct the grid of points. Since the PDE only contains second order derivatives we use truncation order 2.</span>
 <span class="c1"># Since we are using vectorized gdual we can instantiate only one gdual</span>
 <span class="n">N</span><span class="o">=</span><span class="mi">10</span>
@@ -1184,11 +1176,10 @@ spaced points.</p>
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [172]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[172]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="c1"># We define the quadratic error of the dCGP in the grid points</span>
 <span class="k">def</span> <span class="nf">qe_PDE6</span><span class="p">(</span><span class="n">dCGP</span><span class="p">,</span> <span class="n">grid</span><span class="p">):</span>
     <span class="n">retval</span> <span class="o">=</span> <span class="mi">0</span>
@@ -1205,11 +1196,10 @@ spaced points.</p>
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [190]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[190]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="c1">### We define a penalty term associated to the initial conditions violation</span>
 <span class="k">def</span> <span class="nf">ic_PDE6</span><span class="p">(</span><span class="n">dCGP</span><span class="p">):</span>
     <span class="n">x0</span> <span class="o">=</span> <span class="n">gdual</span><span class="p">([</span><span class="mf">0.1</span><span class="p">]</span><span class="o">*</span><span class="n">N</span><span class="p">)</span>
@@ -1237,11 +1227,10 @@ spaced points.</p>
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [191]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[191]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="c1"># We run nexp experiments to accumulate statistic for the ERT</span>
 <span class="n">kernels</span> <span class="o">=</span> <span class="n">kernel_set</span><span class="p">([</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span> <span class="s2">&quot;mul&quot;</span><span class="p">,</span> <span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="s2">&quot;diff&quot;</span><span class="p">,</span> <span class="s2">&quot;log&quot;</span><span class="p">,</span><span class="s2">&quot;exp&quot;</span><span class="p">,</span><span class="s2">&quot;cos&quot;</span><span class="p">,</span><span class="s2">&quot;sin&quot;</span><span class="p">])()</span> <span class="c1"># note the call operator (returns the list of kernels)</span>
 <span class="n">nexp</span> <span class="o">=</span> <span class="mi">100</span>
@@ -1276,11 +1265,10 @@ restart:         gen:    expression:
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [192]:
+<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[192]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="n">ERT</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="o">&lt;</span><span class="p">(</span><span class="n">stop</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
 <span class="k">print</span><span class="p">(</span><span class="s2">&quot;ERT Expected Run Time - avg. number of function evaluations needed: &quot;</span><span class="p">,</span> <span class="n">ERT</span> <span class="o">*</span> <span class="n">offsprings</span><span class="p">)</span>
 <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Avg. number of function evaluations from Tsoulos paper: &quot;</span><span class="p">,</span> <span class="mi">797</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span> <span class="c1"># here we assume tsoulos used the maximum population size since PDE6 is the most difficult problem</span>
@@ -1312,7 +1300,7 @@ Avg. number of function evaluations from Tsoulos paper:  797000
     </p>
     <p>
         &copy; Copyright 2018, Dario Izzo, Francesco Biscani, Alessio Mereta.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.5.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7.<br/>
     </p>
   </div>
 </footer>
