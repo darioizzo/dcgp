@@ -38,7 +38,7 @@ int main()
 
     // We here use the Multi-Objective Memetic Evolutionary Strategy: an original algorithm provided in this dCGP project.
     // We instantiate it with 100 generations and 4 active mutations maximum per individual.
-    dcgp::momes4cgp uda{100u, 4u};
+    dcgp::momes4cgp uda{500u, 4u};
     pagmo::algorithm algo{uda};
     algo.set_verbosity(1u);
 

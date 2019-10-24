@@ -108,7 +108,8 @@ BOOST_AUTO_TEST_CASE(fitness_test_two_obj)
     symbolic_regression udp{points, labels, 1, 15, 16, 2, basic_set(), 2, true, 0u};
     pagmo::population pop(udp, 10u);
     for (decltype(pop.size()) i = 0u; i < pop.size(); ++i) {
-        auto l1 = udp.prettier(pop.get_x()[i]).length() - 2u; //The parenthesis
+        auto string = udp.prettier(pop.get_x()[i]);
+        auto l1 = string.length() - std::count(string.begin(), string.end(), ' ') - 2u; // no spaces and no [] parenthesis
         auto l2 = udp.pretty(pop.get_x()[i]).length() - 2u;
         BOOST_CHECK_EQUAL(std::min(l1, l2), pop.get_f()[i][1]);
     }
@@ -191,7 +192,7 @@ BOOST_AUTO_TEST_CASE(hessians_test)
     // c1-c2-x, c1+2y
     pagmo::vector_double test_xeph
         = {1.23, 2.34, 0, 0, 2, 1, 0, 1, 1, 2, 3, 0, 3, 1, 1, 6, 0, 0, 4, 1, 2, 1, 1, 1, 9, 5, 2, 3, 3, 0, 5, 0, 8, 11};
-    symbolic_regression udp({{1., 0.}}, {{0., 3.}}, 1, 10, 11, 2, basic_set(), 2u, 1u);
+    symbolic_regression udp({{1., 0.}}, {{0., 3.}}, 1, 10, 11, 2, basic_set(), 2u, false);
     BOOST_CHECK(udp.hessians(test_xeph) == std::vector<pagmo::vector_double>(1, pagmo::vector_double{2, -1, 1}));
 }
 

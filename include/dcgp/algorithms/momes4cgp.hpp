@@ -22,8 +22,8 @@ namespace dcgp
 class momes4cgp
 {
 public:
-    /// Single entry of the log (gen, fevals, best loss, ndf size)
-    typedef std::tuple<unsigned, unsigned long long, double, unsigned long long> log_line_type;
+    /// Single entry of the log (gen, fevals, best loss, ndf size, max. complexity)
+    typedef std::tuple<unsigned, unsigned long long, double, unsigned long long, double> log_line_type;
     /// The log
     typedef std::vector<log_line_type> log_type;
 
@@ -101,7 +101,7 @@ public:
                     // Every 50 lines print the column names
                     if (count % 50u == 1u) {
                         pagmo::print("\n", std::setw(7), "Gen:", std::setw(15), "Fevals:", std::setw(15),
-                                     "Best loss:", std::setw(17), "Ndf size:\n");
+                                     "Best loss:", std::setw(10), "Ndf size:", std::setw(10), "Compl.:\n");
                     }
                     log_single_line(gen - 1, prob.get_fevals() - fevals0, pop);
                     ++count;
@@ -143,28 +143,21 @@ public:
             // 2 - Life long learning (i.e. touching the continuous part) is  obtained performing a single Newton
             // iteration (thus favouring constants appearing linearly)
             for (decltype(NP) i = 0u; i < NP; ++i) {
+                pagmo::vector_double grad;
+                std::vector<pagmo::vector_double> hess;
                 // For a single ephemeral constants we avoid to call the Eigen machinery as its an overkill.
                 // I never tested if this is actually also more efficient, but it certainly is more readable.
                 if (n_eph == 1u) {
-                    auto hess = prob.hessians(mutated_x[i]);
-                    auto grad = prob.gradient(mutated_x[i]);
+                    hess = prob.hessians(mutated_x[i]);
+                    grad = prob.gradient(mutated_x[i]);
                     if (grad[0] != 0.) {
                         mutated_x[i][0] = mutated_x[i][0] - grad[0] / hess[0][0];
-                        // We use prob to evaluate the fitness so its feval counter is increased.
-                        auto f = prob.fitness(mutated_x[i]);
-                        // Diversity mechanism. If the fitness is already present we do not insert the individual.
-                        // Do I need this copy? @bluescarni? Can I use the get in the find directly? its a ref I think
-                        // so yes in theory....
-                        auto fs = popnew.get_f();
-                        if (std::find(fs.begin(), fs.end(), f) == fs.end() && std::isfinite(f[0])) {
-                            popnew.push_back(mutated_x[i], f);
-                        }
                     }
                 } else {
                     // TODO IMPORTANT: guard against non invertible Hessians (for exmaple when an eph constant is not
                     // picked up) We compute hessians and gradients stored in the pagmo format
-                    auto hess = prob.hessians(mutated_x[i]);
-                    auto grad = prob.gradient(mutated_x[i]);
+                    hess = prob.hessians(mutated_x[i]);
+                    grad = prob.gradient(mutated_x[i]);
                     // We copy them into the Eigen format
                     for (decltype(hess[0].size()) j = 0u; j < hess[0].size(); ++j) {
                         H(_(hs[0][j].first), _(hs[0][j].second)) = hess[0][j];
@@ -180,8 +173,14 @@ public:
                     for (decltype(n_eph) j = 0u; j < n_eph; ++j) {
                         mutated_x[i][j] = C(_(j), 0);
                     }
-                    // We use prob to evaluate the fitness so its feval counter is increased
-                    auto f = prob.fitness(mutated_x[i]);
+                }
+                // We use prob to evaluate the fitness so its feval counter is increased.
+                auto f = prob.fitness(mutated_x[i]);
+                // Diversity mechanism. If the fitness is already present we do not insert the individual.
+                // Do I need this copy? @bluescarni? Can I use the get in the find directly? its a ref I think
+                // so yes in theory....
+                auto fs = popnew.get_f();
+                if (std::find(fs.begin(), fs.end(), f) == fs.end() && std::isfinite(f[0])) {
                     popnew.push_back(mutated_x[i], f);
                 }
             }
@@ -306,10 +305,11 @@ private:
     void log_single_line(unsigned gen, unsigned long long fevals, const pagmo::population &pop) const
     {
         pagmo::vector_double ideal_point = pagmo::ideal(pop.get_f());
+        pagmo::vector_double nadir_point = pagmo::nadir(pop.get_f());
         auto ndf_size = pagmo::non_dominated_front_2d(pop.get_f()).size();
-        pagmo::print(std::setw(7), gen, std::setw(15), fevals, std::setw(15), ideal_point[0], std::setw(17), ndf_size,
-                     '\n');
-        m_log.emplace_back(gen, fevals, ideal_point[0], ndf_size);
+        pagmo::print(std::setw(7), gen, std::setw(15), fevals, std::setw(15), ideal_point[0], std::setw(10), ndf_size,
+                     std::setw(10), nadir_point[1], '\n');
+        m_log.emplace_back(gen, fevals, ideal_point[0], ndf_size, nadir_point[1]);
     }
 
     unsigned m_gen;

@@ -17,12 +17,12 @@ BOOST_AUTO_TEST_CASE(evolve_test)
 {
     // The Data
     std::vector<std::vector<double>> points, labels;
-    gym::generate_vladi4(points, labels);
+    gym::generate_vladi6(points, labels);
     // The problem (multi-objective)
     kernel_set<double> basic_set({"sum", "diff", "mul", "div"});
-    symbolic_regression udp{points, labels, 1, 15, 16, 2, basic_set(), 2, true, 0u};
+    symbolic_regression udp{points, labels, 1, 15, 16, 2, basic_set(), 1u, true, 5u};
     // The algorithm 
-    momes4cgp uda{100, 4};
+    momes4cgp uda{10, 4};
     uda.set_verbosity(1);
     // The initial population
     pagmo::population pop{udp, 20};

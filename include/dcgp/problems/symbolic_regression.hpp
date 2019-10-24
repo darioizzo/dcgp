@@ -157,7 +157,7 @@ public:
                 pagmo::stream(ss, prettier);
                 auto string = ss.str();
                 // We remove whitespaces too
-                l_prettier += static_cast<double>(string.length()) - std::count(string.begin(), string.end(), ' ');
+                l_prettier += static_cast<double>(string.length() - std::count(string.begin(), string.end(), ' '));
             }
             // Here we define the formula complexity
             retval[1] = std::min(l_pretty, l_prettier);
