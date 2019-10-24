@@ -157,7 +157,7 @@ public:
                 pagmo::stream(ss, prettier);
                 auto string = ss.str();
                 // We remove whitespaces too
-                l_prettier += static_cast<double>(string.length() - std::count(string.begin(), string.end(), ' '));
+                l_prettier += static_cast<double>(string.length() - static_cast<decltype(string.length())>(std::count(string.begin(), string.end(), ' ')));
             }
             // Here we define the formula complexity
             retval[1] = std::min(l_pretty, l_prettier);
@@ -501,6 +501,7 @@ private:
     // of the UDP in pagmo will force copies of the UDP to be made in all threads. This can in principle be
     // avoided, but likely resulting in prepature optimization. (see https://github.com/darioizzo/dcgp/pull/42)
     mutable expression<double> m_cgp;
+    // TODO: this should be vectorized gduals
     mutable expression<gdual_d> m_dcgp;
     mutable std::pair<pagmo::vector_double, pagmo::vector_double> m_cache_fitness;
     mutable std::pair<pagmo::vector_double, pagmo::vector_double> m_cache_gradient;
