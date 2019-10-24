@@ -50,7 +50,7 @@ Note: the actual output will be different on your computers as its non determini
     Exit condition -- max generations = 250
     
     Non dominated Front at the end:
-    1 - Loss: 0            Complexity:    18   Formula:  c1*cos(x0*sin(x1))
+    1  - Loss: 0            Complexity:    18   Formula:  c1*cos(x0*sin(x1))
     2  - Loss: 0.844272     Complexity:    17   Formula:  3*c1 - 2*x0 - 2*x0*x1
     3  - Loss: 1.10197      Complexity:    15   Formula:  4*c1 - 3*x0 - x0*x1
     4  - Loss: 1.17331      Complexity:    14   Formula:  3*c1 - 3*x0 - 2*x1
