@@ -44,7 +44,7 @@ int main()
     // We use an ES startegy also to learn constants
     dcgp::es4cgp uda1(10000, 1u, 1e-8, true);
     pagmo::algorithm algo_gobal{uda1};
-    algo_gobal.set_verbosity(100u);
+    algo_gobal.set_verbosity(500u);
     pop = algo_gobal.evolve(pop);
 
     // We print on screen the best found

@@ -16,6 +16,22 @@
 
 namespace dcgp
 {
+/// A Symbolic Regression problem
+/**
+ *
+ * Symbolic regression is a type of regression analysis that searches the space of mathematical expressions to 
+ * find the model that best fits a given dataset, both in terms of accuracy and simplicity 
+ * (ref: https://en.wikipedia.org/wiki/Symbolic_regression). It also is one of the core applications
+ * for Differentiable Cartesian Genetic Programming.
+ *
+ * This class provides an easy way to instantiate symbolic regression problems as optimization problems having
+ * a continuous part (i.e. the value of the parameters in the model) and an integer part (i.e. the representation of
+ * the model computational graph). The instantiated object can be used as UDP (User Defined Problem) in the pagmo optimization suite.
+ *
+ * The symbolic regression problem can be instantiated both as a single and a two-objectives problem. In the second
+ * case, aside the Mean Squared Error, the formula complexity will be considered as an objective.
+ *
+ */
 class symbolic_regression
 {
 public:

@@ -109,7 +109,7 @@ BOOST_AUTO_TEST_CASE(fitness_test_two_obj)
     pagmo::population pop(udp, 10u);
     for (decltype(pop.size()) i = 0u; i < pop.size(); ++i) {
         auto string = udp.prettier(pop.get_x()[i]);
-        auto l1 = string.length() - std::count(string.begin(), string.end(), ' ') - 2u; // no spaces and no [] parenthesis
+        auto l1 = string.length() - static_cast<decltype(string.length())>(std::count(string.begin(), string.end()), ' ') - 2u; // no spaces and no [] parenthesis
         auto l2 = udp.pretty(pop.get_x()[i]).length() - 2u;
         BOOST_CHECK_EQUAL(std::min(l1, l2), pop.get_f()[i][1]);
     }
