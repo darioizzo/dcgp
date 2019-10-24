@@ -14,20 +14,6 @@
 using namespace dcgp;
 using namespace boost::algorithm;
 
-// In this second tutorial we show how to find a formula for some input data whn we also
-// want to learn some constants.
-//
-// This case is more generic and interesting than the one treated in the previous tutorial,
-// and can be considered, already, of use in industrial settings.
-//
-// NOTE: constants can, in general, be learned via two main techniques
-// 1) evolutionary (common practice in GP)
-// 2) memetic (this is original with dCGP)
-//
-// In this tutorial we follow the evolutionary approach 1). In the next tutorial we will follow a memetic approach 2).
-//
-// We use the problem P1 from the dcgp::gym, that is x**5 - pi*x**3 + x
-
 int main()
 {
     // We load the data (using problem P1 from the gym)

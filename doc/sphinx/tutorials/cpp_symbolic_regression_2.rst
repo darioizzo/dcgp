@@ -2,7 +2,7 @@ Find a model including one parameter (using a purely evolutionary approach)
 ===========================================================================
 
 In this second tutorial we show how to find a model for our input data when we also
-want to learn some constants. This case is more generic and interesting than the one treated in the previous tutorial.
+want to learn some constants. 
 
 Constants can, in general, be learned via two main techniques:
  1. evolutionary (common and standard practice in GP)
