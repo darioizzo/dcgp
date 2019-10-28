@@ -146,32 +146,32 @@ public:
 
     /// Virtual destructor
     virtual ~expression(){};
-    /// Defaults default copy ctor, copy assignment operator, move ctor and move assignment operator
-    /// are ok since all our members are trivial. They are needed to silence a warning since the destructor is present.
+    // Defaults default copy ctor, copy assignment operator, move ctor and move assignment operator
+    // are ok since all our members are trivial. They are needed to silence a warning since the destructor is present.
+    /// Copy constructor
     expression(const expression &) = default;
+    /// Copy assignment operator
     expression(expression &&) = default;
+    /// Move constructor
     expression &operator=(const expression &) = default;
+    /// Move assignment operator
     expression &operator=(expression &&) = default;
 
     /// Evaluates the dCGP expression
     /**
      * This evaluates the dCGP expression.
-     * NOTE we cannot template this and the following function as they are virtual :(
-     *
-     * @param[point] in an std::vector containing the values where the dCGP expression has
-     * to be computed
      *
      * @param[point] an std::vector containing the values where the dCGP
      * expression has to be computed (doubles, gduals or strings)
      *
      * @return The value of the function (an std::vector)
      */
-    virtual std::vector<T> operator()(const std::vector<T> &in) const
+    virtual std::vector<T> operator()(const std::vector<T> &point) const
     {
-        std::vector<T> point(in);
-        point.insert(point.end(), m_eph_val.begin(), m_eph_val.end());
+        std::vector<T> point_expanded(point);
+        point_expanded.insert(point_expanded.end(), m_eph_val.begin(), m_eph_val.end());
 
-        if (point.size() != m_n) {
+        if (point_expanded.size() != m_n) {
             throw std::invalid_argument("Input size is incompatible");
         }
         std::vector<T> retval(m_m);
@@ -180,7 +180,7 @@ public:
 
         for (auto node_id : m_active_nodes) {
             if (node_id < m_n) {
-                node[node_id] = point[node_id];
+                node[node_id] = point_expanded[node_id];
             } else {
                 unsigned arity = _get_arity(node_id);
                 function_in.resize(arity);
@@ -197,17 +197,29 @@ public:
         return retval;
     }
 
-    /// Evaluates the dCGP expression
+    /// Evaluates the dCGP expression (from initializer list)
     /**
-     * This evaluates the dCGP expression. The method can be overriden in the derived classes.
+     * This evaluates the dCGP expression from an initializer list.
      *
-     * @param[point] in an std::vector containing the values where the dCGP expression has
-     * to be computed
-     *
-     * @param[point] an std::vector containing the values where the dCGP
+     * @param[in] in an initializer list containing the values where the dCGP
      * expression has to be computed (doubles, gduals or strings)
      *
-     * @return The symbolic value of the function
+     * @return The value of the function (an std::vector)
+     */
+    std::vector<double> operator()(const std::initializer_list<double> &in) const
+    {
+        std::vector<double> dummy(in);
+        return (*this)(dummy);
+    }
+
+    /// Evaluates the dCGP expression (symbolic)
+    /**
+     * This evaluates the symbolic form of a dCGP expression from symbols.
+     *
+     * @param[in] in an initializer list containing the symbols to use to construct the dCGP
+     * expression.
+     *
+     * @return The value of the function (an std::vector)
      */
     virtual std::vector<std::string> operator()(const std::vector<std::string> &in) const
     {
@@ -239,25 +251,18 @@ public:
         return retval;
     }
 
-    /// Evaluates the dCGP expression
+    /// Evaluates the dCGP expression (symbolic from initializer list)
     /**
-     * This evaluates the dCGP expression from an initializer list.
+     * This evaluates the symbolic form of a dCGP expression from an initializer list of symbols.
      *
-     * @param[in] in an initializer list containing the values where the dCGP
-     * expression has to be computed (doubles, gduals or strings)
+     * @param[in] in an initializer list containing the symbols to use to construct the dCGP
+     * expression.
      *
      * @return The value of the function (an std::vector)
      */
     std::vector<std::string> operator()(const std::initializer_list<std::string> &in) const
     {
         std::vector<std::string> dummy(in);
-        return (*this)(dummy);
-    }
-    // NOTE PER BLUESCARNI: I could not get these two as a template. Ambiguous calls and conversion problems between
-    // const char* and strings
-    std::vector<double> operator()(const std::initializer_list<double> &in) const
-    {
-        std::vector<double> dummy(in);
         return (*this)(dummy);
     }
 
@@ -330,8 +335,8 @@ public:
     T loss(const std::vector<std::vector<T>> &points, const std::vector<std::vector<T>> &labels,
            const std::string &loss_s, unsigned parallel = 0u) const
     {
-        // A specialization of this method should probably be provided for T = gdual<double>, in which case a vectorized_gdual
-        // should be assembled and used to compute the loss (in which case parallel should always be 0)
+        // A specialization of this method should probably be provided for T = gdual<double>, in which case a
+        // vectorized_gdual should be assembled and used to compute the loss (in which case parallel should always be 0)
         if (points.size() != labels.size()) {
             throw std::invalid_argument("Data and label size mismatch data size is: " + std::to_string(points.size())
                                         + " while label size is: " + std::to_string(labels.size()));
@@ -351,10 +356,11 @@ public:
     }
 
     /// Sets the chromosome
-    /** Sets a given chromosome as genotype for the expression and updates
+    /** 
+     * Sets a given chromosome as genotype for the expression and updates
      * the active nodes and active genes information accordingly
      *
-     * @param[in] x the new cromosome
+     * @param[in] xu the new cromosome
      *
      * @throw std::invalid_argument if the chromosome is out of bounds or has the wrong size.
      */
@@ -831,7 +837,7 @@ protected:
      * Checks if a CGP encoding (i.e. a sequence of integers) is a valid expression
      * by verifying its length and the bounds
      *
-     * @param[in] x chromosome
+     * @param[in] xu chromosome
      */
     bool check_cgp_encoding(const std::vector<unsigned> &xu) const
     {
