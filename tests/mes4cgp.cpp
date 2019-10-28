@@ -39,7 +39,7 @@ BOOST_AUTO_TEST_CASE(evolve_test)
     }
     { // zero gen
         pagmo::population pop{symbolic_regression({{1., 2.}, {0.3, -0.32}}, {{3. / 2.}, {0.02 / 0.32}}), 4u};
-        // BOOST_CHECK(mes4cgp{0u}.evolve(pop).get_x()[0] == pop.get_x()[0]);
+        BOOST_CHECK(mes4cgp{0u}.evolve(pop).get_x()[0] == pop.get_x()[0]);
     }
     // Here we only test that evolution is deterministic if the seed is controlled
     pagmo::problem prob{symbolic_regression({{1., 2.}, {0.3, -0.32}}, {{3. / 2.}, {0.02 / 0.32}})};

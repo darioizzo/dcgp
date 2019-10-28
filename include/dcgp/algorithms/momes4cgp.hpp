@@ -34,10 +34,9 @@ public:
      * @param gen number of generations.
      * @param max_mut maximum number of active genes to be mutated. The minimum is 0 as to allow multiple steps of
      * Newton descent.
-     * @param ftol the algorithm will exit when the loss is below this tolerance.
      * @param seed seed used by the internal random number generator (default is random).
      *
-     * @throws std::invalid_argument if *mut_n* is 0 or *ftol* is negative
+     * @throws std::invalid_argument if *mut_n* is 0
      */
     momes4cgp(unsigned gen = 1u, unsigned max_mut = 1u, unsigned seed = random_device::next())
         : m_gen(gen), m_max_mut(max_mut), m_e(seed), m_seed(seed), m_verbosity(0u)
@@ -223,22 +222,28 @@ public:
      *
      * Example (verbosity 10):
      * @code{.unparsed}
-     *   Gen:        Fevals:          Best:    Constants:   Formula:
-     *      0              0        2802.82    [5.35943]    [c1**2] ...
-     *     10             40        948.839    [10.9722]    [x0**2*c1] ...
-     *     20             80        823.816    [8.38173]    [(c1 + x0)*x0**2] ...
-     *     30            120        473.274    [4.48466]    [x0**3*c1] ...
-     *     40            160        338.735    [24.2287]    [-x0 + x0**2*c1 - (c1 + x0*c1) + x0**2] ...
-     *     50            200        107.126    [24.2287]    [x0**2*(-x0 - x0**2 + x0**3)] ...
-     *     60            240        10.2064    [0.844799]   [x0**2*(-(c1 + x0**2) + x0**3)] ...
-     *     70            280        10.2064    [0.844799]   [x0**2*(-(c1 + x0**2) + x0**3)] ...
-     *     80            320         6.3605    [1.03424]    [x0**2*(x0**3*c1 - (c1 + x0**2*c1))] ...
-     *     90            360         6.3605    [1.03424]    [x0**2*(x0**3*c1 - (c1 + x0**2*c1))] ...
+     *  Gen:        Fevals:     Best loss: Ndf size:   Compl.:
+     *     0              0        6.07319         3        92
+     *    10           1000        2.15419         5        10
+     *    20           2000        1.92403         8        33
+     *    30           3000       0.373663        12        72
+     *    40           4000        0.36954        13        72
+     *    50           5000       0.235749        16        73
+     *    60           6000       0.235749        12        73
+     *    70           7000       0.235749        13        73
+     *    80           8000       0.217968        12        75
+     *    90           9000       0.217968        12        75
+     *   100          10000       0.217968        12        75
+     *   110          11000       0.217968        14        75
+     *   120          12000       0.217968        14        75
+     *   130          13000       0.217968        13        75
+     *   140          14000       0.162293        12        52
+
 
      * @endcode
-     * Gen is the generation number, Fevals the number of function evaluation used, Best is the best fitness found,
-     * Constants contains the value of the ephemeral constants and Formula peeks into the prettier expression of the
-     * underlying CGP.
+     * Gen is the generation number, Fevals the number of function evaluation used, Best loss is the best loss in the
+     * population, Ndf size is the size of the non dominated front (i.e. the number of models that are optimal) and
+     * compl. is the complexity of the lowest loss model.
      *
      * @param level verbosity level
      */
@@ -262,7 +267,7 @@ public:
      */
     std::string get_name() const
     {
-        return "M-ES for CGP: A memetic Evolutionary Strategy for Cartesian Genetic Programming";
+        return "MOM-ES for CGP: MultiObjective Memetic Evolutionary Strategy for Cartesian Genetic Programming";
     }
 
     // Extra info
