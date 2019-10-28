@@ -8,7 +8,7 @@
 /// Type is a gdual
 /**
  * Checks whether T is a gdual type. Provides the member constant value which is
- * equal to true, if T is the type gdual<U> for any U.
+ * equal to true, if T is the type gdual< U > for any U.
  *
  * \tparam T a type to check
  */
