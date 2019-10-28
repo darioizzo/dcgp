@@ -28,64 +28,66 @@ BOOST_AUTO_TEST_CASE(construction_test)
                       std::invalid_argument);
     // Sanity checks tests (inconsistent cgp parameters)
     BOOST_CHECK_THROW(symbolic_regression({{1., 2.}, {0.3, -0.32}}, {{3. / 2.}, {0.02 / 0.32}}, 0u, 1u, 1u, 2u,
-                                          kernel_set<double>({"sum"})(), 0u),
+                                          kernel_set<double>({"sum"})(), 0u, false),
                       std::invalid_argument);
     BOOST_CHECK_THROW(symbolic_regression({{1., 2.}, {0.3, -0.32}}, {{3. / 2.}, {0.02 / 0.32}}, 1u, 0u, 1u, 2u,
-                                          kernel_set<double>({"sum"})(), 0u),
+                                          kernel_set<double>({"sum"})(), 0u, false),
                       std::invalid_argument);
     BOOST_CHECK_THROW(symbolic_regression({{1., 2.}, {0.3, -0.32}}, {{3. / 2.}, {0.02 / 0.32}}, 1u, 1u, 0u, 2u,
-                                          kernel_set<double>({"sum"})(), 0u),
+                                          kernel_set<double>({"sum"})(), 0u, false),
                       std::invalid_argument);
     BOOST_CHECK_THROW(symbolic_regression({{1., 2.}, {0.3, -0.32}}, {{3. / 2.}, {0.02 / 0.32}}, 1u, 1u, 1u, 1u,
-                                          kernel_set<double>({"sum"})(), 0u),
+                                          kernel_set<double>({"sum"})(), 0u, false),
                       std::invalid_argument);
     BOOST_CHECK_THROW(symbolic_regression({{1., 2.}, {0.3, -0.32}}, {{3. / 2.}, {0.02 / 0.32}}, 1u, 1u, 1u, 2u,
-                                          kernel_set<double>(std::vector<std::string>())(), 0u),
+                                          kernel_set<double>(std::vector<std::string>())(), 0u, false),
                       std::invalid_argument);
 }
 
-BOOST_AUTO_TEST_CASE(fitness_test)
+BOOST_AUTO_TEST_CASE(fitness_test_single_obj)
 {
     kernel_set<double> basic_set({"sum", "diff", "mul", "div"});
+    std::vector<std::vector<double>> points, labels;
+    gym::generate_vladi4(points, labels);
     // 2xy, 2x
     pagmo::vector_double test_x = {0, 1, 1, 0, 0, 0, 2, 0, 2, 2, 0, 2, 4, 3};
     // On a single point/label.
     {
-        symbolic_regression udp({{1., 1.}}, {{2., 2.}}, 2, 2, 3, 2, basic_set(), 0u, 0u);
+        symbolic_regression udp({{1., 1.}}, {{2., 2.}}, 2, 2, 3, 2, basic_set(), 0u, false, 0u);
         BOOST_CHECK_EQUAL(udp.fitness(test_x)[0], 0.);
     }
     {
-        symbolic_regression udp({{1., 1.}}, {{0., 0.}}, 2, 2, 3, 2, basic_set(), 0u, 0u);
+        symbolic_regression udp({{1., 1.}}, {{0., 0.}}, 2, 2, 3, 2, basic_set(), 0u, false, 0u);
         BOOST_CHECK_EQUAL(udp.fitness(test_x)[0], 4.);
     }
     {
-        symbolic_regression udp({{1., 0.}}, {{0., 0.}}, 2, 2, 3, 2, basic_set(), 0u, 0u);
+        symbolic_regression udp({{1., 0.}}, {{0., 0.}}, 2, 2, 3, 2, basic_set(), 0u, false, 0u);
         BOOST_CHECK_EQUAL(udp.fitness(test_x)[0], 2.);
     }
     // On a batch (first sequential then parallel)
     {
-        symbolic_regression udp({{1., 1.}, {1., 0.}}, {{2., 2.}, {0., 0.}}, 2, 2, 3, 2, basic_set(), 0u, 0u);
+        symbolic_regression udp({{1., 1.}, {1., 0.}}, {{2., 2.}, {0., 0.}}, 2, 2, 3, 2, basic_set(), 0u, false, 0u);
         BOOST_CHECK_EQUAL(udp.fitness(test_x)[0], 1.);
     }
     {
-        symbolic_regression udp({{1., 1.}, {1., 0.}}, {{2., 2.}, {0., 0.}}, 2, 2, 3, 2, basic_set(), 0u, 1u);
+        symbolic_regression udp({{1., 1.}, {1., 0.}}, {{2., 2.}, {0., 0.}}, 2, 2, 3, 2, basic_set(), 0u, false, 1u);
         BOOST_CHECK_EQUAL(udp.fitness(test_x)[0], 1.);
     }
     // c1-c2-x, c1+2y
     pagmo::vector_double test_xeph
         = {1., 2., 0, 0, 2, 1, 0, 1, 1, 2, 3, 0, 3, 1, 1, 6, 0, 0, 4, 1, 2, 1, 1, 1, 9, 5, 2, 3, 3, 0, 5, 0, 8, 11};
     {
-        symbolic_regression udp({{1., 0.}}, {{0., 3.}}, 1, 10, 11, 2, basic_set(), 2u, 1u);
+        symbolic_regression udp({{1., 0.}}, {{0., 3.}}, 1, 10, 11, 2, basic_set(), 2u, false, 1u);
         // 1 - 2 - 1, 1
         BOOST_CHECK_EQUAL(udp.fitness(test_xeph)[0], 4.);
     }
     {
-        symbolic_regression udp({{1., 0.}}, {{-2., 1.}}, 1, 10, 11, 2, basic_set(), 2u, 1u);
+        symbolic_regression udp({{1., 0.}}, {{-2., 1.}}, 1, 10, 11, 2, basic_set(), 2u, false, 1u);
         // 1 - 2 - 1, 1
         BOOST_CHECK_EQUAL(udp.fitness(test_xeph)[0], 0.);
     }
     {
-        symbolic_regression udp({{-1, -1}}, {{0., -1.}}, 1, 10, 11, 2, basic_set(), 2u, 1u);
+        symbolic_regression udp({{-1, -1}}, {{0., -1.}}, 1, 10, 11, 2, basic_set(), 2u, false, 1u);
         // 1 - 2 + 1, 1 - 2
         BOOST_CHECK_EQUAL(udp.fitness(test_xeph)[0], 0.);
         // 1 - 2 + 1, 1 - 2
@@ -96,6 +98,20 @@ BOOST_AUTO_TEST_CASE(fitness_test)
         test_xeph[0] = 3.;
         test_xeph[1] = 3.;
         BOOST_CHECK_EQUAL(udp.fitness(test_xeph)[0], 2.5);
+    }
+}
+BOOST_AUTO_TEST_CASE(fitness_test_two_obj)
+{
+    kernel_set<double> basic_set({"sum", "diff", "mul", "div"});
+    std::vector<std::vector<double>> points, labels;
+    gym::generate_vladi4(points, labels);
+    symbolic_regression udp{points, labels, 1, 15, 16, 2, basic_set(), 2, true, 0u};
+    pagmo::population pop(udp, 10u);
+    for (decltype(pop.size()) i = 0u; i < pop.size(); ++i) {
+        auto string = udp.prettier(pop.get_x()[i]);
+        auto l1 = string.length() - static_cast<decltype(string.length())>(std::count(string.begin(), string.end(), ' ')) - 2u; // no spaces and no [] parenthesis
+        auto l2 = udp.pretty(pop.get_x()[i]).length() - 2u;
+        BOOST_CHECK_EQUAL(std::min(l1, l2), pop.get_f()[i][1]);
     }
 }
 
@@ -176,7 +192,7 @@ BOOST_AUTO_TEST_CASE(hessians_test)
     // c1-c2-x, c1+2y
     pagmo::vector_double test_xeph
         = {1.23, 2.34, 0, 0, 2, 1, 0, 1, 1, 2, 3, 0, 3, 1, 1, 6, 0, 0, 4, 1, 2, 1, 1, 1, 9, 5, 2, 3, 3, 0, 5, 0, 8, 11};
-    symbolic_regression udp({{1., 0.}}, {{0., 3.}}, 1, 10, 11, 2, basic_set(), 2u, 1u);
+    symbolic_regression udp({{1., 0.}}, {{0., 3.}}, 1, 10, 11, 2, basic_set(), 2u, false);
     BOOST_CHECK(udp.hessians(test_xeph) == std::vector<pagmo::vector_double>(1, pagmo::vector_double{2, -1, 1}));
 }
 

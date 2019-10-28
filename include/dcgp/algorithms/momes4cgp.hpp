@@ -6,6 +6,7 @@
 #include <pagmo/detail/custom_comparisons.hpp>
 #include <pagmo/io.hpp>
 #include <pagmo/population.hpp>
+#include <pagmo/utils/multi_objective.hpp>
 #include <random>
 #include <sstream>
 #include <string>
@@ -18,11 +19,11 @@
 
 namespace dcgp
 {
-class mes4cgp
+class momes4cgp
 {
 public:
-    /// Single entry of the log (gen, fevals, best, constants, formula)
-    typedef std::tuple<unsigned, unsigned long long, double, pagmo::vector_double, std::string> log_line_type;
+    /// Single entry of the log (gen, fevals, best loss, ndf size, max. complexity)
+    typedef std::tuple<unsigned, unsigned long long, double, unsigned long long, double> log_line_type;
     /// The log
     typedef std::vector<log_line_type> log_type;
 
@@ -31,20 +32,18 @@ public:
      * Constructs an evolutionary strategy algorithm for use with a cgp::symbolic_regression UDP.
      *
      * @param gen number of generations.
-     * @param mut_n number of active genes to be mutated.
+     * @param max_mut maximum number of active genes to be mutated. The minimum is 0 as to allow multiple steps of
+     * Newton descent.
      * @param ftol the algorithm will exit when the loss is below this tolerance.
      * @param seed seed used by the internal random number generator (default is random).
      *
      * @throws std::invalid_argument if *mut_n* is 0 or *ftol* is negative
      */
-    mes4cgp(unsigned gen = 1u, unsigned mut_n = 1u, double ftol = 1e-4, unsigned seed = random_device::next())
-        : m_gen(gen), m_mut_n(mut_n), m_ftol(ftol), m_e(seed), m_seed(seed), m_verbosity(0u)
+    momes4cgp(unsigned gen = 1u, unsigned max_mut = 1u, unsigned seed = random_device::next())
+        : m_gen(gen), m_max_mut(max_mut), m_e(seed), m_seed(seed), m_verbosity(0u)
     {
-        if (mut_n == 0u) {
+        if (max_mut == 0u) {
             throw std::invalid_argument("The number of active mutations is zero, it must be at least 1.");
-        }
-        if (ftol < 0.) {
-            throw std::invalid_argument("The ftol is negative, it must be positive or zero.");
         }
     }
 
@@ -59,16 +58,16 @@ public:
         auto count = 1u;                  // regulates the screen output
         auto udp_ptr = prob.extract<symbolic_regression>();
         // PREAMBLE-------------------------------------------------------------------------------------------------
-        // Check whether the problem is suitable for mes4cgp
+        // Check whether the problem is suitable for momes4cgp
         // If the UDP in pop is not a symbolic_regression UDP, udp_ptr will be NULL
         if (!udp_ptr) {
             throw std::invalid_argument(prob.get_name() + " does not seem to be a symbolic regression problem. "
                                         + get_name()
                                         + " can only be used on problems of the type dcgp::symbolic_regression ");
         }
-        if (n_obj > 1) {
-            throw std::invalid_argument(prob.get_name() + " has multiple objectives. " + get_name()
-                                        + " can only be used on problems that are single objective.");
+        if (n_obj == 1u) {
+            throw std::invalid_argument(get_name()
+                                        + " can only be used on multiobjective symbolic regression problems");
         }
         if (NP < 2u) {
             throw std::invalid_argument(get_name() + " needs at least 2 individuals in the population, "
@@ -86,15 +85,6 @@ public:
         auto cgp = udp_ptr->get_cgp();
         // How many ephemeral constants?
         auto n_eph = prob.get_ncx();
-        // We get the best chromosome in the population.
-        auto best_idx = pop.best_idx();
-        auto worst_idx = pop.worst_idx();
-        auto best_x = pop.get_x()[best_idx];
-        auto best_f = pop.get_f()[best_idx];
-        // And we split it into its integer ...
-        std::vector<unsigned> best_xu(best_x.size() - n_eph);
-        std::transform(best_x.data() + n_eph, best_x.data() + best_x.size(), best_xu.begin(),
-                       [](double a) { return boost::numeric_cast<unsigned>(a); });
         // The hessian will be stored in a square Eigen for inversion
         Eigen::MatrixXd H = Eigen::MatrixXd::Zero(_(n_eph), _(n_eph));
         // Gradient and Constants will be stored in these column vectors
@@ -111,46 +101,63 @@ public:
                     // Every 50 lines print the column names
                     if (count % 50u == 1u) {
                         pagmo::print("\n", std::setw(7), "Gen:", std::setw(15), "Fevals:", std::setw(15),
-                                     "Best:", "\tConstants:", "\tFormula:\n");
+                                     "Best loss:", std::setw(10), "Ndf size:", std::setw(10), "Compl.:\n");
                     }
-                    auto formula = udp_ptr->prettier(best_x);
-                    log_single_line(gen - 1, prob.get_fevals() - fevals0, best_f[0], formula, best_x, n_eph);
+                    log_single_line(gen - 1, prob.get_fevals() - fevals0, pop);
                     ++count;
                 }
             }
 
+            // At each generation we need a copy of the population
+            pagmo::population popnew(pop);
+            // We also need to randomly assign the number of active mutations to each individual. We do this
+            // instantiating an n_active_mutations vector:
+            std::vector<pagmo::vector_double::size_type> best_idx(NP);
+            std::vector<unsigned> n_active_mutations(NP);
+            std::iota(n_active_mutations.begin(), n_active_mutations.end(),
+                      pagmo::vector_double::size_type(0)); // 0,1,2,3,4,5,6,7,8
+            std::transform(
+                n_active_mutations.begin(), n_active_mutations.end(), n_active_mutations.begin(),
+                [this](pagmo::vector_double::size_type el) { return el % m_max_mut; }); // 0, 1, 2, 3, 0, 1, 2, 3,
+            std::shuffle(n_active_mutations.begin(), n_active_mutations.end(), m_e);    // 3, 1, 0, 2, 0, 2, 3, 1,
+
             // 1 - We generate new NP individuals mutating the integer part of the chromosome and leaving the continuous
             // part untouched
-            std::vector<pagmo::vector_double> mutated_x(NP, best_x);
-            std::vector<pagmo::vector_double> mutated_f(NP, best_f);
+            std::vector<pagmo::vector_double> mutated_x(NP);
             for (decltype(NP) i = 0u; i < NP; ++i) {
-                cgp.set(best_xu);
-                // TODO: (crop the active mutation number to some value or create a distribution)
-                cgp.mutate_active(m_mut_n + static_cast<unsigned>(i));
-                std::vector<unsigned> mutated_xu = cgp.get();
+                mutated_x[i] = pop.get_x()[i];
+                // We extract the integer part of the individual
+                std::vector<unsigned> mutated_xu(mutated_x[i].size() - n_eph);
+                std::transform(mutated_x[i].data() + n_eph, mutated_x[i].data() + mutated_x[i].size(),
+                               mutated_xu.begin(), [](double a) { return boost::numeric_cast<unsigned>(a); });
+                // Use it to set the CGP
+                cgp.set(mutated_xu);
+                // Mutate the expression
+                cgp.mutate_active(n_active_mutations[i]);
+                mutated_xu = cgp.get();
+                // Put it back
                 std::transform(mutated_xu.begin(), mutated_xu.end(), mutated_x[i].data() + n_eph,
                                [](unsigned a) { return boost::numeric_cast<double>(a); });
             }
 
-            // 2 - Life long learning is here obtained performing a single Newton iteration (thus favouring constants
-            // appearing linearly) and when this does not bring to an improvement, by applying a few gradient descent
-            // steps
+            // 2 - Life long learning (i.e. touching the continuous part) is  obtained performing a single Newton
+            // iteration (thus favouring constants appearing linearly)
             for (decltype(NP) i = 0u; i < NP; ++i) {
+                pagmo::vector_double grad;
+                std::vector<pagmo::vector_double> hess;
                 // For a single ephemeral constants we avoid to call the Eigen machinery as its an overkill.
                 // I never tested if this is actually also more efficient, but it certainly is more readable.
                 if (n_eph == 1u) {
-                    auto hess = prob.hessians(mutated_x[i]);
-                    auto grad = prob.gradient(mutated_x[i]);
+                    hess = prob.hessians(mutated_x[i]);
+                    grad = prob.gradient(mutated_x[i]);
                     if (grad[0] != 0.) {
                         mutated_x[i][0] = mutated_x[i][0] - grad[0] / hess[0][0];
                     }
-                    mutated_f[i] = prob.fitness(mutated_x[i]);
                 } else {
                     // TODO IMPORTANT: guard against non invertible Hessians (for exmaple when an eph constant is not
-                    // picked up)
-                    // We compute hessians and gradients stored in the pagmo format
-                    auto hess = prob.hessians(mutated_x[i]);
-                    auto grad = prob.gradient(mutated_x[i]);
+                    // picked up) We compute hessians and gradients stored in the pagmo format
+                    hess = prob.hessians(mutated_x[i]);
+                    grad = prob.gradient(mutated_x[i]);
                     // We copy them into the Eigen format
                     for (decltype(hess[0].size()) j = 0u; j < hess[0].size(); ++j) {
                         H(_(hs[0][j].first), _(hs[0][j].second)) = hess[0][j];
@@ -166,52 +173,26 @@ public:
                     for (decltype(n_eph) j = 0u; j < n_eph; ++j) {
                         mutated_x[i][j] = C(_(j), 0);
                     }
-                    mutated_f[i] = prob.fitness(mutated_x[i]);
+                }
+                // We use prob to evaluate the fitness so its feval counter is increased.
+                auto f = prob.fitness(mutated_x[i]);
+                // Diversity mechanism. If the fitness is already present we do not insert the individual.
+                // Do I need this copy? @bluescarni? Can I use the get in the find directly? its a ref I think
+                // so yes in theory....
+                auto fs = popnew.get_f();
+                if (std::find(fs.begin(), fs.end(), f) == fs.end() && std::isfinite(f[0])) {
+                    popnew.push_back(mutated_x[i], f);
                 }
             }
-            // 3 - We check if we found anything better.
-            for (decltype(NP) i = 0u; i < NP; ++i) {
-                if (pagmo::detail::less_than_f(mutated_f[i][0], best_f[0])) {
-                    best_f = mutated_f[i];
-                    best_x = mutated_x[i];
-                    std::copy(mutated_x[i].data() + n_eph, mutated_x[i].data() + mutated_x[i].size(), best_xu.begin());
-                }
-                // TODO: else some gradient descent steps
-                //    COPY FROM best_x THE EPH VALUES INTO mutated_x
-                //    for (decltype(5u) k = 0u; k < 10u; ++k) {
-                //        auto grad = prob.gradient(mutated_x[i]);
-                //        auto loss_gradient_norm = std::sqrt(std::inner_product(grad.begin(), grad.end(), grad.begin(),
-                //        0.));
-                //        // We only do a few steps if the gradient is not zero and finite.
-                //        if (loss_gradient_norm > 1e-13 && std::isfinite(loss_gradient_norm)) {
-                //            std::transform(
-                //                grad.begin(), grad.end(), mutated_x[i].data(), mutated_x[i].data(),
-                //                [lr, loss_gradient_norm](double a, double b) { return b - a / loss_gradient_norm * lr;
-                //                });
-                //        } else {
-                //            break;
-                //        }
-                //    }
-                //    mutated_f[i] = prob.fitness(mutated_x[i]);
-            }
-            // Check if ftol exit condition is met
-            if (pagmo::detail::less_than_f(best_f[0], m_ftol)) {
-                auto formula = udp_ptr->prettier(best_x);
-                log_single_line(gen, prob.get_fevals() - fevals0, best_f[0], formula, best_x, n_eph);
-                if (pagmo::detail::less_than_f(best_f[0], pop.get_f()[best_idx][0])) {
-                    pop.set_xf(worst_idx, best_x, best_f);
-                }
-                pagmo::print("Exit condition -- ftol < ", m_ftol, "\n");
-                return pop;
+            // 3 - We select a new population using the crowding distance
+            best_idx = pagmo::select_best_N_mo(popnew.get_f(), NP);
+            // We insert into the population
+            for (pagmo::population::size_type i = 0; i < NP; ++i) {
+                pop.set_xf(i, popnew.get_x()[best_idx[i]], popnew.get_f()[best_idx[i]]);
             }
         }
-        if (pagmo::detail::less_than_f(best_f[0], pop.get_f()[best_idx][0])) {
-            pop.set_xf(worst_idx, best_x, best_f);
-        }
-
         if (m_verbosity > 0u) {
-            auto formula = udp_ptr->prettier(best_x);
-            log_single_line(m_gen, prob.get_fevals() - fevals0, best_f[0], formula, best_x, n_eph);
+            log_single_line(m_gen, prob.get_fevals() - fevals0, pop);
             pagmo::print("Exit condition -- max generations = ", m_gen, '\n');
         }
         return pop;
@@ -289,8 +270,7 @@ public:
     {
         std::ostringstream ss;
         pagmo::stream(ss, "\tMaximum number of generations: ", m_gen);
-        pagmo::stream(ss, "\n\tNumber of active mutations: ", m_mut_n);
-        pagmo::stream(ss, "\n\tExit condition of the final loss (ftol): ", m_ftol);
+        pagmo::stream(ss, "\n\tMaximum number of active mutations: ", m_max_mut);
         pagmo::stream(ss, "\n\tVerbosity: ", m_verbosity);
         pagmo::stream(ss, "\n\tSeed: ", m_seed);
         return ss.str();
@@ -322,18 +302,18 @@ private:
         return static_cast<Eigen::DenseIndex>(n);
     }
     // This prints to screen and logs one single line.
-    void log_single_line(unsigned gen, unsigned long long fevals, double best_f, const std::string &formula,
-                         const std::vector<double> &best_x, pagmo::vector_double::size_type n_eph) const
+    void log_single_line(unsigned gen, unsigned long long fevals, const pagmo::population &pop) const
     {
-        std::vector<double> eph_val(best_x.data(), best_x.data() + n_eph);
-        pagmo::print(std::setw(7), gen, std::setw(15), fevals, std::setw(15), best_f, "\t", eph_val, "\t",
-                     formula.substr(0, 40) + " ...", '\n');
-        m_log.emplace_back(gen, fevals, best_f, eph_val, formula);
+        pagmo::vector_double ideal_point = pagmo::ideal(pop.get_f());
+        pagmo::vector_double nadir_point = pagmo::nadir(pop.get_f());
+        auto ndf_size = pagmo::non_dominated_front_2d(pop.get_f()).size();
+        pagmo::print(std::setw(7), gen, std::setw(15), fevals, std::setw(15), ideal_point[0], std::setw(10), ndf_size,
+                     std::setw(10), nadir_point[1], '\n');
+        m_log.emplace_back(gen, fevals, ideal_point[0], ndf_size, nadir_point[1]);
     }
 
     unsigned m_gen;
-    unsigned m_mut_n;
-    double m_ftol;
+    unsigned m_max_mut;
     mutable detail::random_engine_type m_e;
     unsigned m_seed;
     unsigned m_verbosity;

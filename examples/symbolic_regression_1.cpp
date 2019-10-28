@@ -14,13 +14,6 @@
 using namespace dcgp;
 using namespace boost::algorithm;
 
-// In this first tutorial we show how to find an exact formula for some input data that do not require
-// any real valued constant.
-//
-// This is the easiest case for a symbolic regression task and thus makes it for a perfect entry tutorial.
-//
-// We use the classic problem Koza quintic polynomial from the dcgp::gym, that is x0 - 2*x0**3 + x0**5.
-
 int main()
 {
     // We load the data (using problem koza_quintic from the gym)
@@ -34,11 +27,11 @@ int main()
     // We init a population with four individuals
     pagmo::population pop{udp, 4};
 
-    // And we define an evolutionary startegy with 1000 generation and 2
+    // And we define an evolutionary startegy with 10000 generation and 2
     // active mutations (base)
     dcgp::es4cgp uda(10000, 1u, 1e-8);
     pagmo::algorithm algo{uda};
-    algo.set_verbosity(100u);
+    algo.set_verbosity(500u);
 
     // We evolve the population
     pop = algo.evolve(pop);

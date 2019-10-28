@@ -14,20 +14,6 @@
 using namespace dcgp;
 using namespace boost::algorithm;
 
-// In this second tutorial we show how to find an exact formula for some input data where we also
-// want to learn some constants.
-//
-// This case is more generic and interesting than the one treated in the previous tutorial,
-// and can be considered, already, of use in industrial settings.
-//
-// NOTE: constants can, in general, be learned via two main techniques
-// 1) evolutionary (common practice in GP)
-// 2) 'backpropagation' (this is original with dCGP)
-//
-// In this tutorial we use 2)
-//
-// We use the problem P2 from the dcgp::gym, that is x**5 - pi*x**3 + 2 pi / x
-
 int main()
 {
     // We load the data (using problem P1 from the gym)
@@ -44,7 +30,7 @@ int main()
     // We instantiate the memetic solver setting 1000 maximum generation and one active mutation (minimum)
     dcgp::mes4cgp uda(1000u, 1u, 1e-8);
     pagmo::algorithm algo{uda};
-    algo.set_verbosity(10u);
+    algo.set_verbosity(50u);
 
     // We solve
     pop = algo.evolve(pop);

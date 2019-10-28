@@ -3,6 +3,7 @@
 #include <audi/gdual.hpp>
 #include <boost/numeric/conversion/cast.hpp>
 #include <boost/range/algorithm/transform.hpp>
+#include <numeric> // std::accumulate
 #include <pagmo/io.hpp>
 #include <pagmo/population.hpp>
 #include <pagmo/types.hpp>
@@ -15,6 +16,22 @@
 
 namespace dcgp
 {
+/// A Symbolic Regression problem
+/**
+ *
+ * Symbolic regression is a type of regression analysis that searches the space of mathematical expressions to 
+ * find the model that best fits a given dataset, both in terms of accuracy and simplicity 
+ * (ref: https://en.wikipedia.org/wiki/Symbolic_regression). It also is one of the core applications
+ * for Differentiable Cartesian Genetic Programming.
+ *
+ * This class provides an easy way to instantiate symbolic regression problems as optimization problems having
+ * a continuous part (i.e. the value of the parameters in the model) and an integer part (i.e. the representation of
+ * the model computational graph). The instantiated object can be used as UDP (User Defined Problem) in the pagmo optimization suite.
+ *
+ * The symbolic regression problem can be instantiated both as a single and a two-objectives problem. In the second
+ * case, aside the Mean Squared Error, the formula complexity will be considered as an objective.
+ *
+ */
 class symbolic_regression
 {
 public:
@@ -25,8 +42,8 @@ public:
      * It is guaranteed that m_points[0] and m_labels[0] can be accessed.
      */
     symbolic_regression()
-        : m_points(1), m_labels(1), m_r(1), m_c(1), m_l(1), m_arity(2), m_f(kernel_set<double>({"sum"})()),
-          m_parallel_batches(0u)
+        : m_points(1), m_labels(1), m_r(1), m_c(1), m_l(1), m_arity(2), m_f(kernel_set<double>({"sum"})()), m_n_eph(0),
+          m_multi_objective(true), m_parallel_batches(0u)
     {
     }
 
@@ -54,10 +71,11 @@ public:
                         std::vector<kernel<double>> f
                         = kernel_set<double>({"sum", "diff", "mul", "pdiv"})(), // functions
                         unsigned n_eph = 0u,                                    // number of ephemeral constants
-                        unsigned parallel_batches = 0u                          // number of parallel batches
+                        bool multi_objective = false,  // when true the fitness also returns the formula complexity
+                        unsigned parallel_batches = 0u // number of parallel batches
                         )
         : m_points(points), m_labels(labels), m_r(r), m_c(c), m_l(l), m_arity(arity), m_f(f), m_n_eph(n_eph),
-          m_parallel_batches(parallel_batches)
+          m_multi_objective(multi_objective), m_parallel_batches(parallel_batches)
     {
         unsigned n;
         unsigned m;
@@ -101,6 +119,21 @@ public:
         for (const auto &symb : m_dcgp.get_eph_symb()) {
             m_deph_symb.push_back("d" + symb);
         }
+        // We create the symbols of the input variables here
+        for (decltype(m_points[0].size()) i = 0u; i < m_points[0].size(); ++i) {
+            m_symbols.push_back("x" + std::to_string(i));
+        }
+    }
+
+    /// Number of objectives
+    /**
+     * Returns the number of objectives.
+     *
+     * @return the number of objectives.
+     */
+    pagmo::vector_double::size_type get_nobj() const
+    {
+        return 1u + m_multi_objective;
     }
 
     /// Fitness computation
@@ -113,17 +146,39 @@ public:
      */
     pagmo::vector_double fitness(const pagmo::vector_double &x) const
     {
+        std::vector<double> retval(1u + m_multi_objective, 0);
+        // Here we set the CGP member from the chromosome
+        set_cgp(x);
         if (x == m_cache_fitness.first) {
-            return m_cache_fitness.second;
+            retval[0] = m_cache_fitness.second[0];
         } else {
-            std::vector<double> retval(1, 0);
-            // Here we set the CGP member from the chromosome
-            set_cgp(x);
             // And we compute the MSE loss splitting the data in n batches.
             // TODO: make this work also when m_parallel_batches does not divide exactly the data size.
             retval[0] = m_cgp.loss(m_points, m_labels, "MSE", m_parallel_batches);
-            return retval;
         }
+        // In the multiobjective case we compute the formula complexity
+        if (m_multi_objective) {
+            std::ostringstream ss;
+            // A first "naive" implementation of the formula complexity measure is the length of
+            // the shortest string among pretty and prettier. That is among the raw cgp expression
+            // and the result of constructing a symengine expression out of it (which carries out some
+            // basic simplifications but that may results in rare occasions in a longer string).
+            std::vector<std::string> pretty = m_cgp(m_symbols);
+            double l_pretty = std::accumulate(pretty.begin(), pretty.end(), 0., [](double a, std::string b) {
+                return a + static_cast<double>(b.length());
+            });
+            double l_prettier = 0.;
+            for (decltype(pretty.size()) i = 0u; i < pretty.size(); ++i) {
+                SymEngine::Expression prettier(pretty[i]);
+                pagmo::stream(ss, prettier);
+                auto string = ss.str();
+                // We remove whitespaces too
+                l_prettier += static_cast<double>(string.length() - static_cast<decltype(string.length())>(std::count(string.begin(), string.end(), ' ')));
+            }
+            // Here we define the formula complexity
+            retval[1] = std::min(l_pretty, l_prettier);
+        }
+        return retval;
     }
 
     /// Gradient computation
@@ -155,7 +210,7 @@ public:
         auto loss = m_dcgp.loss(m_dpoints, m_dlabels, "MSE", m_parallel_batches);
         // Now we extract fitness and gradient and store the values in th caches or in the return value
         m_cache_fitness.first = x;
-        m_cache_fitness.second.resize(1);
+        m_cache_fitness.second.resize(get_nobj());
         m_cache_fitness.second[0] = loss.constant_cf();
         loss.extend_symbol_set(m_deph_symb);
         if (!(loss.get_order() == 0u)) { // this happens when input terminals of the eph constants are inactive
@@ -201,7 +256,10 @@ public:
         auto hs = hessians_sparsity();
         auto hd = hs[0].size();
         // Initializing the return value (hessian) to zeros.
-        std::vector<pagmo::vector_double> retval(1, std::vector<double>(hd, 0.));
+        std::vector<pagmo::vector_double> retval;
+        for (const auto &item : hs) {
+            retval.emplace_back(item.size(), 0.);
+        }
         // Initializing the gradient to zeros.
         m_cache_gradient.first = x;
         m_cache_gradient.second.clear();
@@ -227,7 +285,7 @@ public:
 
         // Now we extract fitness, gradient and hessians from the gdual and store the values (retval or cache)
         m_cache_fitness.first = x;
-        m_cache_fitness.second.resize(1);
+        m_cache_fitness.second.resize(get_nobj());
         m_cache_fitness.second[0] = loss.constant_cf();
         // We compute the gradient and the hessian only if
         // the loss depends on at least one ephemeral constant.
@@ -268,6 +326,9 @@ public:
             }
         }
         retval.push_back(std::move(sp));
+        if (m_multi_objective) {
+            retval.push_back({{}});
+        }
         return retval;
     }
 
@@ -442,20 +503,24 @@ private:
     std::vector<std::vector<gdual_d>> m_dpoints;
     std::vector<std::vector<gdual_d>> m_dlabels;
     std::vector<std::string> m_deph_symb;
+    std::vector<std::string> m_symbols;
+
     unsigned m_r;
     unsigned m_c;
     unsigned m_l;
     unsigned m_arity;
     std::vector<kernel<double>> m_f;
     unsigned m_n_eph;
+    bool m_multi_objective;
     unsigned m_parallel_batches;
     // The fact that this is mutable may hamper the performances of the bfe as the thread safetly level
     // of the UDP in pagmo will force copies of the UDP to be made in all threads. This can in principle be
     // avoided, but likely resulting in prepature optimization. (see https://github.com/darioizzo/dcgp/pull/42)
     mutable expression<double> m_cgp;
+    // TODO: this should be vectorized gduals
     mutable expression<gdual_d> m_dcgp;
     mutable std::pair<pagmo::vector_double, pagmo::vector_double> m_cache_fitness;
     mutable std::pair<pagmo::vector_double, pagmo::vector_double> m_cache_gradient;
-};
+}; // namespace dcgp
 } // namespace dcgp
 #endif

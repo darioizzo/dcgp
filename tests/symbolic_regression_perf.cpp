@@ -12,7 +12,7 @@
 
 using namespace dcgp;
 
-BOOST_AUTO_TEST_CASE(fitness_gradient_speed)
+BOOST_AUTO_TEST_CASE(fitness_gradient_hessians_speed)
 {
     kernel_set<double> basic_set({"sum", "diff", "mul", "div"});
     std::vector<std::vector<double>> points, labels;
@@ -34,6 +34,14 @@ BOOST_AUTO_TEST_CASE(fitness_gradient_speed)
         boost::timer::auto_cpu_timer t;
         for (decltype(pop.size()) i = 0u; i < pop.size(); ++i) {
             udp.gradient(pop.get_x()[i]);
+        }
+    }
+    // We measure the speed on N hessians evaluations
+    pagmo::print("Hessians evaluation speed on 100 calls: \n");
+    {
+        boost::timer::auto_cpu_timer t;
+        for (decltype(pop.size()) i = 0u; i < pop.size(); ++i) {
+            udp.hessians(pop.get_x()[i]);
         }
     }
 }

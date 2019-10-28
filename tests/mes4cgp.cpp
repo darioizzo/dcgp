@@ -1,4 +1,4 @@
-#define BOOST_TEST_MODULE dcgp_es4cgp_test
+#define BOOST_TEST_MODULE dcgp_mes4cgp_test
 #include <boost/test/unit_test.hpp>
 #include <pagmo/algorithm.hpp>
 #include <pagmo/io.hpp>
@@ -21,6 +21,7 @@ BOOST_AUTO_TEST_CASE(construction_test)
 BOOST_AUTO_TEST_CASE(evolve_test)
 {
     // We test that evolve fails on UDPs that are not suitable.
+    kernel_set<double> basic_set({"sum", "diff", "mul", "div"});
     mes4cgp uda(10u, 1u, 1e-4, 0u);
     { // wrong problem (not symbolic)
         pagmo::population pop{pagmo::rosenbrock(10), 4};
@@ -30,11 +31,17 @@ BOOST_AUTO_TEST_CASE(evolve_test)
         pagmo::population pop(symbolic_regression({{1., 2.}, {0.3, -0.32}}, {{3. / 2.}, {0.02 / 0.32}}), 1u);
         BOOST_CHECK_THROW(uda.evolve(pop), std::invalid_argument);
     }
+    { // multiobjective
+        pagmo::population pop(symbolic_regression({{1., 2.}, {0.3, -0.32}}, {{3. / 2.}, {0.02 / 0.32}}, 1, 15, 16, 2,
+                                                  basic_set(), 2u, true),
+                              10u);
+        BOOST_CHECK_THROW(uda.evolve(pop), std::invalid_argument);
+    }
     { // zero gen
         pagmo::population pop{symbolic_regression({{1., 2.}, {0.3, -0.32}}, {{3. / 2.}, {0.02 / 0.32}}), 4u};
-        //BOOST_CHECK(mes4cgp{0u}.evolve(pop).get_x()[0] == pop.get_x()[0]);
+        // BOOST_CHECK(mes4cgp{0u}.evolve(pop).get_x()[0] == pop.get_x()[0]);
     }
-    // Here we only test that evolution is deterministic if the seed is controlled 
+    // Here we only test that evolution is deterministic if the seed is controlled
     pagmo::problem prob{symbolic_regression({{1., 2.}, {0.3, -0.32}}, {{3. / 2.}, {0.02 / 0.32}})};
     pagmo::population pop1{prob, 5u, 23u};
     pagmo::population pop2{prob, 5u, 23u};

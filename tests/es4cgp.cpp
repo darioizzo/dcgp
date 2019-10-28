@@ -22,12 +22,19 @@ BOOST_AUTO_TEST_CASE(evolve_test)
 {
     // We test that evolve fails on UDPs that are not suitable.
     es4cgp uda(10u, 2u, 1e-4, true, 0u);
+    kernel_set<double> basic_set({"sum", "diff", "mul", "div"});
     { // wrong problem (not symbolic)
         pagmo::population pop{pagmo::rosenbrock(10), 4};
         BOOST_CHECK_THROW(uda.evolve(pop), std::invalid_argument);
     }
     { // small pop
         pagmo::population pop(symbolic_regression({{1., 2.}, {0.3, -0.32}}, {{3. / 2.}, {0.02 / 0.32}}), 1u);
+        BOOST_CHECK_THROW(uda.evolve(pop), std::invalid_argument);
+    }
+    { // multiobjective
+        pagmo::population pop(symbolic_regression({{1., 2.}, {0.3, -0.32}}, {{3. / 2.}, {0.02 / 0.32}}, 1u, 15u, 16u,
+                                                  2u, basic_set(), 2u, true),
+                              10u);
         BOOST_CHECK_THROW(uda.evolve(pop), std::invalid_argument);
     }
     { // zero gen
