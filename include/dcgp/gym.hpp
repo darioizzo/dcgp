@@ -1,7 +1,12 @@
+#ifndef DCGP_GYM_H
+#define DCGP_GYM_H
+
 #include <boost/math/constants/constants.hpp>
 #include <cmath>
 #include <random>
 #include <vector>
+
+#include <dcgp/nist_data.hpp>
 
 namespace dcgp
 {
@@ -193,5 +198,63 @@ void generate_vladi8(std::vector<std::vector<double>> &points, std::vector<std::
         labels.push_back({detail::vladi8(point)});
     }
 }
+
+void generate_chwirut1(std::vector<std::vector<double>> &points, std::vector<std::vector<double>> &labels)
+{
+    points.clear();
+    labels.clear();
+    points = chwirut1_points;
+    labels = chwirut1_labels;
+}
+
+void generate_chwirut2(std::vector<std::vector<double>> &points, std::vector<std::vector<double>> &labels)
+{
+    points.clear();
+    labels.clear();
+    points = chwirut2_points;
+    labels = chwirut2_labels;
+}
+
+void generate_daniel_wood(std::vector<std::vector<double>> &points, std::vector<std::vector<double>> &labels)
+{
+    points.clear();
+    labels.clear();
+    points = daniel_wood_points;
+    labels = daniel_wood_labels;
+}
+
+void generate_gauss1(std::vector<std::vector<double>> &points, std::vector<std::vector<double>> &labels)
+{
+    points.clear();
+    labels.clear();
+    points = gauss1_points;
+    labels = gauss1_labels;
+}
+
+void generate_kirby2(std::vector<std::vector<double>> &points, std::vector<std::vector<double>> &labels)
+{
+    points.clear();
+    labels.clear();
+    points = kirby2_points;
+    labels = kirby2_labels;
+}
+
+void generate_lanczos2(std::vector<std::vector<double>> &points, std::vector<std::vector<double>> &labels)
+{
+    points.clear();
+    labels.clear();
+    points = lanczos2_points;
+    labels = lanczos2_labels;
+}
+
+void generate_misra1b(std::vector<std::vector<double>> &points, std::vector<std::vector<double>> &labels)
+{
+    points.clear();
+    labels.clear();
+    points = misra1b_points;
+    labels = misra1b_labels;
+}
 } // namespace gym
 } // namespace dcgp
+
+#endif

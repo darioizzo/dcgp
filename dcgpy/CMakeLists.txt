@@ -40,7 +40,7 @@ $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include/dcgpy> $<INSTALL_INTERFACE
 YACMA_PYTHON_MODULE(core core.cpp docstrings.cpp)
 target_link_libraries(core PRIVATE ${DCGPY_BP_TARGET} dcgpy)
 target_compile_options(core PRIVATE "$<$<CONFIG:DEBUG>:${DCGP_CXX_FLAGS_DEBUG}>" "$<$<CONFIG:RELEASE>:${DCGP_CXX_FLAGS_RELEASE}>")
-set_property(TARGET core PROPERTY CXX_STANDARD 14)
+set_property(TARGET core PROPERTY CXX_STANDARD 17)
 set_property(TARGET core PROPERTY CXX_STANDARD_REQUIRED YES)
 set_property(TARGET core PROPERTY CXX_EXTENSIONS NO)
 

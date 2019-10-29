@@ -461,6 +461,18 @@ void expose_expression_ann(std::string type)
              bp::arg("parallel") = 0u, bp::arg("shuffle") = true));
 }
 
+using gym_ptr = void (*)(std::vector<std::vector<double>> &, std::vector<std::vector<double>> &);
+template <gym_ptr F>
+inline void expose_data_from_the_gym(const std::string &name)
+{
+    bp::def(
+        name.c_str(), +[]() {
+            std::vector<std::vector<double>> points, labels;
+            F(points, labels);
+            return bp::make_tuple(vvector_to_ndarr<double>(points), vvector_to_ndarr<double>(labels));
+        });
+}
+
 BOOST_PYTHON_MODULE(core)
 {
     bp::docstring_options doc_options;
@@ -499,11 +511,37 @@ BOOST_PYTHON_MODULE(core)
     expose_expression<gdual_v>("gdual_vdouble");
     expose_expression_weighted<gdual_v>("gdual_vdouble");
 
-    bp::def("generate_koza_quintic", +[]() {
-        std::vector<std::vector<double>> points, labels;
-        gym::generate_koza_quintic(points, labels);
-        return bp::make_tuple(vvector_to_ndarr<double>(points), vvector_to_ndarr<double>(labels));
-    });
+    // Making data from the gym available in python
+    expose_data_from_the_gym<&gym::generate_koza_quintic>("generate_koza_quintic");
+    // From Our paper
+    expose_data_from_the_gym<&gym::generate_P1>("generate_P1");
+    expose_data_from_the_gym<&gym::generate_P2>("generate_P2");
+    expose_data_from_the_gym<&gym::generate_P3>("generate_P3");
+    expose_data_from_the_gym<&gym::generate_P4>("generate_P4");
+    expose_data_from_the_gym<&gym::generate_P5>("generate_P5");
+    expose_data_from_the_gym<&gym::generate_P6>("generate_P6");
+    expose_data_from_the_gym<&gym::generate_P7>("generate_P7");
+    // From Vladi paper
+    expose_data_from_the_gym<&gym::generate_vladi1>("generate_vladi1");
+    expose_data_from_the_gym<&gym::generate_vladi2>("generate_vladi2");
+    expose_data_from_the_gym<&gym::generate_vladi3>("generate_vladi3");
+    expose_data_from_the_gym<&gym::generate_vladi4>("generate_vladi4");
+    expose_data_from_the_gym<&gym::generate_vladi5>("generate_vladi5");
+    expose_data_from_the_gym<&gym::generate_vladi6>("generate_vladi6");
+    expose_data_from_the_gym<&gym::generate_vladi7>("generate_vladi7");
+    expose_data_from_the_gym<&gym::generate_vladi8>("generate_vladi8");
+    // NIST data
+    expose_data_from_the_gym<&gym::generate_chwirut1>("generate_chwirut1");
+    expose_data_from_the_gym<&gym::generate_chwirut2>("generate_chwirut2");
+    expose_data_from_the_gym<&gym::generate_daniel_wood>("generate_daniel_wood");
+    expose_data_from_the_gym<&gym::generate_gauss1>("generate_gauss1");
+    expose_data_from_the_gym<&gym::generate_kirby2>("generate_kirby2");
+    expose_data_from_the_gym<&gym::generate_lanczos2>("generate_lanczos2");
+    expose_data_from_the_gym<&gym::generate_misra1b>("generate_misra1b");
+
+
+
+
 
     // Define a cleanup functor to be run when the module is unloaded.
     struct dcgp_cleanup_functor {
