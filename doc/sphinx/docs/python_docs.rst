@@ -102,3 +102,21 @@ kernel_set_gdual_vdouble
 .. autoclass:: dcgpy.kernel_set_gdual_vdouble
 
     .. automethod:: dcgpy.kernel_set_gdual_vdouble.push_back()
+
+Symbolic Regression Gym
+-----------------------------
+
+Koza Quintic
+^^^^^^^^^^^^^
+
+.. autofunction:: dcgpy.generate_koza_quintic
+
+Problems P1-P7
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+These seven problems are introduced studied in the paper:
+
+Izzo, Dario, Francesco Biscani, and Alessio Mereta. "Differentiable genetic programming." 
+European Conference on Genetic Programming. Springer, 2017.
+
+.. autofunction:: dcgpy.generate_P1
+.. autofunction:: dcgpy.generate_P1

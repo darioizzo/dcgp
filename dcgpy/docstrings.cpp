@@ -403,22 +403,49 @@ Args:
 
 std::string generate_koza_quintic_doc()
 {
-    return R"(X, Y = generate_koza_quintic()
+    return R"(
 
 Generates the data for the classic Koza quintic regression problem.
 
 .. math::
-   Y = X^5 - 2 X^3 + X
+   y = x^5 - 2 x^3 + x
 
-X is sampled in ten equally spaced points in [-3,3].
+x is sampled in ten equally spaced points in [-3,3].
 
 Returns:
-    A tuple containing the points (2D NumPy float array) and labels (2D NumPy float array).
+    A tuple containing the points (``2D NumPy float array``) and labels (``2D NumPy float array``).
 
 Examples:
 
 >>> from dcgpy import *
 >>> X, Y = generate_koza_quintic()
+>>> plt.plot(X[0], Y[0])
+    )";
+}
+
+std::string generate_P1_doc()
+{
+    return R"(
+
+Generates the problem P1 from the paper:
+
+Izzo, Dario, Francesco Biscani, and Alessio Mereta. "Differentiable genetic programming." 
+European Conference on Genetic Programming. Springer, 2017.
+
+The functional form of such a problem is:
+
+.. math::
+   y = x^5 - \pi x^3 + x
+
+X is sampled in ten equally spaced points in [1,3].
+
+Returns:
+    A tuple containing the points (``2D NumPy float array``) and labels (``2D NumPy float array``).
+
+Examples:
+
+>>> from dcgpy import *
+>>> X, Y = generate_P1()
 >>> plt.plot(X[0], Y[0])
     )";
 }

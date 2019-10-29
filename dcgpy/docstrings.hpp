@@ -37,6 +37,7 @@ std::string expression_ann_sgd_doc();
 
 // gym
 std::string generate_koza_quintic_doc();
+std::string generate_P1_doc();
 
 
 } // namespace dcgpy

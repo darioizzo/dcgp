@@ -514,11 +514,9 @@ BOOST_PYTHON_MODULE(core)
     expose_expression_weighted<gdual_v>("gdual_vdouble");
 
     // Making data from the gym available in python
-    expose_data_from_the_gym<&gym::generate_koza_quintic>(
-        "generate_koza_quintic",
-        generate_koza_quintic_doc());
+    expose_data_from_the_gym<&gym::generate_koza_quintic>("generate_koza_quintic", generate_koza_quintic_doc());
     // From Our paper
-    expose_data_from_the_gym<&gym::generate_P1>("generate_P1");
+    expose_data_from_the_gym<&gym::generate_P1>("generate_P1", generate_P1_doc());
     expose_data_from_the_gym<&gym::generate_P2>("generate_P2");
     expose_data_from_the_gym<&gym::generate_P3>("generate_P3");
     expose_data_from_the_gym<&gym::generate_P4>("generate_P4");
