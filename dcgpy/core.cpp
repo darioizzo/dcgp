@@ -1,5 +1,6 @@
 #include <audi/audi.hpp>
 #include <boost/python.hpp>
+#include <boost/python/tuple.hpp>
 #include <functional> //std::function
 #include <sstream>
 #include <string>
@@ -8,6 +9,7 @@
 #include <dcgp/expression.hpp>
 #include <dcgp/expression_ann.hpp>
 #include <dcgp/expression_weighted.hpp>
+#include <dcgp/gym.hpp>
 #include <dcgp/kernel.hpp>
 #include <dcgp/kernel_set.hpp>
 
@@ -496,6 +498,12 @@ BOOST_PYTHON_MODULE(core)
     expose_kernel_set<gdual_v>("gdual_vdouble");
     expose_expression<gdual_v>("gdual_vdouble");
     expose_expression_weighted<gdual_v>("gdual_vdouble");
+
+    bp::def("generate_koza_quintic", +[]() {
+        std::vector<std::vector<double>> points, labels;
+        gym::generate_koza_quintic(points, labels);
+        return bp::make_tuple(vvector_to_ndarr<double>(points), vvector_to_ndarr<double>(labels));
+    });
 
     // Define a cleanup functor to be run when the module is unloaded.
     struct dcgp_cleanup_functor {

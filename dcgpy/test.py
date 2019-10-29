@@ -2,6 +2,7 @@ from __future__ import absolute_import as _ai
 
 import unittest as _ut
 
+
 class test_kernel(_ut.TestCase):
 
     def my_sum(self, x):
@@ -48,9 +49,9 @@ class test_kernel(_ut.TestCase):
 
 class test_kernel_set(_ut.TestCase):
     def runTest(self):
-            self.test_double()
-            self.test_gdual_double()
-            self.test_gdual_vdouble()
+        self.test_double()
+        self.test_gdual_double()
+        self.test_gdual_vdouble()
 
     def my_sum(self, x):
         return sum(x)
@@ -109,28 +110,41 @@ class test_kernel_set(_ut.TestCase):
 
 
 class test_expression(_ut.TestCase):
-
     def runTest(self):
-            self.test_double()
-            self.test_gdual_double()
-            self.test_gdual_vdouble()
-            self.test_loss_double()
-            self.test_loss_gdual_double()
-            self.test_loss_gdual_vdouble()
+        self.test_double()
+        self.test_gdual_double()
+        self.test_gdual_vdouble()
+        self.test_loss_double()
+        self.test_loss_gdual_double()
+        self.test_loss_gdual_vdouble()
 
     def test_double(self):
         from dcgpy import expression_double as expression
         from dcgpy import kernel_set_double as kernel_set
 
         # Construction
-        ex = expression(1, 1, 1, 6, 6, 2, kernel_set(
-            ["sum", "mul", "div", "diff"])(), 0, 33)
+        ex = expression(inputs=1,
+                        outputs=1,
+                        rows=1,
+                        cols=6,
+                        levels_back=6,
+                        arity=2,
+                        kernels=kernel_set(["sum", "mul", "div", "diff"])(),
+                        n_eph=0,
+                        seed=33)
         self.assertEqual(ex([1.]), [0.5])
         self.assertEqual(ex([2.]), [1.])
         self.assertEqual(ex([-1.]), [-0.5])
         self.assertEqual(ex([-2.]), [-1.])
-        ex = expression(1, 1, 1, 6, 6, 2, kernel_set(
-            ["sum", "mul", "div", "diff"])(), 2, 33)
+        ex = expression(inputs=1,
+                        outputs=1,
+                        rows=1,
+                        cols=6,
+                        levels_back=6,
+                        arity=2,
+                        kernels=kernel_set(["sum", "mul", "div", "diff"])(),
+                        n_eph=2,
+                        seed=33)
         # Ephemeral value attributes tests
         self.assertEqual(ex.eph_val, [1, 2])
         self.assertEqual(ex.eph_symb, ["c1", "c2"])
@@ -144,8 +158,15 @@ class test_expression(_ut.TestCase):
         from dcgpy import kernel_set_gdual_double as kernel_set
         from pyaudi import gdual_double as gdual
 
-        ex = expression(1, 1, 1, 6, 6, 2, kernel_set(
-            ["sum", "mul", "div", "diff"])(), 0, 20)
+        ex = expression(inputs=1,
+                        outputs=1,
+                        rows=1,
+                        cols=6,
+                        levels_back=6,
+                        arity=2,
+                        kernels=kernel_set(["sum", "mul", "div", "diff"])(),
+                        n_eph=0,
+                        seed=20)
         self.assertEqual(ex([gdual(1, "x", 2)]), [gdual(0.)])
         self.assertEqual(ex([gdual(2, "x", 2)]), [gdual(0.)])
         self.assertEqual(ex([gdual(-1, "x", 2)]), [gdual(0.)])
@@ -156,8 +177,15 @@ class test_expression(_ut.TestCase):
         from dcgpy import kernel_set_gdual_vdouble as kernel_set
         from pyaudi import gdual_vdouble as gdual
 
-        ex = expression(1, 1, 1, 6, 6, 2, kernel_set(
-            ["sum", "mul", "div", "diff"])(), 0, 20)
+        ex = expression(inputs=1, 
+                        outputs=1, 
+                        rows=1, 
+                        cols=6, 
+                        levels_back=6, 
+                        arity=2, 
+                        kernels=kernel_set(["sum", "mul", "div", "diff"])(), 
+                        n_eph=0, 
+                        seed=20)
         self.assertEqual(ex([gdual([1, 2, -1, 2], "x", 2)]),
                          [gdual([0, 0, 0, 0])])
 
@@ -166,8 +194,15 @@ class test_expression(_ut.TestCase):
         from dcgpy import kernel_set_double as kernel_set
         import numpy as np
 
-        ex = expression(1, 1, 1, 6, 6, 2, kernel_set(
-            ["sum", "mul", "div", "diff"])(), 0, 33)
+        ex = expression(inputs=1, 
+                        outputs=1, 
+                        rows=1, 
+                        cols=6, 
+                        levels_back=6, 
+                        arity=2, 
+                        kernels=kernel_set(["sum", "mul", "div", "diff"])(), 
+                        n_eph=0, 
+                        seed=33)
         x = 1.
         loss_list = ex.loss([[x]], [ex([x])], "MSE")
         loss_array = ex.loss(np.array([[x]]), np.array([ex([x])]), "MSE")
@@ -179,13 +214,19 @@ class test_expression(_ut.TestCase):
         from pyaudi import gdual_double as gdual
         import numpy as np
 
-        ex = expression(1, 1, 1, 6, 6, 2, kernel_set(
-            ["sum", "mul", "div", "diff"])(), 0, 33)
+        ex = expression(inputs=1, 
+                        outputs=1, 
+                        rows=1, 
+                        cols=6, 
+                        levels_back=6, 
+                        arity=2, 
+                        kernels=kernel_set(["sum", "mul", "div", "diff"])(), 
+                        n_eph=0, 
+                        seed=33)
         x = gdual(1., "x", 3)
         loss_list = ex.loss([[x]], [ex([x])], "MSE")
         loss_array = ex.loss(np.array([[x]]), np.array([ex([x])]), "MSE")
         self.assertEqual(loss_list, loss_array)
-
 
     def test_loss_gdual_vdouble(self):
         from dcgpy import expression_gdual_vdouble as expression
@@ -193,8 +234,15 @@ class test_expression(_ut.TestCase):
         from pyaudi import gdual_vdouble as gdual
         import numpy as np
 
-        ex = expression(1, 1, 1, 6, 6, 2, kernel_set(
-            ["sum", "mul", "div", "diff"])(), 0, 33)
+        ex = expression(inputs=1, 
+                        outputs=1, 
+                        rows=1, 
+                        cols=6, 
+                        levels_back=6, 
+                        arity=2, 
+                        kernels=kernel_set(["sum", "mul", "div", "diff"])(), 
+                        n_eph=0, 
+                        seed=33)
         x = gdual([1., 2.], "x", 3)
         loss_list = ex.loss([[x]], [ex([x])], "MSE")
         loss_array = ex.loss(np.array([[x]]), np.array([ex([x])]), "MSE")
