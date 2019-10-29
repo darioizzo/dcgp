@@ -35,6 +35,10 @@ std::string expression_ann_set_output_f_doc();
 std::string expression_ann_n_active_weights_doc();
 std::string expression_ann_sgd_doc();
 
+// gym
+std::string generate_koza_quintic_doc();
+
+
 } // namespace dcgpy
 
 #endif

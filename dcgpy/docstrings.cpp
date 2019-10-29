@@ -39,7 +39,7 @@ Constructs a set of common kernel functions from their common name. The kernel
 functions can be then retrieved via the call operator.
 
 Args:
-    kernels (``List[string]``): a list of strings indicating names of kernels to use. The following are available: "sum", "diff", "mul", "div", "sig", "sin", "log", "exp"
+    kernels (``list`` of ``string``): a list of strings indicating names of kernels to use. The following are available: "sum", "diff", "mul", "div", "sig", "sin", "log", "exp"
 
 Examples:
 
@@ -117,8 +117,8 @@ Computes the loss of the model on the data
 Args:
     points (2D NumPy float array or ``list of lists`` of ``float``): the input data
     labels (2D NumPy float array or ``list of lists`` of ``float``): the output labels (supervised signal)
-    loss_type (a ``str``): the loss, one of "MSE" for Mean Square Error and "CE" for Cross-Entropy.
-    parallel (a ``int``): sets the grain for parallelism. 0 -> no parallelism n -> divides the data into n parts and processes them in parallel threads 
+    loss_type (``str``): the loss, one of "MSE" for Mean Square Error and "CE" for Cross-Entropy.
+    parallel (``int``): sets the grain for parallelism. 0 -> no parallelism n -> divides the data into n parts and processes them in parallel threads 
 
 Raises:
     ValueError: if *points* or *labels* are malformed or if *loss_type* is not one of the available types.
@@ -132,7 +132,7 @@ std::string expression_set_doc()
 Sets the chromosome.
 
 Args:
-    chromosome (a ``List[int]``): the new chromosome
+    chromosome (``List[int]``): the new chromosome
 
 Raises:
     ValueError: if the the chromosome is incompatible with the expression (n.inputs, n.outputs, levels-back, etc.)
@@ -146,8 +146,8 @@ std::string expression_set_f_gene_doc()
 Sets for a valid node (i.e. not an input node) a new kernel.
 
 Args:
-    node_id (a ``List[int]``): the node id
-    f_id (a ``List[int]``): the kernel id
+    node_id (``List[int]``): the node id
+    f_id (``List[int]``): the kernel id
 
 
 Raises:
@@ -162,7 +162,7 @@ std::string expression_mutate_doc()
 Mutates multiple genes within their allowed bounds.
 
 Args:
-    idxs (a ``List[int]``): indexes of the genes to me mutated
+    idxs (``List[int]``): indexes of the genes to me mutated
 
 Raises:
     ValueError: if the index of a gene is out of bounds
@@ -179,9 +179,9 @@ Note:
     Convention adopted for node numbering: http://ppsn2014.ijs.si/files/slides/ppsn2014-tutorial3-miller.pdf
 
 Args:
-    node_id (an ``int``): the id of the node whose weight is being set
-    input_id (an ``int``): the id of the node input (0 for the first one up to arity-1)
-    weight (a ``float``): the new value of the weight
+    node_id (``int``): the id of the node whose weight is being set
+    input_id (``int``): the id of the node input (0 for the first one up to arity-1)
+    weight (``float``): the new value of the weight
 
 Raises:
     ValueError: if *node_id* or *input_id* are not valid
@@ -195,7 +195,7 @@ std::string expression_weighted_set_weights_doc()
 Sets all weights.
 
 Args:
-    weights (a ``List[float]``): the new values of the weights
+    weights (``List[float]``): the new values of the weights
 
 Raises:
     ValueError: if the input vector dimension is not valid (r*c*arity)
@@ -212,8 +212,8 @@ Note:
     Convention adopted for node numbering: http://ppsn2014.ijs.si/files/slides/ppsn2014-tutorial3-miller.pdf
 
 Args:
-    node_id (an ``int``): the id of the node
-    input_id (an ``int``): the id of the node input (0 for the first one up to arity-1)
+    node_id (``int``): the id of the node
+    input_id (``int``): the id of the node input (0 for the first one up to arity-1)
 
 Returns:
     The value of the weight (a ``float``)
@@ -235,10 +235,10 @@ Note:
     Convention adopted for node numbering: http://ppsn2014.ijs.si/files/slides/ppsn2014-tutorial3-miller.pdf
 
 Args:
-    node_id (an ``int``): the id of the node whose weight is being set
-    input_id (an ``int``): the id of the node input (0 for the first one up to arity-1)
-    weight (a ``float``): the new value of the weight
-    idx (an ``int``): the idx of weight to be set
+    node_id (``int``): the id of the node whose weight is being set
+    input_id (``int``): the id of the node input (0 for the first one up to arity-1)
+    weight (``float``): the new value of the weight
+    idx (``int``): the idx of weight to be set
 
 Raises:
     ValueError: if *node_id* or *input_id* or *idx* are not valid
@@ -257,11 +257,11 @@ Note:
     Convention adopted for node numbering: http://ppsn2014.ijs.si/files/slides/ppsn2014-tutorial3-miller.pdf
 
 Args:
-    node_id (an ``int``): the id of the node
-    input_id (an ``int``): the id of the node input (0 for the first one up to arity-1)
+    node_id (``int``): the id of the node
+    input_id (``int``): the id of the node input (0 for the first one up to arity-1)
 
 Returns:
-    The value of the weight (a ``float``)
+    The value of the weight (``float``)
 
 Raises:
     ValueError: if *node_id* or *input_id* or *idx* are not valid
@@ -275,9 +275,9 @@ std::string expression_ann_randomise_weights_doc()
 Randomises all the values for the weights using a normal distribution.
 
 Args:
-    mean (a ``float``): the mean of the normal distribution.
-    std (a ``float``): the standard deviation of the normal distribution.
-    seed (an ``int``): the random seed to use.
+    mean (``float``): the mean of the normal distribution.
+    std (``float``): the standard deviation of the normal distribution.
+    seed (``int``): the random seed to use.
 )";
 }
 
@@ -291,8 +291,8 @@ Note:
     Convention adopted for node numbering: http://ppsn2014.ijs.si/files/slides/ppsn2014-tutorial3-miller.pdf
 
 Args:
-    node_id (an ``int``): the id of the node whose weight is being set
-    weight (a ``float``): the new value of the weight
+    node_id (``int``): the id of the node whose weight is being set
+    weight (``float``): the new value of the weight
 
 Raises:
     ValueError: if *node_id* is not valid
@@ -306,7 +306,7 @@ std::string expression_ann_set_biases_doc()
 Sets all biases.
 
 Args:
-    biases (a ``List[float]``): the new values of the biases
+    biases (``List[float]``): the new values of the biases
 
 Raises:
     ValueError: if the input vector dimension is not valid (r*c)
@@ -323,7 +323,7 @@ Note:
     Convention adopted for node numbering: http://ppsn2014.ijs.si/files/slides/ppsn2014-tutorial3-miller.pdf
 
 Args:
-    node_id (an ``int``): the id of the node
+    node_id (``int``): the id of the node
 
 Returns:
     The value of the bias (a ``float``)
@@ -340,9 +340,9 @@ std::string expression_ann_randomise_biases_doc()
 Randomises all the values for the biases using a normal distribution.
 
 Args:
-    mean (a ``float``): the mean of the normal distribution.
-    std (a ``float``): the standard deviation of the normal distribution.
-    seed (an ``int``): the random seed to use.
+    mean (``float``): the mean of the normal distribution.
+    std (``float``): the standard deviation of the normal distribution.
+    seed (``int``): the random seed to use.
 )";
 }
 
@@ -356,15 +356,15 @@ Performs one epoch of mini-batch (stochastic) gradient descent updating the weig
 Args:
     points (2D NumPy float array or ``list of lists`` of ``float``): the input data
     labels (2D NumPy float array or ``list of lists`` of ``float``): the output labels (supervised signal)
-    lr (a ``float``): the learning generate
-    batch_size (an ``int``): the batch size
-    loss_type (a ``str``): the loss, one of "MSE" for Mean Square Error and "CE" for Cross-Entropy.
-    parallel (a ``int``): sets the grain for parallelism. 0 -> no parallelism n -> divides the data into n parts and processes them in parallel threads 
-    shuffle (a ``bool``): when True it shuffles the points and labels before performing one epoch of training.
+    lr (``float``): the learning generate
+    batch_size (``int``): the batch size
+    loss_type (``str``): the loss, one of "MSE" for Mean Square Error and "CE" for Cross-Entropy.
+    parallel (``int``): sets the grain for parallelism. 0 -> no parallelism n -> divides the data into n parts and processes them in parallel threads 
+    shuffle (``bool``): when True it shuffles the points and labels before performing one epoch of training.
 
 
 Returns:
-    The average error across the batches a (``float``). Note: this is only a proxy for the real loss on the whole data set.
+    The average error across the batches (``float``). Note: this is only a proxy for the real loss on the whole data set.
 
 Raises:
     ValueError: if *points* or *labels* are malformed or if *loss_type* is not one of the available types.
@@ -381,7 +381,7 @@ and hence the output layer should have some sigmoid or tanh nonlinearity, or in 
 layer by having a sum in all output neurons.
 
 Args:
-    name (a ``string``): the kernel name
+    name (``string``): the kernel name
 
 Raises:
     ValueError: if *name* is not one of the kernels in the expression.
@@ -397,7 +397,29 @@ of weights that are updated when calling sgd. The number of active weights, as w
 the number of active nodes, define the complexity of the expression expressed by the chromosome.
 
 Args:
-    unique (a ``bool``): when True weights are counted only once if connecting the same two nodes.
+    unique (``bool``): when True weights are counted only once if connecting the same two nodes.
+    )";
+}
+
+std::string generate_koza_quintic_doc()
+{
+    return R"(X, Y = generate_koza_quintic()
+
+Generates the data for the classic Koza quintic regression problem.
+
+.. math::
+   Y = X^5 - 2 X^3 + X
+
+X is sampled in ten equally spaced points in [-3,3].
+
+Returns:
+    A tuple containing the points (2D NumPy float array) and labels (2D NumPy float array).
+
+Examples:
+
+>>> from dcgpy import *
+>>> X, Y = generate_koza_quintic()
+>>> plt.plot(X[0], Y[0])
     )";
 }
 } // namespace dcgpy

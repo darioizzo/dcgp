@@ -463,14 +463,16 @@ void expose_expression_ann(std::string type)
 
 using gym_ptr = void (*)(std::vector<std::vector<double>> &, std::vector<std::vector<double>> &);
 template <gym_ptr F>
-inline void expose_data_from_the_gym(const std::string &name)
+inline void expose_data_from_the_gym(const std::string &name, const std::string &docstring = std::string{"ds"})
 {
     bp::def(
-        name.c_str(), +[]() {
+        name.c_str(),
+        +[]() {
             std::vector<std::vector<double>> points, labels;
             F(points, labels);
             return bp::make_tuple(vvector_to_ndarr<double>(points), vvector_to_ndarr<double>(labels));
-        });
+        },
+        docstring.c_str());
 }
 
 BOOST_PYTHON_MODULE(core)
@@ -512,7 +514,9 @@ BOOST_PYTHON_MODULE(core)
     expose_expression_weighted<gdual_v>("gdual_vdouble");
 
     // Making data from the gym available in python
-    expose_data_from_the_gym<&gym::generate_koza_quintic>("generate_koza_quintic");
+    expose_data_from_the_gym<&gym::generate_koza_quintic>(
+        "generate_koza_quintic",
+        generate_koza_quintic_doc());
     // From Our paper
     expose_data_from_the_gym<&gym::generate_P1>("generate_P1");
     expose_data_from_the_gym<&gym::generate_P2>("generate_P2");
@@ -538,10 +542,6 @@ BOOST_PYTHON_MODULE(core)
     expose_data_from_the_gym<&gym::generate_kirby2>("generate_kirby2");
     expose_data_from_the_gym<&gym::generate_lanczos2>("generate_lanczos2");
     expose_data_from_the_gym<&gym::generate_misra1b>("generate_misra1b");
-
-
-
-
 
     // Define a cleanup functor to be run when the module is unloaded.
     struct dcgp_cleanup_functor {
