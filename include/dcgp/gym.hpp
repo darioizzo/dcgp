@@ -57,7 +57,7 @@ multivar_func uball5d = [](const std::vector<double> &x) {
 };
 multivar_func ratpol3d
     = [](const std::vector<double> &x) { return 30. * (x[0] - 1.) * (x[2] - 1.) / (x[1] * x[1] * (x[0] - 10.)); };
-multivar_func vladi6 = [](const std::vector<double> &x) { return 6. * std::cos(x[0] * std::sin(x[1])); };
+multivar_func sinecosine = [](const std::vector<double> &x) { return 6. * std::cos(x[0] * std::sin(x[1])); };
 multivar_func vladi7
     = [](const std::vector<double> &x) { return (x[0] - 3.) * (x[1] - 3.) + 2 * std::sin((x[0] - 4.) * (x[1] - 4.)); };
 multivar_func vladi8 = [](const std::vector<double> &x) {
@@ -162,16 +162,16 @@ void generate_ratpol3d(std::vector<std::vector<double>> &points, std::vector<std
         labels.push_back({detail::ratpol3d(point)});
     }
 }
-void generate_vladi6(std::vector<std::vector<double>> &points, std::vector<std::vector<double>> &labels)
+void generate_sinecosine(std::vector<std::vector<double>> &points, std::vector<std::vector<double>> &labels)
 {
     points.clear();
     labels.clear();
     std::mt19937 mt(32);
-    std::uniform_real_distribution<double> dist(0.05, 2);
+    std::uniform_real_distribution<double> dist(0.1, 5.9);
     for (unsigned i = 0; i < 30u; ++i) {
         std::vector<double> point = {dist(mt), dist(mt)};
         points.push_back(point);
-        labels.push_back({detail::vladi6(point)});
+        labels.push_back({detail::sinecosine(point)});
     }
 }
 void generate_vladi7(std::vector<std::vector<double>> &points, std::vector<std::vector<double>> &labels)
