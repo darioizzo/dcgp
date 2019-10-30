@@ -110,7 +110,7 @@ Args:
 
 std::string expression_loss_doc()
 {
-    return R"(loss(points, labels, loss_type, parallel=True)
+    return R"(loss(points, labels, loss_type)
 
 Computes the loss of the model on the data
 
@@ -118,7 +118,6 @@ Args:
     points (2D NumPy float array or ``list of lists`` of ``float``): the input data
     labels (2D NumPy float array or ``list of lists`` of ``float``): the output labels (supervised signal)
     loss_type (``str``): the loss, one of "MSE" for Mean Square Error and "CE" for Cross-Entropy.
-    parallel (``int``): sets the grain for parallelism. 0 -> no parallelism n -> divides the data into n parts and processes them in parallel threads 
 
 Raises:
     ValueError: if *points* or *labels* are malformed or if *loss_type* is not one of the available types.
@@ -446,6 +445,87 @@ Examples:
 
 >>> from dcgpy import *
 >>> X, Y = generate_P1()
+>>> plt.plot(X[0], Y[0])
+    )";
+}
+
+std::string generate_P2_doc()
+{
+    return R"(
+
+Generates the problem P2 from the paper:
+
+Izzo, Dario, Francesco Biscani, and Alessio Mereta. "Differentiable genetic programming." 
+European Conference on Genetic Programming. Springer, 2017.
+
+The functional form of such a problem is:
+
+.. math::
+   y = x^5 - \pi x^3 + \frac{\pi}{x}
+
+X is sampled in ten equally spaced points in [0.1,5].
+
+Returns:
+    A tuple containing the points (``2D NumPy float array``) and labels (``2D NumPy float array``).
+
+Examples:
+
+>>> from dcgpy import *
+>>> X, Y = generate_P2()
+>>> plt.plot(X[0], Y[0])
+    )";
+}
+
+std::string generate_P3_doc()
+{
+    return R"(
+
+Generates the problem P3 from the paper:
+
+Izzo, Dario, Francesco Biscani, and Alessio Mereta. "Differentiable genetic programming." 
+European Conference on Genetic Programming. Springer, 2017.
+
+The functional form of such a problem is:
+
+.. math::
+   y = \frac{e x^5 + x^3}{x+1}
+
+X is sampled in ten equally spaced points in [-0.9,1].
+
+Returns:
+    A tuple containing the points (``2D NumPy float array``) and labels (``2D NumPy float array``).
+
+Examples:
+
+>>> from dcgpy import *
+>>> X, Y = generate_P3()
+>>> plt.plot(X[0], Y[0])
+    )";
+}
+
+std::string generate_P4_doc()
+{
+    return R"(
+
+Generates the problem P4 from the paper:
+
+Izzo, Dario, Francesco Biscani, and Alessio Mereta. "Differentiable genetic programming." 
+European Conference on Genetic Programming. Springer, 2017.
+
+The functional form of such a problem is:
+
+.. math::
+   y = sin(\pi x) + \frac 1x
+
+X is sampled in ten equally spaced points in [-1,1].
+
+Returns:
+    A tuple containing the points (``2D NumPy float array``) and labels (``2D NumPy float array``).
+
+Examples:
+
+>>> from dcgpy import *
+>>> X, Y = generate_P4()
 >>> plt.plot(X[0], Y[0])
     )";
 }

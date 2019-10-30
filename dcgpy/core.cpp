@@ -225,13 +225,15 @@ void expose_expression(std::string type)
             "mutate_active_fgene", &expression<T>::mutate_active_fgene,
             "mutate_active_fgene(N = 1)\nMutates N randomly selected active function genes within their allowed bounds",
             (bp::arg("N") = 1))
+        // The parallelism for the loss computation is switched off in python as pitonic kernels can produce a crash
         .def(
             "loss",
             +[](const expression<T> &instance, const bp::object &points, const bp::object &labels,
-                const std::string &loss,
-                unsigned parallel) { return instance.loss(to_vv<T>(points), to_vv<T>(labels), loss, parallel); },
-            expression_loss_doc().c_str(),
-            (bp::arg("points"), bp::arg("labels"), bp::arg("loss"), bp::arg("parallel") = 0u))
+                const std::string &loss) {
+                auto parallel = 0u;
+                return instance.loss(to_vv<T>(points), to_vv<T>(labels), loss, parallel);
+            },
+            expression_loss_doc().c_str(), (bp::arg("points"), bp::arg("labels"), bp::arg("loss")))
         .add_property(
             "eph_val", +[](const expression<T> &instance) { return v_to_l(instance.get_eph_val()); },
             +[](expression<T> &instance, const bp::object &eph_val) { instance.set_eph_val(l_to_v<T>(eph_val)); })
@@ -517,9 +519,9 @@ BOOST_PYTHON_MODULE(core)
     expose_data_from_the_gym<&gym::generate_koza_quintic>("generate_koza_quintic", generate_koza_quintic_doc());
     // From Our paper
     expose_data_from_the_gym<&gym::generate_P1>("generate_P1", generate_P1_doc());
-    expose_data_from_the_gym<&gym::generate_P2>("generate_P2");
-    expose_data_from_the_gym<&gym::generate_P3>("generate_P3");
-    expose_data_from_the_gym<&gym::generate_P4>("generate_P4");
+    expose_data_from_the_gym<&gym::generate_P2>("generate_P2", generate_P2_doc());
+    expose_data_from_the_gym<&gym::generate_P3>("generate_P3", generate_P3_doc());
+    expose_data_from_the_gym<&gym::generate_P4>("generate_P4", generate_P4_doc());
     expose_data_from_the_gym<&gym::generate_P5>("generate_P5");
     expose_data_from_the_gym<&gym::generate_P6>("generate_P6");
     expose_data_from_the_gym<&gym::generate_P7>("generate_P7");

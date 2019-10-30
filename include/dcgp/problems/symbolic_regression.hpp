@@ -451,6 +451,11 @@ public:
         return m_cgp;
     }
 
+    pagmo::thread_safety get_thread_safety() const
+    {
+        return pagmo::thread_safety::none;
+    }
+
 private:
     // This setter can be marked const as m_cgp is mutable
     void set_cgp(const pagmo::vector_double &x) const
