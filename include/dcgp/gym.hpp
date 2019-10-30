@@ -44,12 +44,12 @@ multivar_func P7 = [](const std::vector<double> &x) { return std::cos(pi * x[0])
 multivar_func kotanchek = [](const std::vector<double> &x) {
     return std::exp(-(x[0] - 1.) * (x[0] - 1.)) / (1.2 + (x[1] - 2.5) * (x[1] - 2.5));
 };
-multivar_func vladi2 = [](const std::vector<double> &x) {
+multivar_func salutowicz = [](const std::vector<double> &x) {
     return std::exp(-x[0]) * x[0] * x[0] * x[0] * std::cos(x[0]) * std::sin(x[0])
            * (std::cos(x[0]) * std::sin(x[0]) * std::sin(x[0]) - 1.);
 };
-multivar_func vladi3 = [](const std::vector<double> &x) { return vladi2(x) * (x[1] - 5.); };
-multivar_func vladi4 = [](const std::vector<double> &x) {
+multivar_func salutowicz2d = [](const std::vector<double> &x) { return salutowicz(x) * (x[1] - 5.); };
+multivar_func uball5d = [](const std::vector<double> &x) {
     return 10.
            / (5.
               + std::pow((x[0] - 3.), 2) * std::pow((x[1] - 3.), 2) * std::pow((x[2] - 3.), 2)
@@ -121,11 +121,11 @@ void generate_kotanchek(std::vector<std::vector<double>> &points, std::vector<st
         labels.push_back({detail::kotanchek(point)});
     }
 }
-void generate_vladi2(std::vector<std::vector<double>> &points, std::vector<std::vector<double>> &labels)
+void generate_salutowicz(std::vector<std::vector<double>> &points, std::vector<std::vector<double>> &labels)
 {
-    gym::detail::generate_1Ddata(points, labels, detail::vladi2, 0.05, 10., 100);
+    gym::detail::generate_1Ddata(points, labels, detail::salutowicz, 0.05, 10., 100);
 }
-void generate_vladi3(std::vector<std::vector<double>> &points, std::vector<std::vector<double>> &labels)
+void generate_salutowicz2d(std::vector<std::vector<double>> &points, std::vector<std::vector<double>> &labels)
 {
     points.clear();
     labels.clear();
@@ -134,10 +134,10 @@ void generate_vladi3(std::vector<std::vector<double>> &points, std::vector<std::
     for (unsigned i = 0; i < 601u; ++i) {
         std::vector<double> point = {dist(mt), dist(mt)};
         points.push_back(point);
-        labels.push_back({detail::vladi3(point)});
+        labels.push_back({detail::salutowicz2d(point)});
     }
 }
-void generate_vladi4(std::vector<std::vector<double>> &points, std::vector<std::vector<double>> &labels)
+void generate_uball5d(std::vector<std::vector<double>> &points, std::vector<std::vector<double>> &labels)
 {
     points.clear();
     labels.clear();
@@ -146,7 +146,7 @@ void generate_vladi4(std::vector<std::vector<double>> &points, std::vector<std::
     for (unsigned i = 0; i < 1024u; ++i) {
         std::vector<double> point = {dist(mt), dist(mt), dist(mt), dist(mt), dist(mt)};
         points.push_back(point);
-        labels.push_back({detail::vladi4(point)});
+        labels.push_back({detail::uball5d(point)});
     }
 }
 void generate_vladi5(std::vector<std::vector<double>> &points, std::vector<std::vector<double>> &labels)

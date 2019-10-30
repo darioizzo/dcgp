@@ -157,3 +157,6 @@ Vladislavleva, Ekaterina J., Guido F. Smits, and Dick Den Hertog.
 programming." IEEE Transactions on Evolutionary Computation 13.2 (2008): 333-349. 
 
 .. autofunction:: dcgpy.generate_kotanchek
+.. autofunction:: dcgpy.generate_salutowicz
+.. autofunction:: dcgpy.generate_salutowicz2d
+.. autofunction:: dcgpy.generate_uball5d
