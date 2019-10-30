@@ -58,9 +58,9 @@ multivar_func uball5d = [](const std::vector<double> &x) {
 multivar_func ratpol3d
     = [](const std::vector<double> &x) { return 30. * (x[0] - 1.) * (x[2] - 1.) / (x[1] * x[1] * (x[0] - 10.)); };
 multivar_func sinecosine = [](const std::vector<double> &x) { return 6. * std::cos(x[0] * std::sin(x[1])); };
-multivar_func vladi7
+multivar_func ripple
     = [](const std::vector<double> &x) { return (x[0] - 3.) * (x[1] - 3.) + 2 * std::sin((x[0] - 4.) * (x[1] - 4.)); };
-multivar_func vladi8 = [](const std::vector<double> &x) {
+multivar_func ratpol2d = [](const std::vector<double> &x) {
     return (std::pow(x[0] - 3., 4) + std::pow(x[1] - 3., 3) - (x[1] - 3.)) / (std::pow(x[1] - 2, 4.) + 10.);
 };
 
@@ -174,7 +174,7 @@ void generate_sinecosine(std::vector<std::vector<double>> &points, std::vector<s
         labels.push_back({detail::sinecosine(point)});
     }
 }
-void generate_vladi7(std::vector<std::vector<double>> &points, std::vector<std::vector<double>> &labels)
+void generate_ripple(std::vector<std::vector<double>> &points, std::vector<std::vector<double>> &labels)
 {
     points.clear();
     labels.clear();
@@ -183,10 +183,10 @@ void generate_vladi7(std::vector<std::vector<double>> &points, std::vector<std::
     for (unsigned i = 0; i < 300u; ++i) {
         std::vector<double> point = {dist(mt), dist(mt)};
         points.push_back(point);
-        labels.push_back({detail::vladi7(point)});
+        labels.push_back({detail::ripple(point)});
     }
 }
-void generate_vladi8(std::vector<std::vector<double>> &points, std::vector<std::vector<double>> &labels)
+void generate_ratpol2d(std::vector<std::vector<double>> &points, std::vector<std::vector<double>> &labels)
 {
     points.clear();
     labels.clear();
@@ -195,7 +195,7 @@ void generate_vladi8(std::vector<std::vector<double>> &points, std::vector<std::
     for (unsigned i = 0; i < 50u; ++i) {
         std::vector<double> point = {dist(mt), dist(mt)};
         points.push_back(point);
-        labels.push_back({detail::vladi8(point)});
+        labels.push_back({detail::ratpol2d(point)});
     }
 }
 

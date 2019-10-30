@@ -532,8 +532,8 @@ BOOST_PYTHON_MODULE(core)
     expose_data_from_the_gym<&gym::generate_uball5d>("generate_uball5d", generate_uball5d_doc());
     expose_data_from_the_gym<&gym::generate_ratpol3d>("generate_ratpol3d", generate_ratpol3d_doc());
     expose_data_from_the_gym<&gym::generate_sinecosine>("generate_sinecosine", generate_sinecosine_doc());
-    expose_data_from_the_gym<&gym::generate_vladi7>("generate_vladi7");
-    expose_data_from_the_gym<&gym::generate_vladi8>("generate_vladi8");
+    expose_data_from_the_gym<&gym::generate_ripple>("generate_ripple", generate_ripple_doc());
+    expose_data_from_the_gym<&gym::generate_ratpol2d>("generate_ratpol2d", generate_ratpol2d_doc());
     // NIST data
     expose_data_from_the_gym<&gym::generate_chwirut1>("generate_chwirut1");
     expose_data_from_the_gym<&gym::generate_chwirut2>("generate_chwirut2");

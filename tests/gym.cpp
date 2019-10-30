@@ -93,16 +93,16 @@ BOOST_AUTO_TEST_CASE(gym_test)
         BOOST_CHECK_EQUAL(labels[i][0], gym::detail::sinecosine(points[i]));
         BOOST_CHECK_EQUAL(labels.size(), points.size());
     }
-    gym::generate_vladi7(points, labels);
+    gym::generate_ripple(points, labels);
     for (decltype(points.size()) i = 0u; i < points.size(); ++i) {
 
-        BOOST_CHECK_EQUAL(labels[i][0], gym::detail::vladi7(points[i]));
+        BOOST_CHECK_EQUAL(labels[i][0], gym::detail::ripple(points[i]));
         BOOST_CHECK_EQUAL(labels.size(), points.size());
     }
-    gym::generate_vladi8(points, labels);
+    gym::generate_ratpol2d(points, labels);
     for (decltype(points.size()) i = 0u; i < points.size(); ++i) {
 
-        BOOST_CHECK_EQUAL(labels[i][0], gym::detail::vladi8(points[i]));
+        BOOST_CHECK_EQUAL(labels[i][0], gym::detail::ratpol2d(points[i]));
         BOOST_CHECK_EQUAL(labels.size(), points.size());
     }
 }

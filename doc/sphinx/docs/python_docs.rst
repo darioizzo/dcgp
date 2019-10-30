@@ -162,3 +162,5 @@ programming." IEEE Transactions on Evolutionary Computation 13.2 (2008): 333-349
 .. autofunction:: dcgpy.generate_uball5d
 .. autofunction:: dcgpy.generate_ratpol3d
 .. autofunction:: dcgpy.generate_sinecosine
+.. autofunction:: dcgpy.generate_ripple
+.. autofunction:: dcgpy.generate_ratpol2d

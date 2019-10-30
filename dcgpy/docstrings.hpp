@@ -51,6 +51,8 @@ std::string generate_salutowicz2d_doc();
 std::string generate_uball5d_doc();
 std::string generate_ratpol3d_doc();
 std::string generate_sinecosine_doc();
+std::string generate_ripple_doc();
+std::string generate_ratpol2d_doc();
 
 
 } // namespace dcgpy
