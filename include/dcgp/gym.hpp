@@ -55,7 +55,7 @@ multivar_func uball5d = [](const std::vector<double> &x) {
               + std::pow((x[0] - 3.), 2) * std::pow((x[1] - 3.), 2) * std::pow((x[2] - 3.), 2)
                     * std::pow((x[3] - 3.), 2) * std::pow((x[4] - 3.), 2));
 };
-multivar_func vladi5
+multivar_func ratpol3d
     = [](const std::vector<double> &x) { return 30. * (x[0] - 1.) * (x[2] - 1.) / (x[1] * x[1] * (x[0] - 10.)); };
 multivar_func vladi6 = [](const std::vector<double> &x) { return 6. * std::cos(x[0] * std::sin(x[1])); };
 multivar_func vladi7
@@ -149,7 +149,7 @@ void generate_uball5d(std::vector<std::vector<double>> &points, std::vector<std:
         labels.push_back({detail::uball5d(point)});
     }
 }
-void generate_vladi5(std::vector<std::vector<double>> &points, std::vector<std::vector<double>> &labels)
+void generate_ratpol3d(std::vector<std::vector<double>> &points, std::vector<std::vector<double>> &labels)
 {
     points.clear();
     labels.clear();
@@ -159,7 +159,7 @@ void generate_vladi5(std::vector<std::vector<double>> &points, std::vector<std::
     for (unsigned i = 0; i < 300u; ++i) {
         std::vector<double> point = {dist(mt), dist1(mt), dist(mt)};
         points.push_back(point);
-        labels.push_back({detail::vladi5(point)});
+        labels.push_back({detail::ratpol3d(point)});
     }
 }
 void generate_vladi6(std::vector<std::vector<double>> &points, std::vector<std::vector<double>> &labels)

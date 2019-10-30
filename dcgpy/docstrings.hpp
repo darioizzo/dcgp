@@ -49,10 +49,7 @@ std::string generate_kotanchek_doc();
 std::string generate_salutowicz_doc();
 std::string generate_salutowicz2d_doc();
 std::string generate_uball5d_doc();
-
-
-
-
+std::string generate_ratpol3d_doc();
 
 } // namespace dcgpy
 

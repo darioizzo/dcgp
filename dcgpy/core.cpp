@@ -530,7 +530,7 @@ BOOST_PYTHON_MODULE(core)
     expose_data_from_the_gym<&gym::generate_salutowicz>("generate_salutowicz", generate_salutowicz_doc());
     expose_data_from_the_gym<&gym::generate_salutowicz2d>("generate_salutowicz2d", generate_salutowicz2d_doc());
     expose_data_from_the_gym<&gym::generate_uball5d>("generate_uball5d", generate_uball5d_doc());
-    expose_data_from_the_gym<&gym::generate_vladi5>("generate_vladi5");
+    expose_data_from_the_gym<&gym::generate_vladi5>("generate_ratpol3d", generate_ratpol3d_doc());
     expose_data_from_the_gym<&gym::generate_vladi6>("generate_vladi6");
     expose_data_from_the_gym<&gym::generate_vladi7>("generate_vladi7");
     expose_data_from_the_gym<&gym::generate_vladi8>("generate_vladi8");
