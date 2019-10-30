@@ -522,11 +522,11 @@ BOOST_PYTHON_MODULE(core)
     expose_data_from_the_gym<&gym::generate_P2>("generate_P2", generate_P2_doc());
     expose_data_from_the_gym<&gym::generate_P3>("generate_P3", generate_P3_doc());
     expose_data_from_the_gym<&gym::generate_P4>("generate_P4", generate_P4_doc());
-    expose_data_from_the_gym<&gym::generate_P5>("generate_P5");
-    expose_data_from_the_gym<&gym::generate_P6>("generate_P6");
-    expose_data_from_the_gym<&gym::generate_P7>("generate_P7");
+    expose_data_from_the_gym<&gym::generate_P5>("generate_P5", generate_P5_doc());
+    expose_data_from_the_gym<&gym::generate_P6>("generate_P6", generate_P6_doc());
+    expose_data_from_the_gym<&gym::generate_P7>("generate_P7", generate_P7_doc());
     // From Vladi paper
-    expose_data_from_the_gym<&gym::generate_vladi1>("generate_vladi1");
+    expose_data_from_the_gym<&gym::generate_kotanchek>("generate_kotanchek", generate_kotanchek_doc());
     expose_data_from_the_gym<&gym::generate_vladi2>("generate_vladi2");
     expose_data_from_the_gym<&gym::generate_vladi3>("generate_vladi3");
     expose_data_from_the_gym<&gym::generate_vladi4>("generate_vladi4");

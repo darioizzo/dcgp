@@ -451,6 +451,10 @@ public:
         return m_cgp;
     }
 
+    /// Thread safety for this udp
+    /**
+     * This is set to none as pitonic kernels could be in the inner expression
+     */
     pagmo::thread_safety get_thread_safety() const
     {
         return pagmo::thread_safety::none;

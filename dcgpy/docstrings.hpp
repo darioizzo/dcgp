@@ -41,6 +41,12 @@ std::string generate_P1_doc();
 std::string generate_P2_doc();
 std::string generate_P3_doc();
 std::string generate_P4_doc();
+std::string generate_P5_doc();
+std::string generate_P6_doc();
+std::string generate_P7_doc();
+
+std::string generate_kotanchek_doc();
+
 
 
 } // namespace dcgpy
