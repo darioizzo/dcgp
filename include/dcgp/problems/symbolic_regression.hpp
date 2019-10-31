@@ -455,10 +455,10 @@ public:
     /**
      * This is set to none as pitonic kernels could be in the inner expression
      */
-    pagmo::thread_safety get_thread_safety() const
-    {
-        return pagmo::thread_safety::none;
-    }
+    //pagmo::thread_safety get_thread_safety() const
+   // {
+    //    return pagmo::thread_safety::none;
+   // }
 
 private:
     // This setter can be marked const as m_cgp is mutable
