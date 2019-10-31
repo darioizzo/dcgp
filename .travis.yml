@@ -74,6 +74,7 @@ matrix:
           sources:
           - ubuntu-toolchain-r-test
     - env: DCGP_BUILD="Python27"
+      dist: bionic
       compiler: gcc
       os: linux
       addons:
