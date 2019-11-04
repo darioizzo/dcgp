@@ -1,0 +1,219 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Python Documentation &#8212; dCGP documentation</title>
+    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="expression (dCGP)" href="expression.html" />
+    <link rel="prev" title="kernel_set" href="../cpp/kernel_set.html" />
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto|Comfortaa|Space+Mono">
+
+  </head>
+  <body>
+
+  <div id="navbar" class="navbar navbar-inverse navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html">
+          dcgp</a>
+        <span class="navbar-text navbar-version pull-left"><b>1.3</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../installation.html">Install</a></li>
+                <li><a href="../../quickstart.html">Quick Start</a></li>
+                <li><a href="../index.html">Docs</a></li>
+                <li><a href="../../tutorials/index.html">Tutorials</a></li>
+                <li><a href="../../theory.html">Theory</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#c">C++</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#python">Python</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Quick start examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../quickstart.html#c">C++</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../quickstart.html#python">Python</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../cpp/index.html">C++ Documentation</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Python Documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">C++ examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/index.html#symbolic-regression">Symbolic Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/index.html#other-applications">Other Applications</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html#python-examples">Python examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/learning_constants.html">Learning constants in a symbolic regression task</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/learning_constants2.html">Learning constants in a symbolic regression task (PART II)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/solving_odes.html">Solving differential equations with dCGP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/weighted_symbolic_regression.html">Weighted dCGP for a symbolic regression task</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/finding_prime_integrals.html">Discovery of prime integrals with dCGP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/An_intro_to_dCGPANNs.html">Representing an Artificial Neural Network as a Cartesian Genetic Program</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/dCGPANNs_for_classification.html">Training a FFNN in dCGPANN vs.&nbsp;Keras (classification)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/dCGPANNs_for_function_approximation.html">Training a FFNN in dCGPANN vs.&nbsp;Keras (regression)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory.html">Cartesian Genetic Programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory.html#dcgp">dCGP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../theory.html#reference">Reference</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="python-documentation">
+<h1><a class="toc-backref" href="#id1">Python Documentation</a><a class="headerlink" href="#python-documentation" title="Permalink to this headline">¶</a></h1>
+<div class="contents topic" id="contents">
+<p class="topic-title first">Contents</p>
+<ul class="simple">
+<li><a class="reference internal" href="#python-documentation" id="id1">Python Documentation</a><ul>
+<li><a class="reference internal" href="#types-of-dcgps" id="id2">Types of dCGPs</a></li>
+<li><a class="reference internal" href="#kernels" id="id3">kernels</a></li>
+<li><a class="reference internal" href="#symbolic-regression-gym" id="id4">Symbolic Regression Gym</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="types-of-dcgps">
+<h2><a class="toc-backref" href="#id2">Types of dCGPs</a><a class="headerlink" href="#types-of-dcgps" title="Permalink to this headline">¶</a></h2>
+<p>Several types of Cartesian Genetic Program are provided in dcgpy. Since the inner computational graph defines, in all cases,
+some kind of mathematical expression, we use the term expression in all names for the different classes.
+We essentially provide three types of dCGP:</p>
+<ul class="simple">
+<li><strong>expression</strong>: this is the original CGP as introduced by Miller in 1999.</li>
+<li><strong>expression_weighted</strong>: this adds to the original CGP formulation weights on each of the graph edges. (original with dCGP - 2016)</li>
+<li><strong>expression_ann</strong>: this represents an Artificial Neural Network inclusive of biases and weights, via a CGP and allows to learn the model parameters using backproagation. (original with dCGP - 2018)</li>
+</ul>
+<p>Each of the above CGPs can operate over different numerical types. For example <strong>expression</strong> can operate over floats, in which case the
+result of evaluating the inner computational graph will be a float, but also on gduals, in which case, the result of evaluating the
+inner computational graph will be a gdual (hence it will contain all the program derivatives up to the chosen order.)</p>
+<p>Another important type some CGP can operate upon is the vectorized gdual. This type is the same as the gdual type, but its vectorized,
+allowing order of magnitude speed ups when a CGP needs to be evaluated over several points (such as in the case aof a loss evaluation)</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="expression.html">expression (dCGP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="expression_weighted.html">expression_weighted (dCGP-W)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="expression_ann.html">expression_ann (dCGP-ANN)</a></li>
+</ul>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="kernels">
+<h2><a class="toc-backref" href="#id3">kernels</a><a class="headerlink" href="#kernels" title="Permalink to this headline">¶</a></h2>
+<p>Kernels, (also called non-linearities in the ANN literature) describe the fundamental computational units of a CGP.
+Things like addition, multiplication, trigonomoetric functions are all kernels. The class <code class="docutils literal"><span class="pre">kernel</span></code> allow the user
+the definition of their own kernels able to operate on the choosen type. Some popular kernels are shipped with dcgpy
+and can be easily instantiated via the class <code class="docutils literal"><span class="pre">kernel_set</span></code></p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="kernel.html">kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="kernel_set.html">kernel set</a></li>
+</ul>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="symbolic-regression-gym">
+<h2><a class="toc-backref" href="#id4">Symbolic Regression Gym</a><a class="headerlink" href="#symbolic-regression-gym" title="Permalink to this headline">¶</a></h2>
+<p>For the specific application of symbolic regression, we make available a number of data sets coming from
+various sources. These are collected in what its called the <code class="docutils literal"><span class="pre">dcgpy</span> <span class="pre">gym</span></code> and have all the same interface.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="koza_quintic.html">Koza Quintic</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p_problems.html">Problems P1-P7</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vladislavleva_problems.html">Problems from Vladislavleva</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nist_problems.html">NIST problems (StRD)</a></li>
+</ul>
+</div>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2018, Dario Izzo, Francesco Biscani, Alessio Mereta.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
