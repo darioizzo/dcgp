@@ -53,7 +53,7 @@ Symbolic Regression Gym
 -----------------------------
 
 For the specific application of symbolic regression, we make available a number of data sets coming from 
-various sources. These are collected in what its called the ``dcgpy gym``` and have all the same interface.
+various sources. These are collected in what its called the ``dcgpy gym`` and have all the same interface.
 
 .. toctree::
   :maxdepth: 1
@@ -61,4 +61,5 @@ various sources. These are collected in what its called the ``dcgpy gym``` and h
   koza_quintic
   p_problems
   vladislavleva_problems
+  nist_problems
 

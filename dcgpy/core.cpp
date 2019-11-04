@@ -535,13 +535,13 @@ BOOST_PYTHON_MODULE(core)
     expose_data_from_the_gym<&gym::generate_ripple>("generate_ripple", generate_ripple_doc());
     expose_data_from_the_gym<&gym::generate_ratpol2d>("generate_ratpol2d", generate_ratpol2d_doc());
     // NIST data
-    expose_data_from_the_gym<&gym::generate_chwirut1>("generate_chwirut1");
-    expose_data_from_the_gym<&gym::generate_chwirut2>("generate_chwirut2");
-    expose_data_from_the_gym<&gym::generate_daniel_wood>("generate_daniel_wood");
-    expose_data_from_the_gym<&gym::generate_gauss1>("generate_gauss1");
-    expose_data_from_the_gym<&gym::generate_kirby2>("generate_kirby2");
-    expose_data_from_the_gym<&gym::generate_lanczos2>("generate_lanczos2");
-    expose_data_from_the_gym<&gym::generate_misra1b>("generate_misra1b");
+    expose_data_from_the_gym<&gym::generate_chwirut1>("generate_chwirut1", generate_chwirut1_doc());
+    expose_data_from_the_gym<&gym::generate_chwirut2>("generate_chwirut2", generate_chwirut2_doc());
+    expose_data_from_the_gym<&gym::generate_daniel_wood>("generate_daniel_wood", generate_daniel_wood_doc());
+    expose_data_from_the_gym<&gym::generate_gauss1>("generate_gauss1", generate_gauss1_doc());
+    expose_data_from_the_gym<&gym::generate_kirby2>("generate_kirby2", generate_kirby2_doc());
+    expose_data_from_the_gym<&gym::generate_lanczos2>("generate_lanczos2", generate_lanczos2_doc());
+    expose_data_from_the_gym<&gym::generate_misra1b>("generate_misra1b", generate_misra1b_doc());
 
     // Define a cleanup functor to be run when the module is unloaded.
     struct dcgp_cleanup_functor {

@@ -863,4 +863,178 @@ Examples:
 >>> ax.scatter(X[:,0], X[:,1], Y)
     )";
 }
+
+std::string generate_chwirut1_doc()
+{
+    return R"(
+
+These data are the result of a NIST study involving ultrasonic calibration. The response variable is ultrasonic response, 
+and the predictor variable is metal distance. (see https://www.itl.nist.gov/div898/strd/nls/data/chwirut1.shtml)
+
+A proposed good model for such a problem is:
+
+.. math::
+   y = \frac{e^{-\beta_1 x}}{\beta_2 + \beta_3 x} + \epsilon
+
+Returns:
+    A tuple containing the points (``2D NumPy float array``) and labels (``2D NumPy float array``).
+
+Examples:
+
+>>> from dcgpy import *
+>>> import matplotlib.pyplot as plt 
+>>> X, Y = generate_chwirut1()
+>>> plt.plot(X,Y, '.')
+    )";
+}
+
+std::string generate_chwirut2_doc()
+{
+    return R"(
+
+These data are the result of a NIST study involving ultrasonic calibration. The response variable is ultrasonic response, 
+and the predictor variable is metal distance. (see https://www.itl.nist.gov/div898/strd/nls/data/chwirut2.shtml)
+
+A proposed good model for such a problem is:
+
+.. math::
+   y = \frac{e^{-\beta_1 x}}{\beta_2 + \beta_3 x} + \epsilon
+
+with respect to the problem chwirut1, less points are included here.
+
+Returns:
+    A tuple containing the points (``2D NumPy float array``) and labels (``2D NumPy float array``).
+
+Examples:
+
+>>> from dcgpy import *
+>>> import matplotlib.pyplot as plt 
+>>> X, Y = generate_chwirut2()
+>>> plt.plot(X,Y, '.')
+    )";
+}
+
+std::string generate_daniel_wood_doc()
+{
+    return R"(
+
+These data and model are described in Daniel and Wood (1980), and originally published in E.S.Keeping, 
+"Introduction to Statistical Inference," Van Nostrand Company, Princeton, NJ, 1962, p. 354. The response variable is energy
+radieted from a carbon filament lamp per cm**2 per second, and the predictor variable is the absolute temperature 
+of the filament in 1000 degrees Kelvin. (see https://www.itl.nist.gov/div898/strd/nls/data/daniel_wood.shtml)
+
+A proposed good model for such a problem is:
+
+.. math::
+   y = \beta_1 x^{\beta_2} + \epsilon
+
+Returns:
+    A tuple containing the points (``2D NumPy float array``) and labels (``2D NumPy float array``).
+
+Examples:
+
+>>> from dcgpy import *
+>>> import matplotlib.pyplot as plt 
+>>> X, Y = generate_daniel_wood()
+>>> plt.plot(X,Y, '.')
+    )";
+}
+
+std::string generate_gauss1_doc()
+{
+    return R"(
+
+The data are two well-separated Gaussians on a decaying exponential baseline plus normally 
+distributed zero-mean noise with variance = 6.25. (see https://www.itl.nist.gov/div898/strd/nls/data/gauss1.shtml)
+
+A proposed good model for such a problem is:
+
+.. math::
+   y = \beta_1 e^{-\beta_2 x} + \beta_3 e^{-\frac{(x-\beta_4)^2}{\beta_5^2}} + \beta_6 e^{-\frac{(x-\beta_7)^2}{\beta_8^2}} + \epsilon
+
+Returns:
+    A tuple containing the points (``2D NumPy float array``) and labels (``2D NumPy float array``).
+
+Examples:
+
+>>> from dcgpy import *
+>>> import matplotlib.pyplot as plt 
+>>> X, Y = generate_gauss1()
+>>> plt.plot(X,Y, '.')
+    )";
+}
+
+std::string generate_kirby2_doc()
+{
+    return R"(
+
+These data are the result of a NIST study involving scanning electron microscope line with standards. 151 
+observations are included. (see https://www.itl.nist.gov/div898/strd/nls/data/kirby2.shtml)
+
+A proposed good model for such a problem is:
+
+.. math::
+   y = \frac{\beta_1 + \beta_2 x + \beta_3 x^2}{1 + \beta_4 x + \beta_5 x^2} + \epsilon
+
+Returns:
+    A tuple containing the points (``2D NumPy float array``) and labels (``2D NumPy float array``).
+
+Examples:
+
+>>> from dcgpy import *
+>>> import matplotlib.pyplot as plt 
+>>> X, Y = generate_kirby2()
+>>> plt.plot(X,Y, '.')
+    )";
+}
+
+std::string generate_lanczos2_doc()
+{
+    return R"(
+
+These data are taken from an example discussed in Lanczos (1956). The data were generated to 6-digits
+of accuracy using the formula below. (see https://www.itl.nist.gov/div898/strd/nls/data/lanczos2.shtml)
+
+A good model for such a problem is, trivially:
+
+.. math::
+   y = \beta_1 e^{-\beta_2 x} + \beta_3 e^{-\beta_4 x} + \beta_5 e^{-\beta_6 x} + \epsilon
+
+Returns:
+    A tuple containing the points (``2D NumPy float array``) and labels (``2D NumPy float array``).
+
+Examples:
+
+>>> from dcgpy import *
+>>> import matplotlib.pyplot as plt 
+>>> X, Y = generate_lanczos2()
+>>> plt.plot(X,Y, '.')
+    )";
+}
+
+std::string generate_misra1b_doc()
+{
+    return R"(
+
+These data are the result of a NIST study involving dental research in monomolecular adsorption. 
+The response variable is volume, and the predictor variable is pressure. 14 observations are 
+available. (see https://www.itl.nist.gov/div898/strd/nls/data/misra1b.shtml)
+
+A good model for such a problem is:
+
+.. math::
+   y = \beta_1 \left( 1 - \frac 1{\left(1 + \beta_1 \frac x2\right)^2}\right) + \epsilon
+
+Returns:
+    A tuple containing the points (``2D NumPy float array``) and labels (``2D NumPy float array``).
+
+Examples:
+
+>>> from dcgpy import *
+>>> import matplotlib.pyplot as plt 
+>>> X, Y = generate_misra1b()
+>>> plt.plot(X,Y, '.')
+    )";
+}
+
 } // namespace dcgpy
