@@ -66,13 +66,24 @@ cmake -DBoost_NO_BOOST_CMAKE=ON -DAUDI_BUILD_AUDI=yes -DAUDI_BUILD_TESTS=no -DCM
 make install > /dev/null 2>&1
 cd ..
 
-# Install pagmo
+# Install pagmo and pygmo
 curl -L  https://github.com/esa/pagmo2/archive/v${PAGMO_VERSION}.tar.gz > pagmo2.tar.gz
 tar xzf pagmo2.tar.gz
 cd pagmo2-${PAGMO_VERSION}
 mkdir build_pagmo
 cd build_pagmo
 cmake -DBoost_NO_BOOST_CMAKE=ON \
+	-DPAGMO_WITH_EIGEN3=yes \
+	-DPAGMO_WITH_NLOPT=yes \
+	-DPAGMO_WITH_IPOPT=yes \
+	-DCMAKE_BUILD_TYPE=Release ../;
+make -j2 install
+cd ../
+mkdir build_pygmo
+cd build_pygmo
+cmake -DBoost_NO_BOOST_CMAKE=ON \
+	-DPAGMO_BUILD_PYGMO=yes \
+	-DPAGMO_BUILD_PAGMO=no \
 	-DPAGMO_WITH_EIGEN3=yes \
 	-DPAGMO_WITH_NLOPT=yes \
 	-DPAGMO_WITH_IPOPT=yes \

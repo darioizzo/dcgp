@@ -6,6 +6,9 @@ if(UNIX)
 set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
 endif()
 
+# Finding pygmo
+find_package(Pygmo REQUIRED)
+
 # The name of the BP target to link to depends on the Boost and Python versions.
 # NOTE: since Boost 1.67, the naming of the Boost.Python library has changed to include the
 # major and minor python version as a suffix. See the release notes:
@@ -32,12 +35,17 @@ endif()
 
 # Setup of the header-only dcgpy library.
 add_library(dcgpy INTERFACE)
-target_link_libraries(dcgpy INTERFACE ${DCGPY_BP_TARGET} Boost::disable_autolinking YACMA::PythonModule NumPy::numpy Dcgp::dcgp)
+target_link_libraries(dcgpy INTERFACE ${DCGPY_BP_TARGET} Boost::disable_autolinking YACMA::PythonModule NumPy::numpy Dcgp::dcgp Pygmo::pygmo)
 target_include_directories(dcgpy INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../>
 $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include/dcgpy> $<INSTALL_INTERFACE:include>)
 
 # Setup of the dcgpy core module.
-YACMA_PYTHON_MODULE(core core.cpp docstrings.cpp)
+YACMA_PYTHON_MODULE(core 
+    core.cpp 
+    expose_expressions.cpp
+    expose_kernels.cpp
+    expose_symbolic_regression.cpp
+    docstrings.cpp)
 target_link_libraries(core PRIVATE ${DCGPY_BP_TARGET} dcgpy)
 target_compile_options(core PRIVATE "$<$<CONFIG:DEBUG>:${DCGP_CXX_FLAGS_DEBUG}>" "$<$<CONFIG:RELEASE>:${DCGP_CXX_FLAGS_RELEASE}>")
 set_property(TARGET core PROPERTY CXX_STANDARD 17)

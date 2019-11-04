@@ -20,9 +20,9 @@ if [[ "${DCGP_BUILD}" != manylinux* ]]; then
     conda_pkgs="cmake eigen nlopt ipopt boost boost-cpp tbb tbb-devel pagmo audi symengine"
 
     if [[ "${DCGP_BUILD}" == "Python37" || "${DCGP_BUILD}" == "OSXPython37" ]]; then
-        conda_pkgs="$conda_pkgs python=3.7 pyaudi"
+        conda_pkgs="$conda_pkgs python=3.7 pyaudi pygmo"
     elif [[ "${DCGP_BUILD}" == "Python27" || "${DCGP_BUILD}" == "OSXPython27" ]]; then
-        conda_pkgs="$conda_pkgs python=2.7 pyaudi"
+        conda_pkgs="$conda_pkgs python=2.7 pyaudi pygmo"
     fi
 
     # We create the conda environment and activate it

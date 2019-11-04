@@ -1,13 +1,13 @@
 .. contents::
 
-Cartesian Genetic Programming
-=============================
+Cartesian Genetic Programming (CGP)
+====================================
 Cartesian Genetic Programming (CGP) is a form of Genetic Programming where the program
-representation consists of a graph. For more information visit
+representation consists of an acyclic graph. For more information visit
 `Cartesian Genetic Programming <http://www.cartesiangp.co.uk/>`_.
 
-dCGP
-====
+Differentiable Cartesian Genetic Programming (dCGP)
+===================================================
 Differentiable Cartesian Genetic Programming (dCGP) is a recent development of CGP
 that adds the information about the derivatives of the output nodes (the programs,
 or expressions encoded) with respect to the input nodes (the input values) and/or the
@@ -31,12 +31,12 @@ currently the subject of active research.
 The evolution of the genetic program can now be supported by using the information
 on the derivatives, hence enabling for the equivalent of back-propagation in Neural Networks.
 
-Furthermore, the fitness function itself can be defined in terms of the derivatives,
-allowing for additional tasks beyond simple regression, *e.g.*:
+Furthermore, the fitness function itself can be defined in terms of the derivatives.
+The applications of a dCGP are:
 
-* solving differential equations,
-* learning differential models,
-* capturing conserved quantities in dynamical systems.
+* Symbolic Regression.
+* Solving differential equations.
+* Search for conserved quantities in dynamical systems.
 
 .. _reference:
 

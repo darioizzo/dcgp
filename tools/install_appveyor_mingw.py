@@ -205,6 +205,28 @@ common_cmake_opts = r'-DCMAKE_PREFIX_PATH=c:\\local ' + \
         r'-DBoost_TIMER_LIBRARY_RELEASE=c:\\local\\lib\\libboost_timer-mgw81-mt-x64-1_70.dll '
 
 if is_python_build:
+    # First we build pygmo
+    os.chdir('c:\\projects\\pagmo2-2.11.3')
+    os.makedirs('build_pygmo')
+    os.chdir('build_pygmo')
+    run_command(r'cmake -G "MinGW Makefiles" .. ' +
+                common_cmake_opts +
+                r'-DPAGMO_BUILD_PYGMO=yes ' +
+                r'-DPAGMO_BUILD_PAGMO=no ' +
+                r'-DPAGMO_WITH_EIGEN3=yes ' +
+                r'-DPAGMO_WITH_NLOPT=yes ' +
+                r'-DCMAKE_BUILD_TYPE=Release ' + \
+                r'-DBoost_PYTHON' + python_version + r'_LIBRARY_RELEASE=c:\\local\\lib\\libboost_python' + python_version + r'-mgw81-mt-x64-1_70.dll ' + \
+                r'-DPYTHON_INCLUDE_DIR=C:\\' + python_folder + r'\\include ' + \
+                r'-DPYTHON_EXECUTABLE=C:\\' + python_folder + r'\\python.exe ' + \
+                r'-DPYTHON_LIBRARY=' + python_library)
+    run_command(r'mingw32-make install VERBOSE=1 -j2')
+    # We add this so that the pagmo dll is found
+    os.environ['PATH'] = os.getcwd() + ";" + os.environ['PATH']
+    os.chdir('../../')
+    print("Pygmo sucessfully installed .. continuing")
+
+    # Then we build dcgp - dcgpy
     os.chdir('C:\projects\d-cgp')
     os.makedirs('build_dcgp')
     os.chdir('build_dcgp')

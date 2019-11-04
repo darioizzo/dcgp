@@ -1,5 +1,5 @@
-#ifndef PYGMO_DOCSTRINGS_HPP
-#define PYGMO_DOCSTRINGS_HPP
+#ifndef DCGPY_DOCSTRINGS_HPP
+#define DCGPY_DOCSTRINGS_HPP
 
 #include <string>
 
