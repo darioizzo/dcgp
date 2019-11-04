@@ -1,6 +1,7 @@
-dcgp::kernel, a function defining the generic dCGP node
+kernel
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
+.. highlight:: c++
+ 
 .. doxygenclass:: dcgp::kernel
    :project: dCGP
    :members:

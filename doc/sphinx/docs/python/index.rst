@@ -20,108 +20,40 @@ Each of the above CGPs can operate over different numerical types. For example *
 result of evaluating the inner computational graph will be a float, but also on gduals, in which case, the result of evaluating the
 inner computational graph will be a gdual (hence it will contain all the program derivatives up to the chosen order.)
 
-Another important type some CGP can operate upon in the vectorized gdual. This type is the same as the gdual type, but its vectorized,
+Another important type some CGP can operate upon is the vectorized gdual. This type is the same as the gdual type, but its vectorized,
 allowing order of magnitude speed ups when a CGP needs to be evaluated over several points (such as in the case aof a loss evaluation)
 
-expression_double
-^^^^^^^^^^^^^^^^^
+.. toctree::
+  :maxdepth: 1
 
-.. autoclass:: dcgpy.expression_double
-    :members:
+  expression
+  expression_weighted
+  expression_ann
 
-expression_gdual_double
-^^^^^^^^^^^^^^^^^^^^^^^
+----------------------------------------------------------------------------------
 
-.. autoclass:: dcgpy.expression_gdual_double
-    :members:
+Kernel
+-------
 
-expression_gdual_vdouble
-^^^^^^^^^^^^^^^^^^^^^^^^
-
-.. autoclass:: dcgpy.expression_gdual_vdouble
-    :members:
-
-expression_weighted_double
-^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-.. autoclass:: dcgpy.expression_weighted_double
-    :members:
-
-expression_weighted_gdual_double
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-.. autoclass:: dcgpy.expression_weighted_gdual_double
-    :members:
-
-expression_weighted_gdual_vdouble
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-.. autoclass:: dcgpy.expression_weighted_gdual_vdouble
-    :members:
-
-expression_ann_double
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-
-.. important::
-   This Cartesian Genetic Program is able to encode an Artificial Neural Network. Weights and biases are added to the acyclic graph
-   as well as extra methods to allow to perform backpropagation (in parallel), to visualize the network and more ...
-
-.. autoclass:: dcgpy.expression_ann_double
-    :members:
-
------------------------------------------------------------------------------------
-
-Single Kernels
---------------------
-
-Kernels (also called non-linearities in the ANN literature) describe the fundamental computational units of a CGP. 
-Things like addition, multiplication, trigonomoetric functions are all kernels. The following classes allow the user
+Kernels, (also called non-linearities in the ANN literature) describe the fundamental computational units of a CGP. 
+Things like addition, multiplication, trigonomoetric functions are all kernels. The classes ``kernel``1 allow the user
 the definition of their own kernels able to operate on the choosen type.
 
-kernel_double
-^^^^^^^^^^^^^
+.. toctree::
+  :maxdepth: 1
 
-.. autoclass:: dcgpy.kernel_double
-    :members:
+  kernel
 
-kernel_gdual_double
-^^^^^^^^^^^^^^^^^^^
+----------------------------------------------------------------------------------
 
-.. autoclass:: dcgpy.kernel_gdual_double
-    :members:
 
-kernel_gdual_vdouble
-^^^^^^^^^^^^^^^^^^^^
-
-.. autoclass:: dcgpy.kernel_gdual_vdouble
-    :members:
-
-Kernels set
+Kernel set
 ------------------
 
-For a list of the available kernels see :ref:`kernels <kernels>`.
+.. toctree::
+  :maxdepth: 1
 
-kernel_set_double
-^^^^^^^^^^^^^^^^^
-
-.. autoclass:: dcgpy.kernel_set_double
-
-    .. automethod:: dcgpy.kernel_set_double.push_back()
-
-kernel_set_gdual_double
-^^^^^^^^^^^^^^^^^^^^^^^
-
-.. autoclass:: dcgpy.kernel_set_gdual_double
-
-    .. automethod:: dcgpy.kernel_set_gdual_double.push_back()
-
-kernel_set_gdual_vdouble
-^^^^^^^^^^^^^^^^^^^^^^^^
-
-.. autoclass:: dcgpy.kernel_set_gdual_vdouble
-
-    .. automethod:: dcgpy.kernel_set_gdual_vdouble.push_back()
+  kernel_set
 
 ----------------------------------------------------------------------------------
 

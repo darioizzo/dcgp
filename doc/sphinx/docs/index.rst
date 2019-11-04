@@ -9,13 +9,13 @@ an arbitrary number of template instantiations indicating in the class name, aft
 -------------------------------------------------
 
 .. toctree::
-  :maxdepth: 3
+  :maxdepth: 1
 
-  cpp_docs
+  cpp/index
 
 ------------------------------------------------
 
 .. toctree::
-  :maxdepth: 3
+  :maxdepth: 1
 
-  python_docs
+  python/index

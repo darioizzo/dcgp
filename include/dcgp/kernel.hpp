@@ -19,10 +19,27 @@ namespace dcgp
  * std::vector<std::string>&) computing, respectively, the function value on generic inputs and the textual
  * representation of the operation.
  *
- * The intended use would then be something like:
+ * The intended use, for an example with ``T`` = ``double`` would then be something like:
  * @code
- * kernel<double> f(my_sum<double>, print_my_sum, "sum");
- * kernel<double> f(my_sum<gdual_d>, print_my_sum, "sum");
+ * inline double my_sum(const std::vector<double> &in)
+ * {
+ *     T retval(in[0]);
+ *     for (auto i = 1u; i < in.size(); ++i) {
+ *         retval += in[i];
+ *     }
+ *     return retval;
+ * }
+ * 
+ * inline std::string print_my_sum(const std::vector<std::string> &in)
+ * {
+ *     std::string retval(in[0]);
+ *     for (auto i = 1u; i < in.size(); ++i) {
+ *         retval += "+" + in[i];
+ *     }
+ *     return "(" + retval + ")";
+ * }
+ *
+ * kernel<double> f(my_sum<double>, print_my_sum, "my_sum");
  * @endcode
  *
  * @tparam T The type of the function output (and inputs)
