@@ -1,4 +1,4 @@
-kernel set
+Kernel set
 -------------
 
 kernel_set_double

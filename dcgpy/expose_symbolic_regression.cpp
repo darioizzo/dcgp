@@ -59,8 +59,13 @@ void expose_symbolic_regression()
                  (bp::arg("points"), bp::arg("labels"), bp::arg("rows"), bp::arg("cols"), bp::arg("levels_back"),
                   bp::arg("arity"), bp::arg("kernels"), bp::arg("n_eph"), bp::arg("multi_objective"),
                   bp::arg("parallel_batches") = 0u)),
-             symbolic_regression_init_doc().c_str());
-
+             symbolic_regression_init_doc().c_str())
+             .def("pretty", +[](const dcgp::symbolic_regression& instance, const bp::object &x) {
+                 return instance.pretty(to_v<double>(x));
+             })
+             .def("prettier", +[](const dcgp::symbolic_regression& instance, const bp::object &x) {
+                 return instance.prettier(to_v<double>(x));
+             });
     // Making data from the gym available in python
     expose_data_from_the_gym<&gym::generate_koza_quintic>("generate_koza_quintic", generate_koza_quintic_doc());
     // From Our paper

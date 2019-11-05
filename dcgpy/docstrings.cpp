@@ -1082,7 +1082,17 @@ Examples:
     >>> import dcgpy
     >>> import pygmo as pg
     >>> X, Y = dcgpy.generate_koza_quintic()
-    >>> udp = dcgpy.symbolic_regression(X,Y,1,20,21,2, dcgpy.kernel_set_double(["sum", "diff"])(), 1, True, 0)   
+    >>> udp = dcgpy.symbolic_regression(
+    ...        points = X,
+    ...        labels = Y,
+    ...        rows = 1,
+    ...        cols = 20,
+    ...        levels_back = 21,
+    ...        arity = 2, 
+    ...        kernels = dcgpy.kernel_set_double(["sum", "diff"])(), 
+    ...        n_eph = 1, 
+    ...        multi_objective = True, 
+    ...        parallel_batches = 0)   
     >>> prob = pg.problem(udp)
     >>> print(prob) # doctest: +NORMALIZE_WHITESPACE
     Problem name: a CGP symbolic regression problem
