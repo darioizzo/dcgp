@@ -12,8 +12,9 @@
 // with the correct #defines.
 #define NO_IMPORT_ARRAY
 #define PY_ARRAY_UNIQUE_SYMBOL dcgpy_ARRAY_API
-#include "common_utils.hpp"
+#include "numpy.hpp"
 
+#include "common_utils.hpp"
 #include "docstrings.hpp"
 
 using namespace dcgp;

@@ -1037,4 +1037,13 @@ Examples:
     )";
 }
 
+
+std::string symbolic_regression_doc()
+{
+    return R"(
+
+blah blah
+    )";
+}
+
 } // namespace dcgpy

@@ -1,22 +1,25 @@
 #include <boost/python.hpp>
 #include <pygmo/algorithm_exposition_suite.hpp>
-#include <pygmo/register_ap.hpp>
+#include <pygmo/problem_exposition_suite.hpp>
 #include <sstream>
 #include <string>
 #include <vector>
 
 #include <dcgp/gym.hpp>
+#include <dcgp/problems/symbolic_regression.hpp>
 
 // See: https://docs.scipy.org/doc/numpy/reference/c-api.array.html#importing-the-api
 // In every cpp file We need to make sure this is included before everything else,
 // with the correct #defines.
 #define NO_IMPORT_ARRAY
 #define PY_ARRAY_UNIQUE_SYMBOL dcgpy_ARRAY_API
-#include "common_utils.hpp"
+#include "numpy.hpp"
 
+#include "common_utils.hpp"
 #include "docstrings.hpp"
 
 namespace bp = boost::python;
+namespace pg = pygmo;
 using namespace dcgp;
 
 using gym_ptr = void (*)(std::vector<std::vector<double>> &, std::vector<std::vector<double>> &);
@@ -38,6 +41,10 @@ namespace dcgpy
 
 void expose_symbolic_regression()
 {
+    // We expose the UDPs
+    auto symbolic_regression_
+        = pg::expose_problem<dcgp::symbolic_regression>("symbolic_regression", symbolic_regression_doc().c_str());
+
     // Making data from the gym available in python
     expose_data_from_the_gym<&gym::generate_koza_quintic>("generate_koza_quintic", generate_koza_quintic_doc());
     // From Our paper
