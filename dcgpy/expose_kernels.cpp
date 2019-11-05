@@ -1,3 +1,10 @@
+// See: https://docs.scipy.org/doc/numpy/reference/c-api.array.html#importing-the-api
+// In every cpp file We need to make sure this is included before everything else,
+// with the correct #defines.
+#define NO_IMPORT_ARRAY
+#define PY_ARRAY_UNIQUE_SYMBOL dcgpy_ARRAY_API
+#include "numpy.hpp"
+
 #include <boost/python.hpp>
 #include <sstream>
 #include <string>
@@ -5,13 +12,6 @@
 
 #include <dcgp/kernel.hpp>
 #include <dcgp/kernel_set.hpp>
-
-// See: https://docs.scipy.org/doc/numpy/reference/c-api.array.html#importing-the-api
-// In every cpp file We need to make sure this is included before everything else,
-// with the correct #defines.
-#define NO_IMPORT_ARRAY
-#define PY_ARRAY_UNIQUE_SYMBOL dcgpy_ARRAY_API
-#include "numpy.hpp"
 
 #include "common_utils.hpp"
 #include "docstrings.hpp"

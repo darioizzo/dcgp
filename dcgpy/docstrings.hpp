@@ -37,6 +37,7 @@ std::string expression_ann_sgd_doc();
 
 // UDPs
 std::string symbolic_regression_doc();
+std::string symbolic_regression_init_doc();
 
 // gym
 // Classic

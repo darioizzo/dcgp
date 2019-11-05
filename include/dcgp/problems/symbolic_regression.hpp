@@ -51,8 +51,8 @@ public:
     /**
      * Constructs a symbolic_regression optimization problem compatible with the pagmo UDP interface.
      *
-     * @param[in] points number of inputs (independent variables).
-     * @param[in] labels number of outputs (dependent variables).
+     * @param[in] points input data.
+     * @param[in] labels output data.
      * @param[in] r number of rows of the dCGP.
      * @param[in] c number of columns of the dCGP.
      * @param[in] l number of levels-back allowed in the dCGP.
@@ -379,8 +379,8 @@ public:
     std::string get_extra_info() const
     {
         std::ostringstream ss;
-        pagmo::stream(ss, "\tData dimension (in): ", m_points[0].size(), "\n");
-        pagmo::stream(ss, "\tData dimension (out): ", m_labels[0].size(), "\n");
+        pagmo::stream(ss, "\tData dimension (points): ", m_points[0].size(), "\n");
+        pagmo::stream(ss, "\tData dimension (labels): ", m_labels[0].size(), "\n");
         pagmo::stream(ss, "\tData size: ", m_points.size(), "\n");
         pagmo::stream(ss, "\tKernels: ", m_cgp.get_f(), "\n");
         return ss.str();

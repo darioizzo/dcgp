@@ -1037,13 +1037,84 @@ Examples:
     )";
 }
 
-
 std::string symbolic_regression_doc()
 {
     return R"(
 
-blah blah
+Symbolic regression is a type of regression analysis that searches the space of mathematical expressions to 
+find the model that best fits a given dataset, both in terms of accuracy and simplicity 
+(ref: https://en.wikipedia.org/wiki/Symbolic_regression). It also is one of the applications
+for Differentiable Cartesian Genetic Programming.
+
+This class provides an easy way to instantiate symbolic regression problems as optimization problems having
+a continuous part (i.e. the value of the parameters in the model) and an integer part (i.e. the representation of
+the model computational graph). The instantiated object can be used as UDP (User Defined Problem) in the pygmo optimization suite.
+
+The symbolic regression problem can be instantiated both as a single and as a two-objectives problem. In the second
+case, aside the Mean Squared Error, the model complexity will be considered as an objective.
+
     )";
+}
+
+std::string symbolic_regression_init_doc()
+{
+    return R"(__init__(points, labels, rows, columns, levels_back, arity, kernels, n_eph, multi_objective, parallel_batches=0)
+
+Constructs a symbolic_regression optimization problem compatible with the pagmo UDP interface.
+
+Args:
+    points (2D NumPy float array or ``list of lists`` of ``float``): the input data
+    labels (2D NumPy float array or ``list of lists`` of ``float``): the output data (to be predicted)
+    rows (``int``): number of rows in the cartesian program
+    columns (``int``): number of columns in the cartesian program
+    levels_back (``int``): number of levels-back in the cartesian program
+    arity (``int`` on ``list``): arity of the kernels. Assumed equal for all columns.
+    kernels (``List[dcgpy.kernel_]``): kernel functions
+    n_eph (``int``): Number of ephemeral constants. 
+    multi_objective (``bool``): when True the problem will be considered as multiobjective (loss and model complexity).
+    parallel_batches (``int``): allows to split the data into batches for parallel evaluation.
+
+Raises:
+    unspecified: any exception thrown by failures at the intersection between C++ and Python (e.g.,
+      type conversion errors, mismatched function signatures, etc.)
+
+Examples:
+    >>> import dcgpy
+    >>> import pygmo as pg
+    >>> X, Y = dcgpy.generate_koza_quintic()
+    >>> udp = dcgpy.symbolic_regression(X,Y,1,20,21,2, dcgpy.kernel_set_double(["sum", "diff"])(), 1, True, 0)   
+    >>> prob = pg.problem(udp)
+    >>> print(prob) # doctest: +NORMALIZE_WHITESPACE
+    Problem name: a CGP symbolic regression problem
+        Global dimension:			62
+        Integer dimension:			61
+        Fitness dimension:			2
+        Number of objectives:			2
+        Equality constraints dimension:		0
+        Inequality constraints dimension:	0
+        Lower bounds: [-10, 0, 0, 0, 0, ... ]
+        Upper bounds: [10, 1, 1, 1, 1, ... ]
+        Has batch fitness evaluation: false
+        <BLANKLINE>
+        Has gradient: true
+        User implemented gradient sparsity: true
+        Expected gradients: 1
+        Has hessians: true
+        User implemented hessians sparsity: true
+        Expected hessian components: [1, 1]
+        <BLANKLINE>
+        Fitness evaluations: 0
+        Gradient evaluations: 0
+        Hessians evaluations: 0
+        <BLANKLINE>
+        Thread safety: basic
+        <BLANKLINE>
+    Extra info:
+        Data dimension (in): 1
+        Data dimension (out): 1
+        Data size: 10
+        Kernels: [sum, diff]
+)";
 }
 
 } // namespace dcgpy
