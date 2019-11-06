@@ -70,15 +70,14 @@ void expose_symbolic_regression()
             });
     // We expose the UDAs
     // ES-4CGP (Evolutionary Strategy for Caertesian Genetic Programming)
-    pg::expose_algorithm<dcgp::es4cgp>("es4cgp", es4cgp_docstring().c_str())
-        .def(bp::init<unsigned, unsigned, double, bool>((bp::arg("gen") = 1u, bp::arg("mut_n") = 1u,
-                                                         bp::arg("ftol") = 1e-4, bp::arg("learn_constants") = true)),
-             es4cgp_init_doc().c_str())
-        .def(bp::init<unsigned, unsigned, double, bool, unsigned>((bp::arg("gen") = 1u, bp::arg("mut_n") = 1u,
-                                                                   bp::arg("ftol") = 1e-4,
-                                                                   bp::arg("learn_constants") = true, bp::arg("seed"))))
-        .def("get_seed", &es4cgp::get_seed, generic_uda_get_seed_docstring().c_str());
-    pg::expose_algo_log(dcgp::es4cgp, es4cgp_get_log_docstring().c_str());
+    auto es4cgp_ = pg::expose_algorithm<dcgp::es4cgp>("es4cgp", es4cgp_doc().c_str());
+    es4cgp_.def(bp::init<unsigned, unsigned, double, bool>(
+        (bp::arg("gen") = 1u, bp::arg("mut_n") = 1u, bp::arg("ftol") = 1e-4, bp::arg("learn_constants") = true)));
+    es4cgp_.def(bp::init<unsigned, unsigned, double, bool, unsigned>(
+        (bp::arg("gen") = 1u, bp::arg("mut_n") = 1u, bp::arg("ftol") = 1e-4, bp::arg("learn_constants") = true,
+         bp::arg("seed"))));
+    es4cgp_.def("get_seed", &es4cgp::get_seed, generic_uda_get_seed_doc().c_str());
+    pg::expose_algo_log(es4cgp_, es4cgp_get_log_doc().c_str());
 
     // Making data from the gym available in python
     expose_data_from_the_gym<&gym::generate_koza_quintic>("generate_koza_quintic", generate_koza_quintic_doc());

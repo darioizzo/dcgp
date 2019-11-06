@@ -1127,7 +1127,7 @@ Examples:
 )";
 }
 
-std::string generic_uda_get_seed_docstring()
+std::string generic_uda_get_seed_doc()
 {
     return R"(get_seed()
 This method will return the random seed used internally by this uda.
@@ -1136,7 +1136,7 @@ Returns:
 )";
 }
 
-std::string es4cgp_get_log_docstring()
+std::string es4cgp_get_log_doc()
 {
     return R"(get_log()
 Returns a log containing relevant parameters recorded during the last call to ``evolve()``. The log frequency depends
@@ -1186,19 +1186,44 @@ See also the docs of the relevant C++ method :cpp:func:`dcgp::es4cgp::get_log()`
 
 std::string es4cgp_doc()
 {
-    return R"(
+    return R"(__init__(gen = 1, mut_n = 1, ftol = 1e-4, learn_constants = False, seed = random)
 
-Symbolic regression is a type of regression analysis that searches the space of mathematical expressions to 
-find the model that best fits a given dataset, both in terms of accuracy and simplicity 
-(ref: https://en.wikipedia.org/wiki/Symbolic_regression). It also is one of the applications
-for Differentiable Cartesian Genetic Programming.
+Evolutionary strategies are popular global optimization meta-heuristics essentially based
+on the following simple pseudo-algorithm:
 
-This class provides an easy way to instantiate symbolic regression problems as optimization problems having
-a continuous part (i.e. the value of the parameters in the model) and an integer part (i.e. the representation of
-the model computational graph). The instantiated object can be used as UDP (User Defined Problem) in the pygmo optimization suite.
+* Start from a population (pop) of dimension N
 
-The symbolic regression problem can be instantiated both as a single and as a two-objectives problem. In the second
-case, aside the Mean Squared Error, the model complexity will be considered as an objective.
+*  while i < gen
+
+*  > > Mutation: create a new population pop2 mutating N times the best individual
+
+*  > > Evaluate all new chromosomes in pop2
+
+*  > > Reinsertion: set pop to contain the best N individuals taken from pop and pop2
+
+The key to the success of such a search strategy is in the quality of its mutation operator. In the
+case of chrosomoses that encode a Cartesian Genetic Program (CGP), it makes sense to have mutation act
+on active genes only (that is on that part of the chromosome that is actually expressed in the
+final CGP / formula / model). This introduces a coupling between the optimization problem (say a symbolic
+regression problem) and its solution strategy which, although not preventing, makes the use of general purpose
+optimization algorithms inefficient (e.g. a generic evolutionary strategy would have a mutation operator which
+is agnostic of the existence of active genes).
+
+In this class we provide an evolutionary strategy tailored to solve :class:`dcgpy.symbolic_regression` problems
+leveraging the kowledge on the genetic structure of Cartesian Genetic Programs (i.e. able to mutate only active
+genes).
+
+Args:
+    gen (``int``): number of generations.
+    mut_n (``int``): number of active genes to be mutated.
+    ftol (``int``): the algorithm will exit when the loss is below this tolerance.
+    learn_constants (``bool``): when true a gaussian mutation is applied to the ephemeral constants (std = 0.1).
+    seed (``int``): seed used by the internal random number generator (default is random).
+
+Raises:
+    unspecified: any exception thrown by failures at the intersection between C++ and Python (e.g.,
+      type conversion errors, mismatched function signatures, etc.)
+    ValueError: if  *mut_n* is 0 or *ftol* is negative.
 
     )";
 }
