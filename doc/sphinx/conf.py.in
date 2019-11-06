@@ -34,11 +34,14 @@ import sphinx_bootstrap_theme
 extensions = [
     'sphinx.ext.mathjax',
     'sphinx.ext.autodoc',
+    'sphinx.ext.intersphinx',
     'breathe',
     'sphinxcontrib.napoleon',
     'IPython.sphinxext.ipython_console_highlighting',
-    'nbsphinx',
+    'nbsphinx'
 ]
+
+intersphinx_mapping = {'pagmo': ('https://esa.github.io/pagmo2/', None)}
 
 autoclass_content = 'both'
 

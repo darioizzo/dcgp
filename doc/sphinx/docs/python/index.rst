@@ -67,16 +67,19 @@ Symbolic Regression
    :align: right
    :scale: 70 %
 
-In order to facilitate the solution of symbolic regression problems using dcgpy, a number of classes have been designed
-to interface a ``dcgpy.expression_double`` to the optimisation suite pygmo.
+Mathematically, a symbolic regression problem is a global optimization problem. In order to facilitate its solution,
+a number of classes have been designed to interface a dcgpy ``expression`` to the optimisation suite pygmo. 
+In particular we provide UDPs (in pagmo's jargon user defined problems) that can be used to build :class:`pygmo.problem` objects 
+(representing symbolic regression problems) and UDAs (in pagmo's jargon user defined algorithms) that can be used
+to build :class:`pygmo.algorithm` objects.
 
 .. toctree::
   :maxdepth: 1
 
   symbolic_regression
 
-For the specific application of symbolic regression, we make available a number of data sets coming from 
-various sources. These are collected in what its called the ``dcgpy gym`` and have all the same interface.
+We also make available, as a gym to test the capabilities of various proposed methodologies, a number of data sets
+coming from different scientific sources. These are collected in what we call the ``dcgpy gym``.
 
 .. toctree::
   :maxdepth: 1
