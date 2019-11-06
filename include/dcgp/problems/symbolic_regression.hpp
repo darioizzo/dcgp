@@ -99,7 +99,7 @@ public:
                 f_g.push_back(ker.get_name());
             }
         }
-        m_dcgp = expression<gdual_d>(n, m, m_r, m_c, m_l, m_arity, f_g(), m_n_eph, seed);
+        m_dcgp = expression<audi::gdual_d>(n, m, m_r, m_c, m_l, m_arity, f_g(), m_n_eph, seed);
         // We initialize the dpoints/dduals
         m_dpoints.clear();
         m_dlabels.clear();
@@ -530,7 +530,7 @@ private:
     // avoided, but likely resulting in prepature optimization. (see https://github.com/darioizzo/dcgp/pull/42)
     mutable expression<double> m_cgp;
     // TODO: this should be vectorized gduals
-    mutable expression<gdual_d> m_dcgp;
+    mutable expression<audi::gdual_d> m_dcgp;
     mutable std::pair<pagmo::vector_double, pagmo::vector_double> m_cache_fitness;
     mutable std::pair<pagmo::vector_double, pagmo::vector_double> m_cache_gradient;
 }; // namespace dcgp
