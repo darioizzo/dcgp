@@ -38,8 +38,13 @@ std::string expression_ann_sgd_doc();
 // UDPs
 std::string symbolic_regression_doc();
 std::string symbolic_regression_init_doc();
+// UDAs
+std::string generic_uda_get_seed_docstring();
+std::string es4cgp_doc();
+std::string es4cgp_init_doc();
+std::string es4cgp_get_log_docstring();
 
-// gym
+// The symbolic Regressio Gym problems
 // Classic
 std::string generate_koza_quintic_doc();
 // From our paper

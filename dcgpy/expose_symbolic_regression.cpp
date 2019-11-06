@@ -12,6 +12,7 @@
 #include <string>
 #include <vector>
 
+#include <dcgp/algorithms/es4cgp.hpp>
 #include <dcgp/gym.hpp>
 #include <dcgp/kernel.hpp>
 #include <dcgp/problems/symbolic_regression.hpp>
@@ -60,12 +61,25 @@ void expose_symbolic_regression()
                   bp::arg("arity"), bp::arg("kernels"), bp::arg("n_eph"), bp::arg("multi_objective"),
                   bp::arg("parallel_batches") = 0u)),
              symbolic_regression_init_doc().c_str())
-             .def("pretty", +[](const dcgp::symbolic_regression& instance, const bp::object &x) {
-                 return instance.pretty(to_v<double>(x));
-             })
-             .def("prettier", +[](const dcgp::symbolic_regression& instance, const bp::object &x) {
-                 return instance.prettier(to_v<double>(x));
-             });
+        .def(
+            "pretty", +[](const dcgp::symbolic_regression &instance,
+                          const bp::object &x) { return instance.pretty(to_v<double>(x)); })
+        .def(
+            "prettier", +[](const dcgp::symbolic_regression &instance, const bp::object &x) {
+                return instance.prettier(to_v<double>(x));
+            });
+    // We expose the UDAs
+    // ES-4CGP (Evolutionary Strategy for Caertesian Genetic Programming)
+    pg::expose_algorithm<dcgp::es4cgp>("es4cgp", es4cgp_docstring().c_str())
+        .def(bp::init<unsigned, unsigned, double, bool>((bp::arg("gen") = 1u, bp::arg("mut_n") = 1u,
+                                                         bp::arg("ftol") = 1e-4, bp::arg("learn_constants") = true)),
+             es4cgp_init_doc().c_str())
+        .def(bp::init<unsigned, unsigned, double, bool, unsigned>((bp::arg("gen") = 1u, bp::arg("mut_n") = 1u,
+                                                                   bp::arg("ftol") = 1e-4,
+                                                                   bp::arg("learn_constants") = true, bp::arg("seed"))))
+        .def("get_seed", &es4cgp::get_seed, generic_uda_get_seed_docstring().c_str());
+    pg::expose_algo_log(dcgp::es4cgp, es4cgp_get_log_docstring().c_str());
+
     // Making data from the gym available in python
     expose_data_from_the_gym<&gym::generate_koza_quintic>("generate_koza_quintic", generate_koza_quintic_doc());
     // From Our paper

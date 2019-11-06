@@ -16,6 +16,34 @@
 
 namespace dcgp
 {
+/// Evolutionary Strategy for a Cartesian Genetic Program
+/**
+ *
+ * \image html EvolutionaryStrategy.jpg "ES"
+ *
+ * Evolutionary strategies are popular global optimization meta-heuristics essentially based
+ * on the following simple pseudo-algorithm:
+ *
+ * @code{.unparsed}
+ * > Start from a population (pop) of dimension N
+ * > while i < gen
+ * > > Mutation: create a new population pop2 mutating N times the best individual
+ * > > Evaluate all new chromosomes in pop2
+ * > > Reinsertion: set pop to contain the best N individuals taken from pop and pop2
+ * @endcode
+ *
+ * The key to the success of such a search strategy is in the quality of its mutation operator. In the
+ * case of chrosomoses that encode a Cartesian Genetic Program (CGP), it makes sense to have mutation act
+ * on active genes only (that is on that part of the chromosome that is actually expressed in the
+ * final CGP / formula / model). This introduces a coupling between the optimization problem (say a symbolic
+ * regression problem) and its solution strategy which, although not preventing, makes the use of general purpose
+ * optimization algorithms inefficient (e.g. a generic evolutionary strategy would have a mutation operator which
+ * is agnostic of the existence of active genes).
+ *
+ * In this class we provide an evolutionary strategy tailored to solve problems of the class dcgp::symbolic_regression
+ * leveraging the kowledge on the genetic structure of Cartesian Genetic Programs (i.e. able to mutate only active
+ * genes).
+ */
 class es4cgp
 {
 public:
@@ -49,7 +77,16 @@ public:
         }
     }
 
-    // Algorithm evolve method
+    /// Algorithm evolve method
+    /**
+     * Evolves the population for a maximum number of generations
+     *
+     * @param pop population to be evolved
+     * @return evolved population
+     * @throws std::invalid_argument if a dcgp::symbolic_regression cannot be extracted from the problem
+     * @throws std::invalid_argument if the population size is smaller than 2
+     * @throws std::invalid_argument if the number of objectives is not 1.
+     */
     pagmo::population evolve(pagmo::population pop) const
     {
         const auto &prob = pop.get_problem();
@@ -115,7 +152,7 @@ public:
                     // Every 50 lines print the column names
                     if (count % 50u == 1u) {
                         pagmo::print("\n", std::setw(7), "Gen:", std::setw(15), "Fevals:", std::setw(15),
-                                     "Best:", "\tConstants:", "\tFormula:\n");
+                                     "Best:", "\tConstants:", "\tModel:\n");
                     }
                     auto formula = udp_ptr->prettier(best_x);
                     log_single_line(gen - 1, prob.get_fevals() - fevals0, best_f, best_x, formula, n_eph);
@@ -185,7 +222,10 @@ public:
         return pop;
     }
 
-    // Sets the seed
+    /// Sets the seed
+    /**
+     * @param seed the seed controlling the algorithm stochastic behaviour
+     */
     void set_seed(unsigned seed)
     {
         m_e.seed(seed);
@@ -210,7 +250,7 @@ public:
      *
      * Example (verbosity 100):
      * @code{.unparsed}
-     *  Gen:        Fevals:          Best:    Constants:    Formula:
+     *  Gen:        Fevals:          Best:    Constants:    Model:
      *      0              0        4087.68    [3.52114]    [0] ...
      *    100            400        324.845    [3.61414]    [2*x0**4] ...
      *    200            800        324.845    [3.61414]    [2*x0**4] ...
@@ -254,7 +294,10 @@ public:
         return "ES for CGP: Evolutionary strategy for Cartesian Genetic Programming";
     }
 
-    // Extra info
+    /// Extra info
+    /**
+     * @return a string containing extra info on the algorithm
+     */
     std::string get_extra_info() const
     {
         std::ostringstream ss;

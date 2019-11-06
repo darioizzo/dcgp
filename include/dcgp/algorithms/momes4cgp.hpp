@@ -46,7 +46,17 @@ public:
         }
     }
 
-    // Algorithm evolve method
+
+    /// Algorithm evolve method
+    /**
+     * Evolves the population for a maximum number of generations
+     *
+     * @param pop population to be evolved
+     * @return evolved population
+     * @throws std::invalid_argument if a dcgp::symbolic_regression cannot be extracted from the problem
+     * @throws std::invalid_argument if the population size is smaller than 2.
+     * @throws std::invalid_argument if the number of objectives is smaller than 2.
+     */
     pagmo::population evolve(pagmo::population pop) const
     {
         const auto &prob = pop.get_problem();
@@ -197,7 +207,10 @@ public:
         return pop;
     }
 
-    // Sets the seed
+    /// Sets the seed
+    /**
+     * @param seed the seed controlling the algorithm stochastic behaviour
+     */
     void set_seed(unsigned seed)
     {
         m_e.seed(seed);
@@ -270,7 +283,10 @@ public:
         return "MOM-ES for CGP: MultiObjective Memetic Evolutionary Strategy for Cartesian Genetic Programming";
     }
 
-    // Extra info
+    /// Extra info
+    /**
+     * @return a string containing extra info on the algorithm
+     */
     std::string get_extra_info() const
     {
         std::ostringstream ss;

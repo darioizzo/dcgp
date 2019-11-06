@@ -19,6 +19,7 @@ namespace dcgp
 /// A Symbolic Regression problem
 /**
  *
+ *
  * Symbolic regression is a type of regression analysis that searches the space of mathematical expressions to 
  * find the model that best fits a given dataset, both in terms of accuracy and simplicity 
  * (ref: https://en.wikipedia.org/wiki/Symbolic_regression). It also is one of the core applications
@@ -58,6 +59,8 @@ public:
      * @param[in] l number of levels-back allowed in the dCGP.
      * @param[in] arity arity of the basis functions.
      * @param[in] f function set. An std::vector of dcgp::kernel<expression::type>.
+     * @param[in] n_eph number of ephemeral constants.
+     * @param[in] multi_objective when true, it will consider the model complexity as a second objective.
      * @param[in] parallel_batches number of parallel batches.
      *
      * @throws std::invalid_argument if points and labels are not consistent.

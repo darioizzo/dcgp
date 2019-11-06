@@ -48,7 +48,17 @@ public:
                 "The minimum learning rate must be strictly smaller than the initial learning rate.");
         }
     }
-    // Algorithm evolve method
+
+    /// Algorithm evolve method
+    /**
+     * Evolves the population for a maximum number of generations
+     *
+     * @param pop population to be evolved
+     * @return evolved population
+     * @throws std::invalid_argument if a dcgp::symbolic_regression cannot be extracted from the problem
+     * @throws std::invalid_argument if no ephemeral constants are detected in the model.
+     * @throws std::invalid_argument if the number of objectives is not 1.
+     */
     pagmo::population evolve(pagmo::population pop) const
     {
         const auto &prob = pop.get_problem();
@@ -212,7 +222,10 @@ public:
         return "GD for CGP: gradient descent for Cartesian Genetic Programming";
     }
 
-    // Extra info
+    /// Extra info
+    /**
+     * @return a string containing extra info on the algorithm
+     */
     std::string get_extra_info() const
     {
         std::ostringstream ss;

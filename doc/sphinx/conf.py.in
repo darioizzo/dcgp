@@ -41,7 +41,8 @@ extensions = [
     'nbsphinx'
 ]
 
-intersphinx_mapping = {'pagmo': ('https://esa.github.io/pagmo2/', None)}
+intersphinx_mapping = {'pagmo': ('https://esa.github.io/pagmo2/', None),
+                       'audi': ('http://darioizzo.github.io/audi/', None)}
 
 autoclass_content = 'both'
 

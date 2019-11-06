@@ -1127,4 +1127,80 @@ Examples:
 )";
 }
 
+std::string generic_uda_get_seed_docstring()
+{
+    return R"(get_seed()
+This method will return the random seed used internally by this uda.
+Returns:
+    ``int``: the random seed of the population
+)";
+}
+
+std::string es4cgp_get_log_docstring()
+{
+    return R"(get_log()
+Returns a log containing relevant parameters recorded during the last call to ``evolve()``. The log frequency depends
+on the verbosity parameter (by default nothing is logged) which can be set calling the
+method :func:`~pygmo.algorithm.set_verbosity()` on an :class:`~pygmo.algorithm`
+constructed with a :class:`~dcgpy.es4cgp`. A verbosity of ``N`` implies a log
+line each ``N`` generations.
+
+Returns:
+    ``list`` of ``tuples``: at each logged epoch, the values ``Gen``, ``Fevals``, ``Current best``, ``Best``, where:
+
+    * ``Gen`` (``int``), generation number.
+    * ``Fevals`` (``int``), number of functions evaluation made.
+    * ``Best`` (``float``), the best fitness found.
+    * ``Constants`` (``list``), the current values for the ephemeral constants.
+    * ``Model`` (``string``), the string representation of the current best model
+Examples:
+    >>> import dcgpy
+    >>> from pygmo import *
+    >>> 
+    >>> algo = algorithm(es4cgp(gen = 500, limit = 20))
+    >>> algo.set_verbosity(100)
+    >>> prob = problem(rosenbrock(10))
+    >>> pop = population(prob, 20)
+    >>> pop = algo.evolve(pop) # doctest: +SKIP
+        Gen:        Fevals:          Best:    Constants:    Model:
+            0              0        4087.68    [3.52114]    [0] ...
+          100            400        324.845    [3.61414]    [2*x0**4] ...
+          200            800        324.845    [3.61414]    [2*x0**4] ...
+          300           1200        165.212    [3.56702]    [x0**2*(-x0 + 2*x0**2)] ...
+          400           1600         28.814    [3.45813]    [x0*(-x0 + x0**2*(-x0 + x0**2) - (-x0 +  ...
+          500           2000        10.5589    [3.59501]    [x0*(-4*x0 + x0**2*(-x0 + x0**2) + x0**2 ...
+          600           2400         2.2459    [3.44443]    [x0*(-x0*c1 + x0**2*(-x0 + x0**2) + x0** ...
+          700           2800        2.24378    [3.43364]    [x0*(-x0*c1 + x0**2*(-x0 + x0**2) + x0** ...
+          800           3200        2.24378    [3.43364]    [x0*(-x0*c1 + x0**2*(-x0 + x0**2) + x0** ...
+          900           3600        2.24378    [3.43364]    [x0*(-x0*c1 + x0**2*(-x0 + x0**2) + x0** ...
+         1000           4000        2.24374    [3.43618]    [x0*(-x0*c1 + x0**2*(-x0 + x0**2) + x0** ...
+         1100           4400        2.24372    [3.43479]    [x0*(-x0*c1 + x0**2*(-x0 + x0**2) + x0** ...
+         1200           4800      0.0697188    [3.35616]    [x0*(x0 + x0**2*(-c1 + x0**2))] ...
+         1300           5200      0.0254527    [3.37625]    [x0*(x0 + x0**2*(-c1 + x0**2))] ...
+    >>> uda = algo.extract(es4cgp)
+    >>> uda.get_log() # doctest: +SKIP
+    [(1, 40, 183727.83934515435, 183727.83934515435), ...
+See also the docs of the relevant C++ method :cpp:func:`dcgp::es4cgp::get_log()`.
+)";
+}
+
+std::string es4cgp_doc()
+{
+    return R"(
+
+Symbolic regression is a type of regression analysis that searches the space of mathematical expressions to 
+find the model that best fits a given dataset, both in terms of accuracy and simplicity 
+(ref: https://en.wikipedia.org/wiki/Symbolic_regression). It also is one of the applications
+for Differentiable Cartesian Genetic Programming.
+
+This class provides an easy way to instantiate symbolic regression problems as optimization problems having
+a continuous part (i.e. the value of the parameters in the model) and an integer part (i.e. the representation of
+the model computational graph). The instantiated object can be used as UDP (User Defined Problem) in the pygmo optimization suite.
+
+The symbolic regression problem can be instantiated both as a single and as a two-objectives problem. In the second
+case, aside the Mean Squared Error, the model complexity will be considered as an objective.
+
+    )";
+}
+
 } // namespace dcgpy
