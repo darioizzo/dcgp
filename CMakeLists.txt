@@ -142,7 +142,7 @@ if(DCGP_BUILD_DCGP)
 
     # Setup of the header-only dcgp library.
     add_library(dcgp INTERFACE)
-    target_link_libraries(dcgp INTERFACE Threads::Threads Boost::boost Boost::serialization Eigen3::eigen3 TBB::tbb)
+    target_link_libraries(dcgp INTERFACE Boost::boost Boost::serialization Eigen3::eigen3 TBB::tbb)
     target_link_libraries(dcgp INTERFACE Audi::audi Pagmo::pagmo ${SYMENGINE_LIBRARIES})
 
 
@@ -156,7 +156,7 @@ if(DCGP_BUILD_DCGP)
     if(DCGP_BUILD_MAIN)
         add_executable(main main.cpp)
         target_link_libraries(main dcgp)
-        set_property(TARGET main PROPERTY CXX_STANDARD 14)
+        set_property(TARGET main PROPERTY CXX_STANDARD 17)
         set_property(TARGET main PROPERTY CXX_STANDARD_REQUIRED YES)
         set_property(TARGET main PROPERTY CXX_EXTENSIONS NO)
     endif()
