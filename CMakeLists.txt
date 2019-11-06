@@ -85,7 +85,7 @@ if(MINGW)
 	list(APPEND DCGP_CXX_FLAGS_RELEASE "-Wa,-mbig-obj")
 endif()
 
-# Some flags that generate warnings due to Eigen or Piranha obsolete versions
+# Some flags that generate warnings due to Eigen obsolete versions
 list(REMOVE_ITEM DCGP_CXX_FLAGS_DEBUG "-Wduplicated-branches")
 list(REMOVE_ITEM DCGP_CXX_FLAGS_DEBUG "-Wold-style-cast")
 
@@ -119,31 +119,6 @@ if(DCGP_BUILD_DCGP)
     message(STATUS "Eigen version detected: ${EIGEN3_VERSION}")
     include_directories(${EIGEN3_INCLUDE_DIR})
 
-    # Piranha setup.
-    find_package(Piranha REQUIRED)
-    message(STATUS "Piranha library found.")
-    message(STATUS "Piranha include dir is: ${Piranha_INCLUDE_DIR}")
-    include_directories(${Piranha_INCLUDE_DIR})
-
-    # GMP setup.
-    find_package(GMP REQUIRED)
-    message(STATUS "GMP library found.")
-    message(STATUS "GMP include dir is: ${GMP_INCLUDE_DIR}")
-    message(STATUS "GMP library is: ${GMP_LIBRARIES}")
-
-    # MPFR setup.
-    find_package(MPFR REQUIRED)
-    message(STATUS "MPFR library found.")
-    message(STATUS "MPFR include dir is: ${MPFR_INCLUDE_DIR}")
-    message(STATUS "MPFR library is: ${MPFR_LIBRARIES}")
-    message(STATUS "Checking MPFR version.")
-    try_compile(MPFR_VERSION_CHECK ${CMAKE_BINARY_DIR} "${CMAKE_SOURCE_DIR}/cmake_modules/mpfr_check_version.cpp"
-        CMAKE_FLAGS "-DINCLUDE_DIRECTORIES:STRING=${MPFR_INCLUDE_DIR};${GMP_INCLUDE_DIR}")
-    if(NOT MPFR_VERSION_CHECK)
-        message(FATAL_ERROR "Unsupported MPFR version, please upgrade.")
-    endif()
-    message(STATUS "MPFR version is ok.")
-
     # Audi setup
     find_package(Audi REQUIRED)
     message(STATUS "AUDI include dir is: ${AUDI_INCLUDE_DIRS}")
@@ -167,7 +142,7 @@ if(DCGP_BUILD_DCGP)
 
     # Setup of the header-only dcgp library.
     add_library(dcgp INTERFACE)
-    target_link_libraries(dcgp INTERFACE Threads::Threads Boost::boost Boost::serialization Eigen3::eigen3 MPFR::MPFR GMP::GMP TBB::tbb)
+    target_link_libraries(dcgp INTERFACE Threads::Threads Boost::boost Boost::serialization Eigen3::eigen3 TBB::tbb)
     target_link_libraries(dcgp INTERFACE Audi::audi Pagmo::pagmo ${SYMENGINE_LIBRARIES})
 
 
@@ -176,9 +151,6 @@ if(DCGP_BUILD_DCGP)
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
     $<INSTALL_INTERFACE:include>)
-
-    # These lines are temporary with piranha v0.10, may be simplified when this is updated
-    target_include_directories(dcgp INTERFACE ${Piranha_INCLUDE_DIR})
 
     # Build main
     if(DCGP_BUILD_MAIN)
@@ -210,10 +182,7 @@ if(DCGP_BUILD_DCGP)
     configure_file("${CMAKE_CURRENT_SOURCE_DIR}/dcgp-config.cmake.in" "${CMAKE_CURRENT_BINARY_DIR}/dcgp-config.cmake" @ONLY)
 
     install(FILES "${CMAKE_CURRENT_BINARY_DIR}/dcgp-config.cmake" DESTINATION "lib/cmake/dcgp")
-    install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/FindGMP.cmake" 
-                  "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/FindMPFR.cmake"
-                  "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/FindPiranha.cmake"
-                  "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/DCGPFindBoost.cmake"
+    install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/DCGPFindBoost.cmake"
                   "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/FindAudi.cmake"
                   "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/FindEigen3.cmake"
                   "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/FindTBB.cmake"

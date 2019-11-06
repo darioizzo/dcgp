@@ -512,8 +512,8 @@ private:
 
     std::vector<std::vector<double>> m_points;
     std::vector<std::vector<double>> m_labels;
-    std::vector<std::vector<gdual_d>> m_dpoints;
-    std::vector<std::vector<gdual_d>> m_dlabels;
+    std::vector<std::vector<audi::gdual_d>> m_dpoints;
+    std::vector<std::vector<audi::gdual_d>> m_dlabels;
     std::vector<std::string> m_deph_symb;
     std::vector<std::string> m_symbols;
 

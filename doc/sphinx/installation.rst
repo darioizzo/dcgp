@@ -11,7 +11,6 @@ C++
 
 dCGP is a header-only library which has the following third party dependencies:
 
-* `Piranha <http://bluescarni.github.io/piranha/sphinx/>`_, header-only library (git clone https://github.com/bluescarni/piranha.git). **Version 0.11 is REQUIRED**.
 * `AuDi <http://darioizzo.github.io/audi/>`_, header-only library (git clone https://github.com/darioizzo/audi.git)
 * `Boost <http://www.boost.org/>`_, headers only (needs the libraries if you intend to use the python bindings)
 
