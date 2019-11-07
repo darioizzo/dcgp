@@ -1,5 +1,5 @@
-#ifndef PYAUDI_COMMON_UTILS_HPP
-#define PYAUDI_COMMON_UTILS_HPP
+#ifndef PYDCGP_COMMON_UTILS_HPP
+#define PYDCGP_COMMON_UTILS_HPP
 
 #include <boost/python.hpp>
 #include <boost/python/stl_iterator.hpp>
