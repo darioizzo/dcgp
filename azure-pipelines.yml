@@ -58,7 +58,6 @@ jobs:
                         tbb-devel ^
                         audi ^
                         pyaudi ^
-
                         python=3.7
           conda list
         displayName: "Install conda packages"
