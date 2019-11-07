@@ -68,7 +68,8 @@ cmake -DBoost_NO_BOOST_CMAKE=ON \
 	-DPAGMO_BUILD_PYGMO=yes \
 	-DPAGMO_BUILD_PAGMO=no \
 	-DBoost_PYTHON${PYTHON_VERSION}_LIBRARY_RELEASE=/usr/local/lib/${BOOST_PYTHON_LIBRARY_NAME} \
-	-DPYTHON_EXECUTABLE=/opt/python/${PYTHON_DIR}/bin/python ../;
+	-DPYTHON_EXECUTABLE=/opt/python/${PYTHON_DIR}/bin/python \
+	-DYACMA_PYTHON_MODULES_INSTALL_PATH=/opt/python/${PYTHON_DIR}/lib/python${PYTHON_VERSION}/site-packages ../;
 make -j2 install
 cd ../
 
@@ -92,7 +93,12 @@ make install
 # Compile and install dcgpy (build directory is created by .travis.yml)
 cd /dcgp
 cd build
-cmake -DBoost_NO_BOOST_CMAKE=ON -DBoost_PYTHON${PYTHON_VERSION}_LIBRARY_RELEASE=/usr/local/lib/${BOOST_PYTHON_LIBRARY_NAME} -DCMAKE_BUILD_TYPE=Release -DDCGP_BUILD_DCGP=no -DDCGP_BUILD_DCGPY=yes -DPYTHON_EXECUTABLE=/opt/python/${PYTHON_DIR}/bin/python ../;
+cmake -DBoost_NO_BOOST_CMAKE=ON \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DDCGP_BUILD_DCGP=no \
+	-DDCGP_BUILD_DCGPY=yes \
+	-DBoost_PYTHON${PYTHON_VERSION}_LIBRARY_RELEASE=/usr/local/lib/${BOOST_PYTHON_LIBRARY_NAME} \
+	-DPYTHON_EXECUTABLE=/opt/python/${PYTHON_DIR}/bin/python ../;
 make -j2 install
 
 
