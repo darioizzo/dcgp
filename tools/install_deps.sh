@@ -17,6 +17,7 @@ if [[ "${DCGP_BUILD}" != manylinux* ]]; then
     bash miniconda.sh -b -p $HOME/miniconda
     conda config --add channels conda-forge --force
 
+    # obake-devel is needed as far as the conda package audi does not list it as a dependency
     conda_pkgs="cmake eigen nlopt ipopt boost boost-cpp tbb tbb-devel pagmo audi symengine obake-devel"
 
     if [[ "${DCGP_BUILD}" == "Python37" || "${DCGP_BUILD}" == "OSXPython37" ]]; then
