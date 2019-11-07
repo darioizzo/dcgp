@@ -46,16 +46,6 @@ fi
 cd
 cd install
 
-# Install piranha
-curl -L https://github.com/bluescarni/piranha/archive/v${PIRANHA_VERSION}.tar.gz > v${PIRANHA_VERSION}
-tar xvf v${PIRANHA_VERSION} > /dev/null 2>&1
-cd piranha-${PIRANHA_VERSION}
-mkdir build
-cd build
-cmake -DBoost_NO_BOOST_CMAKE=ON ../ > /dev/null
-make install > /dev/null 2>&1
-cd ..
-
 # Install audi
 curl -L https://github.com/darioizzo/audi/archive/v${AUDI_VERSION}.tar.gz > v${AUDI_VERSION}
 tar xvf v${AUDI_VERSION} > /dev/null 2>&1
@@ -82,12 +72,11 @@ cd ../
 mkdir build_pygmo
 cd build_pygmo
 cmake -DBoost_NO_BOOST_CMAKE=ON \
+	-DCMAKE_BUILD_TYPE=Release \
 	-DPAGMO_BUILD_PYGMO=yes \
 	-DPAGMO_BUILD_PAGMO=no \
-	-DPAGMO_WITH_EIGEN3=yes \
-	-DPAGMO_WITH_NLOPT=yes \
-	-DPAGMO_WITH_IPOPT=yes \
-	-DCMAKE_BUILD_TYPE=Release ../;
+	-DBoost_PYTHON${PYTHON_VERSION}_LIBRARY_RELEASE=/usr/local/lib/${BOOST_PYTHON_LIBRARY_NAME} \
+	-DPYTHON_EXECUTABLE=/opt/python/${PYTHON_DIR}/bin/python ../;
 make -j2 install
 cd ../
 
