@@ -13,18 +13,22 @@ if [[ ${DCGP_BUILD} == *37 ]]; then
 	PYTHON_DIR="cp37-cp37m"
 	BOOST_PYTHON_LIBRARY_NAME="libboost_python37.so"
 	PYTHON_VERSION="37"
+	PYTHON_VERSION_DOTTED="3.7"
 elif [[ ${DCGP_BUILD} == *36 ]]; then
 	PYTHON_DIR="cp36-cp36m"
 	BOOST_PYTHON_LIBRARY_NAME="libboost_python36.so"
 	PYTHON_VERSION="36"
+	PYTHON_VERSION_DOTTED="3.6"
 elif [[ ${DCGP_BUILD} == *27mu ]]; then
 	PYTHON_DIR="cp27-cp27mu"
 	BOOST_PYTHON_LIBRARY_NAME="libboost_python27mu.so"
 	PYTHON_VERSION="27"
+	PYTHON_VERSION_DOTTED="2.7"
 elif [[ ${DCGP_BUILD} == *27 ]]; then
 	PYTHON_DIR="cp27-cp27m"
 	BOOST_PYTHON_LIBRARY_NAME="libboost_python27.so"
 	PYTHON_VERSION="27"
+	PYTHON_VERSION_DOTTED="2.7"
 else
 	echo "Invalid build type: ${DCGP_BUILD}"
 	exit 1
@@ -69,7 +73,7 @@ cmake -DBoost_NO_BOOST_CMAKE=ON \
 	-DPAGMO_BUILD_PAGMO=no \
 	-DBoost_PYTHON${PYTHON_VERSION}_LIBRARY_RELEASE=/usr/local/lib/${BOOST_PYTHON_LIBRARY_NAME} \
 	-DPYTHON_EXECUTABLE=/opt/python/${PYTHON_DIR}/bin/python \
-	-DYACMA_PYTHON_MODULES_INSTALL_PATH=/opt/python/${PYTHON_DIR}/lib/python${PYTHON_VERSION}/site-packages ../;
+	-DYACMA_PYTHON_MODULES_INSTALL_PATH=/opt/python/${PYTHON_DIR}/lib/python${PYTHON_VERSION_DOTTED}/site-packages ../;
 make -j2 install
 cd ../
 
