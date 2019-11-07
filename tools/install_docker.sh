@@ -45,16 +45,6 @@ fi
 cd
 cd install
 
-# Install audi
-curl -L https://github.com/darioizzo/audi/archive/v${AUDI_VERSION}.tar.gz > v${AUDI_VERSION}
-tar xvf v${AUDI_VERSION} > /dev/null 2>&1
-cd audi-${AUDI_VERSION}
-mkdir build
-cd build
-cmake -DBoost_NO_BOOST_CMAKE=ON -DAUDI_BUILD_AUDI=yes -DAUDI_BUILD_TESTS=no -DCMAKE_BUILD_TYPE=Release ../
-make install > /dev/null 2>&1
-cd ..
-
 # Install pagmo and pygmo
 curl -L  https://github.com/esa/pagmo2/archive/v${PAGMO_VERSION}.tar.gz > pagmo2.tar.gz
 tar xzf pagmo2.tar.gz
@@ -78,6 +68,17 @@ cmake -DBoost_NO_BOOST_CMAKE=ON \
 	-DPYTHON_EXECUTABLE=/opt/python/${PYTHON_DIR}/bin/python ../;
 make -j2 install
 cd ../
+
+# Install audi
+curl -L https://github.com/darioizzo/audi/archive/v${AUDI_VERSION}.tar.gz > v${AUDI_VERSION}
+tar xvf v${AUDI_VERSION} > /dev/null 2>&1
+cd audi-${AUDI_VERSION}
+mkdir build
+cd build
+cmake -DBoost_NO_BOOST_CMAKE=ON -DAUDI_BUILD_AUDI=yes -DAUDI_BUILD_TESTS=no -DCMAKE_BUILD_TYPE=Release ../
+make install > /dev/null 2>&1
+cd ..
+
 
 # Python deps
 /opt/python/${PYTHON_DIR}/bin/pip install numpy
