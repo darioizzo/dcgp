@@ -2,6 +2,7 @@ from __future__ import absolute_import as _ai
 
 import unittest as _ut
 
+
 class test_kernel(_ut.TestCase):
     def runTest(self):
         self.test_double()
@@ -158,30 +159,30 @@ class test_expression(_ut.TestCase):
         from dcgpy import kernel_set_gdual_double as kernel_set
         from pyaudi import gdual_double as gdual
 
-        ex = expression(inputs=1,
-                        outputs=1,
-                        rows=1,
-                        cols=6,
-                        levels_back=6,
-                        arity=2,
-                        kernels=kernel_set(["sum", "mul", "div", "diff"])(),
-                        n_eph=0,
-                        seed=20)
+        expression(inputs=1,
+                   outputs=1,
+                   rows=1,
+                   cols=6,
+                   levels_back=6,
+                   arity=2,
+                   kernels=kernel_set(["sum", "mul", "div", "diff"])(),
+                   n_eph=0,
+                   seed=20)
 
     def test_gdual_vdouble(self):
         from dcgpy import expression_gdual_vdouble as expression
         from dcgpy import kernel_set_gdual_vdouble as kernel_set
         from pyaudi import gdual_vdouble as gdual
 
-        ex = expression(inputs=1,
-                        outputs=1,
-                        rows=1,
-                        cols=6,
-                        levels_back=6,
-                        arity=2,
-                        kernels=kernel_set(["sum", "mul", "div", "diff"])(),
-                        n_eph=0,
-                        seed=20)
+        expression(inputs=1,
+                   outputs=1,
+                   rows=1,
+                   cols=6,
+                   levels_back=6,
+                   arity=2,
+                   kernels=kernel_set(["sum", "mul", "div", "diff"])(),
+                   n_eph=0,
+                   seed=20)
 
     def test_loss_double(self):
         from dcgpy import expression_double as expression
@@ -242,22 +243,23 @@ class test_expression(_ut.TestCase):
         loss_array = ex.loss(np.array([[x]]), np.array([ex([x])]), "MSE")
         self.assertEqual(loss_list, loss_array)
 
+
 class test_symbolic_regression(_ut.TestCase):
     def runTest(self):
         from dcgpy import symbolic_regression, generate_koza_quintic, kernel_set_double
         import pygmo as pg
         X, Y = generate_koza_quintic()
         udp = symbolic_regression(
-            points = X,
-            labels = Y,
-            rows = 1,
-            cols = 20,
-            levels_back = 21,
-            arity = 2, 
-            kernels = kernel_set_double(["sum", "diff"])(), 
-            n_eph = 2,
-            multi_objective = False, 
-            parallel_batches = 0)
+            points=X,
+            labels=Y,
+            rows=1,
+            cols=20,
+            levels_back=21,
+            arity=2,
+            kernels=kernel_set_double(["sum", "diff"])(),
+            n_eph=2,
+            multi_objective=False,
+            parallel_batches=0)
         prob = pg.problem(udp)
         pop = pg.population(prob, 10)
         udp.pretty(pop.champion_x)

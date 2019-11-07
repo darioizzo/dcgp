@@ -45,26 +45,26 @@ matrix:
     #      - binutils-gold
     # These are to be uncommented when the quadmath issue is understood and fixed (maybe upstream?)
     # These builds fail as per a not found quadmath.h ... its not clear why or how
-    #- env: DCGP_BUILD="ReleaseClang"
-    #  dist: bionic
-    #  compiler: clang
-    #  os: linux
-    #  addons:
-    #    apt:
-    #      sources:
-    #      - ubuntu-toolchain-r-test
-    #      packages:
-    #      - clang-7
-    #- env: DCGP_BUILD="DebugClang"
-    #  dist: bionic
-    #  compiler: clang
-    #  os: linux
-    #  addons:
-    #    apt:
-    #      sources:
-    #      - ubuntu-toolchain-r-test
-    #      packages:
-    #      - clang-7
+    - env: DCGP_BUILD="ReleaseClang"
+      dist: bionic
+      compiler: clang
+      os: linux
+      addons:
+        apt:
+          sources:
+          - ubuntu-toolchain-r-test
+          packages:
+          - clang-7
+    - env: DCGP_BUILD="DebugClang"
+      dist: bionic
+      compiler: clang
+      os: linux
+      addons:
+        apt:
+          sources:
+          - ubuntu-toolchain-r-test
+          packages:
+          - clang-7
     #- env: DCGP_BUILD="Python37"
     #  dist: bionic
     #  compiler: gcc
@@ -85,13 +85,10 @@ matrix:
     #  os: osx
     #- env: DCGP_BUILD="OSXRelease"
     #  os: osx
-    # These are Commented as per a weird segfault that must be investigated ....
-    - env: DCGP_BUILD="OSXPython37"
-      os: osx
-      #osx_image: xcode6.4
-    - env: DCGP_BUILD="OSXPython27"
-      os: osx
-      #osx_image: xcode6.4
+    #- env: DCGP_BUILD="OSXPython37"
+    #  os: osx
+    #- env: DCGP_BUILD="OSXPython27"
+    #  os: osx
     #- env: DCGP_BUILD="manylinux64Py37" DOCKER_IMAGE="pagmo2/manylinux2010_x86_64_with_deps"
     #  sudo: required
     #  services:
