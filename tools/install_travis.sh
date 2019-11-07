@@ -59,11 +59,11 @@ elif [[ "${DCGP_BUILD}" == OSXPython* ]]; then
     cd ..;
     mkdir build_dcgp;
     cd build_dcgp;
-    cmake -DCMAKE_INSTALL_PREFIX=$deps_dir -DCMAKE_PREFIX_PATH=$deps_dir -DCMAKE_BUILD_TYPE=Debug -DDCGP_BUILD_DCGP=yes -DDCGP_BUILD_TESTS=no -DDCGP_BUILD_EXAMPLES=no ../;
+    cmake -DCMAKE_INSTALL_PREFIX=$deps_dir -DCMAKE_PREFIX_PATH=$deps_dir -DBoost_NO_BOOST_CMAKE=ON -DCMAKE_BUILD_TYPE=Release -DDCGP_BUILD_DCGP=yes -DDCGP_BUILD_TESTS=no -DDCGP_BUILD_EXAMPLES=no ../;
     make install VERBOSE=1;
     cd ../build;
     # Now dcgpy.
-    cmake -DCMAKE_INSTALL_PREFIX=$deps_dir -DCMAKE_PREFIX_PATH=$deps_dir -DCMAKE_BUILD_TYPE=Debug -DDCGP_BUILD_DCGP=no -DDCGP_BUILD_DCGPY=yes -DCMAKE_CXX_FLAGS_DEBUG="-g0" ../;
+    cmake -DCMAKE_INSTALL_PREFIX=$deps_dir -DCMAKE_PREFIX_PATH=$deps_dir -DBoost_NO_BOOST_CMAKE=ON -DCMAKE_BUILD_TYPE=Release -DDCGP_BUILD_DCGP=no -DDCGP_BUILD_DCGPY=yes -DCMAKE_CXX_FLAGS_DEBUG="-g0" ../;
     make install VERBOSE=1;
     # Move out of the build dir.
     cd ../tools
