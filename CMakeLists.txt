@@ -65,10 +65,76 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin" AND YACMA_COMPILER_IS_CLANGXX)
   list(APPEND DCGP_CXX_FLAGS_RELEASE "-stdlib=libc++")
 endif()
 if(YACMA_COMPILER_IS_MSVC)
+  include(CheckCXXCompilerFlag)
   # Disable the idiotic minmax macros on MSVC, some annoying warnings,
   # and enable the bigobj option.
-  list(APPEND DCGP_CXX_FLAGS_DEBUG "-DNOMINMAX" "/wd4459" "/wd4127" "/wd4702" "/bigobj")
-  list(APPEND DCGP_CXX_FLAGS_RELEASE "-DNOMINMAX" "/wd4459" "/wd4127" "/wd4702" "/bigobj")
+  # Also, enable the WIN32_LEAN_AND_MEAN definition.
+  list(APPEND DCGP_CXX_FLAGS_DEBUG "-DNOMINMAX" "/wd4459" "/wd4127" "/wd4702" "/bigobj" "-DWIN32_LEAN_AND_MEAN")
+  list(APPEND DCGP_CXX_FLAGS_RELEASE "-DNOMINMAX" "/wd4459" "/wd4127" "/wd4702" "/bigobj" "-DWIN32_LEAN_AND_MEAN")
+  # Enable strict conformance mode, if supported.
+  set(CMAKE_REQUIRED_QUIET TRUE)
+  check_cxx_compiler_flag("/permissive-" _DCGP_MSVC_SUPPORTS_STRICT_CONFORMANCE)
+  unset(CMAKE_REQUIRED_QUIET)
+  if(_DCGP_MSVC_SUPPORTS_STRICT_CONFORMANCE)
+    message(STATUS "The '/permissive-' flag is supported, enabling it.")
+    list(APPEND DCGP_CXX_FLAGS_DEBUG "/permissive-")
+    list(APPEND DCGP_CXX_FLAGS_RELEASE "/permissive-")
+  endif()
+  unset(_DCGP_MSVC_SUPPORTS_STRICT_CONFORMANCE)
+  if(YACMA_COMPILER_IS_CLANGXX)
+    # clang-cl emits various warnings from GMP/MPFR, let's just silence them.
+    # NOTE: at one point in the recent past, MSVC added an options similar to GCC's isystem:
+    # https://blogs.msdn.microsoft.com/vcblog/2017/12/13/broken-warnings-theory/
+    # We probably just need to wait for this to be picked up by CMake/clang-cl. Let's
+    # revisit the issue in the future.
+    list(APPEND _DCGP_CLANG_CL_DISABLED_WARNINGS
+      "-Wno-unused-variable"
+      "-Wno-inconsistent-dllimport"
+      "-Wno-unknown-pragmas"
+      "-Wno-unused-parameter"
+      "-Wno-sign-compare"
+      "-Wno-deprecated-declarations"
+      "-Wno-deprecated-dynamic-exception-spec"
+      "-Wno-old-style-cast"
+      "-Wno-sign-conversion"
+      "-Wno-non-virtual-dtor"
+      "-Wno-deprecated"
+      "-Wno-shadow"
+      "-Wno-shorten-64-to-32"
+      "-Wno-reserved-id-macro"
+      "-Wno-undef"
+      "-Wno-c++98-compat-pedantic"
+      "-Wno-documentation-unknown-command"
+      "-Wno-zero-as-null-pointer-constant"
+      "-Wno-language-extension-token"
+      "-Wno-gnu-anonymous-struct"
+      "-Wno-nested-anon-types"
+      "-Wno-documentation"
+      "-Wno-comma"
+      "-Wno-nonportable-system-include-path"
+      "-Wno-global-constructors"
+      "-Wno-redundant-parens"
+      "-Wno-exit-time-destructors"
+      "-Wno-missing-noreturn"
+      "-Wno-switch-enum"
+      "-Wno-covered-switch-default"
+      "-Wno-float-equal"
+      "-Wno-double-promotion"
+      "-Wno-microsoft-enum-value"
+      "-Wno-missing-prototypes"
+      "-Wno-implicit-fallthrough"
+      "-Wno-format-nonliteral"
+      "-Wno-cast-qual"
+      "-Wno-disabled-macro-expansion"
+      "-Wno-unused-private-field"
+      "-Wno-unused-template"
+      "-Wno-unused-macros"
+      "-Wno-extra-semi-stmt"
+      "-Wno-c++98-compat")
+    list(APPEND DCGP_CXX_FLAGS_DEBUG ${_DCGP_CLANG_CL_DISABLED_WARNINGS})
+    list(APPEND DCGP_CXX_FLAGS_RELEASE ${_DCGP_CLANG_CL_DISABLED_WARNINGS})
+    unset(_DCGP_CLANG_CL_DISABLED_WARNINGS)
+  endif()
 endif()
 if(YACMA_COMPILER_IS_INTELXX)
   # NOTE: on MSVC we use the push/pop pragmas, but they do not seem to work on Intel (the pragmas
@@ -121,7 +187,7 @@ if(DCGP_BUILD_DCGP)
 
     # Audi setup
     find_package(Audi REQUIRED)
-    message(STATUS "AUDI include dir is: ${AUDI_INCLUDE_DIRS}")
+    message(STATUS "AUDI include dir is: ${DCGP_INCLUDE_DIRS}")
 
     # Pagmo setup
     find_package(Pagmo REQUIRED)
