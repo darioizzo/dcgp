@@ -183,7 +183,6 @@ if(DCGP_BUILD_DCGP)
 
     install(FILES "${CMAKE_CURRENT_BINARY_DIR}/dcgp-config.cmake" DESTINATION "lib/cmake/dcgp")
     install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/DCGPFindBoost.cmake"
-                  "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/FindAudi.cmake"
                   "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/FindEigen3.cmake"
                   "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/FindTBB.cmake"
                   DESTINATION "lib/cmake/dcgp")

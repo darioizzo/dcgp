@@ -17,7 +17,7 @@ if [[ "${DCGP_BUILD}" != manylinux* ]]; then
     bash miniconda.sh -b -p $HOME/miniconda
     conda config --add channels conda-forge --force
 
-    conda_pkgs="cmake eigen nlopt ipopt boost boost-cpp tbb tbb-devel pagmo audi symengine"
+    conda_pkgs="cmake eigen nlopt ipopt boost boost-cpp tbb tbb-devel pagmo audi symengine obake-devel"
 
     if [[ "${DCGP_BUILD}" == "Python37" || "${DCGP_BUILD}" == "OSXPython37" ]]; then
         conda_pkgs="$conda_pkgs python=3.7 pyaudi pygmo"
