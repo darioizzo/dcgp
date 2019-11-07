@@ -6,8 +6,7 @@ set -x
 # Exit on error.
 set -e
 
-AUDI_VERSION="1.6"
-PIRANHA_VERSION="0.11"
+AUDI_VERSION="1.7"
 PAGMO_VERSION="2.11.3"
 
 if [[ ${DCGP_BUILD} == *37 ]]; then
