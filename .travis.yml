@@ -35,7 +35,7 @@ matrix:
     #      - binutils-gold
     #- env: DCGP_BUILD="CoverageGCC"
     #  dist: bionic
-    #  compiler: gcc
+    #  compiler: gcc 
     #  os: linux
     #  addons:
     #    apt:
