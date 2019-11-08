@@ -1136,54 +1136,6 @@ Returns:
 )";
 }
 
-std::string es4cgp_get_log_doc()
-{
-    return R"(get_log()
-Returns a log containing relevant parameters recorded during the last call to ``evolve()``. The log frequency depends
-on the verbosity parameter (by default nothing is logged) which can be set calling the
-method :func:`~pygmo.algorithm.set_verbosity()` on an :class:`~pygmo.algorithm`
-constructed with a :class:`~dcgpy.es4cgp`. A verbosity of ``N`` implies a log
-line each ``N`` generations.
-
-Returns:
-    ``list`` of ``tuples``: at each logged epoch, the values ``Gen``, ``Fevals``, ``Current best``, ``Best``, where:
-
-    * ``Gen`` (``int``), generation number.
-    * ``Fevals`` (``int``), number of functions evaluation made.
-    * ``Best`` (``float``), the best fitness found.
-    * ``Constants`` (``list``), the current values for the ephemeral constants.
-    * ``Model`` (``string``), the string representation of the current best model
-Examples:
-    >>> import dcgpy
-    >>> from pygmo import *
-    >>> 
-    >>> algo = algorithm(es4cgp(gen = 500, limit = 20))
-    >>> algo.set_verbosity(100)
-    >>> prob = problem(rosenbrock(10))
-    >>> pop = population(prob, 20)
-    >>> pop = algo.evolve(pop) # doctest: +SKIP
-        Gen:        Fevals:          Best:    Constants:    Model:
-            0              0        4087.68    [3.52114]    [0] ...
-          100            400        324.845    [3.61414]    [2*x0**4] ...
-          200            800        324.845    [3.61414]    [2*x0**4] ...
-          300           1200        165.212    [3.56702]    [x0**2*(-x0 + 2*x0**2)] ...
-          400           1600         28.814    [3.45813]    [x0*(-x0 + x0**2*(-x0 + x0**2) - (-x0 +  ...
-          500           2000        10.5589    [3.59501]    [x0*(-4*x0 + x0**2*(-x0 + x0**2) + x0**2 ...
-          600           2400         2.2459    [3.44443]    [x0*(-x0*c1 + x0**2*(-x0 + x0**2) + x0** ...
-          700           2800        2.24378    [3.43364]    [x0*(-x0*c1 + x0**2*(-x0 + x0**2) + x0** ...
-          800           3200        2.24378    [3.43364]    [x0*(-x0*c1 + x0**2*(-x0 + x0**2) + x0** ...
-          900           3600        2.24378    [3.43364]    [x0*(-x0*c1 + x0**2*(-x0 + x0**2) + x0** ...
-         1000           4000        2.24374    [3.43618]    [x0*(-x0*c1 + x0**2*(-x0 + x0**2) + x0** ...
-         1100           4400        2.24372    [3.43479]    [x0*(-x0*c1 + x0**2*(-x0 + x0**2) + x0** ...
-         1200           4800      0.0697188    [3.35616]    [x0*(x0 + x0**2*(-c1 + x0**2))] ...
-         1300           5200      0.0254527    [3.37625]    [x0*(x0 + x0**2*(-c1 + x0**2))] ...
-    >>> uda = algo.extract(es4cgp)
-    >>> uda.get_log() # doctest: +SKIP
-    [(1, 40, 183727.83934515435, 183727.83934515435), ...
-See also the docs of the relevant C++ method :cpp:func:`dcgp::es4cgp::get_log()`.
-)";
-}
-
 std::string es4cgp_doc()
 {
     return R"(__init__(gen = 1, mut_n = 1, ftol = 1e-4, learn_constants = False, seed = random)
@@ -1226,6 +1178,123 @@ Raises:
     ValueError: if  *mut_n* is 0 or *ftol* is negative.
 
     )";
+}
+
+std::string es4cgp_get_log_doc()
+{
+    return R"(get_log()
+Returns a log containing relevant parameters recorded during the last call to ``evolve()``. The log frequency depends
+on the verbosity parameter (by default nothing is logged) which can be set calling the
+method :func:`~pygmo.algorithm.set_verbosity()` on an :class:`~pygmo.algorithm`
+constructed with a :class:`~dcgpy.es4cgp`. A verbosity of ``N`` implies a log
+line each ``N`` generations.
+
+Returns:
+    ``list`` of ``tuples``: at each logged epoch, the values ``Gen``, ``Fevals``, ``Current best``, ``Best``, where:
+
+    * ``Gen`` (``int``), generation number.
+    * ``Fevals`` (``int``), number of functions evaluation made.
+    * ``Best`` (``float``), the best fitness found.
+    * ``Constants`` (``list``), the current values for the ephemeral constants.
+    * ``Model`` (``string``), the string representation of the current best model
+Examples:
+    >>> import dcgpy
+    >>> from pygmo import *
+    >>> 
+    >>> algo = algorithm(dcgpy.es4cgp(gen = 2000, mut_n = 1, ftol = 1e-4, learn_constants=True))       
+    >>> X, Y = dcgpy.generate_koza_quintic()    
+    >>> udp = dcgpy.symbolic_regression(X, Y ,1,20,21,2, dcgpy.kernel_set_double(["sum", "diff", "mul"])(), 1, False, 0)
+    >>> pop = population(udp, 4)
+    >>> algo.set_verbosity(200)
+    >>> pop = algo.evolve(pop) # doctest: +SKIP
+    Gen:        Fevals:          Best:   Constants:   Model:
+       0              0        7398.14   [-1.22497]   [x0*c1**2 + c1**2] ...
+     200            800        233.979   [-1.34118]   [x0*(x0 - x0**2 + x0**3 + (x0 - x0**2)** ...
+     400           1600        4.26131   [-1.15376]   [x0*(x0 + x0*(c1 + x0**2) - x0**2 + (x0  ...
+     600           2400        4.26126   [-1.15198]   [x0*(x0 + x0*(c1 + x0**2) - x0**2 + (x0  ...
+     800           3200        4.26126   [-1.15198]   [x0*(x0 + x0*(c1 + x0**2) - x0**2 + (x0  ...
+    1000           4000        4.26126   [-1.15198]   [x0*(x0 + x0*(c1 + x0**2) - x0**2 + (x0  ...
+    1200           4800        4.26126   [-1.15198]   [x0*(x0 + x0*(c1 + x0**2) - x0**2 + (x0  ...
+    1400           5600        4.26126   [-1.15198]   [x0*(x0 + x0*(c1 + x0**2) - x0**2 + (x0  ...
+    1600           6400       0.664691   [-1.12614]   [x0*(x0 + x0*(c1 + x0**2) - (c1 + x0**2) ...
+    1800           7200       0.664691   [-1.12614]   [x0*(x0 + x0*(c1 + x0**2) - (c1 + x0**2) ...
+    2000           8000       0.664689   [-1.12548]   [x0*(x0 + x0*(c1 + x0**2) - (c1 + x0**2) ...
+    Exit condition -- generations = 2000
+    >>> uda = algo.extract(dcgpy.es4cgp)
+    >>> uda.get_log() # doctest: +SKIP
+    [(0, 0, 7398.139620548432, array([-1.22496858]), '[x0*c1**2 + c1**2]'), ...
+
+See also the docs of the relevant C++ method :cpp:func:`dcgp::es4cgp::get_log()`.
+)";
+}
+
+std::string gd4cgp_doc()
+{
+    return R"(__init__(max_iter = 1, lr = 1., lr_min = 1e-3)
+
+In a symbolic regression problem, models parameters are typically present in the form of
+ephemeral constants (i.e. extra input terminals). The actual values of the constants have a profound
+effect on the resulting loss and its an open question how to balance the learning of the model parameters
+(continuous optimization) with learning the model itself (integer optimization).
+
+In this class we provide a simple gradient descent algorithm able to tackle :class:`dcgpy.symbolic_regression` problems.
+The gradient descent will only modify the continuous part of the chromosome, leaving the integer part (i.e. the 
+actual model) unchanged.
+
+Args:
+    gen (``int``): maximum number of iterations.
+    lr (``float``): initial learning rate (or step size).
+    lr_min (``float``): stopping criteria on the minimum value for the learning rate (or step size).
+
+Raises:
+    unspecified: any exception thrown by failures at the intersection between C++ and Python (e.g.,
+      type conversion errors, mismatched function signatures, etc.)
+    ValueError: if  *lr_min* is smaller than 0, or larger than *lr*
+    )";
+}
+
+std::string gd4cgp_get_log_doc()
+{
+    return R"(get_log()
+Returns a log containing relevant parameters recorded during the last call to ``evolve()``. The log frequency depends
+on the verbosity parameter (by default nothing is logged) which can be set calling the
+method :func:`~pygmo.algorithm.set_verbosity()` on an :class:`~pygmo.algorithm`
+constructed with a :class:`~dcgpy.gd4cgp`. A verbosity of ``N`` implies a log
+line each ``N`` iterations.
+
+Returns:
+    ``list`` of ``tuples``: at each logged epoch, the values ``Gen``, ``Fevals``, ``Current best``, ``Best``, where:
+
+    * ``Gen`` (``int``), generation number.
+    * ``Fevals`` (``int``), number of functions evaluation made.
+    * ``Gevals`` (``int``), number of gradient evaluation made.
+    * ``grad norm`` (``float``), norm of the loss gradient.
+    * ``lr`` (``float``), the current learning rate.
+    * ``Best`` (``float``), current fitness value.
+
+Examples:
+    >>> import dcgpy
+    >>> from pygmo import *
+    >>> 
+    >>> algo = algorithm(dcgpy.gd4cgp(4, 0.1, 1e-4))       
+    >>> X, Y = dcgpy.generate_koza_quintic()    
+    >>> udp = dcgpy.symbolic_regression(X, Y ,1,20,21,2, dcgpy.kernel_set_double(["sum", "diff", "mul"])(), 1, False, 0)
+    >>> pop = population(udp, 10)
+    >>> algo.set_verbosity(1)
+    >>> pop = algo.evolve(pop) # doctest: +SKIP
+    Iter:        Fevals:        Gevals:     grad norm:            lr:         Best:
+        0              0              0              0            0.1         4588.6
+        1              1              1        687.738           0.15        4520.41
+        2              2              2        676.004          0.225        4420.33
+        3              3              3        658.404         0.3375        4275.16
+        4              4              4        632.004        0.50625        4068.54
+    Exit condition -- max iterations = 4
+    >>> uda = algo.extract(es4cgp)
+    >>> uda.get_log() # doctest: +SKIP
+    [(0, 0, 0, 0.0, 0.1, 4588.5979303850145), ...
+
+See also the docs of the relevant C++ method :cpp:func:`dcgp::gd4cgp::get_log()`.
+)";
 }
 
 } // namespace dcgpy
