@@ -22,53 +22,6 @@ Intended use of the class is:
    // (optional) - ... and get a vector with all five kernels
    auto kernel_vector2 = kernels();
 
-.. _kernels:
-
-The following list contains all kernels provided in dcgp, and the name to use when constructing
-a :cpp:class:`dcgp::kernel`.
-
-.. cssclass:: table-bordered table-striped
-
-   +----------------+-----------------------+
-   |Kernel name     |  Function             |
-   +================+=======================+
-   |"sum"           |addition               |
-   +----------------+-----------------------+
-   |"diff"          |subtraction            |
-   +----------------+-----------------------+
-   |"mul"           |multiplication         |
-   +----------------+-----------------------+
-   |"div"           |division               |
-   +----------------+-----------------------+
-   |"pdiv"          |protected division     |
-   +----------------+-----------------------+
-   |"sin"           |sine                   |
-   +----------------+-----------------------+
-   |"cos"           |cosine                 |
-   +----------------+-----------------------+
-   |"log"           | natural logarithm     |
-   +----------------+-----------------------+
-   |"exp"           |exponential            |
-   +----------------+-----------------------+
-   |"gaussian"      |gaussian               |
-   +----------------+-----------------------+
-   |"sqrt"          |square root            |
-   +----------------+-----------------------+
-   | **Suitable for dCGPANN**               |
-   +----------------+-----------------------+
-   |"sig"           |sigmoid                |
-   +----------------+-----------------------+
-   |"tanh"          |hyperbolic tangent     |
-   +----------------+-----------------------+
-   |"ReLu"          |rectified linear unit  |
-   +----------------+-----------------------+
-   |"ELU"           |exp linear unit        |
-   +----------------+-----------------------+
-   |"ISRU"          |sigmoid                |
-   +----------------+-----------------------+
-   |"sum"           |addition               |
-   +----------------+-----------------------+
-
 ---------------------------------------------------------------------------
 
 .. doxygenclass:: dcgp::kernel_set

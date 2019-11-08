@@ -97,8 +97,8 @@
 <li class="toctree-l2"><a class="reference internal" href="notebooks/dCGPANNs_for_function_approximation.html">Training a FFNN in dCGPANN vs.&nbsp;Keras (regression)</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="theory.html">Cartesian Genetic Programming</a></li>
-<li class="toctree-l1"><a class="reference internal" href="theory.html#dcgp">dCGP</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="theory.html">Cartesian Genetic Programming (CGP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="theory.html#differentiable-cartesian-genetic-programming-dcgp">Differentiable Cartesian Genetic Programming (dCGP)</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="theory.html#reference">Reference</a></li>
 </ul>
 </li>
@@ -152,6 +152,30 @@
 <h2 id="D">D</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="docs/cpp/es4cgp.html#_CPPv2N4dcgp6es4cgpE">dcgp::es4cgp (C++ class)</a>
+</li>
+      <li><a href="docs/cpp/es4cgp.html#_CPPv2N4dcgp6es4cgp6es4cgpEjjdbj">dcgp::es4cgp::es4cgp (C++ function)</a>
+</li>
+      <li><a href="docs/cpp/es4cgp.html#_CPPv2NK4dcgp6es4cgp6evolveEN5pagmo10populationE">dcgp::es4cgp::evolve (C++ function)</a>
+</li>
+      <li><a href="docs/cpp/es4cgp.html#_CPPv2NK4dcgp6es4cgp14get_extra_infoEv">dcgp::es4cgp::get_extra_info (C++ function)</a>
+</li>
+      <li><a href="docs/cpp/es4cgp.html#_CPPv2NK4dcgp6es4cgp7get_logEv">dcgp::es4cgp::get_log (C++ function)</a>
+</li>
+      <li><a href="docs/cpp/es4cgp.html#_CPPv2NK4dcgp6es4cgp8get_nameEv">dcgp::es4cgp::get_name (C++ function)</a>
+</li>
+      <li><a href="docs/cpp/es4cgp.html#_CPPv2NK4dcgp6es4cgp8get_seedEv">dcgp::es4cgp::get_seed (C++ function)</a>
+</li>
+      <li><a href="docs/cpp/es4cgp.html#_CPPv2NK4dcgp6es4cgp13get_verbosityEv">dcgp::es4cgp::get_verbosity (C++ function)</a>
+</li>
+      <li><a href="docs/cpp/es4cgp.html#_CPPv2N4dcgp6es4cgp13log_line_typeE">dcgp::es4cgp::log_line_type (C++ type)</a>
+</li>
+      <li><a href="docs/cpp/es4cgp.html#_CPPv2N4dcgp6es4cgp8log_typeE">dcgp::es4cgp::log_type (C++ type)</a>
+</li>
+      <li><a href="docs/cpp/es4cgp.html#_CPPv2N4dcgp6es4cgp8set_seedEj">dcgp::es4cgp::set_seed (C++ function)</a>
+</li>
+      <li><a href="docs/cpp/es4cgp.html#_CPPv2N4dcgp6es4cgp13set_verbosityEj">dcgp::es4cgp::set_verbosity (C++ function)</a>
+</li>
       <li><a href="docs/cpp/expression.html#_CPPv2N4dcgp10expressionE">dcgp::expression (C++ class)</a>
 </li>
       <li><a href="docs/cpp/expression.html#_CPPv2N4dcgp10expression2CEE">dcgp::expression::CE (C++ enumerator)</a>
@@ -228,8 +252,6 @@
 </li>
       <li><a href="docs/cpp/expression_ann.html#_CPPv2N4dcgp14expression_ann6d_lossERKNSt6vectorINSt6vectorIdEEEERKNSt6vectorINSt6vectorIdEEEEN10expressionIdE9loss_typeEj">dcgp::expression_ann::d_loss (C++ function)</a>, <a href="docs/cpp/expression_ann.html#_CPPv2NK4dcgp14expression_ann6d_lossERdRNSt6vectorIdEERNSt6vectorIdEERKNSt6vectorIdEERKNSt6vectorIdEEKN10expressionIdE9loss_typeE">[1]</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="docs/cpp/expression_ann.html#_CPPv2N4dcgp14expression_ann3ELUE">dcgp::expression_ann::ELU (C++ enumerator)</a>
 </li>
       <li><a href="docs/cpp/expression_ann.html#_CPPv2N4dcgp14expression_ann14expression_annEjjjjjNSt6vectorIjEENSt6vectorI6kernelIdEEEj">dcgp::expression_ann::expression_ann (C++ function)</a>, <a href="docs/cpp/expression_ann.html#_CPPv2N4dcgp14expression_ann14expression_annEjjjjjjNSt6vectorI6kernelIdEEEj">[1]</a>
@@ -256,6 +278,8 @@
 </li>
       <li><a href="docs/cpp/expression_ann.html#_CPPv2N4dcgp14expression_ann4RELUE">dcgp::expression_ann::RELU (C++ enumerator)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="docs/cpp/expression_ann.html#_CPPv2N4dcgp14expression_ann8set_biasENSt6vectorIdE9size_typeERKd">dcgp::expression_ann::set_bias (C++ function)</a>
 </li>
       <li><a href="docs/cpp/expression_ann.html#_CPPv2N4dcgp14expression_ann10set_biasesERKNSt6vectorIdEE">dcgp::expression_ann::set_biases (C++ function)</a>
@@ -288,6 +312,26 @@
 </li>
       <li><a href="docs/cpp/expression_weighted.html#_CPPv2N4dcgp19expression_weighted11set_weightsERKNSt6vectorI1TEE">dcgp::expression_weighted::set_weights (C++ function)</a>
 </li>
+      <li><a href="docs/cpp/gd4cgp.html#_CPPv2N4dcgp6gd4cgpE">dcgp::gd4cgp (C++ class)</a>
+</li>
+      <li><a href="docs/cpp/gd4cgp.html#_CPPv2NK4dcgp6gd4cgp6evolveEN5pagmo10populationE">dcgp::gd4cgp::evolve (C++ function)</a>
+</li>
+      <li><a href="docs/cpp/gd4cgp.html#_CPPv2N4dcgp6gd4cgp6gd4cgpEjdd">dcgp::gd4cgp::gd4cgp (C++ function)</a>
+</li>
+      <li><a href="docs/cpp/gd4cgp.html#_CPPv2NK4dcgp6gd4cgp14get_extra_infoEv">dcgp::gd4cgp::get_extra_info (C++ function)</a>
+</li>
+      <li><a href="docs/cpp/gd4cgp.html#_CPPv2NK4dcgp6gd4cgp7get_logEv">dcgp::gd4cgp::get_log (C++ function)</a>
+</li>
+      <li><a href="docs/cpp/gd4cgp.html#_CPPv2NK4dcgp6gd4cgp8get_nameEv">dcgp::gd4cgp::get_name (C++ function)</a>
+</li>
+      <li><a href="docs/cpp/gd4cgp.html#_CPPv2NK4dcgp6gd4cgp13get_verbosityEv">dcgp::gd4cgp::get_verbosity (C++ function)</a>
+</li>
+      <li><a href="docs/cpp/gd4cgp.html#_CPPv2N4dcgp6gd4cgp13log_line_typeE">dcgp::gd4cgp::log_line_type (C++ type)</a>
+</li>
+      <li><a href="docs/cpp/gd4cgp.html#_CPPv2N4dcgp6gd4cgp8log_typeE">dcgp::gd4cgp::log_type (C++ type)</a>
+</li>
+      <li><a href="docs/cpp/gd4cgp.html#_CPPv2N4dcgp6gd4cgp13set_verbosityEj">dcgp::gd4cgp::set_verbosity (C++ function)</a>
+</li>
       <li><a href="docs/cpp/kernel.html#_CPPv2N4dcgp6kernelE">dcgp::kernel (C++ class)</a>
 </li>
       <li><a href="docs/cpp/kernel.html#_CPPv2NK4dcgp6kernel8get_nameEv">dcgp::kernel::get_name (C++ function)</a>
@@ -307,6 +351,60 @@
       <li><a href="docs/cpp/kernel_set.html#_CPPv2NK4dcgp10kernel_setixEKNSt6vectorIN4dcgp6kernelI1TEEE9size_typeE">dcgp::kernel_set::operator[] (C++ function)</a>
 </li>
       <li><a href="docs/cpp/kernel_set.html#_CPPv2N4dcgp10kernel_set9push_backENSt6stringE">dcgp::kernel_set::push_back (C++ function)</a>, <a href="docs/cpp/kernel_set.html#_CPPv2N4dcgp10kernel_set9push_backERKN4dcgp6kernelI1TEE">[1]</a>
+</li>
+      <li><a href="docs/cpp/mes4cgp.html#_CPPv2N4dcgp7mes4cgpE">dcgp::mes4cgp (C++ class)</a>
+</li>
+      <li><a href="docs/cpp/mes4cgp.html#_CPPv2NK4dcgp7mes4cgp6evolveEN5pagmo10populationE">dcgp::mes4cgp::evolve (C++ function)</a>
+</li>
+      <li><a href="docs/cpp/mes4cgp.html#_CPPv2NK4dcgp7mes4cgp14get_extra_infoEv">dcgp::mes4cgp::get_extra_info (C++ function)</a>
+</li>
+      <li><a href="docs/cpp/mes4cgp.html#_CPPv2NK4dcgp7mes4cgp7get_logEv">dcgp::mes4cgp::get_log (C++ function)</a>
+</li>
+      <li><a href="docs/cpp/mes4cgp.html#_CPPv2NK4dcgp7mes4cgp8get_nameEv">dcgp::mes4cgp::get_name (C++ function)</a>
+</li>
+      <li><a href="docs/cpp/mes4cgp.html#_CPPv2NK4dcgp7mes4cgp8get_seedEv">dcgp::mes4cgp::get_seed (C++ function)</a>
+</li>
+      <li><a href="docs/cpp/mes4cgp.html#_CPPv2NK4dcgp7mes4cgp13get_verbosityEv">dcgp::mes4cgp::get_verbosity (C++ function)</a>
+</li>
+      <li><a href="docs/cpp/mes4cgp.html#_CPPv2N4dcgp7mes4cgp13log_line_typeE">dcgp::mes4cgp::log_line_type (C++ type)</a>
+</li>
+      <li><a href="docs/cpp/mes4cgp.html#_CPPv2N4dcgp7mes4cgp8log_typeE">dcgp::mes4cgp::log_type (C++ type)</a>
+</li>
+      <li><a href="docs/cpp/mes4cgp.html#_CPPv2N4dcgp7mes4cgp7mes4cgpEjjdj">dcgp::mes4cgp::mes4cgp (C++ function)</a>
+</li>
+      <li><a href="docs/cpp/mes4cgp.html#_CPPv2N4dcgp7mes4cgp8set_seedEj">dcgp::mes4cgp::set_seed (C++ function)</a>
+</li>
+      <li><a href="docs/cpp/mes4cgp.html#_CPPv2N4dcgp7mes4cgp13set_verbosityEj">dcgp::mes4cgp::set_verbosity (C++ function)</a>
+</li>
+      <li><a href="docs/cpp/symbolic_regression.html#_CPPv2N4dcgp19symbolic_regressionE">dcgp::symbolic_regression (C++ class)</a>
+</li>
+      <li><a href="docs/cpp/symbolic_regression.html#_CPPv2NK4dcgp19symbolic_regression7fitnessERKN5pagmo13vector_doubleE">dcgp::symbolic_regression::fitness (C++ function)</a>
+</li>
+      <li><a href="docs/cpp/symbolic_regression.html#_CPPv2NK4dcgp19symbolic_regression10get_boundsEv">dcgp::symbolic_regression::get_bounds (C++ function)</a>
+</li>
+      <li><a href="docs/cpp/symbolic_regression.html#_CPPv2NK4dcgp19symbolic_regression7get_cgpEv">dcgp::symbolic_regression::get_cgp (C++ function)</a>
+</li>
+      <li><a href="docs/cpp/symbolic_regression.html#_CPPv2NK4dcgp19symbolic_regression14get_extra_infoEv">dcgp::symbolic_regression::get_extra_info (C++ function)</a>
+</li>
+      <li><a href="docs/cpp/symbolic_regression.html#_CPPv2NK4dcgp19symbolic_regression8get_nameEv">dcgp::symbolic_regression::get_name (C++ function)</a>
+</li>
+      <li><a href="docs/cpp/symbolic_regression.html#_CPPv2NK4dcgp19symbolic_regression7get_nixEv">dcgp::symbolic_regression::get_nix (C++ function)</a>
+</li>
+      <li><a href="docs/cpp/symbolic_regression.html#_CPPv2NK4dcgp19symbolic_regression8get_nobjEv">dcgp::symbolic_regression::get_nobj (C++ function)</a>
+</li>
+      <li><a href="docs/cpp/symbolic_regression.html#_CPPv2NK4dcgp19symbolic_regression8gradientERKN5pagmo13vector_doubleE">dcgp::symbolic_regression::gradient (C++ function)</a>
+</li>
+      <li><a href="docs/cpp/symbolic_regression.html#_CPPv2NK4dcgp19symbolic_regression17gradient_sparsityEv">dcgp::symbolic_regression::gradient_sparsity (C++ function)</a>
+</li>
+      <li><a href="docs/cpp/symbolic_regression.html#_CPPv2NK4dcgp19symbolic_regression8hessiansERKN5pagmo13vector_doubleE">dcgp::symbolic_regression::hessians (C++ function)</a>
+</li>
+      <li><a href="docs/cpp/symbolic_regression.html#_CPPv2NK4dcgp19symbolic_regression17hessians_sparsityEv">dcgp::symbolic_regression::hessians_sparsity (C++ function)</a>
+</li>
+      <li><a href="docs/cpp/symbolic_regression.html#_CPPv2NK4dcgp19symbolic_regression8prettierERKN5pagmo13vector_doubleE">dcgp::symbolic_regression::prettier (C++ function)</a>
+</li>
+      <li><a href="docs/cpp/symbolic_regression.html#_CPPv2NK4dcgp19symbolic_regression6prettyERKN5pagmo13vector_doubleE">dcgp::symbolic_regression::pretty (C++ function)</a>
+</li>
+      <li><a href="docs/cpp/symbolic_regression.html#_CPPv2N4dcgp19symbolic_regression19symbolic_regressionERKNSt6vectorINSt6vectorIdEEEERKNSt6vectorINSt6vectorIdEEEEjjjjNSt6vectorI6kernelIdEEEjbj">dcgp::symbolic_regression::symbolic_regression (C++ function)</a>, <a href="docs/cpp/symbolic_regression.html#_CPPv2N4dcgp19symbolic_regression19symbolic_regressionEv">[1]</a>
 </li>
   </ul></td>
 </tr></table>
@@ -348,6 +446,8 @@
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="docs/python/es4cgp.html#dcgpy.es4cgp">es4cgp (class in dcgpy)</a>
+</li>
       <li><a href="docs/python/expression_ann.html#dcgpy.expression_ann_double">expression_ann_double (class in dcgpy)</a>
 </li>
       <li><a href="docs/python/expression.html#dcgpy.expression_double">expression_double (class in dcgpy)</a>
@@ -368,6 +468,8 @@
 <h2 id="G">G</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="docs/python/gd4cgp.html#dcgpy.gd4cgp">gd4cgp (class in dcgpy)</a>
+</li>
       <li><a href="docs/python/nist_problems.html#dcgpy.generate_chwirut1">generate_chwirut1() (in module dcgpy)</a>
 </li>
       <li><a href="docs/python/nist_problems.html#dcgpy.generate_chwirut2">generate_chwirut2() (in module dcgpy)</a>
@@ -448,10 +550,10 @@
       </ul></li>
       <li><a href="docs/python/expression_ann.html#dcgpy.expression_ann_double.get_bias">get_bias() (dcgpy.expression_ann_double method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="docs/python/expression_ann.html#dcgpy.expression_ann_double.get_biases">get_biases() (dcgpy.expression_ann_double method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="docs/python/expression.html#dcgpy.expression_double.get_cols">get_cols() (dcgpy.expression_double method)</a>
 
       <ul>
@@ -492,6 +594,12 @@
         <li><a href="docs/python/expression.html#dcgpy.expression_gdual_vdouble.get_levels_back">(dcgpy.expression_gdual_vdouble method)</a>
 </li>
       </ul></li>
+      <li><a href="docs/python/es4cgp.html#dcgpy.es4cgp.get_log">get_log() (dcgpy.es4cgp method)</a>
+
+      <ul>
+        <li><a href="docs/python/gd4cgp.html#dcgpy.gd4cgp.get_log">(dcgpy.gd4cgp method)</a>
+</li>
+      </ul></li>
       <li><a href="docs/python/expression.html#dcgpy.expression_double.get_m">get_m() (dcgpy.expression_double method)</a>
 
       <ul>
@@ -516,6 +624,8 @@
         <li><a href="docs/python/expression.html#dcgpy.expression_gdual_vdouble.get_rows">(dcgpy.expression_gdual_vdouble method)</a>
 </li>
       </ul></li>
+      <li><a href="docs/python/es4cgp.html#dcgpy.es4cgp.get_seed">get_seed() (dcgpy.es4cgp method)</a>
+</li>
       <li><a href="docs/python/expression.html#dcgpy.expression_double.get_ub">get_ub() (dcgpy.expression_double method)</a>
 
       <ul>
@@ -736,6 +846,8 @@
         <li><a href="docs/python/expression.html#dcgpy.expression_gdual_vdouble.simplify">(dcgpy.expression_gdual_vdouble method)</a>
 </li>
       </ul></li>
+      <li><a href="docs/python/symbolic_regression.html#dcgpy.symbolic_regression">symbolic_regression (class in dcgpy)</a>
+</li>
   </ul></td>
 </tr></table>
 

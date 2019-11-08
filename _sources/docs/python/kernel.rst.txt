@@ -1,4 +1,4 @@
-kernel
+Kernel
 -------------
 
 kernel_double
