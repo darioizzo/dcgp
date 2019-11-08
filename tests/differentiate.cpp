@@ -10,11 +10,11 @@ using namespace dcgp;
 
 BOOST_AUTO_TEST_CASE(differentiation_basic_set)
 {
-    kernel_set<gdual_d> basic_set({"sum", "diff", "mul", "div"});
-    expression<gdual_d> ex(3, 1, 1, 20, 21, 2, basic_set(), 0);
+    kernel_set<audi::gdual_d> basic_set({"sum", "diff", "mul", "div"});
+    expression<audi::gdual_d> ex(3, 1, 1, 20, 21, 2, basic_set(), 0);
 
-    std::vector<gdual_d> in({gdual_d(1., "x", 2), gdual_d(1., "y", 2), gdual_d(1., "z", 2)});
-    std::vector<gdual_d> in2({gdual_d(-1., "x", 6), gdual_d(1., "y", 6), gdual_d(1., "z", 6)});
+    std::vector<audi::gdual_d> in({audi::gdual_d(1., "x", 2), audi::gdual_d(1., "y", 2), audi::gdual_d(1., "z", 2)});
+    std::vector<audi::gdual_d> in2({audi::gdual_d(-1., "x", 6), audi::gdual_d(1., "y", 6), audi::gdual_d(1., "z", 6)});
 
     // We set the expression to 2 y^2 (x + z)^2
     ex.set({0, 2, 1, 0,  1, 3, 0, 2,  0, 2, 5, 1, 0, 6, 6, 1, 3,  7, 2, 5,  3, 3, 0, 3, 0,  10, 10, 2,  1,  7, 3,

@@ -65,10 +65,76 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin" AND YACMA_COMPILER_IS_CLANGXX)
   list(APPEND DCGP_CXX_FLAGS_RELEASE "-stdlib=libc++")
 endif()
 if(YACMA_COMPILER_IS_MSVC)
+  include(CheckCXXCompilerFlag)
   # Disable the idiotic minmax macros on MSVC, some annoying warnings,
   # and enable the bigobj option.
-  list(APPEND DCGP_CXX_FLAGS_DEBUG "-DNOMINMAX" "/wd4459" "/wd4127" "/wd4702" "/bigobj")
-  list(APPEND DCGP_CXX_FLAGS_RELEASE "-DNOMINMAX" "/wd4459" "/wd4127" "/wd4702" "/bigobj")
+  # Also, enable the WIN32_LEAN_AND_MEAN definition.
+  list(APPEND DCGP_CXX_FLAGS_DEBUG "-DNOMINMAX" "/wd4459" "/wd4127" "/wd4702" "/bigobj" "-DWIN32_LEAN_AND_MEAN")
+  list(APPEND DCGP_CXX_FLAGS_RELEASE "-DNOMINMAX" "/wd4459" "/wd4127" "/wd4702" "/bigobj" "-DWIN32_LEAN_AND_MEAN")
+  # Enable strict conformance mode, if supported.
+  set(CMAKE_REQUIRED_QUIET TRUE)
+  check_cxx_compiler_flag("/permissive-" _DCGP_MSVC_SUPPORTS_STRICT_CONFORMANCE)
+  unset(CMAKE_REQUIRED_QUIET)
+  if(_DCGP_MSVC_SUPPORTS_STRICT_CONFORMANCE)
+    message(STATUS "The '/permissive-' flag is supported, enabling it.")
+    list(APPEND DCGP_CXX_FLAGS_DEBUG "/permissive-")
+    list(APPEND DCGP_CXX_FLAGS_RELEASE "/permissive-")
+  endif()
+  unset(_DCGP_MSVC_SUPPORTS_STRICT_CONFORMANCE)
+  if(YACMA_COMPILER_IS_CLANGXX)
+    # clang-cl emits various warnings from GMP/MPFR, let's just silence them.
+    # NOTE: at one point in the recent past, MSVC added an options similar to GCC's isystem:
+    # https://blogs.msdn.microsoft.com/vcblog/2017/12/13/broken-warnings-theory/
+    # We probably just need to wait for this to be picked up by CMake/clang-cl. Let's
+    # revisit the issue in the future.
+    list(APPEND _DCGP_CLANG_CL_DISABLED_WARNINGS
+      "-Wno-unused-variable"
+      "-Wno-inconsistent-dllimport"
+      "-Wno-unknown-pragmas"
+      "-Wno-unused-parameter"
+      "-Wno-sign-compare"
+      "-Wno-deprecated-declarations"
+      "-Wno-deprecated-dynamic-exception-spec"
+      "-Wno-old-style-cast"
+      "-Wno-sign-conversion"
+      "-Wno-non-virtual-dtor"
+      "-Wno-deprecated"
+      "-Wno-shadow"
+      "-Wno-shorten-64-to-32"
+      "-Wno-reserved-id-macro"
+      "-Wno-undef"
+      "-Wno-c++98-compat-pedantic"
+      "-Wno-documentation-unknown-command"
+      "-Wno-zero-as-null-pointer-constant"
+      "-Wno-language-extension-token"
+      "-Wno-gnu-anonymous-struct"
+      "-Wno-nested-anon-types"
+      "-Wno-documentation"
+      "-Wno-comma"
+      "-Wno-nonportable-system-include-path"
+      "-Wno-global-constructors"
+      "-Wno-redundant-parens"
+      "-Wno-exit-time-destructors"
+      "-Wno-missing-noreturn"
+      "-Wno-switch-enum"
+      "-Wno-covered-switch-default"
+      "-Wno-float-equal"
+      "-Wno-double-promotion"
+      "-Wno-microsoft-enum-value"
+      "-Wno-missing-prototypes"
+      "-Wno-implicit-fallthrough"
+      "-Wno-format-nonliteral"
+      "-Wno-cast-qual"
+      "-Wno-disabled-macro-expansion"
+      "-Wno-unused-private-field"
+      "-Wno-unused-template"
+      "-Wno-unused-macros"
+      "-Wno-extra-semi-stmt"
+      "-Wno-c++98-compat")
+    list(APPEND DCGP_CXX_FLAGS_DEBUG ${_DCGP_CLANG_CL_DISABLED_WARNINGS})
+    list(APPEND DCGP_CXX_FLAGS_RELEASE ${_DCGP_CLANG_CL_DISABLED_WARNINGS})
+    unset(_DCGP_CLANG_CL_DISABLED_WARNINGS)
+  endif()
 endif()
 if(YACMA_COMPILER_IS_INTELXX)
   # NOTE: on MSVC we use the push/pop pragmas, but they do not seem to work on Intel (the pragmas
@@ -85,7 +151,7 @@ if(MINGW)
 	list(APPEND DCGP_CXX_FLAGS_RELEASE "-Wa,-mbig-obj")
 endif()
 
-# Some flags that generate warnings due to Eigen or Piranha obsolete versions
+# Some flags that generate warnings due to Eigen obsolete versions
 list(REMOVE_ITEM DCGP_CXX_FLAGS_DEBUG "-Wduplicated-branches")
 list(REMOVE_ITEM DCGP_CXX_FLAGS_DEBUG "-Wold-style-cast")
 
@@ -119,34 +185,9 @@ if(DCGP_BUILD_DCGP)
     message(STATUS "Eigen version detected: ${EIGEN3_VERSION}")
     include_directories(${EIGEN3_INCLUDE_DIR})
 
-    # Piranha setup.
-    find_package(Piranha REQUIRED)
-    message(STATUS "Piranha library found.")
-    message(STATUS "Piranha include dir is: ${Piranha_INCLUDE_DIR}")
-    include_directories(${Piranha_INCLUDE_DIR})
-
-    # GMP setup.
-    find_package(GMP REQUIRED)
-    message(STATUS "GMP library found.")
-    message(STATUS "GMP include dir is: ${GMP_INCLUDE_DIR}")
-    message(STATUS "GMP library is: ${GMP_LIBRARIES}")
-
-    # MPFR setup.
-    find_package(MPFR REQUIRED)
-    message(STATUS "MPFR library found.")
-    message(STATUS "MPFR include dir is: ${MPFR_INCLUDE_DIR}")
-    message(STATUS "MPFR library is: ${MPFR_LIBRARIES}")
-    message(STATUS "Checking MPFR version.")
-    try_compile(MPFR_VERSION_CHECK ${CMAKE_BINARY_DIR} "${CMAKE_SOURCE_DIR}/cmake_modules/mpfr_check_version.cpp"
-        CMAKE_FLAGS "-DINCLUDE_DIRECTORIES:STRING=${MPFR_INCLUDE_DIR};${GMP_INCLUDE_DIR}")
-    if(NOT MPFR_VERSION_CHECK)
-        message(FATAL_ERROR "Unsupported MPFR version, please upgrade.")
-    endif()
-    message(STATUS "MPFR version is ok.")
-
     # Audi setup
     find_package(Audi REQUIRED)
-    message(STATUS "AUDI include dir is: ${AUDI_INCLUDE_DIRS}")
+    message(STATUS "AUDI include dir is: ${DCGP_INCLUDE_DIRS}")
 
     # Pagmo setup
     find_package(Pagmo REQUIRED)
@@ -167,7 +208,7 @@ if(DCGP_BUILD_DCGP)
 
     # Setup of the header-only dcgp library.
     add_library(dcgp INTERFACE)
-    target_link_libraries(dcgp INTERFACE Threads::Threads Boost::boost Boost::serialization Eigen3::eigen3 MPFR::MPFR GMP::GMP TBB::tbb)
+    target_link_libraries(dcgp INTERFACE Boost::boost Boost::serialization Eigen3::eigen3 TBB::tbb)
     target_link_libraries(dcgp INTERFACE Audi::audi Pagmo::pagmo ${SYMENGINE_LIBRARIES})
 
 
@@ -177,14 +218,11 @@ if(DCGP_BUILD_DCGP)
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
     $<INSTALL_INTERFACE:include>)
 
-    # These lines are temporary with piranha v0.10, may be simplified when this is updated
-    target_include_directories(dcgp INTERFACE ${Piranha_INCLUDE_DIR})
-
     # Build main
     if(DCGP_BUILD_MAIN)
         add_executable(main main.cpp)
         target_link_libraries(main dcgp)
-        set_property(TARGET main PROPERTY CXX_STANDARD 14)
+        set_property(TARGET main PROPERTY CXX_STANDARD 17)
         set_property(TARGET main PROPERTY CXX_STANDARD_REQUIRED YES)
         set_property(TARGET main PROPERTY CXX_EXTENSIONS NO)
     endif()
@@ -210,11 +248,7 @@ if(DCGP_BUILD_DCGP)
     configure_file("${CMAKE_CURRENT_SOURCE_DIR}/dcgp-config.cmake.in" "${CMAKE_CURRENT_BINARY_DIR}/dcgp-config.cmake" @ONLY)
 
     install(FILES "${CMAKE_CURRENT_BINARY_DIR}/dcgp-config.cmake" DESTINATION "lib/cmake/dcgp")
-    install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/FindGMP.cmake" 
-                  "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/FindMPFR.cmake"
-                  "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/FindPiranha.cmake"
-                  "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/DCGPFindBoost.cmake"
-                  "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/FindAudi.cmake"
+    install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/DCGPFindBoost.cmake"
                   "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/FindEigen3.cmake"
                   "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/FindTBB.cmake"
                   DESTINATION "lib/cmake/dcgp")

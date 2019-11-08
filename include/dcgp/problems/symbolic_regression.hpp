@@ -19,6 +19,7 @@ namespace dcgp
 /// A Symbolic Regression problem
 /**
  *
+ *
  * Symbolic regression is a type of regression analysis that searches the space of mathematical expressions to 
  * find the model that best fits a given dataset, both in terms of accuracy and simplicity 
  * (ref: https://en.wikipedia.org/wiki/Symbolic_regression). It also is one of the core applications
@@ -51,13 +52,15 @@ public:
     /**
      * Constructs a symbolic_regression optimization problem compatible with the pagmo UDP interface.
      *
-     * @param[in] points number of inputs (independent variables).
-     * @param[in] labels number of outputs (dependent variables).
+     * @param[in] points input data.
+     * @param[in] labels output data.
      * @param[in] r number of rows of the dCGP.
      * @param[in] c number of columns of the dCGP.
      * @param[in] l number of levels-back allowed in the dCGP.
      * @param[in] arity arity of the basis functions.
      * @param[in] f function set. An std::vector of dcgp::kernel<expression::type>.
+     * @param[in] n_eph number of ephemeral constants.
+     * @param[in] multi_objective when true, it will consider the model complexity as a second objective.
      * @param[in] parallel_batches number of parallel batches.
      *
      * @throws std::invalid_argument if points and labels are not consistent.
@@ -96,7 +99,7 @@ public:
                 f_g.push_back(ker.get_name());
             }
         }
-        m_dcgp = expression<gdual_d>(n, m, m_r, m_c, m_l, m_arity, f_g(), m_n_eph, seed);
+        m_dcgp = expression<audi::gdual_d>(n, m, m_r, m_c, m_l, m_arity, f_g(), m_n_eph, seed);
         // We initialize the dpoints/dduals
         m_dpoints.clear();
         m_dlabels.clear();
@@ -379,8 +382,8 @@ public:
     std::string get_extra_info() const
     {
         std::ostringstream ss;
-        pagmo::stream(ss, "\tData dimension (in): ", m_points[0].size(), "\n");
-        pagmo::stream(ss, "\tData dimension (out): ", m_labels[0].size(), "\n");
+        pagmo::stream(ss, "\tData dimension (points): ", m_points[0].size(), "\n");
+        pagmo::stream(ss, "\tData dimension (labels): ", m_labels[0].size(), "\n");
         pagmo::stream(ss, "\tData size: ", m_points.size(), "\n");
         pagmo::stream(ss, "\tKernels: ", m_cgp.get_f(), "\n");
         return ss.str();
@@ -451,6 +454,15 @@ public:
         return m_cgp;
     }
 
+    /// Thread safety for this udp
+    /**
+     * This is set to none as pitonic kernels could be in the inner expression
+     */
+    //pagmo::thread_safety get_thread_safety() const
+   // {
+    //    return pagmo::thread_safety::none;
+   // }
+
 private:
     // This setter can be marked const as m_cgp is mutable
     void set_cgp(const pagmo::vector_double &x) const
@@ -500,8 +512,8 @@ private:
 
     std::vector<std::vector<double>> m_points;
     std::vector<std::vector<double>> m_labels;
-    std::vector<std::vector<gdual_d>> m_dpoints;
-    std::vector<std::vector<gdual_d>> m_dlabels;
+    std::vector<std::vector<audi::gdual_d>> m_dpoints;
+    std::vector<std::vector<audi::gdual_d>> m_dlabels;
     std::vector<std::string> m_deph_symb;
     std::vector<std::string> m_symbols;
 
@@ -518,7 +530,7 @@ private:
     // avoided, but likely resulting in prepature optimization. (see https://github.com/darioizzo/dcgp/pull/42)
     mutable expression<double> m_cgp;
     // TODO: this should be vectorized gduals
-    mutable expression<gdual_d> m_dcgp;
+    mutable expression<audi::gdual_d> m_dcgp;
     mutable std::pair<pagmo::vector_double, pagmo::vector_double> m_cache_fitness;
     mutable std::pair<pagmo::vector_double, pagmo::vector_double> m_cache_gradient;
 }; // namespace dcgp

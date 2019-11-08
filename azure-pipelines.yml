@@ -54,6 +54,10 @@ jobs:
                         symengine ^
                         boost-cpp ^
                         boost ^
+                        tbb ^
+                        tbb-devel ^
+                        audi ^
+                        pyaudi ^
                         python=3.7
           conda list
         displayName: "Install conda packages"
@@ -87,7 +91,8 @@ jobs:
                 -DCMAKE_PREFIX_PATH=C:\tools\miniconda3\Library ^
                 -DCMAKE_INSTALL_PREFIX=C:\tools\miniconda3\Library ^
                 -DDCGP_BUILD_DCGP=no ^
-                -DDCGP_BUILD_DCGPY=yes
+                -DDCGP_BUILD_DCGPY=yes ^
+                -DDCGP_CXX_FLAGS_EXTRA="-D_copysign=copysign"
           cmake --build . -- -v
           cmake --build . --target install
           python -c "import dcgpy.test; dcgpy.test.run_test_suite()"

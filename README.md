@@ -32,7 +32,6 @@ otherwise you will have to compile it by activating the BUILD_DCGPY option in CM
 ### Dependencies
 Several dependencies are necessary to successfully compile d-CGP
  * Audi, headers only library - (git clone https://github.com/darioizzo/audi.git)
- * Piranha, headers only library - (git clone https://github.com/bluescarni/piranha.git)
  * Boost, headers only
  
 After making sure the dependencies above are installed in your system, you may download the latest dCGP version via git:

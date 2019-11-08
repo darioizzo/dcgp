@@ -11,7 +11,7 @@ URL = 'https://github.com/darioizzo/d-CGP'
 AUTHOR = 'Dario Izzo'
 AUTHOR_EMAIL = 'dario.izzo@gmail.com'
 LICENSE = 'GPLv3+/LGPL3+'
-INSTALL_REQUIRES = ['pyaudi']
+INSTALL_REQUIRES = ['pyaudi', 'pygmo']
 CLASSIFIERS = [
     # How mature is this project? Common values are
     #   3 - Alpha
@@ -34,20 +34,13 @@ CLASSIFIERS = [
     'Programming Language :: Python :: 3'
 ]
 KEYWORDS = 'cartesian genetic programming backpropagation machine learning'
-PLATFORMS = ['Unix', 'Windows', 'OSX']
+PLATFORMS = ['Unix']
 
 class BinaryDistribution(Distribution):
 
     def has_ext_modules(foo):
         return True
 
-# Setup the list of external dlls.
-import os
-if os.name == 'nt':
-    mingw_wheel_libs = 'mingw_wheel_libs_python{}{}.txt'.format(
-        sys.version_info[0], sys.version_info[1])
-    l = open(mingw_wheel_libs, 'r').readlines()
-    DLL_LIST = [os.path.basename(_[:-1]) for _ in l]
 
 setup(name=NAME,
       version=VERSION,
@@ -63,6 +56,5 @@ setup(name=NAME,
       install_requires=INSTALL_REQUIRES,
       packages=['dcgpy'],
       # Include pre-compiled extension
-      package_data={'dcgpy': ['core.pyd'] + \
-                    DLL_LIST if os.name == 'nt' else ['core.so']},
+      package_data={'dcgpy': ['core.pyd'] + ['core.so']},
       distclass=BinaryDistribution)

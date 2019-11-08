@@ -48,7 +48,7 @@ BOOST_AUTO_TEST_CASE(fitness_test_single_obj)
 {
     kernel_set<double> basic_set({"sum", "diff", "mul", "div"});
     std::vector<std::vector<double>> points, labels;
-    gym::generate_vladi4(points, labels);
+    gym::generate_uball5d(points, labels);
     // 2xy, 2x
     pagmo::vector_double test_x = {0, 1, 1, 0, 0, 0, 2, 0, 2, 2, 0, 2, 4, 3};
     // On a single point/label.
@@ -104,7 +104,7 @@ BOOST_AUTO_TEST_CASE(fitness_test_two_obj)
 {
     kernel_set<double> basic_set({"sum", "diff", "mul", "div"});
     std::vector<std::vector<double>> points, labels;
-    gym::generate_vladi4(points, labels);
+    gym::generate_uball5d(points, labels);
     symbolic_regression udp{points, labels, 1, 15, 16, 2, basic_set(), 2, true, 0u};
     pagmo::population pop(udp, 10u);
     for (decltype(pop.size()) i = 0u; i < pop.size(); ++i) {

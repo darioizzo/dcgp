@@ -6,26 +6,29 @@ set -x
 # Exit on error.
 set -e
 
-AUDI_VERSION="1.6"
-PIRANHA_VERSION="0.11"
+AUDI_VERSION="1.7"
 PAGMO_VERSION="2.11.3"
 
 if [[ ${DCGP_BUILD} == *37 ]]; then
 	PYTHON_DIR="cp37-cp37m"
 	BOOST_PYTHON_LIBRARY_NAME="libboost_python37.so"
 	PYTHON_VERSION="37"
+	PYTHON_VERSION_DOTTED="3.7"
 elif [[ ${DCGP_BUILD} == *36 ]]; then
 	PYTHON_DIR="cp36-cp36m"
 	BOOST_PYTHON_LIBRARY_NAME="libboost_python36.so"
 	PYTHON_VERSION="36"
+	PYTHON_VERSION_DOTTED="3.6"
 elif [[ ${DCGP_BUILD} == *27mu ]]; then
 	PYTHON_DIR="cp27-cp27mu"
 	BOOST_PYTHON_LIBRARY_NAME="libboost_python27mu.so"
 	PYTHON_VERSION="27"
+	PYTHON_VERSION_DOTTED="2.7"
 elif [[ ${DCGP_BUILD} == *27 ]]; then
 	PYTHON_DIR="cp27-cp27m"
 	BOOST_PYTHON_LIBRARY_NAME="libboost_python27.so"
 	PYTHON_VERSION="27"
+	PYTHON_VERSION_DOTTED="2.7"
 else
 	echo "Invalid build type: ${DCGP_BUILD}"
 	exit 1
@@ -46,27 +49,10 @@ fi
 cd
 cd install
 
-# Install piranha
-curl -L https://github.com/bluescarni/piranha/archive/v${PIRANHA_VERSION}.tar.gz > v${PIRANHA_VERSION}
-tar xvf v${PIRANHA_VERSION} > /dev/null 2>&1
-cd piranha-${PIRANHA_VERSION}
-mkdir build
-cd build
-cmake -DBoost_NO_BOOST_CMAKE=ON ../ > /dev/null
-make install > /dev/null 2>&1
-cd ..
+# Python deps
+/opt/python/${PYTHON_DIR}/bin/pip install numpy cloudpickle
 
-# Install audi
-curl -L https://github.com/darioizzo/audi/archive/v${AUDI_VERSION}.tar.gz > v${AUDI_VERSION}
-tar xvf v${AUDI_VERSION} > /dev/null 2>&1
-cd audi-${AUDI_VERSION}
-mkdir build
-cd build
-cmake -DBoost_NO_BOOST_CMAKE=ON -DAUDI_BUILD_AUDI=yes -DAUDI_BUILD_TESTS=no -DCMAKE_BUILD_TYPE=Release ../
-make install > /dev/null 2>&1
-cd ..
-
-# Install pagmo
+# Install pagmo and pygmo
 curl -L  https://github.com/esa/pagmo2/archive/v${PAGMO_VERSION}.tar.gz > pagmo2.tar.gz
 tar xzf pagmo2.tar.gz
 cd pagmo2-${PAGMO_VERSION}
@@ -79,10 +65,27 @@ cmake -DBoost_NO_BOOST_CMAKE=ON \
 	-DCMAKE_BUILD_TYPE=Release ../;
 make -j2 install
 cd ../
+mkdir build_pygmo
+cd build_pygmo
+cmake -DBoost_NO_BOOST_CMAKE=ON \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DPAGMO_BUILD_PYGMO=yes \
+	-DPAGMO_BUILD_PAGMO=no \
+	-DBoost_PYTHON${PYTHON_VERSION}_LIBRARY_RELEASE=/usr/local/lib/${BOOST_PYTHON_LIBRARY_NAME} \
+	-DPYTHON_EXECUTABLE=/opt/python/${PYTHON_DIR}/bin/python \
+	-DYACMA_PYTHON_MODULES_INSTALL_PATH=/opt/python/${PYTHON_DIR}/lib/python${PYTHON_VERSION_DOTTED}/site-packages ../;
+make -j2 install
+cd ../
 
-# Python deps
-/opt/python/${PYTHON_DIR}/bin/pip install numpy
-sleep 20
+# Install audi
+curl -L https://github.com/darioizzo/audi/archive/v${AUDI_VERSION}.tar.gz > v${AUDI_VERSION}
+tar xvf v${AUDI_VERSION} > /dev/null 2>&1
+cd audi-${AUDI_VERSION}
+mkdir build
+cd build
+cmake -DBoost_NO_BOOST_CMAKE=ON -DAUDI_BUILD_AUDI=yes -DAUDI_BUILD_TESTS=no -DCMAKE_BUILD_TYPE=Release ../
+make install > /dev/null 2>&1
+cd ..
 
 # Install dcgp headers
 cd /dcgp
@@ -94,7 +97,12 @@ make install
 # Compile and install dcgpy (build directory is created by .travis.yml)
 cd /dcgp
 cd build
-cmake -DBoost_NO_BOOST_CMAKE=ON -DBoost_PYTHON${PYTHON_VERSION}_LIBRARY_RELEASE=/usr/local/lib/${BOOST_PYTHON_LIBRARY_NAME} -DCMAKE_BUILD_TYPE=Release -DDCGP_BUILD_DCGP=no -DDCGP_BUILD_DCGPY=yes -DPYTHON_EXECUTABLE=/opt/python/${PYTHON_DIR}/bin/python ../;
+cmake -DBoost_NO_BOOST_CMAKE=ON \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DDCGP_BUILD_DCGP=no \
+	-DDCGP_BUILD_DCGPY=yes \
+	-DBoost_PYTHON${PYTHON_VERSION}_LIBRARY_RELEASE=/usr/local/lib/${BOOST_PYTHON_LIBRARY_NAME} \
+	-DPYTHON_EXECUTABLE=/opt/python/${PYTHON_DIR}/bin/python ../;
 make -j2 install
 
 

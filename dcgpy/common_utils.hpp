@@ -1,5 +1,5 @@
-#ifndef PYAUDI_COMMON_UTILS_HPP
-#define PYAUDI_COMMON_UTILS_HPP
+#ifndef PYDCGP_COMMON_UTILS_HPP
+#define PYDCGP_COMMON_UTILS_HPP
 
 #include <boost/python.hpp>
 #include <boost/python/stl_iterator.hpp>
@@ -17,6 +17,33 @@
     throw
 
 namespace bp = boost::python;
+
+// Map C++ types to NPY_ types.
+template <typename T>
+struct cpp_npy {
+};
+
+#define DCGPY_CPP_NPY(from, to)                                                                                        \
+    template <>                                                                                                        \
+    struct cpp_npy<from> {                                                                                             \
+        static constexpr auto value = to;                                                                              \
+    };
+
+// We only need the types below at the moment.
+DCGPY_CPP_NPY(unsigned char, NPY_UBYTE)
+DCGPY_CPP_NPY(unsigned short, NPY_USHORT)
+DCGPY_CPP_NPY(unsigned, NPY_UINT)
+DCGPY_CPP_NPY(unsigned long, NPY_ULONG)
+DCGPY_CPP_NPY(unsigned long long, NPY_ULONGLONG)
+DCGPY_CPP_NPY(signed char, NPY_BYTE)
+DCGPY_CPP_NPY(short, NPY_SHORT)
+DCGPY_CPP_NPY(int, NPY_INT)
+DCGPY_CPP_NPY(long, NPY_LONG)
+DCGPY_CPP_NPY(long long, NPY_LONGLONG)
+DCGPY_CPP_NPY(float, NPY_FLOAT)
+DCGPY_CPP_NPY(double, NPY_DOUBLE)
+
+#undef DCGPY_CPP_NPY
 
 namespace dcgpy
 {
@@ -201,6 +228,35 @@ inline std::vector<std::vector<double>> to_vv<double>(const bp::object &o)
     throw std::invalid_argument(
         "cannot convert the type '" + str(type(o))
         + "' to a vector of vector_double: only lists of doubles and NumPy arrays of doubles are supported");
+}
+
+// Convert a vector of vectors of arithmetic types into a 2D numpy array.
+template <typename T>
+inline bp::object vvector_to_ndarr(const std::vector<std::vector<T>> &v)
+{
+    // The dimensions of the array to be created.
+    const auto nrows = v.size();
+    const auto ncols = nrows ? v[0].size() : 0u;
+    npy_intp dims[] = {boost::numeric_cast<npy_intp>(nrows), boost::numeric_cast<npy_intp>(ncols)};
+    // Attempt creating the array.
+    PyObject *ret = PyArray_SimpleNew(2, dims, cpp_npy<T>::value);
+    if (!ret) {
+        dcgpy_throw(PyExc_RuntimeError, "couldn't create a NumPy array: the 'PyArray_SimpleNew()' function failed");
+    }
+    // Hand over to BP for exception-safe behaviour.
+    bp::object retval{bp::handle<>(ret)};
+    if (nrows) {
+        auto data = static_cast<T *>(PyArray_DATA(reinterpret_cast<PyArrayObject *>(ret)));
+        for (const auto &i : v) {
+            if (i.size() != ncols) {
+                dcgpy_throw(PyExc_ValueError, "cannot convert a vector of vectors to a NumPy 2D array "
+                                              "if the vector instances don't have all the same size");
+            }
+            std::copy(i.begin(), i.end(), data);
+            data += ncols;
+        }
+    }
+    return retval;
 }
 
 } // namespace dcgpy
