@@ -39,6 +39,11 @@ target_link_libraries(dcgpy INTERFACE ${DCGPY_BP_TARGET} Boost::disable_autolink
 target_include_directories(dcgpy INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../>
 $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include/dcgpy> $<INSTALL_INTERFACE:include>)
 
+# Extra flags to be appended in CI experiments
+set(DCGP_CXX_FLAGS_EXTRA)
+mark_as_advanced(DCGP_CXX_FLAGS_EXTRA)
+list(APPEND DCGP_CXX_FLAGS_RELEASE ${DCGP_CXX_FLAGS_EXTRA})
+
 # Setup of the dcgpy core module.
 YACMA_PYTHON_MODULE(core 
     core.cpp 
