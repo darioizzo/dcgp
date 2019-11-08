@@ -1,0 +1,382 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Symbolic Regression (UDP) &#8212; dCGP documentation</title>
+    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Evolutionary Strategy (UDA)" href="es4cgp.html" />
+    <link rel="prev" title="expression_ann (dCGP-ANN)" href="expression_ann.html" />
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto|Comfortaa|Space+Mono">
+
+  </head>
+  <body>
+
+  <div id="navbar" class="navbar navbar-inverse navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html">
+          dcgp</a>
+        <span class="navbar-text navbar-version pull-left"><b>1.3</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../installation.html">Install</a></li>
+                <li><a href="../../quickstart.html">Quick Start</a></li>
+                <li><a href="../index.html">Docs</a></li>
+                <li><a href="../../tutorials/index.html">Tutorials</a></li>
+                <li><a href="../../theory.html">Theory</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#c">C++</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#python">Python</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Quick start examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../quickstart.html#c">C++</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../quickstart.html#python">Python</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Documentation</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">C++ Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python/index.html">Python Documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">C++ examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/index.html#symbolic-regression">Symbolic Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/index.html#other-applications">Other Applications</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html#python-examples">Python examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/learning_constants.html">Learning constants in a symbolic regression task</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/learning_constants2.html">Learning constants in a symbolic regression task (PART II)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/solving_odes.html">Solving differential equations with dCGP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/weighted_symbolic_regression.html">Weighted dCGP for a symbolic regression task</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/finding_prime_integrals.html">Discovery of prime integrals with dCGP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/An_intro_to_dCGPANNs.html">Representing an Artificial Neural Network as a Cartesian Genetic Program</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/dCGPANNs_for_classification.html">Training a FFNN in dCGPANN vs.&nbsp;Keras (classification)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/dCGPANNs_for_function_approximation.html">Training a FFNN in dCGPANN vs.&nbsp;Keras (regression)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory.html">Cartesian Genetic Programming (CGP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory.html#differentiable-cartesian-genetic-programming-dcgp">Differentiable Cartesian Genetic Programming (dCGP)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../theory.html#reference">Reference</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="symbolic-regression-udp">
+<h1>Symbolic Regression (UDP)<a class="headerlink" href="#symbolic-regression-udp" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="_CPPv2N4dcgp19symbolic_regressionE">
+<span class="target" id="classdcgp_1_1symbolic__regression"></span><em class="property">class </em><code class="descname">symbolic_regression</code><a class="headerlink" href="#_CPPv2N4dcgp19symbolic_regressionE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>A Symbolic Regression problem. </p>
+<p><img alt="../../_images/symbolic_regression.jpg" src="../../_images/symbolic_regression.jpg" /></p>
+<p>Symbolic regression is a type of regression analysis that searches the space of mathematical expressions to find the model that best fits a given dataset, both in terms of accuracy and simplicity (ref: <a class="reference external" href="https://en.wikipedia.org/wiki/Symbolic_regression">https://en.wikipedia.org/wiki/Symbolic_regression</a>). It also is one of the core applications for Differentiable Cartesian Genetic Programming.</p>
+<p>This class provides an easy way to instantiate symbolic regression problems as optimization problems having a continuous part (i.e. the value of the parameters in the model) and an integer part (i.e. the representation of the model computational graph). The instantiated object can be used as UDP (User Defined Problem) in the pagmo optimization suite.</p>
+<p>The symbolic regression problem can be instantiated both as a single and a two-objectives problem. In the second case, aside the Mean Squared Error, the formula complexity will be considered as an objective. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Functions</p>
+<dl class="function">
+<dt id="_CPPv2N4dcgp19symbolic_regression19symbolic_regressionEv">
+<span class="target" id="classdcgp_1_1symbolic__regression_1a0f3d682c8fae577afb0d6dd049684e6f"></span><code class="descname">symbolic_regression</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N4dcgp19symbolic_regression19symbolic_regressionEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Default constructor. </p>
+<p>A default constructor is needed by the pagmo UDP interface, but it should not be used. It constructs a list of 1 empty points/labels vector and a dummy cgp member. It is guaranteed that m_points[0] and m_labels[0] can be accessed. </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N4dcgp19symbolic_regression19symbolic_regressionERKNSt6vectorINSt6vectorIdEEEERKNSt6vectorINSt6vectorIdEEEEjjjjNSt6vectorI6kernelIdEEEjbj">
+<span class="target" id="classdcgp_1_1symbolic__regression_1aff4468379a984e493d8a2982ba800299"></span><code class="descname">symbolic_regression</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;std::vector&lt;double&gt;&gt; &amp;<em>points</em>, <em class="property">const</em> std::vector&lt;std::vector&lt;double&gt;&gt; &amp;<em>labels</em>, unsigned <em>r</em> = 1u, unsigned <em>c</em> = 10u, unsigned <em>l</em> = 11u, unsigned <em>arity</em> = 2u, std::vector&lt;<a class="reference internal" href="kernel.html#_CPPv2N4dcgp6kernelE" title="dcgp::kernel">kernel</a>&lt;double&gt;&gt; <em>f</em> = kernel_set &lt; double &gt;({&quot;sum&quot;, &quot;diff&quot;, &quot;mul&quot;, &quot;pdiv&quot;})(), unsigned <em>n_eph</em> = 0u, bool <em>multi_objective</em> = false, unsigned <em>parallel_batches</em> = 0u<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N4dcgp19symbolic_regression19symbolic_regressionERKNSt6vectorINSt6vectorIdEEEERKNSt6vectorINSt6vectorIdEEEEjjjjNSt6vectorI6kernelIdEEEjbj" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Constructor. </p>
+<p>Constructs a <a class="reference internal" href="#classdcgp_1_1symbolic__regression"><span class="std std-ref">symbolic_regression</span></a> optimization problem compatible with the pagmo UDP interface.</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal"><span class="pre">points</span></code>: input data. </li>
+<li><code class="docutils literal"><span class="pre">labels</span></code>: output data. </li>
+<li><code class="docutils literal"><span class="pre">r</span></code>: number of rows of the dCGP. </li>
+<li><code class="docutils literal"><span class="pre">c</span></code>: number of columns of the dCGP. </li>
+<li><code class="docutils literal"><span class="pre">l</span></code>: number of levels-back allowed in the dCGP. </li>
+<li><code class="docutils literal"><span class="pre">arity</span></code>: arity of the basis functions. </li>
+<li><code class="docutils literal"><span class="pre">f</span></code>: function set. An std::vector of dcgp::kernel&lt;expression::type&gt;. </li>
+<li><code class="docutils literal"><span class="pre">n_eph</span></code>: number of ephemeral constants. </li>
+<li><code class="docutils literal"><span class="pre">multi_objective</span></code>: when true, it will consider the model complexity as a second objective. </li>
+<li><code class="docutils literal"><span class="pre">parallel_batches</span></code>: number of parallel batches.</li>
+</ul>
+</dd>
+<dt><strong>Exceptions</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal"><span class="pre">std::invalid_argument</span></code>: if points and labels are not consistent. </li>
+<li><code class="docutils literal"><span class="pre">std::invalid_argument</span></code>: if the CGP related parameters (i.e. <em>r</em>, <em>c</em>, etc…) are malformed. </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2NK4dcgp19symbolic_regression8get_nobjEv">
+<span class="target" id="classdcgp_1_1symbolic__regression_1a33c4d8995d22d4f78b42b791299ebb77"></span>pagmo::<a class="reference external" href="https://esa.github.io/pagmo2/docs/cpp/types.html#_CPPv4N5pagmo13vector_doubleE" title="(in pagmo v2.12)">vector_double</a>::size_type <code class="descname">get_nobj</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK4dcgp19symbolic_regression8get_nobjEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Number of objectives. </p>
+<p>Returns the number of objectives.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>the number of objectives. </dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2NK4dcgp19symbolic_regression7fitnessERKN5pagmo13vector_doubleE">
+<span class="target" id="classdcgp_1_1symbolic__regression_1a25af0241ce0d6a063c21f3622fd3da94"></span>pagmo::<a class="reference external" href="https://esa.github.io/pagmo2/docs/cpp/types.html#_CPPv4N5pagmo13vector_doubleE" title="(in pagmo v2.12)">vector_double</a> <code class="descname">fitness</code><span class="sig-paren">(</span><em class="property">const</em> pagmo::<a class="reference external" href="https://esa.github.io/pagmo2/docs/cpp/types.html#_CPPv4N5pagmo13vector_doubleE" title="(in pagmo v2.12)">vector_double</a> &amp;<em>x</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK4dcgp19symbolic_regression7fitnessERKN5pagmo13vector_doubleE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Fitness computation. </p>
+<p>Computes the fitness for this UDP</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>the fitness of <code class="docutils literal"><span class="pre">x</span></code>. </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal"><span class="pre">x</span></code>: the decision vector.</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2NK4dcgp19symbolic_regression8gradientERKN5pagmo13vector_doubleE">
+<span class="target" id="classdcgp_1_1symbolic__regression_1a223db242ad61bd6843688d67c0000a8f"></span>pagmo::<a class="reference external" href="https://esa.github.io/pagmo2/docs/cpp/types.html#_CPPv4N5pagmo13vector_doubleE" title="(in pagmo v2.12)">vector_double</a> <code class="descname">gradient</code><span class="sig-paren">(</span><em class="property">const</em> pagmo::<a class="reference external" href="https://esa.github.io/pagmo2/docs/cpp/types.html#_CPPv4N5pagmo13vector_doubleE" title="(in pagmo v2.12)">vector_double</a> &amp;<em>x</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK4dcgp19symbolic_regression8gradientERKN5pagmo13vector_doubleE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Gradient computation. </p>
+<p>Computes the gradient of the loss with respect to the ephemeral constants (i.e. the continuous part of the chromosome).</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>the gradient in <code class="docutils literal"><span class="pre">x</span></code>. </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal"><span class="pre">x</span></code>: the decision vector.</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2NK4dcgp19symbolic_regression17gradient_sparsityEv">
+<span class="target" id="classdcgp_1_1symbolic__regression_1a4a4f274daa0b4e4832797e2acb63aa76"></span>pagmo::<a class="reference external" href="https://esa.github.io/pagmo2/docs/cpp/types.html#_CPPv4N5pagmo16sparsity_patternE" title="(in pagmo v2.12)">sparsity_pattern</a> <code class="descname">gradient_sparsity</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK4dcgp19symbolic_regression17gradient_sparsityEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sparsity pattern (gradient) </p>
+<p>Returns the sparsity pattern of the gradient. The sparsity patter is dense in the continuous part of the chromosome. (this is a result of assuming all ephemeral constants are actually in the expression, if not zeros will be returned)</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>the gradient sparsity pattern. </dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2NK4dcgp19symbolic_regression8hessiansERKN5pagmo13vector_doubleE">
+<span class="target" id="classdcgp_1_1symbolic__regression_1adbe3806395cfb8e5c78727dc716c69d5"></span>std::vector&lt;pagmo::<a class="reference external" href="https://esa.github.io/pagmo2/docs/cpp/types.html#_CPPv4N5pagmo13vector_doubleE" title="(in pagmo v2.12)">vector_double</a>&gt; <code class="descname">hessians</code><span class="sig-paren">(</span><em class="property">const</em> pagmo::<a class="reference external" href="https://esa.github.io/pagmo2/docs/cpp/types.html#_CPPv4N5pagmo13vector_doubleE" title="(in pagmo v2.12)">vector_double</a> &amp;<em>x</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK4dcgp19symbolic_regression8hessiansERKN5pagmo13vector_doubleE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Hessian computation. </p>
+<p>Computes the hessian of the loss with respect to the ephemeral constants (i.e. the continuous part of the chromosome).</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>the hessian in <code class="docutils literal"><span class="pre">x</span></code>. </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal"><span class="pre">x</span></code>: the decision vector.</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2NK4dcgp19symbolic_regression17hessians_sparsityEv">
+<span class="target" id="classdcgp_1_1symbolic__regression_1ae9a88446925aea477f7f8549279678cf"></span>std::vector&lt;pagmo::<a class="reference external" href="https://esa.github.io/pagmo2/docs/cpp/types.html#_CPPv4N5pagmo16sparsity_patternE" title="(in pagmo v2.12)">sparsity_pattern</a>&gt; <code class="descname">hessians_sparsity</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK4dcgp19symbolic_regression17hessians_sparsityEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sparsity pattern (hessian) </p>
+<p>Returns the sparsity pattern of the hessian. The sparsity patter is dense in the continuous part of the chromosome. (this is a result of assuming all ephemeral constants are actually in the expression, if not zeros will be returned)</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>the hessian sparsity pattern. </dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2NK4dcgp19symbolic_regression10get_boundsEv">
+<span class="target" id="classdcgp_1_1symbolic__regression_1abedf46c77590f80c229dab57eeaa5db3"></span>std::pair&lt;pagmo::<a class="reference external" href="https://esa.github.io/pagmo2/docs/cpp/types.html#_CPPv4N5pagmo13vector_doubleE" title="(in pagmo v2.12)">vector_double</a>, pagmo::<a class="reference external" href="https://esa.github.io/pagmo2/docs/cpp/types.html#_CPPv4N5pagmo13vector_doubleE" title="(in pagmo v2.12)">vector_double</a>&gt; <code class="descname">get_bounds</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK4dcgp19symbolic_regression10get_boundsEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Box-bounds. </p>
+<p>Returns the box-bounds for this UDP.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>the lower and upper bounds for each of the decision vector components </dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2NK4dcgp19symbolic_regression7get_nixEv">
+<span class="target" id="classdcgp_1_1symbolic__regression_1a1f0f00974768dce33bc411e89f57b866"></span>pagmo::<a class="reference external" href="https://esa.github.io/pagmo2/docs/cpp/types.html#_CPPv4N5pagmo13vector_doubleE" title="(in pagmo v2.12)">vector_double</a>::size_type <code class="descname">get_nix</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK4dcgp19symbolic_regression7get_nixEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Integer dimension. </p>
+<p>Returns the integer dimension of the problem.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>the integer dimension of the problem. </dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2NK4dcgp19symbolic_regression8get_nameEv">
+<span class="target" id="classdcgp_1_1symbolic__regression_1a4113bf85a3f9844356121692fbea6fbc"></span>std::string <code class="descname">get_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK4dcgp19symbolic_regression8get_nameEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Problem name. </p>
+<p>Returns a string containing the problem name.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>a string containing the problem name </dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2NK4dcgp19symbolic_regression14get_extra_infoEv">
+<span class="target" id="classdcgp_1_1symbolic__regression_1ab2e98dc507caeaa0393869ee3d4854b8"></span>std::string <code class="descname">get_extra_info</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK4dcgp19symbolic_regression14get_extra_infoEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Extra info. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>a string containing extra problem information. </dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2NK4dcgp19symbolic_regression6prettyERKN5pagmo13vector_doubleE">
+<span class="target" id="classdcgp_1_1symbolic__regression_1a355d14b67a5d8deee062aacfa960728f"></span>std::string <code class="descname">pretty</code><span class="sig-paren">(</span><em class="property">const</em> pagmo::<a class="reference external" href="https://esa.github.io/pagmo2/docs/cpp/types.html#_CPPv4N5pagmo13vector_doubleE" title="(in pagmo v2.12)">vector_double</a> &amp;<em>x</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK4dcgp19symbolic_regression6prettyERKN5pagmo13vector_doubleE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Human-readable representation of a decision vector. </p>
+<p>A human readable representation of the chromosome is here obtained by calling directly the expression::operator() assuming as inputs variables names <span class="math">\(x_1, x_2, ...\)</span> and as ephemeral constants names <span class="math">\(c_1, c_2, ...\)</span></p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>a string containing the mathematical expression represented by <em>x</em>. </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal"><span class="pre">x</span></code>: a valid chromosome.</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2NK4dcgp19symbolic_regression8prettierERKN5pagmo13vector_doubleE">
+<span class="target" id="classdcgp_1_1symbolic__regression_1af02c475264ce2abbc47daa33ab1f0582"></span>std::string <code class="descname">prettier</code><span class="sig-paren">(</span><em class="property">const</em> pagmo::<a class="reference external" href="https://esa.github.io/pagmo2/docs/cpp/types.html#_CPPv4N5pagmo13vector_doubleE" title="(in pagmo v2.12)">vector_double</a> &amp;<em>x</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK4dcgp19symbolic_regression8prettierERKN5pagmo13vector_doubleE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Human-readable representation of a decision vector. </p>
+<p>A human readable representation of the chromosome is here obtained by using symengine the expression::operator() assuming as inputs variables names <span class="math">\(x_1, x_2, ...\)</span> and as ephemeral constants names <span class="math">\(c_1, c_2, ...\)</span></p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>a string containing the mathematical expression represented by <em>x</em>. </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal"><span class="pre">x</span></code>: a valid chromosome.</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2NK4dcgp19symbolic_regression7get_cgpEv">
+<span class="target" id="classdcgp_1_1symbolic__regression_1a184bc75d54b11a4173584711b87316e1"></span><em class="property">const</em> <a class="reference internal" href="expression.html#_CPPv2N4dcgp10expressionE" title="dcgp::expression">expression</a>&lt;double&gt; &amp;<code class="descname">get_cgp</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK4dcgp19symbolic_regression7get_cgpEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Gets the inner CGP. </p>
+<p>The access to the inner CGP is offered in the public interface to allow evolve methods in UDAs to reuse the same object and perform mutations via it. This is a hack to interface pagmo with dCGP. Alternatives would be a friendship relation (uughhh) or construct a new CGP object within the evolve each time (seems expensive). So here it is, FOR USE ONLY IN udas::evolve methods. </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2018, Dario Izzo, Francesco Biscani, Alessio Mereta.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

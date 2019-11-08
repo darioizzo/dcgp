@@ -1,0 +1,644 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>expression_ann (dCGP-ANN) &#8212; dCGP documentation</title>
+    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Symbolic Regression (UDP)" href="symbolic_regression.html" />
+    <link rel="prev" title="expression_weighted (dCGP-W)" href="expression_weighted.html" />
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto|Comfortaa|Space+Mono">
+
+  </head>
+  <body>
+
+  <div id="navbar" class="navbar navbar-inverse navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html">
+          dcgp</a>
+        <span class="navbar-text navbar-version pull-left"><b>1.3</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../installation.html">Install</a></li>
+                <li><a href="../../quickstart.html">Quick Start</a></li>
+                <li><a href="../index.html">Docs</a></li>
+                <li><a href="../../tutorials/index.html">Tutorials</a></li>
+                <li><a href="../../theory.html">Theory</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#c">C++</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#python">Python</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Quick start examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../quickstart.html#c">C++</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../quickstart.html#python">Python</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Documentation</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">C++ Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python/index.html">Python Documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">C++ examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/index.html#symbolic-regression">Symbolic Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/index.html#other-applications">Other Applications</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html#python-examples">Python examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/learning_constants.html">Learning constants in a symbolic regression task</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/learning_constants2.html">Learning constants in a symbolic regression task (PART II)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/solving_odes.html">Solving differential equations with dCGP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/weighted_symbolic_regression.html">Weighted dCGP for a symbolic regression task</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/finding_prime_integrals.html">Discovery of prime integrals with dCGP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/An_intro_to_dCGPANNs.html">Representing an Artificial Neural Network as a Cartesian Genetic Program</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/dCGPANNs_for_classification.html">Training a FFNN in dCGPANN vs.&nbsp;Keras (classification)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/dCGPANNs_for_function_approximation.html">Training a FFNN in dCGPANN vs.&nbsp;Keras (regression)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory.html">Cartesian Genetic Programming (CGP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory.html#differentiable-cartesian-genetic-programming-dcgp">Differentiable Cartesian Genetic Programming (dCGP)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../theory.html#reference">Reference</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="expression-ann-dcgp-ann">
+<h1>expression_ann (dCGP-ANN)<a class="headerlink" href="#expression-ann-dcgp-ann" title="Permalink to this headline">¶</a></h1>
+<p>This class represents a <strong>Artificial Neural Network Cartesian Genetic Program</strong>. Each node connection is associated to a weight and each node to a bias. Only a subset of the kernel functions
+is allowed, including the most used nonlinearities in ANN research: <em>tanh</em>, <em>sig</em>, <em>ReLu</em>, <em>ELU</em> and <em>ISRU</em>. The resulting expression can represent any feed forward neural network but also other
+less obvious architectures. Weights and biases of the expression can be trained using the efficient backpropagation algorithm (gduals are not allowed for this class, they correspond to forward mode
+automated differentiation which is super inefficient for deep networks ML.)</p>
+<div class="figure align-center" id="id1">
+<img alt="weighted dCGP expression" src="../../_images/expression_ann.png" />
+<p class="caption"><span class="caption-text">A, small, artificial neural network as using the dCPP-ANN approach.</span></p>
+</div>
+<dl class="class">
+<dt id="_CPPv2N4dcgp14expression_annE">
+<span class="target" id="classdcgp_1_1expression__ann"></span><em class="property">class </em><code class="descname">expression_ann</code> : <em class="property">public</em> dcgp::<a class="reference internal" href="expression.html#_CPPv2N4dcgp10expressionE" title="dcgp::expression">expression</a>&lt;double&gt;<a class="headerlink" href="#_CPPv2N4dcgp14expression_annE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>A dCGP-ANN expression. </p>
+<p>This class represents an artificial neural network as a differentiable Cartesian Genetic program. It adds weights, biases and backward automated differentiation to the class <a class="reference internal" href="expression.html#classdcgp_1_1expression"><span class="std std-ref">dcgp::expression</span></a>. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Types</p>
+<dl class="type">
+<dt id="_CPPv2N4dcgp14expression_ann11kernel_typeE">
+<span class="target" id="classdcgp_1_1expression__ann_1af45ff107501df656476c72dbed79490f"></span><em class="property">enum </em><code class="descname">kernel_type</code><a class="headerlink" href="#_CPPv2N4dcgp14expression_ann11kernel_typeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Allowed kernels (for backpropagation to work) </p>
+<p><em>Values:</em></p>
+<dl class="enumerator">
+<dt id="_CPPv2N4dcgp14expression_ann3SIGE">
+<span class="target" id="classdcgp_1_1expression__ann_1af45ff107501df656476c72dbed79490fa8e40932558a1eaaf985335ab7154d6dc"></span><code class="descname">SIG</code><a class="headerlink" href="#_CPPv2N4dcgp14expression_ann3SIGE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>sigmoid </p>
+</dd></dl>
+
+<dl class="enumerator">
+<dt id="_CPPv2N4dcgp14expression_ann4TANHE">
+<span class="target" id="classdcgp_1_1expression__ann_1af45ff107501df656476c72dbed79490fa143c8c6f51b9bb893ce71e38702e3cc1"></span><code class="descname">TANH</code><a class="headerlink" href="#_CPPv2N4dcgp14expression_ann4TANHE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Hyperbolic tangent. </p>
+</dd></dl>
+
+<dl class="enumerator">
+<dt id="_CPPv2N4dcgp14expression_ann4RELUE">
+<span class="target" id="classdcgp_1_1expression__ann_1af45ff107501df656476c72dbed79490fad346bb4679d29be241279f15d7795c1c"></span><code class="descname">RELU</code><a class="headerlink" href="#_CPPv2N4dcgp14expression_ann4RELUE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Rectified linear unit. </p>
+</dd></dl>
+
+<dl class="enumerator">
+<dt id="_CPPv2N4dcgp14expression_ann3ELUE">
+<span class="target" id="classdcgp_1_1expression__ann_1af45ff107501df656476c72dbed79490fa5b44c930bf0ddeef48b50ef11e5ddd58"></span><code class="descname">ELU</code><a class="headerlink" href="#_CPPv2N4dcgp14expression_ann3ELUE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Exponential linear unit. </p>
+</dd></dl>
+
+<dl class="enumerator">
+<dt id="_CPPv2N4dcgp14expression_ann4ISRUE">
+<span class="target" id="classdcgp_1_1expression__ann_1af45ff107501df656476c72dbed79490fa2fddd414d781109ea6f1689b806ba436"></span><code class="descname">ISRU</code><a class="headerlink" href="#_CPPv2N4dcgp14expression_ann4ISRUE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>ISRU. </p>
+</dd></dl>
+
+<dl class="enumerator">
+<dt id="_CPPv2N4dcgp14expression_ann3SUME">
+<span class="target" id="classdcgp_1_1expression__ann_1af45ff107501df656476c72dbed79490fa6970bdc2201030b9c03fbdcf3973858a"></span><code class="descname">SUM</code><a class="headerlink" href="#_CPPv2N4dcgp14expression_ann3SUME" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Simple sum of inputs. </p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Functions</p>
+<dl class="function">
+<dt id="_CPPv2N4dcgp14expression_ann14expression_annEjjjjjNSt6vectorIjEENSt6vectorI6kernelIdEEEj">
+<span class="target" id="classdcgp_1_1expression__ann_1a06467f26e6467729402470ed0da220bc"></span><code class="descname">expression_ann</code><span class="sig-paren">(</span>unsigned <em>n</em>, unsigned <em>m</em>, unsigned <em>r</em>, unsigned <em>c</em>, unsigned <em>l</em>, std::vector&lt;unsigned&gt; <em>arity</em>, std::vector&lt;<a class="reference internal" href="kernel.html#_CPPv2N4dcgp6kernelE" title="dcgp::kernel">kernel</a>&lt;double&gt;&gt; <em>f</em>, unsigned <em>seed</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N4dcgp14expression_ann14expression_annEjjjjjNSt6vectorIjEENSt6vectorI6kernelIdEEEj" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Constructor. </p>
+<p>Constructs a dCGPANN expression</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal"><span class="pre">n</span></code>: number of inputs (independent variables). </li>
+<li><code class="docutils literal"><span class="pre">m</span></code>: number of outputs (dependent variables). </li>
+<li><code class="docutils literal"><span class="pre">r</span></code>: number of rows of the dCGPANN. </li>
+<li><code class="docutils literal"><span class="pre">c</span></code>: number of columns of the dCGPANN. </li>
+<li><code class="docutils literal"><span class="pre">l</span></code>: number of levels-back allowed for the dCGPANN. </li>
+<li><code class="docutils literal"><span class="pre">arity</span></code>: arities of the basis functions for each column. </li>
+<li><code class="docutils literal"><span class="pre">f</span></code>: function set. An std::vector of dcgp::kernel&lt;expression::type&gt;. Can only contain allowed functions. </li>
+<li><code class="docutils literal"><span class="pre">seed</span></code>: seed for the random number generator (initial expression and mutations depend on this). </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N4dcgp14expression_ann14expression_annEjjjjjjNSt6vectorI6kernelIdEEEj">
+<span class="target" id="classdcgp_1_1expression__ann_1a856240df4095188d71d841c8de77a570"></span><code class="descname">expression_ann</code><span class="sig-paren">(</span>unsigned <em>n</em>, unsigned <em>m</em>, unsigned <em>r</em>, unsigned <em>c</em>, unsigned <em>l</em>, unsigned <em>arity</em>, std::vector&lt;<a class="reference internal" href="kernel.html#_CPPv2N4dcgp6kernelE" title="dcgp::kernel">kernel</a>&lt;double&gt;&gt; <em>f</em>, unsigned <em>seed</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N4dcgp14expression_ann14expression_annEjjjjjjNSt6vectorI6kernelIdEEEj" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Constructor. </p>
+<p>Constructs a dCGPANN expression</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal"><span class="pre">n</span></code>: number of inputs (independent variables). </li>
+<li><code class="docutils literal"><span class="pre">m</span></code>: number of outputs (dependent variables). </li>
+<li><code class="docutils literal"><span class="pre">r</span></code>: number of rows of the dCGPANN. </li>
+<li><code class="docutils literal"><span class="pre">c</span></code>: number of columns of the dCGPANN. </li>
+<li><code class="docutils literal"><span class="pre">l</span></code>: number of levels-back allowed for the dCGPANN. </li>
+<li><code class="docutils literal"><span class="pre">arity</span></code>: uniform arity for all basis functions. </li>
+<li><code class="docutils literal"><span class="pre">f</span></code>: function set. An std::vector of dcgp::kernel&lt;expression::type&gt;. Can only contain allowed functions. </li>
+<li><code class="docutils literal"><span class="pre">seed</span></code>: seed for the random number generator (initial expression and mutations depend on this). </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2NK4dcgp14expression_annclERKNSt6vectorIdEE">
+<span class="target" id="classdcgp_1_1expression__ann_1a7e5ef57825ceb24e75cc2a4ee9546550"></span>std::vector&lt;double&gt; <code class="descname">operator()</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;double&gt; &amp;<em>point</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK4dcgp14expression_annclERKNSt6vectorIdEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Evaluates the dCGP-ANN expression. </p>
+<p>This evaluates the dCGP-ANN expression. This method overrides the base class method. NOTE we cannot template this and the following function as they are virtual in the base class.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The value of the output (an std::vector) </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal"><span class="pre">[point]</span></code>: in an std::vector containing the values where the dCGP-ANN expression has to be computed</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2NK4dcgp14expression_annclERKNSt6vectorINSt6stringEEE">
+<span class="target" id="classdcgp_1_1expression__ann_1af040678604a980e20d33ee1f35454b33"></span>std::vector&lt;std::string&gt; <code class="descname">operator()</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;std::string&gt; &amp;<em>point</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK4dcgp14expression_annclERKNSt6vectorINSt6stringEEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Evaluates the dCGP-ANN expression. </p>
+<p>This evaluates the dCGP-ANN expression. This method overrides the base class method.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The symbolic value of the output (an std::vector) </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal"><span class="pre">[point]</span></code>: in an std::vector containing the symbol names.</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2NK4dcgp14expression_annclERKNSt16initializer_listI1UEE">
+<em class="property">template </em>&lt;<em class="property">typename</em> U, enable_double_string&lt; U &gt; = 0&gt;<br /><span class="target" id="classdcgp_1_1expression__ann_1aa73e790c4c365e13d45b1b8bf5eb091c"></span>std::vector&lt;U&gt; <code class="descname">operator()</code><span class="sig-paren">(</span><em class="property">const</em> std::initializer_list&lt;U&gt; &amp;<em>point</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK4dcgp14expression_annclERKNSt16initializer_listI1UEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Evaluates the dCGP-ANN expression. </p>
+<p>This evaluates the dCGP-ANN expression. This template can be instantiated with type <em>U</em> double, in which case the algorithm computes the numerical value of the inputs or with <em>U</em> being a string, in which case the instantiated method will produce a symbolic representation of the output.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The value of the output (an std::vector) </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal"><span class="pre">[point]</span></code>: in an initialzer list containing the values where the dCGP-ANN expression has to be computed (doubles or strings)</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2NK4dcgp14expression_ann6d_lossERdRNSt6vectorIdEERNSt6vectorIdEERKNSt6vectorIdEERKNSt6vectorIdEEKN10expressionIdE9loss_typeE">
+<span class="target" id="classdcgp_1_1expression__ann_1a0b800378f9d13426a20638ae466941ee"></span>void <code class="descname">d_loss</code><span class="sig-paren">(</span>double &amp;<em>value</em>, std::vector&lt;double&gt; &amp;<em>gweights</em>, std::vector&lt;double&gt; &amp;<em>gbiases</em>, <em class="property">const</em> std::vector&lt;double&gt; &amp;<em>point</em>, <em class="property">const</em> std::vector&lt;double&gt; &amp;<em>prediction</em>, <em class="property">const</em> <a class="reference internal" href="expression.html#_CPPv2N4dcgp10expressionE" title="dcgp::expression">expression</a>&lt;double&gt;::loss_type <em>loss_e</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK4dcgp14expression_ann6d_lossERdRNSt6vectorIdEERNSt6vectorIdEERKNSt6vectorIdEERKNSt6vectorIdEEKN10expressionIdE9loss_typeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Cumulates the loss and its gradient (of a single point) </p>
+<p>Cumulates the loss and its gradient with respect to weights and biases. The values are cumulated into the inputs. If called in a loop with many data points will cumulate the total batch values.</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal"><span class="pre">[value]</span></code>: The initial loss </li>
+<li><code class="docutils literal"><span class="pre">[gweights]</span></code>: The initial loss gradient w.r.t. weights </li>
+<li><code class="docutils literal"><span class="pre">[gbiases]</span></code>: The initial loss gradient w.r.t. biases </li>
+<li><code class="docutils literal"><span class="pre">[point]</span></code>: The input data (single point) </li>
+<li><code class="docutils literal"><span class="pre">[prediction]</span></code>: The predicted output (single point) </li>
+<li><code class="docutils literal"><span class="pre">[loss_e]</span></code>: The loss type. Must be loss_type::MSE for Mean Square Error (regression) or loss_type::CE for Cross Entropy (classification) </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N4dcgp14expression_ann6d_lossERKNSt6vectorINSt6vectorIdEEEERKNSt6vectorINSt6vectorIdEEEEN10expressionIdE9loss_typeEj">
+<span class="target" id="classdcgp_1_1expression__ann_1ac0c426cc04cf5aeaf819361987a56ad7"></span>std::tuple&lt;double, std::vector&lt;double&gt;, std::vector&lt;double&gt;&gt; <code class="descname">d_loss</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;std::vector&lt;double&gt;&gt; &amp;<em>points</em>, <em class="property">const</em> std::vector&lt;std::vector&lt;double&gt;&gt; &amp;<em>labels</em>, <a class="reference internal" href="expression.html#_CPPv2N4dcgp10expressionE" title="dcgp::expression">expression</a>&lt;double&gt;::loss_type <em>loss_e</em>, unsigned <em>parallel</em> = 0u<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N4dcgp14expression_ann6d_lossERKNSt6vectorINSt6vectorIdEEEERKNSt6vectorINSt6vectorIdEEEEN10expressionIdE9loss_typeEj" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Evaluates the loss and its gradient (on a batch) </p>
+<p>Returns the loss and its gradient with respect to weights and biases.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>the loss, the gradient of the loss w.r.t. all weights (also inactive) and the gradient of the loss w.r.t all biases. </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal"><span class="pre">[points]</span></code>: The input data (a batch). </li>
+<li><code class="docutils literal"><span class="pre">[labels]</span></code>: The predicted outputs (a batch). </li>
+<li><code class="docutils literal"><span class="pre">[loss_e]</span></code>: The loss type. Must be loss_type::MSE for Mean Square Error (regression) or loss_type::CE for Cross Entropy (classification) </li>
+<li><code class="docutils literal"><span class="pre">[parallel]</span></code>: sets the grain for parallelism. 0 -&gt; no parallelism n -&gt; divides the data into n parts and processes them in parallel threads. </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N4dcgp14expression_ann3sgdERNSt6vectorINSt6vectorIdEEEERNSt6vectorINSt6vectorIdEEEEdjRKNSt6stringEjb">
+<span class="target" id="classdcgp_1_1expression__ann_1a90313611ade6d06e8462dce8f9926aef"></span>double <code class="descname">sgd</code><span class="sig-paren">(</span>std::vector&lt;std::vector&lt;double&gt;&gt; &amp;<em>points</em>, std::vector&lt;std::vector&lt;double&gt;&gt; &amp;<em>labels</em>, double <em>lr</em>, unsigned <em>batch_size</em>, <em class="property">const</em> std::string &amp;<em>loss_s</em>, unsigned <em>parallel</em> = 0u, bool <em>shuffle</em> = true<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N4dcgp14expression_ann3sgdERNSt6vectorINSt6vectorIdEEEERNSt6vectorINSt6vectorIdEEEEdjRKNSt6stringEjb" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Stochastic gradient descent. </p>
+<p>Performs one “epoch” of stochastic gradient descent using mean square error</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The average error across the batches. Note: this will not be equal to the error on the whole data set as weights get updated after each batch. It is an indicator, though, and its free to compute.</dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal"><span class="pre">[points]</span></code>: The input data (a batch). Will be randomly shuffled (with labels) after a call to sgd. </li>
+<li><code class="docutils literal"><span class="pre">[labels]</span></code>: The predicted outputs (a batch). Will be randomly shuffled (with points) after a call to sgd. </li>
+<li><code class="docutils literal"><span class="pre">[lr]</span></code>: The learning rate. </li>
+<li><code class="docutils literal"><span class="pre">[batch_size]</span></code>: The batch size. </li>
+<li><code class="docutils literal"><span class="pre">[loss_s]</span></code>: A string defining the loss type. Can be one of “MSE” (mean squared error) or “CE” (cross-entropy) </li>
+<li><code class="docutils literal"><span class="pre">[parallel]</span></code>: sets the grain for parallelism. 0 -&gt; no parallelism n -&gt; divides the data into n parts and processes them in parallel threads. </li>
+<li><code class="docutils literal"><span class="pre">[shuffle]</span></code>: when true it shuffles the points and labels before performing one epoch of training.</li>
+</ul>
+</dd>
+<dt><strong>Exceptions</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal"><span class="pre">std::invalid_argument</span></code>: if the <em>data</em> and <em>label</em> size do not match or is zero, or if <em>lr</em> is not positive. </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N4dcgp14expression_ann12set_output_fERKNSt6stringE">
+<span class="target" id="classdcgp_1_1expression__ann_1a3032902a0f9402af4aadb61cd2df187f"></span>void <code class="descname">set_output_f</code><span class="sig-paren">(</span><em class="property">const</em> std::string &amp;<em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N4dcgp14expression_ann12set_output_fERKNSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sets the output nonlinearities. </p>
+<p>Sets the nonlinearities of all nodes connected to the output nodes. This is useful when, for example, the dCGPANN is used for a regression task where output values are expected in [-1 1] and hence the output layer should have some sigmoid or tanh nonlinearity.</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal"><span class="pre">name</span></code>: the name of the kernel (nonlinearity)</li>
+</ul>
+</dd>
+<dt><strong>Exceptions</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal"><span class="pre">std::invalid_argument</span></code>: if <em>name</em> is invalid. </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2NK4dcgp14expression_ann16n_active_weightsEb">
+<span class="target" id="classdcgp_1_1expression__ann_1ae6847989a197992330206653c54d2000"></span>unsigned <code class="descname">n_active_weights</code><span class="sig-paren">(</span>bool <em>unique</em> = false<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK4dcgp14expression_ann16n_active_weightsEb" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Computes the number of weights influencing the result. </p>
+<p>Computes the number of weights influencing the result. This will also be the number of weights that are updated when calling sgd. The number of active weights, as well as the number of active nodes, define the complexity of the expression expressed by the chromosome.</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal"><span class="pre">unique</span></code>: when true weights are counted only once if connecting the same two nodes. </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N4dcgp14expression_ann10set_weightEjjRKd">
+<span class="target" id="classdcgp_1_1expression__ann_1a4f1abfbfec676ea784609591a07b6823"></span>void <code class="descname">set_weight</code><span class="sig-paren">(</span>unsigned <em>node_id</em>, unsigned <em>input_id</em>, <em class="property">const</em> double &amp;<em>w</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N4dcgp14expression_ann10set_weightEjjRKd" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sets a weight. </p>
+<p>Sets a connection weight to a new value</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal"><span class="pre">node_id</span></code>: the id of the node whose weight is being set (convention adopted for node numbering <a class="reference external" href="http://ppsn2014.ijs.si/files/slides/ppsn2014-tutorial3-miller.pdf">http://ppsn2014.ijs.si/files/slides/ppsn2014-tutorial3-miller.pdf</a>) </li>
+<li><code class="docutils literal"><span class="pre">input_id</span></code>: the id of the node input (0 for the first one up to arity-1) </li>
+<li><code class="docutils literal"><span class="pre">w</span></code>: the new value of the weight</li>
+</ul>
+</dd>
+<dt><strong>Exceptions</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal"><span class="pre">std::invalid_argument</span></code>: if the node_id or input_id are not valid </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N4dcgp14expression_ann10set_weightENSt6vectorIdE9size_typeERKd">
+<span class="target" id="classdcgp_1_1expression__ann_1ab9d504afb78b03bb2f38e3841fd83131"></span>void <code class="descname">set_weight</code><span class="sig-paren">(</span>std::vector&lt;double&gt;::size_type <em>idx</em>, <em class="property">const</em> double &amp;<em>w</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N4dcgp14expression_ann10set_weightENSt6vectorIdE9size_typeERKd" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sets a weight. </p>
+<p>Sets a connection weight to a new value</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal"><span class="pre">[idx]</span></code>: index of the weight to be changed. </li>
+<li><code class="docutils literal"><span class="pre">[w]</span></code>: value of the weight to be changed.</li>
+</ul>
+</dd>
+<dt><strong>Exceptions</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal"><span class="pre">std::invalid_argument</span></code>: if the node_id or input_id are not valid </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N4dcgp14expression_ann11set_weightsERKNSt6vectorIdEE">
+<span class="target" id="classdcgp_1_1expression__ann_1aa4254bf5b72cc0354b8d9b0b80fb6988"></span>void <code class="descname">set_weights</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;double&gt; &amp;<em>ws</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N4dcgp14expression_ann11set_weightsERKNSt6vectorIdEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sets all weights. </p>
+<p>Sets all the connection weights at once</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal"><span class="pre">ws</span></code>: an std::vector containing all the weights to set</li>
+</ul>
+</dd>
+<dt><strong>Exceptions</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal"><span class="pre">std::invalid_argument</span></code>: if the input vector dimension is not valid. </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2NK4dcgp14expression_ann10get_weightEjj">
+<span class="target" id="classdcgp_1_1expression__ann_1a038ac8410be5c7bf7ac97ef433e1beea"></span>double <code class="descname">get_weight</code><span class="sig-paren">(</span>unsigned <em>node_id</em>, unsigned <em>input_id</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK4dcgp14expression_ann10get_weightEjj" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Gets a weight. </p>
+<p>Gets the value of a connection weight</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>the value of the weight</dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal"><span class="pre">node_id</span></code>: the id of the node (convention adopted for node numbering <a class="reference external" href="http://ppsn2014.ijs.si/files/slides/ppsn2014-tutorial3-miller.pdf">http://ppsn2014.ijs.si/files/slides/ppsn2014-tutorial3-miller.pdf</a>) </li>
+<li><code class="docutils literal"><span class="pre">input_id</span></code>: the id of the node input (0 up to node arity-1)</li>
+</ul>
+</dd>
+<dt><strong>Exceptions</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal"><span class="pre">std::invalid_argument</span></code>: if the node_id or input_id are not valid </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2NK4dcgp14expression_ann10get_weightENSt6vectorIdE9size_typeE">
+<span class="target" id="classdcgp_1_1expression__ann_1a0674e533a6a5b1137d646ccec96654e0"></span>double <code class="descname">get_weight</code><span class="sig-paren">(</span>std::vector&lt;double&gt;::size_type <em>idx</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK4dcgp14expression_ann10get_weightENSt6vectorIdE9size_typeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Gets a weight. </p>
+<p>Gets the value of a connection weight</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal"><span class="pre">idx</span></code>: index of the weight </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2NK4dcgp14expression_ann11get_weightsEv">
+<span class="target" id="classdcgp_1_1expression__ann_1abea6cd3b4692bd607b6f5418579627e2"></span><em class="property">const</em> std::vector&lt;double&gt; &amp;<code class="descname">get_weights</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK4dcgp14expression_ann11get_weightsEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Gets the weights. </p>
+<p>Gets the values of all the weights.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>an std::vector containing all the weights </dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N4dcgp14expression_ann17randomise_weightsEddNSt13random_device11result_typeE">
+<span class="target" id="classdcgp_1_1expression__ann_1a8b2d1b4fd0f895cb0f6034c42c13eb0b"></span>void <code class="descname">randomise_weights</code><span class="sig-paren">(</span>double <em>mean</em> = 0, double <em>std</em> = 0.1, std::random_device::result_type <em>seed</em> = random_number<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N4dcgp14expression_ann17randomise_weightsEddNSt13random_device11result_typeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Randomises all weights. </p>
+<p>Set all weights to a normally distributed number</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal"><span class="pre">[mean]</span></code>: the mean of the normal distribution. </li>
+<li><code class="docutils literal"><span class="pre">[std]</span></code>: the standard deviation of the normal distribution. </li>
+<li><code class="docutils literal"><span class="pre">[seed]</span></code>: the seed to generate the new weights (by default its randomly generated). </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N4dcgp14expression_ann8set_biasENSt6vectorIdE9size_typeERKd">
+<span class="target" id="classdcgp_1_1expression__ann_1a3e7707c501f09d669b6f4f40bfacbfe2"></span>void <code class="descname">set_bias</code><span class="sig-paren">(</span><em class="property">typename</em> std::vector&lt;double&gt;::size_type <em>idx</em>, <em class="property">const</em> double &amp;<em>w</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N4dcgp14expression_ann8set_biasENSt6vectorIdE9size_typeERKd" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sets a bias. </p>
+<p>Sets a node bias to a new value</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal"><span class="pre">[idx]</span></code>: index of the bias to be changed. </li>
+<li><code class="docutils literal"><span class="pre">[w]</span></code>: value of the new bias. </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N4dcgp14expression_ann10set_biasesERKNSt6vectorIdEE">
+<span class="target" id="classdcgp_1_1expression__ann_1a7c29f9fefabaf70d36a261781d786626"></span>void <code class="descname">set_biases</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;double&gt; &amp;<em>bs</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N4dcgp14expression_ann10set_biasesERKNSt6vectorIdEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sets all biases. </p>
+<p>Sets all the nodes biases at once</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal"><span class="pre">bs</span></code>: an std::vector containing all the biases to set</li>
+</ul>
+</dd>
+<dt><strong>Exceptions</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal"><span class="pre">std::invalid_argument</span></code>: if the input vector dimension is not valid (r*c) </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2NK4dcgp14expression_ann8get_biasENSt6vectorIdE9size_typeE">
+<span class="target" id="classdcgp_1_1expression__ann_1a055d3cea85dd3e4a1f27b175164c0a96"></span>double <code class="descname">get_bias</code><span class="sig-paren">(</span><em class="property">typename</em> std::vector&lt;double&gt;::size_type <em>idx</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK4dcgp14expression_ann8get_biasENSt6vectorIdE9size_typeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Gets a bias. </p>
+<p>Gets the value of a bias</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal"><span class="pre">idx</span></code>: index of the bias </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2NK4dcgp14expression_ann10get_biasesEv">
+<span class="target" id="classdcgp_1_1expression__ann_1a05b937ffc3adce324cd0223d2aa8c679"></span><em class="property">const</em> std::vector&lt;double&gt; &amp;<code class="descname">get_biases</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK4dcgp14expression_ann10get_biasesEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Gets the biases. </p>
+<p>Gets the values of all the biases</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>an std::vector containing all the biases </dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N4dcgp14expression_ann16randomise_biasesEddNSt13random_device11result_typeE">
+<span class="target" id="classdcgp_1_1expression__ann_1a8656a0b436cfc2cd75aaffe805b6185e"></span>void <code class="descname">randomise_biases</code><span class="sig-paren">(</span>double <em>mean</em> = 0, double <em>std</em> = 0.1, std::random_device::result_type <em>seed</em> = random_number<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N4dcgp14expression_ann16randomise_biasesEddNSt13random_device11result_typeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Randomises all biases. </p>
+<p>Set all biases to a normally distributed number</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal"><span class="pre">mean</span></code>: the mean of the normal distribution </li>
+<li><code class="docutils literal"><span class="pre">std</span></code>: the standard deviation of the normal distribution </li>
+<li><code class="docutils literal"><span class="pre">seed</span></code>: the seed to generate the new biases (by default its randomly generated) </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Friends</p>
+<dl class="function">
+<dt id="_CPPv2lsRNSt7ostreamERK14expression_ann">
+<span class="target" id="classdcgp_1_1expression__ann_1aa8aa88d24d89141a9c1020204e56e5f5"></span>std::ostream &amp;<code class="descname">operator&lt;&lt;</code><span class="sig-paren">(</span>std::ostream &amp;<em>os</em>, <em class="property">const</em> expression_ann &amp;<em>d</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2lsRNSt7ostreamERK14expression_ann" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Overloaded stream operator. </p>
+<p>Will return a formatted string containing a human readable representation of the class</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>std::string containing a human-readable representation of the problem. </dd>
+</dl>
+</p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2018, Dario Izzo, Francesco Biscani, Alessio Mereta.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

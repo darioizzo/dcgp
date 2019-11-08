@@ -1,0 +1,247 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Symbolic Regression (UDP) &#8212; dCGP documentation</title>
+    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Evolutionary Strategy (UDA)" href="es4cgp.html" />
+    <link rel="prev" title="expression_ann (dCGP-ANN)" href="expression_ann.html" />
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto|Comfortaa|Space+Mono">
+
+  </head>
+  <body>
+
+  <div id="navbar" class="navbar navbar-inverse navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html">
+          dcgp</a>
+        <span class="navbar-text navbar-version pull-left"><b>1.3</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../installation.html">Install</a></li>
+                <li><a href="../../quickstart.html">Quick Start</a></li>
+                <li><a href="../index.html">Docs</a></li>
+                <li><a href="../../tutorials/index.html">Tutorials</a></li>
+                <li><a href="../../theory.html">Theory</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#c">C++</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#python">Python</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Quick start examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../quickstart.html#c">C++</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../quickstart.html#python">Python</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../cpp/index.html">C++ Documentation</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Python Documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">C++ examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/index.html#symbolic-regression">Symbolic Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/index.html#other-applications">Other Applications</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html#python-examples">Python examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/learning_constants.html">Learning constants in a symbolic regression task</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/learning_constants2.html">Learning constants in a symbolic regression task (PART II)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/solving_odes.html">Solving differential equations with dCGP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/weighted_symbolic_regression.html">Weighted dCGP for a symbolic regression task</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/finding_prime_integrals.html">Discovery of prime integrals with dCGP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/An_intro_to_dCGPANNs.html">Representing an Artificial Neural Network as a Cartesian Genetic Program</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/dCGPANNs_for_classification.html">Training a FFNN in dCGPANN vs.&nbsp;Keras (classification)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/dCGPANNs_for_function_approximation.html">Training a FFNN in dCGPANN vs.&nbsp;Keras (regression)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory.html">Cartesian Genetic Programming (CGP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory.html#differentiable-cartesian-genetic-programming-dcgp">Differentiable Cartesian Genetic Programming (dCGP)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../theory.html#reference">Reference</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="symbolic-regression-udp">
+<h1>Symbolic Regression (UDP)<a class="headerlink" href="#symbolic-regression-udp" title="Permalink to this headline">¶</a></h1>
+<div class="figure">
+<img alt="weighted dCGP expression" src="../../_images/symbolic_regression1.jpg" />
+</div>
+<dl class="class">
+<dt id="dcgpy.symbolic_regression">
+<em class="property">class </em><code class="descclassname">dcgpy.</code><code class="descname">symbolic_regression</code><span class="sig-paren">(</span><em>points</em>, <em>labels</em>, <em>rows</em>, <em>columns</em>, <em>levels_back</em>, <em>arity</em>, <em>kernels</em>, <em>n_eph</em>, <em>multi_objective</em>, <em>parallel_batches=0</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.symbolic_regression" title="Permalink to this definition">¶</a></dt>
+<dd><p>Symbolic regression is a type of regression analysis that searches the space of mathematical expressions to
+find the model that best fits a given dataset, both in terms of accuracy and simplicity
+(ref: <a class="reference external" href="https://en.wikipedia.org/wiki/Symbolic_regression">https://en.wikipedia.org/wiki/Symbolic_regression</a>). It also is one of the applications
+for Differentiable Cartesian Genetic Programming.</p>
+<p>This class provides an easy way to instantiate symbolic regression problems as optimization problems having
+a continuous part (i.e. the value of the parameters in the model) and an integer part (i.e. the representation of
+the model computational graph). The instantiated object can be used as UDP (User Defined Problem) in the pygmo optimization suite.</p>
+<p>The symbolic regression problem can be instantiated both as a single and as a two-objectives problem. In the second
+case, aside the Mean Squared Error, the model complexity will be considered as an objective.</p>
+<p>Constructs a symbolic_regression optimization problem compatible with the pagmo UDP interface.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>points</strong> (2D NumPy float array or <code class="docutils literal"><span class="pre">list</span> <span class="pre">of</span> <span class="pre">lists</span></code> of <code class="docutils literal"><span class="pre">float</span></code>) – the input data</li>
+<li><strong>labels</strong> (2D NumPy float array or <code class="docutils literal"><span class="pre">list</span> <span class="pre">of</span> <span class="pre">lists</span></code> of <code class="docutils literal"><span class="pre">float</span></code>) – the output data (to be predicted)</li>
+<li><strong>rows</strong> (<code class="docutils literal"><span class="pre">int</span></code>) – number of rows in the cartesian program</li>
+<li><strong>columns</strong> (<code class="docutils literal"><span class="pre">int</span></code>) – number of columns in the cartesian program</li>
+<li><strong>levels_back</strong> (<code class="docutils literal"><span class="pre">int</span></code>) – number of levels-back in the cartesian program</li>
+<li><strong>arity</strong> (<code class="docutils literal"><span class="pre">int</span></code> on <code class="docutils literal"><span class="pre">list</span></code>) – arity of the kernels. Assumed equal for all columns.</li>
+<li><strong>kernels</strong> (<code class="docutils literal"><span class="pre">List[dcgpy.kernel_]</span></code>) – kernel functions</li>
+<li><strong>n_eph</strong> (<code class="docutils literal"><span class="pre">int</span></code>) – Number of ephemeral constants.</li>
+<li><strong>multi_objective</strong> (<code class="docutils literal"><span class="pre">bool</span></code>) – when True the problem will be considered as multiobjective (loss and model complexity).</li>
+<li><strong>parallel_batches</strong> (<code class="docutils literal"><span class="pre">int</span></code>) – allows to split the data into batches for parallel evaluation.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><strong>unspecified</strong> – any exception thrown by failures at the intersection between C++ and Python (e.g.,
+    type conversion errors, mismatched function signatures, etc.)</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">dcgpy</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pygmo</span> <span class="k">as</span> <span class="nn">pg</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="n">dcgpy</span><span class="o">.</span><span class="n">generate_koza_quintic</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">udp</span> <span class="o">=</span> <span class="n">dcgpy</span><span class="o">.</span><span class="n">symbolic_regression</span><span class="p">(</span>
+<span class="gp">... </span>       <span class="n">points</span> <span class="o">=</span> <span class="n">X</span><span class="p">,</span>
+<span class="gp">... </span>       <span class="n">labels</span> <span class="o">=</span> <span class="n">Y</span><span class="p">,</span>
+<span class="gp">... </span>       <span class="n">rows</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+<span class="gp">... </span>       <span class="n">cols</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
+<span class="gp">... </span>       <span class="n">levels_back</span> <span class="o">=</span> <span class="mi">21</span><span class="p">,</span>
+<span class="gp">... </span>       <span class="n">arity</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+<span class="gp">... </span>       <span class="n">kernels</span> <span class="o">=</span> <span class="n">dcgpy</span><span class="o">.</span><span class="n">kernel_set_double</span><span class="p">([</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span> <span class="s2">&quot;diff&quot;</span><span class="p">])(),</span>
+<span class="gp">... </span>       <span class="n">n_eph</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+<span class="gp">... </span>       <span class="n">multi_objective</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="gp">... </span>       <span class="n">parallel_batches</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">prob</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">problem</span><span class="p">(</span><span class="n">udp</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">prob</span><span class="p">)</span> 
+<span class="go">Problem name: a CGP symbolic regression problem</span>
+<span class="go">    Global dimension:                       62</span>
+<span class="go">    Integer dimension:                      61</span>
+<span class="go">    Fitness dimension:                      2</span>
+<span class="go">    Number of objectives:                   2</span>
+<span class="go">    Equality constraints dimension:         0</span>
+<span class="go">    Inequality constraints dimension:       0</span>
+<span class="go">    Lower bounds: [-10, 0, 0, 0, 0, ... ]</span>
+<span class="go">    Upper bounds: [10, 1, 1, 1, 1, ... ]</span>
+<span class="go">    Has batch fitness evaluation: false</span>
+
+<span class="go">    Has gradient: true</span>
+<span class="go">    User implemented gradient sparsity: true</span>
+<span class="go">    Expected gradients: 1</span>
+<span class="go">    Has hessians: true</span>
+<span class="go">    User implemented hessians sparsity: true</span>
+<span class="go">    Expected hessian components: [1, 1]</span>
+
+<span class="go">    Fitness evaluations: 0</span>
+<span class="go">    Gradient evaluations: 0</span>
+<span class="go">    Hessians evaluations: 0</span>
+
+<span class="go">    Thread safety: basic</span>
+
+<span class="go">Extra info:</span>
+<span class="go">    Data dimension (in): 1</span>
+<span class="go">    Data dimension (out): 1</span>
+<span class="go">    Data size: 10</span>
+<span class="go">    Kernels: [sum, diff]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2018, Dario Izzo, Francesco Biscani, Alessio Mereta.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

@@ -1,0 +1,243 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Gradient Descent (UDA) &#8212; dCGP documentation</title>
+    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Koza Quintic" href="koza_quintic.html" />
+    <link rel="prev" title="Evolutionary Strategy (UDA)" href="es4cgp.html" />
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto|Comfortaa|Space+Mono">
+
+  </head>
+  <body>
+
+  <div id="navbar" class="navbar navbar-inverse navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html">
+          dcgp</a>
+        <span class="navbar-text navbar-version pull-left"><b>1.3</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../installation.html">Install</a></li>
+                <li><a href="../../quickstart.html">Quick Start</a></li>
+                <li><a href="../index.html">Docs</a></li>
+                <li><a href="../../tutorials/index.html">Tutorials</a></li>
+                <li><a href="../../theory.html">Theory</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#c">C++</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#python">Python</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Quick start examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../quickstart.html#c">C++</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../quickstart.html#python">Python</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../cpp/index.html">C++ Documentation</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Python Documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">C++ examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/index.html#symbolic-regression">Symbolic Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/index.html#other-applications">Other Applications</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html#python-examples">Python examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/learning_constants.html">Learning constants in a symbolic regression task</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/learning_constants2.html">Learning constants in a symbolic regression task (PART II)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/solving_odes.html">Solving differential equations with dCGP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/weighted_symbolic_regression.html">Weighted dCGP for a symbolic regression task</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/finding_prime_integrals.html">Discovery of prime integrals with dCGP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/An_intro_to_dCGPANNs.html">Representing an Artificial Neural Network as a Cartesian Genetic Program</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/dCGPANNs_for_classification.html">Training a FFNN in dCGPANN vs.&nbsp;Keras (classification)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/dCGPANNs_for_function_approximation.html">Training a FFNN in dCGPANN vs.&nbsp;Keras (regression)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory.html">Cartesian Genetic Programming (CGP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory.html#differentiable-cartesian-genetic-programming-dcgp">Differentiable Cartesian Genetic Programming (dCGP)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../theory.html#reference">Reference</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="gradient-descent-uda">
+<h1>Gradient Descent (UDA)<a class="headerlink" href="#gradient-descent-uda" title="Permalink to this headline">¶</a></h1>
+<div class="figure">
+<img alt="gradient descent" src="../../_images/gd1.png" />
+</div>
+<dl class="class">
+<dt id="dcgpy.gd4cgp">
+<em class="property">class </em><code class="descclassname">dcgpy.</code><code class="descname">gd4cgp</code><span class="sig-paren">(</span><em>max_iter = 1</em>, <em>lr = 1.</em>, <em>lr_min = 1e-3</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.gd4cgp" title="Permalink to this definition">¶</a></dt>
+<dd><p>In a symbolic regression problem, models parameters are typically present in the form of
+ephemeral constants (i.e. extra input terminals). The actual values of the constants have a profound
+effect on the resulting loss and its an open question how to balance the learning of the model parameters
+(continuous optimization) with learning the model itself (integer optimization).</p>
+<p>In this class we provide a simple gradient descent algorithm able to tackle <a class="reference internal" href="symbolic_regression.html#dcgpy.symbolic_regression" title="dcgpy.symbolic_regression"><code class="xref py py-class docutils literal"><span class="pre">dcgpy.symbolic_regression</span></code></a> problems.
+The gradient descent will only modify the continuous part of the chromosome, leaving the integer part (i.e. the
+actual model) unchanged.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>gen</strong> (<code class="docutils literal"><span class="pre">int</span></code>) – maximum number of iterations.</li>
+<li><strong>lr</strong> (<code class="docutils literal"><span class="pre">float</span></code>) – initial learning rate (or step size).</li>
+<li><strong>lr_min</strong> (<code class="docutils literal"><span class="pre">float</span></code>) – stopping criteria on the minimum value for the learning rate (or step size).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><strong>unspecified</strong> – any exception thrown by failures at the intersection between C++ and Python (e.g.,
+    type conversion errors, mismatched function signatures, etc.)</li>
+<li><strong>ValueError</strong> – if  <em>lr_min</em> is smaller than 0, or larger than <em>lr</em></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="dcgpy.gd4cgp.get_log">
+<code class="descname">get_log</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.gd4cgp.get_log" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a log containing relevant parameters recorded during the last call to <code class="docutils literal"><span class="pre">evolve()</span></code>. The log frequency depends
+on the verbosity parameter (by default nothing is logged) which can be set calling the
+method <code class="xref py py-func docutils literal"><span class="pre">set_verbosity()</span></code> on an <a class="reference external" href="https://esa.github.io/pagmo2/docs/python/py_algorithm.html#pygmo.algorithm" title="(in pagmo v2.12)"><code class="xref py py-class docutils literal"><span class="pre">algorithm</span></code></a>
+constructed with a <a class="reference internal" href="#dcgpy.gd4cgp" title="dcgpy.gd4cgp"><code class="xref py py-class docutils literal"><span class="pre">gd4cgp</span></code></a>. A verbosity of <code class="docutils literal"><span class="pre">N</span></code> implies a log
+line each <code class="docutils literal"><span class="pre">N</span></code> iterations.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">at each logged epoch, the values <code class="docutils literal"><span class="pre">Gen</span></code>, <code class="docutils literal"><span class="pre">Fevals</span></code>, <code class="docutils literal"><span class="pre">Current</span> <span class="pre">best</span></code>, <code class="docutils literal"><span class="pre">Best</span></code>, where:<ul class="simple">
+<li><code class="docutils literal"><span class="pre">Gen</span></code> (<code class="docutils literal"><span class="pre">int</span></code>), generation number.</li>
+<li><code class="docutils literal"><span class="pre">Fevals</span></code> (<code class="docutils literal"><span class="pre">int</span></code>), number of functions evaluation made.</li>
+<li><code class="docutils literal"><span class="pre">Gevals</span></code> (<code class="docutils literal"><span class="pre">int</span></code>), number of gradient evaluation made.</li>
+<li><code class="docutils literal"><span class="pre">grad</span> <span class="pre">norm</span></code> (<code class="docutils literal"><span class="pre">float</span></code>), norm of the loss gradient.</li>
+<li><code class="docutils literal"><span class="pre">lr</span></code> (<code class="docutils literal"><span class="pre">float</span></code>), the current learning rate.</li>
+<li><code class="docutils literal"><span class="pre">Best</span></code> (<code class="docutils literal"><span class="pre">float</span></code>), current fitness value.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="docutils literal"><span class="pre">list</span></code> of <code class="docutils literal"><span class="pre">tuples</span></code></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">dcgpy</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pygmo</span> <span class="k">import</span> <span class="o">*</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">algo</span> <span class="o">=</span> <span class="n">algorithm</span><span class="p">(</span><span class="n">dcgpy</span><span class="o">.</span><span class="n">gd4cgp</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">1e-4</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="n">dcgpy</span><span class="o">.</span><span class="n">generate_koza_quintic</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">udp</span> <span class="o">=</span> <span class="n">dcgpy</span><span class="o">.</span><span class="n">symbolic_regression</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">21</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span> <span class="n">dcgpy</span><span class="o">.</span><span class="n">kernel_set_double</span><span class="p">([</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span> <span class="s2">&quot;diff&quot;</span><span class="p">,</span> <span class="s2">&quot;mul&quot;</span><span class="p">])(),</span> <span class="mi">1</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pop</span> <span class="o">=</span> <span class="n">population</span><span class="p">(</span><span class="n">udp</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">algo</span><span class="o">.</span><span class="n">set_verbosity</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pop</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">evolve</span><span class="p">(</span><span class="n">pop</span><span class="p">)</span> 
+<span class="go">Iter:        Fevals:        Gevals:     grad norm:            lr:         Best:</span>
+<span class="go">    0              0              0              0            0.1         4588.6</span>
+<span class="go">    1              1              1        687.738           0.15        4520.41</span>
+<span class="go">    2              2              2        676.004          0.225        4420.33</span>
+<span class="go">    3              3              3        658.404         0.3375        4275.16</span>
+<span class="go">    4              4              4        632.004        0.50625        4068.54</span>
+<span class="go">Exit condition -- max iterations = 4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">uda</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="n">es4cgp</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">uda</span><span class="o">.</span><span class="n">get_log</span><span class="p">()</span> 
+<span class="go">[(0, 0, 0, 0.0, 0.1, 4588.5979303850145), ...</span>
+</pre></div>
+</div>
+<p>See also the docs of the relevant C++ method <a class="reference internal" href="../cpp/gd4cgp.html#_CPPv2NK4dcgp6gd4cgp7get_logEv" title="dcgp::gd4cgp::get_log"><code class="xref cpp cpp-func docutils literal"><span class="pre">dcgp::gd4cgp::get_log()</span></code></a>.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2018, Dario Izzo, Francesco Biscani, Alessio Mereta.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

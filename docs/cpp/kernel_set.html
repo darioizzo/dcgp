@@ -1,0 +1,300 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>kernel_set &#8212; dCGP documentation</title>
+    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Available kernels" href="kernel_list.html" />
+    <link rel="prev" title="kernel" href="kernel.html" />
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto|Comfortaa|Space+Mono">
+
+  </head>
+  <body>
+
+  <div id="navbar" class="navbar navbar-inverse navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html">
+          dcgp</a>
+        <span class="navbar-text navbar-version pull-left"><b>1.3</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../installation.html">Install</a></li>
+                <li><a href="../../quickstart.html">Quick Start</a></li>
+                <li><a href="../index.html">Docs</a></li>
+                <li><a href="../../tutorials/index.html">Tutorials</a></li>
+                <li><a href="../../theory.html">Theory</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#c">C++</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#python">Python</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Quick start examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../quickstart.html#c">C++</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../quickstart.html#python">Python</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Documentation</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">C++ Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python/index.html">Python Documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">C++ examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/index.html#symbolic-regression">Symbolic Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/index.html#other-applications">Other Applications</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html#python-examples">Python examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/learning_constants.html">Learning constants in a symbolic regression task</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/learning_constants2.html">Learning constants in a symbolic regression task (PART II)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/solving_odes.html">Solving differential equations with dCGP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/weighted_symbolic_regression.html">Weighted dCGP for a symbolic regression task</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/finding_prime_integrals.html">Discovery of prime integrals with dCGP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/An_intro_to_dCGPANNs.html">Representing an Artificial Neural Network as a Cartesian Genetic Program</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/dCGPANNs_for_classification.html">Training a FFNN in dCGPANN vs.&nbsp;Keras (classification)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/dCGPANNs_for_function_approximation.html">Training a FFNN in dCGPANN vs.&nbsp;Keras (regression)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory.html">Cartesian Genetic Programming (CGP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory.html#differentiable-cartesian-genetic-programming-dcgp">Differentiable Cartesian Genetic Programming (dCGP)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../theory.html#reference">Reference</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="kernel-set">
+<h1>kernel_set<a class="headerlink" href="#kernel-set" title="Permalink to this headline">¶</a></h1>
+<p>Classes such as <a class="reference internal" href="expression.html#_CPPv2N4dcgp10expressionE" title="dcgp::expression"><code class="xref cpp cpp-class docutils literal"><span class="pre">dcgp::expression</span></code></a>, <a class="reference internal" href="symbolic_regression.html#_CPPv2N4dcgp19symbolic_regressionE" title="dcgp::symbolic_regression"><code class="xref cpp cpp-class docutils literal"><span class="pre">dcgp::symbolic_regression</span></code></a> and others are constructed
+from an <code class="docutils literal"><span class="pre">std::vector</span></code> of <a class="reference internal" href="kernel.html#_CPPv2N4dcgp6kernelE" title="dcgp::kernel"><code class="xref cpp cpp-class docutils literal"><span class="pre">dcgp::kernel</span></code></a>. Assembling such a <code class="docutils literal"><span class="pre">std::vector</span></code> is an operation that is greatly
+facilitated by the class <a class="reference internal" href="#_CPPv2N4dcgp10kernel_setE" title="dcgp::kernel_set"><code class="xref cpp cpp-class docutils literal"><span class="pre">dcgp::kernel_set</span></code></a>.</p>
+<p>Intended use of the class is:</p>
+<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="c1">// (optional) - Say we have a custom kernel named f</span>
+<span class="n">kernel</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">f</span><span class="p">(</span><span class="n">my_sum</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">print_my_sum</span><span class="p">,</span> <span class="s">&quot;my_sum&quot;</span><span class="p">);</span>
+<span class="c1">// We can construct a kernel set (and fill it in with provided kernels)</span>
+<span class="n">kernel_set</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">kernels</span><span class="p">({</span><span class="s">&quot;sum&quot;</span><span class="p">,</span> <span class="s">&quot;div&quot;</span><span class="p">,</span> <span class="s">&quot;mul&quot;</span><span class="p">,</span><span class="s">&quot;diff&quot;</span><span class="p">});</span>
+<span class="c1">// We can get a vector with these four basic kernels ...</span>
+<span class="k">auto</span> <span class="n">kernel_vector</span> <span class="o">=</span> <span class="n">kernels</span><span class="p">();</span>
+<span class="c1">// (optional) - ... or add our own custom kernel to the set ...</span>
+<span class="n">basic_set</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+<span class="c1">// (optional) - ... and get a vector with all five kernels</span>
+<span class="k">auto</span> <span class="n">kernel_vector2</span> <span class="o">=</span> <span class="n">kernels</span><span class="p">();</span>
+</pre></div>
+</div>
+<hr class="docutils" />
+<dl class="class">
+<dt id="_CPPv2N4dcgp10kernel_setE">
+<span class="target" id="classdcgp_1_1kernel__set"></span><em class="property">template </em>&lt;typename <em>T</em>&gt;<br /><em class="property">class </em><code class="descname">kernel_set</code><a class="headerlink" href="#_CPPv2N4dcgp10kernel_setE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Function set. </p>
+<p>This class is provided as an helper to construct the std::vector&lt;kernel&lt;T&gt;&gt; that is requested to form a dcgp::expression&lt;T&gt;. Once constructed, a call to its parenthesis operator will return the std::vector containing the requested kernels</p>
+<p><dl class="docutils">
+<dt><strong>Template Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal"><span class="pre">T</span></code>: The type of the functions output (and inputs) </li>
+</ul>
+</dd>
+</dl>
+</p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Functions</p>
+<dl class="function">
+<dt id="_CPPv2N4dcgp10kernel_set10kernel_setEv">
+<span class="target" id="classdcgp_1_1kernel__set_1a816e6b39a37cf37ff0f997eba28adf3c"></span><code class="descname">kernel_set</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N4dcgp10kernel_set10kernel_setEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Constructor. </p>
+<p>Default constructor </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N4dcgp10kernel_set10kernel_setERKNSt6vectorINSt6stringEEE">
+<span class="target" id="classdcgp_1_1kernel__set_1a9e77585d4db14d2863d2ca66903b7123"></span><code class="descname">kernel_set</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;std::string&gt; &amp;<em>list</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N4dcgp10kernel_set10kernel_setERKNSt6vectorINSt6stringEEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Constructor. </p>
+<p>Constructs a kernel set that can be used in a dCGP expression</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal"><span class="pre">list</span></code>: an std::vector of strings containing the function names (e.g., “sum”) </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N4dcgp10kernel_set9push_backENSt6stringE">
+<span class="target" id="classdcgp_1_1kernel__set_1ab50af3275d6540e3e15009ee725d527c"></span>void <code class="descname">push_back</code><span class="sig-paren">(</span>std::string <em>kernel_name</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N4dcgp10kernel_set9push_backENSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Adds a kernel to the set. </p>
+<p>Constructs a kernel&lt;T&gt; given a string containing the function name, and inserts it into the std::vector</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal"><span class="pre">kernel_name</span></code>: a string containing the function name</li>
+</ul>
+</dd>
+<dt><strong>Exceptions</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal"><span class="pre">std::invalid_argument</span></code>: if the function is not implemented </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N4dcgp10kernel_set9push_backERKN4dcgp6kernelI1TEE">
+<span class="target" id="classdcgp_1_1kernel__set_1aa9e742d425be06e5791e84169dbe80c3"></span>void <code class="descname">push_back</code><span class="sig-paren">(</span><em class="property">const</em> dcgp::<a class="reference internal" href="kernel.html#_CPPv2N4dcgp6kernelE" title="dcgp::kernel">kernel</a>&lt;<a class="reference external" href="http://darioizzo.github.io/audi/functions.html#_CPPv4I0E1TRK1TRK1T" title="(in audi v1.7)">T</a>&gt; &amp;<em>kernel</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N4dcgp10kernel_set9push_backERKN4dcgp6kernelI1TEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Adds a kernel to the set. </p>
+<p>Inserts the given kernel&lt;T&gt; into the std::vector</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal"><span class="pre">kernel</span></code>: the dcgp::kernel&lt;T&gt; to add </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N4dcgp10kernel_set5clearEv">
+<span class="target" id="classdcgp_1_1kernel__set_1a03ec6a5a1ffa91b78b4c334d7aa7978b"></span>void <code class="descname">clear</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N4dcgp10kernel_set5clearEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Clears the kernel set. </p>
+<p>Removes all the elements from the std::vector containing the kernels </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2NK4dcgp10kernel_setclEv">
+<span class="target" id="classdcgp_1_1kernel__set_1a052341c728d41cf6e4a09c73d05fe260"></span>std::vector&lt;dcgp::<a class="reference internal" href="kernel.html#_CPPv2N4dcgp6kernelE" title="dcgp::kernel">kernel</a>&lt;<a class="reference external" href="http://darioizzo.github.io/audi/functions.html#_CPPv4I0E1TRK1TRK1T" title="(in audi v1.7)">T</a>&gt;&gt; <code class="descname">operator()</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK4dcgp10kernel_setclEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Overloaded function call operator. </p>
+<p>Returns the std::vector containing the kernels </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2NK4dcgp10kernel_setixEKNSt6vectorIN4dcgp6kernelI1TEEE9size_typeE">
+<span class="target" id="classdcgp_1_1kernel__set_1a23a266ae572f831f2b8959cdf471e477"></span>dcgp::<a class="reference internal" href="kernel.html#_CPPv2N4dcgp6kernelE" title="dcgp::kernel">kernel</a>&lt;<a class="reference external" href="http://darioizzo.github.io/audi/functions.html#_CPPv4I0E1TRK1TRK1T" title="(in audi v1.7)">T</a>&gt; <code class="descname">operator[]</code><span class="sig-paren">(</span><em class="property">const</em> <em class="property">typename</em> std::vector&lt;dcgp::<a class="reference internal" href="kernel.html#_CPPv2N4dcgp6kernelE" title="dcgp::kernel">kernel</a>&lt;<a class="reference external" href="http://darioizzo.github.io/audi/functions.html#_CPPv4I0E1TRK1TRK1T" title="(in audi v1.7)">T</a>&gt;&gt;::size_type <em>idx</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv2NK4dcgp10kernel_setixEKNSt6vectorIN4dcgp6kernelI1TEEE9size_typeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Returns the kernel at a specified index in the std::vector</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>the kernel at the specified index </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal"><span class="pre">idx</span></code>: index of the required kernel</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Friends</p>
+<dl class="function">
+<dt id="_CPPv2lsRNSt7ostreamERK10kernel_setI1TE">
+<span class="target" id="classdcgp_1_1kernel__set_1ae1010fbacdb829ac82538a01ea8d790d"></span>std::ostream &amp;<code class="descname">operator&lt;&lt;</code><span class="sig-paren">(</span>std::ostream &amp;<em>os</em>, <em class="property">const</em> kernel_set&lt;<a class="reference external" href="http://darioizzo.github.io/audi/functions.html#_CPPv4I0E1TRK1TRK1T" title="(in audi v1.7)">T</a>&gt; &amp;<em>d</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2lsRNSt7ostreamERK10kernel_setI1TE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Overloaded stream operator. </p>
+<p>Will stream the function names</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>reference to <code class="docutils literal"><span class="pre">os</span></code> </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal"><span class="pre">os</span></code>: target stream </li>
+<li><code class="docutils literal"><span class="pre">d</span></code>: <a class="reference internal" href="#classdcgp_1_1kernel__set"><span class="std std-ref">kernel_set</span></a> argument</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2018, Dario Izzo, Francesco Biscani, Alessio Mereta.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
