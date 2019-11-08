@@ -18,6 +18,37 @@
 
 namespace dcgp
 {
+/// Memetic Evolutionary Strategy for a Cartesian Genetic Program
+/**
+ *
+ * \image html neo-darwinism.jpg "Neo-darwinism"
+ *
+ * The term Memetic is widely used, in the context of meta-heuristic search, to indicate a synergy between any
+ * population-based approach with local improvement procedures. The resulting algorithms are also referred to, in the
+ * literature, as Baldwinian evolutionary algorithms (EAs), Lamarckian EAs, cultural algorithms, or genetic local
+ * searches. The very same approach, is seen by many just as an hybridization of a global search technique with a
+ * local search technique. Regardless of the terminology and point of view, a memetic approach is applicable to symbolic
+ * regression tasks and able to improve considerably on the long standing issue of finding constants in
+ * Genetic Programming.
+ *
+ * @see Izzo, Dario, Francesco Biscani, and Alessio Mereta. "Differentiable genetic programming." In European Conference
+ * on Genetic Programming, pp. 35-51. Springer, 2017.
+ *
+ * In this C++ class we offer an UDA (User Defined Algorithm for the pagmo optimization suite) hybridizing the classic
+ * Evolutionary Strategy that is traditionally used in Cartesian Genetic Programming research with a second order Newton
+ * search step able to help finding the best values for the ephemeral constants. The resulting algorithm is
+ * outlined by the following pseudo-algorithm:
+ *
+ * @code{.unparsed}
+ * > Start from a population (pop) of dimension N
+ * > while i < gen
+ * > > Mutation: create a new population pop2 mutating N times the best individual (only the integer part is affected)
+ * > > Life long learning: apply a one step of a second order Newton method to each individual (only the continuous part
+ *     is affected) 
+ * > > Reinsertion: set pop to contain the best N individuals taken from pop and pop2
+ * @endcode
+ *
+ */
 class mes4cgp
 {
 public:
@@ -28,7 +59,7 @@ public:
 
     /// Constructor
     /**
-     * Constructs an evolutionary strategy algorithm for use with a cgp::symbolic_regression UDP.
+     * Constructs an evolutionary strategy algorithm for use with a :class:`dcgp::symbolic_regression` UDP.
      *
      * @param gen number of generations.
      * @param mut_n number of active genes to be mutated.
@@ -142,8 +173,7 @@ public:
             }
 
             // 2 - Life long learning is here obtained performing a single Newton iteration (thus favouring constants
-            // appearing linearly) and when this does not bring to an improvement, by applying a few gradient descent
-            // steps
+            // appearing linearly)
             for (decltype(NP) i = 0u; i < NP; ++i) {
                 // For a single ephemeral constants we avoid to call the Eigen machinery as its an overkill.
                 // I never tested if this is actually also more efficient, but it certainly is more readable.

@@ -40,7 +40,7 @@ namespace dcgp
  * optimization algorithms inefficient (e.g. a generic evolutionary strategy would have a mutation operator which
  * is agnostic of the existence of active genes).
  *
- * In this class we provide an evolutionary strategy tailored to solve problems of the class dcgp::symbolic_regression
+ * In this class we provide an evolutionary strategy tailored to solve :class:`dcgp::symbolic_regression` problems 
  * leveraging the kowledge on the genetic structure of Cartesian Genetic Programs (i.e. able to mutate only active
  * genes).
  */

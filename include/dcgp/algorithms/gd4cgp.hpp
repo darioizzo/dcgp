@@ -28,7 +28,7 @@ namespace dcgp
  * effect on the resulting loss and its an open question how to balance the learning of the model parameters
  * (continuous optimization) with learning the model itself (integer optimization)
  *
- * In this class we provide a simple gradient descent algorithm able to tackle problems of the class dcgp::symbolic_regression
+ * In this class we provide a simple gradient descent algorithm able to tackle :class:`dcgp::symbolic_regression` problems
  * The gradient descent will only modify the continuous part of the chromosome, leaving the integer part (i.e. the 
  * actual model) unchanged.
  */
