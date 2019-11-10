@@ -4,9 +4,6 @@
 Quick start examples
 ====================
 
-.. contents::
-
-
 C++
 ---
 

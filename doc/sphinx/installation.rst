@@ -3,9 +3,6 @@
 Installation guide
 ==================
 
-.. contents::
-
-
 C++
 ---
 
