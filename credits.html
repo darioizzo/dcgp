@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Differentiable Cartesian Genetic Programming &mdash; dCGP 1.3 documentation</title>
+  <title>Credits &mdash; dCGP 1.3 documentation</title>
   
 
   
@@ -38,7 +38,7 @@
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Installation guide" href="installation.html" /> 
+    <link rel="prev" title="Differentiable Cartesian Genetic Programming (dCGP)" href="theory/dcgp.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -52,7 +52,7 @@
           
 
           
-            <a href="#" class="icon icon-home"> dCGP
+            <a href="index.html" class="icon icon-home"> dCGP
           
 
           
@@ -89,14 +89,17 @@
               
             
             
-              <ul>
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick start examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="docs/index.html">Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials/index.html">C++ examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials/index.html#python-examples">Python examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="theory/index.html">Background</a></li>
-<li class="toctree-l1"><a class="reference internal" href="credits.html">Credits</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Credits</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#main-developers">Main developers</a></li>
+</ul>
+</li>
 </ul>
 
             
@@ -111,7 +114,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="#">dCGP</a>
+          <a href="index.html">dCGP</a>
         
       </nav>
 
@@ -140,15 +143,15 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="#">Docs</a> &raquo;</li>
+      <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>Differentiable Cartesian Genetic Programming</li>
+      <li>Credits</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/credits.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -185,49 +188,26 @@
     text-align: unset;
 }
 </style>
-<div class="section" id="differentiable-cartesian-genetic-programming">
-<h1>Differentiable Cartesian Genetic Programming<a class="headerlink" href="#differentiable-cartesian-genetic-programming" title="Permalink to this headline">¶</a></h1>
-<p>Differentiable Cartesian Genetic Programming (dCGP) is a recent development in the field of Genetic Programming
-that adds the information about the derivatives of the output nodes (the programs, or expressions encoded) with
-respect to the input nodes (the input values) and/or weights. In doing so, it enables a number of new applications
-currently the subject of active research.</p>
-<p>The evolution of the genetic program can now be supported by using the information on the derivatives, hence enabling
-for the equivalent of back-propagation in Neural Networks. The fitness function can be defined in terms of the
-derivatives, allowing to go beyond simple regression tasks and, additionally, solve differential equations, learn
-differential models, capture conserved quantities in dynamical systems.</p>
-<p>Beyond the standard <strong>CGP</strong> we provide two new encodings called <strong>dCGP-W</strong> and <strong>dCGPANN</strong>.
-The first one adds weights to the standard CGP nodes connections, while the second one allows to encode and evolve
-Artificial Neural Networks, while learning its parameters too, using an underlying CGP representation.</p>
-<div class="figure align-center" id="id1">
-<a class="reference internal image-reference" href="_images/expression_home.png"><img alt="dCGP expression" src="_images/expression_home.png" style="width: 800px;" /></a>
-<p class="caption"><span class="caption-text">A dCGP expression and its differential expansion in a specified point</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
-</div>
+<div class="section" id="credits">
+<span id="id1"></span><h1>Credits<a class="headerlink" href="#credits" title="Permalink to this headline">¶</a></h1>
+<p>Who is behind all of this? Once again, the elusive and yet so resourceful “pagmo foundation”,
+which is, basically, a bunch of people fooling around, not taking themselves too seriously and,
+in the meantime trying to make some good progress in science.</p>
+<p>dcgp/dcgpy is a software developed and offered to the users in a full FLOSS philosophy. We have
+created it, mostly, in our spare time and as a tool to explore some research ideas we started
+nourishing since our early investigations into the evolutionary computations / optimization field.</p>
+<p>We use dcgp in the context of our work for the European Space Agency to perform research on genetic programming,
+but its capabilities go well beyond that of a purely scientific/academic tool.</p>
+<p>Over the years, our work attracted a wider interest. We acknowledge and thanks the support of
+The Dow Corporation during some phases of the development and of the European Space Agency
+for having its Advanced Concepts Team to look into Genetic Programming as a potentially game changing technology.</p>
+<div class="section" id="main-developers">
+<h2>Main developers<a class="headerlink" href="#main-developers" title="Permalink to this headline">¶</a></h2>
+<p>Dario Izzo - European Space Agency</p>
+<p>Francesco Biscani - Max Planck Institute for Astronomy</p>
 <hr class="docutils" />
-<div class="section" id="table-of-contents">
-<h2>Table of contents:<a class="headerlink" href="#table-of-contents" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick start examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="docs/index.html">Documentation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials/index.html">C++ examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials/index.html#python-examples">Python examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="theory/index.html">Background</a></li>
-<li class="toctree-l1"><a class="reference internal" href="credits.html">Credits</a></li>
-</ul>
-</div>
-</div>
-<hr class="docutils" />
-<div class="section" id="references">
-<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
-<dl class="citation">
-<dt class="label" id="dcgp1"><span class="brackets">dCGP1</span></dt>
-<dd><p>Dario Izzo, Francesco Biscani, and Alessio Mereta. “Differentiable genetic programming.” In European Conference on Genetic Programming, pp. 35-51. Springer, 2017. <a class="reference external" href="https://arxiv.org/pdf/1611.04766v1.pdf">Arxiv version (2016)</a></p>
-</dd>
-<dt class="label" id="dcgp2"><span class="brackets">dCGP2</span></dt>
-<dd><p>Marcus Märtens and Dario Izzo. Neural network architecture search with differentiable cartesian genetic programming for regression. In Proceedings of the Genetic and Evolutionary Computation Conference Companion (pp. 181-182). ACM. <a class="reference external" href="https://arxiv.org/abs/1907.01939">Arxiv version (2018)</a></p>
-</dd>
-</dl>
+<a class="reference internal image-reference" href="_images/dow.png"><img alt="_images/dow.png" src="_images/dow.png" style="width: 40%;" /></a>
+<a class="reference internal image-reference" href="_images/esa.png"><img alt="_images/esa.png" src="_images/esa.png" style="width: 40%;" /></a>
 </div>
 </div>
 
@@ -239,8 +219,8 @@ Artificial Neural Networks, while learning its parameters too, using an underlyi
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="installation.html" class="btn btn-neutral float-right" title="Installation guide" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
+        <a href="theory/dcgp.html" class="btn btn-neutral float-left" title="Differentiable Cartesian Genetic Programming (dCGP)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

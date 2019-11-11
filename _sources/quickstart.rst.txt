@@ -7,7 +7,8 @@ Quick start examples
 C++
 ---
 
-After following the :ref:`installationguide` you will be able to compile and run your first C++ dCGP program:
+After following the :ref:`installationguide` you will be able to compile and run your first C++ dCGP program, 
+put the following text into a ``getting_started.cpp`` file:
 
 .. _getting_started_c++:
 
@@ -15,18 +16,39 @@ After following the :ref:`installationguide` you will be able to compile and run
    :language: c++
    :linenos:
 
-Place it into a getting_started.cpp text file and compile it with:
+To compile it, create also, in the same folder, a ``CmakeLists.txt`` file with the following content:
 
-.. code-block:: bash
+.. code-block:: cmake
 
-   g++ -std=c++11 getting_started.cpp -lmpfr -lgmp -pthread
+    project(getting_started)
+
+    cmake_minimum_required(VERSION 3.2)
+
+    find_package(dcgp REQUIRED)
+
+    add_executable(getting_started getting_started.cpp)
+    target_link_libraries(getting_started Dcgp::dcgp)
+
+    set_property(TARGET getting_started PROPERTY CXX_STANDARD 17)
+    set_property(TARGET getting_started PROPERTY CXX_STANDARD_REQUIRED YES)
+    set_property(TARGET getting_started PROPERTY CXX_EXTENSIONS NO)
+
+then:
+
+.. code-block:: console
+
+    $ mkdir build
+    $ cd build
+    $ make
+    $ ./getting_started
 
 -----------------------------------------------------------------------
 
 Python
 ------
 
-If you have successfully compiled and installed dcgpy following the :ref:`installationguide` you will be able to test its use by running the following script:
+If you have successfully compiled and installed dcgpy following the :ref:`installationguide` you will be able to test its
+use by running the following script:
 
 .. _getting_started_py:
 
@@ -34,11 +56,11 @@ If you have successfully compiled and installed dcgpy following the :ref:`instal
    :language: python
    :linenos:
 
-Place it into a getting_started.py text file and run it with:
+Place it into a ``getting_started.py`` text file and run it with:
 
-.. code-block:: bash
+.. code-block:: console
 
-   python getting_started.py
+   $ python getting_started.py
 
-We recommend the use of Jupyter or Ipython do enjoy dcgpy the most.
+We recommend the use of `Jupyter <https://jupyter.org/>`_ or `Ipython <https://github.com/ipython/ipython>`_ to enjoy ``dcgpy`` the most.
 

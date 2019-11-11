@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Documentation &mdash; dCGP 1.3 documentation</title>
+  <title>Differentiable Cartesian Genetic Programming (dCGP) &mdash; dCGP 1.3 documentation</title>
   
 
   
@@ -38,8 +38,8 @@
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="C++ Documentation" href="cpp/index.html" />
-    <link rel="prev" title="Quick start examples" href="../quickstart.html" /> 
+    <link rel="next" title="Credits" href="../credits.html" />
+    <link rel="prev" title="Cartesian Genetic Programming (CGP)" href="cgp.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -93,14 +93,14 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick start examples</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Documentation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="cpp/index.html">C++ Documentation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="python/index.html">Python Documentation</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="../docs/index.html">Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">C++ examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html#python-examples">Python examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../theory/index.html">Background</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Background</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="cgp.html">Cartesian Genetic Programming (CGP)</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Differentiable Cartesian Genetic Programming (dCGP)</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../credits.html">Credits</a></li>
 </ul>
 
@@ -147,13 +147,15 @@
     
       <li><a href="../index.html">Docs</a> &raquo;</li>
         
-      <li>Documentation</li>
+          <li><a href="index.html">Background</a> &raquo;</li>
+        
+      <li>Differentiable Cartesian Genetic Programming (dCGP)</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/docs/index.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/theory/dcgp.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -190,20 +192,44 @@
     text-align: unset;
 }
 </style>
-<div class="section" id="documentation">
-<h1>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h1>
-<p>The documentation is split into two parts. The C++ documentation and the Python documentation.
-We try to keep the APIs as similar as possible, but since templates are not available in python,
-we expose an arbitrary number of template instantiations indicating in the class name
-after an underscore, the type. For example, the Python class <em>expression_double</em> corresponds,
-to the C++ class <em>expression&lt;double&gt;</em>.</p>
-<hr class="docutils" />
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="cpp/index.html">C++ Documentation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="python/index.html">Python Documentation</a></li>
-</ul>
+<div class="section" id="differentiable-cartesian-genetic-programming-dcgp">
+<h1>Differentiable Cartesian Genetic Programming (dCGP)<a class="headerlink" href="#differentiable-cartesian-genetic-programming-dcgp" title="Permalink to this headline">¶</a></h1>
+<p>Differentiable Cartesian Genetic Programming (dCGP) is a recent development of CGP
+that adds the information about the derivatives of the output nodes (the programs,
+or expressions encoded) with respect to the input nodes (the input values) and/or the
+weights (that can be associated with every connection in the graph, similarly to Neural Networks).</p>
+<div class="figure align-center" id="id3">
+<a class="reference internal image-reference" href="../_images/expression_theory.png"><img alt="weighted dCGP expression" src="../_images/expression_theory.png" style="width: 800px;" /></a>
+<p class="caption"><span class="caption-text">A weighted dCGP expression</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
 </div>
+<p>The derivatives are obtained by means of Automatic Differentiation through the
+<a class="reference external" href="http://darioizzo.github.io/audi/">AuDi</a> library, that implements the Taylor truncated
+polynomial algebra. See <span class="xref std std-ref">reference</span> for more details.</p>
+<p>The use of the derivatives of the outputs (and hence of any fitness function that is a
+combination of these) with respect to inputs/weights enables a number of new applications
+currently the subject of active research.</p>
+<p>The evolution of the genetic program can now be supported by using the information
+on the derivatives, hence enabling for the equivalent of back-propagation in Neural Networks.</p>
+<p>Furthermore, the fitness function itself can be defined in terms of the derivatives, allowing
+dCGP to encode solutions to initial value problems, boundary value problems, Lyapunov functions, etc.</p>
+<div class="figure align-center" id="id4">
+<a class="reference internal image-reference" href="../_images/expression_ann1.png"><img alt="weighted dCGP expression" src="../_images/expression_ann1.png" style="width: 500px;" /></a>
+<p class="caption"><span class="caption-text">A dCGP-ANN expression</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
+</div>
+<p>Possible applications of a dCGP are:</p>
+<ul class="simple">
+<li><p>Symbolic Regression.</p></li>
+<li><p>Solving differential equations.</p></li>
+<li><p>Searching for Lyapunov functions (in non-linear control problems).</p></li>
+<li><p>Searching for conserved quantities in dynamical systems.</p></li>
+<li><p>Concurrent learning of network topologies and parameters.</p></li>
+</ul>
+<p>In <a class="reference internal" href="../index.html#dcgp1" id="id1"><span>[dCGP1]</span></a> we introduce the ideas behind dCGP and study a few interesting applications. we
+present an extension to the normal, canonical CGP, which introduces weights on the node connections
+and allows for a variable number of model parameters, albeit complicating the learning process.</p>
+<p>In <a class="reference internal" href="../index.html#dcgp2" id="id2"><span>[dCGP2]</span></a> we introduce a further new variant of a canonical CGP, the dCGP-ANN, which makes use
+of backpropagation to learn the many model parameters (biases and weights) of an artificial neural network
+represented by the CGP encoding.</p>
 </div>
 
 
@@ -214,10 +240,10 @@ to the C++ class <em>expression&lt;double&gt;</em>.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="cpp/index.html" class="btn btn-neutral float-right" title="C++ Documentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="../credits.html" class="btn btn-neutral float-right" title="Credits" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="../quickstart.html" class="btn btn-neutral float-left" title="Quick start examples" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="cgp.html" class="btn btn-neutral float-left" title="Cartesian Genetic Programming (CGP)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
