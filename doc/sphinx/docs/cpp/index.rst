@@ -6,7 +6,7 @@ C++ Documentation
 .. contents::
 
 Kernels
----------
+--------- 
 
 .. figure:: ../../_static/kernels.png
    :alt: dCGP kernels
@@ -42,7 +42,7 @@ We essentially provide three types of CGPs:
 * **expression_ann**: this represents an Artificial Neural Network inclusive of biases and weights, via a CGP and allows to learn the model parameters using backproagation. (original with dCGP - 2018)
 
 Each of the above CGPs can operate over different numerical types, hence the corresponding classes are templated. 
-For example a :cpp:class:`dcgp::expression` can operate over doubles (``T`` = ``double``), in which case the 
+For example a :cpp:class:`dcgp::expression <dcgp::expression>` can operate over doubles (``T`` = ``double``), in which case the 
 result of evaluating the inner computational graph is a ``double``, but also on a ``gdual`` (``T`` = :cpp:class:`audi::gdual <gdual>` ``<Cf>``)
 with ``Cf`` = ``double``, in which case, the result of evaluating the inner computational graph will
 be a :cpp:class:`audi::gdual <gdual>` ``<Cf>`` and hence it will contain all the program derivatives
@@ -81,6 +81,10 @@ In particular we provide UDPs (in pagmo's jargon user defined problems) that can
 
   symbolic_regression
   es4cgp
+  gd4cgp
+  mes4cgp
+  momes4cgp
+
 
 We also make available, as a gym to test the capabilities of various proposed methodologies, a number of data sets
 coming from different scientific sources. These are collected in what we call the ``dcgpy gym``.

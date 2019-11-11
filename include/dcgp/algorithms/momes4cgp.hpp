@@ -1,8 +1,7 @@
-#ifndef DCGP_MEMETIC4CGP_H
-#define DCGP_MEMETIC4CGP_H
+#ifndef DCGP_MOMES4CGP_H
+#define DCGP_MOMES4CGP_H
 
 #include <Eigen/Dense>
-#include <pagmo/bfe.hpp>
 #include <pagmo/detail/custom_comparisons.hpp>
 #include <pagmo/io.hpp>
 #include <pagmo/population.hpp>
@@ -19,6 +18,30 @@
 
 namespace dcgp
 {
+/// Multi-Objective, Memetic Evolutionary Strategy for a Cartesian Genetic Program
+/**
+ *
+ * \image html multiple_objectives.png "Multi-objective"
+ * \image html neo-darwinism.jpg "Neo-darwinism"
+ *
+ * Symbolic regression tasks seek for good mathematical models to represent input data. By increasing
+ * the model complexity it is always (theoretically) possible to find almost perfect fits of any input data.
+ * As a consequence, the model complexity must be traded off with its accuracy so that symbolic regression
+ * is, ultimately, a two-objectives optimization problem. 
+ *
+ * In this C++ class we offer an UDA (User Defined Algorithm for the pagmo optimization suite) which extends
+ * :class:`dcgp::mes4cgp` for a multiobjective problem. The resulting algorithm, is
+ * outlined by the following pseudo-algorithm:
+ *
+ * @code{.unparsed}
+ * > Start from a population (pop) of dimension N
+ * > while i < gen
+ * > > Mutation: create a new population pop2 mutating N times the best individual (only the integer part is affected)
+ * > > Life long learning: apply a one step of a second order Newton method to each individual (only the continuous part
+ *     is affected) 
+ * > > Reinsertion: set pop to contain the best N individuals taken from pop and pop2 according to non dominated sorting.
+ * @endcode
+ */
 class momes4cgp
 {
 public:
@@ -29,7 +52,8 @@ public:
 
     /// Constructor
     /**
-     * Constructs an evolutionary strategy algorithm for use with a cgp::symbolic_regression UDP.
+     * Constructs a multi-objective memetic evolutionary strategy algorithm for use with a 
+     * :class:`dcgp::symbolic_regression` UDP.
      *
      * @param gen number of generations.
      * @param max_mut maximum number of active genes to be mutated. The minimum is 0 as to allow multiple steps of
@@ -53,7 +77,7 @@ public:
      *
      * @param pop population to be evolved
      * @return evolved population
-     * @throws std::invalid_argument if a dcgp::symbolic_regression cannot be extracted from the problem
+     * @throws std::invalid_argument if a :class:`dcgp::symbolic_regression` cannot be extracted from the problem
      * @throws std::invalid_argument if the population size is smaller than 2.
      * @throws std::invalid_argument if the number of objectives is smaller than 2.
      */
@@ -193,7 +217,7 @@ public:
                     popnew.push_back(mutated_x[i], f);
                 }
             }
-            // 3 - We select a new population using the crowding distance
+            // 3 - We select a new population using non dominated sorting
             best_idx = pagmo::select_best_N_mo(popnew.get_f(), NP);
             // We insert into the population
             for (pagmo::population::size_type i = 0; i < NP; ++i) {

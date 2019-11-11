@@ -18,6 +18,20 @@
 
 namespace dcgp
 {
+/// Gradient descent for a Cartesian Genetic Program
+/**
+ *
+ * \image html gd.png "Gradient Descent"
+ *
+ * In a symbolic regression problem, models parameters are typically present in the form of
+ * ephemeral constants (i.e. extra input terminals). The actual values of the constants have a profound
+ * effect on the resulting loss and its an open question how to balance the learning of the model parameters
+ * (continuous optimization) with learning the model itself (integer optimization)
+ *
+ * In this class we provide a simple gradient descent algorithm able to tackle :class:`dcgp::symbolic_regression` problems
+ * The gradient descent will only modify the continuous part of the chromosome, leaving the integer part (i.e. the 
+ * actual model) unchanged.
+ */
 class gd4cgp : public pagmo::not_population_based
 {
 public:
@@ -126,7 +140,7 @@ public:
                                      "Gevals:", std::setw(15), "grad norm:", std::setw(15), "lr:", std::setw(15),
                                      "Best:\n");
                     }
-                    log_single_line(iter-1, prob, fevals0, gevals0, loss_gradient_norm, lr, fit0);
+                    log_single_line(iter - 1, prob, fevals0, gevals0, loss_gradient_norm, lr, fit0);
                     ++count;
                 }
             }
@@ -194,8 +208,8 @@ public:
      *      9              9              9        269.803       0.177979        7295.06
      *     10             10             10        168.844       0.266968        7271.23
      * @endcode
-     * Gen is the generation number, Fevals the number of function evaluation used, Gevals the number of gradient evaluation used,
-     * lr is the current learning rate, or line search width and Best is the best fitness found.
+     * Gen is the generation number, Fevals the number of function evaluation used, Gevals the number of gradient
+     * evaluation used, lr is the current learning rate, or line search width and Best is the best fitness found.
      *
      * @param level verbosity level
      */
@@ -257,7 +271,7 @@ private:
         pagmo::print(std::setw(7), iter, std::setw(15), prob.get_fevals() - fevals0, std::setw(15),
                      prob.get_gevals() - gevals0, std::setw(15), loss_gradient_norm, std::setw(15), lr, std::setw(15),
                      fit0[0], '\n');
-        m_log.emplace_back(iter - 1, prob.get_fevals() - fevals0, prob.get_gevals() - gevals0, loss_gradient_norm, lr,
+        m_log.emplace_back(iter, prob.get_fevals() - fevals0, prob.get_gevals() - gevals0, loss_gradient_norm, lr,
                            fit0[0]);
     }
     unsigned m_max_iter;

@@ -1,5 +1,3 @@
-.. contents::
-
 Cartesian Genetic Programming (CGP)
 ====================================
 Cartesian Genetic Programming (CGP) is a form of Genetic Programming where the program

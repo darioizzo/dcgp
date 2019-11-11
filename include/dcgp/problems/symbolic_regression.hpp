@@ -19,6 +19,7 @@ namespace dcgp
 /// A Symbolic Regression problem
 /**
  *
+ * \image html symbolic_regression.jpg "Math Formulae"
  *
  * Symbolic regression is a type of regression analysis that searches the space of mathematical expressions to 
  * find the model that best fits a given dataset, both in terms of accuracy and simplicity 
