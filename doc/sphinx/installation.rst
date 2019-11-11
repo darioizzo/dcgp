@@ -3,47 +3,65 @@
 Installation guide
 ==================
 
-.. contents::
-
-
 C++
 ---
 
 dCGP is a header-only library which has the following third party dependencies:
 
-* `AuDi <http://darioizzo.github.io/audi/>`_, header-only library (git clone https://github.com/darioizzo/audi.git)
-* `Boost <http://www.boost.org/>`_, headers only (needs the libraries if you intend to use the python bindings)
+* `AuDi <http://darioizzo.github.io/audi/>`_, high order automated differentiation library.
+* `Boost <http://www.boost.org/>`_, various C++ utilities.
+* `Symengine <https://github.com/symengine/symengine>`_, symbolic manipulation of math expressions.
 
 After making sure the dependencies above are installed in your system, you may download the latest dCGP version via git:
 
-.. code-block:: bash
+.. code-block:: console
 
-   git clone https://github.com/darioizzo/d-CGP.git
+   $ git clone https://github.com/darioizzo/dcgp.git
 
 and configure your build using CMake. When done, type (in your build directory):
 
-.. code-block:: bash
+.. code-block:: console
 
-   make install
+   $ make install
 
-The headers will be installed in the CMAKE_INSTALL_PREFIX/include directory. To check that all went well compile the :ref:`quick-start example <getting_started_c++>`.
+The headers will be installed in the CMAKE_INSTALL_PREFIX/include directory. 
+To check that all went well compile the :ref:`quick-start example <getting_started_c++>`.
 
 -----------------------------------------------------------------------
 
 Python
 ------
-The main functionalities of dCGP are exposed into a Python module called dcgpy.
-It can be installed either directly from pip or by building the module.
+The main functionalities of dCGP are exposed into a Python module called ``dcgpy`` which
+can be installed from conda (OSx, linux and Win), pip (only linux) or by building the module.
+
+Installing with conda
+^^^^^^^^^^^^^^^^^^^^^
+``dcgpy`` is available in the `conda <https://conda.io/en/latest/>`__ package manager
+from the `conda-forge <https://conda-forge.org/>`__ channel. A single package is available:
+
+* `dcgp-python <https://anaconda.org/conda-forge/dcccgp-python>`__, which contains the ``dcgpy`` python module.
+
+In order to install ``dcgpy`` via conda, you just need
+to add ``conda-forge`` to the channels:
+
+.. code-block:: console
+
+   $ conda config --add channels conda-forge
+   $ conda install dcgp-python
+
+Please refer to the `conda documentation <https://conda.io/en/latest/>`__ for instructions
+on how to setup and manage your conda installation.
 
 Installing with pip
 ^^^^^^^^^^^^^^^^^^^
-On a Win 64bit system or a Linux based system (32 or 64 bits), the Python package dcgpy (Python binding of the C++ code) can be installed using ``pip``:
+We also provide the pip packages (mainly for linux 64 bit architectures). Check on the 
+`PyPi dcgpy page <https://pypi.org/project/dcgpy/>`_ if the needed package is provided.
 
-.. code-block:: bash
+.. code-block:: console
 
-   pip install dcgpy
+   $ pip install dcgpy
 
-Building the python module
+Building
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 To build the module you need to have the Boost Python libraries installed and to activate the BUILD_DCGPY option from within CMake (and deselect BUILD_DCGP)
@@ -55,8 +73,8 @@ The CMAKE_INSTALL_PREFIX will be used to construct the final location of headers
 
 When done, type (in your build directory):
 
-.. code-block:: bash
+.. code-block:: console
 
-   make install
+   $ make install
 
 To check that all went well fire-up your Python console and try the example in :ref:`quick-start example <getting_started_py>`.

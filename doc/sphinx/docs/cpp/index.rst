@@ -42,7 +42,7 @@ We essentially provide three types of CGPs:
 * **expression_ann**: this represents an Artificial Neural Network inclusive of biases and weights, via a CGP and allows to learn the model parameters using backproagation. (original with dCGP - 2018)
 
 Each of the above CGPs can operate over different numerical types, hence the corresponding classes are templated. 
-For example a :cpp:class:`dcgp::expression` can operate over doubles (``T`` = ``double``), in which case the 
+For example a :cpp:class:`dcgp::expression <dcgp::expression>` can operate over doubles (``T`` = ``double``), in which case the 
 result of evaluating the inner computational graph is a ``double``, but also on a ``gdual`` (``T`` = :cpp:class:`audi::gdual <gdual>` ``<Cf>``)
 with ``Cf`` = ``double``, in which case, the result of evaluating the inner computational graph will
 be a :cpp:class:`audi::gdual <gdual>` ``<Cf>`` and hence it will contain all the program derivatives

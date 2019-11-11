@@ -246,9 +246,10 @@ class test_expression(_ut.TestCase):
 
 class test_symbolic_regression(_ut.TestCase):
     def runTest(self):
-        from dcgpy import symbolic_regression, generate_koza_quintic, kernel_set_double
+        from dcgpy import symbolic_regression, generate_koza_quintic, kernel_set_double, es4cgp, gd4cgp, mes4cgp
         import pygmo as pg
         X, Y = generate_koza_quintic()
+        # Interface for the UDPs
         udp = symbolic_regression(
             points=X,
             labels=Y,
@@ -275,6 +276,12 @@ class test_symbolic_regression(_ut.TestCase):
         # Has gradient and hessians
         self.assertEqual(prob.has_gradient(), True)
         self.assertEqual(prob.has_hessians(), True)
+
+        # Interface for the UDAs
+        uda = es4cgp(gen=2, mut_n=3, ftol=1e-3, learn_constants=True, seed=34)
+        uda = mes4cgp(gen=2, mut_n=3, ftol=1e-3, seed=34)
+        uda = gd4cgp(max_iter=2, lr=0.1, lr_min=1e-3)
+
 
 
 def run_test_suite():
