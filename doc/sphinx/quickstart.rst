@@ -39,6 +39,7 @@ then:
 
     $ mkdir build
     $ cd build
+    $ cmake ../
     $ make
     $ ./getting_started
 
