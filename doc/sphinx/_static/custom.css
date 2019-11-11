@@ -13,6 +13,18 @@
     color: #AAA;
 }
 
+.highlight .go {
+    color: #925b5b;
+}
+
+.highlight .nf {
+    color: #b9cc38;
+}
+
+.highlight .n {
+    color: #c5c5c5;
+}
+
 .rst-content dl:not(.docutils) dt{
     background: #d7e2af;
     color: #829040;
