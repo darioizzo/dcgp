@@ -40,12 +40,6 @@ Table of contents:
 References
 ^^^^^^^^^^
 
-Izzo, D., Biscani, F., & Mereta, A. (2017, April). 
-**Differentiable genetic programming.**
-In European Conference on Genetic Programming (pp. 35-51). Springer. 
-`Arxiv version (2016) <https://arxiv.org/pdf/1611.04766v1.pdf>`_ 
+.. [dCGP1] Dario, Francesco Biscani, and Alessio Mereta. "Differentiable genetic programming." In European Conference on Genetic Programming, pp. 35-51. Springer, 2017. `Arxiv version (2016) <https://arxiv.org/pdf/1611.04766v1.pdf>`_ 
 
-Märtens, M., & Izzo, D. (2019, July). 
-**Neural network architecture search with differentiable cartesian genetic programming for regression.**
-In Proceedings of the Genetic and Evolutionary Computation Conference Companion (pp. 181-182). ACM. 
-`Arxiv version (2018) <https://arxiv.org/abs/1907.01939>`_
+.. [dCGP2] Märtens, M., & Izzo, D. Neural network architecture search with differentiable cartesian genetic programming for regression. In Proceedings of the Genetic and Evolutionary Computation Conference Companion (pp. 181-182). ACM. `Arxiv version (2018) <https://arxiv.org/abs/1907.01939>`_ 

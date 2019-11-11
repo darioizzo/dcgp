@@ -13,6 +13,7 @@
 #include <vector>
 
 #include <dcgp/algorithms/es4cgp.hpp>
+#include <dcgp/algorithms/mes4cgp.hpp>
 #include <dcgp/algorithms/gd4cgp.hpp>
 #include <dcgp/gym.hpp>
 #include <dcgp/kernel.hpp>
@@ -79,21 +80,42 @@ void expose_symbolic_regression()
         (bp::arg("gen") = 1u, bp::arg("mut_n") = 1u, bp::arg("ftol") = 1e-4, bp::arg("learn_constants") = true,
          bp::arg("seed"))));
     es4cgp_.def("get_seed", &es4cgp::get_seed, generic_uda_get_seed_doc().c_str());
-   // es4cgp_ needs an ad hoc exposition for the log as one entry is a vector (constants)
-    es4cgp_.def("get_log", +[](const dcgp::es4cgp &a) -> bp::list {
-                   bp::list retval;
-                   for (const auto &t : a.get_log()) {
-                       retval.append(bp::make_tuple(std::get<0>(t), std::get<1>(t), std::get<2>(t),
-                                                    pygmo::vector_to_ndarr(std::get<3>(t)), std::get<4>(t)));
-                   }
-                   return retval;
-               },
-               es4cgp_get_log_doc().c_str());
+    // es4cgp_ needs an ad hoc exposition for the log as one entry is a vector (constants)
+    es4cgp_.def(
+        "get_log",
+        +[](const dcgp::es4cgp &a) -> bp::list {
+            bp::list retval;
+            for (const auto &t : a.get_log()) {
+                retval.append(bp::make_tuple(std::get<0>(t), std::get<1>(t), std::get<2>(t),
+                                             pygmo::vector_to_ndarr(std::get<3>(t)), std::get<4>(t)));
+            }
+            return retval;
+        },
+        es4cgp_get_log_doc().c_str());
     // GD-4CGP (Gradient Descent for Cartesian Genetic Programming)
     auto gd4cgp_ = pg::expose_algorithm<dcgp::gd4cgp>("gd4cgp", gd4cgp_doc().c_str());
     gd4cgp_.def(
         bp::init<unsigned, double, double>((bp::arg("max_iter") = 1u, bp::arg("lr") = 1., bp::arg("lr_min") = 1e-3)));
     pg::expose_algo_log(gd4cgp_, gd4cgp_get_log_doc().c_str());
+    // MES-4CGP (Memetic Evolutionary Strategy for Cartesian Genetic Programming)
+    auto mes4cgp_ = pg::expose_algorithm<dcgp::mes4cgp>("mes4cgp", mes4cgp_doc().c_str());
+    mes4cgp_.def(
+        bp::init<unsigned, unsigned, double>((bp::arg("gen") = 1u, bp::arg("mut_n") = 1u, bp::arg("ftol") = 1e-4)));
+    mes4cgp_.def(bp::init<unsigned, unsigned, double, unsigned>(
+        (bp::arg("gen") = 1u, bp::arg("mut_n") = 1u, bp::arg("ftol") = 1e-4, bp::arg("seed"))));
+    mes4cgp_.def("get_seed", &mes4cgp::get_seed, generic_uda_get_seed_doc().c_str());
+    // es4cgp_ needs an ad hoc exposition for the log as one entry is a vector (constants)
+    mes4cgp_.def(
+        "get_log",
+        +[](const dcgp::mes4cgp &a) -> bp::list {
+            bp::list retval;
+            for (const auto &t : a.get_log()) {
+                retval.append(bp::make_tuple(std::get<0>(t), std::get<1>(t), std::get<2>(t),
+                                             pygmo::vector_to_ndarr(std::get<3>(t)), std::get<4>(t)));
+            }
+            return retval;
+        },
+        mes4cgp_get_log_doc().c_str());
 
     // Making data from the gym available in python
     expose_data_from_the_gym<&gym::generate_koza_quintic>("generate_koza_quintic", generate_koza_quintic_doc());

@@ -1161,6 +1161,9 @@ regression problem) and its solution strategy which, although not preventing, ma
 optimization algorithms inefficient (e.g. a generic evolutionary strategy would have a mutation operator which
 is agnostic of the existence of active genes).
 
+.. note::
+    ES4CGP is tailored to solve :class:`dcgpy.symbolic_regression` problems and will not work on different types.
+
 In this class we provide an evolutionary strategy tailored to solve :class:`dcgpy.symbolic_regression` problems
 leveraging the kowledge on the genetic structure of Cartesian Genetic Programs (i.e. able to mutate only active
 genes).
@@ -1168,7 +1171,7 @@ genes).
 Args:
     gen (``int``): number of generations.
     mut_n (``int``): number of active genes to be mutated.
-    ftol (``int``): the algorithm will exit when the loss is below this tolerance.
+    ftol (``float``): the algorithm will exit when the loss is below this tolerance.
     learn_constants (``bool``): when true a gaussian mutation is applied to the ephemeral constants (std = 0.1).
     seed (``int``): seed used by the internal random number generator (default is random).
 
@@ -1237,6 +1240,9 @@ ephemeral constants (i.e. extra input terminals). The actual values of the const
 effect on the resulting loss and its an open question how to balance the learning of the model parameters
 (continuous optimization) with learning the model itself (integer optimization).
 
+.. note::
+    GD4CGP is tailored to solve :class:`dcgpy.symbolic_regression` problems and will not work on different types.
+
 In this class we provide a simple gradient descent algorithm able to tackle :class:`dcgpy.symbolic_regression` problems.
 The gradient descent will only modify the continuous part of the chromosome, leaving the integer part (i.e. the 
 actual model) unchanged.
@@ -1294,6 +1300,99 @@ Examples:
     [(0, 0, 0, 0.0, 0.1, 4588.5979303850145), ...
 
 See also the docs of the relevant C++ method :cpp:func:`dcgp::gd4cgp::get_log()`.
+)";
+}
+
+std::string mes4cgp_doc()
+{
+    return R"(__init__(gen = 1, mut_n = 1, ftol = 1e-4, learn_constants = False, seed = random)
+
+The term Memetic is widely used, in the context of meta-heuristic search, to indicate a synergy between any
+population-based approach with local improvement procedures. The resulting algorithms are also referred to, in the
+literature, as Baldwinian evolutionary algorithms (EAs), Lamarckian EAs, cultural algorithms, or genetic local
+searches. The very same approach, is seen by many just as an hybridization of a global search technique with a
+local search technique. Regardless of the terminology and point of view, a memetic approach is applicable to symbolic
+regression tasks and able to improve considerably on the long standing issue of finding constants in
+Genetic Programming.
+
+.. [dCGP1] Dario, Francesco Biscani, and Alessio Mereta. "Differentiable genetic programming." In European Conference on Genetic Programming, pp. 35-51. Springer, 2017.
+
+In this class we offer an UDA (User Defined Algorithm for the pagmo optimization suite) hybridizing the classic
+Evolutionary Strategy that is traditionally used in Cartesian Genetic Programming research with a second order Newton
+search step able to help finding the best values for the ephemeral constants. The resulting algorithm is
+outlined by the following pseudo-algorithm:
+
+* Start from a population (pop) of dimension N
+
+*  while i < gen
+
+*  > > Mutation: create a new population pop2 mutating N times the best individual
+
+*  > > Life long learning: apply a one step of a second order Newton method to each individual (only the continuous part is affected) 
+
+*  > > Reinsertion: set pop to contain the best N individuals taken from pop and pop2
+
+.. note::
+    MES4CGP is tailored to solve :class:`dcgpy.symbolic_regression` problems and will not work on different types.
+
+Args:
+    gen (``int``): number of generations.
+    mut_n (``int``): number of active genes to be mutated.
+    ftol (``float``): the algorithm will exit when the loss is below this tolerance.
+    seed (``int``): seed used by the internal random number generator (default is random).
+
+Raises:
+    unspecified: any exception thrown by failures at the intersection between C++ and Python (e.g.,
+      type conversion errors, mismatched function signatures, etc.)
+    ValueError: if  *mut_n* is 0 or *ftol* is negative.
+
+    )";
+}
+
+std::string mes4cgp_get_log_doc()
+{
+    return R"(get_log()
+Returns a log containing relevant parameters recorded during the last call to ``evolve()``. The log frequency depends
+on the verbosity parameter (by default nothing is logged) which can be set calling the
+method :func:`~pygmo.algorithm.set_verbosity()` on an :class:`~pygmo.algorithm`
+constructed with a :class:`~dcgpy.mes4cgp`. A verbosity of ``N`` implies a log
+line each ``N`` generations.
+
+Returns:
+    ``list`` of ``tuples``: at each logged epoch, the values ``Gen``, ``Fevals``, ``Current best``, ``Best``, where:
+
+    * ``Gen`` (``int``), generation number.
+    * ``Fevals`` (``int``), number of functions evaluation made.
+    * ``Best`` (``float``), the best fitness found.
+    * ``Constants`` (``list``), the current values for the ephemeral constants.
+    * ``Model`` (``string``), the string representation of the current best model
+Examples:
+    >>> import dcgpy
+    >>> from pygmo import *
+    >>> 
+    >>> algo = algorithm(dcgpy.mes4cgp(gen = 90, mut_n = 1, ftol = 1e-4))       
+    >>> X, Y = dcgpy.generate_koza_quintic()    
+    >>> udp = dcgpy.symbolic_regression(X, Y ,1,20,21,2, dcgpy.kernel_set_double(["sum", "diff", "mul"])(), 1, False, 0)
+    >>> pop = population(udp, 4)
+    >>> algo.set_verbosity(10)
+    >>> pop = algo.evolve(pop) # doctest: +SKIP
+    Gen:        Fevals:          Best:   Constants:   Model:
+       0              0        2802.82    [5.35943]    [c1**2] ...
+      10             40        948.839    [10.9722]    [x0**2*c1] ...
+      20             80        823.816    [8.38173]    [(c1 + x0)*x0**2] ...
+      30            120        473.274    [4.48466]    [x0**3*c1] ...
+      40            160        338.735    [24.2287]    [-x0 + x0**2*c1 - (c1 + x0*c1) + x0**2] ...
+      50            200        107.126    [24.2287]    [x0**2*(-x0 - x0**2 + x0**3)] ...
+      60            240        10.2064    [0.844799]   [x0**2*(-(c1 + x0**2) + x0**3)] ...
+      70            280        10.2064    [0.844799]   [x0**2*(-(c1 + x0**2) + x0**3)] ...
+      80            320         6.3605    [1.03424]    [x0**2*(x0**3*c1 - (c1 + x0**2*c1))] ...
+      90            360         6.3605    [1.03424]    [x0**2*(x0**3*c1 - (c1 + x0**2*c1))] ...
+    Exit condition -- generations = 90
+    >>> uda = algo.extract(dcgpy.mes4cgp)
+    >>> uda.get_log() # doctest: +SKIP
+    [(0, 0, 2802.8212344354, array([5.35943212]), '[c1**2]'), ...
+
+See also the docs of the relevant C++ method :cpp:func:`dcgp::mes4cgp::get_log()`.
 )";
 }
 
