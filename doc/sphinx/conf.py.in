@@ -144,15 +144,21 @@ html_theme_options = {
     'titles_only': False
 }
 
-# Add any paths that contain custom themes here, relative to this directory.
-#html_theme_path = []
-
-# The name of an image file (relative to this directory) to place at the top
-# of the sidebar.
-#html_logo = "_static/gd.png"
 
 # The name of an image file (within the static path) to use as favicon of the
 # docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
 # pixels large.
 #html_favicon = None
 
+# These folders are copied to the documentation's HTML output
+html_static_path = ['_static']
+
+# These paths are either relative to html_static_path
+# or fully qualified paths (eg. https://...)
+html_css_files = [
+    'custom.css',
+]
+
+# The name of an image file (relative to this directory) to place at the top
+# of the sidebar.
+html_logo = "_static/logo2.png"
