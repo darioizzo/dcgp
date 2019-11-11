@@ -1131,6 +1131,7 @@ std::string generic_uda_get_seed_doc()
 {
     return R"(get_seed()
 This method will return the random seed used internally by this uda.
+
 Returns:
     ``int``: the random seed of the population
 )";
@@ -1393,6 +1394,97 @@ Examples:
     [(0, 0, 2802.8212344354, array([5.35943212]), '[c1**2]'), ...
 
 See also the docs of the relevant C++ method :cpp:func:`dcgp::mes4cgp::get_log()`.
+)";
+}
+
+std::string momes4cgp_doc()
+{
+    return R"(__init__(gen = 1, max_mut = 1, seed = random)
+
+Symbolic regression tasks seek for good mathematical models to represent input data. By increasing
+the model complexity it is always (theoretically) possible to find almost perfect fits of any input data.
+As a consequence, the model complexity must be traded off with its accuracy so that symbolic regression
+is, ultimately, a two-objectives optimization problem. 
+
+In this class we offer an UDA (User Defined Algorithm for the pygmo optimization suite) which extends
+:class:`dcgpy.mes4cgp` for a multiobjective problem. The resulting algorithm, is
+outlined by the following pseudo-algorithm:
+
+* Start from a population (pop) of dimension N
+
+*  while i < gen
+
+*  > > Mutation: create a new population pop2 mutating N times the best individual
+
+*  > > Life long learning: apply a one step of a second order Newton method to each individual (only the continuous part is affected) 
+
+*  > > Reinsertion: set pop to contain the best N individuals taken from pop and pop2 according to non dominated sorting.
+
+.. note::
+    MOMES4CGP is tailored to solve :class:`dcgpy.symbolic_regression` problems and will not work on different types.
+
+Args:
+    gen (``int``): number of generations.
+    max_mut (``int``): maximum number of active genes to be mutated. The minimum is zero (this allow the memetic learning to act in consecutive gens)
+    seed (``int``): seed used by the internal random number generator (default is random).
+
+Raises:
+    unspecified: any exception thrown by failures at the intersection between C++ and Python (e.g.,
+      type conversion errors, mismatched function signatures, etc.)
+    ValueError: if  *max_mut* is 0.
+
+    )";
+}
+
+std::string momes4cgp_get_log_doc()
+{
+    return R"(get_log()
+Returns a log containing relevant parameters recorded during the last call to ``evolve()``. The log frequency depends
+on the verbosity parameter (by default nothing is logged) which can be set calling the
+method :func:`~pygmo.algorithm.set_verbosity()` on an :class:`~pygmo.algorithm`
+constructed with a :class:`~dcgpy.mes4cgp`. A verbosity of ``N`` implies a log
+line each ``N`` generations.
+
+Returns:
+    ``list`` of ``tuples``: at each logged epoch, the values ``Gen``, ``Fevals``, ``Current best``, ``Best``, where:
+
+    * ``Gen`` (``int``), generation number.
+    * ``Fevals`` (``int``), number of functions evaluation made.
+    * ``Best loss`` (``float``), the best fitness found.
+    * ``Ndf size`` (``int``), number of models in the non dominated front.
+    * ``Compl.`` (``in``), minimum complexity across the models in the non dominated front.
+Examples:
+    >>> import dcgpy
+    >>> from pygmo import *
+    >>> 
+    >>> algo = algorithm(dcgpy.momes4cgp(gen = 90, max_mut = 2))       
+    >>> X, Y = dcgpy.generate_koza_quintic()    
+    >>> udp = dcgpy.symbolic_regression(X, Y ,1,20,21,2, dcgpy.kernel_set_double(["sum", "diff", "mul"])(), 1, False, 0)
+    >>> pop = population(udp, 100)
+    >>> algo.set_verbosity(10)
+    >>> pop = algo.evolve(pop) # doctest: +SKIP
+    Gen:        Fevals:     Best loss: Ndf size:   Compl.:
+       0              0        6.07319         3        92
+      10           1000        2.15419         5        10
+      20           2000        1.92403         8        33
+      30           3000       0.373663        12        72
+      40           4000        0.36954        13        72
+      50           5000       0.235749        16        73
+      60           6000       0.235749        12        73
+      70           7000       0.235749        13        73
+      80           8000       0.217968        12        75
+      90           9000       0.217968        12        75
+     100          10000       0.217968        12        75
+     110          11000       0.217968        14        75
+     120          12000       0.217968        14        75
+     130          13000       0.217968        13        75
+     140          14000       0.162293        12        52
+    Exit condition -- generations = 140
+    >>> uda = algo.extract(dcgpy.momes4cgp)
+    >>> uda.get_log() # doctest: +SKIP
+    [(0, 0, 6.0731942123423, 3, 92), ...
+
+See also the docs of the relevant C++ method :cpp:func:`dcgp::momes4cgp::get_log()`.
 )";
 }
 

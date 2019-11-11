@@ -1,8 +1,7 @@
-#ifndef DCGP_MEMETIC4CGP_H
-#define DCGP_MEMETIC4CGP_H
+#ifndef DCGP_MES4CGP_H
+#define DCGP_MES4CGP_H
 
 #include <Eigen/Dense>
-#include <pagmo/bfe.hpp>
 #include <pagmo/detail/custom_comparisons.hpp>
 #include <pagmo/io.hpp>
 #include <pagmo/population.hpp>

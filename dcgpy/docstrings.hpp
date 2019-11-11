@@ -46,6 +46,8 @@ std::string gd4cgp_doc();
 std::string gd4cgp_get_log_doc();
 std::string mes4cgp_doc();
 std::string mes4cgp_get_log_doc();
+std::string momes4cgp_doc();
+std::string momes4cgp_get_log_doc();
 
 // The symbolic Regressio Gym problems
 // Classic

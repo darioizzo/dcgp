@@ -19,7 +19,7 @@ Things like addition, multiplication, trigonomoetric functions are all kernels. 
 the definition of their own kernels able to operate on the choosen type. 
 
 The most popular kernels are already coded and shipped with dcgpy. A python list containing multiple kernels can be easily instantiated 
-via the classes :class:`kernel_set_double`, :class:`kernel_set_gdual_double` and :class:`kernel_set_gdual_vdouble`.
+via the classes :class:`dcgpy.kernel_set_double`, :class:`dcgpy.kernel_set_gdual_double` and :class:`dcgpy.kernel_set_gdual_vdouble`.
 
 .. toctree::
   :maxdepth: 1
@@ -80,6 +80,7 @@ to build :class:`pygmo.algorithm` objects.
   es4cgp
   gd4cgp
   mes4cgp
+  momes4cgp
 
 
 We also make available, as a gym to test the capabilities of various proposed methodologies, a number of data sets

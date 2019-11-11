@@ -13,8 +13,9 @@
 #include <vector>
 
 #include <dcgp/algorithms/es4cgp.hpp>
-#include <dcgp/algorithms/mes4cgp.hpp>
 #include <dcgp/algorithms/gd4cgp.hpp>
+#include <dcgp/algorithms/mes4cgp.hpp>
+#include <dcgp/algorithms/momes4cgp.hpp>
 #include <dcgp/gym.hpp>
 #include <dcgp/kernel.hpp>
 #include <dcgp/problems/symbolic_regression.hpp>
@@ -42,7 +43,6 @@ inline void expose_data_from_the_gym(const std::string &name, const std::string 
 
 namespace dcgpy
 {
-
 void expose_symbolic_regression()
 {
     // We expose the UDPs
@@ -103,8 +103,8 @@ void expose_symbolic_regression()
         bp::init<unsigned, unsigned, double>((bp::arg("gen") = 1u, bp::arg("mut_n") = 1u, bp::arg("ftol") = 1e-4)));
     mes4cgp_.def(bp::init<unsigned, unsigned, double, unsigned>(
         (bp::arg("gen") = 1u, bp::arg("mut_n") = 1u, bp::arg("ftol") = 1e-4, bp::arg("seed"))));
-    mes4cgp_.def("get_seed", &mes4cgp::get_seed, generic_uda_get_seed_doc().c_str());
-    // es4cgp_ needs an ad hoc exposition for the log as one entry is a vector (constants)
+    mes4cgp_.def("get_seed", &dcgp::mes4cgp::get_seed, generic_uda_get_seed_doc().c_str());
+    // mes4cgp_ needs an ad hoc exposition for the log as one entry is a vector (constants)
     mes4cgp_.def(
         "get_log",
         +[](const dcgp::mes4cgp &a) -> bp::list {
@@ -116,6 +116,14 @@ void expose_symbolic_regression()
             return retval;
         },
         mes4cgp_get_log_doc().c_str());
+
+    // MOMES-4CGP (Multi-Objective Memetic Evolutionary Strategy for Cartesian Genetic Programming)
+    auto momes4cgp_ = pg::expose_algorithm<dcgp::momes4cgp>("momes4cgp", momes4cgp_doc().c_str());
+    momes4cgp_.def(bp::init<unsigned, unsigned>((bp::arg("gen") = 1u, bp::arg("max_mut") = 1u)));
+    momes4cgp_.def(
+        bp::init<unsigned, unsigned, unsigned>((bp::arg("gen") = 1u, bp::arg("max_mut") = 1u, bp::arg("seed"))));
+    momes4cgp_.def("get_seed", &dcgp::momes4cgp::get_seed, generic_uda_get_seed_doc().c_str());
+    pg::expose_algo_log(momes4cgp_, momes4cgp_get_log_doc().c_str());
 
     // Making data from the gym available in python
     expose_data_from_the_gym<&gym::generate_koza_quintic>("generate_koza_quintic", generate_koza_quintic_doc());

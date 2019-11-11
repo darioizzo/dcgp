@@ -83,6 +83,7 @@ In particular we provide UDPs (in pagmo's jargon user defined problems) that can
   es4cgp
   gd4cgp
   mes4cgp
+  momes4cgp
 
 
 We also make available, as a gym to test the capabilities of various proposed methodologies, a number of data sets
