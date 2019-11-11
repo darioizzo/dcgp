@@ -8,7 +8,7 @@ We use the classic problem Koza quintic polynomial, that is x - 2x^3 + x^5.
 
 Code:
 ^^^^^^^^
-.. literalinclude:: ../../../examples/symbolic_regression_1.cpp
+.. literalinclude:: ../../../../examples/symbolic_regression_1.cpp
    :language: c++
    :linenos:
 

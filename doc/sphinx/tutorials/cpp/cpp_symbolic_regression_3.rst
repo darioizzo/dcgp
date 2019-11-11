@@ -14,7 +14,7 @@ We use the problem P1 from the dcgp::gym, that is x^5 - pi*x^3 + x
 
 Code:
 ^^^^^^^^
-.. literalinclude:: ../../../examples/symbolic_regression_3.cpp
+.. literalinclude:: ../../../../examples/symbolic_regression_3.cpp
    :language: c++
    :linenos:
 
