@@ -1,137 +1,190 @@
 
-<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Solving differential equations with dCGP &#8212; dCGP documentation</title>
-    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
-        VERSION:     '1.3',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
-    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Solving differential equations with dCGP &mdash; dCGP 1.3 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Weighted dCGP for a symbolic regression task" href="weighted_symbolic_regression.html" />
-    <link rel="prev" title="Learning constants in a symbolic regression task (PART II)" href="learning_constants2.html" />
-<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto|Comfortaa|Space+Mono">
+    <link rel="prev" title="Learning constants in a symbolic regression task (PART II)" href="learning_constants2.html" /> 
+</head>
 
-  </head>
-  <body>
+<body class="wy-body-for-nav">
 
-  <div id="navbar" class="navbar navbar-inverse navbar-default navbar-fixed-top">
-    <div class="container">
-      <div class="navbar-header">
-        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="../index.html">
-          dcgp</a>
-        <span class="navbar-text navbar-version pull-left"><b>1.3</b></span>
-      </div>
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
 
-        <div class="collapse navbar-collapse nav-collapse">
-          <ul class="nav navbar-nav">
+          
+            <a href="../index.html" class="icon icon-home"> dCGP
+          
+
+          
             
-                <li><a href="../installation.html">Install</a></li>
-                <li><a href="../quickstart.html">Quick Start</a></li>
-                <li><a href="../docs/index.html">Docs</a></li>
-                <li><a href="../tutorials/index.html">Tutorials</a></li>
-                <li><a href="../theory.html">Theory</a></li>
+            <img src="../_static/logo2.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
             
             
-              <li class="dropdown globaltoc-container">
-  <a role="button"
-     id="dLabelGlobalToc"
-     data-toggle="dropdown"
-     data-target="#"
-     href="../index.html">Site <b class="caret"></b></a>
-  <ul class="dropdown-menu globaltoc"
-      role="menu"
-      aria-labelledby="dLabelGlobalToc"><ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation guide</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../installation.html#c">C++</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../installation.html#python">Python</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick start examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#c">C++</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#python">Python</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../docs/index.html">Documentation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../docs/cpp/index.html">C++ Documentation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../docs/python/index.html">Python Documentation</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">C++ examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/index.html#symbolic-regression">Symbolic Regression</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/index.html#other-applications">Other Applications</a></li>
-</ul>
-</li>
-<li class="toctree-l1 current"><a class="reference internal" href="../tutorials/index.html#python-examples">Python examples</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="learning_constants.html">Learning constants in a symbolic regression task</a></li>
-<li class="toctree-l2"><a class="reference internal" href="learning_constants2.html">Learning constants in a symbolic regression task (PART II)</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Solving differential equations with dCGP</a></li>
-<li class="toctree-l2"><a class="reference internal" href="weighted_symbolic_regression.html">Weighted dCGP for a symbolic regression task</a></li>
-<li class="toctree-l2"><a class="reference internal" href="finding_prime_integrals.html">Discovery of prime integrals with dCGP</a></li>
-<li class="toctree-l2"><a class="reference internal" href="An_intro_to_dCGPANNs.html">Representing an Artificial Neural Network as a Cartesian Genetic Program</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dCGPANNs_for_classification.html">Training a FFNN in dCGPANN vs.&nbsp;Keras (classification)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dCGPANNs_for_function_approximation.html">Training a FFNN in dCGPANN vs.&nbsp;Keras (regression)</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../theory.html">Cartesian Genetic Programming (CGP)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../theory.html#differentiable-cartesian-genetic-programming-dcgp">Differentiable Cartesian Genetic Programming (dCGP)</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../theory.html#reference">Reference</a></li>
-</ul>
-</li>
-</ul>
-</ul>
-</li>
+              <div class="version">
+                1.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
               
             
             
-            
-            
-            
-          </ul>
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick start examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docs/index.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">C++ examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../tutorials/index.html#python-examples">Python examples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="learning_constants.html">Learning constants in a symbolic regression task</a></li>
+<li class="toctree-l2"><a class="reference internal" href="learning_constants2.html">Learning constants in a symbolic regression task (PART II)</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Solving differential equations with dCGP</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#The-kernel-functions">The kernel functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Instantiate-a-(1-input,-1-output)-dCGP-and-we-inspect-a-randomly-created-program">Instantiate a (1 input, 1 output) dCGP and we inspect a randomly created program</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Define-the-ES-that-will-evolve-solutions">Define the ES that will evolve solutions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Consider-the-following-Ordinary-Differential-Equation-(ODE1):">Consider the following Ordinary Differential Equation (ODE1):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Consider-the-following-Ordinary-Differential-Equation-(ODE2):">Consider the following Ordinary Differential Equation (ODE2):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Consider-the-following-Ordinary-Differential-Equation-(ODE5):">Consider the following Ordinary Differential Equation (ODE5):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Consider-the-following-non-linear-Ordinary-Differential-Equation-(NLODE3):">Consider the following non linear Ordinary Differential Equation (NLODE3):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Consider-the-following-non-linear-Patial-Differential-Equation-(PDE2):">Consider the following non linear Patial Differential Equation (PDE2):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Consider-the-following-non-linear-Patial-Differential-Equation-(PDE6):">Consider the following non linear Patial Differential Equation (PDE6):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="weighted_symbolic_regression.html">Weighted dCGP for a symbolic regression task</a></li>
+<li class="toctree-l2"><a class="reference internal" href="finding_prime_integrals.html">Discovery of prime integrals with dCGP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="An_intro_to_dCGPANNs.html">Representing an Artificial Neural Network as a Cartesian Genetic Program</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dCGPANNs_for_classification.html">Training a FFNN in dCGPANN vs. Keras (classification)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dCGPANNs_for_function_approximation.html">Training a FFNN in dCGPANN vs. Keras (regression)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../theory.html">Cartesian Genetic Programming (CGP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../theory.html#differentiable-cartesian-genetic-programming-dcgp">Differentiable Cartesian Genetic Programming (dCGP)</a></li>
+</ul>
 
-          
             
-<form class="navbar-form navbar-right" action="../search.html" method="get">
- <div class="form-group">
-  <input type="text" name="q" class="form-control" placeholder="Search" />
- </div>
-  <input type="hidden" name="check_keywords" value="yes" />
-  <input type="hidden" name="area" value="default" />
-</form>
           
         </div>
-    </div>
-  </div>
+      </div>
+    </nav>
 
-<div class="container">
-  <div class="row">
-    <div class="col-md-12 content">
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
       
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">dCGP</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content style-external-links">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../tutorials/index.html">C++ examples</a> &raquo;</li>
+        
+      <li>Solving differential equations with dCGP</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/notebooks/solving_odes.ipynb.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
   
 <style>
 /* CSS for nbsphinx extension */
@@ -198,7 +251,7 @@ div.nboutput div.prompt pre {
 /* all prompts */
 div.nbinput div.prompt,
 div.nboutput div.prompt {
-    min-width: 7ex;
+    min-width: 5ex;
     padding-top: 0.4em;
     padding-right: 0.4em;
     text-align: right;
@@ -331,15 +384,37 @@ div.rendered_html tbody tr:nth-child(odd) {
 div.rendered_html tbody tr:hover {
   background: rgba(66, 165, 245, 0.2);
 }
+
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
 </style>
 <div class="section" id="Solving-differential-equations-with-dCGP">
 <h1>Solving differential equations with dCGP<a class="headerlink" href="#Solving-differential-equations-with-dCGP" title="Permalink to this headline">¶</a></h1>
 <p>Lets first import dcgpy and pyaudi and set up things as to use dCGP on gduals defined over vectorized floats</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[1]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">dcgpy</span> <span class="kn">import</span> <span class="n">expression_gdual_vdouble</span> <span class="k">as</span> <span class="n">expression</span>
 <span class="kn">from</span> <span class="nn">dcgpy</span> <span class="kn">import</span> <span class="n">kernel_set_gdual_vdouble</span> <span class="k">as</span> <span class="n">kernel_set</span>
 <span class="kn">from</span> <span class="nn">pyaudi</span> <span class="kn">import</span> <span class="n">gdual_vdouble</span> <span class="k">as</span> <span class="n">gdual</span>
@@ -355,10 +430,10 @@ div.rendered_html tbody tr:hover {
 <div class="section" id="The-kernel-functions">
 <h2>The kernel functions<a class="headerlink" href="#The-kernel-functions" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[125]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[125]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">kernels</span> <span class="o">=</span> <span class="n">kernel_set</span><span class="p">([</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span> <span class="s2">&quot;mul&quot;</span><span class="p">,</span> <span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="s2">&quot;diff&quot;</span><span class="p">,</span> <span class="s2">&quot;log&quot;</span><span class="p">,</span> <span class="s2">&quot;sin&quot;</span><span class="p">,</span> <span class="s2">&quot;cos&quot;</span><span class="p">,</span> <span class="s2">&quot;exp&quot;</span><span class="p">])()</span> <span class="c1"># note the call operator (returns the list of kernels)</span>
 </pre></div>
 </div>
@@ -367,19 +442,19 @@ div.rendered_html tbody tr:hover {
 <div class="section" id="Instantiate-a-(1-input,-1-output)-dCGP-and-we-inspect-a-randomly-created-program">
 <h2>Instantiate a (1 input, 1 output) dCGP and we inspect a randomly created program<a class="headerlink" href="#Instantiate-a-(1-input,-1-output)-dCGP-and-we-inspect-a-randomly-created-program" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[3]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">dCGP_example</span> <span class="o">=</span> <span class="n">expression</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">rows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">levels_back</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">arity</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">kernels</span><span class="o">=</span><span class="n">kernels</span><span class="p">,</span> <span class="n">seed</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span><span class="mi">6</span><span class="p">]</span>
 <span class="n">dCGP_example</span><span class="o">.</span><span class="n">visualize</span><span class="p">()</span> <span class="c1">#requires pygraphwiz module installed</span>
 <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Represented expression: &quot;</span><span class="p">,</span> <span class="n">dCGP_example</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">])[</span><span class="mi">0</span><span class="p">])</span>
@@ -407,10 +482,10 @@ Simplified expression:  [2*x]
 <div class="section" id="Define-the-ES-that-will-evolve-solutions">
 <h2>Define the ES that will evolve solutions<a class="headerlink" href="#Define-the-ES-that-will-evolve-solutions" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[115]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[115]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="c1"># We run an evolutionary strategy ES(1 + offspring)</span>
 <span class="k">def</span> <span class="nf">run_experiment</span><span class="p">(</span><span class="n">max_gen</span><span class="p">,</span> <span class="n">offsprings</span><span class="p">,</span> <span class="n">quadratic_error</span><span class="p">,</span> <span class="n">initial_conditions_error</span><span class="p">,</span> <span class="n">dCGP</span><span class="p">,</span> <span class="n">screen_output</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
     <span class="n">chromosome</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">offsprings</span>
@@ -441,14 +516,14 @@ Simplified expression:  [2*x]
 </div>
 <div class="section" id="Consider-the-following-Ordinary-Differential-Equation-(ODE1):">
 <h2>Consider the following Ordinary Differential Equation (ODE1):<a class="headerlink" href="#Consider-the-following-Ordinary-Differential-Equation-(ODE1):" title="Permalink to this headline">¶</a></h2>
-<p><span class="math">\(\frac{dy}{dx} = \frac{2x - y}{x}\)</span>, with <span class="math">\(y(0.1) = 20.1\)</span> and <span class="math">\(x \in [0.1,1]\)</span></p>
-<p>we demand its punctual validity over a grid of <span class="math">\(N\)</span> equally spaced points.</p>
-<p>The solution to the ODE is <span class="math">\(y = x + \frac 2x\)</span></p>
+<p><span class="math notranslate nohighlight">\(\frac{dy}{dx} = \frac{2x - y}{x}\)</span>, with <span class="math notranslate nohighlight">\(y(0.1) = 20.1\)</span> and <span class="math notranslate nohighlight">\(x \in [0.1,1]\)</span></p>
+<p>we demand its punctual validity over a grid of <span class="math notranslate nohighlight">\(N\)</span> equally spaced points.</p>
+<p>The solution to the ODE is <span class="math notranslate nohighlight">\(y = x + \frac 2x\)</span></p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[126]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[126]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="c1"># We define the quadratic error of the dCGP in the grid points</span>
 <span class="k">def</span> <span class="nf">qe_ODE1</span><span class="p">(</span><span class="n">dCGP</span><span class="p">,</span> <span class="n">grid</span><span class="p">):</span>
     <span class="n">retval</span> <span class="o">=</span> <span class="mi">0</span>
@@ -463,10 +538,10 @@ Simplified expression:  [2*x]
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[127]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[127]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="c1"># We define a penalty term associated to the initial conditions violation</span>
 <span class="k">def</span> <span class="nf">ic_ODE1</span><span class="p">(</span><span class="n">dCGP</span><span class="p">):</span>
     <span class="n">x0</span> <span class="o">=</span> <span class="mi">1</span>
@@ -477,10 +552,10 @@ Simplified expression:  [2*x]
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[128]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[128]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="c1"># We construct the grid of points. Since the ODE only contains first order derivatives we use truncation order 1.</span>
 <span class="c1"># Since we are using vectorized gdual we can instantiate only one gdual</span>
 
@@ -490,10 +565,10 @@ Simplified expression:  [2*x]
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[135]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[135]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="c1"># We run nexp experiments to accumulate statistic for the ERT</span>
 <span class="n">nexp</span> <span class="o">=</span> <span class="mi">100</span>
 <span class="n">offsprings</span> <span class="o">=</span> <span class="mi">10</span>
@@ -565,10 +640,10 @@ restart:         gen:    expression:
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[136]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[136]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">ERT</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="o">&lt;</span><span class="p">(</span><span class="n">stop</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
 <span class="k">print</span><span class="p">(</span><span class="s2">&quot;ERT Expected run time - avg. number of function evaluations needed: &quot;</span><span class="p">,</span> <span class="n">ERT</span> <span class="o">*</span> <span class="n">offsprings</span><span class="p">)</span>
 <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Avg. number of function evaluations from Tsoulos paper: &quot;</span><span class="p">,</span> <span class="mi">653</span> <span class="o">*</span> <span class="mi">200</span><span class="p">)</span>
@@ -587,14 +662,14 @@ Avg. number of function evaluations from Tsoulos paper:  130600
 </div>
 <div class="section" id="Consider-the-following-Ordinary-Differential-Equation-(ODE2):">
 <h2>Consider the following Ordinary Differential Equation (ODE2):<a class="headerlink" href="#Consider-the-following-Ordinary-Differential-Equation-(ODE2):" title="Permalink to this headline">¶</a></h2>
-<p><span class="math">\(\frac{dy}{dx} = \frac{1 - ycos(x)}{sin(x)}\)</span>, with <span class="math">\(y(0.1) = \frac{2.1}{sin(0,1)}\)</span> and <span class="math">\(x \in [0.1,1]\)</span></p>
-<p>we demand its punctual validity over a grid of <span class="math">\(N\)</span> equally spaced points.</p>
-<p>NOTE: The solution to the ODE is <span class="math">\(y = \frac{x+2}{sin(x)}\)</span></p>
+<p><span class="math notranslate nohighlight">\(\frac{dy}{dx} = \frac{1 - ycos(x)}{sin(x)}\)</span>, with <span class="math notranslate nohighlight">\(y(0.1) = \frac{2.1}{sin(0,1)}\)</span> and <span class="math notranslate nohighlight">\(x \in [0.1,1]\)</span></p>
+<p>we demand its punctual validity over a grid of <span class="math notranslate nohighlight">\(N\)</span> equally spaced points.</p>
+<p>NOTE: The solution to the ODE is <span class="math notranslate nohighlight">\(y = \frac{x+2}{sin(x)}\)</span></p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[137]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[137]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="c1"># We construct the grid of points. Since the ODE only contains first order derivatives we use truncation order 1.</span>
 <span class="c1"># Since we are using vectorized gdual we can instantiate only one gdual</span>
 
@@ -604,10 +679,10 @@ Avg. number of function evaluations from Tsoulos paper:  130600
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[138]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[138]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="c1"># We define the quadratic error of the dCGP in the grid points</span>
 <span class="k">def</span> <span class="nf">qe_ODE2</span><span class="p">(</span><span class="n">dCGP</span><span class="p">,</span> <span class="n">grid</span><span class="p">):</span>
     <span class="n">retval</span> <span class="o">=</span> <span class="mi">0</span>
@@ -622,10 +697,10 @@ Avg. number of function evaluations from Tsoulos paper:  130600
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[139]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[139]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="c1"># We define a penalty term associated to the initial conditions violation</span>
 <span class="n">dummy</span> <span class="o">=</span> <span class="p">(</span><span class="mf">2.1</span><span class="p">)</span><span class="o">/</span><span class="n">sin</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">ic_ODE2</span><span class="p">(</span><span class="n">dCGP</span><span class="p">):</span>
@@ -637,10 +712,10 @@ Avg. number of function evaluations from Tsoulos paper:  130600
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[140]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[140]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="c1"># We run nexp experiments to accumulate statistic for the ERT</span>
 <span class="n">nexp</span> <span class="o">=</span> <span class="mi">100</span>
 <span class="n">stop</span> <span class="o">=</span> <span class="mi">500</span>
@@ -681,10 +756,10 @@ restart:         gen:    expression:
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[141]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[141]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">ERT</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="o">&lt;</span><span class="p">(</span><span class="n">stop</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
 <span class="k">print</span><span class="p">(</span><span class="s2">&quot;ERT Expected run time - avg. number of function evaluations needed: &quot;</span><span class="p">,</span> <span class="n">ERT</span> <span class="o">*</span> <span class="n">offsprings</span><span class="p">)</span>
 <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Avg. number of function evaluations from Tsoulos paper: &quot;</span><span class="p">,</span> <span class="mi">742</span> <span class="o">*</span> <span class="mi">200</span><span class="p">)</span>
@@ -703,14 +778,14 @@ Avg. number of function evaluations from Tsoulos paper:  148400
 </div>
 <div class="section" id="Consider-the-following-Ordinary-Differential-Equation-(ODE5):">
 <h2>Consider the following Ordinary Differential Equation (ODE5):<a class="headerlink" href="#Consider-the-following-Ordinary-Differential-Equation-(ODE5):" title="Permalink to this headline">¶</a></h2>
-<p><span class="math">\(\frac{d^2y}{dx^2} = 6\frac{dy}{dx} - 9y\)</span>, with <span class="math">\(y(0) = 0\)</span>, <span class="math">\(\frac{dy}{dx}(0)=2\)</span> and <span class="math">\(x \in [0,1]\)</span></p>
-<p>we demand its punctual validity over a grid of <span class="math">\(N\)</span> equally spaced points.</p>
-<p>NOTE: The solution to the ODE is <span class="math">\(y = 2x \exp(3x)\)</span></p>
+<p><span class="math notranslate nohighlight">\(\frac{d^2y}{dx^2} = 6\frac{dy}{dx} - 9y\)</span>, with <span class="math notranslate nohighlight">\(y(0) = 0\)</span>, <span class="math notranslate nohighlight">\(\frac{dy}{dx}(0)=2\)</span> and <span class="math notranslate nohighlight">\(x \in [0,1]\)</span></p>
+<p>we demand its punctual validity over a grid of <span class="math notranslate nohighlight">\(N\)</span> equally spaced points.</p>
+<p>NOTE: The solution to the ODE is <span class="math notranslate nohighlight">\(y = 2x \exp(3x)\)</span></p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[142]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[142]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="c1"># We construct the grid of points. Since the ODE only contains second order derivatives we use truncation order 2.</span>
 <span class="c1"># Since we are using vectorized gdual we can instantiate only one gdual</span>
 
@@ -720,10 +795,10 @@ Avg. number of function evaluations from Tsoulos paper:  148400
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[143]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[143]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="c1"># We define the quadratic error of the dCGP in the grid points</span>
 <span class="k">def</span> <span class="nf">qe_ODE5</span><span class="p">(</span><span class="n">dCGP</span><span class="p">,</span> <span class="n">grid</span><span class="p">):</span>
     <span class="n">retval</span> <span class="o">=</span> <span class="mi">0</span>
@@ -739,10 +814,10 @@ Avg. number of function evaluations from Tsoulos paper:  148400
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[144]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[144]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="c1"># We define a penalty term associated to the initial conditions violation</span>
 <span class="k">def</span> <span class="nf">ic_ODE5</span><span class="p">(</span><span class="n">dCGP</span><span class="p">):</span>
     <span class="n">x0</span> <span class="o">=</span> <span class="mf">1e-16</span> <span class="c1"># avoids what seems a numerical problem with vectorized dual?</span>
@@ -756,10 +831,10 @@ Avg. number of function evaluations from Tsoulos paper:  148400
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[145]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[145]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="c1"># We run nexp experiments to accumulate statistic for the ERT</span>
 <span class="n">nexp</span> <span class="o">=</span> <span class="mi">100</span>
 <span class="n">stop</span> <span class="o">=</span> <span class="mi">500</span>
@@ -807,10 +882,10 @@ restart:         gen:    expression:
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[146]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[146]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">ERT</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="o">&lt;</span><span class="p">(</span><span class="n">stop</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
 <span class="k">print</span><span class="p">(</span><span class="s2">&quot;ERT Expected run time - avg. number of function evaluations needed: &quot;</span><span class="p">,</span> <span class="n">ERT</span> <span class="o">*</span> <span class="n">offsprings</span><span class="p">)</span>
 <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Avg. number of function evaluations from Tsoulos paper: &quot;</span><span class="p">,</span> <span class="mi">441</span> <span class="o">*</span> <span class="mi">200</span><span class="p">)</span>
@@ -829,14 +904,14 @@ Avg. number of function evaluations from Tsoulos paper:  88200
 </div>
 <div class="section" id="Consider-the-following-non-linear-Ordinary-Differential-Equation-(NLODE3):">
 <h2>Consider the following non linear Ordinary Differential Equation (NLODE3):<a class="headerlink" href="#Consider-the-following-non-linear-Ordinary-Differential-Equation-(NLODE3):" title="Permalink to this headline">¶</a></h2>
-<p><span class="math">\(\frac{d^2y}{dx^2}\frac{dy}{dx} = -\frac4{x^3}\)</span>, with <span class="math">\(y(1) = 0\)</span>, and <span class="math">\(x \in [1,2]\)</span></p>
-<p>we demand its punctual validity over a grid of <span class="math">\(N\)</span> equally spaced points.</p>
-<p>NOTE: The solution to the ODE is <span class="math">\(y = log(x^2)\)</span></p>
+<p><span class="math notranslate nohighlight">\(\frac{d^2y}{dx^2}\frac{dy}{dx} = -\frac4{x^3}\)</span>, with <span class="math notranslate nohighlight">\(y(1) = 0\)</span>, and <span class="math notranslate nohighlight">\(x \in [1,2]\)</span></p>
+<p>we demand its punctual validity over a grid of <span class="math notranslate nohighlight">\(N\)</span> equally spaced points.</p>
+<p>NOTE: The solution to the ODE is <span class="math notranslate nohighlight">\(y = log(x^2)\)</span></p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[147]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[147]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="c1"># We construct the grid of points. Since the ODE only contains second order derivatives we use truncation order 2.</span>
 <span class="c1"># Since we are using vectorized gdual we can instantiate only one gdual</span>
 
@@ -846,10 +921,10 @@ Avg. number of function evaluations from Tsoulos paper:  88200
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[148]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[148]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="c1"># We define the quadratic error of the dCGP in the grid points</span>
 <span class="k">def</span> <span class="nf">qe_NLODE3</span><span class="p">(</span><span class="n">dCGP</span><span class="p">,</span> <span class="n">grid</span><span class="p">):</span>
     <span class="n">retval</span> <span class="o">=</span> <span class="mi">0</span>
@@ -865,10 +940,10 @@ Avg. number of function evaluations from Tsoulos paper:  88200
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[149]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[149]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="c1"># We define a penalty term associated to the initial conditions violation</span>
 <span class="k">def</span> <span class="nf">ic_NLODE3</span><span class="p">(</span><span class="n">dCGP</span><span class="p">):</span>
     <span class="n">x0</span> <span class="o">=</span> <span class="mf">1.</span>
@@ -881,10 +956,10 @@ Avg. number of function evaluations from Tsoulos paper:  88200
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[150]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[150]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="c1"># We run nexp experiments to accumulate statistic for the ERT</span>
 <span class="n">nexp</span> <span class="o">=</span> <span class="mi">100</span>
 <span class="n">stop</span> <span class="o">=</span> <span class="mi">500</span>
@@ -1002,10 +1077,10 @@ restart:         gen:    expression:
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[151]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[151]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">ERT</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="o">&lt;</span><span class="p">(</span><span class="n">stop</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
 <span class="k">print</span><span class="p">(</span><span class="s2">&quot;ERT Expected run time - avg. number of function evaluations needed: &quot;</span><span class="p">,</span> <span class="n">ERT</span> <span class="o">*</span> <span class="n">offsprings</span><span class="p">)</span>
 <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Avg. number of function evaluations from Tsoulos paper: &quot;</span><span class="p">,</span> <span class="mi">191</span> <span class="o">*</span> <span class="mi">200</span><span class="p">)</span>
@@ -1024,14 +1099,14 @@ Avg. number of function evaluations from Tsoulos paper:  38200
 </div>
 <div class="section" id="Consider-the-following-non-linear-Patial-Differential-Equation-(PDE2):">
 <h2>Consider the following non linear Patial Differential Equation (PDE2):<a class="headerlink" href="#Consider-the-following-non-linear-Patial-Differential-Equation-(PDE2):" title="Permalink to this headline">¶</a></h2>
-<p><span class="math">\(\nabla^2 \psi(x,y) = -\psi(x,y)\)</span> with <span class="math">\(x\in[0,1]\)</span>, <span class="math">\(y\in[0,1]\)</span> and boundary conditions: <span class="math">\(\psi(0,y) = 0\)</span>, <span class="math">\(\psi(1,y) = \sin(1)\cos(y)\)</span></p>
-<p>we demand its punctual validity over a squared grid of <span class="math">\(N\)</span> equally spaced points.</p>
-<p>NOTE: The solution to the PDE is <span class="math">\(\psi(x,y) = \sin(x)\cos(y)\)</span></p>
+<p><span class="math notranslate nohighlight">\(\nabla^2 \psi(x,y) = -\psi(x,y)\)</span> with <span class="math notranslate nohighlight">\(x\in[0,1]\)</span>, <span class="math notranslate nohighlight">\(y\in[0,1]\)</span> and boundary conditions: <span class="math notranslate nohighlight">\(\psi(0,y) = 0\)</span>, <span class="math notranslate nohighlight">\(\psi(1,y) = \sin(1)\cos(y)\)</span></p>
+<p>we demand its punctual validity over a squared grid of <span class="math notranslate nohighlight">\(N\)</span> equally spaced points.</p>
+<p>NOTE: The solution to the PDE is <span class="math notranslate nohighlight">\(\psi(x,y) = \sin(x)\cos(y)\)</span></p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[152]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[152]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="c1"># We construct the grid of points. Since the PDE only contains second order derivatives we use truncation order 2.</span>
 <span class="c1"># Since we are using vectorized gdual we can instantiate only one gdual</span>
 <span class="n">N</span><span class="o">=</span><span class="mi">10</span>
@@ -1043,10 +1118,10 @@ Avg. number of function evaluations from Tsoulos paper:  38200
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[153]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[153]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="c1"># We define the quadratic error of the dCGP in the grid points</span>
 <span class="k">def</span> <span class="nf">qe_PDE1</span><span class="p">(</span><span class="n">dCGP</span><span class="p">,</span> <span class="n">grid</span><span class="p">):</span>
     <span class="n">retval</span> <span class="o">=</span> <span class="mi">0</span>
@@ -1063,10 +1138,10 @@ Avg. number of function evaluations from Tsoulos paper:  38200
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[154]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[154]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="c1"># We define a penalty term associated to the initial conditions violation</span>
 <span class="n">sin1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">ic_PDE1</span><span class="p">(</span><span class="n">dCGP</span><span class="p">):</span>
@@ -1085,10 +1160,10 @@ Avg. number of function evaluations from Tsoulos paper:  38200
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[155]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[155]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="c1"># We run nexp experiments to accumulate statistic for the ERT</span>
 <span class="n">nexp</span> <span class="o">=</span> <span class="mi">100</span>
 <span class="n">stop</span> <span class="o">=</span> <span class="mi">500</span>
@@ -1135,10 +1210,10 @@ restart:         gen:    expression:
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[156]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[156]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">ERT</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="o">&lt;</span><span class="p">(</span><span class="n">stop</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
 <span class="k">print</span><span class="p">(</span><span class="s2">&quot;ERT Expected Run Time - avg. number of function evaluations needed: &quot;</span><span class="p">,</span> <span class="n">ERT</span> <span class="o">*</span> <span class="n">offsprings</span><span class="p">)</span>
 <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Avg. number of function evaluations from Tsoulos paper: &quot;</span><span class="p">,</span> <span class="mi">203</span> <span class="o">*</span> <span class="mi">200</span><span class="p">)</span>
@@ -1157,14 +1232,14 @@ Avg. number of function evaluations from Tsoulos paper:  40600
 </div>
 <div class="section" id="Consider-the-following-non-linear-Patial-Differential-Equation-(PDE6):">
 <h2>Consider the following non linear Patial Differential Equation (PDE6):<a class="headerlink" href="#Consider-the-following-non-linear-Patial-Differential-Equation-(PDE6):" title="Permalink to this headline">¶</a></h2>
-<p><span class="math">\(\nabla^2 \psi(x,y) + \exp(\psi(x,y)) = 1 + x^2 + y^2 + \frac 4{(1 + x^2 + y^2)^2}\)</span> with <span class="math">\(x\in[0.1,3]\)</span>, <span class="math">\(y\in[0.1,3]\)</span> and boundary conditions: <span class="math">\(\psi(0,y) = \log(1+y^2)\)</span>, <span class="math">\(\psi(1,y) = \log(2+y^2)\)</span></p>
-<p>we demand its punctual validity over a squared grid of <span class="math">\(N\)</span> equally spaced points.</p>
-<p>NOTE: The solution to the PDE is <span class="math">\(\psi(x,y) = \log(1 + x^2 + y^2)\)</span></p>
+<p><span class="math notranslate nohighlight">\(\nabla^2 \psi(x,y) + \exp(\psi(x,y)) = 1 + x^2 + y^2 + \frac 4{(1 + x^2 + y^2)^2}\)</span> with <span class="math notranslate nohighlight">\(x\in[0.1,3]\)</span>, <span class="math notranslate nohighlight">\(y\in[0.1,3]\)</span> and boundary conditions: <span class="math notranslate nohighlight">\(\psi(0,y) = \log(1+y^2)\)</span>, <span class="math notranslate nohighlight">\(\psi(1,y) = \log(2+y^2)\)</span></p>
+<p>we demand its punctual validity over a squared grid of <span class="math notranslate nohighlight">\(N\)</span> equally spaced points.</p>
+<p>NOTE: The solution to the PDE is <span class="math notranslate nohighlight">\(\psi(x,y) = \log(1 + x^2 + y^2)\)</span></p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[171]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[171]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="c1"># We construct the grid of points. Since the PDE only contains second order derivatives we use truncation order 2.</span>
 <span class="c1"># Since we are using vectorized gdual we can instantiate only one gdual</span>
 <span class="n">N</span><span class="o">=</span><span class="mi">10</span>
@@ -1176,10 +1251,10 @@ Avg. number of function evaluations from Tsoulos paper:  40600
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[172]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[172]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="c1"># We define the quadratic error of the dCGP in the grid points</span>
 <span class="k">def</span> <span class="nf">qe_PDE6</span><span class="p">(</span><span class="n">dCGP</span><span class="p">,</span> <span class="n">grid</span><span class="p">):</span>
     <span class="n">retval</span> <span class="o">=</span> <span class="mi">0</span>
@@ -1196,10 +1271,10 @@ Avg. number of function evaluations from Tsoulos paper:  40600
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[190]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[190]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="c1">### We define a penalty term associated to the initial conditions violation</span>
 <span class="k">def</span> <span class="nf">ic_PDE6</span><span class="p">(</span><span class="n">dCGP</span><span class="p">):</span>
     <span class="n">x0</span> <span class="o">=</span> <span class="n">gdual</span><span class="p">([</span><span class="mf">0.1</span><span class="p">]</span><span class="o">*</span><span class="n">N</span><span class="p">)</span>
@@ -1227,10 +1302,10 @@ Avg. number of function evaluations from Tsoulos paper:  40600
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[191]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[191]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="c1"># We run nexp experiments to accumulate statistic for the ERT</span>
 <span class="n">kernels</span> <span class="o">=</span> <span class="n">kernel_set</span><span class="p">([</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span> <span class="s2">&quot;mul&quot;</span><span class="p">,</span> <span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="s2">&quot;diff&quot;</span><span class="p">,</span> <span class="s2">&quot;log&quot;</span><span class="p">,</span><span class="s2">&quot;exp&quot;</span><span class="p">,</span><span class="s2">&quot;cos&quot;</span><span class="p">,</span><span class="s2">&quot;sin&quot;</span><span class="p">])()</span> <span class="c1"># note the call operator (returns the list of kernels)</span>
 <span class="n">nexp</span> <span class="o">=</span> <span class="mi">100</span>
@@ -1265,10 +1340,10 @@ restart:         gen:    expression:
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[192]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[192]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">ERT</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="o">&lt;</span><span class="p">(</span><span class="n">stop</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
 <span class="k">print</span><span class="p">(</span><span class="s2">&quot;ERT Expected Run Time - avg. number of function evaluations needed: &quot;</span><span class="p">,</span> <span class="n">ERT</span> <span class="o">*</span> <span class="n">offsprings</span><span class="p">)</span>
 <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Avg. number of function evaluations from Tsoulos paper: &quot;</span><span class="p">,</span> <span class="mi">797</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span> <span class="c1"># here we assume tsoulos used the maximum population size since PDE6 is the most difficult problem</span>
@@ -1288,21 +1363,52 @@ Avg. number of function evaluations from Tsoulos paper:  797000
 </div>
 
 
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="weighted_symbolic_regression.html" class="btn btn-neutral float-right" title="Weighted dCGP for a symbolic regression task" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="learning_constants2.html" class="btn btn-neutral float-left" title="Learning constants in a symbolic regression task (PART II)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
     </div>
-      
-  </div>
-</div>
-<footer class="footer">
-  <div class="container">
-    <p class="pull-right">
-      <a href="#">Back to top</a>
-      
-    </p>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
     <p>
-        &copy; Copyright 2018, Dario Izzo, Francesco Biscani, Alessio Mereta.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7.<br/>
+        &copy; Copyright 2018, Dario Izzo, Francesco Biscani, Alessio Mereta
+
     </p>
   </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
 </footer>
-  </body>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
 </html>

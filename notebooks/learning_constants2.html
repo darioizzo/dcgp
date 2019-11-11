@@ -1,137 +1,187 @@
 
-<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Learning constants in a symbolic regression task (PART II) &#8212; dCGP documentation</title>
-    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
-        VERSION:     '1.3',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
-    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Learning constants in a symbolic regression task (PART II) &mdash; dCGP 1.3 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Solving differential equations with dCGP" href="solving_odes.html" />
-    <link rel="prev" title="Learning constants in a symbolic regression task" href="learning_constants.html" />
-<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto|Comfortaa|Space+Mono">
+    <link rel="prev" title="Learning constants in a symbolic regression task" href="learning_constants.html" /> 
+</head>
 
-  </head>
-  <body>
+<body class="wy-body-for-nav">
 
-  <div id="navbar" class="navbar navbar-inverse navbar-default navbar-fixed-top">
-    <div class="container">
-      <div class="navbar-header">
-        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="../index.html">
-          dcgp</a>
-        <span class="navbar-text navbar-version pull-left"><b>1.3</b></span>
-      </div>
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
 
-        <div class="collapse navbar-collapse nav-collapse">
-          <ul class="nav navbar-nav">
+          
+            <a href="../index.html" class="icon icon-home"> dCGP
+          
+
+          
             
-                <li><a href="../installation.html">Install</a></li>
-                <li><a href="../quickstart.html">Quick Start</a></li>
-                <li><a href="../docs/index.html">Docs</a></li>
-                <li><a href="../tutorials/index.html">Tutorials</a></li>
-                <li><a href="../theory.html">Theory</a></li>
+            <img src="../_static/logo2.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
             
             
-              <li class="dropdown globaltoc-container">
-  <a role="button"
-     id="dLabelGlobalToc"
-     data-toggle="dropdown"
-     data-target="#"
-     href="../index.html">Site <b class="caret"></b></a>
-  <ul class="dropdown-menu globaltoc"
-      role="menu"
-      aria-labelledby="dLabelGlobalToc"><ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation guide</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../installation.html#c">C++</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../installation.html#python">Python</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick start examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#c">C++</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#python">Python</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../docs/index.html">Documentation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../docs/cpp/index.html">C++ Documentation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../docs/python/index.html">Python Documentation</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">C++ examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/index.html#symbolic-regression">Symbolic Regression</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/index.html#other-applications">Other Applications</a></li>
-</ul>
-</li>
+              <div class="version">
+                1.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick start examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docs/index.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">C++ examples</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../tutorials/index.html#python-examples">Python examples</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="learning_constants.html">Learning constants in a symbolic regression task</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Learning constants in a symbolic regression task (PART II)</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Learning constants in a symbolic regression task (PART II)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#The-ES-(1+\lambda)-algorithm">The ES-(1+<span class="math notranslate nohighlight">\(\lambda\)</span>) algorithm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#The-test-problems">The test problems</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#The-error-functions">The error functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Problem-P5:-ex^5---\pi-x^3-+-x">Problem P5: <span class="math notranslate nohighlight">\(ex^5 - \pi x^3 + x\)</span></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Problem-P6:-\frac{e-x^2-1}{\pi-(x-+-2)}">Problem P6: <span class="math notranslate nohighlight">\(\frac{e x^2-1}{\pi (x + 2)}\)</span></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Problem-P7:-\sin(e-x)-+-\cos(\pi-x)">Problem P7: <span class="math notranslate nohighlight">\(\sin(e x) + \cos(\pi x)\)</span></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="solving_odes.html">Solving differential equations with dCGP</a></li>
 <li class="toctree-l2"><a class="reference internal" href="weighted_symbolic_regression.html">Weighted dCGP for a symbolic regression task</a></li>
 <li class="toctree-l2"><a class="reference internal" href="finding_prime_integrals.html">Discovery of prime integrals with dCGP</a></li>
 <li class="toctree-l2"><a class="reference internal" href="An_intro_to_dCGPANNs.html">Representing an Artificial Neural Network as a Cartesian Genetic Program</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dCGPANNs_for_classification.html">Training a FFNN in dCGPANN vs.&nbsp;Keras (classification)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dCGPANNs_for_function_approximation.html">Training a FFNN in dCGPANN vs.&nbsp;Keras (regression)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dCGPANNs_for_classification.html">Training a FFNN in dCGPANN vs. Keras (classification)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dCGPANNs_for_function_approximation.html">Training a FFNN in dCGPANN vs. Keras (regression)</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../theory.html">Cartesian Genetic Programming (CGP)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../theory.html#differentiable-cartesian-genetic-programming-dcgp">Differentiable Cartesian Genetic Programming (dCGP)</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../theory.html#reference">Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../theory.html#differentiable-cartesian-genetic-programming-dcgp">Differentiable Cartesian Genetic Programming (dCGP)</a></li>
 </ul>
-</li>
-</ul>
-</ul>
-</li>
-              
-            
-            
-            
-            
-            
-          </ul>
 
-          
             
-<form class="navbar-form navbar-right" action="../search.html" method="get">
- <div class="form-group">
-  <input type="text" name="q" class="form-control" placeholder="Search" />
- </div>
-  <input type="hidden" name="check_keywords" value="yes" />
-  <input type="hidden" name="area" value="default" />
-</form>
           
         </div>
-    </div>
-  </div>
+      </div>
+    </nav>
 
-<div class="container">
-  <div class="row">
-    <div class="col-md-12 content">
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
       
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">dCGP</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content style-external-links">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../tutorials/index.html">C++ examples</a> &raquo;</li>
+        
+      <li>Learning constants in a symbolic regression task (PART II)</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/notebooks/learning_constants2.ipynb.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
   
 <style>
 /* CSS for nbsphinx extension */
@@ -198,7 +248,7 @@ div.nboutput div.prompt pre {
 /* all prompts */
 div.nbinput div.prompt,
 div.nboutput div.prompt {
-    min-width: 7ex;
+    min-width: 5ex;
     padding-top: 0.4em;
     padding-right: 0.4em;
     text-align: right;
@@ -331,6 +381,28 @@ div.rendered_html tbody tr:nth-child(odd) {
 div.rendered_html tbody tr:hover {
   background: rgba(66, 165, 245, 0.2);
 }
+
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
 </style>
 <div class="section" id="Learning-constants-in-a-symbolic-regression-task-(PART-II)">
 <h1>Learning constants in a symbolic regression task (PART II)<a class="headerlink" href="#Learning-constants-in-a-symbolic-regression-task-(PART-II)" title="Permalink to this headline">¶</a></h1>
@@ -338,10 +410,10 @@ div.rendered_html tbody tr:hover {
 <p>Using dCGP, we are here able to succesfully learn constants as well as expressions during evolution thanks to the hybridization of the evolutionary strategy with what may, essentially, be seen as a second order back-propagation algorithm</p>
 <p>Lets first import dcgpy and pyaudi and set up things as to compute our CGP using the type “gdual” and thus get for free all derivatives</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[1]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">dcgpy</span> <span class="kn">import</span> <span class="n">expression_gdual_vdouble</span> <span class="k">as</span> <span class="n">expression</span>
 <span class="kn">from</span> <span class="nn">dcgpy</span> <span class="kn">import</span> <span class="n">kernel_set_gdual_vdouble</span> <span class="k">as</span> <span class="n">kernel_set</span>
 <span class="kn">from</span> <span class="nn">pyaudi</span> <span class="kn">import</span> <span class="n">gdual_vdouble</span> <span class="k">as</span> <span class="n">gdual</span>
@@ -353,13 +425,13 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
-<div class="section" id="The-ES-(1+)-algorithm">
-<h2>The ES-(1+<span class="math">\(\lambda\)</span>) algorithm<a class="headerlink" href="#The-ES-(1+)-algorithm" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="The-ES-(1+\lambda)-algorithm">
+<h2>The ES-(1+<span class="math notranslate nohighlight">\(\lambda\)</span>) algorithm<a class="headerlink" href="#The-ES-(1+\lambda)-algorithm" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[2]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="k">def</span> <span class="nf">run_experiment</span><span class="p">(</span><span class="n">dCGP</span><span class="p">,</span> <span class="n">offsprings</span><span class="p">,</span> <span class="n">max_gen</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">yt</span><span class="p">,</span> <span class="n">screen_output</span><span class="p">):</span>
     <span class="c1"># The offsprings chromosome, fitness and constant</span>
     <span class="n">chromosome</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">offsprings</span>
@@ -399,15 +471,15 @@ div.rendered_html tbody tr:hover {
 <div class="section" id="The-test-problems">
 <h2>The test problems<a class="headerlink" href="#The-test-problems" title="Permalink to this headline">¶</a></h2>
 <p>As target functions, we define three different problems of increasing complexity:</p>
-<p>P5: <span class="math">\(e x^5 - \pi x^3 + x\)</span></p>
-<p>P6: <span class="math">\(\frac{e x^2-1}{\pi (x + 2)}\)</span></p>
-<p>P7: <span class="math">\(\sin(e x) + \cos(\pi x)\)</span></p>
-<p>note how <span class="math">\(\pi\)</span> and <span class="math">\(e\)</span> are present in the expressions.</p>
+<p>P5: <span class="math notranslate nohighlight">\(e x^5 - \pi x^3 + x\)</span></p>
+<p>P6: <span class="math notranslate nohighlight">\(\frac{e x^2-1}{\pi (x + 2)}\)</span></p>
+<p>P7: <span class="math notranslate nohighlight">\(\sin(e x) + \cos(\pi x)\)</span></p>
+<p>note how <span class="math notranslate nohighlight">\(\pi\)</span> and <span class="math notranslate nohighlight">\(e\)</span> are present in the expressions.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[28]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="c1"># The following functions create the target values for a gridded input x for different test problems</span>
 <span class="k">def</span> <span class="nf">data_P5</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">e</span> <span class="o">*</span> <span class="n">x</span><span class="o">**</span><span class="mi">5</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">x</span><span class="o">**</span><span class="mi">3</span> <span class="o">+</span> <span class="n">x</span>
@@ -423,10 +495,10 @@ div.rendered_html tbody tr:hover {
 <div class="section" id="The-error-functions">
 <h2>The error functions<a class="headerlink" href="#The-error-functions" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="c1"># This is used to sum over the component of a vectorized coefficient, accounting for the fact that if its dimension</span>
 <span class="c1"># is 1, then it could represent [a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a ...] with [a]</span>
 <span class="k">def</span> <span class="nf">collapse_vectorized_coefficient</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
@@ -508,13 +580,13 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 </div>
-<div class="section" id="Problem-P5:-">
-<h2>Problem P5: <span class="math">\(ex^5 - \pi x^3 + x\)</span><a class="headerlink" href="#Problem-P5:-" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="Problem-P5:-ex^5---\pi-x^3-+-x">
+<h2>Problem P5: <span class="math notranslate nohighlight">\(ex^5 - \pi x^3 + x\)</span><a class="headerlink" href="#Problem-P5:-ex^5---\pi-x^3-+-x" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">gdual</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 <span class="n">yt</span> <span class="o">=</span> <span class="n">data_P5</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
@@ -522,10 +594,10 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="c1"># We run nexp experiments and accumulate statistic for the ERT</span>
 <span class="n">nexp</span> <span class="o">=</span> <span class="mi">100</span>
 <span class="n">offsprings</span> <span class="o">=</span> <span class="mi">4</span>
@@ -604,10 +676,10 @@ restart:         gen:    expression:
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">mean_gen</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="o">&lt;</span><span class="p">(</span><span class="n">max_gen</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
 <span class="k">print</span><span class="p">(</span><span class="s2">&quot;ERT Expected run time = avg. number of dCGP evaluations needed: &quot;</span><span class="p">,</span> <span class="n">mean_gen</span> <span class="o">*</span> <span class="n">offsprings</span><span class="p">)</span>
 </pre></div>
@@ -622,13 +694,13 @@ ERT Expected run time = avg. number of dCGP evaluations needed:  49451.4666667
 </pre></div></div>
 </div>
 </div>
-<div class="section" id="Problem-P6:-">
-<h2>Problem P6: <span class="math">\(\frac{e x^2-1}{\pi (x + 2)}\)</span><a class="headerlink" href="#Problem-P6:-" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="Problem-P6:-\frac{e-x^2-1}{\pi-(x-+-2)}">
+<h2>Problem P6: <span class="math notranslate nohighlight">\(\frac{e x^2-1}{\pi (x + 2)}\)</span><a class="headerlink" href="#Problem-P6:-\frac{e-x^2-1}{\pi-(x-+-2)}" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[13]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">2.1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">gdual</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 <span class="n">yt</span> <span class="o">=</span> <span class="n">data_P6</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
@@ -636,10 +708,10 @@ ERT Expected run time = avg. number of dCGP evaluations needed:  49451.4666667
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[14]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="c1"># We run nexp experiments and accumulate statistic for the ERT</span>
 <span class="n">nexp</span> <span class="o">=</span> <span class="mi">100</span>
 <span class="n">offsprings</span> <span class="o">=</span> <span class="mi">4</span>
@@ -706,10 +778,10 @@ restart:         gen:    expression:
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[16]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">mean_gen</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="o">&lt;</span><span class="p">(</span><span class="n">max_gen</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
 <span class="k">print</span><span class="p">(</span><span class="s2">&quot;ERT Expected run time = avg. number of dCGP evaluations needed: &quot;</span><span class="p">,</span> <span class="n">mean_gen</span> <span class="o">*</span> <span class="n">offsprings</span><span class="p">)</span>
 </pre></div>
@@ -724,13 +796,13 @@ ERT Expected run time = avg. number of dCGP evaluations needed:  781924.8
 </pre></div></div>
 </div>
 </div>
-<div class="section" id="Problem-P7:-">
-<h2>Problem P7: <span class="math">\(\sin(e x) + \cos(\pi x)\)</span><a class="headerlink" href="#Problem-P7:-" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="Problem-P7:-\sin(e-x)-+-\cos(\pi-x)">
+<h2>Problem P7: <span class="math notranslate nohighlight">\(\sin(e x) + \cos(\pi x)\)</span><a class="headerlink" href="#Problem-P7:-\sin(e-x)-+-\cos(\pi-x)" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[39]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">gdual</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 <span class="n">yt</span> <span class="o">=</span> <span class="n">data_P7</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
@@ -738,10 +810,10 @@ ERT Expected run time = avg. number of dCGP evaluations needed:  781924.8
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[47]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[47]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="c1"># We run nexp experiments and accumulate statistic for the ERT</span>
 <span class="n">nexp</span> <span class="o">=</span> <span class="mi">100</span>
 <span class="n">offsprings</span> <span class="o">=</span> <span class="mi">4</span>
@@ -793,10 +865,10 @@ restart:         gen:    expression:
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[48]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[48]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">mean_gen</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="o">&lt;</span><span class="p">(</span><span class="n">max_gen</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
 <span class="k">print</span><span class="p">(</span><span class="s2">&quot;ERT Expected run time = avg. number of dCGP evaluations needed: &quot;</span><span class="p">,</span> <span class="n">mean_gen</span> <span class="o">*</span> <span class="n">offsprings</span><span class="p">)</span>
 </pre></div>
@@ -811,10 +883,10 @@ ERT Expected run time = avg. number of dCGP evaluations needed:  319292.666667
 </pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre><span></span>[ ]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span>
 </pre></div>
 </div>
@@ -823,21 +895,52 @@ ERT Expected run time = avg. number of dCGP evaluations needed:  319292.666667
 </div>
 
 
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="solving_odes.html" class="btn btn-neutral float-right" title="Solving differential equations with dCGP" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="learning_constants.html" class="btn btn-neutral float-left" title="Learning constants in a symbolic regression task" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
     </div>
-      
-  </div>
-</div>
-<footer class="footer">
-  <div class="container">
-    <p class="pull-right">
-      <a href="#">Back to top</a>
-      
-    </p>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
     <p>
-        &copy; Copyright 2018, Dario Izzo, Francesco Biscani, Alessio Mereta.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7.<br/>
+        &copy; Copyright 2018, Dario Izzo, Francesco Biscani, Alessio Mereta
+
     </p>
   </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
 </footer>
-  </body>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
 </html>

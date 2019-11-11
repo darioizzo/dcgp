@@ -1,161 +1,208 @@
 
-<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Cartesian Genetic Programming (CGP) &#8212; dCGP documentation</title>
-    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
-        VERSION:     '1.3',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
-    <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Cartesian Genetic Programming (CGP) &mdash; dCGP 1.3 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="Training a FFNN in dCGPANN vs. Keras (regression)" href="notebooks/dCGPANNs_for_function_approximation.html" />
-<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto|Comfortaa|Space+Mono">
+    <link rel="prev" title="Training a FFNN in dCGPANN vs. Keras (regression)" href="notebooks/dCGPANNs_for_function_approximation.html" /> 
+</head>
 
-  </head>
-  <body>
+<body class="wy-body-for-nav">
 
-  <div id="navbar" class="navbar navbar-inverse navbar-default navbar-fixed-top">
-    <div class="container">
-      <div class="navbar-header">
-        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="index.html">
-          dcgp</a>
-        <span class="navbar-text navbar-version pull-left"><b>1.3</b></span>
-      </div>
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
 
-        <div class="collapse navbar-collapse nav-collapse">
-          <ul class="nav navbar-nav">
+          
+            <a href="index.html" class="icon icon-home"> dCGP
+          
+
+          
             
-                <li><a href="installation.html">Install</a></li>
-                <li><a href="quickstart.html">Quick Start</a></li>
-                <li><a href="docs/index.html">Docs</a></li>
-                <li><a href="tutorials/index.html">Tutorials</a></li>
-                <li><a href="#">Theory</a></li>
+            <img src="_static/logo2.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
             
             
-              <li class="dropdown globaltoc-container">
-  <a role="button"
-     id="dLabelGlobalToc"
-     data-toggle="dropdown"
-     data-target="#"
-     href="index.html">Site <b class="caret"></b></a>
-  <ul class="dropdown-menu globaltoc"
-      role="menu"
-      aria-labelledby="dLabelGlobalToc"><ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation guide</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="installation.html#c">C++</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation.html#python">Python</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick start examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="quickstart.html#c">C++</a></li>
-<li class="toctree-l2"><a class="reference internal" href="quickstart.html#python">Python</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="docs/index.html">Documentation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="docs/cpp/index.html">C++ Documentation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="docs/python/index.html">Python Documentation</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials/index.html">C++ examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="tutorials/index.html#symbolic-regression">Symbolic Regression</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorials/index.html#other-applications">Other Applications</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials/index.html#python-examples">Python examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="notebooks/learning_constants.html">Learning constants in a symbolic regression task</a></li>
-<li class="toctree-l2"><a class="reference internal" href="notebooks/learning_constants2.html">Learning constants in a symbolic regression task (PART II)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="notebooks/solving_odes.html">Solving differential equations with dCGP</a></li>
-<li class="toctree-l2"><a class="reference internal" href="notebooks/weighted_symbolic_regression.html">Weighted dCGP for a symbolic regression task</a></li>
-<li class="toctree-l2"><a class="reference internal" href="notebooks/finding_prime_integrals.html">Discovery of prime integrals with dCGP</a></li>
-<li class="toctree-l2"><a class="reference internal" href="notebooks/An_intro_to_dCGPANNs.html">Representing an Artificial Neural Network as a Cartesian Genetic Program</a></li>
-<li class="toctree-l2"><a class="reference internal" href="notebooks/dCGPANNs_for_classification.html">Training a FFNN in dCGPANN vs.&nbsp;Keras (classification)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="notebooks/dCGPANNs_for_function_approximation.html">Training a FFNN in dCGPANN vs.&nbsp;Keras (regression)</a></li>
-</ul>
-</li>
+              <div class="version">
+                1.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick start examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docs/index.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/index.html">C++ examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/index.html#python-examples">Python examples</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Cartesian Genetic Programming (CGP)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="#differentiable-cartesian-genetic-programming-dcgp">Differentiable Cartesian Genetic Programming (dCGP)</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#reference">Reference</a></li>
 </ul>
 </li>
 </ul>
-</ul>
-</li>
-              
-            
-            
-            
-            
-            
-          </ul>
 
-          
             
-<form class="navbar-form navbar-right" action="search.html" method="get">
- <div class="form-group">
-  <input type="text" name="q" class="form-control" placeholder="Search" />
- </div>
-  <input type="hidden" name="check_keywords" value="yes" />
-  <input type="hidden" name="area" value="default" />
-</form>
           
         </div>
-    </div>
-  </div>
+      </div>
+    </nav>
 
-<div class="container">
-  <div class="row">
-    <div class="col-md-12 content">
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
       
-  <div class="contents topic" id="contents">
-<p class="topic-title first">Contents</p>
-<ul class="simple">
-<li><a class="reference internal" href="#cartesian-genetic-programming-cgp" id="id3">Cartesian Genetic Programming (CGP)</a></li>
-<li><a class="reference internal" href="#differentiable-cartesian-genetic-programming-dcgp" id="id4">Differentiable Cartesian Genetic Programming (dCGP)</a><ul>
-<li><a class="reference internal" href="#reference" id="id5">Reference</a></li>
-</ul>
-</li>
-</ul>
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">dCGP</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content style-external-links">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Cartesian Genetic Programming (CGP)</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/theory.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
 </div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
 <div class="section" id="cartesian-genetic-programming-cgp">
-<h1><a class="toc-backref" href="#id3">Cartesian Genetic Programming (CGP)</a><a class="headerlink" href="#cartesian-genetic-programming-cgp" title="Permalink to this headline">¶</a></h1>
+<h1>Cartesian Genetic Programming (CGP)<a class="headerlink" href="#cartesian-genetic-programming-cgp" title="Permalink to this headline">¶</a></h1>
 <p>Cartesian Genetic Programming (CGP) is a form of Genetic Programming where the program
 representation consists of an acyclic graph. For more information visit
 <a class="reference external" href="http://www.cartesiangp.co.uk/">Cartesian Genetic Programming</a>.</p>
 </div>
 <div class="section" id="differentiable-cartesian-genetic-programming-dcgp">
-<h1><a class="toc-backref" href="#id4">Differentiable Cartesian Genetic Programming (dCGP)</a><a class="headerlink" href="#differentiable-cartesian-genetic-programming-dcgp" title="Permalink to this headline">¶</a></h1>
+<h1>Differentiable Cartesian Genetic Programming (dCGP)<a class="headerlink" href="#differentiable-cartesian-genetic-programming-dcgp" title="Permalink to this headline">¶</a></h1>
 <p>Differentiable Cartesian Genetic Programming (dCGP) is a recent development of CGP
 that adds the information about the derivatives of the output nodes (the programs,
 or expressions encoded) with respect to the input nodes (the input values) and/or the
 weights (that can be associated with every connection in the graph, similarly to Neural Networks).</p>
 <div class="figure align-center" id="id2">
 <a class="reference internal image-reference" href="_images/expression_theory.png"><img alt="weighted dCGP expression" src="_images/expression_theory.png" style="width: 800px;" /></a>
-<p class="caption"><span class="caption-text">A weighted dCGP expression</span></p>
+<p class="caption"><span class="caption-text">A weighted dCGP expression</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
 </div>
 <p>The derivatives are obtained by means of Automatic Differentiation through the
 <a class="reference external" href="http://darioizzo.github.io/audi/">AuDi</a> library, that implements the Taylor truncated
@@ -168,32 +215,61 @@ on the derivatives, hence enabling for the equivalent of back-propagation in Neu
 <p>Furthermore, the fitness function itself can be defined in terms of the derivatives.
 The applications of a dCGP are:</p>
 <ul class="simple">
-<li>Symbolic Regression.</li>
-<li>Solving differential equations.</li>
-<li>Search for conserved quantities in dynamical systems.</li>
+<li><p>Symbolic Regression.</p></li>
+<li><p>Solving differential equations.</p></li>
+<li><p>Search for conserved quantities in dynamical systems.</p></li>
 </ul>
 <div class="section" id="reference">
-<span id="id1"></span><h2><a class="toc-backref" href="#id5">Reference</a><a class="headerlink" href="#reference" title="Permalink to this headline">¶</a></h2>
+<span id="id1"></span><h2>Reference<a class="headerlink" href="#reference" title="Permalink to this headline">¶</a></h2>
 <p>Dario Izzo, Francesco Biscani, and Alessio Mereta. <a class="reference external" href="https://arxiv.org/pdf/1611.04766v1.pdf">Differentiable Genetic Programming.</a> arXiv preprint arXiv:1611.04766 (2016).</p>
 </div>
 </div>
 
 
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="notebooks/dCGPANNs_for_function_approximation.html" class="btn btn-neutral float-left" title="Training a FFNN in dCGPANN vs. Keras (regression)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
     </div>
-      
-  </div>
-</div>
-<footer class="footer">
-  <div class="container">
-    <p class="pull-right">
-      <a href="#">Back to top</a>
-      
-    </p>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
     <p>
-        &copy; Copyright 2018, Dario Izzo, Francesco Biscani, Alessio Mereta.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7.<br/>
+        &copy; Copyright 2018, Dario Izzo, Francesco Biscani, Alessio Mereta
+
     </p>
   </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
 </footer>
-  </body>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
 </html>

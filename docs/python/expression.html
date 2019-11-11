@@ -1,138 +1,210 @@
 
-<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>expression (dCGP) &#8212; dCGP documentation</title>
-    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../../',
-        VERSION:     '1.3',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
-    <script type="text/javascript" src="../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js"></script>
-    <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>expression (dCGP) &mdash; dCGP 1.3 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="expression_weighted (dCGP-W)" href="expression_weighted.html" />
-    <link rel="prev" title="Available kernels" href="kernel_list.html" />
-<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto|Comfortaa|Space+Mono">
+    <link rel="prev" title="Available kernels" href="kernel_list.html" /> 
+</head>
 
-  </head>
-  <body>
+<body class="wy-body-for-nav">
 
-  <div id="navbar" class="navbar navbar-inverse navbar-default navbar-fixed-top">
-    <div class="container">
-      <div class="navbar-header">
-        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="../../index.html">
-          dcgp</a>
-        <span class="navbar-text navbar-version pull-left"><b>1.3</b></span>
-      </div>
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
 
-        <div class="collapse navbar-collapse nav-collapse">
-          <ul class="nav navbar-nav">
+          
+            <a href="../../index.html" class="icon icon-home"> dCGP
+          
+
+          
             
-                <li><a href="../../installation.html">Install</a></li>
-                <li><a href="../../quickstart.html">Quick Start</a></li>
-                <li><a href="../index.html">Docs</a></li>
-                <li><a href="../../tutorials/index.html">Tutorials</a></li>
-                <li><a href="../../theory.html">Theory</a></li>
+            <img src="../../_static/logo2.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
             
             
-              <li class="dropdown globaltoc-container">
-  <a role="button"
-     id="dLabelGlobalToc"
-     data-toggle="dropdown"
-     data-target="#"
-     href="../../index.html">Site <b class="caret"></b></a>
-  <ul class="dropdown-menu globaltoc"
-      role="menu"
-      aria-labelledby="dLabelGlobalToc"><ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation guide</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../installation.html#c">C++</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../installation.html#python">Python</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Quick start examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../quickstart.html#c">C++</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../quickstart.html#python">Python</a></li>
-</ul>
-</li>
-<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Documentation</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="../cpp/index.html">C++ Documentation</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="index.html">Python Documentation</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">C++ examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../tutorials/index.html#symbolic-regression">Symbolic Regression</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../tutorials/index.html#other-applications">Other Applications</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html#python-examples">Python examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../notebooks/learning_constants.html">Learning constants in a symbolic regression task</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../notebooks/learning_constants2.html">Learning constants in a symbolic regression task (PART II)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../notebooks/solving_odes.html">Solving differential equations with dCGP</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../notebooks/weighted_symbolic_regression.html">Weighted dCGP for a symbolic regression task</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../notebooks/finding_prime_integrals.html">Discovery of prime integrals with dCGP</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../notebooks/An_intro_to_dCGPANNs.html">Representing an Artificial Neural Network as a Cartesian Genetic Program</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../notebooks/dCGPANNs_for_classification.html">Training a FFNN in dCGPANN vs.&nbsp;Keras (classification)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../notebooks/dCGPANNs_for_function_approximation.html">Training a FFNN in dCGPANN vs.&nbsp;Keras (regression)</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../../theory.html">Cartesian Genetic Programming (CGP)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../theory.html#differentiable-cartesian-genetic-programming-dcgp">Differentiable Cartesian Genetic Programming (dCGP)</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../theory.html#reference">Reference</a></li>
-</ul>
-</li>
-</ul>
-</ul>
-</li>
+              <div class="version">
+                1.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
               
             
             
-            
-            
-            
-          </ul>
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Quick start examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../cpp/index.html">C++ Documentation</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Python Documentation</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="index.html#kernels">Kernels</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="index.html#types-of-dcgps">Types of dCGPs</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">expression (dCGP)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="expression_weighted.html">expression_weighted (dCGP-W)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="expression_ann.html">expression_ann (dCGP-ANN)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#symbolic-regression">Symbolic Regression</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">C++ examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html#python-examples">Python examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory.html">Cartesian Genetic Programming (CGP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory.html#differentiable-cartesian-genetic-programming-dcgp">Differentiable Cartesian Genetic Programming (dCGP)</a></li>
+</ul>
 
-          
             
-<form class="navbar-form navbar-right" action="../../search.html" method="get">
- <div class="form-group">
-  <input type="text" name="q" class="form-control" placeholder="Search" />
- </div>
-  <input type="hidden" name="check_keywords" value="yes" />
-  <input type="hidden" name="area" value="default" />
-</form>
           
         </div>
-    </div>
-  </div>
+      </div>
+    </nav>
 
-<div class="container">
-  <div class="row">
-    <div class="col-md-12 content">
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
       
-  <div class="section" id="expression-dcgp">
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">dCGP</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content style-external-links">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Documentation</a> &raquo;</li>
+        
+          <li><a href="index.html">Python Documentation</a> &raquo;</li>
+        
+      <li>expression (dCGP)</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/docs/python/expression.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="expression-dcgp">
 <h1><a class="toc-backref" href="#id1">expression (dCGP)</a><a class="headerlink" href="#expression-dcgp" title="Permalink to this headline">¶</a></h1>
 <div class="figure align-center">
 <img alt="dCGP expression" src="../../_images/expression1.png" />
@@ -142,10 +214,11 @@ They differ from the type they operate upon: double, gdual, vectorized gdual.</p
 <div class="contents topic" id="contents">
 <p class="topic-title first">Contents</p>
 <ul class="simple">
-<li><a class="reference internal" href="#expression-dcgp" id="id1">expression (dCGP)</a><ul>
-<li><a class="reference internal" href="#expression-double" id="id2">expression_double</a></li>
-<li><a class="reference internal" href="#expression-gdual-double" id="id3">expression_gdual_double</a></li>
-<li><a class="reference internal" href="#expression-gdual-vdouble" id="id4">expression_gdual_vdouble</a></li>
+<li><p><a class="reference internal" href="#expression-dcgp" id="id1">expression (dCGP)</a></p>
+<ul>
+<li><p><a class="reference internal" href="#expression-double" id="id2">expression_double</a></p></li>
+<li><p><a class="reference internal" href="#expression-gdual-double" id="id3">expression_gdual_double</a></p></li>
+<li><p><a class="reference internal" href="#expression-gdual-vdouble" id="id4">expression_gdual_vdouble</a></p></li>
 </ul>
 </li>
 </ul>
@@ -155,58 +228,48 @@ They differ from the type they operate upon: double, gdual, vectorized gdual.</p
 <h2><a class="toc-backref" href="#id2">expression_double</a><a class="headerlink" href="#expression-double" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="dcgpy.expression_double">
-<em class="property">class </em><code class="descclassname">dcgpy.</code><code class="descname">expression_double</code><span class="sig-paren">(</span><em>inputs</em>, <em>outputs</em>, <em>rows</em>, <em>columns</em>, <em>levels_back</em>, <em>arity</em>, <em>kernels</em>, <em>n_eph</em>, <em>seed = randint</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_double" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">dcgpy.</code><code class="sig-name descname">expression_double</code><span class="sig-paren">(</span><em class="sig-param">inputs</em>, <em class="sig-param">outputs</em>, <em class="sig-param">rows</em>, <em class="sig-param">columns</em>, <em class="sig-param">levels_back</em>, <em class="sig-param">arity</em>, <em class="sig-param">kernels</em>, <em class="sig-param">n_eph</em>, <em class="sig-param">seed = randint</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_double" title="Permalink to this definition">¶</a></dt>
 <dd><p>A CGP expression</p>
 <p>Constructs a CGP expression operating on double</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>inputs</strong> (<code class="docutils literal"><span class="pre">int</span></code>) – number of inputs</li>
-<li><strong>outputs</strong> (<code class="docutils literal"><span class="pre">int</span></code>) – number of outputs</li>
-<li><strong>rows</strong> (<code class="docutils literal"><span class="pre">int</span></code>) – number of rows in the cartesian program</li>
-<li><strong>columns</strong> (<code class="docutils literal"><span class="pre">int</span></code>) – number of columns in the cartesian program</li>
-<li><strong>levels_back</strong> (<code class="docutils literal"><span class="pre">int</span></code>) – number of levels-back in the cartesian program</li>
-<li><strong>arity</strong> (<code class="docutils literal"><span class="pre">int</span></code> on <code class="docutils literal"><span class="pre">list</span></code>) – arity of the kernels. Assumed equal for all columns unless its specified by a list. The list must contain a number of entries equal to the number of columns.</li>
-<li><strong>kernels</strong> (<code class="docutils literal"><span class="pre">List[dcgpy.kernel_double]</span></code>) – kernel functions</li>
-<li><strong>n_eph</strong> (<em>int</em>) – Number of ephemeral constants. Their values and their symbols can be set via dedicated methods.</li>
-<li><strong>seed</strong> (<code class="docutils literal"><span class="pre">int</span></code>) – random seed to generate mutations and chromosomes</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>inputs</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – number of inputs</p></li>
+<li><p><strong>outputs</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – number of outputs</p></li>
+<li><p><strong>rows</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – number of rows in the cartesian program</p></li>
+<li><p><strong>columns</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – number of columns in the cartesian program</p></li>
+<li><p><strong>levels_back</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – number of levels-back in the cartesian program</p></li>
+<li><p><strong>arity</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code> on <code class="docutils literal notranslate"><span class="pre">list</span></code>) – arity of the kernels. Assumed equal for all columns unless its specified by a list. The list must contain a number of entries equal to the number of columns.</p></li>
+<li><p><strong>kernels</strong> (<code class="docutils literal notranslate"><span class="pre">List[dcgpy.kernel_double]</span></code>) – kernel functions</p></li>
+<li><p><strong>n_eph</strong> (<em>int</em>) – Number of ephemeral constants. Their values and their symbols can be set via dedicated methods.</p></li>
+<li><p><strong>seed</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – random seed to generate mutations and chromosomes</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <dl class="attribute">
 <dt id="dcgpy.expression_double.eph_val">
-<code class="descname">eph_val</code><a class="headerlink" href="#dcgpy.expression_double.eph_val" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">eph_val</code><a class="headerlink" href="#dcgpy.expression_double.eph_val" title="Permalink to this definition">¶</a></dt>
 <dd><p>Values of the ephemeral constants.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">list(<code class="docutils literal"><span class="pre">`)double`</span></code></td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list(<code class="docutils literal notranslate"><span class="pre">`)double`</span></code></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="dcgpy.expression_double.eph_symb">
-<code class="descname">eph_symb</code><a class="headerlink" href="#dcgpy.expression_double.eph_symb" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">eph_symb</code><a class="headerlink" href="#dcgpy.expression_double.eph_symb" title="Permalink to this definition">¶</a></dt>
 <dd><p>Symbols used for the ephemeral constants.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">list(<code class="docutils literal"><span class="pre">str</span></code>)</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list(<code class="docutils literal notranslate"><span class="pre">str</span></code>)</p>
+</dd>
+</dl>
 </dd></dl>
 
 <p>Examples:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dcgpy</span> <span class="k">import</span> <span class="o">*</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dcgpy</span> <span class="k">import</span> <span class="o">*</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">dcgp</span> <span class="o">=</span> <span class="n">expression_double</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">kernel_set</span><span class="p">([</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span><span class="s2">&quot;diff&quot;</span><span class="p">,</span><span class="s2">&quot;mul&quot;</span><span class="p">,</span><span class="s2">&quot;div&quot;</span><span class="p">])(),</span> <span class="mi">0</span><span class="n">u</span><span class="p">,</span> <span class="mi">32</span><span class="n">u</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">dcgp</span><span class="p">)</span>
 <span class="gp">...</span>
@@ -216,25 +279,25 @@ They differ from the type they operate upon: double, gdual, vectorized gdual.</p
 </div>
 <dl class="method">
 <dt id="dcgpy.expression_double.get">
-<code class="descname">get</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_double.get" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_double.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the expression chromosome</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="dcgpy.expression_double.get_active_genes">
-<code class="descname">get_active_genes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_double.get_active_genes" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_active_genes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_double.get_active_genes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the idx of the active genes in the current chromosome (numbering is from 0)</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="dcgpy.expression_double.get_active_nodes">
-<code class="descname">get_active_nodes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_double.get_active_nodes" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_active_nodes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_double.get_active_nodes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the idx of the active nodes in the current chromosome</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="dcgpy.expression_double.get_arity">
-<code class="descname">get_arity</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_double.get_arity" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_arity</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_double.get_arity" title="Permalink to this definition">¶</a></dt>
 <dd><p>get_arity(node_id)
 Gets the arity of the basis functions of the dCGP expression. Either the whole vector or that of a single node.</p>
 <p>get_arity()
@@ -244,197 +307,181 @@ Gets the arity of the basis functions of the dCGP expression. Either the whole v
 
 <dl class="method">
 <dt id="dcgpy.expression_double.get_cols">
-<code class="descname">get_cols</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_double.get_cols" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_cols</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_double.get_cols" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the number of columns of the dCGP expression</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="dcgpy.expression_double.get_f">
-<code class="descname">get_f</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_double.get_f" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_f</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_double.get_f" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the kernel functions</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="dcgpy.expression_double.get_gene_idx">
-<code class="descname">get_gene_idx</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_double.get_gene_idx" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_gene_idx</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_double.get_gene_idx" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets a vector containing the indexes in the chromosome where each node starts to be expressed.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="dcgpy.expression_double.get_lb">
-<code class="descname">get_lb</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_double.get_lb" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_lb</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_double.get_lb" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the lower bounds of the chromosome</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="dcgpy.expression_double.get_levels_back">
-<code class="descname">get_levels_back</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_double.get_levels_back" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_levels_back</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_double.get_levels_back" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the number of levels-back allowed for the dCGP expression</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="dcgpy.expression_double.get_m">
-<code class="descname">get_m</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_double.get_m" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_m</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_double.get_m" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the number of outputs of the dCGP expression</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="dcgpy.expression_double.get_n">
-<code class="descname">get_n</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_double.get_n" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_n</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_double.get_n" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the number of inputs of the dCGP expression</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="dcgpy.expression_double.get_rows">
-<code class="descname">get_rows</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_double.get_rows" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_rows</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_double.get_rows" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the number of rows of the dCGP expression</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="dcgpy.expression_double.get_ub">
-<code class="descname">get_ub</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_double.get_ub" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_ub</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_double.get_ub" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the upper bounds of the chromosome</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="dcgpy.expression_double.loss">
-<code class="descname">loss</code><span class="sig-paren">(</span><em>points</em>, <em>labels</em>, <em>loss_type</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_double.loss" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">loss</code><span class="sig-paren">(</span><em class="sig-param">points</em>, <em class="sig-param">labels</em>, <em class="sig-param">loss_type</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_double.loss" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the loss of the model on the data</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>points</strong> (2D NumPy float array or <code class="docutils literal"><span class="pre">list</span> <span class="pre">of</span> <span class="pre">lists</span></code> of <code class="docutils literal"><span class="pre">float</span></code>) – the input data</li>
-<li><strong>labels</strong> (2D NumPy float array or <code class="docutils literal"><span class="pre">list</span> <span class="pre">of</span> <span class="pre">lists</span></code> of <code class="docutils literal"><span class="pre">float</span></code>) – the output labels (supervised signal)</li>
-<li><strong>loss_type</strong> (<code class="docutils literal"><span class="pre">str</span></code>) – the loss, one of “MSE” for Mean Square Error and “CE” for Cross-Entropy.</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>points</strong> (2D NumPy float array or <code class="docutils literal notranslate"><span class="pre">list</span> <span class="pre">of</span> <span class="pre">lists</span></code> of <code class="docutils literal notranslate"><span class="pre">float</span></code>) – the input data</p></li>
+<li><p><strong>labels</strong> (2D NumPy float array or <code class="docutils literal notranslate"><span class="pre">list</span> <span class="pre">of</span> <span class="pre">lists</span></code> of <code class="docutils literal notranslate"><span class="pre">float</span></code>) – the output labels (supervised signal)</p></li>
+<li><p><strong>loss_type</strong> (<code class="docutils literal notranslate"><span class="pre">str</span></code>) – the loss, one of “MSE” for Mean Square Error and “CE” for Cross-Entropy.</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><strong>ValueError</strong> – if <em>points</em> or <em>labels</em> are malformed or if <em>loss_type</em> is not one of the available types.</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – if <em>points</em> or <em>labels</em> are malformed or if <em>loss_type</em> is not one of the available types.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="dcgpy.expression_double.mutate">
-<code class="descname">mutate</code><span class="sig-paren">(</span><em>idxs</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_double.mutate" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">mutate</code><span class="sig-paren">(</span><em class="sig-param">idxs</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_double.mutate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Mutates multiple genes within their allowed bounds.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>idxs</strong> (<code class="docutils literal"><span class="pre">List[int]</span></code>) – indexes of the genes to me mutated</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><strong>ValueError</strong> – if the index of a gene is out of bounds</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>idxs</strong> (<code class="docutils literal notranslate"><span class="pre">List[int]</span></code>) – indexes of the genes to me mutated</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – if the index of a gene is out of bounds</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="dcgpy.expression_double.mutate_active">
-<code class="descname">mutate_active</code><span class="sig-paren">(</span><em>N = 1</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_double.mutate_active" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">mutate_active</code><span class="sig-paren">(</span><em class="sig-param">N = 1</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_double.mutate_active" title="Permalink to this definition">¶</a></dt>
 <dd><p>Mutates N randomly selected active genes within their allowed bounds</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="dcgpy.expression_double.mutate_active_cgene">
-<code class="descname">mutate_active_cgene</code><span class="sig-paren">(</span><em>N = 1</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_double.mutate_active_cgene" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">mutate_active_cgene</code><span class="sig-paren">(</span><em class="sig-param">N = 1</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_double.mutate_active_cgene" title="Permalink to this definition">¶</a></dt>
 <dd><p>Mutates N randomly selected active connections within their allowed bounds</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="dcgpy.expression_double.mutate_active_fgene">
-<code class="descname">mutate_active_fgene</code><span class="sig-paren">(</span><em>N = 1</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_double.mutate_active_fgene" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">mutate_active_fgene</code><span class="sig-paren">(</span><em class="sig-param">N = 1</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_double.mutate_active_fgene" title="Permalink to this definition">¶</a></dt>
 <dd><p>Mutates N randomly selected active function genes within their allowed bounds</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="dcgpy.expression_double.mutate_ogene">
-<code class="descname">mutate_ogene</code><span class="sig-paren">(</span><em>N = 1</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_double.mutate_ogene" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">mutate_ogene</code><span class="sig-paren">(</span><em class="sig-param">N = 1</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_double.mutate_ogene" title="Permalink to this definition">¶</a></dt>
 <dd><p>Mutates N randomly selected output genes connection within their allowed bounds</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="dcgpy.expression_double.mutate_random">
-<code class="descname">mutate_random</code><span class="sig-paren">(</span><em>N = 1</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_double.mutate_random" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">mutate_random</code><span class="sig-paren">(</span><em class="sig-param">N = 1</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_double.mutate_random" title="Permalink to this definition">¶</a></dt>
 <dd><p>Mutates N randomly selected genes within its allowed bounds</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="dcgpy.expression_double.set">
-<code class="descname">set</code><span class="sig-paren">(</span><em>chromosome</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_double.set" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">set</code><span class="sig-paren">(</span><em class="sig-param">chromosome</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_double.set" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets the chromosome.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>chromosome</strong> (<code class="docutils literal"><span class="pre">List[int]</span></code>) – the new chromosome</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><strong>ValueError</strong> – if the the chromosome is incompatible with the expression (n.inputs, n.outputs, levels-back, etc.)</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>chromosome</strong> (<code class="docutils literal notranslate"><span class="pre">List[int]</span></code>) – the new chromosome</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – if the the chromosome is incompatible with the expression (n.inputs, n.outputs, levels-back, etc.)</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="dcgpy.expression_double.set_f_gene">
-<code class="descname">set_f_gene</code><span class="sig-paren">(</span><em>node_id</em>, <em>f_id</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_double.set_f_gene" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">set_f_gene</code><span class="sig-paren">(</span><em class="sig-param">node_id</em>, <em class="sig-param">f_id</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_double.set_f_gene" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets for a valid node (i.e. not an input node) a new kernel.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>node_id</strong> (<code class="docutils literal"><span class="pre">List[int]</span></code>) – the node id</li>
-<li><strong>f_id</strong> (<code class="docutils literal"><span class="pre">List[int]</span></code>) – the kernel id</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>node_id</strong> (<code class="docutils literal notranslate"><span class="pre">List[int]</span></code>) – the node id</p></li>
+<li><p><strong>f_id</strong> (<code class="docutils literal notranslate"><span class="pre">List[int]</span></code>) – the kernel id</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><strong>ValueError</strong> – if the node_id or f_id are  incompatible with the expression.</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – if the node_id or f_id are  incompatible with the expression.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="dcgpy.expression_double.simplify">
-<code class="descname">simplify</code><span class="sig-paren">(</span><em>in_sym</em>, <em>subs_weights = False</em>, <em>erc = []</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_double.simplify" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">simplify</code><span class="sig-paren">(</span><em class="sig-param">in_sym</em>, <em class="sig-param">subs_weights = False</em>, <em class="sig-param">erc = []</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_double.simplify" title="Permalink to this definition">¶</a></dt>
 <dd><p>Simplifies the symbolic output of dCGP expressions</p>
 <p>Returns the simplified dCGP expression for each output</p>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">This method requires <code class="docutils literal"><span class="pre">sympy</span></code> and <code class="docutils literal"><span class="pre">pyaudi</span></code> modules installed in your Python system</p>
+<p class="admonition-title">Note</p>
+<p>This method requires <code class="docutils literal notranslate"><span class="pre">sympy</span></code> and <code class="docutils literal notranslate"><span class="pre">pyaudi</span></code> modules installed in your Python system</p>
 </div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>in_sym</strong> (a <code class="docutils literal"><span class="pre">List[str]</span></code>) – input symbols (its length must match the number of inputs)</li>
-<li><strong>subs_weights</strong> (a <code class="docutils literal"><span class="pre">bool</span></code>) – indicates whether to substitute the weights symbols with their values</li>
-<li><strong>erc</strong> (a <code class="docutils literal"><span class="pre">List[float]</span></code>) – values of the ephemeral random constants (if empty their symbolic representation is used instead)</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_sym</strong> (a <code class="docutils literal notranslate"><span class="pre">List[str]</span></code>) – input symbols (its length must match the number of inputs)</p></li>
+<li><p><strong>subs_weights</strong> (a <code class="docutils literal notranslate"><span class="pre">bool</span></code>) – indicates whether to substitute the weights symbols with their values</p></li>
+<li><p><strong>erc</strong> (a <code class="docutils literal notranslate"><span class="pre">List[float]</span></code>) – values of the ephemeral random constants (if empty their symbolic representation is used instead)</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A <code class="docutils literal"><span class="pre">List[str]</span></code> containing the simplified expressions</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
-<li><strong>ValueError</strong> – if the length of in_sym does not match the number of inputs</li>
-<li><strong>ValueError</strong> – if the length of erc is larger than the number of inputs</li>
-<li><strong>ImportError</strong> – if modules sympy or pyaudi are not installed in your Python system</li>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A <code class="docutils literal notranslate"><span class="pre">List[str]</span></code> containing the simplified expressions</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ValueError</strong> – if the length of in_sym does not match the number of inputs</p></li>
+<li><p><strong>ValueError</strong> – if the length of erc is larger than the number of inputs</p></li>
+<li><p><strong>ImportError</strong> – if modules sympy or pyaudi are not installed in your Python system</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ex</span> <span class="o">=</span> <span class="n">dcgpy</span><span class="o">.</span><span class="n">expression_weighted_gdual_double</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">dcgpy</span><span class="o">.</span><span class="n">kernel_set_gdual_double</span><span class="p">([</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span><span class="s2">&quot;diff&quot;</span><span class="p">])(),</span><span class="mi">0</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ex</span> <span class="o">=</span> <span class="n">dcgpy</span><span class="o">.</span><span class="n">expression_weighted_gdual_double</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">dcgpy</span><span class="o">.</span><span class="n">kernel_set_gdual_double</span><span class="p">([</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span><span class="s2">&quot;diff&quot;</span><span class="p">])(),</span><span class="mi">0</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">ex</span><span class="o">.</span><span class="n">simplify</span><span class="p">([</span><span class="s1">&#39;x&#39;</span><span class="p">,</span><span class="s1">&#39;c0&#39;</span><span class="p">,</span><span class="s1">&#39;c1&#39;</span><span class="p">],</span><span class="kc">True</span><span class="p">,[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])[</span><span class="mi">0</span><span class="p">])</span>
 <span class="go">x + 6</span>
 </pre></div>
@@ -443,34 +490,30 @@ Gets the arity of the basis functions of the dCGP expression. Either the whole v
 
 <dl class="method">
 <dt id="dcgpy.expression_double.visualize">
-<code class="descname">visualize</code><span class="sig-paren">(</span><em>in_sym = []</em>, <em>draw_inactive = True</em>, <em>draw_weights = False</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_double.visualize" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">visualize</code><span class="sig-paren">(</span><em class="sig-param">in_sym = []</em>, <em class="sig-param">draw_inactive = True</em>, <em class="sig-param">draw_weights = False</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_double.visualize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Visualizes the d-CGP expression
 Visualizes the graph of the d-CGP expression
 .. note:: This method requires the <cite>graphviz`</cite> module installed in your Python system</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>in_sym</strong> (a <code class="docutils literal"><span class="pre">List[str]</span></code>) – input symbols. Its length must either match the number of inputs or be zero (to visualize them as x_i)</li>
-<li><strong>draw_inactive</strong> (a <code class="docutils literal"><span class="pre">bool</span></code>) – indicates whether to draw inactive nodes</li>
-<li><strong>draw_weights</strong> (a <code class="docutils literal"><span class="pre">bool</span></code>) – indicates whether to draw connection weights symbols</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_sym</strong> (a <code class="docutils literal notranslate"><span class="pre">List[str]</span></code>) – input symbols. Its length must either match the number of inputs or be zero (to visualize them as x_i)</p></li>
+<li><p><strong>draw_inactive</strong> (a <code class="docutils literal notranslate"><span class="pre">bool</span></code>) – indicates whether to draw inactive nodes</p></li>
+<li><p><strong>draw_weights</strong> (a <code class="docutils literal notranslate"><span class="pre">bool</span></code>) – indicates whether to draw connection weights symbols</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The <code class="docutils literal"><span class="pre">graphviz.Digraph</span></code> for the given expression</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
-<li><strong>ImportError</strong> – if module pygraphviz is not installed in your Python system</li>
-<li><strong>ValueError</strong> – if in_sym is nonempty but its length does not match the number of inputs</li>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The <code class="docutils literal notranslate"><span class="pre">graphviz.Digraph</span></code> for the given expression</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ImportError</strong> – if module pygraphviz is not installed in your Python system</p></li>
+<li><p><strong>ValueError</strong> – if in_sym is nonempty but its length does not match the number of inputs</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ex</span> <span class="o">=</span> <span class="n">dcgpy</span><span class="o">.</span><span class="n">expression_double</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">dcgpy</span><span class="o">.</span><span class="n">kernel_set_double</span><span class="p">([</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span><span class="s2">&quot;diff&quot;</span><span class="p">])(),</span><span class="mi">0</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ex</span> <span class="o">=</span> <span class="n">dcgpy</span><span class="o">.</span><span class="n">expression_double</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">dcgpy</span><span class="o">.</span><span class="n">kernel_set_double</span><span class="p">([</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span><span class="s2">&quot;diff&quot;</span><span class="p">])(),</span><span class="mi">0</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">graph</span> <span class="o">=</span> <span class="n">ex</span><span class="o">.</span><span class="n">visualize</span><span class="p">([</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">],</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -484,58 +527,48 @@ Visualizes the graph of the d-CGP expression
 <h2><a class="toc-backref" href="#id3">expression_gdual_double</a><a class="headerlink" href="#expression-gdual-double" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="dcgpy.expression_gdual_double">
-<em class="property">class </em><code class="descclassname">dcgpy.</code><code class="descname">expression_gdual_double</code><span class="sig-paren">(</span><em>inputs</em>, <em>outputs</em>, <em>rows</em>, <em>columns</em>, <em>levels_back</em>, <em>arity</em>, <em>kernels</em>, <em>n_eph</em>, <em>seed = randint</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_double" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">dcgpy.</code><code class="sig-name descname">expression_gdual_double</code><span class="sig-paren">(</span><em class="sig-param">inputs</em>, <em class="sig-param">outputs</em>, <em class="sig-param">rows</em>, <em class="sig-param">columns</em>, <em class="sig-param">levels_back</em>, <em class="sig-param">arity</em>, <em class="sig-param">kernels</em>, <em class="sig-param">n_eph</em>, <em class="sig-param">seed = randint</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_double" title="Permalink to this definition">¶</a></dt>
 <dd><p>A CGP expression</p>
 <p>Constructs a CGP expression operating on gdual_double</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>inputs</strong> (<code class="docutils literal"><span class="pre">int</span></code>) – number of inputs</li>
-<li><strong>outputs</strong> (<code class="docutils literal"><span class="pre">int</span></code>) – number of outputs</li>
-<li><strong>rows</strong> (<code class="docutils literal"><span class="pre">int</span></code>) – number of rows in the cartesian program</li>
-<li><strong>columns</strong> (<code class="docutils literal"><span class="pre">int</span></code>) – number of columns in the cartesian program</li>
-<li><strong>levels_back</strong> (<code class="docutils literal"><span class="pre">int</span></code>) – number of levels-back in the cartesian program</li>
-<li><strong>arity</strong> (<code class="docutils literal"><span class="pre">int</span></code> on <code class="docutils literal"><span class="pre">list</span></code>) – arity of the kernels. Assumed equal for all columns unless its specified by a list. The list must contain a number of entries equal to the number of columns.</li>
-<li><strong>kernels</strong> (<code class="docutils literal"><span class="pre">List[dcgpy.kernel_gdual_double]</span></code>) – kernel functions</li>
-<li><strong>n_eph</strong> (<em>int</em>) – Number of ephemeral constants. Their values and their symbols can be set via dedicated methods.</li>
-<li><strong>seed</strong> (<code class="docutils literal"><span class="pre">int</span></code>) – random seed to generate mutations and chromosomes</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>inputs</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – number of inputs</p></li>
+<li><p><strong>outputs</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – number of outputs</p></li>
+<li><p><strong>rows</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – number of rows in the cartesian program</p></li>
+<li><p><strong>columns</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – number of columns in the cartesian program</p></li>
+<li><p><strong>levels_back</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – number of levels-back in the cartesian program</p></li>
+<li><p><strong>arity</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code> on <code class="docutils literal notranslate"><span class="pre">list</span></code>) – arity of the kernels. Assumed equal for all columns unless its specified by a list. The list must contain a number of entries equal to the number of columns.</p></li>
+<li><p><strong>kernels</strong> (<code class="docutils literal notranslate"><span class="pre">List[dcgpy.kernel_gdual_double]</span></code>) – kernel functions</p></li>
+<li><p><strong>n_eph</strong> (<em>int</em>) – Number of ephemeral constants. Their values and their symbols can be set via dedicated methods.</p></li>
+<li><p><strong>seed</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – random seed to generate mutations and chromosomes</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <dl class="attribute">
 <dt id="dcgpy.expression_gdual_double.eph_val">
-<code class="descname">eph_val</code><a class="headerlink" href="#dcgpy.expression_gdual_double.eph_val" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">eph_val</code><a class="headerlink" href="#dcgpy.expression_gdual_double.eph_val" title="Permalink to this definition">¶</a></dt>
 <dd><p>Values of the ephemeral constants.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">list(<code class="docutils literal"><span class="pre">`)gdual_double`</span></code></td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list(<code class="docutils literal notranslate"><span class="pre">`)gdual_double`</span></code></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="dcgpy.expression_gdual_double.eph_symb">
-<code class="descname">eph_symb</code><a class="headerlink" href="#dcgpy.expression_gdual_double.eph_symb" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">eph_symb</code><a class="headerlink" href="#dcgpy.expression_gdual_double.eph_symb" title="Permalink to this definition">¶</a></dt>
 <dd><p>Symbols used for the ephemeral constants.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">list(<code class="docutils literal"><span class="pre">str</span></code>)</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list(<code class="docutils literal notranslate"><span class="pre">str</span></code>)</p>
+</dd>
+</dl>
 </dd></dl>
 
 <p>Examples:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dcgpy</span> <span class="k">import</span> <span class="o">*</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dcgpy</span> <span class="k">import</span> <span class="o">*</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">dcgp</span> <span class="o">=</span> <span class="n">expression_gdual_double</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">kernel_set</span><span class="p">([</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span><span class="s2">&quot;diff&quot;</span><span class="p">,</span><span class="s2">&quot;mul&quot;</span><span class="p">,</span><span class="s2">&quot;div&quot;</span><span class="p">])(),</span> <span class="mi">0</span><span class="n">u</span><span class="p">,</span> <span class="mi">32</span><span class="n">u</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">dcgp</span><span class="p">)</span>
 <span class="gp">...</span>
@@ -545,25 +578,25 @@ Visualizes the graph of the d-CGP expression
 </div>
 <dl class="method">
 <dt id="dcgpy.expression_gdual_double.get">
-<code class="descname">get</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_double.get" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_double.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the expression chromosome</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="dcgpy.expression_gdual_double.get_active_genes">
-<code class="descname">get_active_genes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_double.get_active_genes" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_active_genes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_double.get_active_genes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the idx of the active genes in the current chromosome (numbering is from 0)</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="dcgpy.expression_gdual_double.get_active_nodes">
-<code class="descname">get_active_nodes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_double.get_active_nodes" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_active_nodes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_double.get_active_nodes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the idx of the active nodes in the current chromosome</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="dcgpy.expression_gdual_double.get_arity">
-<code class="descname">get_arity</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_double.get_arity" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_arity</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_double.get_arity" title="Permalink to this definition">¶</a></dt>
 <dd><p>get_arity(node_id)
 Gets the arity of the basis functions of the dCGP expression. Either the whole vector or that of a single node.</p>
 <p>get_arity()
@@ -573,197 +606,181 @@ Gets the arity of the basis functions of the dCGP expression. Either the whole v
 
 <dl class="method">
 <dt id="dcgpy.expression_gdual_double.get_cols">
-<code class="descname">get_cols</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_double.get_cols" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_cols</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_double.get_cols" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the number of columns of the dCGP expression</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="dcgpy.expression_gdual_double.get_f">
-<code class="descname">get_f</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_double.get_f" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_f</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_double.get_f" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the kernel functions</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="dcgpy.expression_gdual_double.get_gene_idx">
-<code class="descname">get_gene_idx</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_double.get_gene_idx" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_gene_idx</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_double.get_gene_idx" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets a vector containing the indexes in the chromosome where each node starts to be expressed.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="dcgpy.expression_gdual_double.get_lb">
-<code class="descname">get_lb</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_double.get_lb" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_lb</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_double.get_lb" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the lower bounds of the chromosome</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="dcgpy.expression_gdual_double.get_levels_back">
-<code class="descname">get_levels_back</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_double.get_levels_back" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_levels_back</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_double.get_levels_back" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the number of levels-back allowed for the dCGP expression</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="dcgpy.expression_gdual_double.get_m">
-<code class="descname">get_m</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_double.get_m" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_m</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_double.get_m" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the number of outputs of the dCGP expression</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="dcgpy.expression_gdual_double.get_n">
-<code class="descname">get_n</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_double.get_n" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_n</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_double.get_n" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the number of inputs of the dCGP expression</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="dcgpy.expression_gdual_double.get_rows">
-<code class="descname">get_rows</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_double.get_rows" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_rows</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_double.get_rows" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the number of rows of the dCGP expression</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="dcgpy.expression_gdual_double.get_ub">
-<code class="descname">get_ub</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_double.get_ub" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_ub</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_double.get_ub" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the upper bounds of the chromosome</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="dcgpy.expression_gdual_double.loss">
-<code class="descname">loss</code><span class="sig-paren">(</span><em>points</em>, <em>labels</em>, <em>loss_type</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_double.loss" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">loss</code><span class="sig-paren">(</span><em class="sig-param">points</em>, <em class="sig-param">labels</em>, <em class="sig-param">loss_type</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_double.loss" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the loss of the model on the data</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>points</strong> (2D NumPy float array or <code class="docutils literal"><span class="pre">list</span> <span class="pre">of</span> <span class="pre">lists</span></code> of <code class="docutils literal"><span class="pre">float</span></code>) – the input data</li>
-<li><strong>labels</strong> (2D NumPy float array or <code class="docutils literal"><span class="pre">list</span> <span class="pre">of</span> <span class="pre">lists</span></code> of <code class="docutils literal"><span class="pre">float</span></code>) – the output labels (supervised signal)</li>
-<li><strong>loss_type</strong> (<code class="docutils literal"><span class="pre">str</span></code>) – the loss, one of “MSE” for Mean Square Error and “CE” for Cross-Entropy.</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>points</strong> (2D NumPy float array or <code class="docutils literal notranslate"><span class="pre">list</span> <span class="pre">of</span> <span class="pre">lists</span></code> of <code class="docutils literal notranslate"><span class="pre">float</span></code>) – the input data</p></li>
+<li><p><strong>labels</strong> (2D NumPy float array or <code class="docutils literal notranslate"><span class="pre">list</span> <span class="pre">of</span> <span class="pre">lists</span></code> of <code class="docutils literal notranslate"><span class="pre">float</span></code>) – the output labels (supervised signal)</p></li>
+<li><p><strong>loss_type</strong> (<code class="docutils literal notranslate"><span class="pre">str</span></code>) – the loss, one of “MSE” for Mean Square Error and “CE” for Cross-Entropy.</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><strong>ValueError</strong> – if <em>points</em> or <em>labels</em> are malformed or if <em>loss_type</em> is not one of the available types.</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – if <em>points</em> or <em>labels</em> are malformed or if <em>loss_type</em> is not one of the available types.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="dcgpy.expression_gdual_double.mutate">
-<code class="descname">mutate</code><span class="sig-paren">(</span><em>idxs</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_double.mutate" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">mutate</code><span class="sig-paren">(</span><em class="sig-param">idxs</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_double.mutate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Mutates multiple genes within their allowed bounds.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>idxs</strong> (<code class="docutils literal"><span class="pre">List[int]</span></code>) – indexes of the genes to me mutated</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><strong>ValueError</strong> – if the index of a gene is out of bounds</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>idxs</strong> (<code class="docutils literal notranslate"><span class="pre">List[int]</span></code>) – indexes of the genes to me mutated</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – if the index of a gene is out of bounds</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="dcgpy.expression_gdual_double.mutate_active">
-<code class="descname">mutate_active</code><span class="sig-paren">(</span><em>N = 1</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_double.mutate_active" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">mutate_active</code><span class="sig-paren">(</span><em class="sig-param">N = 1</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_double.mutate_active" title="Permalink to this definition">¶</a></dt>
 <dd><p>Mutates N randomly selected active genes within their allowed bounds</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="dcgpy.expression_gdual_double.mutate_active_cgene">
-<code class="descname">mutate_active_cgene</code><span class="sig-paren">(</span><em>N = 1</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_double.mutate_active_cgene" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">mutate_active_cgene</code><span class="sig-paren">(</span><em class="sig-param">N = 1</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_double.mutate_active_cgene" title="Permalink to this definition">¶</a></dt>
 <dd><p>Mutates N randomly selected active connections within their allowed bounds</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="dcgpy.expression_gdual_double.mutate_active_fgene">
-<code class="descname">mutate_active_fgene</code><span class="sig-paren">(</span><em>N = 1</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_double.mutate_active_fgene" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">mutate_active_fgene</code><span class="sig-paren">(</span><em class="sig-param">N = 1</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_double.mutate_active_fgene" title="Permalink to this definition">¶</a></dt>
 <dd><p>Mutates N randomly selected active function genes within their allowed bounds</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="dcgpy.expression_gdual_double.mutate_ogene">
-<code class="descname">mutate_ogene</code><span class="sig-paren">(</span><em>N = 1</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_double.mutate_ogene" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">mutate_ogene</code><span class="sig-paren">(</span><em class="sig-param">N = 1</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_double.mutate_ogene" title="Permalink to this definition">¶</a></dt>
 <dd><p>Mutates N randomly selected output genes connection within their allowed bounds</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="dcgpy.expression_gdual_double.mutate_random">
-<code class="descname">mutate_random</code><span class="sig-paren">(</span><em>N = 1</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_double.mutate_random" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">mutate_random</code><span class="sig-paren">(</span><em class="sig-param">N = 1</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_double.mutate_random" title="Permalink to this definition">¶</a></dt>
 <dd><p>Mutates N randomly selected genes within its allowed bounds</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="dcgpy.expression_gdual_double.set">
-<code class="descname">set</code><span class="sig-paren">(</span><em>chromosome</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_double.set" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">set</code><span class="sig-paren">(</span><em class="sig-param">chromosome</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_double.set" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets the chromosome.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>chromosome</strong> (<code class="docutils literal"><span class="pre">List[int]</span></code>) – the new chromosome</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><strong>ValueError</strong> – if the the chromosome is incompatible with the expression (n.inputs, n.outputs, levels-back, etc.)</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>chromosome</strong> (<code class="docutils literal notranslate"><span class="pre">List[int]</span></code>) – the new chromosome</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – if the the chromosome is incompatible with the expression (n.inputs, n.outputs, levels-back, etc.)</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="dcgpy.expression_gdual_double.set_f_gene">
-<code class="descname">set_f_gene</code><span class="sig-paren">(</span><em>node_id</em>, <em>f_id</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_double.set_f_gene" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">set_f_gene</code><span class="sig-paren">(</span><em class="sig-param">node_id</em>, <em class="sig-param">f_id</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_double.set_f_gene" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets for a valid node (i.e. not an input node) a new kernel.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>node_id</strong> (<code class="docutils literal"><span class="pre">List[int]</span></code>) – the node id</li>
-<li><strong>f_id</strong> (<code class="docutils literal"><span class="pre">List[int]</span></code>) – the kernel id</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>node_id</strong> (<code class="docutils literal notranslate"><span class="pre">List[int]</span></code>) – the node id</p></li>
+<li><p><strong>f_id</strong> (<code class="docutils literal notranslate"><span class="pre">List[int]</span></code>) – the kernel id</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><strong>ValueError</strong> – if the node_id or f_id are  incompatible with the expression.</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – if the node_id or f_id are  incompatible with the expression.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="dcgpy.expression_gdual_double.simplify">
-<code class="descname">simplify</code><span class="sig-paren">(</span><em>in_sym</em>, <em>subs_weights = False</em>, <em>erc = []</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_double.simplify" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">simplify</code><span class="sig-paren">(</span><em class="sig-param">in_sym</em>, <em class="sig-param">subs_weights = False</em>, <em class="sig-param">erc = []</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_double.simplify" title="Permalink to this definition">¶</a></dt>
 <dd><p>Simplifies the symbolic output of dCGP expressions</p>
 <p>Returns the simplified dCGP expression for each output</p>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">This method requires <code class="docutils literal"><span class="pre">sympy</span></code> and <code class="docutils literal"><span class="pre">pyaudi</span></code> modules installed in your Python system</p>
+<p class="admonition-title">Note</p>
+<p>This method requires <code class="docutils literal notranslate"><span class="pre">sympy</span></code> and <code class="docutils literal notranslate"><span class="pre">pyaudi</span></code> modules installed in your Python system</p>
 </div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>in_sym</strong> (a <code class="docutils literal"><span class="pre">List[str]</span></code>) – input symbols (its length must match the number of inputs)</li>
-<li><strong>subs_weights</strong> (a <code class="docutils literal"><span class="pre">bool</span></code>) – indicates whether to substitute the weights symbols with their values</li>
-<li><strong>erc</strong> (a <code class="docutils literal"><span class="pre">List[float]</span></code>) – values of the ephemeral random constants (if empty their symbolic representation is used instead)</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_sym</strong> (a <code class="docutils literal notranslate"><span class="pre">List[str]</span></code>) – input symbols (its length must match the number of inputs)</p></li>
+<li><p><strong>subs_weights</strong> (a <code class="docutils literal notranslate"><span class="pre">bool</span></code>) – indicates whether to substitute the weights symbols with their values</p></li>
+<li><p><strong>erc</strong> (a <code class="docutils literal notranslate"><span class="pre">List[float]</span></code>) – values of the ephemeral random constants (if empty their symbolic representation is used instead)</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A <code class="docutils literal"><span class="pre">List[str]</span></code> containing the simplified expressions</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
-<li><strong>ValueError</strong> – if the length of in_sym does not match the number of inputs</li>
-<li><strong>ValueError</strong> – if the length of erc is larger than the number of inputs</li>
-<li><strong>ImportError</strong> – if modules sympy or pyaudi are not installed in your Python system</li>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A <code class="docutils literal notranslate"><span class="pre">List[str]</span></code> containing the simplified expressions</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ValueError</strong> – if the length of in_sym does not match the number of inputs</p></li>
+<li><p><strong>ValueError</strong> – if the length of erc is larger than the number of inputs</p></li>
+<li><p><strong>ImportError</strong> – if modules sympy or pyaudi are not installed in your Python system</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ex</span> <span class="o">=</span> <span class="n">dcgpy</span><span class="o">.</span><span class="n">expression_weighted_gdual_double</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">dcgpy</span><span class="o">.</span><span class="n">kernel_set_gdual_double</span><span class="p">([</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span><span class="s2">&quot;diff&quot;</span><span class="p">])(),</span><span class="mi">0</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ex</span> <span class="o">=</span> <span class="n">dcgpy</span><span class="o">.</span><span class="n">expression_weighted_gdual_double</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">dcgpy</span><span class="o">.</span><span class="n">kernel_set_gdual_double</span><span class="p">([</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span><span class="s2">&quot;diff&quot;</span><span class="p">])(),</span><span class="mi">0</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">ex</span><span class="o">.</span><span class="n">simplify</span><span class="p">([</span><span class="s1">&#39;x&#39;</span><span class="p">,</span><span class="s1">&#39;c0&#39;</span><span class="p">,</span><span class="s1">&#39;c1&#39;</span><span class="p">],</span><span class="kc">True</span><span class="p">,[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])[</span><span class="mi">0</span><span class="p">])</span>
 <span class="go">x + 6</span>
 </pre></div>
@@ -772,34 +789,30 @@ Gets the arity of the basis functions of the dCGP expression. Either the whole v
 
 <dl class="method">
 <dt id="dcgpy.expression_gdual_double.visualize">
-<code class="descname">visualize</code><span class="sig-paren">(</span><em>in_sym = []</em>, <em>draw_inactive = True</em>, <em>draw_weights = False</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_double.visualize" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">visualize</code><span class="sig-paren">(</span><em class="sig-param">in_sym = []</em>, <em class="sig-param">draw_inactive = True</em>, <em class="sig-param">draw_weights = False</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_double.visualize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Visualizes the d-CGP expression
 Visualizes the graph of the d-CGP expression
 .. note:: This method requires the <cite>graphviz`</cite> module installed in your Python system</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>in_sym</strong> (a <code class="docutils literal"><span class="pre">List[str]</span></code>) – input symbols. Its length must either match the number of inputs or be zero (to visualize them as x_i)</li>
-<li><strong>draw_inactive</strong> (a <code class="docutils literal"><span class="pre">bool</span></code>) – indicates whether to draw inactive nodes</li>
-<li><strong>draw_weights</strong> (a <code class="docutils literal"><span class="pre">bool</span></code>) – indicates whether to draw connection weights symbols</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_sym</strong> (a <code class="docutils literal notranslate"><span class="pre">List[str]</span></code>) – input symbols. Its length must either match the number of inputs or be zero (to visualize them as x_i)</p></li>
+<li><p><strong>draw_inactive</strong> (a <code class="docutils literal notranslate"><span class="pre">bool</span></code>) – indicates whether to draw inactive nodes</p></li>
+<li><p><strong>draw_weights</strong> (a <code class="docutils literal notranslate"><span class="pre">bool</span></code>) – indicates whether to draw connection weights symbols</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The <code class="docutils literal"><span class="pre">graphviz.Digraph</span></code> for the given expression</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
-<li><strong>ImportError</strong> – if module pygraphviz is not installed in your Python system</li>
-<li><strong>ValueError</strong> – if in_sym is nonempty but its length does not match the number of inputs</li>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The <code class="docutils literal notranslate"><span class="pre">graphviz.Digraph</span></code> for the given expression</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ImportError</strong> – if module pygraphviz is not installed in your Python system</p></li>
+<li><p><strong>ValueError</strong> – if in_sym is nonempty but its length does not match the number of inputs</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ex</span> <span class="o">=</span> <span class="n">dcgpy</span><span class="o">.</span><span class="n">expression_double</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">dcgpy</span><span class="o">.</span><span class="n">kernel_set_double</span><span class="p">([</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span><span class="s2">&quot;diff&quot;</span><span class="p">])(),</span><span class="mi">0</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ex</span> <span class="o">=</span> <span class="n">dcgpy</span><span class="o">.</span><span class="n">expression_double</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">dcgpy</span><span class="o">.</span><span class="n">kernel_set_double</span><span class="p">([</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span><span class="s2">&quot;diff&quot;</span><span class="p">])(),</span><span class="mi">0</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">graph</span> <span class="o">=</span> <span class="n">ex</span><span class="o">.</span><span class="n">visualize</span><span class="p">([</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">],</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -813,58 +826,48 @@ Visualizes the graph of the d-CGP expression
 <h2><a class="toc-backref" href="#id4">expression_gdual_vdouble</a><a class="headerlink" href="#expression-gdual-vdouble" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="dcgpy.expression_gdual_vdouble">
-<em class="property">class </em><code class="descclassname">dcgpy.</code><code class="descname">expression_gdual_vdouble</code><span class="sig-paren">(</span><em>inputs</em>, <em>outputs</em>, <em>rows</em>, <em>columns</em>, <em>levels_back</em>, <em>arity</em>, <em>kernels</em>, <em>n_eph</em>, <em>seed = randint</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_vdouble" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">dcgpy.</code><code class="sig-name descname">expression_gdual_vdouble</code><span class="sig-paren">(</span><em class="sig-param">inputs</em>, <em class="sig-param">outputs</em>, <em class="sig-param">rows</em>, <em class="sig-param">columns</em>, <em class="sig-param">levels_back</em>, <em class="sig-param">arity</em>, <em class="sig-param">kernels</em>, <em class="sig-param">n_eph</em>, <em class="sig-param">seed = randint</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_vdouble" title="Permalink to this definition">¶</a></dt>
 <dd><p>A CGP expression</p>
 <p>Constructs a CGP expression operating on gdual_vdouble</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>inputs</strong> (<code class="docutils literal"><span class="pre">int</span></code>) – number of inputs</li>
-<li><strong>outputs</strong> (<code class="docutils literal"><span class="pre">int</span></code>) – number of outputs</li>
-<li><strong>rows</strong> (<code class="docutils literal"><span class="pre">int</span></code>) – number of rows in the cartesian program</li>
-<li><strong>columns</strong> (<code class="docutils literal"><span class="pre">int</span></code>) – number of columns in the cartesian program</li>
-<li><strong>levels_back</strong> (<code class="docutils literal"><span class="pre">int</span></code>) – number of levels-back in the cartesian program</li>
-<li><strong>arity</strong> (<code class="docutils literal"><span class="pre">int</span></code> on <code class="docutils literal"><span class="pre">list</span></code>) – arity of the kernels. Assumed equal for all columns unless its specified by a list. The list must contain a number of entries equal to the number of columns.</li>
-<li><strong>kernels</strong> (<code class="docutils literal"><span class="pre">List[dcgpy.kernel_gdual_vdouble]</span></code>) – kernel functions</li>
-<li><strong>n_eph</strong> (<em>int</em>) – Number of ephemeral constants. Their values and their symbols can be set via dedicated methods.</li>
-<li><strong>seed</strong> (<code class="docutils literal"><span class="pre">int</span></code>) – random seed to generate mutations and chromosomes</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>inputs</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – number of inputs</p></li>
+<li><p><strong>outputs</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – number of outputs</p></li>
+<li><p><strong>rows</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – number of rows in the cartesian program</p></li>
+<li><p><strong>columns</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – number of columns in the cartesian program</p></li>
+<li><p><strong>levels_back</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – number of levels-back in the cartesian program</p></li>
+<li><p><strong>arity</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code> on <code class="docutils literal notranslate"><span class="pre">list</span></code>) – arity of the kernels. Assumed equal for all columns unless its specified by a list. The list must contain a number of entries equal to the number of columns.</p></li>
+<li><p><strong>kernels</strong> (<code class="docutils literal notranslate"><span class="pre">List[dcgpy.kernel_gdual_vdouble]</span></code>) – kernel functions</p></li>
+<li><p><strong>n_eph</strong> (<em>int</em>) – Number of ephemeral constants. Their values and their symbols can be set via dedicated methods.</p></li>
+<li><p><strong>seed</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – random seed to generate mutations and chromosomes</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <dl class="attribute">
 <dt id="dcgpy.expression_gdual_vdouble.eph_val">
-<code class="descname">eph_val</code><a class="headerlink" href="#dcgpy.expression_gdual_vdouble.eph_val" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">eph_val</code><a class="headerlink" href="#dcgpy.expression_gdual_vdouble.eph_val" title="Permalink to this definition">¶</a></dt>
 <dd><p>Values of the ephemeral constants.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">list(<code class="docutils literal"><span class="pre">`)gdual_vdouble`</span></code></td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list(<code class="docutils literal notranslate"><span class="pre">`)gdual_vdouble`</span></code></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="dcgpy.expression_gdual_vdouble.eph_symb">
-<code class="descname">eph_symb</code><a class="headerlink" href="#dcgpy.expression_gdual_vdouble.eph_symb" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">eph_symb</code><a class="headerlink" href="#dcgpy.expression_gdual_vdouble.eph_symb" title="Permalink to this definition">¶</a></dt>
 <dd><p>Symbols used for the ephemeral constants.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">list(<code class="docutils literal"><span class="pre">str</span></code>)</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list(<code class="docutils literal notranslate"><span class="pre">str</span></code>)</p>
+</dd>
+</dl>
 </dd></dl>
 
 <p>Examples:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dcgpy</span> <span class="k">import</span> <span class="o">*</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dcgpy</span> <span class="k">import</span> <span class="o">*</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">dcgp</span> <span class="o">=</span> <span class="n">expression_gdual_vdouble</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">kernel_set</span><span class="p">([</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span><span class="s2">&quot;diff&quot;</span><span class="p">,</span><span class="s2">&quot;mul&quot;</span><span class="p">,</span><span class="s2">&quot;div&quot;</span><span class="p">])(),</span> <span class="mi">0</span><span class="n">u</span><span class="p">,</span> <span class="mi">32</span><span class="n">u</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">dcgp</span><span class="p">)</span>
 <span class="gp">...</span>
@@ -874,25 +877,25 @@ Visualizes the graph of the d-CGP expression
 </div>
 <dl class="method">
 <dt id="dcgpy.expression_gdual_vdouble.get">
-<code class="descname">get</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_vdouble.get" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_vdouble.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the expression chromosome</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="dcgpy.expression_gdual_vdouble.get_active_genes">
-<code class="descname">get_active_genes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_vdouble.get_active_genes" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_active_genes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_vdouble.get_active_genes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the idx of the active genes in the current chromosome (numbering is from 0)</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="dcgpy.expression_gdual_vdouble.get_active_nodes">
-<code class="descname">get_active_nodes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_vdouble.get_active_nodes" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_active_nodes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_vdouble.get_active_nodes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the idx of the active nodes in the current chromosome</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="dcgpy.expression_gdual_vdouble.get_arity">
-<code class="descname">get_arity</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_vdouble.get_arity" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_arity</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_vdouble.get_arity" title="Permalink to this definition">¶</a></dt>
 <dd><p>get_arity(node_id)
 Gets the arity of the basis functions of the dCGP expression. Either the whole vector or that of a single node.</p>
 <p>get_arity()
@@ -902,197 +905,181 @@ Gets the arity of the basis functions of the dCGP expression. Either the whole v
 
 <dl class="method">
 <dt id="dcgpy.expression_gdual_vdouble.get_cols">
-<code class="descname">get_cols</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_vdouble.get_cols" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_cols</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_vdouble.get_cols" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the number of columns of the dCGP expression</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="dcgpy.expression_gdual_vdouble.get_f">
-<code class="descname">get_f</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_vdouble.get_f" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_f</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_vdouble.get_f" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the kernel functions</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="dcgpy.expression_gdual_vdouble.get_gene_idx">
-<code class="descname">get_gene_idx</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_vdouble.get_gene_idx" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_gene_idx</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_vdouble.get_gene_idx" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets a vector containing the indexes in the chromosome where each node starts to be expressed.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="dcgpy.expression_gdual_vdouble.get_lb">
-<code class="descname">get_lb</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_vdouble.get_lb" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_lb</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_vdouble.get_lb" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the lower bounds of the chromosome</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="dcgpy.expression_gdual_vdouble.get_levels_back">
-<code class="descname">get_levels_back</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_vdouble.get_levels_back" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_levels_back</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_vdouble.get_levels_back" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the number of levels-back allowed for the dCGP expression</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="dcgpy.expression_gdual_vdouble.get_m">
-<code class="descname">get_m</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_vdouble.get_m" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_m</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_vdouble.get_m" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the number of outputs of the dCGP expression</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="dcgpy.expression_gdual_vdouble.get_n">
-<code class="descname">get_n</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_vdouble.get_n" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_n</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_vdouble.get_n" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the number of inputs of the dCGP expression</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="dcgpy.expression_gdual_vdouble.get_rows">
-<code class="descname">get_rows</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_vdouble.get_rows" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_rows</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_vdouble.get_rows" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the number of rows of the dCGP expression</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="dcgpy.expression_gdual_vdouble.get_ub">
-<code class="descname">get_ub</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_vdouble.get_ub" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_ub</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_vdouble.get_ub" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the upper bounds of the chromosome</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="dcgpy.expression_gdual_vdouble.loss">
-<code class="descname">loss</code><span class="sig-paren">(</span><em>points</em>, <em>labels</em>, <em>loss_type</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_vdouble.loss" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">loss</code><span class="sig-paren">(</span><em class="sig-param">points</em>, <em class="sig-param">labels</em>, <em class="sig-param">loss_type</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_vdouble.loss" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the loss of the model on the data</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>points</strong> (2D NumPy float array or <code class="docutils literal"><span class="pre">list</span> <span class="pre">of</span> <span class="pre">lists</span></code> of <code class="docutils literal"><span class="pre">float</span></code>) – the input data</li>
-<li><strong>labels</strong> (2D NumPy float array or <code class="docutils literal"><span class="pre">list</span> <span class="pre">of</span> <span class="pre">lists</span></code> of <code class="docutils literal"><span class="pre">float</span></code>) – the output labels (supervised signal)</li>
-<li><strong>loss_type</strong> (<code class="docutils literal"><span class="pre">str</span></code>) – the loss, one of “MSE” for Mean Square Error and “CE” for Cross-Entropy.</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>points</strong> (2D NumPy float array or <code class="docutils literal notranslate"><span class="pre">list</span> <span class="pre">of</span> <span class="pre">lists</span></code> of <code class="docutils literal notranslate"><span class="pre">float</span></code>) – the input data</p></li>
+<li><p><strong>labels</strong> (2D NumPy float array or <code class="docutils literal notranslate"><span class="pre">list</span> <span class="pre">of</span> <span class="pre">lists</span></code> of <code class="docutils literal notranslate"><span class="pre">float</span></code>) – the output labels (supervised signal)</p></li>
+<li><p><strong>loss_type</strong> (<code class="docutils literal notranslate"><span class="pre">str</span></code>) – the loss, one of “MSE” for Mean Square Error and “CE” for Cross-Entropy.</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><strong>ValueError</strong> – if <em>points</em> or <em>labels</em> are malformed or if <em>loss_type</em> is not one of the available types.</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – if <em>points</em> or <em>labels</em> are malformed or if <em>loss_type</em> is not one of the available types.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="dcgpy.expression_gdual_vdouble.mutate">
-<code class="descname">mutate</code><span class="sig-paren">(</span><em>idxs</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_vdouble.mutate" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">mutate</code><span class="sig-paren">(</span><em class="sig-param">idxs</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_vdouble.mutate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Mutates multiple genes within their allowed bounds.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>idxs</strong> (<code class="docutils literal"><span class="pre">List[int]</span></code>) – indexes of the genes to me mutated</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><strong>ValueError</strong> – if the index of a gene is out of bounds</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>idxs</strong> (<code class="docutils literal notranslate"><span class="pre">List[int]</span></code>) – indexes of the genes to me mutated</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – if the index of a gene is out of bounds</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="dcgpy.expression_gdual_vdouble.mutate_active">
-<code class="descname">mutate_active</code><span class="sig-paren">(</span><em>N = 1</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_vdouble.mutate_active" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">mutate_active</code><span class="sig-paren">(</span><em class="sig-param">N = 1</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_vdouble.mutate_active" title="Permalink to this definition">¶</a></dt>
 <dd><p>Mutates N randomly selected active genes within their allowed bounds</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="dcgpy.expression_gdual_vdouble.mutate_active_cgene">
-<code class="descname">mutate_active_cgene</code><span class="sig-paren">(</span><em>N = 1</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_vdouble.mutate_active_cgene" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">mutate_active_cgene</code><span class="sig-paren">(</span><em class="sig-param">N = 1</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_vdouble.mutate_active_cgene" title="Permalink to this definition">¶</a></dt>
 <dd><p>Mutates N randomly selected active connections within their allowed bounds</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="dcgpy.expression_gdual_vdouble.mutate_active_fgene">
-<code class="descname">mutate_active_fgene</code><span class="sig-paren">(</span><em>N = 1</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_vdouble.mutate_active_fgene" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">mutate_active_fgene</code><span class="sig-paren">(</span><em class="sig-param">N = 1</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_vdouble.mutate_active_fgene" title="Permalink to this definition">¶</a></dt>
 <dd><p>Mutates N randomly selected active function genes within their allowed bounds</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="dcgpy.expression_gdual_vdouble.mutate_ogene">
-<code class="descname">mutate_ogene</code><span class="sig-paren">(</span><em>N = 1</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_vdouble.mutate_ogene" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">mutate_ogene</code><span class="sig-paren">(</span><em class="sig-param">N = 1</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_vdouble.mutate_ogene" title="Permalink to this definition">¶</a></dt>
 <dd><p>Mutates N randomly selected output genes connection within their allowed bounds</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="dcgpy.expression_gdual_vdouble.mutate_random">
-<code class="descname">mutate_random</code><span class="sig-paren">(</span><em>N = 1</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_vdouble.mutate_random" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">mutate_random</code><span class="sig-paren">(</span><em class="sig-param">N = 1</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_vdouble.mutate_random" title="Permalink to this definition">¶</a></dt>
 <dd><p>Mutates N randomly selected genes within its allowed bounds</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="dcgpy.expression_gdual_vdouble.set">
-<code class="descname">set</code><span class="sig-paren">(</span><em>chromosome</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_vdouble.set" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">set</code><span class="sig-paren">(</span><em class="sig-param">chromosome</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_vdouble.set" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets the chromosome.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>chromosome</strong> (<code class="docutils literal"><span class="pre">List[int]</span></code>) – the new chromosome</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><strong>ValueError</strong> – if the the chromosome is incompatible with the expression (n.inputs, n.outputs, levels-back, etc.)</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>chromosome</strong> (<code class="docutils literal notranslate"><span class="pre">List[int]</span></code>) – the new chromosome</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – if the the chromosome is incompatible with the expression (n.inputs, n.outputs, levels-back, etc.)</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="dcgpy.expression_gdual_vdouble.set_f_gene">
-<code class="descname">set_f_gene</code><span class="sig-paren">(</span><em>node_id</em>, <em>f_id</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_vdouble.set_f_gene" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">set_f_gene</code><span class="sig-paren">(</span><em class="sig-param">node_id</em>, <em class="sig-param">f_id</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_vdouble.set_f_gene" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets for a valid node (i.e. not an input node) a new kernel.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>node_id</strong> (<code class="docutils literal"><span class="pre">List[int]</span></code>) – the node id</li>
-<li><strong>f_id</strong> (<code class="docutils literal"><span class="pre">List[int]</span></code>) – the kernel id</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>node_id</strong> (<code class="docutils literal notranslate"><span class="pre">List[int]</span></code>) – the node id</p></li>
+<li><p><strong>f_id</strong> (<code class="docutils literal notranslate"><span class="pre">List[int]</span></code>) – the kernel id</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><strong>ValueError</strong> – if the node_id or f_id are  incompatible with the expression.</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – if the node_id or f_id are  incompatible with the expression.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="dcgpy.expression_gdual_vdouble.simplify">
-<code class="descname">simplify</code><span class="sig-paren">(</span><em>in_sym</em>, <em>subs_weights = False</em>, <em>erc = []</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_vdouble.simplify" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">simplify</code><span class="sig-paren">(</span><em class="sig-param">in_sym</em>, <em class="sig-param">subs_weights = False</em>, <em class="sig-param">erc = []</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_vdouble.simplify" title="Permalink to this definition">¶</a></dt>
 <dd><p>Simplifies the symbolic output of dCGP expressions</p>
 <p>Returns the simplified dCGP expression for each output</p>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">This method requires <code class="docutils literal"><span class="pre">sympy</span></code> and <code class="docutils literal"><span class="pre">pyaudi</span></code> modules installed in your Python system</p>
+<p class="admonition-title">Note</p>
+<p>This method requires <code class="docutils literal notranslate"><span class="pre">sympy</span></code> and <code class="docutils literal notranslate"><span class="pre">pyaudi</span></code> modules installed in your Python system</p>
 </div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>in_sym</strong> (a <code class="docutils literal"><span class="pre">List[str]</span></code>) – input symbols (its length must match the number of inputs)</li>
-<li><strong>subs_weights</strong> (a <code class="docutils literal"><span class="pre">bool</span></code>) – indicates whether to substitute the weights symbols with their values</li>
-<li><strong>erc</strong> (a <code class="docutils literal"><span class="pre">List[float]</span></code>) – values of the ephemeral random constants (if empty their symbolic representation is used instead)</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_sym</strong> (a <code class="docutils literal notranslate"><span class="pre">List[str]</span></code>) – input symbols (its length must match the number of inputs)</p></li>
+<li><p><strong>subs_weights</strong> (a <code class="docutils literal notranslate"><span class="pre">bool</span></code>) – indicates whether to substitute the weights symbols with their values</p></li>
+<li><p><strong>erc</strong> (a <code class="docutils literal notranslate"><span class="pre">List[float]</span></code>) – values of the ephemeral random constants (if empty their symbolic representation is used instead)</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A <code class="docutils literal"><span class="pre">List[str]</span></code> containing the simplified expressions</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
-<li><strong>ValueError</strong> – if the length of in_sym does not match the number of inputs</li>
-<li><strong>ValueError</strong> – if the length of erc is larger than the number of inputs</li>
-<li><strong>ImportError</strong> – if modules sympy or pyaudi are not installed in your Python system</li>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A <code class="docutils literal notranslate"><span class="pre">List[str]</span></code> containing the simplified expressions</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ValueError</strong> – if the length of in_sym does not match the number of inputs</p></li>
+<li><p><strong>ValueError</strong> – if the length of erc is larger than the number of inputs</p></li>
+<li><p><strong>ImportError</strong> – if modules sympy or pyaudi are not installed in your Python system</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ex</span> <span class="o">=</span> <span class="n">dcgpy</span><span class="o">.</span><span class="n">expression_weighted_gdual_double</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">dcgpy</span><span class="o">.</span><span class="n">kernel_set_gdual_double</span><span class="p">([</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span><span class="s2">&quot;diff&quot;</span><span class="p">])(),</span><span class="mi">0</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ex</span> <span class="o">=</span> <span class="n">dcgpy</span><span class="o">.</span><span class="n">expression_weighted_gdual_double</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">dcgpy</span><span class="o">.</span><span class="n">kernel_set_gdual_double</span><span class="p">([</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span><span class="s2">&quot;diff&quot;</span><span class="p">])(),</span><span class="mi">0</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">ex</span><span class="o">.</span><span class="n">simplify</span><span class="p">([</span><span class="s1">&#39;x&#39;</span><span class="p">,</span><span class="s1">&#39;c0&#39;</span><span class="p">,</span><span class="s1">&#39;c1&#39;</span><span class="p">],</span><span class="kc">True</span><span class="p">,[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])[</span><span class="mi">0</span><span class="p">])</span>
 <span class="go">x + 6</span>
 </pre></div>
@@ -1101,34 +1088,30 @@ Gets the arity of the basis functions of the dCGP expression. Either the whole v
 
 <dl class="method">
 <dt id="dcgpy.expression_gdual_vdouble.visualize">
-<code class="descname">visualize</code><span class="sig-paren">(</span><em>in_sym = []</em>, <em>draw_inactive = True</em>, <em>draw_weights = False</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_vdouble.visualize" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">visualize</code><span class="sig-paren">(</span><em class="sig-param">in_sym = []</em>, <em class="sig-param">draw_inactive = True</em>, <em class="sig-param">draw_weights = False</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_vdouble.visualize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Visualizes the d-CGP expression
 Visualizes the graph of the d-CGP expression
 .. note:: This method requires the <cite>graphviz`</cite> module installed in your Python system</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>in_sym</strong> (a <code class="docutils literal"><span class="pre">List[str]</span></code>) – input symbols. Its length must either match the number of inputs or be zero (to visualize them as x_i)</li>
-<li><strong>draw_inactive</strong> (a <code class="docutils literal"><span class="pre">bool</span></code>) – indicates whether to draw inactive nodes</li>
-<li><strong>draw_weights</strong> (a <code class="docutils literal"><span class="pre">bool</span></code>) – indicates whether to draw connection weights symbols</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_sym</strong> (a <code class="docutils literal notranslate"><span class="pre">List[str]</span></code>) – input symbols. Its length must either match the number of inputs or be zero (to visualize them as x_i)</p></li>
+<li><p><strong>draw_inactive</strong> (a <code class="docutils literal notranslate"><span class="pre">bool</span></code>) – indicates whether to draw inactive nodes</p></li>
+<li><p><strong>draw_weights</strong> (a <code class="docutils literal notranslate"><span class="pre">bool</span></code>) – indicates whether to draw connection weights symbols</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The <code class="docutils literal"><span class="pre">graphviz.Digraph</span></code> for the given expression</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
-<li><strong>ImportError</strong> – if module pygraphviz is not installed in your Python system</li>
-<li><strong>ValueError</strong> – if in_sym is nonempty but its length does not match the number of inputs</li>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The <code class="docutils literal notranslate"><span class="pre">graphviz.Digraph</span></code> for the given expression</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ImportError</strong> – if module pygraphviz is not installed in your Python system</p></li>
+<li><p><strong>ValueError</strong> – if in_sym is nonempty but its length does not match the number of inputs</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ex</span> <span class="o">=</span> <span class="n">dcgpy</span><span class="o">.</span><span class="n">expression_double</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">dcgpy</span><span class="o">.</span><span class="n">kernel_set_double</span><span class="p">([</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span><span class="s2">&quot;diff&quot;</span><span class="p">])(),</span><span class="mi">0</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ex</span> <span class="o">=</span> <span class="n">dcgpy</span><span class="o">.</span><span class="n">expression_double</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">dcgpy</span><span class="o">.</span><span class="n">kernel_set_double</span><span class="p">([</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span><span class="s2">&quot;diff&quot;</span><span class="p">])(),</span><span class="mi">0</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">graph</span> <span class="o">=</span> <span class="n">ex</span><span class="o">.</span><span class="n">visualize</span><span class="p">([</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">],</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1140,21 +1123,52 @@ Visualizes the graph of the d-CGP expression
 </div>
 
 
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="expression_weighted.html" class="btn btn-neutral float-right" title="expression_weighted (dCGP-W)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="kernel_list.html" class="btn btn-neutral float-left" title="Available kernels" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
     </div>
-      
-  </div>
-</div>
-<footer class="footer">
-  <div class="container">
-    <p class="pull-right">
-      <a href="#">Back to top</a>
-      
-    </p>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
     <p>
-        &copy; Copyright 2018, Dario Izzo, Francesco Biscani, Alessio Mereta.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7.<br/>
+        &copy; Copyright 2018, Dario Izzo, Francesco Biscani, Alessio Mereta
+
     </p>
   </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
 </footer>
-  </body>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
 </html>

@@ -1,0 +1,31 @@
+.wy-side-nav-search {
+    background-color: #345a33
+}
+.wy-side-nav-search a:visited  {
+    color: #fcfcfc;
+}
+.wy-menu-vertical a:visited {
+    color: #fcfcfc;
+}
+
+.highlight {
+    background: #222222;
+    color: #AAA;
+}
+
+.rst-content dl:not(.docutils) dt{
+    background: #d7e2af;
+    color: #829040;
+    border-top: solid 3px #b3ab31;
+}
+
+.rst-content tt.literal, .rst-content tt.literal, .rst-content code.literal {
+    color: #b3ab31;
+}
+
+a:visited {
+    color: #38d230;
+}
+a {
+    color: #208050;
+}
