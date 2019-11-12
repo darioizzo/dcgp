@@ -8,15 +8,11 @@ C++
 
 dCGP is a header-only library which has the following third party dependencies:
 
-* `Boost <http://www.boost.org/>`_, various C++ utilities.
-* `Eigen <http://eigen.tuxfamily.org/index.php?title=Main_Page>`_, linear algebra library.
-* `Pagmo <https://github.com/esa/pagmo2>`_, parallel optimization library.
-* `tbb <https://github.com/intel/tbb>`_, lets you easily write parallel C++ programs that take full advantage of multicore performance.
 * `AuDi <http://darioizzo.github.io/audi/>`_, high order automated differentiation library.
+* `Boost <http://www.boost.org/>`_, various C++ utilities.
 * `Symengine <https://github.com/symengine/symengine>`_, symbolic manipulation of math expressions.
 
-After making sure the dependencies above are installed and found in your system, you may download
-the latest dCGP code via git:
+After making sure the dependencies above are installed in your system, you may download the latest dCGP version via git:
 
 .. code-block:: console
 

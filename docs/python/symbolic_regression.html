@@ -114,9 +114,10 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../theory/index.html">Background</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../credits.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">C++ examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html#python-examples">Python examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory.html">Cartesian Genetic Programming (CGP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory.html#differentiable-cartesian-genetic-programming-dcgp">Differentiable Cartesian Genetic Programming (dCGP)</a></li>
 </ul>
 
             
@@ -216,7 +217,7 @@
 </div>
 <dl class="class">
 <dt id="dcgpy.symbolic_regression">
-<em class="property">class </em><code class="sig-prename descclassname">dcgpy.</code><code class="sig-name descname">symbolic_regression</code><span class="sig-paren">(</span><em class="sig-param">points</em>, <em class="sig-param">labels</em>, <em class="sig-param">rows</em>, <em class="sig-param">columns</em>, <em class="sig-param">levels_back</em>, <em class="sig-param">arity</em>, <em class="sig-param">kernels</em>, <em class="sig-param">n_eph</em>, <em class="sig-param">multi_objective</em>, <em class="sig-param">parallel_batches=0</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.symbolic_regression" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">dcgpy.</code><code class="sig-name descname">symbolic_regression</code><span class="sig-paren">(</span><em class="sig-param">points</em>, <em class="sig-param">labels</em>, <em class="sig-param">rows = 1</em>, <em class="sig-param">columns=16</em>, <em class="sig-param">levels_back=17</em>, <em class="sig-param">arity=2</em>, <em class="sig-param">kernels</em>, <em class="sig-param">n_eph=0</em>, <em class="sig-param">multi_objective=False</em>, <em class="sig-param">parallel_batches=0</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.symbolic_regression" title="Permalink to this definition">¶</a></dt>
 <dd><p>Symbolic regression is a type of regression analysis that searches the space of mathematical expressions to
 find the model that best fits a given dataset, both in terms of accuracy and simplicity
 (ref: <a class="reference external" href="https://en.wikipedia.org/wiki/Symbolic_regression">https://en.wikipedia.org/wiki/Symbolic_regression</a>). It also is one of the applications

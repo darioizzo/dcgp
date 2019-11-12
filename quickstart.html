@@ -98,9 +98,10 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="docs/index.html">Documentation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials/index.html">Tutorials</a></li>
-<li class="toctree-l1"><a class="reference internal" href="theory/index.html">Background</a></li>
-<li class="toctree-l1"><a class="reference internal" href="credits.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/index.html">C++ examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/index.html#python-examples">Python examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="theory.html">Cartesian Genetic Programming (CGP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="theory.html#differentiable-cartesian-genetic-programming-dcgp">Differentiable Cartesian Genetic Programming (dCGP)</a></li>
 </ul>
 
             
@@ -193,8 +194,7 @@
 <h1>Quick start examples<a class="headerlink" href="#quick-start-examples" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="c">
 <h2>C++<a class="headerlink" href="#c" title="Permalink to this headline">¶</a></h2>
-<p>After following the <a class="reference internal" href="installation.html#installationguide"><span class="std std-ref">Installation guide</span></a> you will be able to compile and run your first C++ dCGP program,
-put the following text into a <code class="docutils literal notranslate"><span class="pre">getting_started.cpp</span></code> file:</p>
+<p>After following the <a class="reference internal" href="installation.html#installationguide"><span class="std std-ref">Installation guide</span></a> you will be able to compile and run your first C++ dCGP program:</p>
 <div class="highlight-c++ notranslate" id="getting-started-c"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
@@ -220,65 +220,43 @@ put the following text into a <code class="docutils literal notranslate"><span c
 23
 24
 25
-26
-27</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+26</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;dcgp/expression.hpp&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;dcgp/kernel_set.hpp&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;audi/gdual.hpp&gt;</span><span class="cp"></span>
 
 <span class="k">using</span> <span class="k">namespace</span> <span class="n">dcgp</span><span class="p">;</span>
 
 <span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
     <span class="c1">// 1- Instantiate a random expression using the 4 basic arithmetic operations</span>
-    <span class="n">kernel_set</span><span class="o">&lt;</span><span class="n">audi</span><span class="o">::</span><span class="n">gdual_d</span><span class="o">&gt;</span> <span class="n">basic_set</span><span class="p">({</span><span class="s">&quot;sum&quot;</span><span class="p">,</span> <span class="s">&quot;diff&quot;</span><span class="p">,</span> <span class="s">&quot;div&quot;</span><span class="p">,</span> <span class="s">&quot;mul&quot;</span><span class="p">});</span>
-    <span class="n">expression</span><span class="o">&lt;</span><span class="n">audi</span><span class="o">::</span><span class="n">gdual_d</span><span class="o">&gt;</span> <span class="n">ex</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">basic_set</span><span class="p">(),</span> <span class="mi">1u</span><span class="p">);</span>
+    <span class="n">kernel_set</span><span class="o">&lt;</span><span class="n">gdual_d</span><span class="o">&gt;</span> <span class="n">ks</span><span class="p">({</span><span class="s">&quot;sum&quot;</span><span class="p">,</span> <span class="s">&quot;diff&quot;</span><span class="p">,</span> <span class="s">&quot;div&quot;</span><span class="p">,</span> <span class="s">&quot;mul&quot;</span><span class="p">});</span>
+    <span class="n">expression</span><span class="o">&lt;</span><span class="n">gdual_d</span><span class="o">&gt;</span> <span class="n">ex</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">ks</span><span class="p">(),</span> <span class="mi">123212321</span><span class="p">);</span>
 
     <span class="c1">// 2 - Define the symbol set (in our case, 1 input variable named &quot;x&quot;) and visualize the expression</span>
     <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">in_sym</span><span class="p">({</span><span class="s">&quot;x&quot;</span><span class="p">});</span>
-    <span class="n">audi</span><span class="o">::</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;Expression: &quot;</span><span class="p">,</span> <span class="n">ex</span><span class="p">(</span><span class="n">in_sym</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+    <span class="n">stream</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="p">,</span> <span class="s">&quot;Expression: &quot;</span><span class="p">,</span> <span class="n">ex</span><span class="p">(</span><span class="n">in_sym</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
 
     <span class="c1">// 3 - Define a gdual number of value 1.2 and truncation order 2</span>
-    <span class="n">audi</span><span class="o">::</span><span class="n">gdual_d</span> <span class="n">x</span><span class="p">(</span><span class="mf">1.2</span><span class="p">,</span> <span class="s">&quot;x&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
+    <span class="n">gdual_d</span> <span class="n">x</span><span class="p">(</span><span class="mf">1.2</span><span class="p">,</span> <span class="s">&quot;x&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
 
     <span class="c1">// 4 - Compute the output of the expression and its second derivative in x = 1.2 and visualize</span>
-    <span class="n">audi</span><span class="o">::</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">Expression in x=1.2: </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">ex</span><span class="p">({</span><span class="n">x</span><span class="p">})[</span><span class="mi">0</span><span class="p">],</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
-    <span class="n">audi</span><span class="o">::</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">Second derivative: &quot;</span><span class="p">,</span> <span class="n">ex</span><span class="p">({</span><span class="n">x</span><span class="p">})[</span><span class="mi">0</span><span class="p">].</span><span class="n">get_derivative</span><span class="p">({</span><span class="mi">2</span><span class="p">}),</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+    <span class="n">stream</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="p">,</span> <span class="s">&quot;Expression in x=1.2: &quot;</span><span class="p">,</span> <span class="n">ex</span><span class="p">({</span><span class="n">x</span><span class="p">})[</span><span class="mi">0</span><span class="p">],</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+    <span class="n">stream</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="p">,</span> <span class="s">&quot;Second derivative: &quot;</span><span class="p">,</span> <span class="n">ex</span><span class="p">({</span><span class="n">x</span><span class="p">})[</span><span class="mi">0</span><span class="p">].</span><span class="n">get_derivative</span><span class="p">({</span><span class="mi">2</span><span class="p">}),</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
 
     <span class="c1">// 5 - Mutate the expression with 2 random mutations of active genes and visualize</span>
     <span class="n">ex</span><span class="p">.</span><span class="n">mutate_active</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
-    <span class="n">audi</span><span class="o">::</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">Mutated expression: &quot;</span><span class="p">,</span> <span class="n">ex</span><span class="p">(</span><span class="n">in_sym</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+    <span class="n">stream</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="p">,</span> <span class="s">&quot;Mutated expression: &quot;</span><span class="p">,</span> <span class="n">ex</span><span class="p">(</span><span class="n">in_sym</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
 </td></tr></table></div>
-<p>To compile it, create also, in the same folder, a <code class="docutils literal notranslate"><span class="pre">CmakeLists.txt</span></code> file with the following content:</p>
-<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">project</span><span class="p">(</span><span class="s">getting_started</span><span class="p">)</span>
-
-<span class="nb">cmake_minimum_required</span><span class="p">(</span><span class="s">VERSION</span> <span class="s">3.2</span><span class="p">)</span>
-
-<span class="nb">find_package</span><span class="p">(</span><span class="s">dcgp</span> <span class="s">REQUIRED</span><span class="p">)</span>
-
-<span class="nb">add_executable</span><span class="p">(</span><span class="s">getting_started</span> <span class="s">getting_started.cpp</span><span class="p">)</span>
-<span class="nb">target_link_libraries</span><span class="p">(</span><span class="s">getting_started</span> <span class="s">Dcgp::dcgp</span><span class="p">)</span>
-
-<span class="nb">set_property</span><span class="p">(</span><span class="s">TARGET</span> <span class="s">getting_started</span> <span class="s">PROPERTY</span> <span class="s">CXX_STANDARD</span> <span class="s">17</span><span class="p">)</span>
-<span class="nb">set_property</span><span class="p">(</span><span class="s">TARGET</span> <span class="s">getting_started</span> <span class="s">PROPERTY</span> <span class="s">CXX_STANDARD_REQUIRED</span> <span class="s">YES</span><span class="p">)</span>
-<span class="nb">set_property</span><span class="p">(</span><span class="s">TARGET</span> <span class="s">getting_started</span> <span class="s">PROPERTY</span> <span class="s">CXX_EXTENSIONS</span> <span class="s">NO</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>then:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> mkdir build
-<span class="gp">$</span> <span class="nb">cd</span> build
-<span class="gp">$</span> cmake ../
-<span class="gp">$</span> make
-<span class="gp">$</span> ./getting_started
+<p>Place it into a getting_started.cpp text file and compile it with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>g++ -std<span class="o">=</span>c++11 getting_started.cpp -lmpfr -lgmp -pthread
 </pre></div>
 </div>
 </div>
 <hr class="docutils" />
 <div class="section" id="python">
 <h2>Python<a class="headerlink" href="#python" title="Permalink to this headline">¶</a></h2>
-<p>If you have successfully compiled and installed dcgpy following the <a class="reference internal" href="installation.html#installationguide"><span class="std std-ref">Installation guide</span></a> you will be able to test its
-use by running the following script:</p>
+<p>If you have successfully compiled and installed dcgpy following the <a class="reference internal" href="installation.html#installationguide"><span class="std std-ref">Installation guide</span></a> you will be able to test its use by running the following script:</p>
 <div class="highlight-python notranslate" id="getting-started-py"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
@@ -336,11 +314,11 @@ use by running the following script:</p>
 <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Mutated expression:&quot;</span><span class="p">,</span> <span class="n">ex</span><span class="p">(</span><span class="n">in_sym</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
 </pre></div>
 </td></tr></table></div>
-<p>Place it into a <code class="docutils literal notranslate"><span class="pre">getting_started.py</span></code> text file and run it with:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> python getting_started.py
+<p>Place it into a getting_started.py text file and run it with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python getting_started.py
 </pre></div>
 </div>
-<p>We recommend the use of <a class="reference external" href="https://jupyter.org/">Jupyter</a> or <a class="reference external" href="https://github.com/ipython/ipython">Ipython</a> to enjoy <code class="docutils literal notranslate"><span class="pre">dcgpy</span></code> the most.</p>
+<p>We recommend the use of Jupyter or Ipython do enjoy dcgpy the most.</p>
 </div>
 </div>
 

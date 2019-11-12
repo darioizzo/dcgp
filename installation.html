@@ -103,9 +103,10 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick start examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="docs/index.html">Documentation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials/index.html">Tutorials</a></li>
-<li class="toctree-l1"><a class="reference internal" href="theory/index.html">Background</a></li>
-<li class="toctree-l1"><a class="reference internal" href="credits.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/index.html">C++ examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/index.html#python-examples">Python examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="theory.html">Cartesian Genetic Programming (CGP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="theory.html#differentiable-cartesian-genetic-programming-dcgp">Differentiable Cartesian Genetic Programming (dCGP)</a></li>
 </ul>
 
             
@@ -200,15 +201,11 @@
 <h2>C++<a class="headerlink" href="#c" title="Permalink to this headline">¶</a></h2>
 <p>dCGP is a header-only library which has the following third party dependencies:</p>
 <ul class="simple">
-<li><p><a class="reference external" href="http://www.boost.org/">Boost</a>, various C++ utilities.</p></li>
-<li><p><a class="reference external" href="http://eigen.tuxfamily.org/index.php?title=Main_Page">Eigen</a>, linear algebra library.</p></li>
-<li><p><a class="reference external" href="https://github.com/esa/pagmo2">Pagmo</a>, parallel optimization library.</p></li>
-<li><p><a class="reference external" href="https://github.com/intel/tbb">tbb</a>, lets you easily write parallel C++ programs that take full advantage of multicore performance.</p></li>
 <li><p><a class="reference external" href="http://darioizzo.github.io/audi/">AuDi</a>, high order automated differentiation library.</p></li>
+<li><p><a class="reference external" href="http://www.boost.org/">Boost</a>, various C++ utilities.</p></li>
 <li><p><a class="reference external" href="https://github.com/symengine/symengine">Symengine</a>, symbolic manipulation of math expressions.</p></li>
 </ul>
-<p>After making sure the dependencies above are installed and found in your system, you may download
-the latest dCGP code via git:</p>
+<p>After making sure the dependencies above are installed in your system, you may download the latest dCGP version via git:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> git clone https://github.com/darioizzo/dcgp.git
 </pre></div>
 </div>
