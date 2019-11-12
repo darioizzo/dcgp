@@ -46,3 +46,7 @@ a:visited {
 a {
     color: #208050;
 }
+
+div.nbinput .n {
+    color: rgb(10, 9, 9);
+}

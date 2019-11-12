@@ -6,6 +6,8 @@ Symbolic Regression
 .. toctree::
   :maxdepth: 1
 
+  ../../notebooks/symbolic_regression_1.ipynb
+
 Others
 ^^^^^^
 

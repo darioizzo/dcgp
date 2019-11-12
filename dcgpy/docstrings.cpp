@@ -1058,7 +1058,7 @@ case, aside the Mean Squared Error, the model complexity will be considered as a
 
 std::string symbolic_regression_init_doc()
 {
-    return R"(__init__(points, labels, rows, columns, levels_back, arity, kernels, n_eph, multi_objective, parallel_batches=0)
+    return R"(__init__(points, labels, rows = 1, columns=16, levels_back=17, arity=2, kernels, n_eph=0, multi_objective=False, parallel_batches=0)
 
 Constructs a symbolic_regression optimization problem compatible with the pagmo UDP interface.
 
