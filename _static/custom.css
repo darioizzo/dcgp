@@ -1,6 +1,11 @@
 .wy-side-nav-search {
     background-color: #345a33
 }
+
+.wy-nav-top {
+    background: #345a33;
+}
+
 .wy-side-nav-search a:visited  {
     color: #fcfcfc;
 }
@@ -40,4 +45,8 @@ a:visited {
 }
 a {
     color: #208050;
+}
+
+div.nbinput .n {
+    color: rgb(10, 9, 9);
 }

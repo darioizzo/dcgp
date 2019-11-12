@@ -103,7 +103,7 @@
 <li class="toctree-l4 current"><a class="current reference internal" href="#">Finding an entire non dominated front of formulas.</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="index.html#other-applications">Other Applications</a></li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#others">Others</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../py/index.html">Python</a></li>
@@ -285,7 +285,7 @@ the problem vladi6 from the dcgp::gym, that is: 6*cos(x*sin(y))</p>
 <span class="p">{</span>
     <span class="c1">// We load the data (using problem vladi6 from the gym)</span>
     <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&gt;</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">;</span>
-    <span class="n">gym</span><span class="o">::</span><span class="n">generate_vladi6</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">);</span>
+    <span class="n">gym</span><span class="o">::</span><span class="n">generate_sinecosine</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">);</span>
 
     <span class="c1">// We instantiate a symbolic regression problem with one only ephemeral constants.</span>
     <span class="c1">// Note that here we also set a batch parallelism to 5 so that 5 batches of 2 points</span>
