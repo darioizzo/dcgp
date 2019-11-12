@@ -39,7 +39,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Learning constants in a symbolic regression task (PART II)" href="learning_constants2.html" />
-    <link rel="prev" title="Search for first integrals of Kepler’s problem" href="../tutorials/cpp_kepler_first_integral.html" /> 
+    <link rel="prev" title="Symbolic Regression (via Evolutionary Strategy)" href="symbolic_regression_1.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -94,30 +94,27 @@
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick start examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../docs/index.html">Documentation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">C++ examples</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../tutorials/index.html#python-examples">Python examples</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Learning constants in a symbolic regression task</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#The-kernel-functions">The kernel functions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#The-ES-(1+\lambda)-algorithm">The ES-(1+<span class="math notranslate nohighlight">\(\lambda\)</span>) algorithm</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#The-test-problems">The test problems</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#The-error-functions">The error functions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#Problem-P1:-x^5---\pi-x^3-+-x">Problem P1: <span class="math notranslate nohighlight">\(x^5 - \pi x^3 + x\)</span></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#Problem-P2---x^5---\pi-x^3-+-\frac{2\pi}x">Problem P2 - <span class="math notranslate nohighlight">\(x^5 - \pi x^3 + \frac{2\pi}x\)</span></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#Problem-P3---\frac{e-x^5-+-x^3}{x-+-1}">Problem P3 - <span class="math notranslate nohighlight">\(\frac{e x^5 + x^3}{x + 1}\)</span></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#Problem-P4:-\sin(\pi-x)-+-\frac-1x">Problem P4: <span class="math notranslate nohighlight">\(\sin(\pi x) + \frac 1x\)</span></a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../tutorials/index.html">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/cpp/index.html">C++</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../tutorials/py/index.html">Python</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../tutorials/py/index.html#symbolic-regression">Symbolic Regression</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../tutorials/py/index.html#others">Others</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Learning constants in a symbolic regression task</a></li>
+<li class="toctree-l4"><a class="reference internal" href="learning_constants2.html">Learning constants in a symbolic regression task (PART II)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="solving_odes.html">Solving differential equations with dCGP</a></li>
+<li class="toctree-l4"><a class="reference internal" href="weighted_symbolic_regression.html">Weighted dCGP for a symbolic regression task</a></li>
+<li class="toctree-l4"><a class="reference internal" href="finding_prime_integrals.html">Discovery of prime integrals with dCGP</a></li>
+<li class="toctree-l4"><a class="reference internal" href="An_intro_to_dCGPANNs.html">Representing an Artificial Neural Network as a Cartesian Genetic Program</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dCGPANNs_for_classification.html">Training a FFNN in dCGPANN vs. Keras (classification)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dCGPANNs_for_function_approximation.html">Training a FFNN in dCGPANN vs. Keras (regression)</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="learning_constants2.html">Learning constants in a symbolic regression task (PART II)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="solving_odes.html">Solving differential equations with dCGP</a></li>
-<li class="toctree-l2"><a class="reference internal" href="weighted_symbolic_regression.html">Weighted dCGP for a symbolic regression task</a></li>
-<li class="toctree-l2"><a class="reference internal" href="finding_prime_integrals.html">Discovery of prime integrals with dCGP</a></li>
-<li class="toctree-l2"><a class="reference internal" href="An_intro_to_dCGPANNs.html">Representing an Artificial Neural Network as a Cartesian Genetic Program</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dCGPANNs_for_classification.html">Training a FFNN in dCGPANN vs. Keras (classification)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dCGPANNs_for_function_approximation.html">Training a FFNN in dCGPANN vs. Keras (regression)</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../theory.html">Cartesian Genetic Programming (CGP)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../theory.html#differentiable-cartesian-genetic-programming-dcgp">Differentiable Cartesian Genetic Programming (dCGP)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../theory/index.html">Background</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../credits.html">Credits</a></li>
 </ul>
 
             
@@ -163,7 +160,9 @@
     
       <li><a href="../index.html">Docs</a> &raquo;</li>
         
-          <li><a href="../tutorials/index.html">C++ examples</a> &raquo;</li>
+          <li><a href="../tutorials/index.html">Tutorials</a> &raquo;</li>
+        
+          <li><a href="../tutorials/py/index.html">Python</a> &raquo;</li>
         
       <li>Learning constants in a symbolic regression task</li>
     
@@ -878,7 +877,7 @@ ERT Expected run time = avg. number of dCGP evaluations needed:  94195.7894737
         <a href="learning_constants2.html" class="btn btn-neutral float-right" title="Learning constants in a symbolic regression task (PART II)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="../tutorials/cpp_kepler_first_integral.html" class="btn btn-neutral float-left" title="Search for first integrals of Kepler’s problem" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="symbolic_regression_1.html" class="btn btn-neutral float-left" title="Symbolic Regression (via Evolutionary Strategy)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
