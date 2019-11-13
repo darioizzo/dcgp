@@ -3,8 +3,11 @@
 
 #include <sstream>
 #include <stdexcept>
+#include <utility>
 
 #include <boost/algorithm/string/predicate.hpp>
+
+#include <pagmo/threading.hpp>
 
 #include <dcgp/function.hpp>
 #include <dcgp/s11n.hpp>
@@ -47,17 +50,92 @@ BOOST_AUTO_TEST_CASE(function_basic_tests)
             re.what(),
             "This dcp::function object cannot be invoked because it contains a null pointer to a C++ function");
     });
+    BOOST_CHECK(f1.get_thread_safety() == pagmo::thread_safety::basic);
+
+    // Copy construction.
+    auto f1_copy(f1);
+    BOOST_CHECK(f1_copy.is_valid());
+    BOOST_CHECK(f1_copy.is<void (*)()>());
+    BOOST_CHECK(!f1_copy.is<void (*)(int)>());
+    BOOST_CHECK(static_cast<const function<void()> &>(f1_copy).extract<void (*)()>() != nullptr);
+    BOOST_CHECK(static_cast<const function<void()> &>(f1_copy).extract<void (*)(int)>() == nullptr);
+    BOOST_CHECK_EXCEPTION(f1_copy(), std::runtime_error, [](const std::runtime_error &re) {
+        return boost::contains(
+            re.what(),
+            "This dcp::function object cannot be invoked because it contains a null pointer to a C++ function");
+    });
+    BOOST_CHECK(f1_copy.get_thread_safety() == pagmo::thread_safety::basic);
+
+    // Move construction.
+    auto f1_move(std::move(f1_copy));
+    BOOST_CHECK(f1_move.is_valid());
+    BOOST_CHECK(f1_move.is<void (*)()>());
+    BOOST_CHECK(!f1_move.is<void (*)(int)>());
+    BOOST_CHECK(static_cast<const function<void()> &>(f1_move).extract<void (*)()>() != nullptr);
+    BOOST_CHECK(static_cast<const function<void()> &>(f1_move).extract<void (*)(int)>() == nullptr);
+    BOOST_CHECK_EXCEPTION(f1_move(), std::runtime_error, [](const std::runtime_error &re) {
+        return boost::contains(
+            re.what(),
+            "This dcp::function object cannot be invoked because it contains a null pointer to a C++ function");
+    });
+    BOOST_CHECK(f1_move.get_thread_safety() == pagmo::thread_safety::basic);
+    BOOST_CHECK(!f1_copy.is_valid());
+
+    // Copy assignment.
+    f1_copy = f1_move;
+    BOOST_CHECK(f1_copy.is_valid());
+    BOOST_CHECK(f1_copy.is<void (*)()>());
+    BOOST_CHECK(!f1_copy.is<void (*)(int)>());
+    BOOST_CHECK(static_cast<const function<void()> &>(f1_copy).extract<void (*)()>() != nullptr);
+    BOOST_CHECK(static_cast<const function<void()> &>(f1_copy).extract<void (*)(int)>() == nullptr);
+    BOOST_CHECK_EXCEPTION(f1_copy(), std::runtime_error, [](const std::runtime_error &re) {
+        return boost::contains(
+            re.what(),
+            "This dcp::function object cannot be invoked because it contains a null pointer to a C++ function");
+    });
+    BOOST_CHECK(f1_copy.get_thread_safety() == pagmo::thread_safety::basic);
+
+    // Move assignment.
+    f1_move = std::move(f1_copy);
+    BOOST_CHECK(f1_move.is_valid());
+    BOOST_CHECK(f1_move.is<void (*)()>());
+    BOOST_CHECK(!f1_move.is<void (*)(int)>());
+    BOOST_CHECK(static_cast<const function<void()> &>(f1_move).extract<void (*)()>() != nullptr);
+    BOOST_CHECK(static_cast<const function<void()> &>(f1_move).extract<void (*)(int)>() == nullptr);
+    BOOST_CHECK_EXCEPTION(f1_move(), std::runtime_error, [](const std::runtime_error &re) {
+        return boost::contains(
+            re.what(),
+            "This dcp::function object cannot be invoked because it contains a null pointer to a C++ function");
+    });
+    BOOST_CHECK(f1_move.get_thread_safety() == pagmo::thread_safety::basic);
+    BOOST_CHECK(!f1_copy.is_valid());
 
     // The simplest function.
     f1 = function<void()>{hello_world};
     BOOST_CHECK(f1.is_valid());
     f1();
 
+    // A couple of other simple functions.
     function<double(double, double)> f2(double_add);
     BOOST_CHECK(f2(1, 2) == 3);
-
     function<double(const double &, const double &)> f3(double_add_ref);
     BOOST_CHECK(f3(1, 2) == 3);
+
+    // Try with a functor too, setting a custom thread safety.
+    struct local_f {
+        bool operator()() const
+        {
+            return true;
+        }
+        pagmo::thread_safety get_thread_safety() const
+        {
+            return pagmo::thread_safety::none;
+        }
+    };
+    function<bool()> f4(local_f{});
+    BOOST_CHECK(f4());
+    BOOST_CHECK(f4.get_thread_safety() == pagmo::thread_safety::none);
+    BOOST_CHECK(f4.is<local_f>());
 }
 
 BOOST_AUTO_TEST_CASE(function_serialization_test)

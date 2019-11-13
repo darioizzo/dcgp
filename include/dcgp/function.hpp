@@ -9,6 +9,9 @@
 #include <boost/type_traits/integral_constant.hpp>
 #include <boost/type_traits/is_virtual_base_of.hpp>
 
+#include <pagmo/threading.hpp>
+#include <pagmo/type_traits.hpp>
+
 #include <dcgp/s11n.hpp>
 
 // NOTE: we disable address tracking for all user-defined classes. The reason is that even if the final
@@ -48,6 +51,7 @@ struct function_inner_base {
     virtual ~function_inner_base() {}
     virtual std::unique_ptr<function_inner_base> clone() const = 0;
     virtual R operator()(Args &&...) const = 0;
+    virtual pagmo::thread_safety get_thread_safety() const = 0;
     template <typename Archive>
     void serialize(Archive &, unsigned)
     {
@@ -77,6 +81,22 @@ struct function_inner final : function_inner_base<R, Args...> {
     virtual R operator()(Args &&... args) const override final
     {
         return m_value(std::forward<Args>(args)...);
+    }
+
+    // Optional methods.
+    virtual pagmo::thread_safety get_thread_safety() const override final
+    {
+        return get_thread_safety_impl(m_value);
+    }
+    template <typename U, std::enable_if_t<pagmo::has_get_thread_safety<U>::value, int> = 0>
+    static pagmo::thread_safety get_thread_safety_impl(const U &value)
+    {
+        return value.get_thread_safety();
+    }
+    template <typename U, std::enable_if_t<!pagmo::has_get_thread_safety<U>::value, int> = 0>
+    static pagmo::thread_safety get_thread_safety_impl(const U &)
+    {
+        return pagmo::thread_safety::basic;
     }
 
     // Serialization.
@@ -134,9 +154,27 @@ class function<R(Args...)>
 
 public:
     function() : function(static_cast<f_ptr>(nullptr)) {}
-    template <typename T>
+    function(const function &other) : m_ptr(other.ptr()->clone()), m_thread_safety(other.m_thread_safety) {}
+    function(function &&) noexcept = default;
+    function &operator=(function &&other) noexcept
+    {
+        if (this != &other) {
+            m_ptr = std::move(other.m_ptr);
+            m_thread_safety = std::move(other.m_thread_safety);
+        }
+        return *this;
+    }
+    function &operator=(const function &other)
+    {
+        // Copy ctor + move assignment.
+        return *this = function(other);
+    }
+
+    template <typename T, std::enable_if_t<!std::is_same_v<function, uncvref_t<T>>, int> = 0>
     explicit function(T &&x) : function(std::forward<T>(x), std::is_function<uncvref_t<T>>{})
     {
+        // Assign the thread safety level.
+        m_thread_safety = ptr()->get_thread_safety();
     }
 
     // Extraction and related.
@@ -168,6 +206,12 @@ public:
         return m_ptr->operator()(std::forward<Args>(args)...);
     }
 
+    // Thread safety level.
+    pagmo::thread_safety get_thread_safety() const
+    {
+        return m_thread_safety;
+    }
+
     // Check if the function was not
     // moved-from.
     bool is_valid() const
@@ -180,6 +224,7 @@ public:
     void save(Archive &ar, unsigned) const
     {
         ar << m_ptr;
+        ar << m_thread_safety;
     }
     template <typename Archive>
     void load(Archive &ar, unsigned)
@@ -187,6 +232,7 @@ public:
         // Deserialize in a separate object and move it in later, for exception safety.
         function tmp_func;
         ar >> tmp_func.m_ptr;
+        ar >> tmp_func.m_thread_safety;
         *this = std::move(tmp_func);
     }
     BOOST_SERIALIZATION_SPLIT_MEMBER()
@@ -208,6 +254,8 @@ private:
 private:
     // Pointer to the inner base function.
     std::unique_ptr<detail::function_inner_base<R, Args...>> m_ptr;
+    // Thread safety.
+    pagmo::thread_safety m_thread_safety;
 };
 
 } // namespace dcgp
