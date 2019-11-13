@@ -58,6 +58,8 @@ jobs:
                         tbb-devel ^
                         audi ^
                         pyaudi ^
+                        matplotlib ^
+                        sympy ^
                         python=3.7
           conda list
         displayName: "Install conda packages"
@@ -96,4 +98,8 @@ jobs:
           cmake --build . -- -v
           cmake --build . --target install
           python -c "import dcgpy.test; dcgpy.test.run_test_suite()"
+          cd ..
+          cd ..
+          cd tools
+          python tutorial1.py
         displayName: "Configure, build and test"
