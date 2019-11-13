@@ -33,15 +33,15 @@ void expose_kernel(const std::string &type)
         .def("__init__",
              bp::make_constructor(
                  +[](const bp::object &obj1, const bp::object &obj2, const std::string &name) {
-                     dcgp::function<T(const std::vector<T> &)> my_function = [obj1](const std::vector<T> &x) {
+                     dcgp::function<T(const std::vector<T> &)> my_function([obj1](const std::vector<T> &x) {
                          T in = bp::extract<T>(obj1(v_to_l(x)));
                          return in;
-                     };
-                     dcgp::function<std::string(const std::vector<std::string> &)> my_print_function
-                         = [obj2](const std::vector<std::string> &x) {
-                               std::string in = bp::extract<std::string>(obj2(v_to_l(x)));
-                               return in;
-                           };
+                     });
+                     dcgp::function<std::string(const std::vector<std::string> &)> my_print_function(
+                         [obj2](const std::vector<std::string> &x) {
+                             std::string in = bp::extract<std::string>(obj2(v_to_l(x)));
+                             return in;
+                         });
                      return ::new kernel<T>(my_function, my_print_function, name);
                  },
                  bp::default_call_policies(), (bp::arg("callable_f"), bp::arg("callable_s"), bp::arg("name"))),
