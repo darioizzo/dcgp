@@ -7,6 +7,7 @@ Symbolic Regression
   :maxdepth: 1
 
   ../../notebooks/symbolic_regression_1.ipynb
+  ../../notebooks/symbolic_regression_2.ipynb
 
 Others
 ^^^^^^

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Symbolic Regression (via Evolutionary Strategy) &mdash; dCGP 1.3 documentation</title>
+  <title>Learning constants (via Evolutionary Strategy) &mdash; dCGP 1.3 documentation</title>
   
 
   
@@ -39,8 +39,8 @@
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Symbolic Regression with constants (via Evolutionary Strategy)" href="symbolic_regression_2.html" />
-    <link rel="prev" title="Python" href="../tutorials/py/index.html" /> 
+    <link rel="next" title="Learning constants in a symbolic regression task" href="learning_constants.html" />
+    <link rel="prev" title="Symbolic Regression (via Evolutionary Strategy)" href="symbolic_regression_1.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -99,8 +99,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/cpp/index.html">C++</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../tutorials/py/index.html">Python</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="../tutorials/py/index.html#symbolic-regression">Symbolic Regression</a><ul class="current">
-<li class="toctree-l4 current"><a class="current reference internal" href="#">Symbolic Regression (via Evolutionary Strategy)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="symbolic_regression_2.html">Symbolic Regression with constants (via Evolutionary Strategy)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="symbolic_regression_1.html">Symbolic Regression (via Evolutionary Strategy)</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Learning constants (via Evolutionary Strategy)</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../tutorials/py/index.html#others">Others</a></li>
@@ -159,13 +159,13 @@
         
           <li><a href="../tutorials/py/index.html">Python</a> &raquo;</li>
         
-      <li>Symbolic Regression (via Evolutionary Strategy)</li>
+      <li>Learning constants (via Evolutionary Strategy)</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/notebooks/symbolic_regression_1.ipynb.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/notebooks/symbolic_regression_2.ipynb.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -400,11 +400,12 @@ div.rendered_html tbody tr:hover {
     text-align: unset;
 }
 </style>
-<div class="section" id="Symbolic-Regression-(via-Evolutionary-Strategy)">
-<h1>Symbolic Regression (via Evolutionary Strategy)<a class="headerlink" href="#Symbolic-Regression-(via-Evolutionary-Strategy)" title="Permalink to this headline">¶</a></h1>
-<p>In this first tutorial we will make use of a classic Evolutionary to evolve a model for our input data.</p>
+<div class="section" id="Learning-constants-(via-Evolutionary-Strategy)">
+<h1>Learning constants (via Evolutionary Strategy)<a class="headerlink" href="#Learning-constants-(via-Evolutionary-Strategy)" title="Permalink to this headline">¶</a></h1>
+<p>In this second tutorial we consider an example with two dimensional input data and we make use of the possibility to add constants to the model. We will thus show how to learn these constants using a purely evolutionary approach.</p>
+<p>We will learn: * How to introduce ephemeral constants in a symbolic regression problem. * How to learn said constants too using an evolutionary strategy.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -424,29 +425,30 @@ div.rendered_html tbody tr:hover {
 <div class="section" id="1---The-data">
 <h2>1 - The data<a class="headerlink" href="#1---The-data" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[68]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="c1"># We load our data from some available ones shipped with dcgpy.</span>
-<span class="c1"># In this particular case we use the problem chwirut2 from</span>
-<span class="c1"># (https://www.itl.nist.gov/div898/strd/nls/data/chwirut2.shtml)</span>
-<span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="n">dcgpy</span><span class="o">.</span><span class="n">generate_chwirut2</span><span class="p">()</span>
+<span class="c1"># In this particular case we use the problem ratpol2 from the paper:</span>
+<span class="c1"># Vladislavleva, Ekaterina J., Guido F. Smits, and Dick Den Hertog.</span>
+<span class="c1"># &quot;Order of nonlinearity as a complexity measure for models generated by symbolic regression via pareto genetic</span>
+<span class="c1"># programming.&quot; IEEE Transactions on Evolutionary Computation 13.2 (2008): 333-349.</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="n">dcgpy</span><span class="o">.</span><span class="n">generate_ratpol2d</span><span class="p">()</span>
 
 </pre></div>
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[81]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># And we plot them as to visualize the problem.</span>
-<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="s1">&#39;.&#39;</span><span class="p">)</span>
-<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;54 measurments&#39;</span><span class="p">)</span>
-<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;metal distance&#39;</span><span class="p">)</span>
-<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;ultrasonic response&#39;</span><span class="p">)</span>
-
+<span></span><span class="kn">from</span> <span class="nn">mpl_toolkits.mplot3d</span> <span class="kn">import</span> <span class="n">Axes3D</span>
+<span class="c1"># And we plot them as to visualize the problem.</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">Y</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])</span>
 
 
 </pre></div>
@@ -456,14 +458,14 @@ div.rendered_html tbody tr:hover {
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_symbolic_regression_1_4_0.png" src="../_images/notebooks_symbolic_regression_1_4_0.png" />
+<img alt="../_images/notebooks_symbolic_regression_2_4_0.png" src="../_images/notebooks_symbolic_regression_2_4_0.png" />
 </div>
 </div>
 </div>
 <div class="section" id="2---The-symbolic-regression-problem">
 <h2>2 - The symbolic regression problem<a class="headerlink" href="#2---The-symbolic-regression-problem" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -471,18 +473,28 @@ div.rendered_html tbody tr:hover {
 <span class="c1"># want our final model to possibly contain. What to choose in here is left</span>
 <span class="c1"># to the competence and knowledge of the user. A list of kernels shipped with dcgpy</span>
 <span class="c1"># can be found on the online docs. The user can also define its own kernels (see the corresponding tutorial).</span>
-<span class="n">ss</span> <span class="o">=</span> <span class="n">dcgpy</span><span class="o">.</span><span class="n">kernel_set_double</span><span class="p">([</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span> <span class="s2">&quot;diff&quot;</span><span class="p">,</span> <span class="s2">&quot;mul&quot;</span><span class="p">,</span> <span class="s2">&quot;pdiv&quot;</span><span class="p">])</span>
+<span class="n">ss</span> <span class="o">=</span> <span class="n">dcgpy</span><span class="o">.</span><span class="n">kernel_set_double</span><span class="p">([</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span> <span class="s2">&quot;mul&quot;</span><span class="p">,</span> <span class="s2">&quot;pdiv&quot;</span><span class="p">])</span>
 </pre></div>
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># We instantiate the symbolic regression optimization problem (note: many important options are here not</span>
-<span class="c1"># specified and thus set to their default values)</span>
-<span class="n">udp</span> <span class="o">=</span> <span class="n">dcgpy</span><span class="o">.</span><span class="n">symbolic_regression</span><span class="p">(</span><span class="n">points</span> <span class="o">=</span> <span class="n">X</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">Y</span><span class="p">,</span> <span class="n">kernels</span><span class="o">=</span><span class="n">ss</span><span class="p">())</span>
+<span></span><span class="c1"># We instantiate the symbolic regression optimization problem</span>
+<span class="c1"># Note how we specify to consider one ephemeral constant via</span>
+<span class="c1"># the kwarg n_eph. We also request 100 kernels with a linear</span>
+<span class="c1"># layout (this allows for the construction of longer expressions) and</span>
+<span class="c1"># we set the level back (in an attempt to skew the search towards</span>
+<span class="c1"># more complex expressions)</span>
+<span class="n">udp</span> <span class="o">=</span> <span class="n">dcgpy</span><span class="o">.</span><span class="n">symbolic_regression</span><span class="p">(</span>
+    <span class="n">points</span> <span class="o">=</span> <span class="n">X</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">Y</span><span class="p">,</span> <span class="n">kernels</span><span class="o">=</span><span class="n">ss</span><span class="p">(),</span>
+    <span class="n">rows</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">cols</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+    <span class="n">n_eph</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">levels_back</span> <span class="o">=</span> <span class="mi">80</span><span class="p">)</span>
+<span class="n">prob</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">problem</span><span class="p">(</span><span class="n">udp</span><span class="p">)</span>
 <span class="k">print</span><span class="p">(</span><span class="n">udp</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -492,10 +504,10 @@ div.rendered_html tbody tr:hover {
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-        Data dimension (points): 1
+        Data dimension (points): 2
         Data dimension (labels): 1
-        Data size: 54
-        Kernels: [sum, diff, mul, pdiv]
+        Data size: 50
+        Kernels: [sum, mul, pdiv]
 
 </pre></div></div>
 </div>
@@ -503,12 +515,16 @@ div.rendered_html tbody tr:hover {
 <div class="section" id="3---The-search-algorithm">
 <h2>3 - The search algorithm<a class="headerlink" href="#3---The-search-algorithm" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># We instantiate here the evolutionary strategy we want to use to search for models.</span>
-<span class="n">uda</span>  <span class="o">=</span> <span class="n">dcgpy</span><span class="o">.</span><span class="n">es4cgp</span><span class="p">(</span><span class="n">gen</span> <span class="o">=</span> <span class="mi">10000</span><span class="p">,</span> <span class="n">mut_n</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span>
+<span></span><span class="c1"># We instantiate here the evolutionary strategy we want to use to</span>
+<span class="c1"># search for models. Note we specify we want the evolutionary operators</span>
+<span class="c1"># to be applied also to the constants via the kwarg *learn_constants*</span>
+<span class="n">uda</span>  <span class="o">=</span> <span class="n">dcgpy</span><span class="o">.</span><span class="n">es4cgp</span><span class="p">(</span><span class="n">gen</span> <span class="o">=</span> <span class="mi">400000</span><span class="p">,</span> <span class="n">mut_n</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">learn_constants</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">algo</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">algorithm</span><span class="p">(</span><span class="n">uda</span><span class="p">)</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">set_verbosity</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -516,21 +532,17 @@ div.rendered_html tbody tr:hover {
 <div class="section" id="4---The-search">
 <h2>4 - The search<a class="headerlink" href="#4---The-search" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">prob</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">problem</span><span class="p">(</span><span class="n">udp</span><span class="p">)</span>
-<span class="n">algo</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">algorithm</span><span class="p">(</span><span class="n">uda</span><span class="p">)</span>
-<span class="c1"># Note that the screen output will happen on the terminal, not on your Jupyter notebook.</span>
-<span class="c1"># It can be recovered afterwards from the log.</span>
-<span class="n">algo</span><span class="o">.</span><span class="n">set_verbosity</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span></span><span class="c1"># A</span>
 <span class="n">pop</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">population</span><span class="p">(</span><span class="n">prob</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -541,26 +553,37 @@ div.rendered_html tbody tr:hover {
 </div>
 <div class="section" id="5---Inspecting-the-solution">
 <h2>5 - Inspecting the solution<a class="headerlink" href="#5---Inspecting-the-solution" title="Permalink to this headline">¶</a></h2>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[41]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="c1"># Lets have a look to the symbolic representation of our model (using sympy)</span>
-<span class="n">parse_expr</span><span class="p">(</span><span class="n">udp</span><span class="o">.</span><span class="n">prettier</span><span class="p">(</span><span class="n">pop</span><span class="o">.</span><span class="n">champion_x</span><span class="p">))</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">pop</span><span class="o">.</span><span class="n">champion_x</span>
+<span class="n">a</span> <span class="o">=</span> <span class="n">parse_expr</span><span class="p">(</span><span class="n">udp</span><span class="o">.</span><span class="n">prettier</span><span class="p">(</span><span class="n">x</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[51]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">a</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">subs</span><span class="p">({</span><span class="s2">&quot;c1&quot;</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]})</span>
+<span class="n">a</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[51]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="math notranslate nohighlight">
-$\displaystyle \left[ \frac{45}{x_{0}} - \frac{2}{3 x_{0}^{3}}\right]$</div></div>
+$\displaystyle \frac{\frac{0.0285289049008367 x_{0}^{3}}{x_{1}} + \frac{1}{x_{0}}}{\frac{2 x_{1}^{2}}{\left(\frac{0.0285289049008367 x_{0}^{3}}{x_{1}} + \frac{1}{x_{0}}\right) \left(0.00871726272380201 x_{0}^{3} x_{1}^{2} + \frac{10.710504609479}{x_{0} x_{1}}\right)} + \frac{3.27269072927446}{x_{1} \left(0.00871726272380201 x_{0}^{3} x_{1}^{2} + x_{1}^{2}\right)}}$</div></div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[43]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -570,17 +593,15 @@ $\displaystyle \left[ \frac{45}{x_{0}} - \frac{2}{3 x_{0}^{3}}\right]$</div></di
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[83]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># Lets comapre to the data</span>
-<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y_pred</span><span class="p">,</span> <span class="s1">&#39;r.&#39;</span><span class="p">)</span>
-<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
-<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;54 measurments&#39;</span><span class="p">)</span>
-<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;metal distance&#39;</span><span class="p">)</span>
-<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;ultrasonic response&#39;</span><span class="p">)</span>
-
+<span></span><span class="c1"># Lets compare (visually) to the data</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">Y</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">Y_pred</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])</span>
 </pre></div>
 </div>
 </div>
@@ -588,14 +609,14 @@ $\displaystyle \left[ \frac{45}{x_{0}} - \frac{2}{3 x_{0}^{3}}\right]$</div></di
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_symbolic_regression_1_16_0.png" src="../_images/notebooks_symbolic_regression_1_16_0.png" />
+<img alt="../_images/notebooks_symbolic_regression_2_17_0.png" src="../_images/notebooks_symbolic_regression_2_17_0.png" />
 </div>
 </div>
 </div>
 <div class="section" id="6---Recovering-the-log">
 <h2>6 - Recovering the log<a class="headerlink" href="#6---Recovering-the-log" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[45]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -607,15 +628,15 @@ $\displaystyle \left[ \frac{45}{x_{0}} - \frac{2}{3 x_{0}^{3}}\right]$</div></di
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[47]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="c1"># And here we plot, for example, the generations against the best loss</span>
 <span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">semilogy</span><span class="p">(</span><span class="n">gen</span><span class="p">,</span> <span class="n">loss</span><span class="p">)</span>
 <span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;last call to evolve&#39;</span><span class="p">)</span>
-<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;metal distance&#39;</span><span class="p">)</span>
-<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;ultrasonic response&#39;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;generation&#39;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;loss&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -623,7 +644,7 @@ $\displaystyle \left[ \frac{45}{x_{0}} - \frac{2}{3 x_{0}^{3}}\right]$</div></di
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_symbolic_regression_1_19_0.png" src="../_images/notebooks_symbolic_regression_1_19_0.png" />
+<img alt="../_images/notebooks_symbolic_regression_2_20_0.png" src="../_images/notebooks_symbolic_regression_2_20_0.png" />
 </div>
 </div>
 </div>
@@ -637,10 +658,10 @@ $\displaystyle \left[ \frac{45}{x_{0}} - \frac{2}{3 x_{0}^{3}}\right]$</div></di
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="symbolic_regression_2.html" class="btn btn-neutral float-right" title="Symbolic Regression with constants (via Evolutionary Strategy)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="learning_constants.html" class="btn btn-neutral float-right" title="Learning constants in a symbolic regression task" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="../tutorials/py/index.html" class="btn btn-neutral float-left" title="Python" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="symbolic_regression_1.html" class="btn btn-neutral float-left" title="Symbolic Regression (via Evolutionary Strategy)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
