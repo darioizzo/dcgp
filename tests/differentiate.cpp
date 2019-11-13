@@ -1,7 +1,8 @@
+#define BOOST_TEST_MODULE dcgp_differentiation_test
+#include <boost/test/included/unit_test.hpp>
+
 #include <audi/audi.hpp>
 #include <vector>
-#define BOOST_TEST_MODULE dcgp_differentiation_test
-#include <boost/test/unit_test.hpp>
 
 #include <dcgp/expression.hpp>
 #include <dcgp/kernel_set.hpp>

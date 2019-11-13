@@ -78,7 +78,7 @@ jobs:
                 -DDCGP_BUILD_DCGP=yes ^
                 -DDCGP_BUILD_TESTS=yes
           cmake --build . -- -v
-          ctest -j4 -V .
+          ctest -V .
           cmake --build . --target install
           cd ..
           mkdir build_pyaudi

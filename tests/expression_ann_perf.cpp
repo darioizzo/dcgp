@@ -1,10 +1,11 @@
-#include <random>
 #define BOOST_TEST_MODULE dcgp_expression_ann_test
+#include <boost/test/included/unit_test.hpp>
+
 #include <algorithm>
 #include <audi/back_compatibility.hpp>
 #include <audi/io.hpp>
-#include <boost/test/unit_test.hpp>
 #include <boost/timer/timer.hpp>
+#include <random>
 
 #include <dcgp/expression_ann.hpp>
 #include <dcgp/kernel_set.hpp>

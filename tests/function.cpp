@@ -1,5 +1,5 @@
 #define BOOST_TEST_MODULE dcgp_function_test
-#include <boost/test/unit_test.hpp>
+#include <boost/test/included/unit_test.hpp>
 
 #include <sstream>
 #include <stdexcept>

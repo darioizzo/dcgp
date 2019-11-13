@@ -1,7 +1,8 @@
 #define BOOST_TEST_MODULE dcgp_compute_test
+#include <boost/test/included/unit_test.hpp>
+
 #include <algorithm>
 #include <audi/gdual.hpp>
-#include <boost/test/unit_test.hpp>
 #include <pagmo/io.hpp>
 #include <random>
 #include <string>
