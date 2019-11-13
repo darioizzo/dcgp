@@ -1127,6 +1127,22 @@ Examples:
 )";
 }
 
+std::string symbolic_regression_predict_doc()
+{
+    return R"(predict(points, chromosome)
+
+Predicts the labels of *points* using the model encoded in *x*.
+
+Args:
+    points (2D NumPy float array or ``list of lists`` of ``float`` or the 1D equivalents): the input point / points
+    chromosome (1D NumPy array or ``list`` of ``int``):  the encoded model.
+
+Raises:
+    unspecified: any exception thrown by failures at the intersection between C++ and Python (e.g.,
+      type conversion errors, mismatched function signatures, etc.)
+)";
+}
+
 std::string generic_uda_get_seed_doc()
 {
     return R"(get_seed()

@@ -78,7 +78,8 @@ void expose_symbolic_regression()
                     PyErr_Clear();
                     return vector_to_ndarr(instance.predict(to_v<double>(points), to_v<double>(x)));
                 }
-            })
+            },
+            (bp::arg("points"), bp::arg("chromosome")), symbolic_regression_predict_doc().c_str())
         .def("__repr__", &dcgp::symbolic_regression::get_extra_info);
 
     // We expose the UDAs
