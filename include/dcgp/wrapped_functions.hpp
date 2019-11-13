@@ -173,7 +173,9 @@ inline T my_relu(const std::vector<T> &in)
     for (auto i = 1u; i < in.size(); ++i) {
         retval += in[i];
     }
-    (retval < 0) ? retval = T(0.) : retval = retval;
+    if (retval < 0) {
+        retval = T(0.);
+    }
     return retval;
 }
 
@@ -185,7 +187,9 @@ inline T my_relu(const std::vector<T> &in)
     for (auto i = 1u; i < in.size(); ++i) {
         retval += in[i];
     }
-    (retval.constant_cf() < T(0.).constant_cf()) ? retval = T(0.) : retval = retval;
+    if (retval.constant_cf() < T(0.).constant_cf()) {
+        retval = T(0.);
+    }
     return retval;
 }
 
@@ -206,7 +210,9 @@ inline T my_elu(const std::vector<T> &in)
     for (auto i = 1u; i < in.size(); ++i) {
         retval += in[i];
     }
-    (retval < 0) ? retval = audi::exp(retval) - T(1.) : retval = retval;
+    if (retval < 0) {
+        retval = audi::exp(retval) - T(1.);
+    }
     return retval;
 }
 
@@ -218,7 +224,9 @@ inline T my_elu(const std::vector<T> &in)
     for (auto i = 1u; i < in.size(); ++i) {
         retval += in[i];
     }
-    (retval.constant_cf() < T(0.).constant_cf()) ? retval = audi::exp(retval) - T(1.) : retval = retval;
+    if (retval.constant_cf() < T(0.).constant_cf()) {
+        retval = audi::exp(retval) - T(1.);
+    }
     return retval;
 }
 
@@ -327,7 +335,7 @@ inline std::string print_my_exp(const std::vector<std::string> &in)
 template <typename T, f_enabler<T> = 0>
 inline T my_gaussian(const std::vector<T> &in)
 {
-    return audi::exp(-in[0]*in[0]);
+    return audi::exp(-in[0] * in[0]);
 }
 
 inline std::string print_my_gaussian(const std::vector<std::string> &in)
