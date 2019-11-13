@@ -8,7 +8,6 @@
 #include <random>
 #include <sstream>
 #include <string>
-#include <tbb/tbb.h>
 #include <tuple>
 #include <vector>
 
@@ -43,7 +42,7 @@ namespace dcgp
  * > while i < gen
  * > > Mutation: create a new population pop2 mutating N times the best individual (only the integer part is affected)
  * > > Life long learning: apply a one step of a second order Newton method to each individual (only the continuous part
- *     is affected) 
+ *     is affected)
  * > > Reinsertion: set pop to contain the best N individuals taken from pop and pop2
  * @endcode
  *

@@ -14,8 +14,8 @@
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include <tbb/parallel_for.h>
 #include <tbb/spin_mutex.h>
-#include <tbb/tbb.h>
 #include <vector>
 
 #include <dcgp/kernel_set.hpp>
