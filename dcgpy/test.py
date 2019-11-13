@@ -257,7 +257,7 @@ class test_symbolic_regression(_ut.TestCase):
             cols=20,
             levels_back=21,
             arity=2,
-            kernels=kernel_set_double(["sum", "diff"])(),
+            kernels=kernel_set_double(["sum", "diff", "mul", "pdiv"])(),
             n_eph=2,
             multi_objective=False,
             parallel_batches=0)
@@ -277,11 +277,109 @@ class test_symbolic_regression(_ut.TestCase):
         self.assertEqual(prob.has_gradient(), True)
         self.assertEqual(prob.has_hessians(), True)
 
+class test_es4cgp(_ut.TestCase):
+    def runTest(self):
+        from dcgpy import symbolic_regression, generate_koza_quintic, kernel_set_double, es4cgp
+        import pygmo as pg
+        X, Y = generate_koza_quintic()
+        # Interface for the UDPs
+        udp = symbolic_regression(
+            points=X,
+            labels=Y,
+            rows=1,
+            cols=20,
+            levels_back=21,
+            arity=2,
+            kernels=kernel_set_double(["sum", "diff", "mul", "pdiv"])(),
+            n_eph=2,
+            multi_objective=False,
+            parallel_batches=0)
+        prob = pg.problem(udp)
+        pop = pg.population(prob, 10)
         # Interface for the UDAs
-        uda = es4cgp(gen=2, mut_n=3, ftol=1e-3, learn_constants=True, seed=34)
-        uda = mes4cgp(gen=2, mut_n=3, ftol=1e-3, seed=34)
-        uda = gd4cgp(max_iter=2, lr=0.1, lr_min=1e-3)
+        uda = es4cgp(gen=20, mut_n=3, ftol=1e-3, learn_constants=True, seed=34)
+        algo = pg.algorithm(uda)
+        algo.set_verbosity(1)
+        # Testing some evolutions
+        pop = algo.evolve(pop)
 
+class test_mes4cgp(_ut.TestCase):
+    def runTest(self):
+        from dcgpy import symbolic_regression, generate_koza_quintic, kernel_set_double, mes4cgp
+        import pygmo as pg
+        X, Y = generate_koza_quintic()
+        # Interface for the UDPs
+        udp = symbolic_regression(
+            points=X,
+            labels=Y,
+            rows=1,
+            cols=20,
+            levels_back=21,
+            arity=2,
+            kernels=kernel_set_double(["sum", "diff", "mul", "pdiv"])(),
+            n_eph=2,
+            multi_objective=False,
+            parallel_batches=0)
+        prob = pg.problem(udp)
+        pop = pg.population(prob, 10)
+        # Interface for the UDAs
+        uda = mes4cgp(gen=20, mut_n=3, ftol=1e-3, seed=34)
+        algo = pg.algorithm(uda)
+        algo.set_verbosity(1)
+        # Testing some evolutions
+        pop = algo.evolve(pop)
+
+class test_momes4cgp(_ut.TestCase):
+    def runTest(self):
+        from dcgpy import symbolic_regression, generate_koza_quintic, kernel_set_double, momes4cgp
+        import pygmo as pg
+        X, Y = generate_koza_quintic()
+        # Interface for the UDPs
+        udp = symbolic_regression(
+            points=X,
+            labels=Y,
+            rows=1,
+            cols=20,
+            levels_back=21,
+            arity=2,
+            kernels=kernel_set_double(["sum", "diff", "mul", "pdiv"])(),
+            n_eph=2,
+            multi_objective=True,
+            parallel_batches=0)
+        prob = pg.problem(udp)
+        pop = pg.population(prob, 10)
+        # Interface for the UDAs
+        uda = momes4cgp(gen=5, max_mut=3)
+        algo = pg.algorithm(uda)
+        algo.set_verbosity(1)
+        # Testing some evolutions
+        pop = algo.evolve(pop)
+
+class test_gd4cgp(_ut.TestCase):
+    def runTest(self):
+        from dcgpy import symbolic_regression, generate_koza_quintic, kernel_set_double, gd4cgp
+        import pygmo as pg
+        X, Y = generate_koza_quintic()
+        # Interface for the UDPs
+        udp = symbolic_regression(
+            points=X,
+            labels=Y,
+            rows=1,
+            cols=20,
+            levels_back=21,
+            arity=2,
+            kernels=kernel_set_double(["sum", "diff", "mul", "pdiv"])(),
+            n_eph=2,
+            multi_objective=False,
+            parallel_batches=0)
+        prob = pg.problem(udp)
+        pop = pg.population(prob, 10)
+        # Interface for the UDAs
+        uda = gd4cgp(max_iter=10, lr = 0.1, lr_min = 1e-6)
+        algo = pg.algorithm(uda)
+        algo.set_verbosity(1)
+        # Testing some evolutions
+        pop = algo.evolve(pop)
 
 
 def run_test_suite():
@@ -293,6 +391,10 @@ def run_test_suite():
     suite.addTest(test_kernel_set())
     suite.addTest(test_expression())
     suite.addTest(test_symbolic_regression())
+    suite.addTest(test_mes4cgp())
+    suite.addTest(test_momes4cgp())
+    suite.addTest(test_es4cgp())
+    suite.addTest(test_gd4cgp())
 
     test_result = _ut.TextTestRunner(verbosity=2).run(suite)
     if len(test_result.failures) > 0 or len(test_result.errors) > 0:
