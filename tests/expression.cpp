@@ -10,8 +10,6 @@
 #include <dcgp/expression.hpp>
 #include <dcgp/kernel_set.hpp>
 
-#include <tbb/task_scheduler_init.h>
-
 #include "helpers.hpp"
 
 using namespace dcgp;
@@ -73,8 +71,6 @@ gdual_d test_loss2(unsigned int n, unsigned int m, unsigned int r, unsigned int 
 
 BOOST_AUTO_TEST_CASE(construction)
 {
-    tbb::task_scheduler_init ti(1);
-
     // Random seed
     std::random_device rd;
     kernel_set<double> basic_set({"sum", "diff", "mul", "div"});
@@ -110,8 +106,6 @@ BOOST_AUTO_TEST_CASE(construction)
 
 BOOST_AUTO_TEST_CASE(compute)
 {
-    tbb::task_scheduler_init ti(1);
-
     // Random seed
     std::random_device rd;
 
@@ -139,8 +133,6 @@ BOOST_AUTO_TEST_CASE(compute)
 
 BOOST_AUTO_TEST_CASE(check_bounds)
 {
-    tbb::task_scheduler_init ti(1);
-
     // Random seed
     std::random_device rd;
 
@@ -157,8 +149,6 @@ BOOST_AUTO_TEST_CASE(check_bounds)
 
 BOOST_AUTO_TEST_CASE(get_gene_idx)
 {
-    tbb::task_scheduler_init ti(1);
-
     // Random seed
     std::random_device rd;
     kernel_set<double> basic_set({"sum", "diff", "mul", "div"});
@@ -169,8 +159,6 @@ BOOST_AUTO_TEST_CASE(get_gene_idx)
 
 BOOST_AUTO_TEST_CASE(get_active_nodes_and_genes)
 {
-    tbb::task_scheduler_init ti(1);
-
     // Random seed
     std::random_device rd;
     kernel_set<double> basic_set({"sum", "diff", "mul", "div"});
@@ -196,8 +184,6 @@ BOOST_AUTO_TEST_CASE(get_active_nodes_and_genes)
 
 BOOST_AUTO_TEST_CASE(mutate)
 {
-    tbb::task_scheduler_init ti(1);
-
     // Random seed
     std::random_device rd;
     // We define a d-CGP expression and get the reference chromosome
@@ -291,8 +277,6 @@ BOOST_AUTO_TEST_CASE(mutate)
 
 BOOST_AUTO_TEST_CASE(loss)
 {
-    tbb::task_scheduler_init ti(1);
-
     // Random seed
     std::random_device rd;
     kernel_set<double> basic_set({"sum", "diff", "mul", "div"});
@@ -350,8 +334,6 @@ BOOST_AUTO_TEST_CASE(loss)
 
 BOOST_AUTO_TEST_CASE(ephemeral_constants_test)
 {
-    tbb::task_scheduler_init ti(1);
-
     std::vector<unsigned> test_x
         = {3, 1, 2, 2, 1, 4, 3, 1, 1, 3, 6, 5, 0, 0, 3, 1, 8, 0, 1, 2, 5, 0, 0, 8, 1, 3, 8, 0, 11, 11, 4, 12};
     {
