@@ -4,7 +4,7 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "# Symbolic Regression (via Evolutionary Strategy)\n",
+    "# A first tutorial\n",
     "In this first tutorial we will make use of a classic Evolutionary to evolve a model for our input data."
    ]
   },
