@@ -6,11 +6,12 @@
 #include <vector>
 
 #include <dcgp/expression.hpp>
+#include <dcgp/function.hpp>
 #include <dcgp/kernel_set.hpp>
 #include <dcgp/wrapped_functions.hpp>
 
 // We test the speed of evauating sig(a+b) calling
-// the function directly, via an std::function or a minimal d-CGP expression
+// the function directly, via a function or a minimal d-CGP expression
 
 BOOST_AUTO_TEST_CASE(function_calls)
 {
@@ -39,8 +40,8 @@ BOOST_AUTO_TEST_CASE(function_calls)
         }
     }
 
-    std::cout << "Testing " << N << " std::function calls to the sigmoid function" << std::endl;
-    std::function<double(const std::vector<double> &)> my_sig2(dcgp::my_sig<double>);
+    std::cout << "Testing " << N << " function calls to the sigmoid function" << std::endl;
+    dcgp::function<double(const std::vector<double> &)> my_sig2(dcgp::my_sig<double>);
     {
         boost::timer::auto_cpu_timer t; // Sets up a timer
         for (auto i = 0u; i < N; ++i) {
@@ -48,7 +49,7 @@ BOOST_AUTO_TEST_CASE(function_calls)
         }
     }
 
-    std::cout << "Testing " << N << " std::function calls to the sigmoid function via dcgp::expression" << std::endl;
+    std::cout << "Testing " << N << " function calls to the sigmoid function via dcgp::expression" << std::endl;
     dcgp::kernel_set<double> only_one_sigmoid({"sig"});
     dcgp::expression<double> ex(2, 1, 1, 1, 1, 2, only_one_sigmoid(), 0u, 0u);
     ex.set({0, 0, 1, 2});

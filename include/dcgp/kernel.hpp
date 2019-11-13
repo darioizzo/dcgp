@@ -1,13 +1,13 @@
 #ifndef DCGP_KERNEL_H
 #define DCGP_KERNEL_H
 
-#include <functional> // std::function
 #include <iostream>
 #include <string>
 #include <utility> // std::forward
 #include <vector>
 
 #include <dcgp/config.hpp>
+#include <dcgp/function.hpp>
 
 namespace dcgp
 {
@@ -29,7 +29,7 @@ namespace dcgp
  *     }
  *     return retval;
  * }
- * 
+ *
  * inline std::string print_my_sum(const std::vector<std::string> &in)
  * {
  *     std::string retval(in[0]);
@@ -50,9 +50,9 @@ class kernel
 public:
 #if !defined(DCGP_DOXYGEN_INVOKED)
     /// Basic prototype of a kernel function returning its evaluation
-    using my_fun_type = std::function<T(const std::vector<T> &)>;
+    using my_fun_type = function<T(const std::vector<T> &)>;
     /// Basic prototype of a kernel function returning its symbolic representation
-    using my_print_fun_type = std::function<std::string(const std::vector<std::string> &)>;
+    using my_print_fun_type = function<std::string(const std::vector<std::string> &)>;
 #endif
     /// Constructor
     /**

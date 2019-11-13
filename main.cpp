@@ -5,13 +5,14 @@
 #include <random>
 
 #include <dcgp/expression_ann.hpp>
+#include <dcgp/function.hpp>
 #include <dcgp/kernel.hpp>
 #include <dcgp/kernel_set.hpp>
 #include <dcgp/wrapped_functions.hpp>
 
 using namespace dcgp;
-using fun_type = std::function<double(const std::vector<double> &)>;
-using fun_print_type = std::function<std::string(const std::vector<std::string> &)>;
+using fun_type = function<double(const std::vector<double> &)>;
+using fun_print_type = function<std::string(const std::vector<std::string> &)>;
 
 void perform_sgd(unsigned int rows, unsigned int columns, unsigned int levels_back, unsigned int arity, unsigned int N,
                  unsigned bs, std::vector<dcgp::kernel<double>> kernel_set)

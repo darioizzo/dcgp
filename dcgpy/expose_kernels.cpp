@@ -10,6 +10,7 @@
 #include <string>
 #include <vector>
 
+#include <dcgp/function.hpp>
 #include <dcgp/kernel.hpp>
 #include <dcgp/kernel_set.hpp>
 
@@ -32,11 +33,11 @@ void expose_kernel(const std::string &type)
         .def("__init__",
              bp::make_constructor(
                  +[](const bp::object &obj1, const bp::object &obj2, const std::string &name) {
-                     std::function<T(const std::vector<T> &)> my_function = [obj1](const std::vector<T> &x) {
+                     dcgp::function<T(const std::vector<T> &)> my_function = [obj1](const std::vector<T> &x) {
                          T in = bp::extract<T>(obj1(v_to_l(x)));
                          return in;
                      };
-                     std::function<std::string(const std::vector<std::string> &)> my_print_function
+                     dcgp::function<std::string(const std::vector<std::string> &)> my_print_function
                          = [obj2](const std::vector<std::string> &x) {
                                std::string in = bp::extract<std::string>(obj2(v_to_l(x)));
                                return in;
