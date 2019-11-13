@@ -277,8 +277,8 @@
     "# And here we plot, for example, the generations against the best loss\n",
     "_ = plt.semilogy(gen, loss)\n",
     "_ = plt.title('last call to evolve')\n",
-    "_ = plt.xlabel('metal distance')\n",
-    "_ = plt.ylabel('ultrasonic response')"
+    "_ = plt.xlabel('generation')\n",
+    "_ = plt.ylabel('loss')"
    ]
   }
  ],

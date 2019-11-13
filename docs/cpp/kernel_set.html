@@ -206,7 +206,7 @@
 </style>
 <div class="section" id="kernel-set">
 <h1>kernel_set<a class="headerlink" href="#kernel-set" title="Permalink to this headline">¶</a></h1>
-<p>Classes such as <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">dcgp::expression</span></code>, <a class="reference internal" href="symbolic_regression.html#_CPPv4N4dcgp19symbolic_regressionE" title="dcgp::symbolic_regression"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">dcgp::symbolic_regression</span></code></a> and others are constructed
+<p>Classes such as <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">dcgp::expression</span></code>, <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">dcgp::symbolic_regression</span></code> and others are constructed
 from an <code class="docutils literal notranslate"><span class="pre">std::vector</span></code> of <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">dcgp::kernel</span></code>. Assembling such a <code class="docutils literal notranslate"><span class="pre">std::vector</span></code> is an operation that is greatly
 facilitated by the class <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">dcgp::kernel_set</span></code>.</p>
 <p>Intended use of the class is:</p>
@@ -223,125 +223,10 @@ facilitated by the class <code class="xref cpp cpp-class docutils literal notran
 </pre></div>
 </div>
 <hr class="docutils" />
-<dl class="class">
-<dt id="_CPPv4I0EN4dcgp10kernel_setE">
-<span class="target" id="classdcgp_1_1kernel__set"></span>template&lt;typename <code class="sig-name descname">T</code>&gt;<br /><em class="property">class </em><code class="sig-name descname">kernel_set</code><a class="headerlink" href="#_CPPv4I0EN4dcgp10kernel_setE" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Function set. </p>
-<p>This class is provided as an helper to construct the std::vector&lt;kernel&lt;T&gt;&gt; that is requested to form a dcgp::expression&lt;T&gt;. Once constructed, a call to its parenthesis operator will return the std::vector containing the requested kernels</p>
-<p><dl class="simple">
-<dt><strong>Template Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">T</span></code>: The type of the functions output (and inputs) </p></li>
-</ul>
-</dd>
-</dl>
-</p>
-<div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric">Public Functions</p>
-<dl class="function">
-<dt id="_CPPv4N4dcgp10kernel_set10kernel_setEv">
-<span class="target" id="classdcgp_1_1kernel__set_1a816e6b39a37cf37ff0f997eba28adf3c"></span><code class="sig-name descname">kernel_set</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10kernel_set10kernel_setEv" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Constructor. </p>
-<p>Default constructor </p>
-</dd></dl>
-
-<dl class="function">
-<dt id="_CPPv4N4dcgp10kernel_set10kernel_setERKNSt6vectorINSt6stringEEE">
-<span class="target" id="classdcgp_1_1kernel__set_1a9e77585d4db14d2863d2ca66903b7123"></span><code class="sig-name descname">kernel_set</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;std::string&gt; &amp;<em>list</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10kernel_set10kernel_setERKNSt6vectorINSt6stringEEE" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Constructor. </p>
-<p>Constructs a kernel set that can be used in a dCGP expression</p>
-<p><dl class="simple">
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">list</span></code>: an std::vector of strings containing the function names (e.g., “sum”) </p></li>
-</ul>
-</dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="_CPPv4N4dcgp10kernel_set9push_backENSt6stringE">
-<span class="target" id="classdcgp_1_1kernel__set_1ab50af3275d6540e3e15009ee725d527c"></span>void <code class="sig-name descname">push_back</code><span class="sig-paren">(</span>std::string <em>kernel_name</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10kernel_set9push_backENSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Adds a kernel to the set. </p>
-<p>Constructs a kernel&lt;T&gt; given a string containing the function name, and inserts it into the std::vector</p>
-<p><dl class="simple">
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">kernel_name</span></code>: a string containing the function name</p></li>
-</ul>
-</dd>
-<dt><strong>Exceptions</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">std::invalid_argument</span></code>: if the function is not implemented </p></li>
-</ul>
-</dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="_CPPv4N4dcgp10kernel_set9push_backERKN4dcgp6kernelI1TEE">
-<span class="target" id="classdcgp_1_1kernel__set_1aa9e742d425be06e5791e84169dbe80c3"></span>void <code class="sig-name descname">push_back</code><span class="sig-paren">(</span><em class="property">const</em> dcgp::kernel&lt;<a class="reference external" href="http://darioizzo.github.io/audi/functions.html#_CPPv4I0E1TRK1TRK1T" title="(in audi v1.7)">T</a>&gt; &amp;<em>kernel</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10kernel_set9push_backERKN4dcgp6kernelI1TEE" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Adds a kernel to the set. </p>
-<p>Inserts the given kernel&lt;T&gt; into the std::vector</p>
-<p><dl class="simple">
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">kernel</span></code>: the dcgp::kernel&lt;T&gt; to add </p></li>
-</ul>
-</dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="_CPPv4N4dcgp10kernel_set5clearEv">
-<span class="target" id="classdcgp_1_1kernel__set_1a03ec6a5a1ffa91b78b4c334d7aa7978b"></span>void <code class="sig-name descname">clear</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10kernel_set5clearEv" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Clears the kernel set. </p>
-<p>Removes all the elements from the std::vector containing the kernels </p>
-</dd></dl>
-
-<dl class="function">
-<dt id="_CPPv4NK4dcgp10kernel_setclEv">
-<span class="target" id="classdcgp_1_1kernel__set_1a052341c728d41cf6e4a09c73d05fe260"></span>std::vector&lt;dcgp::kernel&lt;<a class="reference external" href="http://darioizzo.github.io/audi/functions.html#_CPPv4I0E1TRK1TRK1T" title="(in audi v1.7)">T</a>&gt;&gt; <code class="sig-name descname">operator()</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp10kernel_setclEv" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Overloaded function call operator. </p>
-<p>Returns the std::vector containing the kernels </p>
-</dd></dl>
-
-<dl class="function">
-<dt id="_CPPv4NK4dcgp10kernel_setixEKNSt6vectorIN4dcgp6kernelI1TEEE9size_typeE">
-<span class="target" id="classdcgp_1_1kernel__set_1a23a266ae572f831f2b8959cdf471e477"></span>dcgp::kernel&lt;<a class="reference external" href="http://darioizzo.github.io/audi/functions.html#_CPPv4I0E1TRK1TRK1T" title="(in audi v1.7)">T</a>&gt; <code class="sig-name descname">operator[]</code><span class="sig-paren">(</span><em class="property">const</em> <em class="property">typename</em> std::vector&lt;dcgp::kernel&lt;<a class="reference external" href="http://darioizzo.github.io/audi/functions.html#_CPPv4I0E1TRK1TRK1T" title="(in audi v1.7)">T</a>&gt;&gt;::size_type <em>idx</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp10kernel_setixEKNSt6vectorIN4dcgp6kernelI1TEEE9size_typeE" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Returns the kernel at a specified index in the std::vector</p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>the kernel at the specified index </p>
-</dd>
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">idx</span></code>: index of the required kernel</p></li>
-</ul>
-</dd>
-</dl>
-</p>
-</dd></dl>
-
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>doxygenclass: Cannot find file: /home/dario/Develop/dcgp/doc/doxygen/xml/index.xml</p>
 </div>
-<div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric">Friends</p>
-<dl class="function">
-<dt id="_CPPv4lsRNSt7ostreamERK10kernel_setI1TE">
-<span class="target" id="classdcgp_1_1kernel__set_1ae1010fbacdb829ac82538a01ea8d790d"></span>std::ostream &amp;<code class="sig-name descname">operator&lt;&lt;</code><span class="sig-paren">(</span>std::ostream &amp;<em>os</em>, <em class="property">const</em> kernel_set&lt;<a class="reference external" href="http://darioizzo.github.io/audi/functions.html#_CPPv4I0E1TRK1TRK1T" title="(in audi v1.7)">T</a>&gt; &amp;<em>d</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4lsRNSt7ostreamERK10kernel_setI1TE" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Overloaded stream operator. </p>
-<p>Will stream the function names</p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>reference to <code class="docutils literal notranslate"><span class="pre">os</span></code> </p>
-</dd>
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">[inout]</span> <span class="pre">os</span></code>: target stream </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">d</span></code>: <a class="reference internal" href="#classdcgp_1_1kernel__set"><span class="std std-ref">kernel_set</span></a> argument</p></li>
-</ul>
-</dd>
-</dl>
-</p>
-</dd></dl>
-
-</div>
-</dd></dl>
-
 </div>
 
 
@@ -364,7 +249,7 @@ facilitated by the class <code class="xref cpp cpp-class docutils literal notran
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2018, Dario Izzo, Francesco Biscani, Alessio Mereta
+        &copy; Copyright 2020, Dario Izzo, Francesco Biscani, Alessio Mereta
 
     </p>
   </div>
