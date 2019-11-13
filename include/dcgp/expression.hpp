@@ -356,7 +356,7 @@ public:
     }
 
     /// Sets the chromosome
-    /** 
+    /**
      * Sets a given chromosome as genotype for the expression and updates
      * the active nodes and active genes information accordingly
      *
