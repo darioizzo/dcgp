@@ -24,17 +24,17 @@
 #define DCGP_S11N_FUNCTION_EXPORT_KEY(id, func, ...)                                                                   \
     namespace dcgp::s11n_names                                                                                         \
     {                                                                                                                  \
-    using udf##id = dcgp::detail::function_inner<func, __VA_ARGS__>;                                                   \
+    using udf_##id = dcgp::detail::function_inner<func, __VA_ARGS__>;                                                  \
     }                                                                                                                  \
-    BOOST_CLASS_EXPORT_KEY2(dcgp::s11n_names::udf##id, "udf " #id)                                                     \
-    BOOST_CLASS_TRACKING(dcgp::s11n_names::udf##id, boost::serialization::track_never)
+    BOOST_CLASS_EXPORT_KEY2(dcgp::s11n_names::udf_##id, "udf " #id)                                                    \
+    BOOST_CLASS_TRACKING(dcgp::s11n_names::udf_##id, boost::serialization::track_never)
 
 #define DCGP_S11N_FUNCTION_IMPLEMENT(func, ...)                                                                        \
     namespace dcgp::s11n_names                                                                                         \
     {                                                                                                                  \
-    using udf##id = dcgp::detail::function_inner<func, __VA_ARGS__>;                                                   \
+    using udf_##id = dcgp::detail::function_inner<func, __VA_ARGS__>;                                                  \
     }                                                                                                                  \
-    BOOST_CLASS_EXPORT_IMPLEMENT(dcgp::s11n_names::udf##id)
+    BOOST_CLASS_EXPORT_IMPLEMENT(dcgp::s11n_names::udf_##id)
 
 #define DCGP_S11N_FUNCTION_EXPORT(id, func, ...)                                                                       \
     DCGP_S11N_FUNCTION_EXPORT_KEY(id, func, __VA_ARGS__)                                                               \
@@ -111,9 +111,12 @@ class function;
 template <typename R, typename... Args>
 class function<R(Args...)>
 {
+    // Helpful alias.
     template <typename T>
     using uncvref_t = std::remove_cv_t<std::remove_reference_t<T>>;
 
+    // Function pointer type returning R and taking Args
+    // as parameters.
     using f_ptr = R (*)(Args...);
 
     // Dispatching for the generic ctor. We have a special case if T is
@@ -165,6 +168,13 @@ public:
         return m_ptr->operator()(std::forward<Args>(args)...);
     }
 
+    // Check if the function was not
+    // moved-from.
+    bool is_valid() const
+    {
+        return static_cast<bool>(m_ptr);
+    }
+
     // Serialisation support.
     template <typename Archive>
     void save(Archive &ar, unsigned) const
@@ -201,5 +211,21 @@ private:
 };
 
 } // namespace dcgp
+
+// Disable class tracking for all instances of dcgp::function.
+
+namespace boost::serialization
+{
+
+template <typename R, typename... Args>
+struct tracking_level<dcgp::function<R, Args...>> {
+    typedef mpl::integral_c_tag tag;
+    typedef mpl::int_<track_never> type;
+    BOOST_STATIC_CONSTANT(int, value = tracking_level::type::value);
+    BOOST_STATIC_ASSERT(
+        (mpl::greater<implementation_level<dcgp::function<R, Args...>>, mpl::int_<primitive_type>>::value));
+};
+
+} // namespace boost::serialization
 
 #endif

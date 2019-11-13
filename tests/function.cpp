@@ -2,6 +2,9 @@
 #include <boost/test/unit_test.hpp>
 
 #include <sstream>
+#include <stdexcept>
+
+#include <boost/algorithm/string/predicate.hpp>
 
 #include <dcgp/function.hpp>
 #include <dcgp/s11n.hpp>
@@ -20,10 +23,33 @@ inline constexpr auto hello_world = hello_world_func{};
 
 DCGP_S11N_FUNCTION_EXPORT(hwf, hello_world_func, void)
 
-BOOST_AUTO_TEST_CASE(basic_test)
+double double_add(double a, double b)
 {
-    function<void()> f{hello_world};
-    f();
+    return a + b;
+}
+
+BOOST_AUTO_TEST_CASE(function_basic_tests)
+{
+    // Default construction.
+    function<void()> f1;
+    BOOST_CHECK(f1.is_valid());
+    BOOST_CHECK(f1.is<void (*)()>());
+    BOOST_CHECK(!f1.is<void (*)(int)>());
+    BOOST_CHECK(static_cast<const function<void()> &>(f1).extract<void (*)()>() != nullptr);
+    BOOST_CHECK(static_cast<const function<void()> &>(f1).extract<void (*)(int)>() == nullptr);
+    BOOST_CHECK_EXCEPTION(f1(), std::runtime_error, [](const std::runtime_error &re) {
+        return boost::contains(
+            re.what(),
+            "This dcp::function object cannot be invoked because it contains a null pointer to a C++ function");
+    });
+
+    // The simplest function.
+    f1 = function<void()>{hello_world};
+    BOOST_CHECK(f1.is_valid());
+    f1();
+
+    function<double(double, double)> f2(double_add);
+    BOOST_CHECK(f2(1, 2) == 3);
 }
 
 BOOST_AUTO_TEST_CASE(function_serialization_test)
