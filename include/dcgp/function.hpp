@@ -32,7 +32,7 @@
     BOOST_CLASS_EXPORT_KEY2(dcgp::s11n_names::udf_##id, "udf " #id)                                                    \
     BOOST_CLASS_TRACKING(dcgp::s11n_names::udf_##id, boost::serialization::track_never)
 
-#define DCGP_S11N_FUNCTION_IMPLEMENT(func, ...)                                                                        \
+#define DCGP_S11N_FUNCTION_IMPLEMENT(id, func, ...)                                                                    \
     namespace dcgp::s11n_names                                                                                         \
     {                                                                                                                  \
     using udf_##id = dcgp::detail::function_inner<func, __VA_ARGS__>;                                                  \
@@ -41,7 +41,7 @@
 
 #define DCGP_S11N_FUNCTION_EXPORT(id, func, ...)                                                                       \
     DCGP_S11N_FUNCTION_EXPORT_KEY(id, func, __VA_ARGS__)                                                               \
-    DCGP_S11N_FUNCTION_IMPLEMENT(func, __VA_ARGS__)
+    DCGP_S11N_FUNCTION_IMPLEMENT(id, func, __VA_ARGS__)
 
 namespace dcgp::detail
 {
