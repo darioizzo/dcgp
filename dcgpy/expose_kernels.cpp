@@ -13,6 +13,7 @@
 #include <dcgp/function.hpp>
 #include <dcgp/kernel.hpp>
 #include <dcgp/kernel_set.hpp>
+#include <dcgp/wrapped_functions_s11n_implement.hpp>
 
 #include "common_utils.hpp"
 #include "docstrings.hpp"

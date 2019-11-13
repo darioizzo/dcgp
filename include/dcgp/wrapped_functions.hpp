@@ -9,7 +9,22 @@
 #include <vector>
 
 #include <dcgp/config.hpp>
+#include <dcgp/function.hpp>
 #include <dcgp/type_traits.hpp>
+
+#define DCGP_S11N_FUNCTION_EXPORT_KEY_MULTI(f)                                                                         \
+    DCGP_S11N_FUNCTION_EXPORT_KEY(dcgp_##f##_double, dcgp::f##_func<double>, double, const std::vector<double> &)      \
+    DCGP_S11N_FUNCTION_EXPORT_KEY(dcgp_##f##_gdual_d, dcgp::f##_func<audi::gdual_d>, audi::gdual_d,                    \
+                                  const std::vector<audi::gdual_d> &)                                                  \
+    DCGP_S11N_FUNCTION_EXPORT_KEY(dcgp_##f##_gdual_v, dcgp::f##_func<audi::gdual_v>, audi::gdual_v,                    \
+                                  const std::vector<audi::gdual_v> &)
+
+#define DCGP_S11N_FUNCTION_IMPLEMENT_MULTI(f)                                                                          \
+    DCGP_S11N_FUNCTION_IMPLEMENT(dcgp_##f##_double, dcgp::f##_func<double>, double, const std::vector<double> &)       \
+    DCGP_S11N_FUNCTION_IMPLEMENT(dcgp_##f##_gdual_d, dcgp::f##_func<audi::gdual_d>, audi::gdual_d,                     \
+                                 const std::vector<audi::gdual_d> &)                                                   \
+    DCGP_S11N_FUNCTION_IMPLEMENT(dcgp_##f##_gdual_v, dcgp::f##_func<audi::gdual_v>, audi::gdual_v,                     \
+                                 const std::vector<audi::gdual_v> &)
 
 namespace dcgp
 {
@@ -25,14 +40,23 @@ using f_enabler = typename std::enable_if<std::is_same<T, double>::value || is_g
  *------------------------------------------------------------------------**/
 
 template <typename T, f_enabler<T> = 0>
-inline T my_diff(const std::vector<T> &in)
-{
-    T retval(in[0]);
-    for (auto i = 1u; i < in.size(); ++i) {
-        retval -= in[i];
+struct my_diff_func {
+    T operator()(const std::vector<T> &in) const
+    {
+        T retval(in[0]);
+        for (auto i = 1u; i < in.size(); ++i) {
+            retval -= in[i];
+        }
+        return retval;
     }
-    return retval;
-}
+    template <typename Archive>
+    void serialize(Archive &, unsigned)
+    {
+    }
+};
+
+template <typename T>
+inline constexpr auto my_diff = my_diff_func<T>{};
 
 inline std::string print_my_diff(const std::vector<std::string> &in)
 {
@@ -346,10 +370,19 @@ inline std::string print_my_gaussian(const std::vector<std::string> &in)
 // sqrt (unary)
 // This square root discards all inputs except the first one
 template <typename T, f_enabler<T> = 0>
-inline T my_sqrt(const std::vector<T> &in)
-{
-    return audi::sqrt(in[0]);
-}
+struct my_sqrt_func {
+    T operator()(const std::vector<T> &in) const
+    {
+        return audi::sqrt(in[0]);
+    }
+    template <typename Archive>
+    void serialize(Archive &, unsigned)
+    {
+    }
+};
+
+template <typename T>
+inline constexpr auto my_sqrt = my_sqrt_func<T>{};
 
 inline std::string print_my_sqrt(const std::vector<std::string> &in)
 {
@@ -357,5 +390,8 @@ inline std::string print_my_sqrt(const std::vector<std::string> &in)
 }
 
 } // namespace dcgp
+
+DCGP_S11N_FUNCTION_EXPORT_KEY_MULTI(my_diff)
+DCGP_S11N_FUNCTION_EXPORT_KEY_MULTI(my_sqrt)
 
 #endif // DCGP_WRAPPED_FUNCTIONS_H
