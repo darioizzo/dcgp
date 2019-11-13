@@ -28,6 +28,11 @@ double double_add(double a, double b)
     return a + b;
 }
 
+double double_add_ref(const double &a, const double &b)
+{
+    return a + b;
+}
+
 BOOST_AUTO_TEST_CASE(function_basic_tests)
 {
     // Default construction.
@@ -50,6 +55,9 @@ BOOST_AUTO_TEST_CASE(function_basic_tests)
 
     function<double(double, double)> f2(double_add);
     BOOST_CHECK(f2(1, 2) == 3);
+
+    function<double(const double &, const double &)> f3(double_add_ref);
+    BOOST_CHECK(f3(1, 2) == 3);
 }
 
 BOOST_AUTO_TEST_CASE(function_serialization_test)
