@@ -213,7 +213,6 @@ private:
 } // namespace dcgp
 
 // Disable class tracking for all instances of dcgp::function.
-
 namespace boost::serialization
 {
 
