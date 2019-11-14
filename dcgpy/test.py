@@ -277,6 +277,7 @@ class test_symbolic_regression(_ut.TestCase):
         self.assertEqual(prob.has_gradient(), True)
         self.assertEqual(prob.has_hessians(), True)
 
+
 class test_es4cgp(_ut.TestCase):
     def runTest(self):
         from dcgpy import symbolic_regression, generate_koza_quintic, kernel_set_double, es4cgp
@@ -302,6 +303,7 @@ class test_es4cgp(_ut.TestCase):
         algo.set_verbosity(1)
         # Testing some evolutions
         pop = algo.evolve(pop)
+
 
 class test_mes4cgp(_ut.TestCase):
     def runTest(self):
@@ -329,6 +331,7 @@ class test_mes4cgp(_ut.TestCase):
         # Testing some evolutions
         pop = algo.evolve(pop)
 
+
 class test_momes4cgp(_ut.TestCase):
     def runTest(self):
         from dcgpy import symbolic_regression, generate_koza_quintic, kernel_set_double, momes4cgp
@@ -355,6 +358,7 @@ class test_momes4cgp(_ut.TestCase):
         # Testing some evolutions
         pop = algo.evolve(pop)
 
+
 class test_gd4cgp(_ut.TestCase):
     def runTest(self):
         from dcgpy import symbolic_regression, generate_koza_quintic, kernel_set_double, gd4cgp
@@ -375,11 +379,25 @@ class test_gd4cgp(_ut.TestCase):
         prob = pg.problem(udp)
         pop = pg.population(prob, 10)
         # Interface for the UDAs
-        uda = gd4cgp(max_iter=10, lr = 0.1, lr_min = 1e-6)
+        uda = gd4cgp(max_iter=10, lr=0.1, lr_min=1e-6)
         algo = pg.algorithm(uda)
         algo.set_verbosity(1)
         # Testing some evolutions
         pop = algo.evolve(pop)
+
+
+class test_kernel(_ut.TestCase):
+    def runTest(self):
+        self.test_serialization()
+
+    def test_serialization(self):
+        import pickle as pickle
+        import dcgpy
+
+        cpp_kv = dcgpy.kernel_set_double(
+            ["sum", "diff", "mul", "div", "pdiv", "tanh", "sig", "cos", "sin", "log", "exp", "gaussian", "sqrt", "ReLu", "ELU", "ISRU"])()
+        for cpp_k in cpp_kv:
+            pickle.loads(pickle.dumps(cpp_k))
 
 
 def run_test_suite():
