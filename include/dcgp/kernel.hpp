@@ -1,6 +1,7 @@
 #ifndef DCGP_KERNEL_H
 #define DCGP_KERNEL_H
 
+#include <algorithm>
 #include <iostream>
 #include <string>
 #include <utility> // std::forward
@@ -69,6 +70,7 @@ public:
     template <typename U, typename V>
     kernel(U &&f, V &&pf, std::string name) : m_f(std::forward<U>(f)), m_pf(std::forward<V>(pf)), m_name(name)
     {
+        m_thread_safety = std::min(m_f.get_thread_safety(), m_pf.get_thread_safety());
     }
 
     /// Parenthesis operator
@@ -119,6 +121,12 @@ public:
         return m_name;
     }
 
+    // Thread safety level.
+    pagmo::thread_safety get_thread_safety() const
+    {
+        return m_thread_safety;
+    }
+
     /// Overloaded stream operator
     /**
      * Will stream the function name
@@ -151,6 +159,8 @@ private:
     my_print_fun_type m_pf;
     /// Its name
     std::string m_name;
+    // Thread safety.
+    pagmo::thread_safety m_thread_safety;
 };
 
 } // end of namespace dcgp
