@@ -19,7 +19,7 @@ int main()
 {
     // We load the data (using problem vladi6 from the gym)
     std::vector<std::vector<double>> X, Y;
-    gym::generate_vladi6(X, Y);
+    gym::generate_sinecosine(X, Y);
 
     // We instantiate a symbolic regression problem with one only ephemeral constants.
     // Note that here we also set a batch parallelism to 5 so that 5 batches of 2 points

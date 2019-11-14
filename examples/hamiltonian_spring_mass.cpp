@@ -9,7 +9,8 @@
 // using our "mutation suppression" method The hamiltonian is H = 1/2 p^2 + 1/2
 // q^2
 
-double fitness(const dcgp::expression<gdual_d> &ex, const std::vector<std::vector<gdual_d>> &in, double &check)
+double fitness(const dcgp::expression<audi::gdual_d> &ex, const std::vector<std::vector<audi::gdual_d>> &in,
+               double &check)
 {
     double retval = 0;
     check = 0;
@@ -36,20 +37,20 @@ int main()
     std::random_device rd;
 
     // Function set
-    dcgp::kernel_set<gdual_d> basic_set({"sum", "diff", "mul", "div"});
+    dcgp::kernel_set<audi::gdual_d> basic_set({"sum", "diff", "mul", "div"});
 
     // d-CGP expression
-    dcgp::expression<gdual_d> ex(2, 1, 1, 15, 16, 2, basic_set(), rd());
+    dcgp::expression<audi::gdual_d> ex(2, 1, 1, 15, 16, 2, basic_set(), rd());
 
     // Symbols
     std::vector<std::string> in_sym({"p", "q"});
 
     // We create the grid over x
-    std::vector<std::vector<gdual_d>> in(10u);
+    std::vector<std::vector<audi::gdual_d>> in(10u);
     for (auto i = 0u; i < in.size(); ++i) {
-        gdual_d p_var(0.12 + 0.9 / static_cast<double>((in.size() - 1)) * i, "p", 1u);
-        gdual_d q_var(1. - 0.143 / static_cast<double>((in.size() - 1)) * i, "q", 1u);
-        in[i] = std::vector<gdual_d>{p_var, q_var};
+        audi::gdual_d p_var(0.12 + 0.9 / static_cast<double>((in.size() - 1)) * i, "p", 1u);
+        audi::gdual_d q_var(1. - 0.143 / static_cast<double>((in.size() - 1)) * i, "q", 1u);
+        in[i] = std::vector<audi::gdual_d>{p_var, q_var};
     }
 
     // We run the (1-4)-ES

@@ -7,7 +7,7 @@
 // Here we solve the differential equation d^2y dy  = - 4 / x^3 (NLODE3) from Tsoulos paper
 // Tsoulos and Lagaris: "Solving Differential equations with genetic programming"
 
-double fitness(const dcgp::expression<gdual_d> &ex, const std::vector<std::vector<gdual_d>> &in)
+double fitness(const dcgp::expression<audi::gdual_d> &ex, const std::vector<std::vector<audi::gdual_d>> &in)
 {
     double retval = 0;
     for (auto i = 0u; i < in.size(); ++i) {
@@ -27,18 +27,18 @@ int main()
     std::random_device rd;
 
     // Function set
-    dcgp::kernel_set<gdual_d> basic_set({"sum", "diff", "mul", "div", "log"});
+    dcgp::kernel_set<audi::gdual_d> basic_set({"sum", "diff", "mul", "div", "log"});
 
     // d-CGP expression
-    dcgp::expression<gdual_d> ex(1, 1, 1, 15, 16, 2, basic_set(), rd());
+    dcgp::expression<audi::gdual_d> ex(1, 1, 1, 15, 16, 2, basic_set(), rd());
 
     // Symbols for streaming out the hr expression
     std::vector<std::string> in_sym({"x"});
 
     // We create the grid over x
-    std::vector<std::vector<gdual_d>> in(10u);
+    std::vector<std::vector<audi::gdual_d>> in(10u);
     for (auto i = 0u; i < in.size(); ++i) {
-        in[i].push_back(gdual_d(1. + 1. / static_cast<double>((in.size() - 1)) * i, "x", 2)); // 1, .., 2
+        in[i].push_back(audi::gdual_d(1. + 1. / static_cast<double>((in.size() - 1)) * i, "x", 2)); // 1, .., 2
     }
 
     // We run the (1-4)-ES
@@ -54,7 +54,7 @@ int main()
             ex.set(best_chromosome);
             ex.mutate_active(2);
             auto fitness_ic
-                = ex(std::vector<gdual_d>{gdual_d(1.)})[0]; // Penalty term to enforce the initial conditions
+                = ex(std::vector<audi::gdual_d>{audi::gdual_d(1.)})[0]; // Penalty term to enforce the initial conditions
             newfits[i] = fitness(ex, in) + fitness_ic.constant_cf() * fitness_ic.constant_cf(); // Total fitness
             newchromosomes[i] = ex.get();
         }

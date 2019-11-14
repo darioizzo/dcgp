@@ -10,7 +10,7 @@ the problem vladi6 from the dcgp::gym, that is: 6*cos(x*sin(y))
 
 Code:
 ^^^^^^^^
-.. literalinclude:: ../../../examples/symbolic_regression_4.cpp
+.. literalinclude:: ../../../../examples/symbolic_regression_4.cpp
    :language: c++
    :linenos:
 

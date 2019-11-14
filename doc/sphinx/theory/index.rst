@@ -1,7 +1,7 @@
-Tutorials
+Background
 ====================
 .. toctree::
   :maxdepth: 1
 
-  cpp/index
-  py/index
+  cgp
+  dcgp

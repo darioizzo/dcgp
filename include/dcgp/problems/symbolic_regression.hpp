@@ -455,6 +455,44 @@ public:
         return m_cgp;
     }
 
+    /// Model predictions
+    /**
+     * Uses the model encoded in *x* to predict the label of *point*.
+     *
+     * @param[in] point point to be predicted.
+     * @param[in] x chromosome encoding the model.
+     *
+     * @return the predicted label for *point*.
+     */
+    std::vector<double> predict(const std::vector<double> &point, pagmo::vector_double x) const
+    {
+        // Here we set the CGP member from the chromosome
+        set_cgp(x);
+        return m_cgp(point);
+    }
+
+    /// Model predictions
+    /**
+     * Uses the model encoded in *x* to predict the labels of *points*.
+     *
+     * @param[in] points points to be predicted.
+     * @param[in] x chromosome encoding the model.
+     *
+     * @return the predicted labels for *points*.
+     */
+    std::vector<std::vector<double>> predict(const std::vector<std::vector<double>> &points, pagmo::vector_double x) const
+    {
+        // This will hold the return value
+        std::vector<std::vector<double>> retval;
+        // Here we set the CGP member from the chromosome
+        set_cgp(x);
+        // We loop over the input points
+        for (decltype(points.size()) i = 0u; i < points.size(); ++i) {
+            retval.push_back(m_cgp(points[i]));
+        }
+        return retval;
+    }
+
     /// Thread safety for this udp
     /**
      * This is set to none as pitonic kernels could be in the inner expression

@@ -59,17 +59,28 @@ void expose_symbolic_regression()
                                                             kernels_v, n_eph, multi_objective, parallel_batches);
                  },
                  bp::default_call_policies(),
-                 (bp::arg("points"), bp::arg("labels"), bp::arg("rows"), bp::arg("cols"), bp::arg("levels_back"),
-                  bp::arg("arity"), bp::arg("kernels"), bp::arg("n_eph"), bp::arg("multi_objective"),
-                  bp::arg("parallel_batches") = 0u)),
+                 (bp::arg("points"), bp::arg("labels"), bp::arg("rows") = 1, bp::arg("cols") = 16,
+                  bp::arg("levels_back") = 17, bp::arg("arity") = 2, bp::arg("kernels"), bp::arg("n_eph") = 0u,
+                  bp::arg("multi_objective") = false, bp::arg("parallel_batches") = 0u)),
              symbolic_regression_init_doc().c_str())
         .def(
             "pretty", +[](const dcgp::symbolic_regression &instance,
                           const bp::object &x) { return instance.pretty(to_v<double>(x)); })
         .def(
-            "prettier", +[](const dcgp::symbolic_regression &instance, const bp::object &x) {
-                return instance.prettier(to_v<double>(x));
-            });
+            "prettier", +[](const dcgp::symbolic_regression &instance,
+                            const bp::object &x) { return instance.prettier(to_v<double>(x)); })
+        .def(
+            "predict",
+            +[](const dcgp::symbolic_regression &instance, const bp::object &points, const bp::object &x) {
+                try { //
+                    return vvector_to_ndarr(instance.predict(to_vv<double>(points), to_v<double>(x)));
+                } catch (...) {
+                    PyErr_Clear();
+                    return vector_to_ndarr(instance.predict(to_v<double>(points), to_v<double>(x)));
+                }
+            },
+            (bp::arg("points"), bp::arg("chromosome")), symbolic_regression_predict_doc().c_str())
+        .def("__repr__", &dcgp::symbolic_regression::get_extra_info);
 
     // We expose the UDAs
     // ES-4CGP (Evolutionary Strategy for Cartesian Genetic Programming)
