@@ -95,7 +95,7 @@ template <typename T>
 void expose_kernel(const std::string &type)
 {
     std::string class_name = "kernel_" + type;
-    bp::class_<kernel<T>>(class_name.c_str(), "The function defining the generic CGP node", bp::no_init)
+    bp::class_<kernel<T>>(class_name.c_str(), "The function defining the generic CGP node", bp::init<>())
         .def("__init__",
              bp::make_constructor(
                  +[](const bp::object &obj1, const bp::object &obj2, const std::string &name) {
@@ -146,7 +146,7 @@ void expose_kernel_set(std::string type)
 {
     std::string class_name = "kernel_set_" + type;
     bp::class_<kernel_set<T>>(class_name.c_str(),
-                              "Helper to construct a set of kernel functions from their common name", bp::no_init)
+                              "Helper to construct a set of kernel functions from their common name", bp::init<>())
         .def("__init__",
              bp::make_constructor(
                  +[](const bp::object &obj1) {
