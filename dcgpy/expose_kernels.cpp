@@ -5,7 +5,9 @@
 #define PY_ARRAY_UNIQUE_SYMBOL dcgpy_ARRAY_API
 #include "numpy.hpp"
 
+#include <boost/numeric/conversion/cast.hpp>
 #include <boost/python.hpp>
+
 #include <sstream>
 #include <string>
 #include <vector>
@@ -13,6 +15,7 @@
 #include <dcgp/function.hpp>
 #include <dcgp/kernel.hpp>
 #include <dcgp/kernel_set.hpp>
+#include <dcgp/s11n.hpp>
 #include <dcgp/wrapped_functions_s11n_implement.hpp>
 
 #include "common_utils.hpp"
@@ -25,6 +28,68 @@ namespace bp = boost::python;
 
 namespace dcgpy
 {
+
+// Wrapper around the CPython function to create a bytes object from raw data.
+inline bp::object make_bytes(const char *ptr, Py_ssize_t len)
+{
+    PyObject *retval;
+    if (len) {
+        retval = PyBytes_FromStringAndSize(ptr, len);
+    } else {
+        retval = PyBytes_FromStringAndSize(nullptr, 0);
+    }
+    if (!retval) {
+        PyErr_SetString(PyExc_RuntimeError, "unable to create a bytes object: the 'PyBytes_FromStringAndSize()' "
+                                            "function returned NULL");
+        boost::python::throw_error_already_set();
+    }
+    return bp::object(bp::handle<>(retval));
+}
+
+template <typename T>
+struct kernel_pickle_suite : bp::pickle_suite {
+    static bp::tuple getstate(const T &k)
+    {
+        // The idea here is that first we extract a char array
+        // into which the kernel has been serialized, then we turn
+        // this object into a Python bytes object and return that.
+        std::ostringstream oss;
+        {
+            boost::archive::binary_oarchive oarchive(oss);
+            oarchive << k;
+        }
+        auto s = oss.str();
+        // Store the serialized kernel.
+        return bp::make_tuple(make_bytes(s.data(), boost::numeric_cast<Py_ssize_t>(s.size())));
+    }
+    static void setstate(T &k, const bp::tuple &state)
+    {
+        // Similarly, first we extract a bytes object from the Python state,
+        // and then we build a C++ string from it. The string is then used
+        // to deserialize the object.
+        if (len(state) != 1) {
+            PyErr_SetString(PyExc_ValueError, ("the state tuple passed for kernel deserialization "
+                                               "must have 1 element, but instead it has "
+                                               + std::to_string(len(state)) + " elements")
+                                                  .c_str());
+            boost::python::throw_error_already_set();
+        }
+
+        auto ptr = PyBytes_AsString(bp::object(state[0]).ptr());
+        if (!ptr) {
+            PyErr_SetString(PyExc_TypeError, "a bytes object is needed to deserialize a kernel");
+            boost::python::throw_error_already_set();
+        }
+        const auto size = len(state[0]);
+        std::string s(ptr, ptr + size);
+        std::istringstream iss;
+        iss.str(s);
+        {
+            boost::archive::binary_iarchive iarchive(iss);
+            iarchive >> k;
+        }
+    }
+};
 
 template <typename T>
 void expose_kernel(const std::string &type)
@@ -60,11 +125,13 @@ void expose_kernel(const std::string &type)
                 }
             })
         .def(
-            "__repr__", +[](const kernel<T> &instance) -> std::string {
+            "__repr__",
+            +[](const kernel<T> &instance) -> std::string {
                 std::ostringstream oss;
                 oss << instance;
                 return oss.str();
-            });
+            })
+        .def_pickle(kernel_pickle_suite<kernel<T>>());
     ;
 }
 
@@ -101,7 +168,8 @@ void expose_kernel_set(std::string type)
              kernel_set_push_back_str_doc().c_str(), bp::arg("kernel_name"))
         .def("push_back", (void (kernel_set<T>::*)(const kernel<T> &)) & kernel_set<T>::push_back,
              kernel_set_push_back_ker_doc(type).c_str(), bp::arg("kernel"))
-        .def("__getitem__", &wrap_operator<T>);
+        .def("__getitem__", &wrap_operator<T>)
+        .def_pickle(kernel_pickle_suite<kernel_set<T>>());
 }
 
 void expose_kernels()
