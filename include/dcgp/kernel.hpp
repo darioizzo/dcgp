@@ -55,6 +55,8 @@ public:
     /// Basic prototype of a kernel function returning its symbolic representation
     using my_print_fun_type = function<std::string(const std::vector<std::string> &)>;
 #endif
+    kernel() = default;
+
     /// Constructor
     /**
      * Constructs a kernel that can be used as kernel in a dCGP expression
