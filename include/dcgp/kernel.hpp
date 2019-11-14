@@ -8,6 +8,7 @@
 
 #include <dcgp/config.hpp>
 #include <dcgp/function.hpp>
+#include <dcgp/s11n.hpp>
 
 namespace dcgp
 {
@@ -130,6 +131,15 @@ public:
     {
         os << d.m_name;
         return os;
+    }
+
+    // Serialization support.
+    template <typename Archive>
+    void serialize(Archive &ar, unsigned)
+    {
+        ar &m_f;
+        ar &m_pf;
+        ar &m_name;
     }
 
 private:
