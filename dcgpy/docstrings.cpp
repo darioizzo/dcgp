@@ -1058,7 +1058,7 @@ case, aside the Mean Squared Error, the model complexity will be considered as a
 
 std::string symbolic_regression_init_doc()
 {
-    return R"(__init__(points, labels, rows, columns, levels_back, arity, kernels, n_eph, multi_objective, parallel_batches=0)
+    return R"(__init__(points, labels, rows = 1, columns=16, levels_back=17, arity=2, kernels, n_eph=0, multi_objective=False, parallel_batches=0)
 
 Constructs a symbolic_regression optimization problem compatible with the pagmo UDP interface.
 
@@ -1124,6 +1124,22 @@ Examples:
         Data dimension (out): 1
         Data size: 10
         Kernels: [sum, diff]
+)";
+}
+
+std::string symbolic_regression_predict_doc()
+{
+    return R"(predict(points, chromosome)
+
+Predicts the labels of *points* using the model encoded in *x*.
+
+Args:
+    points (2D NumPy float array or ``list of lists`` of ``float`` or the 1D equivalents): the input point / points
+    chromosome (1D NumPy array or ``list`` of ``int``):  the encoded model.
+
+Raises:
+    unspecified: any exception thrown by failures at the intersection between C++ and Python (e.g.,
+      type conversion errors, mismatched function signatures, etc.)
 )";
 }
 

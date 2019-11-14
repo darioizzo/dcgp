@@ -230,6 +230,26 @@ inline std::vector<std::vector<double>> to_vv<double>(const bp::object &o)
         + "' to a vector of vector_double: only lists of doubles and NumPy arrays of doubles are supported");
 }
 
+// Convert a vector of arithmetic types into a 1D numpy array.
+template <typename T>
+inline bp::object vector_to_ndarr(const std::vector<T> &v)
+{
+    // The dimensions of the array to be created.
+    npy_intp dims[] = {boost::numeric_cast<npy_intp>(v.size())};
+    // Attempt creating the array.
+    PyObject *ret = PyArray_SimpleNew(1, dims, cpp_npy<T>::value);
+    if (!ret) {
+        dcgpy_throw(PyExc_RuntimeError, "couldn't create a NumPy array: the 'PyArray_SimpleNew()' function failed");
+    }
+    // Hand over to BP for exception-safe behaviour.
+    bp::object retval{bp::handle<>(ret)};
+    if (v.size()) {
+        // Copy over the data.
+        std::copy(v.begin(), v.end(), static_cast<T *>(PyArray_DATA(reinterpret_cast<PyArrayObject *>(ret))));
+    }
+    return retval;
+}
+
 // Convert a vector of vectors of arithmetic types into a 2D numpy array.
 template <typename T>
 inline bp::object vvector_to_ndarr(const std::vector<std::vector<T>> &v)

@@ -6,7 +6,7 @@
 // Here we search for first integrals of the Kepler's problem) using our "mutation suppression" method
 // The hamiltonian is H = 1/(2m) (pr^2+pt^2 / r^2) + mu / r
 
-double fitness(const dcgp::expression<gdual_d> &ex, const std::vector<std::vector<gdual_d>> &in, double &check)
+double fitness(const dcgp::expression<audi::gdual_d> &ex, const std::vector<std::vector<audi::gdual_d>> &in, double &check)
 {
     double retval = 0;
     check = 0;
@@ -14,7 +14,7 @@ double fitness(const dcgp::expression<gdual_d> &ex, const std::vector<std::vecto
         auto T = ex(in[i]); // We compute all the derivatives up to order one
         std::vector<std::string> symbol_list{"pr", "pt", "r", "th", "m", "mu"};
         for (auto sym : symbol_list) {
-            T[0] += gdual_d(0, sym, 0); // We make sure that the symbols are all in the final expression
+            T[0] += audi::gdual_d(0, sym, 0); // We make sure that the symbols are all in the final expression
         }
         double dFpr = T[0].get_derivative({{"dpr", 1}});
         // double dFpt= T[0].get_derivative({{"dpt", 1}});
@@ -43,24 +43,24 @@ int main()
     std::random_device rd;
 
     // Function set
-    dcgp::kernel_set<gdual_d> basic_set({"sum", "diff", "mul", "div"});
+    dcgp::kernel_set<audi::gdual_d> basic_set({"sum", "diff", "mul", "div"});
 
     // d-CGP expression
-    dcgp::expression<gdual_d> ex(6, 1, 1, 100, 50, 2, basic_set(), rd());
+    dcgp::expression<audi::gdual_d> ex(6, 1, 1, 100, 50, 2, basic_set(), rd());
 
     // Symbols
     std::vector<std::string> in_sym({"pr", "pt", "r", "th", "m", "mu"});
 
     // We create the grid over x
-    std::vector<std::vector<gdual_d>> in(50u);
+    std::vector<std::vector<audi::gdual_d>> in(50u);
     for (auto i = 0u; i < in.size(); ++i) {
-        gdual_d pr_var(0.12 + 20. / static_cast<double>((in.size() - 1)) * i, "pr", 1u);
-        gdual_d pt_var(1. + 20. / static_cast<double>((in.size() - 1)) * i, "pt", 1u);
-        gdual_d r_var(0.12 + 20. / static_cast<double>((in.size() - 1)) * i, "r", 1u);
-        gdual_d th_var(1. + 20. / static_cast<double>((in.size() - 1)) * i, "th", 1u);
-        gdual_d m_var(0.12 + 20. / static_cast<double>((in.size() - 1)) * i, "m", 1u);
-        gdual_d mu_var(1. + 20. / static_cast<double>((in.size() - 1)) * i, "mu", 1u);
-        in[i] = std::vector<gdual_d>{pr_var, pt_var, r_var, th_var, m_var, mu_var};
+        audi::gdual_d pr_var(0.12 + 20. / static_cast<double>((in.size() - 1)) * i, "pr", 1u);
+        audi::gdual_d pt_var(1. + 20. / static_cast<double>((in.size() - 1)) * i, "pt", 1u);
+        audi::gdual_d r_var(0.12 + 20. / static_cast<double>((in.size() - 1)) * i, "r", 1u);
+        audi::gdual_d th_var(1. + 20. / static_cast<double>((in.size() - 1)) * i, "th", 1u);
+        audi::gdual_d m_var(0.12 + 20. / static_cast<double>((in.size() - 1)) * i, "m", 1u);
+        audi::gdual_d mu_var(1. + 20. / static_cast<double>((in.size() - 1)) * i, "mu", 1u);
+        in[i] = std::vector<audi::gdual_d>{pr_var, pt_var, r_var, th_var, m_var, mu_var};
     }
 
     // We run the (1-4)-ES
@@ -83,7 +83,7 @@ int main()
         for (auto i = 0u; i < newfits.size(); ++i) {
             if (newfits[i] <= best_fit) {
                 if (newfits[i] != best_fit) {
-                    audi::stream(std::cout, "New best found: gen: ", std::setw(7), gen, "\t value: ", newfits[i], "\n");
+                    audi::print("New best found: gen: ", std::setw(7), gen, "\t value: ", newfits[i], "\n");
                     // std::cout << "Expression: " << ex(in_sym), "\n");
                 }
                 best_fit = newfits[i];
@@ -93,9 +93,9 @@ int main()
         }
     } while (best_fit > 1e-12 && gen < 10000);
 
-    audi::stream(std::cout, "Number of generations: ", gen, "\n");
-    audi::stream(std::cout, "Expression: ", ex, "\n");
-    audi::stream(std::cout, "Expression: ", ex(in_sym), "\n");
-    audi::stream(std::cout, "Point: ", in[2], "\n");
-    audi::stream(std::cout, "Taylor: ", ex(in[2]), "\n");
+    audi::print("Number of generations: ", gen, "\n");
+    audi::print("Expression: ", ex, "\n");
+    audi::print("Expression: ", ex(in_sym), "\n");
+    audi::print("Point: ", in[2], "\n");
+    audi::print("Taylor: ", ex(in[2]), "\n");
 }

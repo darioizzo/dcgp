@@ -1,5 +1,4 @@
 #include <audi/io.hpp>
-#include <audi/back_compatibility.hpp>
 #include <iostream>
 
 #include <dcgp/expression.hpp>
@@ -8,7 +7,7 @@
 // Here we solve the differential equation dy = (2x - y) / x from Tsoulos paper
 // Tsoulos and Lagaris: "Solving Differential equations with genetic programming"
 
-double fitness(const dcgp::expression<gdual_d> &ex, const std::vector<std::vector<gdual_d>> &in)
+double fitness(const dcgp::expression<audi::gdual_d> &ex, const std::vector<std::vector<audi::gdual_d>> &in)
 {
     double retval = 0;
     for (auto i = 0u; i < in.size(); ++i) {
@@ -28,18 +27,18 @@ int main()
     std::random_device rd;
 
     // Function set
-    dcgp::kernel_set<gdual_d> basic_set({"sum", "diff", "mul", "div", "exp", "log", "sin", "cos"});
+    dcgp::kernel_set<audi::gdual_d> basic_set({"sum", "diff", "mul", "div", "exp", "log", "sin", "cos"});
 
     // d-CGP expression
-    dcgp::expression<gdual_d> ex(1, 1, 1, 15, 16, 2, basic_set(), rd());
+    dcgp::expression<audi::gdual_d> ex(1, 1, 1, 15, 16, 2, basic_set(), rd());
 
     // Symbols
     std::vector<std::string> in_sym({"x"});
 
     // We create the grid over x
-    std::vector<std::vector<gdual_d>> in(10u);
+    std::vector<std::vector<audi::gdual_d>> in(10u);
     for (auto i = 0u; i < in.size(); ++i) {
-        gdual_d point(0.1 + 0.9 / static_cast<double>((in.size() - 1)) * i, "x", 1);
+        audi::gdual_d point(0.1 + 0.9 / static_cast<double>((in.size() - 1)) * i, "x", 1);
         in[i].push_back(point); // 1, .., 2
     }
 
@@ -55,7 +54,7 @@ int main()
         for (auto i = 0u; i < newfits.size(); ++i) {
             ex.set(best_chromosome);
             ex.mutate_active(2);
-            auto fitness_ic = ex({gdual_d(1.)})[0] - 3.; // Penalty term to enforce the initial conditions
+            auto fitness_ic = ex({audi::gdual_d(1.)})[0] - 3.; // Penalty term to enforce the initial conditions
             newfits[i] = fitness(ex, in) + fitness_ic.constant_cf() * fitness_ic.constant_cf(); // Total fitness
             newchromosomes[i] = ex.get();
         }
