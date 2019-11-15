@@ -1,5 +1,6 @@
 #define BOOST_TEST_MODULE dcgp_momes4cgp_test
-#include <boost/test/unit_test.hpp>
+#include <boost/test/included/unit_test.hpp>
+
 #include <pagmo/algorithm.hpp>
 #include <pagmo/io.hpp>
 #include <pagmo/population.hpp>
@@ -38,7 +39,9 @@ BOOST_AUTO_TEST_CASE(evolve_test)
         BOOST_CHECK_THROW(uda.evolve(pop), std::invalid_argument);
     }
     { // zero gen
-        pagmo::population pop{symbolic_regression({{1., 2.}, {0.3, -0.32}}, {{3. / 2.}, {0.02 / 0.32}}, 1, 20, 21, 2, basic_set(), 1u, true, 0u), 4u};
+        pagmo::population pop{symbolic_regression({{1., 2.}, {0.3, -0.32}}, {{3. / 2.}, {0.02 / 0.32}}, 1, 20, 21, 2,
+                                                  basic_set(), 1u, true, 0u),
+                              4u};
         BOOST_CHECK(momes4cgp{0u}.evolve(pop).get_x()[0] == pop.get_x()[0]);
     }
     // Here we only test that evolution is deterministic if the seed is controlled

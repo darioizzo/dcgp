@@ -1,10 +1,11 @@
-#include <random>
 #define BOOST_TEST_MODULE symbolic_regresion_perf_test
+#include <boost/test/included/unit_test.hpp>
+
 #include <algorithm>
 #include <audi/back_compatibility.hpp>
 #include <audi/io.hpp>
-#include <boost/test/unit_test.hpp>
 #include <boost/timer/timer.hpp>
+#include <random>
 
 #include <dcgp/gym.hpp>
 #include <dcgp/kernel_set.hpp>
@@ -79,8 +80,9 @@ BOOST_AUTO_TEST_CASE(pretty_speed)
         auto l = udp.pretty(pop.get_x()[i]);
         diff += (static_cast<double>(l.size()) - static_cast<double>(s.size()));
         if (l.size() < s.size()) {
-            anomalies+=1;
+            anomalies += 1;
         }
     }
-    pagmo::print("Average length difference: ", diff / 100., "\n", "Number of anomalies (prettier less pretty than pretty): ", anomalies, "\n");
+    pagmo::print("Average length difference: ", diff / 100., "\n",
+                 "Number of anomalies (prettier less pretty than pretty): ", anomalies, "\n");
 }

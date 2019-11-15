@@ -14,8 +14,8 @@
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include <tbb/parallel_for.h>
 #include <tbb/spin_mutex.h>
-#include <tbb/tbb.h>
 #include <vector>
 
 #include <dcgp/kernel_set.hpp>
@@ -356,7 +356,7 @@ public:
     }
 
     /// Sets the chromosome
-    /** 
+    /**
      * Sets a given chromosome as genotype for the expression and updates
      * the active nodes and active genes information accordingly
      *

@@ -3,22 +3,25 @@ from __future__ import absolute_import as _ai
 import unittest as _ut
 
 
+def my_py_fun(x):
+    return sum(x)
+
+
+def my_py_fun_print(x):
+    s = "+"
+    return "(" + s.join(x) + ")"
+
+
 class test_kernel(_ut.TestCase):
     def runTest(self):
         self.test_double()
         self.test_gdual_double()
         self.test_gdual_vdouble()
 
-    def my_sum(self, x):
-        return sum(x)
-
-    def print_my_sum(self, x):
-        return "(" + "+".join(x) + ")"
-
     def test_double(self):
         from dcgpy import kernel_double as kernel
 
-        my_kernel = kernel(self.my_sum, self.print_my_sum, "my_sum_kernel")
+        my_kernel = kernel(my_py_fun, my_py_fun_print, "my_sum_kernel")
 
         self.assertEqual(my_kernel.__repr__(), "my_sum_kernel")
         self.assertEqual(my_kernel([1, 2, 3]), 6)
@@ -28,7 +31,7 @@ class test_kernel(_ut.TestCase):
         from dcgpy import kernel_gdual_double as kernel
         from pyaudi import gdual_double as gdual
 
-        my_kernel = kernel(self.my_sum, self.print_my_sum, "my_sum_kernel")
+        my_kernel = kernel(my_py_fun, my_py_fun_print, "my_sum_kernel")
 
         self.assertEqual(my_kernel.__repr__(), "my_sum_kernel")
         x = gdual(1, "x", 2)
@@ -41,7 +44,7 @@ class test_kernel(_ut.TestCase):
         from dcgpy import kernel_gdual_vdouble as kernel
         from pyaudi import gdual_vdouble as gdual
 
-        my_kernel = kernel(self.my_sum, self.print_my_sum, "my_sum_kernel")
+        my_kernel = kernel(my_py_fun, my_py_fun_print, "my_sum_kernel")
 
         self.assertEqual(my_kernel.__repr__(), "my_sum_kernel")
         x = gdual([1, -1], "x", 2)
@@ -50,6 +53,83 @@ class test_kernel(_ut.TestCase):
         self.assertEqual(my_kernel([x, y, z]), x + y + z)
         self.assertEqual(my_kernel(["x", "y"]), "(x+y)")
 
+    def test_serialization_double(self):
+        import cloudpickle as cpk
+        from dcgpy import kernel_set_double as kernel_set
+        from dcgpy import kernel_double as kernel
+
+        # cpp kernels
+        cpp_kv = kernel_set(
+            ["sum", "diff", "mul", "div", "tanh", "sig", "cos", "sin", "log", "exp", "gaussian", "sqrt", "ReLu", "ELU", "ISRU"])()
+        x1 = 1.2
+        x2 = -1.2
+        x3 = 3.2
+
+        for cpp_k in cpp_kv:
+            cpp_k2 = cpk.loads(cpk.dumps(cpp_k))
+            self.assertEqual(cpp_k([x1, x2, x3]), cpp_k([x1, x2, x3]))
+            self.assertEqual(cpp_k2(["a", "b", "c"]), cpp_k2(["a", "b", "c"]))
+
+        # pythonic kernels
+        my_py_kernel = kernel(my_py_fun, my_py_fun_print, "my_py_fun")
+        my_py_kernel2 = cpk.loads(cpk.dumps(my_py_kernel))
+        self.assertEqual(my_py_kernel(
+            [x1, x2, x3]), my_py_kernel([x1, x2, x3]))
+        self.assertEqual(my_py_kernel(
+            ["a", "b", "c"]), my_py_kernel(["a", "b", "c"]))
+
+    def test_serialization_gdual_double(self):
+        import cloudpickle as cpk
+        from dcgpy import kernel_set_gdual_double as kernel_set
+        from dcgpy import kernel_gdual_double as kernel
+        from pyaudi import gdual_double as gdual
+
+        # cpp kernels
+        cpp_kv = kernel_set(
+            ["sum", "diff", "mul", "div", "tanh", "sig", "cos", "sin", "log", "exp", "gaussian", "sqrt", "ReLu", "ELU", "ISRU"])()
+        x1 = gdual(1.2, "x1", 2)
+        x2 = gdual(-1.2, "x2", 2)
+        x3 = gdual(3.2, "x3", 2)
+
+        for cpp_k in cpp_kv:
+            cpp_k2 = cpk.loads(cpk.dumps(cpp_k))
+            self.assertEqual(cpp_k([x1, x2, x3]), cpp_k([x1, x2, x3]))
+            self.assertEqual(cpp_k2(["a", "b", "c"]), cpp_k2(["a", "b", "c"]))
+
+        # pythonic kernels
+        my_py_kernel = kernel(my_py_fun, my_py_fun_print, "my_py_fun")
+        my_py_kernel2 = cpk.loads(cpk.dumps(my_py_kernel))
+        self.assertEqual(my_py_kernel(
+            [x1, x2, x3]), my_py_kernel([x1, x2, x3]))
+        self.assertEqual(my_py_kernel(
+            ["a", "b", "c"]), my_py_kernel(["a", "b", "c"]))
+
+    def test_serialization_gdual_vdouble(self):
+        import cloudpickle as cpk
+        from dcgpy import kernel_set_gdual_vdouble as kernel_set
+        from dcgpy import kernel_gdual_vdouble as kernel
+        from pyaudi import gdual_vdouble as gdual
+
+        # cpp kernels
+        cpp_kv = kernel_set(
+            ["sum", "diff", "mul", "div", "tanh", "sig", "cos", "sin", "log", "exp", "gaussian", "sqrt", "ReLu", "ELU", "ISRU"])()
+        x1 = gdual([1.2, 2.3], "x1", 2)
+        x2 = gdual([-1.2, 3.1], "x2", 2)
+        x3 = gdual([3.2, -0.2], "x3", 2)
+
+        for cpp_k in cpp_kv:
+            cpp_k2 = cpk.loads(cpk.dumps(cpp_k))
+            self.assertEqual(cpp_k([x1, x2, x3]), cpp_k([x1, x2, x3]))
+            self.assertEqual(cpp_k2(["a", "b", "c"]), cpp_k2(["a", "b", "c"]))
+
+        # pythonic kernels
+        my_py_kernel = kernel(my_py_fun, my_py_fun_print, "my_py_fun")
+        my_py_kernel2 = cpk.loads(cpk.dumps(my_py_kernel))
+        self.assertEqual(my_py_kernel(
+            [x1, x2, x3]), my_py_kernel([x1, x2, x3]))
+        self.assertEqual(my_py_kernel(
+            ["a", "b", "c"]), my_py_kernel(["a", "b", "c"]))
+
 
 class test_kernel_set(_ut.TestCase):
     def runTest(self):
@@ -57,18 +137,12 @@ class test_kernel_set(_ut.TestCase):
         self.test_gdual_double()
         self.test_gdual_vdouble()
 
-    def my_sum(self, x):
-        return sum(x)
-
-    def print_my_sum(self, x):
-        return "(" + "+".join(x) + ")"
-
     def test_double(self):
         from dcgpy import kernel_set_double as kernel_set
         from dcgpy import kernel_double as kernel
         a = kernel_set(["diff"])
         a.push_back("mul")
-        my_kernel = kernel(self.my_sum, self.print_my_sum, "my_sum_kernel")
+        my_kernel = kernel(my_py_fun, my_py_fun_print, "my_sum_kernel")
         a.push_back(my_kernel)
         self.assertEqual(a.__repr__(), "[diff, mul, my_sum_kernel]")
         x = 1
@@ -85,7 +159,7 @@ class test_kernel_set(_ut.TestCase):
 
         a = kernel_set(["diff"])
         a.push_back("mul")
-        my_kernel = kernel(self.my_sum, self.print_my_sum, "my_sum_kernel")
+        my_kernel = kernel(my_py_fun, my_py_fun_print, "my_sum_kernel")
         a.push_back(my_kernel)
         self.assertEqual(a.__repr__(), "[diff, mul, my_sum_kernel]")
         x = gdual(1, "x", 2)
@@ -102,7 +176,7 @@ class test_kernel_set(_ut.TestCase):
 
         a = kernel_set(["diff"])
         a.push_back("mul")
-        my_kernel = kernel(self.my_sum, self.print_my_sum, "my_sum_kernel")
+        my_kernel = kernel(my_py_fun, my_py_fun_print, "my_sum_kernel")
         a.push_back(my_kernel)
         self.assertEqual(a.__repr__(), "[diff, mul, my_sum_kernel]")
         x = gdual([1, -1], "x", 2)
@@ -277,6 +351,7 @@ class test_symbolic_regression(_ut.TestCase):
         self.assertEqual(prob.has_gradient(), True)
         self.assertEqual(prob.has_hessians(), True)
 
+
 class test_es4cgp(_ut.TestCase):
     def runTest(self):
         from dcgpy import symbolic_regression, generate_koza_quintic, kernel_set_double, es4cgp
@@ -299,9 +374,10 @@ class test_es4cgp(_ut.TestCase):
         # Interface for the UDAs
         uda = es4cgp(gen=20, mut_n=3, ftol=1e-3, learn_constants=True, seed=34)
         algo = pg.algorithm(uda)
-        algo.set_verbosity(1)
+        algo.set_verbosity(0)
         # Testing some evolutions
         pop = algo.evolve(pop)
+
 
 class test_mes4cgp(_ut.TestCase):
     def runTest(self):
@@ -325,9 +401,10 @@ class test_mes4cgp(_ut.TestCase):
         # Interface for the UDAs
         uda = mes4cgp(gen=20, mut_n=3, ftol=1e-3, seed=34)
         algo = pg.algorithm(uda)
-        algo.set_verbosity(1)
+        algo.set_verbosity(0)
         # Testing some evolutions
         pop = algo.evolve(pop)
+
 
 class test_momes4cgp(_ut.TestCase):
     def runTest(self):
@@ -351,9 +428,10 @@ class test_momes4cgp(_ut.TestCase):
         # Interface for the UDAs
         uda = momes4cgp(gen=5, max_mut=3)
         algo = pg.algorithm(uda)
-        algo.set_verbosity(1)
+        algo.set_verbosity(0)
         # Testing some evolutions
         pop = algo.evolve(pop)
+
 
 class test_gd4cgp(_ut.TestCase):
     def runTest(self):
@@ -375,9 +453,9 @@ class test_gd4cgp(_ut.TestCase):
         prob = pg.problem(udp)
         pop = pg.population(prob, 10)
         # Interface for the UDAs
-        uda = gd4cgp(max_iter=10, lr = 0.1, lr_min = 1e-6)
+        uda = gd4cgp(max_iter=10, lr=0.1, lr_min=1e-6)
         algo = pg.algorithm(uda)
-        algo.set_verbosity(1)
+        algo.set_verbosity(0)
         # Testing some evolutions
         pop = algo.evolve(pop)
 

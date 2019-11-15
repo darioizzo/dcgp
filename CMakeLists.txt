@@ -208,15 +208,16 @@ if(DCGP_BUILD_DCGP)
 
     # Setup of the header-only dcgp library.
     add_library(dcgp INTERFACE)
-    target_link_libraries(dcgp INTERFACE Boost::boost Boost::serialization Eigen3::eigen3 TBB::tbb)
-    target_link_libraries(dcgp INTERFACE Audi::audi Pagmo::pagmo ${SYMENGINE_LIBRARIES})
-
 
     # This sets up the include directory to be different if we build
     target_include_directories(dcgp INTERFACE
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
-    $<INSTALL_INTERFACE:include>)
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
+        $<INSTALL_INTERFACE:include>
+    )
+
+    target_link_libraries(dcgp INTERFACE Boost::boost Boost::serialization Eigen3::eigen3 TBB::tbb)
+    target_link_libraries(dcgp INTERFACE Audi::audi Pagmo::pagmo ${SYMENGINE_LIBRARIES})
 
     # Build main
     if(DCGP_BUILD_MAIN)

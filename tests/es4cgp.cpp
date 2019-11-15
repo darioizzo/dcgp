@@ -1,5 +1,6 @@
 #define BOOST_TEST_MODULE dcgp_es4cgp_test
-#include <boost/test/unit_test.hpp>
+#include <boost/test/included/unit_test.hpp>
+
 #include <pagmo/algorithm.hpp>
 #include <pagmo/io.hpp>
 #include <pagmo/population.hpp>

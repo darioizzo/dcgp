@@ -1,13 +1,15 @@
 #ifndef DCGP_KERNEL_H
 #define DCGP_KERNEL_H
 
-#include <functional> // std::function
+#include <algorithm>
 #include <iostream>
 #include <string>
 #include <utility> // std::forward
 #include <vector>
 
 #include <dcgp/config.hpp>
+#include <dcgp/function.hpp>
+#include <dcgp/s11n.hpp>
 
 namespace dcgp
 {
@@ -29,7 +31,7 @@ namespace dcgp
  *     }
  *     return retval;
  * }
- * 
+ *
  * inline std::string print_my_sum(const std::vector<std::string> &in)
  * {
  *     std::string retval(in[0]);
@@ -50,10 +52,12 @@ class kernel
 public:
 #if !defined(DCGP_DOXYGEN_INVOKED)
     /// Basic prototype of a kernel function returning its evaluation
-    using my_fun_type = std::function<T(const std::vector<T> &)>;
+    using my_fun_type = function<T(const std::vector<T> &)>;
     /// Basic prototype of a kernel function returning its symbolic representation
-    using my_print_fun_type = std::function<std::string(const std::vector<std::string> &)>;
+    using my_print_fun_type = function<std::string(const std::vector<std::string> &)>;
 #endif
+    kernel() = default;
+
     /// Constructor
     /**
      * Constructs a kernel that can be used as kernel in a dCGP expression
@@ -66,6 +70,7 @@ public:
     template <typename U, typename V>
     kernel(U &&f, V &&pf, std::string name) : m_f(std::forward<U>(f)), m_pf(std::forward<V>(pf)), m_name(name)
     {
+        m_thread_safety = std::min(m_f.get_thread_safety(), m_pf.get_thread_safety());
     }
 
     /// Parenthesis operator
@@ -116,6 +121,12 @@ public:
         return m_name;
     }
 
+    // Thread safety level.
+    pagmo::thread_safety get_thread_safety() const
+    {
+        return m_thread_safety;
+    }
+
     /// Overloaded stream operator
     /**
      * Will stream the function name
@@ -132,6 +143,15 @@ public:
         return os;
     }
 
+    // Serialization support.
+    template <typename Archive>
+    void serialize(Archive &ar, unsigned)
+    {
+        ar &m_f;
+        ar &m_pf;
+        ar &m_name;
+    }
+
 private:
     /// The function
     my_fun_type m_f;
@@ -139,6 +159,8 @@ private:
     my_print_fun_type m_pf;
     /// Its name
     std::string m_name;
+    // Thread safety.
+    pagmo::thread_safety m_thread_safety;
 };
 
 } // end of namespace dcgp

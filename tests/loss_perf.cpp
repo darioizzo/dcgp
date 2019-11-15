@@ -1,5 +1,6 @@
 #define BOOST_TEST_MODULE dcgp_evaluation_perf
-#include <boost/test/unit_test.hpp>
+#include <boost/test/included/unit_test.hpp>
+
 #include <boost/timer/timer.hpp>
 #include <iostream>
 

@@ -9,7 +9,6 @@
 #include <random>
 #include <sstream>
 #include <string>
-#include <tbb/tbb.h>
 #include <tuple>
 #include <vector>
 
@@ -27,7 +26,7 @@ namespace dcgp
  * Symbolic regression tasks seek for good mathematical models to represent input data. By increasing
  * the model complexity it is always (theoretically) possible to find almost perfect fits of any input data.
  * As a consequence, the model complexity must be traded off with its accuracy so that symbolic regression
- * is, ultimately, a two-objectives optimization problem. 
+ * is, ultimately, a two-objectives optimization problem.
  *
  * In this C++ class we offer an UDA (User Defined Algorithm for the pagmo optimization suite) which extends
  * :class:`dcgp::mes4cgp` for a multiobjective problem. The resulting algorithm, is
@@ -38,8 +37,9 @@ namespace dcgp
  * > while i < gen
  * > > Mutation: create a new population pop2 mutating N times the best individual (only the integer part is affected)
  * > > Life long learning: apply a one step of a second order Newton method to each individual (only the continuous part
- *     is affected) 
- * > > Reinsertion: set pop to contain the best N individuals taken from pop and pop2 according to non dominated sorting.
+ *     is affected)
+ * > > Reinsertion: set pop to contain the best N individuals taken from pop and pop2 according to non dominated
+ * sorting.
  * @endcode
  */
 class momes4cgp
@@ -52,7 +52,7 @@ public:
 
     /// Constructor
     /**
-     * Constructs a multi-objective memetic evolutionary strategy algorithm for use with a 
+     * Constructs a multi-objective memetic evolutionary strategy algorithm for use with a
      * :class:`dcgp::symbolic_regression` UDP.
      *
      * @param gen number of generations.
@@ -69,7 +69,6 @@ public:
             throw std::invalid_argument("The number of active mutations is zero, it must be at least 1.");
         }
     }
-
 
     /// Algorithm evolve method
     /**

@@ -7,6 +7,7 @@
 
 #include <dcgp/config.hpp>
 #include <dcgp/kernel.hpp>
+#include <dcgp/s11n.hpp>
 #include <dcgp/wrapped_functions.hpp>
 
 namespace dcgp
@@ -146,6 +147,13 @@ public:
     dcgp::kernel<T> operator[](const typename std::vector<dcgp::kernel<T>>::size_type idx) const
     {
         return m_kernels[idx];
+    }
+
+    // Serialization support.
+    template <typename Archive>
+    void serialize(Archive &ar, unsigned)
+    {
+        ar &m_kernels;
     }
 
 private:

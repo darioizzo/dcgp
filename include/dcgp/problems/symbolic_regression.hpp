@@ -1,5 +1,6 @@
 #ifndef DCGP_SYMBOLIC_REGRESSION_H
 #define DCGP_SYMBOLIC_REGRESSION_H
+#include <algorithm>
 #include <audi/gdual.hpp>
 #include <boost/numeric/conversion/cast.hpp>
 #include <boost/range/algorithm/transform.hpp>
@@ -21,14 +22,15 @@ namespace dcgp
  *
  * \image html symbolic_regression.jpg "Math Formulae"
  *
- * Symbolic regression is a type of regression analysis that searches the space of mathematical expressions to 
- * find the model that best fits a given dataset, both in terms of accuracy and simplicity 
+ * Symbolic regression is a type of regression analysis that searches the space of mathematical expressions to
+ * find the model that best fits a given dataset, both in terms of accuracy and simplicity
  * (ref: https://en.wikipedia.org/wiki/Symbolic_regression). It also is one of the core applications
  * for Differentiable Cartesian Genetic Programming.
  *
  * This class provides an easy way to instantiate symbolic regression problems as optimization problems having
  * a continuous part (i.e. the value of the parameters in the model) and an integer part (i.e. the representation of
- * the model computational graph). The instantiated object can be used as UDP (User Defined Problem) in the pagmo optimization suite.
+ * the model computational graph). The instantiated object can be used as UDP (User Defined Problem) in the pagmo
+ * optimization suite.
  *
  * The symbolic regression problem can be instantiated both as a single and a two-objectives problem. In the second
  * case, aside the Mean Squared Error, the formula complexity will be considered as an objective.
@@ -177,7 +179,9 @@ public:
                 pagmo::stream(ss, prettier);
                 auto string = ss.str();
                 // We remove whitespaces too
-                l_prettier += static_cast<double>(string.length() - static_cast<decltype(string.length())>(std::count(string.begin(), string.end(), ' ')));
+                l_prettier += static_cast<double>(
+                    string.length()
+                    - static_cast<decltype(string.length())>(std::count(string.begin(), string.end(), ' ')));
             }
             // Here we define the formula complexity
             retval[1] = std::min(l_pretty, l_prettier);
@@ -480,7 +484,8 @@ public:
      *
      * @return the predicted labels for *points*.
      */
-    std::vector<std::vector<double>> predict(const std::vector<std::vector<double>> &points, pagmo::vector_double x) const
+    std::vector<std::vector<double>> predict(const std::vector<std::vector<double>> &points,
+                                             pagmo::vector_double x) const
     {
         // This will hold the return value
         std::vector<std::vector<double>> retval;
@@ -497,10 +502,12 @@ public:
     /**
      * This is set to none as pitonic kernels could be in the inner expression
      */
-    //pagmo::thread_safety get_thread_safety() const
-   // {
-    //    return pagmo::thread_safety::none;
-   // }
+    pagmo::thread_safety get_thread_safety() const
+    {
+        return (*std::min_element(m_f.begin(), m_f.end(),
+                                  [](const auto &a, const auto &b) { return a.get_thread_safety() < b.get_thread_safety(); }))
+            .get_thread_safety();
+    }
 
 private:
     // This setter can be marked const as m_cgp is mutable
