@@ -199,6 +199,7 @@ class test_expression(_ut.TestCase):
     def test_double(self):
         from dcgpy import expression_double as expression
         from dcgpy import kernel_set_double as kernel_set
+        import pickle
 
         # Construction
         ex = expression(inputs=1,
@@ -210,6 +211,8 @@ class test_expression(_ut.TestCase):
                         kernels=kernel_set(["sum", "mul", "div", "diff"])(),
                         n_eph=0,
                         seed=33)
+
+        self.assertTrue(repr(ex) == repr(pickle.loads(pickle.dumps(ex))))
 
         ex = expression(inputs=1,
                         outputs=1,
