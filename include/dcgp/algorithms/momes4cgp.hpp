@@ -2,6 +2,7 @@
 #define DCGP_MOMES4CGP_H
 
 #include <Eigen/Dense>
+#include <pagmo/algorithm.hpp>
 #include <pagmo/detail/custom_comparisons.hpp>
 #include <pagmo/io.hpp>
 #include <pagmo/population.hpp>
@@ -378,4 +379,7 @@ private:
     mutable log_type m_log;
 };
 } // namespace dcgp
+
+PAGMO_S11N_ALGORITHM_EXPORT_KEY(dcgp::momes4cgp)
+
 #endif

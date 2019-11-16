@@ -3,6 +3,7 @@
 
 #include <audi/gdual.hpp>
 #include <numeric>
+#include <pagmo/algorithm.hpp>
 #include <pagmo/algorithms/not_population_based.hpp>
 #include <pagmo/detail/custom_comparisons.hpp>
 
@@ -295,4 +296,7 @@ private:
     mutable log_type m_log;
 };
 } // namespace dcgp
+
+PAGMO_S11N_ALGORITHM_EXPORT_KEY(dcgp::gd4cgp)
+
 #endif

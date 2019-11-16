@@ -7,6 +7,7 @@
 #include <numeric> // std::accumulate
 #include <pagmo/io.hpp>
 #include <pagmo/population.hpp>
+#include <pagmo/problem.hpp>
 #include <pagmo/types.hpp>
 #include <symengine/expression.h>
 #include <vector>
@@ -607,4 +608,7 @@ private:
     mutable std::pair<pagmo::vector_double, pagmo::vector_double> m_cache_gradient;
 };
 } // namespace dcgp
+
+PAGMO_S11N_PROBLEM_EXPORT_KEY(dcgp::symbolic_regression)
+
 #endif

@@ -1,6 +1,7 @@
 #ifndef DCGP_ES4CGP_H
 #define DCGP_ES4CGP_H
 
+#include <pagmo/algorithm.hpp>
 #include <pagmo/bfe.hpp>
 #include <pagmo/detail/custom_comparisons.hpp>
 #include <pagmo/io.hpp>
@@ -381,4 +382,7 @@ private:
     pagmo::bfe m_bfe;
 };
 } // namespace dcgp
+
+PAGMO_S11N_ALGORITHM_EXPORT_KEY(dcgp::es4cgp)
+
 #endif
