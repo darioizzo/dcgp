@@ -15,6 +15,7 @@
 #include <dcgp/kernel.hpp>
 #include <dcgp/kernel_set.hpp>
 #include <dcgp/problems/symbolic_regression.hpp>
+#include <dcgp/s11n.hpp>
 
 namespace dcgp
 {
@@ -28,9 +29,9 @@ namespace dcgp
  * effect on the resulting loss and its an open question how to balance the learning of the model parameters
  * (continuous optimization) with learning the model itself (integer optimization)
  *
- * In this class we provide a simple gradient descent algorithm able to tackle :class:`dcgp::symbolic_regression` problems
- * The gradient descent will only modify the continuous part of the chromosome, leaving the integer part (i.e. the 
- * actual model) unchanged.
+ * In this class we provide a simple gradient descent algorithm able to tackle :class:`dcgp::symbolic_regression`
+ * problems The gradient descent will only modify the continuous part of the chromosome, leaving the integer part (i.e.
+ * the actual model) unchanged.
  */
 class gd4cgp : public pagmo::not_population_based
 {
@@ -274,6 +275,19 @@ private:
         m_log.emplace_back(iter, prob.get_fevals() - fevals0, prob.get_gevals() - gevals0, loss_gradient_norm, lr,
                            fit0[0]);
     }
+
+public:
+    template <typename Archive>
+    void serialize(Archive &ar, unsigned)
+    {
+        ar &m_max_iter;
+        ar &m_lr;
+        ar &m_lr_min;
+        ar &m_verbosity;
+        ar &m_log;
+    }
+
+private:
     unsigned m_max_iter;
     double m_lr;
     double m_lr_min;

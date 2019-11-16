@@ -2,14 +2,21 @@
 #include <boost/test/included/unit_test.hpp>
 
 #include <algorithm>
-#include <audi/gdual.hpp>
-#include <pagmo/io.hpp>
 #include <random>
+#include <sstream>
 #include <string>
 #include <vector>
 
+#include <audi/gdual.hpp>
+
+#include <boost/lexical_cast.hpp>
+
+#include <pagmo/io.hpp>
+
 #include <dcgp/expression.hpp>
 #include <dcgp/kernel_set.hpp>
+#include <dcgp/s11n.hpp>
+#include <dcgp/wrapped_functions_s11n_implement.hpp>
 
 #include "helpers.hpp"
 
@@ -385,4 +392,27 @@ BOOST_AUTO_TEST_CASE(ephemeral_constants_test)
         std::vector<std::vector<gdual_d>> out = {{gdual_d(0.), gdual_d(0.)}, {gdual_d(-2.), gdual_d(3.)}};
         BOOST_CHECK_CLOSE(ex.loss(in, out, "MSE", true).get_derivative({{"dc1", 1u}}), -0.51005, 1e-3);
     }
+}
+
+BOOST_AUTO_TEST_CASE(s11n_test)
+{
+    // Random seed
+    std::random_device rd;
+    kernel_set<double> basic_set({"sum", "diff", "mul", "div"});
+    expression<double> ex(2, 2, 2, 2, 3, 2, basic_set(), 0u, rd());
+
+    const auto orig = boost::lexical_cast<std::string>(ex);
+
+    std::stringstream ss;
+    {
+        boost::archive::binary_oarchive oarchive(ss);
+        oarchive << ex;
+    }
+    ex = expression<double>(2, 2, 2, 2, 3, 2, basic_set(), 0u, rd());
+    {
+        boost::archive::binary_iarchive iarchive(ss);
+        iarchive >> ex;
+    }
+
+    BOOST_CHECK(orig == boost::lexical_cast<std::string>(ex));
 }

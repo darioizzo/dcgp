@@ -1,6 +1,8 @@
 #define BOOST_TEST_MODULE dcgp_momes4cgp_test
 #include <boost/test/included/unit_test.hpp>
 
+#include <sstream>
+
 #include <pagmo/algorithm.hpp>
 #include <pagmo/io.hpp>
 #include <pagmo/population.hpp>
@@ -10,6 +12,7 @@
 #include <dcgp/algorithms/momes4cgp.hpp>
 #include <dcgp/gym.hpp>
 #include <dcgp/problems/symbolic_regression.hpp>
+#include <dcgp/s11n.hpp>
 
 using namespace dcgp;
 
@@ -78,4 +81,24 @@ BOOST_AUTO_TEST_CASE(trivial_methods_test)
     BOOST_CHECK(uda.get_name().find("CGP") != std::string::npos);
     BOOST_CHECK(uda.get_extra_info().find("Verbosity") != std::string::npos);
     BOOST_CHECK_NO_THROW(uda.get_log());
+}
+
+BOOST_AUTO_TEST_CASE(s11n_test)
+{
+    momes4cgp uda{10u, 1u, 23u};
+
+    const auto orig = uda.get_extra_info();
+
+    std::stringstream ss;
+    {
+        boost::archive::binary_oarchive oarchive(ss);
+        oarchive << uda;
+    }
+    uda = momes4cgp{10u, 2u, 23u};
+    {
+        boost::archive::binary_iarchive iarchive(ss);
+        iarchive >> uda;
+    }
+
+    BOOST_CHECK(orig == uda.get_extra_info());
 }
