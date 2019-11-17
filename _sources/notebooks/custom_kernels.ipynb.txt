@@ -12,7 +12,12 @@
     " \n",
     " * How to use it in a *dcgpy.expression_double*.\n",
     " \n",
-    " NOTE: when defining custom kernels directly via the python interface a slowdown is to be expected as the thread safety level of the callable created is necessarily absent and thus the kernel cannot be called from different threads (only processes)"
+    "NOTE: when defining custom kernels directly via the python interface a slowdown is to be expected for two main reasons: \n",
+    " \n",
+    " \n",
+    " a) python callables cannot be called from different threads (only processes)  \n",
+    " \n",
+    " b) an added c++/python layer is added and forces conversions "
    ]
   },
   {
@@ -46,16 +51,16 @@
    "metadata": {},
    "outputs": [],
    "source": [
-    "# Lets define some non-linear function we would like to use as a computation unit in a dCGP:\n",
+    "# Lets define some non-linear function we would like to use as a computational unit in a dCGP:\n",
     "def my_fun(x):\n",
     "    return exp(-x[0]*x[0])\n",
     "\n",
-    "# We need also to define the textual form of such a kernel so that, for example, symbolic manipulators \n",
-    "# can try to understand its semantic. In this function x will be a list of symbols like [\"x\", \"y\", \"z\"]\n",
+    "# We need also to define the symbolic form of such a kernel so that, for example, symbolic manipulators \n",
+    "# can understand its semantic. In this function x is to be interpreted as a list of symbols like [\"x\", \"y\", \"z\"]\n",
     "def my_fun_print(x):\n",
     "    return \"exp(-\" + x[0] + \"**2)\"\n",
     "\n",
-    "# Note that its left to the user to define a extual representation that makes sense and is truthful, no checks are done.\n",
+    "# Note that it is left to the user to define a symbolic representation that makes sense and is truthful, no checks are done.\n",
     "# All symbolic manipulations will rely on the fact that such a representation makes sense."
    ]
   },
@@ -148,7 +153,7 @@
      "name": "stdout",
      "output_type": "stream",
      "text": [
-      "Elapsed (ms) 8.867025375366211\n"
+      "Elapsed (ms) 17.11416244506836\n"
      ]
     }
    ],
@@ -168,7 +173,7 @@
      "name": "stdout",
      "output_type": "stream",
      "text": [
-      "Elapsed (ms) 2.789735794067383\n"
+      "Elapsed (ms) 2.962350845336914\n"
      ]
     }
    ],
@@ -188,7 +193,7 @@
      "name": "stdout",
      "output_type": "stream",
      "text": [
-      "Elapsed (ms) 2.9599666595458984\n"
+      "Elapsed (ms) 3.305673599243164\n"
      ]
     }
    ],

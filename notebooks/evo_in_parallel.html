@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>A first tutorial &mdash; dCGP 1.4.1 documentation</title>
+  <title>Evolving CGPs in multiple threads &mdash; dCGP 1.4.1 documentation</title>
   
 
   
@@ -39,8 +39,8 @@
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Learning constants using evolution" href="symbolic_regression_2.html" />
-    <link rel="prev" title="Custom Kernels" href="custom_kernels.html" /> 
+    <link rel="next" title="Learning constants in a symbolic regression task" href="learning_constants.html" />
+    <link rel="prev" title="Multi-objective memetic approach" href="symbolic_regression_3.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -100,10 +100,10 @@
 <li class="toctree-l2 current"><a class="reference internal" href="../tutorials/py/index.html">Python</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="../tutorials/py/index.html#core">Core</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="../tutorials/py/index.html#symbolic-regression">Symbolic Regression</a><ul class="current">
-<li class="toctree-l4 current"><a class="current reference internal" href="#">A first tutorial</a></li>
+<li class="toctree-l4"><a class="reference internal" href="symbolic_regression_1.html">A first tutorial</a></li>
 <li class="toctree-l4"><a class="reference internal" href="symbolic_regression_2.html">Learning constants using evolution</a></li>
 <li class="toctree-l4"><a class="reference internal" href="symbolic_regression_3.html">Multi-objective memetic approach</a></li>
-<li class="toctree-l4"><a class="reference internal" href="evo_in_parallel.html">Evolving CGPs in multiple threads</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Evolving CGPs in multiple threads</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../tutorials/py/index.html#legacy">Legacy</a></li>
@@ -162,13 +162,13 @@
         
           <li><a href="../tutorials/py/index.html">Python</a> &raquo;</li>
         
-      <li>A first tutorial</li>
+      <li>Evolving CGPs in multiple threads</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/notebooks/symbolic_regression_1.ipynb.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/notebooks/evo_in_parallel.ipynb.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -403,9 +403,9 @@ div.rendered_html tbody tr:hover {
     text-align: unset;
 }
 </style>
-<div class="section" id="A-first-tutorial">
-<h1>A first tutorial<a class="headerlink" href="#A-first-tutorial" title="Permalink to this headline">¶</a></h1>
-<p>In this first tutorial we will make use of a classic Evolutionary to evolve a model for our input data.</p>
+<div class="section" id="Evolving-CGPs-in-multiple-threads">
+<h1>Evolving CGPs in multiple threads<a class="headerlink" href="#Evolving-CGPs-in-multiple-threads" title="Permalink to this headline">¶</a></h1>
+<p>In this tutorial we will learn how to evolve multiple Cartesian Genetic Programs in parallel CPUs. We use the same problem used in a previous tutorial performing the same evolution in a <em>pygmo</em> archipelago (that is in an island model where each island maintains a population of solutions and evolves them)</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
@@ -414,6 +414,7 @@ div.rendered_html tbody tr:hover {
 <span></span><span class="c1"># Some necessary imports.</span>
 <span class="kn">import</span> <span class="nn">dcgpy</span>
 <span class="kn">import</span> <span class="nn">pygmo</span> <span class="kn">as</span> <span class="nn">pg</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="c1"># Sympy is nice to have for basic symbolic manipulation.</span>
 <span class="kn">from</span> <span class="nn">sympy</span> <span class="kn">import</span> <span class="n">init_printing</span>
 <span class="kn">from</span> <span class="nn">sympy.parsing.sympy_parser</span> <span class="kn">import</span> <span class="o">*</span>
@@ -424,57 +425,39 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
-<div class="section" id="1---The-data">
-<h2>1 - The data<a class="headerlink" href="#1---The-data" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># We load our data from some available ones shipped with dcgpy.</span>
-<span class="c1"># In this particular case we use the problem chwirut2 from</span>
-<span class="c1"># (https://www.itl.nist.gov/div898/strd/nls/data/chwirut2.shtml)</span>
+<span></span><span class="c1"># Here we define our problem and solution strategy. In this case a simple Evolutionary Strategy acting on</span>
+<span class="c1"># a CGP with no added constants.</span>
 <span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="n">dcgpy</span><span class="o">.</span><span class="n">generate_chwirut2</span><span class="p">()</span>
-
+<span class="n">ss</span> <span class="o">=</span> <span class="n">dcgpy</span><span class="o">.</span><span class="n">kernel_set_double</span><span class="p">([</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span> <span class="s2">&quot;diff&quot;</span><span class="p">,</span> <span class="s2">&quot;mul&quot;</span><span class="p">,</span> <span class="s2">&quot;pdiv&quot;</span><span class="p">])</span>
+<span class="n">udp</span> <span class="o">=</span> <span class="n">dcgpy</span><span class="o">.</span><span class="n">symbolic_regression</span><span class="p">(</span><span class="n">points</span> <span class="o">=</span> <span class="n">X</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">Y</span><span class="p">,</span> <span class="n">kernels</span><span class="o">=</span><span class="n">ss</span><span class="p">())</span>
+<span class="n">uda</span>  <span class="o">=</span> <span class="n">dcgpy</span><span class="o">.</span><span class="n">es4cgp</span><span class="p">(</span><span class="n">gen</span> <span class="o">=</span> <span class="mi">10000</span><span class="p">,</span> <span class="n">mut_n</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
-<div class="nbinput docutils container">
+<div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># And we plot them as to visualize the problem.</span>
-<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="s1">&#39;.&#39;</span><span class="p">)</span>
-<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;54 measurments&#39;</span><span class="p">)</span>
-<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;metal distance&#39;</span><span class="p">)</span>
-<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;ultrasonic response&#39;</span><span class="p">)</span>
-
-
-
+<span></span><span class="c1"># We then construct our archipelago of *n*=64 islands containin 4 indivisuals each.</span>
+<span class="n">prob</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">problem</span><span class="p">(</span><span class="n">udp</span><span class="p">)</span>
+<span class="n">algo</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">algorithm</span><span class="p">(</span><span class="n">uda</span><span class="p">)</span>
+<span class="n">archi</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">archipelago</span><span class="p">(</span><span class="n">algo</span> <span class="o">=</span> <span class="n">algo</span><span class="p">,</span> <span class="n">prob</span> <span class="o">=</span> <span class="n">prob</span><span class="p">,</span> <span class="n">pop_size</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">64</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/notebooks_symbolic_regression_1_4_0.png" src="../_images/notebooks_symbolic_regression_1_4_0.png" />
-</div>
-</div>
-</div>
-<div class="section" id="2---The-symbolic-regression-problem">
-<h2>2 - The symbolic regression problem<a class="headerlink" href="#2---The-symbolic-regression-problem" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># We define our kernel set, that is the mathematical operators we will</span>
-<span class="c1"># want our final model to possibly contain. What to choose in here is left</span>
-<span class="c1"># to the competence and knowledge of the user. A list of kernels shipped with dcgpy</span>
-<span class="c1"># can be found on the online docs. The user can also define its own kernels (see the corresponding tutorial).</span>
-<span class="n">ss</span> <span class="o">=</span> <span class="n">dcgpy</span><span class="o">.</span><span class="n">kernel_set_double</span><span class="p">([</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span> <span class="s2">&quot;diff&quot;</span><span class="p">,</span> <span class="s2">&quot;mul&quot;</span><span class="p">,</span> <span class="s2">&quot;pdiv&quot;</span><span class="p">])</span>
+<span></span><span class="c1"># Here is where the evolution starts</span>
+<span class="n">archi</span><span class="o">.</span><span class="n">evolve</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -483,10 +466,56 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># We instantiate the symbolic regression optimization problem (note: many important options are here not</span>
-<span class="c1"># specified and thus set to their default values)</span>
-<span class="n">udp</span> <span class="o">=</span> <span class="n">dcgpy</span><span class="o">.</span><span class="n">symbolic_regression</span><span class="p">(</span><span class="n">points</span> <span class="o">=</span> <span class="n">X</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">Y</span><span class="p">,</span> <span class="n">kernels</span><span class="o">=</span><span class="n">ss</span><span class="p">())</span>
-<span class="k">print</span><span class="p">(</span><span class="n">udp</span><span class="p">)</span>
+<span></span><span class="c1"># We can inspect at any time the status of any island of the archipelago</span>
+<span class="n">archi</span><span class="p">[</span><span class="mi">23</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>Island name: Thread island
+    Status: busy
+
+Algorithm: ES for CGP: Evolutionary strategy for Cartesian Genetic Programming
+
+Problem: a CGP symbolic regression problem
+
+Replacement policy: Fair replace
+
+Selection policy: Select best
+
+Population size: 4
+    Champion decision vector: [0, 0, 0, 3, 1, ... ]
+    Champion fitness: [1553.59]
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Note how in the log above the island is *busy* indicating that the evolution is running. Note also that the</span>
+<span class="c1"># island is, in this case, of type *thread island* indicating that its evolution is running on a separate thread</span>
+<span class="c1"># We can also stop the interactive session and wait for the evolution to finish</span>
+<span class="n">archi</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Let us inspect the results</span>
+<span class="n">fs</span> <span class="o">=</span> <span class="n">archi</span><span class="o">.</span><span class="n">get_champions_f</span><span class="p">()</span>
+<span class="n">xs</span> <span class="o">=</span> <span class="n">archi</span><span class="o">.</span><span class="n">get_champions_x</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">fs</span><span class="p">,</span> <span class="s1">&#39;.&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;thread (island id)&#39;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;loss&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -494,86 +523,48 @@ div.rendered_html tbody tr:hover {
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<div class="highlight"><pre>
-        Data dimension (points): 1
-        Data dimension (labels): 1
-        Data size: 54
-        Kernels: [sum, diff, mul, pdiv]
-
-</pre></div></div>
+<img alt="../_images/notebooks_evo_in_parallel_7_0.png" src="../_images/notebooks_evo_in_parallel_7_0.png" />
 </div>
-</div>
-<div class="section" id="3---The-search-algorithm">
-<h2>3 - The search algorithm<a class="headerlink" href="#3---The-search-algorithm" title="Permalink to this headline">¶</a></h2>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># We instantiate here the evolutionary strategy we want to use to search for models.</span>
-<span class="n">uda</span>  <span class="o">=</span> <span class="n">dcgpy</span><span class="o">.</span><span class="n">es4cgp</span><span class="p">(</span><span class="n">gen</span> <span class="o">=</span> <span class="mi">10000</span><span class="p">,</span> <span class="n">mut_n</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="section" id="4---The-search">
-<h2>4 - The search<a class="headerlink" href="#4---The-search" title="Permalink to this headline">¶</a></h2>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">prob</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">problem</span><span class="p">(</span><span class="n">udp</span><span class="p">)</span>
-<span class="n">algo</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">algorithm</span><span class="p">(</span><span class="n">uda</span><span class="p">)</span>
-<span class="c1"># Note that the screen output will happen on the terminal, not on your Jupyter notebook.</span>
-<span class="c1"># It can be recovered afterwards from the log.</span>
-<span class="n">algo</span><span class="o">.</span><span class="n">set_verbosity</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
-<span class="n">pop</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">population</span><span class="p">(</span><span class="n">prob</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">pop</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">evolve</span><span class="p">(</span><span class="n">pop</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="section" id="5---Inspecting-the-solution">
-<h2>5 - Inspecting the solution<a class="headerlink" href="#5---Inspecting-the-solution" title="Permalink to this headline">¶</a></h2>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># Lets have a look to the symbolic representation of our model (using sympy)</span>
-<span class="n">parse_expr</span><span class="p">(</span><span class="n">udp</span><span class="o">.</span><span class="n">prettier</span><span class="p">(</span><span class="n">pop</span><span class="o">.</span><span class="n">champion_x</span><span class="p">))</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
-</pre></div>
-</div>
-<div class="output_area docutils container">
-<div class="math notranslate nohighlight">
-$\displaystyle \left[ \frac{45}{x_{0}} - \frac{2}{3 x_{0}^{3}}\right]$</div></div>
 </div>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># And lets see what our model actually predicts on the inputs</span>
-<span class="n">Y_pred</span> <span class="o">=</span> <span class="n">udp</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">pop</span><span class="o">.</span><span class="n">champion_x</span><span class="p">)</span>
+<span></span><span class="n">b_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">fs</span><span class="p">)</span>
+<span class="n">best_x</span> <span class="o">=</span> <span class="n">archi</span><span class="o">.</span><span class="n">get_champions_x</span><span class="p">()[</span><span class="n">b_idx</span><span class="p">]</span>
 </pre></div>
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">parse_expr</span><span class="p">(</span><span class="n">udp</span><span class="o">.</span><span class="n">prettier</span><span class="p">(</span><span class="n">best_x</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \left[ \frac{48 + \frac{8 \left(\frac{x_{0}}{4} - \frac{1}{2}\right)}{x_{0}}}{x_{0}}\right]$</div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># And lets see what our model actually predicts on the inputs</span>
+<span class="n">Y_pred</span> <span class="o">=</span> <span class="n">udp</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">best_x</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -583,7 +574,6 @@ $\displaystyle \left[ \frac{45}{x_{0}} - \frac{2}{3 x_{0}^{3}}\right]$</div></di
 <span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;54 measurments&#39;</span><span class="p">)</span>
 <span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;metal distance&#39;</span><span class="p">)</span>
 <span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;ultrasonic response&#39;</span><span class="p">)</span>
-
 </pre></div>
 </div>
 </div>
@@ -591,43 +581,7 @@ $\displaystyle \left[ \frac{45}{x_{0}} - \frac{2}{3 x_{0}^{3}}\right]$</div></di
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_symbolic_regression_1_16_0.png" src="../_images/notebooks_symbolic_regression_1_16_0.png" />
-</div>
-</div>
-</div>
-<div class="section" id="6---Recovering-the-log">
-<h2>6 - Recovering the log<a class="headerlink" href="#6---Recovering-the-log" title="Permalink to this headline">¶</a></h2>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># Here we get the log of the latest call to the evolve</span>
-<span class="n">log</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="n">dcgpy</span><span class="o">.</span><span class="n">es4cgp</span><span class="p">)</span><span class="o">.</span><span class="n">get_log</span><span class="p">()</span>
-<span class="n">gen</span> <span class="o">=</span> <span class="p">[</span><span class="n">it</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">it</span> <span class="ow">in</span> <span class="n">log</span><span class="p">]</span>
-<span class="n">loss</span> <span class="o">=</span> <span class="p">[</span><span class="n">it</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">for</span> <span class="n">it</span> <span class="ow">in</span> <span class="n">log</span><span class="p">]</span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># And here we plot, for example, the generations against the best loss</span>
-<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">semilogy</span><span class="p">(</span><span class="n">gen</span><span class="p">,</span> <span class="n">loss</span><span class="p">)</span>
-<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;last call to evolve&#39;</span><span class="p">)</span>
-<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;generation&#39;</span><span class="p">)</span>
-<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;loss&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/notebooks_symbolic_regression_1_19_0.png" src="../_images/notebooks_symbolic_regression_1_19_0.png" />
-</div>
+<img alt="../_images/notebooks_evo_in_parallel_11_0.png" src="../_images/notebooks_evo_in_parallel_11_0.png" />
 </div>
 </div>
 </div>
@@ -640,10 +594,10 @@ $\displaystyle \left[ \frac{45}{x_{0}} - \frac{2}{3 x_{0}^{3}}\right]$</div></di
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="symbolic_regression_2.html" class="btn btn-neutral float-right" title="Learning constants using evolution" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="learning_constants.html" class="btn btn-neutral float-right" title="Learning constants in a symbolic regression task" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="custom_kernels.html" class="btn btn-neutral float-left" title="Custom Kernels" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="symbolic_regression_3.html" class="btn btn-neutral float-left" title="Multi-objective memetic approach" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

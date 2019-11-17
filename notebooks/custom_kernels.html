@@ -407,7 +407,11 @@ div.rendered_html tbody tr:hover {
 <li><p>How to define a custom Kernel.</p></li>
 <li><p>How to use it in a <em>dcgpy.expression_double</em>.</p></li>
 </ul>
-<p>NOTE: when defining custom kernels directly via the python interface a slowdown is to be expected as the thread safety level of the callable created is necessarily absent and thus the kernel cannot be called from different threads (only processes)</p>
+<p>NOTE: when defining custom kernels directly via the python interface a slowdown is to be expected for two main reasons:</p>
+<ol class="loweralpha simple">
+<li><p>python callables cannot be called from different threads (only processes)</p></li>
+<li><p>an added c++/python layer is added and forces conversions</p></li>
+</ol>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
@@ -433,16 +437,16 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># Lets define some non-linear function we would like to use as a computation unit in a dCGP:</span>
+<span></span><span class="c1"># Lets define some non-linear function we would like to use as a computational unit in a dCGP:</span>
 <span class="k">def</span> <span class="nf">my_fun</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
-<span class="c1"># We need also to define the textual form of such a kernel so that, for example, symbolic manipulators</span>
-<span class="c1"># can try to understand its semantic. In this function x will be a list of symbols like [&quot;x&quot;, &quot;y&quot;, &quot;z&quot;]</span>
+<span class="c1"># We need also to define the symbolic form of such a kernel so that, for example, symbolic manipulators</span>
+<span class="c1"># can understand its semantic. In this function x is to be interpreted as a list of symbols like [&quot;x&quot;, &quot;y&quot;, &quot;z&quot;]</span>
 <span class="k">def</span> <span class="nf">my_fun_print</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
     <span class="k">return</span> <span class="s2">&quot;exp(-&quot;</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;**2)&quot;</span>
 
-<span class="c1"># Note that its left to the user to define a extual representation that makes sense and is truthful, no checks are done.</span>
+<span class="c1"># Note that it is left to the user to define a symbolic representation that makes sense and is truthful, no checks are done.</span>
 <span class="c1"># All symbolic manipulations will rely on the fact that such a representation makes sense.</span>
 </pre></div>
 </div>
@@ -537,7 +541,7 @@ exp(-x**2) is: 0.9607894391523232
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Elapsed (ms) 8.867025375366211
+Elapsed (ms) 17.11416244506836
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -557,7 +561,7 @@ Elapsed (ms) 8.867025375366211
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Elapsed (ms) 2.789735794067383
+Elapsed (ms) 2.962350845336914
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -577,7 +581,7 @@ Elapsed (ms) 2.789735794067383
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Elapsed (ms) 2.9599666595458984
+Elapsed (ms) 3.305673599243164
 </pre></div></div>
 </div>
 </div>
