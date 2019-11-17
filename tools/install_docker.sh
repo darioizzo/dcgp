@@ -7,7 +7,7 @@ set -x
 set -e
 
 AUDI_VERSION="1.7"
-PAGMO_VERSION="2.11.3"
+PAGMO_VERSION="2.11.4"
 
 if [[ ${DCGP_BUILD} == *37 ]]; then
 	PYTHON_DIR="cp37-cp37m"
