@@ -17,6 +17,7 @@ Symbolic Regression
   ../../notebooks/symbolic_regression_1.ipynb
   ../../notebooks/symbolic_regression_2.ipynb
   ../../notebooks/symbolic_regression_3.ipynb
+  ../../notebooks/evo_in_parallel.ipynb
 
 
 Legacy
