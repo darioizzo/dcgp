@@ -2,6 +2,7 @@
 #define DCGP_MES4CGP_H
 
 #include <Eigen/Dense>
+#include <pagmo/algorithm.hpp>
 #include <pagmo/detail/custom_comparisons.hpp>
 #include <pagmo/io.hpp>
 #include <pagmo/population.hpp>
@@ -13,6 +14,7 @@
 
 #include <dcgp/problems/symbolic_regression.hpp>
 #include <dcgp/rng.hpp>
+#include <dcgp/s11n.hpp>
 
 namespace dcgp
 {
@@ -374,6 +376,20 @@ private:
         m_log.emplace_back(gen, fevals, best_f, eph_val, formula);
     }
 
+public:
+    template <typename Archive>
+    void serialize(Archive &ar, unsigned)
+    {
+        ar &m_gen;
+        ar &m_mut_n;
+        ar &m_ftol;
+        ar &m_e;
+        ar &m_seed;
+        ar &m_verbosity;
+        ar &m_log;
+    }
+
+private:
     unsigned m_gen;
     unsigned m_mut_n;
     double m_ftol;
@@ -383,4 +399,7 @@ private:
     mutable log_type m_log;
 };
 } // namespace dcgp
+
+PAGMO_S11N_ALGORITHM_EXPORT_KEY(dcgp::mes4cgp)
+
 #endif

@@ -1,6 +1,8 @@
 #define BOOST_TEST_MODULE dcgp_symbolic_regression_test
 #include <boost/test/included/unit_test.hpp>
 
+#include <sstream>
+
 #include <pagmo/algorithm.hpp>
 #include <pagmo/algorithms/gaco.hpp>
 #include <pagmo/algorithms/sga.hpp>
@@ -10,6 +12,8 @@
 
 #include <dcgp/gym.hpp>
 #include <dcgp/problems/symbolic_regression.hpp>
+#include <dcgp/s11n.hpp>
+#include <dcgp/wrapped_functions_s11n_implement.hpp>
 
 using namespace dcgp;
 
@@ -225,4 +229,27 @@ BOOST_AUTO_TEST_CASE(cache_test)
         BOOST_CHECK_CLOSE(f1[0], f2[0], 1e-12);
         BOOST_CHECK(g1 == g2);
     }
+}
+
+BOOST_AUTO_TEST_CASE(s11n_test)
+{
+    kernel_set<double> basic_set({"sum", "diff", "mul", "div"});
+    std::vector<std::vector<double>> points, labels;
+    gym::generate_koza_quintic(points, labels);
+    symbolic_regression udp(points, labels, 2, 2, 3, 2, basic_set(), 5u, 0u);
+
+    const auto orig = udp.get_extra_info();
+
+    std::stringstream ss;
+    {
+        boost::archive::binary_oarchive oarchive(ss);
+        oarchive << udp;
+    }
+    udp = symbolic_regression(points, labels, 2, 2, 3, 2, kernel_set<double>({"sum", "diff"})(), 5u, 0u);
+    {
+        boost::archive::binary_iarchive iarchive(ss);
+        iarchive >> udp;
+    }
+
+    BOOST_CHECK(orig == udp.get_extra_info());
 }

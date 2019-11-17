@@ -2,23 +2,27 @@
 #define DCGP_EXPRESSION_H
 
 #include <algorithm>
-#include <audi/functions.hpp>
-#include <audi/io.hpp>
-#include <dcgp/config.hpp>
-#include <dcgp/kernel.hpp>
-#include <dcgp/rng.hpp>
-#include <dcgp/type_traits.hpp>
 #include <initializer_list>
 #include <iostream>
 #include <random>
 #include <sstream>
 #include <stdexcept>
 #include <string>
-#include <tbb/parallel_for.h>
-#include <tbb/spin_mutex.h>
 #include <vector>
 
+#include <audi/functions.hpp>
+#include <audi/io.hpp>
+
+#include <tbb/parallel_for.h>
+#include <tbb/spin_mutex.h>
+
+#include <dcgp/config.hpp>
+#include <dcgp/kernel.hpp>
 #include <dcgp/kernel_set.hpp>
+#include <dcgp/rng.hpp>
+#include <dcgp/s11n.hpp>
+#include <dcgp/type_traits.hpp>
+
 namespace dcgp
 {
 
@@ -1054,6 +1058,29 @@ private:
         }
     }
 
+public:
+    template <typename Archive>
+    void serialize(Archive &ar, unsigned)
+    {
+        ar &m_n;
+        ar &m_m;
+        ar &m_r;
+        ar &m_c;
+        ar &m_l;
+        ar &m_arity;
+        ar &m_f;
+        ar &m_eph_val;
+        ar &m_eph_symb;
+        ar &m_lb;
+        ar &m_ub;
+        ar &m_active_nodes;
+        ar &m_active_genes;
+        ar &m_x;
+        ar &m_gene_idx;
+        ar &m_e;
+    }
+
+private:
     // number of inputs
     unsigned m_n;
     // number of outputs

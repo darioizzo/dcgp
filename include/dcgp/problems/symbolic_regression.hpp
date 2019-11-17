@@ -7,6 +7,7 @@
 #include <numeric> // std::accumulate
 #include <pagmo/io.hpp>
 #include <pagmo/population.hpp>
+#include <pagmo/problem.hpp>
 #include <pagmo/types.hpp>
 #include <symengine/expression.h>
 #include <vector>
@@ -14,6 +15,7 @@
 #include <dcgp/expression.hpp>
 #include <dcgp/kernel_set.hpp>
 #include <dcgp/rng.hpp>
+#include <dcgp/s11n.hpp>
 
 namespace dcgp
 {
@@ -504,8 +506,9 @@ public:
      */
     pagmo::thread_safety get_thread_safety() const
     {
-        return (*std::min_element(m_f.begin(), m_f.end(),
-                                  [](const auto &a, const auto &b) { return a.get_thread_safety() < b.get_thread_safety(); }))
+        return (*std::min_element(
+                    m_f.begin(), m_f.end(),
+                    [](const auto &a, const auto &b) { return a.get_thread_safety() < b.get_thread_safety(); }))
             .get_thread_safety();
     }
 
@@ -556,6 +559,30 @@ private:
         if (m_f.size() == 0) throw std::invalid_argument("Number of basis functions is 0");
     }
 
+public:
+    template <typename Archive>
+    void serialize(Archive &ar, unsigned)
+    {
+        ar &m_points;
+        ar &m_labels;
+        ar &m_dpoints;
+        ar &m_dlabels;
+        ar &m_deph_symb;
+        ar &m_symbols;
+        ar &m_r;
+        ar &m_c;
+        ar &m_l;
+        ar &m_arity;
+        ar &m_f;
+        ar &m_n_eph;
+        ar &m_multi_objective;
+        ar &m_parallel_batches;
+        ar &m_cgp;
+        ar &m_dcgp;
+        ar &m_cache_fitness;
+    }
+
+private:
     std::vector<std::vector<double>> m_points;
     std::vector<std::vector<double>> m_labels;
     std::vector<std::vector<audi::gdual_d>> m_dpoints;
@@ -579,6 +606,9 @@ private:
     mutable expression<audi::gdual_d> m_dcgp;
     mutable std::pair<pagmo::vector_double, pagmo::vector_double> m_cache_fitness;
     mutable std::pair<pagmo::vector_double, pagmo::vector_double> m_cache_gradient;
-}; // namespace dcgp
+};
 } // namespace dcgp
+
+PAGMO_S11N_PROBLEM_EXPORT_KEY(dcgp::symbolic_regression)
+
 #endif

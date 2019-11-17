@@ -1,6 +1,8 @@
 #define BOOST_TEST_MODULE dcgp_es4cgp_test
 #include <boost/test/included/unit_test.hpp>
 
+#include <sstream>
+
 #include <pagmo/algorithm.hpp>
 #include <pagmo/io.hpp>
 #include <pagmo/population.hpp>
@@ -10,6 +12,7 @@
 #include <dcgp/algorithms/gd4cgp.hpp>
 #include <dcgp/gym.hpp>
 #include <dcgp/problems/symbolic_regression.hpp>
+#include <dcgp/s11n.hpp>
 
 using namespace dcgp;
 
@@ -66,4 +69,24 @@ BOOST_AUTO_TEST_CASE(pagmo_integration_test)
     algo.set_verbosity(1u);
     pagmo::population pop(symbolic_regression(points, labels, 1, 16, 3, 2, basic_set(), 5u, 0u), 4u);
     pop = algo.evolve(pop);
+}
+
+BOOST_AUTO_TEST_CASE(s11n_test)
+{
+    gd4cgp uda(10u, 1u, 1e-4);
+
+    const auto orig = uda.get_extra_info();
+
+    std::stringstream ss;
+    {
+        boost::archive::binary_oarchive oarchive(ss);
+        oarchive << uda;
+    }
+    uda = gd4cgp{10u, 2u, 1e-3};
+    {
+        boost::archive::binary_iarchive iarchive(ss);
+        iarchive >> uda;
+    }
+
+    BOOST_CHECK(orig == uda.get_extra_info());
 }

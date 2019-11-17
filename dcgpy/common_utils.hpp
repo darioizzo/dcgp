@@ -1,8 +1,10 @@
 #ifndef PYDCGP_COMMON_UTILS_HPP
 #define PYDCGP_COMMON_UTILS_HPP
 
+#include <boost/numeric/conversion/cast.hpp>
 #include <boost/python.hpp>
 #include <boost/python/stl_iterator.hpp>
+
 #include <string>
 #include <vector>
 
@@ -277,6 +279,51 @@ inline bp::object vvector_to_ndarr(const std::vector<std::vector<T>> &v)
         }
     }
     return retval;
+}
+
+// Wrapper around the CPython function to create a bytes object from raw data.
+inline bp::object make_bytes(const char *ptr, Py_ssize_t len)
+{
+    PyObject *retval;
+    if (len) {
+        retval = PyBytes_FromStringAndSize(ptr, len);
+    } else {
+        retval = PyBytes_FromStringAndSize(nullptr, 0);
+    }
+    if (!retval) {
+        dcgpy_throw(PyExc_RuntimeError, "unable to create a bytes object: the 'PyBytes_FromStringAndSize()' "
+                                        "function returned NULL");
+    }
+    return bp::object(bp::handle<>(retval));
+}
+
+// Perform a deep copy of input object o.
+inline bp::object deepcopy(const bp::object &o)
+{
+    return bp::import("copy").attr("deepcopy")(o);
+}
+
+inline std::vector<char> object_to_vchar(const bp::object &o)
+{
+    // This will dump to a bytes object.
+    bp::object tmp = bp::import("cloudpickle").attr("dumps")(o);
+    // This gives a null-terminated char * to the internal
+    // content of the bytes object.
+    auto ptr = PyBytes_AsString(tmp.ptr());
+    if (!ptr) {
+        dcgpy_throw(PyExc_TypeError, "the serialization backend's dumps() function did not return a bytes object");
+    }
+    // NOTE: this will be the length of the bytes object *without* the terminator.
+    const auto size = len(tmp);
+    // NOTE: we store as char here because that's what is returned by the CPython function.
+    // From Python it seems like these are unsigned chars, but this should not concern us.
+    return std::vector<char>(ptr, ptr + size);
+}
+
+inline bp::object vchar_to_object(const std::vector<char> &v)
+{
+    auto b = make_bytes(v.data(), boost::numeric_cast<Py_ssize_t>(v.size()));
+    return bp::import("cloudpickle").attr("loads")(b);
 }
 
 } // namespace dcgpy

@@ -5,10 +5,12 @@
 #define PY_ARRAY_UNIQUE_SYMBOL dcgpy_ARRAY_API
 #include "numpy.hpp"
 
-#include <boost/python.hpp>
 #include <sstream>
 #include <string>
 #include <vector>
+
+#include <boost/numeric/conversion/cast.hpp>
+#include <boost/python.hpp>
 
 #include <dcgp/expression.hpp>
 #include <dcgp/expression_ann.hpp>
@@ -26,10 +28,53 @@ namespace dcgpy
 {
 
 template <typename T>
+struct expression_pickle_suite : bp::pickle_suite {
+    static bp::tuple getstate(const T &k)
+    {
+        // The idea here is that first we extract a char array
+        // into which the expression has been serialized, then we turn
+        // this object into a Python bytes object and return that.
+        std::ostringstream oss;
+        {
+            boost::archive::binary_oarchive oarchive(oss);
+            oarchive << k;
+        }
+        auto s = oss.str();
+        // Store the serialized expression.
+        return bp::make_tuple(make_bytes(s.data(), boost::numeric_cast<Py_ssize_t>(s.size())));
+    }
+    static void setstate(T &k, const bp::tuple &state)
+    {
+        // Similarly, first we extract a bytes object from the Python state,
+        // and then we build a C++ string from it. The string is then used
+        // to deserialize the object.
+        if (len(state) != 1) {
+            dcgpy_throw(PyExc_ValueError, ("the state tuple passed for expression deserialization "
+                                           "must have 1 element, but instead it has "
+                                           + std::to_string(len(state)) + " elements")
+                                              .c_str());
+        }
+
+        auto ptr = PyBytes_AsString(bp::object(state[0]).ptr());
+        if (!ptr) {
+            dcgpy_throw(PyExc_TypeError, "a bytes object is needed to deserialize an expression");
+        }
+        const auto size = len(state[0]);
+        std::string s(ptr, ptr + size);
+        std::istringstream iss;
+        iss.str(s);
+        {
+            boost::archive::binary_iarchive iarchive(iss);
+            iarchive >> k;
+        }
+    }
+};
+
+template <typename T>
 void expose_expression(std::string type)
 {
     std::string class_name = "expression_" + type;
-    bp::class_<expression<T>>(class_name.c_str(), "A CGP expression", bp::no_init)
+    bp::class_<expression<T>>(class_name.c_str(), "A CGP expression", bp::init<>())
         // Constructor with seed
         .def("__init__",
              bp::make_constructor(
@@ -162,7 +207,8 @@ void expose_expression(std::string type)
             "eph_symb", +[](const expression<T> &instance) { return v_to_l(instance.get_eph_symb()); },
             +[](expression<T> &instance, const bp::object &eph_symb) {
                 instance.set_eph_symb(l_to_v<std::string>(eph_symb));
-            });
+            })
+        .def_pickle(expression_pickle_suite<expression<T>>());
 }
 
 template <typename T>

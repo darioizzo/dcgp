@@ -20,8 +20,17 @@
 #include <dcgp/kernel.hpp>
 #include <dcgp/problems/symbolic_regression.hpp>
 
+#include <pagmo/algorithm.hpp>
+#include <pagmo/problem.hpp>
+
 #include "common_utils.hpp"
 #include "docstrings.hpp"
+
+PAGMO_S11N_ALGORITHM_IMPLEMENT(dcgp::es4cgp)
+PAGMO_S11N_ALGORITHM_IMPLEMENT(dcgp::mes4cgp)
+PAGMO_S11N_ALGORITHM_IMPLEMENT(dcgp::momes4cgp)
+PAGMO_S11N_ALGORITHM_IMPLEMENT(dcgp::gd4cgp)
+PAGMO_S11N_PROBLEM_IMPLEMENT(dcgp::symbolic_regression)
 
 namespace bp = boost::python;
 namespace pg = pygmo;

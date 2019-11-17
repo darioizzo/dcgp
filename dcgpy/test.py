@@ -199,6 +199,7 @@ class test_expression(_ut.TestCase):
     def test_double(self):
         from dcgpy import expression_double as expression
         from dcgpy import kernel_set_double as kernel_set
+        import pickle
 
         # Construction
         ex = expression(inputs=1,
@@ -210,6 +211,8 @@ class test_expression(_ut.TestCase):
                         kernels=kernel_set(["sum", "mul", "div", "diff"])(),
                         n_eph=0,
                         seed=33)
+
+        self.assertTrue(repr(ex) == repr(pickle.loads(pickle.dumps(ex))))
 
         ex = expression(inputs=1,
                         outputs=1,
@@ -322,6 +325,7 @@ class test_symbolic_regression(_ut.TestCase):
     def runTest(self):
         from dcgpy import symbolic_regression, generate_koza_quintic, kernel_set_double, es4cgp, gd4cgp, mes4cgp
         import pygmo as pg
+        import pickle
         X, Y = generate_koza_quintic()
         # Interface for the UDPs
         udp = symbolic_regression(
@@ -351,11 +355,15 @@ class test_symbolic_regression(_ut.TestCase):
         self.assertEqual(prob.has_gradient(), True)
         self.assertEqual(prob.has_hessians(), True)
 
+        # Pickling.
+        self.assertTrue(repr(prob) == repr(pickle.loads(pickle.dumps(prob))))
+
 
 class test_es4cgp(_ut.TestCase):
     def runTest(self):
         from dcgpy import symbolic_regression, generate_koza_quintic, kernel_set_double, es4cgp
         import pygmo as pg
+        import pickle
         X, Y = generate_koza_quintic()
         # Interface for the UDPs
         udp = symbolic_regression(
@@ -378,11 +386,15 @@ class test_es4cgp(_ut.TestCase):
         # Testing some evolutions
         pop = algo.evolve(pop)
 
+        # Pickling.
+        self.assertTrue(repr(algo) == repr(pickle.loads(pickle.dumps(algo))))
+
 
 class test_mes4cgp(_ut.TestCase):
     def runTest(self):
         from dcgpy import symbolic_regression, generate_koza_quintic, kernel_set_double, mes4cgp
         import pygmo as pg
+        import pickle
         X, Y = generate_koza_quintic()
         # Interface for the UDPs
         udp = symbolic_regression(
@@ -405,11 +417,15 @@ class test_mes4cgp(_ut.TestCase):
         # Testing some evolutions
         pop = algo.evolve(pop)
 
+        # Pickling.
+        self.assertTrue(repr(algo) == repr(pickle.loads(pickle.dumps(algo))))
+
 
 class test_momes4cgp(_ut.TestCase):
     def runTest(self):
         from dcgpy import symbolic_regression, generate_koza_quintic, kernel_set_double, momes4cgp
         import pygmo as pg
+        import pickle
         X, Y = generate_koza_quintic()
         # Interface for the UDPs
         udp = symbolic_regression(
@@ -432,11 +448,14 @@ class test_momes4cgp(_ut.TestCase):
         # Testing some evolutions
         pop = algo.evolve(pop)
 
+        self.assertTrue(repr(algo) == repr(pickle.loads(pickle.dumps(algo))))
+
 
 class test_gd4cgp(_ut.TestCase):
     def runTest(self):
         from dcgpy import symbolic_regression, generate_koza_quintic, kernel_set_double, gd4cgp
         import pygmo as pg
+        import pickle
         X, Y = generate_koza_quintic()
         # Interface for the UDPs
         udp = symbolic_regression(
@@ -458,6 +477,8 @@ class test_gd4cgp(_ut.TestCase):
         algo.set_verbosity(0)
         # Testing some evolutions
         pop = algo.evolve(pop)
+
+        self.assertTrue(repr(algo) == repr(pickle.loads(pickle.dumps(algo))))
 
 
 def run_test_suite():

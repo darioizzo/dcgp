@@ -1,6 +1,7 @@
 #ifndef DCGP_ES4CGP_H
 #define DCGP_ES4CGP_H
 
+#include <pagmo/algorithm.hpp>
 #include <pagmo/bfe.hpp>
 #include <pagmo/detail/custom_comparisons.hpp>
 #include <pagmo/io.hpp>
@@ -13,6 +14,7 @@
 
 #include <dcgp/problems/symbolic_regression.hpp>
 #include <dcgp/rng.hpp>
+#include <dcgp/s11n.hpp>
 
 namespace dcgp
 {
@@ -40,7 +42,7 @@ namespace dcgp
  * optimization algorithms inefficient (e.g. a generic evolutionary strategy would have a mutation operator which
  * is agnostic of the existence of active genes).
  *
- * In this class we provide an evolutionary strategy tailored to solve :class:`dcgp::symbolic_regression` problems 
+ * In this class we provide an evolutionary strategy tailored to solve :class:`dcgp::symbolic_regression` problems
  * leveraging the kowledge on the genetic structure of Cartesian Genetic Programs (i.e. able to mutate only active
  * genes).
  */
@@ -352,6 +354,23 @@ private:
             pop.set_xf(worst_idx, best_x, pagmo::vector_double(1., best_f));
         }
     }
+
+public:
+    template <typename Archive>
+    void serialize(Archive &ar, unsigned)
+    {
+        ar &m_gen;
+        ar &m_mut_n;
+        ar &m_ftol;
+        ar &m_learn_constants;
+        ar &m_e;
+        ar &m_seed;
+        ar &m_verbosity;
+        ar &m_log;
+        ar &m_bfe;
+    }
+
+private:
     unsigned m_gen;
     unsigned m_mut_n;
     double m_ftol;
@@ -363,4 +382,7 @@ private:
     pagmo::bfe m_bfe;
 };
 } // namespace dcgp
+
+PAGMO_S11N_ALGORITHM_EXPORT_KEY(dcgp::es4cgp)
+
 #endif
