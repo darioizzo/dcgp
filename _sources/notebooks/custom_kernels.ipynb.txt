@@ -1,0 +1,302 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Custom Kernels\n",
+    "\n",
+    "In this tutorial we will learn:\n",
+    "\n",
+    " * How to define a custom Kernel.\n",
+    " \n",
+    " * How to use it in a *dcgpy.expression_double*.\n",
+    " \n",
+    " NOTE: when defining custom kernels directly via the python interface a slowdown is to be expected as the thread safety level of the callable created is necessarily absent and thus the kernel cannot be called from different threads (only processes)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Some necessary imports.\n",
+    "import dcgpy\n",
+    "from time import time\n",
+    "# Sympy is nice to have for basic symbolic manipulation.\n",
+    "from sympy import init_printing\n",
+    "from sympy.parsing.sympy_parser import *\n",
+    "init_printing()\n",
+    "# Fundamental for plotting.\n",
+    "from matplotlib import pyplot as plt\n",
+    "%matplotlib inline"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### 1 - Write the nonlinearity and its symbolic form"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Lets define some non-linear function we would like to use as a computation unit in a dCGP:\n",
+    "def my_fun(x):\n",
+    "    return exp(-x[0]*x[0])\n",
+    "\n",
+    "# We need also to define the textual form of such a kernel so that, for example, symbolic manipulators \n",
+    "# can try to understand its semantic. In this function x will be a list of symbols like [\"x\", \"y\", \"z\"]\n",
+    "def my_fun_print(x):\n",
+    "    return \"exp(-\" + x[0] + \"**2)\"\n",
+    "\n",
+    "# Note that its left to the user to define a extual representation that makes sense and is truthful, no checks are done.\n",
+    "# All symbolic manipulations will rely on the fact that such a representation makes sense."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "exp(-x**2) is: 0.9607894391523232\n"
+     ]
+    }
+   ],
+   "source": [
+    "# ... and see by example how these functions work:\n",
+    "from numpy import exp\n",
+    "a = my_fun([0.2,-0.12,-0.0011])\n",
+    "b = my_fun_print([\"x\", \"y\", \"z\"])\n",
+    "print(b + \" is: \" + str(a))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### 2 - Define a dcgp.kernel with our new callables\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Since the nonlinearities we wrote can operate on gduals as well as on double we can define \n",
+    "# both a kernel_double and a kernel_gdual_double (here we will only use the first one)\n",
+    "my_kernel_double = dcgpy.kernel_double(my_fun, my_fun_print, \"my_gaussian\")\n",
+    "my_kernel_gdual_double = dcgpy.kernel_gdual_double(my_fun, my_fun_print, \"my_gaussian\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "exp(-x**2) is: 0.9607894391523232\n"
+     ]
+    }
+   ],
+   "source": [
+    "a = my_kernel_double([0.2,-0.12,-0.0011])\n",
+    "b = my_kernel_double([\"x\", \"y\", \"z\"])\n",
+    "print(b + \" is: \" + str(a))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### 3 - Profiling the speed\n",
+    "Kernels defined in python introduce some slow down. Here we time 1000 calls to our exp(-x^2) function, when:\n",
+    "\n",
+    " * its wrapped in a python dcgpy.kernel\n",
+    " * its coming from the shipped dcgpy package (cpp implementation)\n",
+    " * its a normal python callable"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "cpp_kernel = dcgpy.kernel_set_double([\"gaussian\"])[0]"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Elapsed (ms) 8.867025375366211\n"
+     ]
+    }
+   ],
+   "source": [
+    "start = time()\n",
+    "_ = [my_kernel_double([i/1000, 0.3]) for i in range(1000)]\n",
+    "end =  time()\n",
+    "print(\"Elapsed (ms)\", (end-start) * 1000)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Elapsed (ms) 2.789735794067383\n"
+     ]
+    }
+   ],
+   "source": [
+    "start = time()\n",
+    "_ = [cpp_kernel([i/1000, 0.3]) for i in range(1000)]\n",
+    "end =  time()\n",
+    "print(\"Elapsed (ms)\", (end-start) * 1000)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 9,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Elapsed (ms) 2.9599666595458984\n"
+     ]
+    }
+   ],
+   "source": [
+    "start = time()\n",
+    "_ = [my_fun([i/1000, 0.3]) for i in range(1000)]\n",
+    "end =  time()\n",
+    "print(\"Elapsed (ms)\", (end-start) * 1000)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Using the new kernel in a dcpy.expression"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 10,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "[sum, mul, diff, my_gaussian]\n"
+     ]
+    }
+   ],
+   "source": [
+    "ks = dcgpy.kernel_set_double([\"sum\", \"mul\", \"diff\"])\n",
+    "ks.push_back(my_kernel_double)\n",
+    "print(ks)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 11,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "['((exp(-(x-x)**2)+(x-x))-(x-x))']\n"
+     ]
+    }
+   ],
+   "source": [
+    "ex = dcgpy.expression_double(inputs=1,\n",
+    "                             outputs=1,\n",
+    "                             rows=1,\n",
+    "                             cols=6,\n",
+    "                             levels_back=6,\n",
+    "                             arity=2,\n",
+    "                             kernels=ks(),\n",
+    "                             n_eph=0,\n",
+    "                             seed = 39)\n",
+    "print(ex([\"x\"]))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 12,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "image/png": "iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAwklEQVQ4EWNgYGAoA+K7UGz0//9/BmIwuj4gn6ETiF2I0YxNDUw/E8gkfICRkdEIiO8CsQA+dSzYJKGaZgPl3gGxCRArYVOHLIbVIKAXPgAVhYIUAg0FhaERiI0PEPQaPs3IcqMGIYcGdvZoGGEPF2RRYsJIGKpBCFkjOhtrFgEpAmaN1VDFLlB6NVDsHpC9G5iFZkHF4BROg4CKwXkNrpIAgxivETACIj14DZoJDEhQKUiw3IH5E6i2DKQHyE8DiQEAlJdkAD3lZsAAAAAASUVORK5CYII=\n",
+      "text/latex": [
+       "$\\displaystyle \\left[ 1\\right]$"
+      ],
+      "text/plain": [
+       "[1]"
+      ]
+     },
+     "execution_count": 12,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# We use the expression internal simplify which is calling sympy. Since our symbolic representation\n",
+    "# of the Kernel is parsable by sympy, a simplified result is possible.\n",
+    "ex.simplify(\"x\")"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.7.4"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}

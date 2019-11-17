@@ -1,6 +1,14 @@
 Python
 =================
 
+Core
+^^^^^^^
+
+.. toctree::
+  :maxdepth: 1
+
+  ../../notebooks/custom_kernels.ipynb
+
 Symbolic Regression 
 ^^^^^^^^^^^^^^^^^^^
 .. toctree::
@@ -11,9 +19,9 @@ Symbolic Regression
   ../../notebooks/symbolic_regression_3.ipynb
 
 
-Others
-^^^^^^
-
+Legacy
+^^^^^^^^
+ 
 .. toctree::
   :maxdepth: 1
 
