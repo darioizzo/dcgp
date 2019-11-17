@@ -270,15 +270,5 @@ if(DCGP_BUILD_DCGPY)
     configure_file("${CMAKE_CURRENT_SOURCE_DIR}/dcgpy/_version.py.in" "${CMAKE_CURRENT_SOURCE_DIR}/dcgpy/_version.py" @ONLY)
     # Add the dcgpy subdirectory.
     add_subdirectory("${CMAKE_SOURCE_DIR}/dcgpy")
-    if(MINGW)
-        message(STATUS "Creating the files for the generation of a binary wheel.")
-        configure_file("${CMAKE_CURRENT_SOURCE_DIR}/tools/wheel_setup.py" "${CMAKE_CURRENT_BINARY_DIR}/wheel/setup.py" @ONLY)
-        configure_file("${CMAKE_CURRENT_SOURCE_DIR}/tools/mingw_wheel_libs_python${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR}.txt" "${CMAKE_CURRENT_BINARY_DIR}/wheel/mingw_wheel_libs_python${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR}.txt" @ONLY)
-    endif()
-    if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-        # NOTE: this is necessary on linux but harmful on mingw.
-        configure_file("${CMAKE_CURRENT_SOURCE_DIR}/tools/wheel_setup.cfg" "${CMAKE_CURRENT_BINARY_DIR}/wheel/setup.cfg" @ONLY)
-        configure_file("${CMAKE_CURRENT_SOURCE_DIR}/tools/wheel_setup.py" "${CMAKE_CURRENT_BINARY_DIR}/wheel/setup.py" @ONLY)
-    endif()
 endif()
 
