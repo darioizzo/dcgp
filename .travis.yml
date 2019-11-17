@@ -67,18 +67,6 @@ matrix:
       os: osx
     - env: DCGP_BUILD="OSXPython27"
       os: osx
-    - env: DCGP_BUILD="manylinux64Py37" DOCKER_IMAGE="pagmo2/manylinux2010_x86_64_with_deps"
-      sudo: required
-      services:
-      - docker
-    - env: DCGP_BUILD="manylinux64Py36" DOCKER_IMAGE="pagmo2/manylinux2010_x86_64_with_deps"
-      sudo: required
-      services:
-      - docker
-    - env: DCGP_BUILD="manylinux64Py27" DOCKER_IMAGE="pagmo2/manylinux2010_x86_64_with_deps"
-      sudo: required
-      services:
-      - docker
 script:
     - mkdir build
     - cd build
