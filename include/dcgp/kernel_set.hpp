@@ -88,6 +88,8 @@ public:
             m_kernels.emplace_back(my_gaussian<T>, print_my_gaussian, kernel_name);
         else if (kernel_name == "sqrt")
             m_kernels.emplace_back(my_sqrt<T>, print_my_sqrt, kernel_name);
+        else if (kernel_name == "psqrt")
+            m_kernels.emplace_back(my_psqrt<T>, print_my_psqrt, kernel_name);
         else
             throw std::invalid_argument("Unimplemented function " + kernel_name + " for this type");
     }

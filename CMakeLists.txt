@@ -1,5 +1,5 @@
 # Main dcgp/dcgpy project version.
-set(DCGP_PROJECT_VERSION 1.4.2)
+set(DCGP_PROJECT_VERSION 1.4.3)
 
 # CMake version check.
 cmake_minimum_required(VERSION 3.2)
@@ -37,6 +37,9 @@ if(DCGP_BUILD_DCGP)
 
     # Build option: enable test set.
     option(DCGP_BUILD_TESTS "Build test set." ON)
+
+    # Build option: enable benchmark.
+    option(DCGP_BUILD_BENCHMARKS "Build benchmarks." OFF)
 
     # Build option: enable examples
     option(DCGP_BUILD_EXAMPLES "Build test set." OFF)
@@ -228,14 +231,19 @@ if(DCGP_BUILD_DCGP)
         set_property(TARGET main PROPERTY CXX_EXTENSIONS NO)
     endif()
 
-    # Builds the tests (performance in Release, the others in Debug)
+    # Builds the tests
     if(DCGP_BUILD_TESTS)
-        add_subdirectory("${CMAKE_SOURCE_DIR}/tests")
+        add_subdirectory("${CMAKE_SOURCE_DIR}/test")
     endif()
 
     # Builds the examples
     if(DCGP_BUILD_EXAMPLES)
         add_subdirectory("${CMAKE_SOURCE_DIR}/examples")
+    endif()
+
+    # Builds the benchmarks
+    if(DCGP_BUILD_BENCHMARKS)
+        add_subdirectory("${CMAKE_SOURCE_DIR}/benchmark")
     endif()
 
     # Configure the doc files.

@@ -1,7 +1,3 @@
-
-#define BOOST_TEST_MODULE dcgp_function_calls_perf
-#include <boost/test/included/unit_test.hpp>
-
 #include <boost/timer/timer.hpp>
 #include <vector>
 
@@ -13,7 +9,7 @@
 // We test the speed of evauating sig(a+b) calling
 // the function directly, via a function or a minimal d-CGP expression
 
-BOOST_AUTO_TEST_CASE(function_calls)
+int main()
 {
     // Number of evaluations to try
     unsigned int N = 100000;
@@ -59,4 +55,5 @@ BOOST_AUTO_TEST_CASE(function_calls)
             ex(ab_vector[i]);
         }
     }
+    return 0;
 }

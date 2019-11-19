@@ -165,7 +165,7 @@ struct my_pdiv_func {
 };
 
 // Protected divide function (gdual overload):
-// this will throw a compiler error when used.
+// this will throw when used.
 // The pdiv is only available as a double type, for use in CGP.
 // Because the gradients created when using gdual are mathematically invalid.
 template <typename T>
@@ -568,12 +568,38 @@ struct print_my_sqrt_func {
 
 inline constexpr auto print_my_sqrt = print_my_sqrt_func{};
 
+// protected sqrt (unary)
+// This protected square root discards all inputs except the first one
+template <typename T, f_enabler<T> = 0>
+struct my_psqrt_func {
+    T operator()(const std::vector<T> &in) const
+    {
+        return audi::sqrt(audi::abs(in[0]));
+    }
+    DCGP_S11N_EMPTY_SERIALIZE_MEMFN()
+};
+
+template <typename T>
+inline constexpr auto my_psqrt = my_psqrt_func<T>{};
+
+struct print_my_psqrt_func {
+    std::string operator()(const std::vector<std::string> &in) const
+    {
+        return "sqrt(abs(" + in[0] + "))";
+    }
+    DCGP_S11N_EMPTY_SERIALIZE_MEMFN()
+};
+
+inline constexpr auto print_my_psqrt = print_my_psqrt_func{};
+
 } // namespace dcgp
 
 DCGP_S11N_FUNCTION_EXPORT_KEY_MULTI(my_diff)
 DCGP_S11N_FUNCTION_EXPORT_KEY_STRING(print_my_diff)
 DCGP_S11N_FUNCTION_EXPORT_KEY_MULTI(my_sqrt)
 DCGP_S11N_FUNCTION_EXPORT_KEY_STRING(print_my_sqrt)
+DCGP_S11N_FUNCTION_EXPORT_KEY_MULTI(my_psqrt)
+DCGP_S11N_FUNCTION_EXPORT_KEY_STRING(print_my_psqrt)
 DCGP_S11N_FUNCTION_EXPORT_KEY_MULTI(my_mul)
 DCGP_S11N_FUNCTION_EXPORT_KEY_STRING(print_my_mul)
 DCGP_S11N_FUNCTION_EXPORT_KEY_MULTI(my_div)

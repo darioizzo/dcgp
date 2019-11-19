@@ -1,5 +1,3 @@
-#define BOOST_TEST_MODULE dcgp_evaluation_perf
-#include <boost/test/included/unit_test.hpp>
 
 #include <boost/timer/timer.hpp>
 #include <iostream>
@@ -35,7 +33,7 @@ void evaluate_loss(unsigned int in, unsigned int out, unsigned int rows, unsigne
     }
 }
 
-BOOST_AUTO_TEST_CASE(evaluation_speed)
+int main()
 {
     unsigned int N = 100000;
 
@@ -56,4 +54,5 @@ BOOST_AUTO_TEST_CASE(evaluation_speed)
     evaluate_loss(2, 2, 1, 100, 101, 7, N, kernel_set1(), true);
     evaluate_loss(2, 2, 2, 100, 101, 8, N, kernel_set1(), true);
     evaluate_loss(2, 2, 3, 100, 101, 9, N, kernel_set1(), true);
+    return 0;
 }

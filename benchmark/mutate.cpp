@@ -1,6 +1,3 @@
-#define BOOST_TEST_MODULE dcgp_mutation_perf
-#include <boost/test/included/unit_test.hpp>
-
 #include <boost/timer/timer.hpp>
 #include <iostream>
 
@@ -25,7 +22,7 @@ void perform_active_mutations(unsigned int in, unsigned int out, unsigned int ro
 
 /// This torture test is passed whenever it completes. It is meant to check for
 /// the code stability when large number of mutations are performed
-BOOST_AUTO_TEST_CASE(mutate_active_speed)
+int main()
 {
     dcgp::kernel_set<double> basic_set({"sum", "diff", "mul", "div"});
     perform_active_mutations(2, 4, 2, 3, 4, 2, 100000, basic_set());
@@ -35,4 +32,5 @@ BOOST_AUTO_TEST_CASE(mutate_active_speed)
     perform_active_mutations(1, 1, 2, 100, 101, 2, 100000, basic_set());
     perform_active_mutations(1, 1, 3, 100, 101, 2, 100000, basic_set());
     perform_active_mutations(1, 1, 100, 100, 101, 2, 100000, basic_set());
+    return 0;
 }

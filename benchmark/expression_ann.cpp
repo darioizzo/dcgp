@@ -1,6 +1,3 @@
-#define BOOST_TEST_MODULE dcgp_expression_ann_test
-#include <boost/test/included/unit_test.hpp>
-
 #include <algorithm>
 #include <audi/back_compatibility.hpp>
 #include <audi/io.hpp>
@@ -49,7 +46,7 @@ void perform_sgd(unsigned int rows, unsigned int columns, unsigned int levels_ba
 
 /// This torture test is passed whenever it completes. It is meant to check for
 /// the code stability when large number of mutations are performed
-BOOST_AUTO_TEST_CASE(evaluation_speed)
+int main()
 {
     unsigned int N = 1024;
     dcgp::kernel_set<double> kernel_set1({"sig", "tanh", "ReLu", "ISRU", "ELU"});
@@ -76,4 +73,5 @@ BOOST_AUTO_TEST_CASE(evaluation_speed)
     perform_sgd(100, 10, 1, {100, 100, 100, 100, 100, 100, 100, 100, 100, 100}, N, 32u, kernel_set1(), 8u);
     perform_sgd(100, 10, 1, {100, 100, 100, 100, 100, 100, 100, 100, 100, 100}, N, 32u, kernel_set1(), 16u);
     perform_sgd(100, 10, 1, {100, 100, 100, 100, 100, 100, 100, 100, 100, 100}, N, 32u, kernel_set1(), 32u);
+    return 0;
 }

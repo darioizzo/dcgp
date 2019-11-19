@@ -1,6 +1,3 @@
-#define BOOST_TEST_MODULE dcgp_evaluation_perf
-#include <boost/test/included/unit_test.hpp>
-
 #include <audi/audi.hpp>
 #include <boost/timer/timer.hpp>
 #include <iostream>
@@ -40,7 +37,7 @@ void perform_evaluations(unsigned int in, unsigned int out, unsigned int rows, u
 
 /// This torture test is passed whenever it completes. It is meant to check for
 /// the code stability when large number of mutations are performed
-BOOST_AUTO_TEST_CASE(evaluation_speed)
+int main()
 {
     unsigned int N = 100000;
 
@@ -61,4 +58,5 @@ BOOST_AUTO_TEST_CASE(evaluation_speed)
     perform_evaluations(1, 1, 1, 100, 101, 7, N, kernel_set2());
     perform_evaluations(1, 1, 2, 100, 101, 8, N, kernel_set2());
     perform_evaluations(1, 1, 3, 100, 101, 9, N, kernel_set2());
+    return 0;
 }
