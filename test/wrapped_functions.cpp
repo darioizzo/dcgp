@@ -162,3 +162,60 @@ BOOST_AUTO_TEST_CASE(my_gaussian_test)
         BOOST_CHECK(f({0.132, 0.4, 0.2, 0.2, 0.1}) == my_gaussian<double>({0.132, 0.4, 0.2, 0.2, 0.1}));
     }
 }
+
+BOOST_AUTO_TEST_CASE(my_psqrt_test)
+{
+    // test with arity of 2
+    {
+        std::vector<double> v({4, 0.34});
+
+        BOOST_CHECK_CLOSE(my_psqrt<double>(v), 2, 1e-4);
+
+        v[0] = 0;
+        v[1] = 0.5;
+        BOOST_CHECK_CLOSE(my_psqrt<double>(v), 0., 1e-4);
+
+        v[0] = 16;
+        v[1] = 0.;
+        BOOST_CHECK_CLOSE(my_psqrt<double>(v), 4., 1e-4);
+
+        v[0] = 1.;
+        v[1] = 1.2e-38;
+        BOOST_CHECK(std::isfinite(my_psqrt<double>(v)));
+
+        v[0] = 1.2e-38;
+        v[1] = 1.;
+        BOOST_CHECK(std::isfinite(my_psqrt<double>(v)));
+    }
+    // test with arity 5
+    {
+        std::vector<double> v{4, 0.4, 0.2, 0.2, 0.1};
+
+        BOOST_CHECK_CLOSE(my_psqrt<double>(v), 2., 1e-4);
+
+        v[3] = 0.;
+        BOOST_CHECK_CLOSE(my_psqrt<double>(v), 2., 1e-4);
+
+        v[3] = 1.2e-38;
+        BOOST_CHECK(std::isfinite(my_psqrt<double>(v)));
+    }
+    // Serialization test.
+    {
+        function<double(const std::vector<double> &)> f{my_psqrt<double>};
+        std::stringstream ss;
+        {
+            boost::archive::binary_oarchive oarchive(ss);
+            oarchive << f;
+        }
+        f = function<double(const std::vector<double> &)>{};
+        BOOST_CHECK(!f.is<my_psqrt_func<double>>());
+        {
+            boost::archive::binary_iarchive iarchive(ss);
+            iarchive >> f;
+        }
+        BOOST_CHECK(f.is<my_psqrt_func<double>>());
+        BOOST_CHECK(f({2.}) == std::sqrt(2.));
+        BOOST_CHECK(f({-2.}) == std::sqrt(2.));
+
+    }
+}

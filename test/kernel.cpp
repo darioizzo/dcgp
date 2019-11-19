@@ -12,6 +12,28 @@
 
 using namespace dcgp;
 
+BOOST_AUTO_TEST_CASE(construction_test)
+{
+// We test that kernels can be constructed with the shipped functions
+BOOST_CHECK_NO_THROW(kernel<double>(my_sum<double>, print_my_sum, "w"));
+BOOST_CHECK_NO_THROW(kernel<double>(my_diff<double>, print_my_diff, "w"));
+BOOST_CHECK_NO_THROW(kernel<double>(my_mul<double>, print_my_mul, "w"));
+BOOST_CHECK_NO_THROW(kernel<double>(my_div<double>, print_my_div, "w"));
+BOOST_CHECK_NO_THROW(kernel<double>(my_pdiv<double>, print_my_pdiv, "w"));
+BOOST_CHECK_NO_THROW(kernel<double>(my_sin<double>, print_my_sin, "w"));
+BOOST_CHECK_NO_THROW(kernel<double>(my_cos<double>, print_my_cos, "w"));
+BOOST_CHECK_NO_THROW(kernel<double>(my_tanh<double>, print_my_tanh, "w"));
+BOOST_CHECK_NO_THROW(kernel<double>(my_exp<double>, print_my_exp, "w"));
+BOOST_CHECK_NO_THROW(kernel<double>(my_gaussian<double>, print_my_gaussian, "w"));
+BOOST_CHECK_NO_THROW(kernel<double>(my_sqrt<double>, print_my_sqrt, "w"));
+BOOST_CHECK_NO_THROW(kernel<double>(my_psqrt<double>, print_my_sqrt, "w"));
+BOOST_CHECK_NO_THROW(kernel<double>(my_log<double>, print_my_log, "w"));
+BOOST_CHECK_NO_THROW(kernel<double>(my_sig<double>, print_my_sig, "w"));
+BOOST_CHECK_NO_THROW(kernel<double>(my_relu<double>, print_my_relu, "w"));
+BOOST_CHECK_NO_THROW(kernel<double>(my_elu<double>, print_my_elu, "w"));
+BOOST_CHECK_NO_THROW(kernel<double>(my_isru<double>, print_my_isru, "w"));
+}
+
 BOOST_AUTO_TEST_CASE(s11n_test)
 {
     {
