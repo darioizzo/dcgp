@@ -221,25 +221,29 @@ kernels to the set.</p>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>“sum”</p></td>
+<tr class="row-even"><td colspan="3"><p><strong>Basic operations</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p>“sum”</p></td>
 <td><p>addition</p></td>
 <td><p><span class="math notranslate nohighlight">\(\sum_i x_i\)</span></p></td>
 </tr>
-<tr class="row-odd"><td><p>“diff”</p></td>
+<tr class="row-even"><td><p>“diff”</p></td>
 <td><p>subtraction</p></td>
 <td><p><span class="math notranslate nohighlight">\(x_1 - \sum_{i=2} x_i\)</span></p></td>
 </tr>
-<tr class="row-even"><td><p>“mul”</p></td>
+<tr class="row-odd"><td><p>“mul”</p></td>
 <td><p>multiplication</p></td>
 <td><p><span class="math notranslate nohighlight">\(\prod_i x_i\)</span></p></td>
 </tr>
-<tr class="row-odd"><td><p>“div”</p></td>
+<tr class="row-even"><td><p>“div”</p></td>
 <td><p>division</p></td>
 <td><p><span class="math notranslate nohighlight">\(x_1 / \prod_{i=2} x_i\)</span></p></td>
 </tr>
-<tr class="row-even"><td><p>“pdiv”</p></td>
+<tr class="row-odd"><td><p>“pdiv”</p></td>
 <td><p>protected division</p></td>
 <td><p><span class="math notranslate nohighlight">\(x_1 / \prod_{i=2} x_i\)</span> or 1 if NaN</p></td>
+</tr>
+<tr class="row-even"><td colspan="3"><p><strong>Unary non linearities (ignoring all inputs after the first one)</strong></p></td>
 </tr>
 <tr class="row-odd"><td><p>“sin”</p></td>
 <td><p>sine</p></td>
@@ -269,7 +273,7 @@ kernels to the set.</p>
 <td><p>protected square root</p></td>
 <td><p><span class="math notranslate nohighlight">\(\sqrt{|x_1|}\)</span></p></td>
 </tr>
-<tr class="row-even"><td colspan="3"><p><strong>Suitable for dCGPANN</strong></p></td>
+<tr class="row-even"><td colspan="3"><p><strong>Non linearities suitable also for dCGPANN</strong></p></td>
 </tr>
 <tr class="row-odd"><td><p>“sig”</p></td>
 <td><p>sigmoid</p></td>
