@@ -1332,7 +1332,8 @@ local search technique. Regardless of the terminology and point of view, a memet
 regression tasks and able to improve considerably on the long standing issue of finding constants in
 Genetic Programming.
 
-.. [dCGP1] Dario, Francesco Biscani, and Alessio Mereta. "Differentiable genetic programming." In European Conference on Genetic Programming, pp. 35-51. Springer, 2017.
+Dario, Francesco Biscani, and Alessio Mereta. "Differentiable genetic programming." 
+In European Conference on Genetic Programming, pp. 35-51. Springer, 2017.
 
 In this class we offer an UDA (User Defined Algorithm for the pagmo optimization suite) hybridizing the classic
 Evolutionary Strategy that is traditionally used in Cartesian Genetic Programming research with a second order Newton
