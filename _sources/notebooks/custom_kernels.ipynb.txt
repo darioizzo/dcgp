@@ -153,7 +153,7 @@
      "name": "stdout",
      "output_type": "stream",
      "text": [
-      "Elapsed (ms) 17.11416244506836\n"
+      "Elapsed (ms) 7.584095001220703\n"
      ]
     }
    ],
@@ -173,7 +173,7 @@
      "name": "stdout",
      "output_type": "stream",
      "text": [
-      "Elapsed (ms) 2.962350845336914\n"
+      "Elapsed (ms) 3.3812522888183594\n"
      ]
     }
    ],
@@ -193,7 +193,7 @@
      "name": "stdout",
      "output_type": "stream",
      "text": [
-      "Elapsed (ms) 3.305673599243164\n"
+      "Elapsed (ms) 3.004789352416992\n"
      ]
     }
    ],

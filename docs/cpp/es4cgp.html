@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Evolutionary Strategy (UDA) &mdash; dCGP 1.4.1 documentation</title>
+  <title>Evolutionary Strategy (UDA) &mdash; dCGP 1.4.3 documentation</title>
   
 
   
@@ -25,7 +25,6 @@
         <script type="text/javascript" src="../../_static/underscore.js"></script>
         <script type="text/javascript" src="../../_static/doctools.js"></script>
         <script type="text/javascript" src="../../_static/language_data.js"></script>
-        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
         <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
         <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     
@@ -67,7 +66,7 @@
             
             
               <div class="version">
-                1.4.1
+                1.4.3
               </div>
             
           
@@ -208,10 +207,190 @@
 </style>
 <div class="section" id="evolutionary-strategy-uda">
 <h1>Evolutionary Strategy (UDA)<a class="headerlink" href="#evolutionary-strategy-uda" title="Permalink to this headline">¶</a></h1>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>doxygenclass: Cannot find file: /home/dario/Develop/dcgp/doc/doxygen/xml/index.xml</p>
+<dl class="class">
+<dt id="_CPPv4N4dcgp6es4cgpE">
+<span class="target" id="classdcgp_1_1es4cgp"></span><em class="property">class </em><code class="sig-name descname">es4cgp</code><a class="headerlink" href="#_CPPv4N4dcgp6es4cgpE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Evolutionary Strategy for a Cartesian Genetic Program. </p>
+<p><img alt="../../_images/EvolutionaryStrategy.jpg" src="../../_images/EvolutionaryStrategy.jpg" /></p>
+<p>Evolutionary strategies are popular global optimization meta-heuristics essentially based on the following simple pseudo-algorithm:</p>
+<p><div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">Start</span> <span class="n">from</span> <span class="n">a</span> <span class="n">population</span> <span class="p">(</span><span class="n">pop</span><span class="p">)</span> <span class="n">of</span> <span class="n">dimension</span> <span class="n">N</span>
+<span class="o">&gt;</span> <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">gen</span>
+<span class="o">&gt;</span> <span class="o">&gt;</span> <span class="nl">Mutation</span><span class="p">:</span> <span class="n">create</span> <span class="n">a</span> <span class="k">new</span> <span class="n">population</span> <span class="n">pop2</span> <span class="n">mutating</span> <span class="n">N</span> <span class="n">times</span> <span class="n">the</span> <span class="n">best</span> <span class="n">individual</span>
+<span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">Evaluate</span> <span class="n">all</span> <span class="k">new</span> <span class="n">chromosomes</span> <span class="n">in</span> <span class="n">pop2</span>
+<span class="o">&gt;</span> <span class="o">&gt;</span> <span class="nl">Reinsertion</span><span class="p">:</span> <span class="n">set</span> <span class="n">pop</span> <span class="n">to</span> <span class="n">contain</span> <span class="n">the</span> <span class="n">best</span> <span class="n">N</span> <span class="n">individuals</span> <span class="n">taken</span> <span class="n">from</span> <span class="n">pop</span> <span class="n">and</span> <span class="n">pop2</span>
+</pre></div>
 </div>
+</p>
+<p>The key to the success of such a search strategy is in the quality of its mutation operator. In the case of chrosomoses that encode a Cartesian Genetic Program (CGP), it makes sense to have mutation act on active genes only (that is on that part of the chromosome that is actually expressed in the final CGP / formula / model). This introduces a coupling between the optimization problem (say a symbolic regression problem) and its solution strategy which, although not preventing, makes the use of general purpose optimization algorithms inefficient (e.g. a generic evolutionary strategy would have a mutation operator which is agnostic of the existence of active genes).</p>
+<p>In this class we provide an evolutionary strategy tailored to solve :class:<code class="docutils literal notranslate"><a class="reference internal" href="symbolic_regression.html#classdcgp_1_1symbolic__regression"><span class="std std-ref"><span class="pre">dcgp::symbolic_regression</span></span></a></code> problems leveraging the kowledge on the genetic structure of Cartesian Genetic Programs (i.e. able to mutate only active genes). </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Types</p>
+<dl class="type">
+<dt id="_CPPv4N4dcgp6es4cgp13log_line_typeE">
+<span class="target" id="classdcgp_1_1es4cgp_1a7e4a36800bc359663e7a5b7817f8aafd"></span><em class="property">typedef </em>std::tuple&lt;unsigned, unsigned long long, double, pagmo::<a class="reference external" href="https://esa.github.io/pagmo2/docs/cpp/types.html#_CPPv4N5pagmo13vector_doubleE" title="(in pagmo v2.12.0)">vector_double</a>, std::string&gt; <code class="sig-name descname">log_line_type</code><a class="headerlink" href="#_CPPv4N4dcgp6es4cgp13log_line_typeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Single entry of the log (gen, fevals, best, constants, formula) </p>
+</dd></dl>
+
+<dl class="type">
+<dt id="_CPPv4N4dcgp6es4cgp8log_typeE">
+<span class="target" id="classdcgp_1_1es4cgp_1ac884ab6a891282753f65279e8e3c419e"></span><em class="property">typedef </em>std::vector&lt;<a class="reference internal" href="#_CPPv4N4dcgp6es4cgp13log_line_typeE" title="dcgp::es4cgp::log_line_type">log_line_type</a>&gt; <code class="sig-name descname">log_type</code><a class="headerlink" href="#_CPPv4N4dcgp6es4cgp8log_typeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The log. </p>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Functions</p>
+<dl class="function">
+<dt id="_CPPv4N4dcgp6es4cgp6es4cgpEjjdbj">
+<span class="target" id="classdcgp_1_1es4cgp_1a50d05aa73d24c9c116aaab3b39832ba7"></span><code class="sig-name descname">es4cgp</code><span class="sig-paren">(</span>unsigned <em>gen</em> = 1u, unsigned <em>mut_n</em> = 1u, double <em>ftol</em> = 1e-4, bool <em>learn_constants</em> = true, unsigned <em>seed</em> = random_device::next()<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp6es4cgp6es4cgpEjjdbj" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Constructor. </p>
+<p>Constructs an evolutionary strategy algorithm for use with a cgp::symbolic_regression UDP.</p>
+<p><dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">gen</span></code>: number of generations. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mut_n</span></code>: number of active genes to be mutated. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ftol</span></code>: the algorithm will exit when the loss is below this tolerance. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">learn_constants</span></code>: when true a gaussian mutation is applied to the ephemeral constants (std = 0.1). </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">seed</span></code>: seed used by the internal random number generator (default is random).</p></li>
+</ul>
+</dd>
+<dt><strong>Exceptions</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">std::invalid_argument</span></code>: if <em>mut_n</em> is 0 or <em>ftol</em> is negative </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK4dcgp6es4cgp6evolveEN5pagmo10populationE">
+<span class="target" id="classdcgp_1_1es4cgp_1a47104ca4049d36583f2121667ed54308"></span>pagmo::<a class="reference external" href="https://esa.github.io/pagmo2/docs/cpp/population.html#_CPPv4N5pagmo10populationE" title="(in pagmo v2.12.0)">population</a> <code class="sig-name descname">evolve</code><span class="sig-paren">(</span>pagmo::<a class="reference external" href="https://esa.github.io/pagmo2/docs/cpp/population.html#_CPPv4N5pagmo10populationE" title="(in pagmo v2.12.0)">population</a> <em>pop</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp6es4cgp6evolveEN5pagmo10populationE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Algorithm evolve method. </p>
+<p>Evolves the population for a maximum number of generations</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>evolved population </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pop</span></code>: population to be evolved </p></li>
+</ul>
+</dd>
+<dt><strong>Exceptions</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">std::invalid_argument</span></code>: if a <a class="reference internal" href="symbolic_regression.html#classdcgp_1_1symbolic__regression"><span class="std std-ref">dcgp::symbolic_regression</span></a> cannot be extracted from the problem </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">std::invalid_argument</span></code>: if the population size is smaller than 2 </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">std::invalid_argument</span></code>: if the number of objectives is not 1. </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N4dcgp6es4cgp8set_seedEj">
+<span class="target" id="classdcgp_1_1es4cgp_1a1a2ada2f1009c38668af912c1b617676"></span>void <code class="sig-name descname">set_seed</code><span class="sig-paren">(</span>unsigned <em>seed</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp6es4cgp8set_seedEj" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sets the seed. </p>
+<p><dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">seed</span></code>: the seed controlling the algorithm stochastic behaviour </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK4dcgp6es4cgp8get_seedEv">
+<span class="target" id="classdcgp_1_1es4cgp_1aa46e7c5287c1a897f07fecb97f49bba1"></span>unsigned <code class="sig-name descname">get_seed</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp6es4cgp8get_seedEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Gets the seed. </p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>the seed controlling the algorithm stochastic behaviour </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N4dcgp6es4cgp13set_verbosityEj">
+<span class="target" id="classdcgp_1_1es4cgp_1abd9dc248c00c3b2c20021b0b25e64fc0"></span>void <code class="sig-name descname">set_verbosity</code><span class="sig-paren">(</span>unsigned <em>level</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp6es4cgp13set_verbosityEj" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sets the algorithm verbosity. </p>
+<p>Sets the verbosity level of the screen output and of the log returned by <a class="reference internal" href="#classdcgp_1_1es4cgp_1ae7d4b46c3f83797e2a076ea5cfd230bb"><span class="std std-ref">get_log()</span></a>. <code class="docutils literal notranslate"><span class="pre">level</span></code> can be:<ul class="simple">
+<li><p>0: no verbosity</p></li>
+<li><p>&gt;0: will print and log one line each <code class="docutils literal notranslate"><span class="pre">level</span></code> generations.</p></li>
+</ul>
+</p>
+<p>Example (verbosity 100): <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="nl">Gen</span><span class="p">:</span>        <span class="nl">Fevals</span><span class="p">:</span>          <span class="nl">Best</span><span class="p">:</span>    <span class="nl">Constants</span><span class="p">:</span>    <span class="nl">Model</span><span class="p">:</span>
+    <span class="mi">0</span>              <span class="mi">0</span>        <span class="mf">4087.68</span>    <span class="p">[</span><span class="mf">3.52114</span><span class="p">]</span>    <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">...</span>
+  <span class="mi">100</span>            <span class="mi">400</span>        <span class="mf">324.845</span>    <span class="p">[</span><span class="mf">3.61414</span><span class="p">]</span>    <span class="p">[</span><span class="mi">2</span><span class="o">*</span><span class="n">x0</span><span class="o">**</span><span class="mi">4</span><span class="p">]</span> <span class="p">...</span>
+  <span class="mi">200</span>            <span class="mi">800</span>        <span class="mf">324.845</span>    <span class="p">[</span><span class="mf">3.61414</span><span class="p">]</span>    <span class="p">[</span><span class="mi">2</span><span class="o">*</span><span class="n">x0</span><span class="o">**</span><span class="mi">4</span><span class="p">]</span> <span class="p">...</span>
+  <span class="mi">300</span>           <span class="mi">1200</span>        <span class="mf">165.212</span>    <span class="p">[</span><span class="mf">3.56702</span><span class="p">]</span>    <span class="p">[</span><span class="n">x0</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="n">x0</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">x0</span><span class="o">**</span><span class="mi">2</span><span class="p">)]</span> <span class="p">...</span>
+  <span class="mi">400</span>           <span class="mi">1600</span>         <span class="mf">28.814</span>    <span class="p">[</span><span class="mf">3.45813</span><span class="p">]</span>    <span class="p">[</span><span class="n">x0</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="n">x0</span> <span class="o">+</span> <span class="n">x0</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="n">x0</span> <span class="o">+</span> <span class="n">x0</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="o">-</span><span class="n">x0</span> <span class="o">+</span>  <span class="p">...</span>
+  <span class="mi">500</span>           <span class="mi">2000</span>        <span class="mf">10.5589</span>    <span class="p">[</span><span class="mf">3.59501</span><span class="p">]</span>    <span class="p">[</span><span class="n">x0</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="o">*</span><span class="n">x0</span> <span class="o">+</span> <span class="n">x0</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="n">x0</span> <span class="o">+</span> <span class="n">x0</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">x0</span><span class="o">**</span><span class="mi">2</span> <span class="p">...</span>
+  <span class="mi">600</span>           <span class="mi">2400</span>         <span class="mf">2.2459</span>    <span class="p">[</span><span class="mf">3.44443</span><span class="p">]</span>    <span class="p">[</span><span class="n">x0</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="n">x0</span><span class="o">*</span><span class="n">c1</span> <span class="o">+</span> <span class="n">x0</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="n">x0</span> <span class="o">+</span> <span class="n">x0</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">x0</span><span class="o">**</span> <span class="p">...</span>
+  <span class="mi">700</span>           <span class="mi">2800</span>        <span class="mf">2.24378</span>    <span class="p">[</span><span class="mf">3.43364</span><span class="p">]</span>    <span class="p">[</span><span class="n">x0</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="n">x0</span><span class="o">*</span><span class="n">c1</span> <span class="o">+</span> <span class="n">x0</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="n">x0</span> <span class="o">+</span> <span class="n">x0</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">x0</span><span class="o">**</span> <span class="p">...</span>
+  <span class="mi">800</span>           <span class="mi">3200</span>        <span class="mf">2.24378</span>    <span class="p">[</span><span class="mf">3.43364</span><span class="p">]</span>    <span class="p">[</span><span class="n">x0</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="n">x0</span><span class="o">*</span><span class="n">c1</span> <span class="o">+</span> <span class="n">x0</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="n">x0</span> <span class="o">+</span> <span class="n">x0</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">x0</span><span class="o">**</span> <span class="p">...</span>
+  <span class="mi">900</span>           <span class="mi">3600</span>        <span class="mf">2.24378</span>    <span class="p">[</span><span class="mf">3.43364</span><span class="p">]</span>    <span class="p">[</span><span class="n">x0</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="n">x0</span><span class="o">*</span><span class="n">c1</span> <span class="o">+</span> <span class="n">x0</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="n">x0</span> <span class="o">+</span> <span class="n">x0</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">x0</span><span class="o">**</span> <span class="p">...</span>
+ <span class="mi">1000</span>           <span class="mi">4000</span>        <span class="mf">2.24374</span>    <span class="p">[</span><span class="mf">3.43618</span><span class="p">]</span>    <span class="p">[</span><span class="n">x0</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="n">x0</span><span class="o">*</span><span class="n">c1</span> <span class="o">+</span> <span class="n">x0</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="n">x0</span> <span class="o">+</span> <span class="n">x0</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">x0</span><span class="o">**</span> <span class="p">...</span>
+ <span class="mi">1100</span>           <span class="mi">4400</span>        <span class="mf">2.24372</span>    <span class="p">[</span><span class="mf">3.43479</span><span class="p">]</span>    <span class="p">[</span><span class="n">x0</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="n">x0</span><span class="o">*</span><span class="n">c1</span> <span class="o">+</span> <span class="n">x0</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="n">x0</span> <span class="o">+</span> <span class="n">x0</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">x0</span><span class="o">**</span> <span class="p">...</span>
+ <span class="mi">1200</span>           <span class="mi">4800</span>      <span class="mf">0.0697188</span>    <span class="p">[</span><span class="mf">3.35616</span><span class="p">]</span>    <span class="p">[</span><span class="n">x0</span><span class="o">*</span><span class="p">(</span><span class="n">x0</span> <span class="o">+</span> <span class="n">x0</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="n">c1</span> <span class="o">+</span> <span class="n">x0</span><span class="o">**</span><span class="mi">2</span><span class="p">))]</span> <span class="p">...</span>
+ <span class="mi">1300</span>           <span class="mi">5200</span>      <span class="mf">0.0254527</span>    <span class="p">[</span><span class="mf">3.37625</span><span class="p">]</span>    <span class="p">[</span><span class="n">x0</span><span class="o">*</span><span class="p">(</span><span class="n">x0</span> <span class="o">+</span> <span class="n">x0</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="n">c1</span> <span class="o">+</span> <span class="n">x0</span><span class="o">**</span><span class="mi">2</span><span class="p">))]</span> <span class="p">...</span>
+</pre></div>
+</div>
+ Gen is the generation number, Fevals the number of function evaluation used, Best is the best fitness found, Constants contains the value of the ephemeral constants and Formula peeks into the prettier expression of the underlying CGP. <dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">level</span></code>: verbosity level </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK4dcgp6es4cgp13get_verbosityEv">
+<span class="target" id="classdcgp_1_1es4cgp_1a910579ea7b61f87e63cdc9eddef674f3"></span>unsigned <code class="sig-name descname">get_verbosity</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp6es4cgp13get_verbosityEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Gets the verbosity level. </p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>the verbosity level </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK4dcgp6es4cgp8get_nameEv">
+<span class="target" id="classdcgp_1_1es4cgp_1ac1e4945d89b30c84bd557814c52be74c"></span>std::string <code class="sig-name descname">get_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp6es4cgp8get_nameEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Algorithm name. </p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>a string containing the algorithm name </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK4dcgp6es4cgp14get_extra_infoEv">
+<span class="target" id="classdcgp_1_1es4cgp_1ab10bd05404b40aefdd248e8be6da0eb8"></span>std::string <code class="sig-name descname">get_extra_info</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp6es4cgp14get_extra_infoEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Extra info. </p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>a string containing extra info on the algorithm </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK4dcgp6es4cgp7get_logEv">
+<span class="target" id="classdcgp_1_1es4cgp_1ae7d4b46c3f83797e2a076ea5cfd230bb"></span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N4dcgp6es4cgp8log_typeE" title="dcgp::es4cgp::log_type">log_type</a> &amp;<code class="sig-name descname">get_log</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp6es4cgp7get_logEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Get log. </p>
+<p>A log containing relevant quantities monitoring the last call to evolve. Each element of the returned <code class="docutils literal notranslate"><span class="pre">std::vector</span></code> is a <a class="reference internal" href="#classdcgp_1_1es4cgp_1a7e4a36800bc359663e7a5b7817f8aafd"><span class="std std-ref">es4cgp::log_line_type</span></a> as described in <a class="reference internal" href="#classdcgp_1_1es4cgp_1abd9dc248c00c3b2c20021b0b25e64fc0"><span class="std std-ref">es4cgp::set_verbosity()</span></a>.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>an <code class="docutils literal notranslate"> <span class="pre">std::vector</span></code> of <a class="reference internal" href="#classdcgp_1_1es4cgp_1a7e4a36800bc359663e7a5b7817f8aafd"><span class="std std-ref">es4cgp::log_line_type</span></a> containing the logged values. </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
 </div>
 
 

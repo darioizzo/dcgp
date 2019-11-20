@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Memetic Evolutionary Strategy (UDA) &mdash; dCGP 1.4.1 documentation</title>
+  <title>Memetic Evolutionary Strategy (UDA) &mdash; dCGP 1.4.3 documentation</title>
   
 
   
@@ -25,7 +25,6 @@
         <script type="text/javascript" src="../../_static/underscore.js"></script>
         <script type="text/javascript" src="../../_static/doctools.js"></script>
         <script type="text/javascript" src="../../_static/language_data.js"></script>
-        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
         <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
         <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     
@@ -67,7 +66,7 @@
             
             
               <div class="version">
-                1.4.1
+                1.4.3
               </div>
             
           
@@ -213,7 +212,7 @@
 <div class="section" id="memetic-evolutionary-strategy-uda">
 <h1>Memetic Evolutionary Strategy (UDA)<a class="headerlink" href="#memetic-evolutionary-strategy-uda" title="Permalink to this headline">¶</a></h1>
 <div class="figure align-default">
-<img alt="MES" src="../../_images/neo-darwinism.jpg" />
+<img alt="MES" src="../../_images/neo-darwinism1.jpg" />
 </div>
 <dl class="class">
 <dt id="dcgpy.mes4cgp">
@@ -267,7 +266,7 @@ outlined by the following pseudo-algorithm:</p>
 <code class="sig-name descname">get_log</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.mes4cgp.get_log" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a log containing relevant parameters recorded during the last call to <code class="docutils literal notranslate"><span class="pre">evolve()</span></code>. The log frequency depends
 on the verbosity parameter (by default nothing is logged) which can be set calling the
-method <code class="xref py py-func docutils literal notranslate"><span class="pre">set_verbosity()</span></code> on an <a class="reference external" href="https://esa.github.io/pagmo2/docs/python/py_algorithm.html#pygmo.algorithm" title="(in pagmo v2.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">algorithm</span></code></a>
+method <code class="xref py py-func docutils literal notranslate"><span class="pre">set_verbosity()</span></code> on an <a class="reference external" href="https://esa.github.io/pagmo2/docs/python/py_algorithm.html#pygmo.algorithm" title="(in pagmo v2.12.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">algorithm</span></code></a>
 constructed with a <a class="reference internal" href="#dcgpy.mes4cgp" title="dcgpy.mes4cgp"><code class="xref py py-class docutils literal notranslate"><span class="pre">mes4cgp</span></code></a>. A verbosity of <code class="docutils literal notranslate"><span class="pre">N</span></code> implies a log
 line each <code class="docutils literal notranslate"><span class="pre">N</span></code> generations.</p>
 <dl class="field-list simple">
@@ -313,7 +312,7 @@ line each <code class="docutils literal notranslate"><span class="pre">N</span><
 <span class="go">[(0, 0, 2802.8212344354, array([5.35943212]), &#39;[c1**2]&#39;), ...</span>
 </pre></div>
 </div>
-<p>See also the docs of the relevant C++ method <code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">dcgp::mes4cgp::get_log()</span></code>.</p>
+<p>See also the docs of the relevant C++ method <a class="reference internal" href="../cpp/mes4cgp.html#_CPPv4NK4dcgp7mes4cgp7get_logEv" title="dcgp::mes4cgp::get_log"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">dcgp::mes4cgp::get_log()</span></code></a>.</p>
 </dd></dl>
 
 <dl class="method">

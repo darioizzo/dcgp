@@ -67,7 +67,9 @@
   {
    "cell_type": "code",
    "execution_count": 5,
-   "metadata": {},
+   "metadata": {
+    "scrolled": true
+   },
    "outputs": [
     {
      "data": {
@@ -107,7 +109,7 @@
     "# Note how in the log above the island is *busy* indicating that the evolution is running. Note also that the\n",
     "# island is, in this case, of type *thread island* indicating that its evolution is running on a separate thread\n",
     "# We can also stop the interactive session and wait for the evolution to finish\n",
-    "archi.wait()"
+    "archi.wait_check()"
    ]
   },
   {

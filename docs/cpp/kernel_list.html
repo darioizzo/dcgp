@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Available kernels &mdash; dCGP 1.4.1 documentation</title>
+  <title>Available kernels &mdash; dCGP 1.4.3 documentation</title>
   
 
   
@@ -25,7 +25,6 @@
         <script type="text/javascript" src="../../_static/underscore.js"></script>
         <script type="text/javascript" src="../../_static/doctools.js"></script>
         <script type="text/javascript" src="../../_static/language_data.js"></script>
-        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
         <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
         <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     
@@ -67,7 +66,7 @@
             
             
               <div class="version">
-                1.4.1
+                1.4.3
               </div>
             
           
@@ -211,67 +210,90 @@ kernels to the set.</p>
 <hr class="docutils" />
 <table class="table-bordered table-striped docutils align-default">
 <colgroup>
-<col style="width: 41%" />
-<col style="width: 59%" />
+<col style="width: 13%" />
+<col style="width: 19%" />
+<col style="width: 69%" />
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Kernel name</p></th>
 <th class="head"><p>Function</p></th>
+<th class="head"><p>Definition</p></th>
 </tr>
 </thead>
 <tbody>
 <tr class="row-even"><td><p>“sum”</p></td>
 <td><p>addition</p></td>
+<td><p><span class="math notranslate nohighlight">\(\sum_i x_i\)</span></p></td>
 </tr>
 <tr class="row-odd"><td><p>“diff”</p></td>
 <td><p>subtraction</p></td>
+<td><p><span class="math notranslate nohighlight">\(x_1 - \sum_{i=2} x_i\)</span></p></td>
 </tr>
 <tr class="row-even"><td><p>“mul”</p></td>
 <td><p>multiplication</p></td>
+<td><p><span class="math notranslate nohighlight">\(\prod_i x_i\)</span></p></td>
 </tr>
 <tr class="row-odd"><td><p>“div”</p></td>
 <td><p>division</p></td>
+<td><p><span class="math notranslate nohighlight">\(x_1 / \prod_{i=2} x_i\)</span></p></td>
 </tr>
 <tr class="row-even"><td><p>“pdiv”</p></td>
 <td><p>protected division</p></td>
+<td><p><span class="math notranslate nohighlight">\(x_1 / \prod_{i=2} x_i\)</span> or 1 if NaN</p></td>
 </tr>
 <tr class="row-odd"><td><p>“sin”</p></td>
 <td><p>sine</p></td>
+<td><p><span class="math notranslate nohighlight">\(\sin x_1\)</span></p></td>
 </tr>
 <tr class="row-even"><td><p>“cos”</p></td>
 <td><p>cosine</p></td>
+<td><p><span class="math notranslate nohighlight">\(\cos x_1\)</span></p></td>
 </tr>
 <tr class="row-odd"><td><p>“log”</p></td>
 <td><p>natural logarithm</p></td>
+<td><p><span class="math notranslate nohighlight">\(\log x_1\)</span></p></td>
 </tr>
 <tr class="row-even"><td><p>“exp”</p></td>
 <td><p>exponential</p></td>
+<td><p><span class="math notranslate nohighlight">\(e^{x_1}\)</span></p></td>
 </tr>
 <tr class="row-odd"><td><p>“gaussian”</p></td>
 <td><p>gaussian</p></td>
+<td><p><span class="math notranslate nohighlight">\(e^{-x_1^2}\)</span></p></td>
 </tr>
 <tr class="row-even"><td><p>“sqrt”</p></td>
 <td><p>square root</p></td>
+<td><p><span class="math notranslate nohighlight">\(\sqrt{x_1}\)</span></p></td>
 </tr>
-<tr class="row-odd"><td colspan="2"><p><strong>Suitable for dCGPANN</strong></p></td>
+<tr class="row-odd"><td><p>“psqrt”</p></td>
+<td><p>protected square root</p></td>
+<td><p><span class="math notranslate nohighlight">\(\sqrt{|x_1|}\)</span></p></td>
 </tr>
-<tr class="row-even"><td><p>“sig”</p></td>
+<tr class="row-even"><td colspan="3"><p><strong>Suitable for dCGPANN</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p>“sig”</p></td>
 <td><p>sigmoid</p></td>
+<td><p><span class="math notranslate nohighlight">\(\frac{1}{1 + e^{-\sum_i x_i}}\)</span></p></td>
 </tr>
-<tr class="row-odd"><td><p>“tanh”</p></td>
+<tr class="row-even"><td><p>“tanh”</p></td>
 <td><p>hyperbolic tangent</p></td>
+<td><p><span class="math notranslate nohighlight">\(\tanh \left(\sum_i x_i\right)\)</span></p></td>
 </tr>
-<tr class="row-even"><td><p>“ReLu”</p></td>
+<tr class="row-odd"><td><p>“ReLu”</p></td>
 <td><p>rectified linear unit</p></td>
+<td><p><span class="math notranslate nohighlight">\(\sum_i x_i\)</span> if positive, 0 otherwise</p></td>
 </tr>
-<tr class="row-odd"><td><p>“ELU”</p></td>
+<tr class="row-even"><td><p>“ELU”</p></td>
 <td><p>exp linear unit</p></td>
+<td><p><span class="math notranslate nohighlight">\(\sum_i x_i\)</span> if positive, <span class="math notranslate nohighlight">\(e^{\sum_i x_i} - 1\)</span> otherwise</p></td>
 </tr>
-<tr class="row-even"><td><p>“ISRU”</p></td>
-<td><p>sigmoid</p></td>
+<tr class="row-odd"><td><p>“ISRU”</p></td>
+<td><p>Inverse square root unit</p></td>
+<td><p><span class="math notranslate nohighlight">\(\frac{\sum_i x_i}{\sqrt{1 + \left(\sum_i x_i\right)^2}}\)</span></p></td>
 </tr>
-<tr class="row-odd"><td><p>“sum”</p></td>
+<tr class="row-even"><td><p>“sum”</p></td>
 <td><p>addition</p></td>
+<td><p><span class="math notranslate nohighlight">\(\sum_i x_i\)</span></p></td>
 </tr>
 </tbody>
 </table>
