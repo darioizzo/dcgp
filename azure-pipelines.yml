@@ -49,6 +49,7 @@ jobs:
                         ninja ^
                         eigen ^
                         obake-devel ^
+                        pagmo-devel ^
                         pagmo ^
                         pygmo ^
                         symengine ^
