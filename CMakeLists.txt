@@ -2,7 +2,8 @@
 set(DCGP_PROJECT_VERSION 1.4.3)
 
 # CMake version check.
-cmake_minimum_required(VERSION 3.2)
+# NOTE: C++17 supported since CMake 3.8.
+cmake_minimum_required(VERSION 3.8)
 
 # Module path setup.
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake_modules" "${CMAKE_SOURCE_DIR}/cmake_modules/yacma")
