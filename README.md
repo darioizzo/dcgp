@@ -1,6 +1,6 @@
 [![DOI](https://zenodo.org/badge/38923383.svg)](https://zenodo.org/badge/latestdoi/38923383)
-[![Build status](https://ci.appveyor.com/api/projects/status/0krbaimpvjx76fcm?svg=true)](https://ci.appveyor.com/project/darioizzo/d-cgp)
-[![Build Status](https://travis-ci.org/darioizzo/d-CGP.svg?branch=master)](https://travis-ci.org/darioizzo/d-CGP)
+[![Build status](https://ci.appveyor.com/api/projects/status/0krbaimpvjx76fcm?svg=true)](https://ci.appveyor.com/project/darioizzo/dcgp)
+[![Build Status](https://travis-ci.org/darioizzo/d-CGP.svg?branch=master)](https://travis-ci.org/darioizzo/dcgp)
 [![PyPI](https://img.shields.io/badge/pypi-v1.0.1-blue.svg)](https://pypi.python.org/pypi?:action=display&name=dcgpy&version=1.0.1)
 
 # d-CGP
