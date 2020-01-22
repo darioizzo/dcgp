@@ -3,6 +3,8 @@
 [![PyPI](https://img.shields.io/pypi/v/dcgpy?style=for-the-badge)](https://pypi.python.org/pypi?:action=display&name=dcgpy&version=1.0.1)
 [![Conda (channel only)](https://img.shields.io/conda/vn/conda-forge/dcgp-python?style=for-the-badge)](https://anaconda.org/conda-forge/dcgp-python)
 
+[![Gitter](https://img.shields.io/gitter/room/esa/dcgp?logo=gitter-white&style=for-the-badge)](https://gitter.im/esa/dcgp)
+
 [![DOI](https://zenodo.org/badge/38923383.svg)](https://zenodo.org/badge/latestdoi/38923383)
 
 # d-CGP
