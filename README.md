@@ -1,4 +1,5 @@
-[![Build Status](https://travis-ci.org/darioizzo/d-CGP.svg?branch=master)](https://travis-ci.org/darioizzo/dcgp)
+[![Travis (.org)](https://img.shields.io/travis/darioizzo/dcgp?style=for-the-badge&logo=travis)](https://travis-ci.org/darioizzo/dcgp)
+[![Azure DevOps builds](https://img.shields.io/azure-devops/build/darioizzo/dcgp/2?style=for-the-badge&logo=win)](https://dev.azure.com/darioizzo/dcgp/_build)
 [![PyPI](https://img.shields.io/badge/pypi-v1.0.1-blue.svg)](https://pypi.python.org/pypi?:action=display&name=dcgpy&version=1.0.1)
 [![DOI](https://zenodo.org/badge/38923383.svg)](https://zenodo.org/badge/latestdoi/38923383)
 
