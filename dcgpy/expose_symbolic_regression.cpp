@@ -60,17 +60,17 @@ void expose_symbolic_regression()
              bp::make_constructor(
                  +[](const bp::object &points, const bp::object &labels, unsigned rows, unsigned cols,
                      unsigned levels_back, unsigned arity, const bp::object &kernels, unsigned n_eph,
-                     bool multi_objective, unsigned parallel_batches) {
+                     bool multi_objective, unsigned parallel_batches, const std::string loss_s) {
                      auto kernels_v = l_to_v<kernel<double>>(kernels);
                      auto vvd_points = to_vv<double>(points);
                      auto vvd_labels = to_vv<double>(labels);
                      return ::new dcgp::symbolic_regression(vvd_points, vvd_labels, rows, cols, levels_back, arity,
-                                                            kernels_v, n_eph, multi_objective, parallel_batches);
+                                                            kernels_v, n_eph, multi_objective, parallel_batches, loss_s);
                  },
                  bp::default_call_policies(),
                  (bp::arg("points"), bp::arg("labels"), bp::arg("rows") = 1, bp::arg("cols") = 16,
                   bp::arg("levels_back") = 17, bp::arg("arity") = 2, bp::arg("kernels"), bp::arg("n_eph") = 0u,
-                  bp::arg("multi_objective") = false, bp::arg("parallel_batches") = 0u)),
+                  bp::arg("multi_objective") = false, bp::arg("parallel_batches") = 0u, bp::arg("loss") = "MSE")),
              symbolic_regression_init_doc().c_str())
         .def(
             "pretty", +[](const dcgp::symbolic_regression &instance,

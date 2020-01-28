@@ -140,6 +140,15 @@ public:
         // Gradient and Constants will be stored in these column vectors
         Eigen::MatrixXd G = Eigen::MatrixXd::Zero(_(n_eph), 1);
         Eigen::MatrixXd C = Eigen::MatrixXd::Zero(_(n_eph), 1);
+        // Choelsky LLT decomposition of H to find the inverse if H is positive definite
+        Eigen::LLT<Eigen::MatrixXd> llt;
+        // Identity Matrix to use for solving the choeslky for H_inv
+        Eigen::MatrixXd Identity = Eigen::MatrixXd::Identity(_(n_eph), _(n_eph));
+        // auxilary index variables used to construct reduced size Hessian
+        unsigned row = 0u;
+        unsigned col = 0u;
+        // used in gradient descent in case we decide to do no newton step because Hessian is not positive definite
+        double loss_gradient_norm = 0.;
         auto hs = prob.hessians_sparsity();
 
         // Main loop
@@ -185,29 +194,89 @@ public:
                     }
                     mutated_f[i] = prob.fitness(mutated_x[i]);
                 } else {
-                    // TODO IMPORTANT: guard against non invertible Hessians (for exmaple when an eph constant is not
-                    // picked up)
+                    // One Newton step (NOTE: here we invert an n_eph_active x n_eph_active matrix)
+                    // where n_eph_active is the number of epheremal consts that are part of the current expression
                     // We compute hessians and gradients stored in the pagmo format
                     auto hess = prob.hessians(mutated_x[i]);
                     auto grad = prob.gradient(mutated_x[i]);
-                    // We copy them into the Eigen format
-                    for (decltype(hess[0].size()) j = 0u; j < hess[0].size(); ++j) {
-                        H(_(hs[0][j].first), _(hs[0][j].second)) = hess[0][j];
-                        H(_(hs[0][j].second), _(hs[0][j].first)) = hess[0][j];
+                    // construct reduced hessian to avoid all zero rows/cols,
+                    // since they are linearly dependant and make the matrix non-invertible
+                    // find out how many epheremal constants are actually in expression
+                    // also collect indices of non-zero gradients
+                    std::vector<pagmo::vector_double::size_type> non_zero;
+                    for (decltype(grad.size()) j = 0u; j < grad.size(); ++j) {
+                        if (grad[j] != 0.){
+                            non_zero.emplace_back(j);
+                        }
                     }
-                    for (decltype(n_eph) j = 0u; j < n_eph; ++j) {
-                        C(_(j), 0) = mutated_x[i][j];
-                        G(_(j), 0) = grad[j];
-                    }
-                    // One Newton step (NOTE: here we invert an n_eph x n_eph matrix)
-                    C = C - H.inverse() * G;
-                    // We copy back the result into pagmo format
-                    for (decltype(n_eph) j = 0u; j < n_eph; ++j) {
-                        mutated_x[i][j] = C(_(j), 0);
+                    std::vector<pagmo::vector_double::size_type>::size_type n_non_zero = non_zero.size();
+                    if (n_non_zero > 0) {
+                        // only do a Newton step if at least one epheremal const is part of expression
+                        // take a part of the original matrices as reduced size Eigen matrices
+                        auto H_red = H.topLeftCorner(n_non_zero, n_non_zero);
+                        auto G_red = G.topLeftCorner(n_non_zero, 1);
+                        auto C_red = C.topLeftCorner(n_non_zero, 1);
+                        auto I_red = Identity.topLeftCorner(n_non_zero, n_non_zero);
+                        // copy Hessian, gradient and epheremal constants to Eigen
+                        row = 0u;
+                        col = 0u;
+                        // construct reduced size Hessian without all-zero rows/cols [shape:(n_non_zero, n_non_zero)]
+                        for (decltype(hess[0].size()) j = 0u; j < hess[0].size(); ++j) {
+                            // hessian is only non-zero where both gradients are non_zero
+                            if (std::find(non_zero.begin(), non_zero.end(), hs[0][j].first) != non_zero.end()
+                                && std::find(non_zero.begin(), non_zero.end(), hs[0][j].second) != non_zero.end()) {
+                                    // we fill the lower diagonal matrix of H_red
+                                    H_red(_(row), _(col)) = hess[0][j];
+                                    // and mirror to upper
+                                    H_red(_(col), _(row)) = hess[0][j];
+                                    // sort out if we increment column or row
+                                    if (hs[0][j].first == hs[0][j].second) {
+                                        // it is a diagonal element
+                                        row = row + 1;
+                                        col = 0;
+                                    } else {
+                                        // off-diagonal, only increase columns count
+                                        col = col + 1;
+                                    }
+                            }
+                        }
+                        // reduced size gradient and epheremal constant vectors [shape:(n_non_zero, 1)]
+                        for (decltype(n_non_zero) j = 0u; j < n_non_zero; ++j) {
+                            C_red(_(j), 0) = mutated_x[i][non_zero[j]];
+                            G_red(_(j), 0) = grad[non_zero[j]];
+                        }
+                        // make sure that gradients are finite
+                        if (G_red.array().isFinite().all()) {
+                            // NOTE: LLT should only work if the matrix is positive definite
+                            // so we perform it and check if it worked to be sure we approach a minimum [and not a saddle]
+                            // TODO: should we log/print what we decided to do?, i.e. Newton step, gradient step or neither of the two
+                            llt = H_red.llt();
+                            if (llt.info() == Eigen::Success) {
+                                // if the choelsky worked H_red must be positive definite
+                                // we are therefore approaching a minimum and the inverse is defined
+                                // so lets do a Newton step
+                                C_red = C_red - llt.solve(I_red) * G_red;
+                            } else {
+                                // lets try a gradient descent step to get away from the saddle
+                                // TODO: can we use gd4cgp in here instead? this would enable us to use the line-search implemented there
+                                // TODO: learning rate as parameter
+                                // TODO: can we do something smarter than a simple gradient step?
+                                // check that gradient norm is well behaved (not vanished + finite)
+                                loss_gradient_norm = G_red.norm();
+                                if (loss_gradient_norm < 1e-13 || !std::isfinite(loss_gradient_norm)) {
+                                    C_red = C_red - ( 0.1 * G_red / G_red.norm() );
+                                }
+                            }
+                            // copy modified constants back to pagmo
+                            for (decltype(non_zero.size()) j = 0u; j < non_zero.size(); ++j) {
+                                mutated_x[i][non_zero[j]] = C(_(j), 0);
+                            }
+                        }
                     }
                     mutated_f[i] = prob.fitness(mutated_x[i]);
                 }
             }
+
             // 3 - We check if we found anything better.
             for (decltype(NP) i = 0u; i < NP; ++i) {
                 if (pagmo::detail::less_than_f(mutated_f[i][0], best_f[0])) {

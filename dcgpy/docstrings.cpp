@@ -118,7 +118,7 @@ Computes the loss of the model on the data
 Args:
     points (2D NumPy float array or ``list of lists`` of ``float``): the input data
     labels (2D NumPy float array or ``list of lists`` of ``float``): the output labels (supervised signal)
-    loss_type (``str``): the loss, one of "MSE" for Mean Square Error and "CE" for Cross-Entropy.
+    loss (``str``): the loss type, one of "MSE" for Mean Square Error, "CE" for Cross-Entropy or "BCE" for Binary-Cross-Entropy.
 
 Raises:
     ValueError: if *points* or *labels* are malformed or if *loss_type* is not one of the available types.
@@ -1051,7 +1051,7 @@ a continuous part (i.e. the value of the parameters in the model) and an integer
 the model computational graph). The instantiated object can be used as UDP (User Defined Problem) in the pygmo optimization suite.
 
 The symbolic regression problem can be instantiated both as a single and as a two-objectives problem. In the second
-case, aside the Mean Squared Error, the model complexity will be considered as an objective.
+case, aside the choosen loss on the data, the model complexity will be considered as an objective.
 
     )";
 }
@@ -1073,6 +1073,7 @@ Args:
     n_eph (``int``): Number of ephemeral constants. 
     multi_objective (``bool``): when True the problem will be considered as multiobjective (loss and model complexity).
     parallel_batches (``int``): allows to split the data into batches for parallel evaluation.
+    loss (``int``): the loss type, one of "MSE" for Mean Square Error, "CE" for Cross-Entropy or "BCE" for Binary-Cross-Entropy.
 
 Raises:
     unspecified: any exception thrown by failures at the intersection between C++ and Python (e.g.,

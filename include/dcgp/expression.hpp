@@ -52,7 +52,9 @@ public:
         /// Mean Squared Error
         MSE,
         // Cross-Entropy
-        CE
+        CE,
+        // Binary Cross-Entropy
+        BCE
     };
 
     /// Constructor
@@ -277,7 +279,7 @@ public:
      * @param[point] The input data (single point)
      * @param[prediction] The predicted output (single point)
      * @param[loss_e] The loss type. Can be "MSE" for Mean Square Error (regression) or "CE" for Cross Entropy
-     * (classification)
+     * (classification) or "BCE" for Binary Cross Entropy (classification with two classes)
      * @return the computed loss
      */
     T loss(const std::vector<T> &point, const std::vector<T> &prediction, loss_type loss_e) const
@@ -287,11 +289,27 @@ public:
                                         + std::to_string(point.size())
                                         + " while I expected: " + std::to_string(this->get_n() - m_eph_val.size()));
         }
-        if (prediction.size() != this->get_m()) {
-            throw std::invalid_argument(
-                "When computing the loss the prediction dimension (output) seemed wrong, it was: "
-                + std::to_string(prediction.size()) + " while I expected: " + std::to_string(this->get_m()));
+        switch (loss_e) {
+            case loss_type::BCE: {
+                // for BCE the second output is determined via 1 = p_1 + p_2
+                // therefore we need 2 targets but can have only one output
+                if (prediction.size() != this->get_m() + 1) {
+                    throw std::invalid_argument(
+                        "When computing the loss the prediction dimension (output) seemed wrong, it was: "
+                        + std::to_string(prediction.size()) + " while I expected: " + std::to_string(this->get_m()));
+                }
+                break;
+            }
+            default: {
+                // for all other loss types we need as many predictions/targets as we have outputs
+                if (prediction.size() != this->get_m()) {
+                    throw std::invalid_argument(
+                    "When computing the loss the prediction dimension (output) seemed wrong, it was: "
+                    + std::to_string(prediction.size()) + " while I expected: " + std::to_string(this->get_m() + 1));
+                }
+            }
         }
+
         T retval(0.);
 
         auto outputs = this->operator()(point);
@@ -320,6 +338,17 @@ public:
                 retval = -std::accumulate(outputs.begin(), outputs.end(), T(0.));
                 break;
             }
+            // Binary Cross Entropy (aka binomial loss)
+            case loss_type::BCE: {
+                // if we have only two labels/possibilities, we can predict only p_1 and take p_2 = 1 - p_1
+                // loss = - y_1 log(p_1) - y_2 log(p_2)
+                // p_1 = 1 / (1 + exp(-a_1))
+                // p_2 = 1 - p_1 = 1 / (1 + exp(a_1))
+                retval = (prediction[0] * audi::log(1. + audi::exp(-outputs[0]))
+                          + prediction[1] * audi::log(1. + audi::exp(outputs[0]))
+                          );
+                break;
+            }
         }
         return retval;
     }
@@ -331,7 +360,7 @@ public:
      * @param[points] The input data (a batch).
      * @param[labels] The predicted outputs (a batch).
      * @param[loss_s] The loss type. Can be "MSE" for Mean Square Error (regression) or "CE" for Cross Entropy
-     * (classification)
+     * (classification) or "BCE" for Binary Cross Entropy (classification with two classes)
      * @param[parallel] sets the grain for parallelism. 0 -> no parallelism n -> divides the data into n parts and
      * evaluates them in parallel threads.
      * @return the loss
@@ -353,6 +382,8 @@ public:
             loss_e = loss_type::MSE;
         } else if (loss_s == "CE") {
             loss_e = loss_type::CE; // Cross Entropy
+        } else if (loss_s == "BCE") {
+            loss_e = loss_type::BCE; // Binary Cross-Entropy
         } else {
             throw std::invalid_argument("The requested loss was: " + loss_s + " while only MSE and CE are allowed");
         }
