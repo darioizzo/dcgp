@@ -871,7 +871,7 @@ protected:
      *
      * @param[node_id] chromosome
      */
-    unsigned _get_arity(unsigned node_id) const
+    unsigned _get_arity(typename std::vector<T>::size_type node_id) const
     {
         assert(node_id >= m_n && node_id < m_n + m_r * m_c);
         unsigned col = (node_id - m_n) / m_r;
