@@ -255,7 +255,7 @@ public:
         }
         // index of the node in the weight vector
         auto idx = this->get_gene_idx()[node_id] - (node_id - this->get_n());
-        m_weights[idx] = w;
+        m_weights[idx + input_id] = w;
     }
 
     /// Sets all weights
@@ -297,7 +297,7 @@ public:
         }
 
         auto idx = this->get_gene_idx()[node_id] - (node_id - this->get_n());
-        return m_weights[idx];
+        return m_weights[idx + input_id];
     }
 
     /// Gets the weights
