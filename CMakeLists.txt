@@ -275,9 +275,6 @@ if(DCGP_BUILD_DCGP)
 endif()
 
 if(DCGP_BUILD_DCGPY)
-    # Configure version
-    configure_file("${CMAKE_CURRENT_SOURCE_DIR}/dcgpy/_version.py.in" "${CMAKE_CURRENT_SOURCE_DIR}/dcgpy/_version.py" @ONLY)
-    # Add the dcgpy subdirectory.
     add_subdirectory("${CMAKE_SOURCE_DIR}/dcgpy")
 endif()
 

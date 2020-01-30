@@ -1,27 +1,18 @@
-// See: https://docs.scipy.org/doc/numpy/reference/c-api.array.html#importing-the-api
-// In every cpp file We need to make sure this is included before everything else,
-// with the correct #defines.
-#define NO_IMPORT_ARRAY
-#define PY_ARRAY_UNIQUE_SYMBOL dcgpy_ARRAY_API
-#include "numpy.hpp"
-
+#include <audi/audi.hpp>
 #include <boost/numeric/conversion/cast.hpp>
-#include <boost/python.hpp>
-
+#include <dcgp/wrapped_functions_s11n_implement.hpp>
 #include <memory>
+#include <pagmo/threading.hpp>
+#include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
 #include <sstream>
 #include <string>
 #include <vector>
-
-#include <audi/audi.hpp>
-
-#include <pagmo/threading.hpp>
 
 #include <dcgp/function.hpp>
 #include <dcgp/kernel.hpp>
 #include <dcgp/kernel_set.hpp>
 #include <dcgp/s11n.hpp>
-#include <dcgp/wrapped_functions_s11n_implement.hpp>
 
 #include "common_utils.hpp"
 #include "docstrings.hpp"
@@ -29,13 +20,13 @@
 using namespace dcgp;
 using namespace dcgpy;
 using namespace audi;
-namespace bp = boost::python;
+namespace py = pybind11;
 
 namespace dcgp::detail
 {
 
 template <typename T>
-struct function_inner<bp::object, T, const std::vector<T> &> final : function_inner_base<T, const std::vector<T> &> {
+struct function_inner<py::object, T, const std::vector<T> &> final : function_inner_base<T, const std::vector<T> &> {
     // We just need the def ctor, delete everything else.
     function_inner() = default;
     function_inner(const function_inner &) = delete;
@@ -44,7 +35,7 @@ struct function_inner<bp::object, T, const std::vector<T> &> final : function_in
     function_inner &operator=(function_inner &&) = delete;
 
     // Constructor from generic python object.
-    explicit function_inner(const bp::object &o)
+    explicit function_inner(const py::object &o)
     {
         m_value = dcgpy::deepcopy(o);
     }
@@ -59,7 +50,7 @@ struct function_inner<bp::object, T, const std::vector<T> &> final : function_in
     // Mandatory methods.
     virtual T operator()(const std::vector<T> &v) const override final
     {
-        return bp::extract<T>(m_value(dcgpy::v_to_l(v)));
+        return py::cast<T>(m_value(v));
     }
 
     virtual pagmo::thread_safety get_thread_safety() const override final
@@ -83,7 +74,7 @@ struct function_inner<bp::object, T, const std::vector<T> &> final : function_in
     }
     BOOST_SERIALIZATION_SPLIT_MEMBER()
 
-    bp::object m_value;
+    py::object m_value;
 };
 
 } // namespace dcgp::detail
@@ -91,110 +82,135 @@ struct function_inner<bp::object, T, const std::vector<T> &> final : function_in
 namespace dcgp::s11n_names
 {
 
-using udf_bp_object_double = dcgp::detail::function_inner<bp::object, double, const std::vector<double> &>;
-using udf_bp_object_string = dcgp::detail::function_inner<bp::object, std::string, const std::vector<std::string> &>;
-using udf_bp_object_gdual_d
-    = dcgp::detail::function_inner<bp::object, audi::gdual_d, const std::vector<audi::gdual_d> &>;
-using udf_bp_object_gdual_v
-    = dcgp::detail::function_inner<bp::object, audi::gdual_v, const std::vector<audi::gdual_v> &>;
+using udf_py_object_double = dcgp::detail::function_inner<py::object, double, const std::vector<double> &>;
+using udf_py_object_string = dcgp::detail::function_inner<py::object, std::string, const std::vector<std::string> &>;
+using udf_py_object_gdual_d
+    = dcgp::detail::function_inner<py::object, audi::gdual_d, const std::vector<audi::gdual_d> &>;
+using udf_py_object_gdual_v
+    = dcgp::detail::function_inner<py::object, audi::gdual_v, const std::vector<audi::gdual_v> &>;
 
 } // namespace dcgp::s11n_names
 
-BOOST_CLASS_EXPORT_KEY2(dcgp::s11n_names::udf_bp_object_double, "udf bp::object double")
-BOOST_CLASS_TRACKING(dcgp::s11n_names::udf_bp_object_double, boost::serialization::track_never)
-BOOST_CLASS_EXPORT_IMPLEMENT(dcgp::s11n_names::udf_bp_object_double)
+BOOST_CLASS_EXPORT_KEY2(dcgp::s11n_names::udf_py_object_double, "udf py::object double")
+BOOST_CLASS_TRACKING(dcgp::s11n_names::udf_py_object_double, boost::serialization::track_never)
+BOOST_CLASS_EXPORT_IMPLEMENT(dcgp::s11n_names::udf_py_object_double)
 
-BOOST_CLASS_EXPORT_KEY2(dcgp::s11n_names::udf_bp_object_gdual_d, "udf bp::object gdual_d")
-BOOST_CLASS_TRACKING(dcgp::s11n_names::udf_bp_object_gdual_d, boost::serialization::track_never)
-BOOST_CLASS_EXPORT_IMPLEMENT(dcgp::s11n_names::udf_bp_object_gdual_d)
+BOOST_CLASS_EXPORT_KEY2(dcgp::s11n_names::udf_py_object_gdual_d, "udf py::object gdual_d")
+BOOST_CLASS_TRACKING(dcgp::s11n_names::udf_py_object_gdual_d, boost::serialization::track_never)
+BOOST_CLASS_EXPORT_IMPLEMENT(dcgp::s11n_names::udf_py_object_gdual_d)
 
-BOOST_CLASS_EXPORT_KEY2(dcgp::s11n_names::udf_bp_object_gdual_v, "udf bp::object gdual_v")
-BOOST_CLASS_TRACKING(dcgp::s11n_names::udf_bp_object_gdual_v, boost::serialization::track_never)
-BOOST_CLASS_EXPORT_IMPLEMENT(dcgp::s11n_names::udf_bp_object_gdual_v)
+BOOST_CLASS_EXPORT_KEY2(dcgp::s11n_names::udf_py_object_gdual_v, "udf py::object gdual_v")
+BOOST_CLASS_TRACKING(dcgp::s11n_names::udf_py_object_gdual_v, boost::serialization::track_never)
+BOOST_CLASS_EXPORT_IMPLEMENT(dcgp::s11n_names::udf_py_object_gdual_v)
 
-BOOST_CLASS_EXPORT_KEY2(dcgp::s11n_names::udf_bp_object_string, "udf bp::object string")
-BOOST_CLASS_TRACKING(dcgp::s11n_names::udf_bp_object_string, boost::serialization::track_never)
-BOOST_CLASS_EXPORT_IMPLEMENT(dcgp::s11n_names::udf_bp_object_string)
+BOOST_CLASS_EXPORT_KEY2(dcgp::s11n_names::udf_py_object_string, "udf py::object string")
+BOOST_CLASS_TRACKING(dcgp::s11n_names::udf_py_object_string, boost::serialization::track_never)
+BOOST_CLASS_EXPORT_IMPLEMENT(dcgp::s11n_names::udf_py_object_string)
 
 namespace dcgpy
 {
 
+// Serialization helpers for kernel.
 template <typename T>
-struct kernel_pickle_suite : bp::pickle_suite {
-    static bp::tuple getstate(const T &k)
+py::tuple kernel_pickle_getstate(const kernel<T> &k)
+{
+    std::ostringstream oss;
     {
-        // The idea here is that first we extract a char array
-        // into which the kernel has been serialized, then we turn
-        // this object into a Python bytes object and return that.
-        std::ostringstream oss;
-        {
-            boost::archive::binary_oarchive oarchive(oss);
-            oarchive << k;
-        }
-        auto s = oss.str();
-        // Store the serialized kernel.
-        return bp::make_tuple(make_bytes(s.data(), boost::numeric_cast<Py_ssize_t>(s.size())));
+        boost::archive::binary_oarchive oarchive(oss);
+        oarchive << k;
     }
-    static void setstate(T &k, const bp::tuple &state)
-    {
-        // Similarly, first we extract a bytes object from the Python state,
-        // and then we build a C++ string from it. The string is then used
-        // to deserialize the object.
-        if (len(state) != 1) {
-            dcgpy_throw(PyExc_ValueError, ("the state tuple passed for kernel deserialization "
-                                           "must have 1 element, but instead it has "
-                                           + std::to_string(len(state)) + " elements")
-                                              .c_str());
-        }
-
-        auto ptr = PyBytes_AsString(bp::object(state[0]).ptr());
-        if (!ptr) {
-            dcgpy_throw(PyExc_TypeError, "a bytes object is needed to deserialize a kernel");
-        }
-        const auto size = len(state[0]);
-        std::string s(ptr, ptr + size);
-        std::istringstream iss;
-        iss.str(s);
-        {
-            boost::archive::binary_iarchive iarchive(iss);
-            iarchive >> k;
-        }
-    }
-};
+    auto s = oss.str();
+    return py::make_tuple(py::bytes(s.data(), boost::numeric_cast<py::size_t>(s.size())));
+}
 
 template <typename T>
-void expose_kernel(const std::string &type)
+kernel<T> kernel_pickle_setstate(py::tuple state)
+{
+    if (py::len(state) != 1) {
+        py_throw(PyExc_ValueError, ("the state tuple passed for kernel deserialization "
+                                    "must have 1 element, but instead it has "
+                                    + std::to_string(py::len(state)) + " element(s)")
+                                       .c_str());
+    }
+
+    auto ptr = PyBytes_AsString(state[0].ptr());
+    if (!ptr) {
+        py_throw(PyExc_TypeError, "a bytes object is needed to deserialize a kernel");
+    }
+
+    std::istringstream iss;
+    iss.str(std::string(ptr, ptr + py::len(state[0])));
+    kernel<T> k;
+    {
+        boost::archive::binary_iarchive iarchive(iss);
+        iarchive >> k;
+    }
+
+    return k;
+}
+
+// Serialization helpers for kernel_set.
+template <typename T>
+py::tuple kernel_set_pickle_getstate(const kernel_set<T> &ks)
+{
+    std::ostringstream oss;
+    {
+        boost::archive::binary_oarchive oarchive(oss);
+        oarchive << ks;
+    }
+    auto s = oss.str();
+    return py::make_tuple(py::bytes(s.data(), boost::numeric_cast<py::size_t>(s.size())));
+}
+
+template <typename T>
+kernel_set<T> kernel_set_pickle_setstate(py::tuple state)
+{
+    if (py::len(state) != 1) {
+        py_throw(PyExc_ValueError, ("the state tuple passed for the kernel set deserialization "
+                                    "must have 1 element, but instead it has "
+                                    + std::to_string(py::len(state)) + " element(s)")
+                                       .c_str());
+    }
+
+    auto ptr = PyBytes_AsString(state[0].ptr());
+    if (!ptr) {
+        py_throw(PyExc_TypeError, "a bytes object is needed to deserialize a kernel set");
+    }
+
+    std::istringstream iss;
+    iss.str(std::string(ptr, ptr + py::len(state[0])));
+    kernel_set<T> ks;
+    {
+        boost::archive::binary_iarchive iarchive(iss);
+        iarchive >> ks;
+    }
+
+    return ks;
+}
+
+template <typename T>
+void expose_kernel(const py::module &m, const std::string &type)
 {
     std::string class_name = "kernel_" + type;
-    bp::class_<kernel<T>>(class_name.c_str(), "The function defining the generic CGP node", bp::init<>())
-        .def("__init__",
-             bp::make_constructor(
-                 +[](const bp::object &obj1, const bp::object &obj2, const std::string &name) {
-                     return ::new kernel<T>(obj1, obj2, name);
-                 },
-                 bp::default_call_policies(), (bp::arg("callable_f"), bp::arg("callable_s"), bp::arg("name"))),
-             kernel_init_doc(type).c_str())
-        .def(
-            "__call__",
-            +[](kernel<T> &instance, const bp::object &in) {
-                try {
-                    auto v = l_to_v<T>(in);
-                    return bp::object(instance(v));
-                } catch (...) {
-                    PyErr_Clear();
-                    auto v = l_to_v<std::string>(in);
-                    return bp::object(instance(v));
-                }
-            })
-        .def(
-            "__repr__",
-            +[](const kernel<T> &instance) -> std::string {
-                std::ostringstream oss;
-                oss << instance;
-                return oss.str();
-            })
-        .def_pickle(kernel_pickle_suite<kernel<T>>());
-    ;
+    auto ker
+        = py::class_<kernel<T>>(m, class_name.c_str(), "The function defining the generic CGP node")
+              .def(py::init<>())
+              .def(py::init<const py::object &, const py::object &, const std::string &>(), py::arg("callable_f"),
+                   py::arg("callable_s"), py::arg("name"), kernel_init_doc(type).c_str())
+              .def("__repr__",
+                   [](const kernel<T> &instance) -> std::string {
+                       std::ostringstream oss;
+                       oss << instance;
+                       return oss.str();
+                   })
+              .def(
+                  "__call__", [](const kernel<T> &instance, const std::vector<T> &v) { return instance(v); },
+                  "Call operator from values")
+              .def(
+                  "__call__", [](const kernel<T> &instance, const std::vector<std::string> &v) { return instance(v); },
+                  "Call operator from strings")
+
+              .def(py::pickle(&dcgpy::kernel_pickle_getstate<T>, &dcgpy::kernel_pickle_setstate<T>));
 }
 
 template <typename T>
@@ -204,48 +220,42 @@ kernel<T> wrap_operator(const kernel_set<T> &ks, typename std::vector<dcgp::kern
 }
 
 template <typename T>
-void expose_kernel_set(std::string type)
+void expose_kernel_set(const py::module m, std::string type)
 {
     std::string class_name = "kernel_set_" + type;
-    bp::class_<kernel_set<T>>(class_name.c_str(),
-                              "Helper to construct a set of kernel functions from their common name", bp::init<>())
-        .def("__init__",
-             bp::make_constructor(
-                 +[](const bp::object &obj1) {
-                     auto a = l_to_v<std::string>(obj1);
-                     return ::new kernel_set<T>(a);
-                 },
-                 bp::default_call_policies(), (bp::arg("kernels"))),
-             kernel_set_init_doc(type).c_str())
-        .def(
-            "__call__", +[](kernel_set<T> &instance) { return v_to_l(instance()); })
+    auto ker_set = py::class_<kernel_set<T>>(m, class_name.c_str(),
+                                             "Helper to construct a set of kernel functions from their common name");
+    ker_set.def(py::init<>())
+        .def(py::init<std::vector<std::string>>(), py::arg("kernels"), kernel_set_init_doc(type).c_str())
+        .def("__call__", &kernel_set<T>::operator())
         .def(
             "__repr__",
-            +[](const kernel_set<T> &instance) -> std::string {
+            +[](const kernel_set<T> &ks) -> std::string {
                 std::ostringstream oss;
-                oss << instance;
+                oss << ks;
                 return oss.str();
             })
-        .def("push_back", (void (kernel_set<T>::*)(std::string)) & kernel_set<T>::push_back,
-             kernel_set_push_back_str_doc().c_str(), bp::arg("kernel_name"))
-        .def("push_back", (void (kernel_set<T>::*)(const kernel<T> &)) & kernel_set<T>::push_back,
-             kernel_set_push_back_ker_doc(type).c_str(), bp::arg("kernel"))
+        .def(
+            "push_back", [](kernel_set<T> &ks, std::string v) { ks.push_back(v); },
+            kernel_set_push_back_str_doc().c_str(), py::arg("kernel_name"))
+        .def(
+            "push_back", [](kernel_set<T> &ks, const kernel<T> &v) { ks.push_back(v); },
+            kernel_set_push_back_ker_doc(type).c_str(), py::arg("kernel"))
         .def("__getitem__", &wrap_operator<T>)
-        .def_pickle(kernel_pickle_suite<kernel_set<T>>());
+        .def(py::pickle(&dcgpy::kernel_set_pickle_getstate<T>, &dcgpy::kernel_set_pickle_setstate<T>));
 }
-
-void expose_kernels()
+//
+void expose_kernels(const py::module &m)
 {
     // double
-    expose_kernel<double>("double");
-    expose_kernel_set<double>("double");
-
-    // gdual_d
-    expose_kernel<gdual_d>("gdual_double");
-    expose_kernel_set<gdual_d>("gdual_double");
-
-    // gdual_v
-    expose_kernel<gdual_v>("gdual_vdouble");
-    expose_kernel_set<gdual_v>("gdual_vdouble");
-}
+    expose_kernel<double>(m, "double");
+    expose_kernel_set<double>(m, "double");
+    //// gdual_d
+    expose_kernel<gdual_d>(m, "gdual_double");
+    expose_kernel_set<gdual_d>(m, "gdual_double");
+    //
+    //// gdual_v
+    expose_kernel<gdual_v>(m, "gdual_vdouble");
+    expose_kernel_set<gdual_v>(m, "gdual_vdouble");
+};
 } // namespace dcgpy

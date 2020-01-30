@@ -163,6 +163,7 @@ Mutates multiple genes within their allowed bounds.
 
 Args:
     idxs (``List[int]``): indexes of the genes to me mutated
+    idxs (``int``): indexes of the single gene to me mutated
 
 Raises:
     ValueError: if the index of a gene is out of bounds
