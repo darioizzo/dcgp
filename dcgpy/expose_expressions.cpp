@@ -28,6 +28,7 @@ void expose_expression(const py::module &m, std::string type)
                       unsigned, unsigned>(),
              py::arg("inputs"), py::arg("outputs"), py::arg("rows"), py::arg("cols"), py::arg("levels_back"),
              py::arg("arity"), py::arg("kernels"), py::arg("n_eph"), py::arg("seed"), expression_init_doc(type).c_str())
+        // Constructor with no seed
         .def(py::init<unsigned, unsigned, unsigned, unsigned, unsigned, std::vector<unsigned>, std::vector<kernel<T>>,
                       unsigned>(),
              py::arg("inputs"), py::arg("outputs"), py::arg("rows"), py::arg("cols"), py::arg("levels_back"),
@@ -104,237 +105,137 @@ void expose_expression(const py::module &m, std::string type)
         .def_property("eph_symb", &expression<T>::get_eph_symb, &expression<T>::set_eph_symb);
 }
 
-// template <typename T>
-// void expose_expression_weighted(std::string type)
-//{
-//    std::string class_name = "expression_weighted_" + type;
-//    bp::class_<expression_weighted<T>, bp::bases<expression<T>>>(class_name.c_str(), bp::no_init)
-//        // Constructor with seed
-//        .def("__init__",
-//             bp::make_constructor(
-//                 +[](unsigned in, unsigned out, unsigned rows, unsigned cols, unsigned levelsback,
-//                     const bp::object &arity, const bp::object &kernels, unsigned seed) {
-//                     auto kernels_v = l_to_v<kernel<T>>(kernels);
-//                     bp::extract<unsigned> is_int(arity);
-//                     if (is_int.check()) { // arity is passed as an integer
-//                         unsigned ar = bp::extract<unsigned>(arity);
-//                         return ::new expression_weighted<T>(in, out, rows, cols, levelsback, ar, kernels_v, seed);
-//                     } else { // arity is passed as something else, a list is assumed
-//                         auto varity = l_to_v<unsigned>(arity);
-//                         return ::new expression_weighted<T>(in, out, rows, cols, levelsback, varity, kernels_v,
-//                         seed);
-//                     }
-//                 },
-//                 bp::default_call_policies(),
-//                 (bp::arg("inputs"), bp::arg("outputs"), bp::arg("rows"), bp::arg("cols"), bp::arg("levels_back"),
-//                  bp::arg("arity"), bp::arg("kernels"), bp::arg("seed"))),
-//             expression_init_doc(type).c_str())
-//        // Constructor with no seed
-//        .def("__init__",
-//             bp::make_constructor(
-//                 +[](unsigned in, unsigned out, unsigned rows, unsigned cols, unsigned levelsback,
-//                     const bp::object &arity, const bp::object &kernels) {
-//                     auto kernels_v = l_to_v<kernel<T>>(kernels);
-//                     bp::extract<unsigned> is_int(arity);
-//                     if (is_int.check()) { // arity is passed as an integer
-//                         unsigned ar = bp::extract<unsigned>(arity);
-//                         return ::new expression_weighted<T>(in, out, rows, cols, levelsback, ar, kernels_v,
-//                                                             std::random_device()());
-//                     } else { // arity is passed as something else, a list is assumed
-//                         auto varity = l_to_v<unsigned>(arity);
-//                         return ::new expression_weighted<T>(in, out, rows, cols, levelsback, varity, kernels_v,
-//                                                             std::random_device()());
-//                     }
-//                 },
-//                 bp::default_call_policies(),
-//                 (bp::arg("inputs"), bp::arg("outputs"), bp::arg("rows"), bp::arg("cols"), bp::arg("levels_back"),
-//                  bp::arg("arity"), bp::arg("kernels"))),
-//             expression_init_doc(type).c_str())
-//        .def(
-//            "__repr__",
-//            +[](const expression_weighted<T> &instance) -> std::string {
-//                std::ostringstream oss;
-//                oss << instance;
-//                return oss.str();
-//            })
-//        .def(
-//            "__call__",
-//            +[](const expression_weighted<T> &instance, const bp::object &in) {
-//                try {
-//                    auto v = l_to_v<T>(in);
-//                    return v_to_l(instance(v));
-//                } catch (...) {
-//                    PyErr_Clear();
-//                    auto v = l_to_v<std::string>(in);
-//                    return v_to_l(instance(v));
-//                }
-//            })
-//        .def("set_weight", &expression_weighted<T>::set_weight, expression_weighted_set_weight_doc().c_str(),
-//             (bp::arg("node_id"), bp::arg("input_id"), bp::arg("weight")))
-//        .def(
-//            "set_weights",
-//            +[](expression_weighted<T> &instance, const bp::object &weights) {
-//                instance.set_weights(l_to_v<T>(weights));
-//            },
-//            expression_weighted_set_weights_doc().c_str(), (bp::arg("weights")))
-//        .def("get_weight", &expression_weighted<T>::get_weight, expression_weighted_get_weight_doc().c_str(),
-//             (bp::arg("node_id"), bp::arg("input_id")))
-//        .def(
-//            "get_weights", +[](expression_weighted<T> &instance) { return v_to_l(instance.get_weights()); },
-//            "Gets all weights");
-//}
-//
-// template <typename T>
-// void expose_expression_ann(std::string type)
-//{
-//    std::string class_name = "expression_ann_" + type;
-//    bp::class_<expression_ann, bp::bases<expression<T>>>(class_name.c_str(), bp::no_init)
-//        // Constructor with seed
-//        .def("__init__",
-//             bp::make_constructor(
-//                 +[](unsigned in, unsigned out, unsigned rows, unsigned cols, unsigned levelsback,
-//                     const bp::object &arity, const bp::object &kernels, unsigned seed) {
-//                     auto kernels_v = l_to_v<kernel<T>>(kernels);
-//                     bp::extract<unsigned> is_int(arity);
-//                     if (is_int.check()) { // arity is passed as an integer
-//                         unsigned ar = bp::extract<unsigned>(arity);
-//                         return ::new expression_ann(in, out, rows, cols, levelsback, ar, kernels_v, seed);
-//                     } else { // arity is passed as something else, a list is assumed
-//                         auto varity = l_to_v<unsigned>(arity);
-//                         return ::new expression_ann(in, out, rows, cols, levelsback, varity, kernels_v, seed);
-//                     }
-//                 },
-//                 bp::default_call_policies(),
-//                 (bp::arg("inputs"), bp::arg("outputs"), bp::arg("rows"), bp::arg("cols"), bp::arg("levels_back"),
-//                  bp::arg("arity"), bp::arg("kernels"), bp::arg("seed"))),
-//             expression_init_doc(type).c_str())
-//        // Constructor with no seed
-//        .def("__init__",
-//             bp::make_constructor(
-//                 +[](unsigned in, unsigned out, unsigned rows, unsigned cols, unsigned levelsback,
-//                     const bp::object &arity, const bp::object &kernels) {
-//                     auto kernels_v = l_to_v<kernel<double>>(kernels);
-//                     bp::extract<unsigned> is_int(arity);
-//                     if (is_int.check()) { // arity is passed as an integer
-//                         unsigned ar = bp::extract<unsigned>(arity);
-//                         return ::new expression_ann(in, out, rows, cols, levelsback, ar, kernels_v,
-//                                                     std::random_device()());
-//                     } else { // arity is passed as something else, a list is assumed
-//                         auto varity = l_to_v<unsigned>(arity);
-//                         return ::new expression_ann(in, out, rows, cols, levelsback, varity, kernels_v,
-//                                                     std::random_device()());
-//                     }
-//                 },
-//                 bp::default_call_policies(),
-//                 (bp::arg("inputs"), bp::arg("outputs"), bp::arg("rows"), bp::arg("cols"), bp::arg("levels_back"),
-//                  bp::arg("arity"), bp::arg("kernels"))),
-//             expression_init_doc(type).c_str())
-//        .def(
-//            "__repr__",
-//            +[](const expression_ann &instance) -> std::string {
-//                std::ostringstream oss;
-//                oss << instance;
-//                return oss.str();
-//            })
-//        .def(
-//            "__call__",
-//            +[](const expression_ann &instance, const bp::object &in) {
-//                try {
-//                    auto v = l_to_v<double>(in);
-//                    return v_to_l(instance(v));
-//                } catch (...) {
-//                    PyErr_Clear();
-//                    auto v = l_to_v<std::string>(in);
-//                    return v_to_l(instance(v));
-//                }
-//            })
-//        .def("set_bias", &expression_ann::set_bias, expression_ann_set_bias_doc().c_str(),
-//             (bp::arg("node_id"), bp::arg("bias")))
-//        .def(
-//            "set_biases",
-//            +[](expression_ann &instance, const bp::object &biases) { instance.set_biases(l_to_v<double>(biases)); },
-//            expression_ann_set_biases_doc().c_str(), (bp::arg("biases")))
-//        .def("get_bias", &expression_ann::get_bias, expression_ann_get_bias_doc().c_str(), (bp::arg("node_id")))
-//        .def(
-//            "get_biases", +[](expression_ann &instance) { return v_to_l(instance.get_biases()); }, "Gets all biases")
-//        .def(
-//            "set_weight", +[](expression_ann &instance, unsigned idx, double w) { instance.set_weight(idx, w); },
-//            (bp::arg("idx"), bp::arg("value")))
-//        .def(
-//            "set_weight",
-//            +[](expression_ann &instance, unsigned node_id, unsigned input_id, double w) {
-//                instance.set_weight(node_id, input_id, w);
-//            },
-//            expression_ann_set_weight_doc().c_str(), (bp::arg("node_id"), bp::arg("input_id"), bp::arg("value")))
-//        .def(
-//            "set_weights",
-//            +[](expression_ann &instance, const bp::object &weights) { instance.set_weights(l_to_v<T>(weights)); },
-//            expression_weighted_set_weights_doc().c_str(), (bp::arg("weights")))
-//        .def("set_output_f", &expression_ann::set_output_f, expression_ann_set_output_f_doc().c_str(),
-//             (bp::arg("f_id")))
-//        .def(
-//            "get_weight", +[](expression_ann &instance, unsigned idx) { return instance.get_weight(idx); },
-//            (bp::arg("idx")))
-//        .def(
-//            "get_weight",
-//            +[](expression_ann &instance, unsigned node_id, unsigned input_id) {
-//                return instance.get_weight(node_id, input_id);
-//            },
-//            expression_ann_get_weight_doc().c_str(), (bp::arg("node_id"), bp::arg("input_id")))
-//        .def(
-//            "get_weights", +[](expression_ann &instance) { return v_to_l(instance.get_weights()); }, "Gets all
-//            weights")
-//        .def("n_active_weights", &expression_ann::n_active_weights, expression_ann_n_active_weights_doc().c_str(),
-//             bp::arg("unique") = false)
-//        .def(
-//            "randomise_weights",
-//            +[](expression_ann &instance, double mean, double std, unsigned seed) {
-//                return instance.randomise_weights(mean, std, seed);
-//            },
-//            expression_ann_randomise_weights_doc().c_str(),
-//            (bp::arg("mean") = 0., bp::arg("std") = 0.1, bp::arg("seed")))
-//        .def(
-//            "randomise_weights",
-//            +[](expression_ann &instance, double mean, double std) {
-//                return instance.randomise_weights(mean, std, std::random_device()());
-//            },
-//            (bp::arg("mean") = 0., bp::arg("std") = 0.1))
-//        .def(
-//            "randomise_biases",
-//            +[](expression_ann &instance, double mean, double std, unsigned seed) {
-//                return instance.randomise_biases(mean, std, seed);
-//            },
-//            expression_ann_randomise_biases_doc().c_str(),
-//            (bp::arg("mean") = 0., bp::arg("std") = 0.1, bp::arg("seed")))
-//        .def(
-//            "randomise_biases",
-//            +[](expression_ann &instance, double mean, double std) {
-//                return instance.randomise_biases(mean, std, std::random_device()());
-//            },
-//            (bp::arg("mean") = 0., bp::arg("std") = 0.1))
-//        .def(
-//            "sgd",
-//            +[](expression_ann &instance, const bp::object &points, const bp::object &labels, double l_rate,
-//                unsigned batch_size, const std::string &loss, unsigned parallel, bool shuffle) {
-//                auto d = to_vv<double>(points);
-//                auto l = to_vv<double>(labels);
-//                return instance.sgd(d, l, l_rate, batch_size, loss, parallel, shuffle);
-//            },
-//            expression_ann_sgd_doc().c_str(),
-//            (bp::arg("points"), bp::arg("labels"), bp::arg("lr"), bp::arg("batch_size"), bp::arg("loss"),
-//             bp::arg("parallel") = 0u, bp::arg("shuffle") = true));
+template <typename T>
+void expose_expression_weighted(const py::module &m, std::string type)
+{
+    std::string class_name = "expression_weighted_" + type;
+    auto wexp_ = py::class_<expression_weighted<T>, expression<T>>(m, class_name.c_str(), "A weighted CGP expression");
+    wexp_.def(py::init<>())
+        .def(py::init<unsigned, unsigned, unsigned, unsigned, unsigned, std::vector<unsigned>, std::vector<kernel<T>>,
+                      unsigned>(),
+             py::arg("inputs"), py::arg("outputs"), py::arg("rows"), py::arg("cols"), py::arg("levels_back"),
+             py::arg("arity"), py::arg("kernels"), py::arg("seed"), expression_init_doc(type).c_str())
+        // Constructor with no seed
+        .def(
+            py::init<unsigned, unsigned, unsigned, unsigned, unsigned, std::vector<unsigned>, std::vector<kernel<T>>>(),
+            py::arg("inputs"), py::arg("outputs"), py::arg("rows"), py::arg("cols"), py::arg("levels_back"),
+            py::arg("arity"), py::arg("kernels"), expression_init_doc(type).c_str())
+        .def("__repr__",
+             [](const expression_weighted<T> &instance) -> std::string {
+                 std::ostringstream oss;
+                 oss << instance;
+                 return oss.str();
+             })
+        .def(
+            "__call__", [](const expression_weighted<T> &instance, const std::vector<T> &v) { return instance(v); },
+            "Call operator from values")
+        .def(
+            "__call__",
+            [](const expression_weighted<T> &instance, const std::vector<std::string> &v) { return instance(v); },
+            "Call operator from strings")
+        .def("set_weight", &expression_weighted<T>::set_weight, expression_weighted_set_weight_doc().c_str(),
+             py::arg("node_id"), py::arg("input_id"), py::arg("weight"))
+        .def("set_weights", &expression_weighted<T>::set_weights, expression_weighted_set_weights_doc().c_str(),
+             py::arg("weights"))
+        .def("get_weight", &expression_weighted<T>::get_weight, expression_weighted_get_weight_doc().c_str(),
+             py::arg("node_id"), py::arg("input_id"))
+        .def("get_weights", &expression_weighted<T>::get_weights, "Gets all weights");
+}
 
+void expose_expression_ann(const py::module &m)
+{
+    std::string class_name = "expression_ann";
+    auto expann_ = py::class_<expression_ann, expression<double>>(m, class_name.c_str(), "A dCGPANN expression");
+    expann_.def(py::init<>())
+        .def(py::init<unsigned, unsigned, unsigned, unsigned, unsigned, std::vector<unsigned>,
+                      std::vector<kernel<double>>, unsigned>(),
+             py::arg("inputs"), py::arg("outputs"), py::arg("rows"), py::arg("cols"), py::arg("levels_back"),
+             py::arg("arity"), py::arg("kernels"), py::arg("seed"), expression_init_doc("double").c_str())
+        // Constructor with no seed
+        .def(py::init<unsigned, unsigned, unsigned, unsigned, unsigned, std::vector<unsigned>,
+                      std::vector<kernel<double>>>(),
+             py::arg("inputs"), py::arg("outputs"), py::arg("rows"), py::arg("cols"), py::arg("levels_back"),
+             py::arg("arity"), py::arg("kernels"), expression_init_doc("double").c_str())
+        .def("__repr__",
+             [](const expression_ann &instance) -> std::string {
+                 std::ostringstream oss;
+                 oss << instance;
+                 return oss.str();
+             })
+        .def(
+            "__call__", [](const expression_ann &instance, const std::vector<double> &v) { return instance(v); },
+            "Call operator from values")
+        .def(
+            "__call__", [](const expression_ann &instance, const std::vector<std::string> &v) { return instance(v); },
+            "Call operator from strings")
+        .def("set_bias", &expression_ann::set_bias, expression_ann_set_bias_doc().c_str(), py::arg("node_id"),
+             py::arg("bias"))
+        .def("set_biases", &expression_ann::set_biases, expression_ann_set_biases_doc().c_str(), py::arg("biases"))
+        .def("get_bias", &expression_ann::get_bias, expression_ann_get_bias_doc().c_str(), py::arg("node_id"))
+        .def("get_biases", &expression_ann::get_biases, "Gets all biases")
+        .def(
+            "set_weight", [](expression_ann &instance, unsigned idx, double w) { instance.set_weight(idx, w); },
+            py::arg("idx"), py::arg("value"))
+        .def(
+            "set_weight",
+            [](expression_ann &instance, unsigned node_id, unsigned input_id, double w) {
+                instance.set_weight(node_id, input_id, w);
+            },
+            expression_ann_set_weight_doc().c_str(), py::arg("node_id"), py::arg("input_id"), py::arg("value"))
+        .def("set_weights", &expression_ann::set_weights, expression_weighted_set_weights_doc().c_str(),
+             py::arg("weights"))
+        .def("set_output_f", &expression_ann::set_output_f, expression_ann_set_output_f_doc().c_str(), py::arg("f_id"))
+        .def(
+            "get_weight", [](expression_ann &instance, unsigned idx) { return instance.get_weight(idx); },
+            py::arg("idx"))
+        .def(
+            "get_weight",
+            [](expression_ann &instance, unsigned node_id, unsigned input_id) {
+                return instance.get_weight(node_id, input_id);
+            },
+            expression_ann_get_weight_doc().c_str(), py::arg("node_id"), py::arg("input_id"))
+        .def("get_weights", &expression_ann::get_weights, "Gets all  weights")
+        .def("n_active_weights", &expression_ann::n_active_weights, expression_ann_n_active_weights_doc().c_str(),
+             py::arg("unique") = false)
+        .def(
+            "randomise_weights",
+            [](expression_ann &instance, double mean, double std, unsigned seed) {
+                return instance.randomise_weights(mean, std, seed);
+            },
+            expression_ann_randomise_weights_doc().c_str(), py::arg("mean") = 0., py::arg("std") = 0.1, py::arg("seed"))
+        .def(
+            "randomise_weights",
+            [](expression_ann &instance, double mean, double std) {
+                return instance.randomise_weights(mean, std, std::random_device()());
+            },
+            py::arg("mean") = 0., py::arg("std") = 0.1)
+        .def(
+            "randomise_biases",
+            [](expression_ann &instance, double mean, double std, unsigned seed) {
+                return instance.randomise_biases(mean, std, seed);
+            },
+            expression_ann_randomise_biases_doc().c_str(), py::arg("mean") = 0., py::arg("std") = 0.1, py::arg("seed"))
+        .def(
+            "randomise_biases",
+            [](expression_ann &instance, double mean, double std) {
+                return instance.randomise_biases(mean, std, std::random_device()());
+            },
+            py::arg("mean") = 0., py::arg("std") = 0.1)
+        .def("sgd", &expression_ann::sgd, expression_ann_sgd_doc().c_str(), py::arg("points"), py::arg("labels"),
+             py::arg("lr"), py::arg("batch_size"), py::arg("loss"), py::arg("parallel") = 0u,
+             py::arg("shuffle") = true);
+}
 void expose_expressions(const py::module &m)
 {
     // double
     expose_expression<double>(m, "double");
-    // expose_expression_weighted<double>(m, "double");
-    // expose_expression_ann<double>(m, "double");
+    expose_expression_weighted<double>(m, "double");
+    expose_expression_ann(m);
     // gdual_d
     expose_expression<gdual_d>(m, "gdual_double");
-    // expose_expression_weighted<gdual_d>("gdual_double");
+    expose_expression_weighted<gdual_d>(m, "gdual_double");
     // gdual_v
     expose_expression<gdual_v>(m, "gdual_vdouble");
-    // expose_expression_weighted<gdual_v>("gdual_vdouble");
+    expose_expression_weighted<gdual_v>(m, "gdual_vdouble");
 }
 } // namespace dcgpy
