@@ -17,7 +17,7 @@ YACMA_PYTHON_MODULE(core
     core.cpp 
     expose_expressions.cpp
     expose_kernels.cpp
-    #expose_symbolic_regression.cpp
+    expose_symbolic_regression.cpp
     docstrings.cpp
     )
 

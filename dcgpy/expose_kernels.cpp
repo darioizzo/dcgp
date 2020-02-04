@@ -220,7 +220,7 @@ kernel<T> wrap_operator(const kernel_set<T> &ks, typename std::vector<dcgp::kern
 }
 
 template <typename T>
-void expose_kernel_set(const py::module m, std::string type)
+void expose_kernel_set(const py::module &m, std::string type)
 {
     std::string class_name = "kernel_set_" + type;
     auto ker_set = py::class_<kernel_set<T>>(m, class_name.c_str(),
