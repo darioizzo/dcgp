@@ -1,5 +1,6 @@
 #include <boost/numeric/conversion/cast.hpp>
 #include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -9,6 +10,7 @@
 #include <dcgp/expression_weighted.hpp>
 #include <dcgp/kernel.hpp>
 
+#include "common_utils.hpp"
 #include "docstrings.hpp"
 
 using namespace dcgp;
@@ -24,18 +26,27 @@ void expose_expression(const py::module &m, std::string type)
     std::string class_name = "expression_" + type;
     auto exp_ = py::class_<expression<T>>(m, class_name.c_str(), "A CGP expression");
     exp_.def(py::init<>())
+        // From scalar arity
+        .def(py::init<unsigned, unsigned, unsigned, unsigned, unsigned, unsigned, std::vector<kernel<T>>, unsigned,
+                      unsigned>(),
+             py::arg("inputs"), py::arg("outputs"), py::arg("rows"), py::arg("cols"), py::arg("levels_back"),
+             py::arg("arity"), py::arg("kernels"), py::arg("n_eph"), py::arg("seed"), expression_init_doc(type).c_str())
+        // From vector arity
         .def(py::init<unsigned, unsigned, unsigned, unsigned, unsigned, std::vector<unsigned>, std::vector<kernel<T>>,
                       unsigned, unsigned>(),
              py::arg("inputs"), py::arg("outputs"), py::arg("rows"), py::arg("cols"), py::arg("levels_back"),
              py::arg("arity"), py::arg("kernels"), py::arg("n_eph"), py::arg("seed"), expression_init_doc(type).c_str())
-        // Constructor with no seed
+        // Constructors with no seed
         .def(py::init<unsigned, unsigned, unsigned, unsigned, unsigned, std::vector<unsigned>, std::vector<kernel<T>>,
                       unsigned>(),
              py::arg("inputs"), py::arg("outputs"), py::arg("rows"), py::arg("cols"), py::arg("levels_back"),
              py::arg("arity"), py::arg("kernels"), py::arg("n_eph"), expression_init_doc(type).c_str())
+        .def(py::init<unsigned, unsigned, unsigned, unsigned, unsigned, unsigned, std::vector<kernel<T>>, unsigned>(),
+             py::arg("inputs"), py::arg("outputs"), py::arg("rows"), py::arg("cols"), py::arg("levels_back"),
+             py::arg("arity"), py::arg("kernels"), py::arg("n_eph"), expression_init_doc(type).c_str())
         .def(
             "__repr__",
-            +[](const expression<T> &instance) -> std::string {
+            [](const expression<T> &instance) -> std::string {
                 std::ostringstream oss;
                 oss << instance;
                 return oss.str();
@@ -102,7 +113,8 @@ void expose_expression(const py::module &m, std::string type)
                const std::string &loss) { return instance.loss(points, labels, loss, 0u); },
             expression_loss_doc().c_str(), py::arg("points"), py::arg("labels"), py::arg("loss"))
         .def_property("eph_val", &expression<T>::get_eph_val, &expression<T>::set_eph_val)
-        .def_property("eph_symb", &expression<T>::get_eph_symb, &expression<T>::set_eph_symb);
+        .def_property("eph_symb", &expression<T>::get_eph_symb, &expression<T>::set_eph_symb)
+        .def(py::pickle(&udx_pickle_getstate<dcgp::expression<T>>, &udx_pickle_setstate<dcgp::expression<T>>));
 }
 
 template <typename T>
@@ -139,7 +151,9 @@ void expose_expression_weighted(const py::module &m, std::string type)
              py::arg("weights"))
         .def("get_weight", &expression_weighted<T>::get_weight, expression_weighted_get_weight_doc().c_str(),
              py::arg("node_id"), py::arg("input_id"))
-        .def("get_weights", &expression_weighted<T>::get_weights, "Gets all weights");
+        .def("get_weights", &expression_weighted<T>::get_weights, "Gets all weights")
+        .def(py::pickle(&udx_pickle_getstate<dcgp::expression_weighted<T>>,
+                        &udx_pickle_setstate<dcgp::expression_weighted<T>>));
 }
 
 void expose_expression_ann(const py::module &m)
@@ -222,8 +236,8 @@ void expose_expression_ann(const py::module &m)
             },
             py::arg("mean") = 0., py::arg("std") = 0.1)
         .def("sgd", &expression_ann::sgd, expression_ann_sgd_doc().c_str(), py::arg("points"), py::arg("labels"),
-             py::arg("lr"), py::arg("batch_size"), py::arg("loss"), py::arg("parallel") = 0u,
-             py::arg("shuffle") = true);
+             py::arg("lr"), py::arg("batch_size"), py::arg("loss"), py::arg("parallel") = 0u, py::arg("shuffle") = true)
+        .def(py::pickle(&udx_pickle_getstate<dcgp::expression_ann>, &udx_pickle_setstate<dcgp::expression_ann>));
 }
 void expose_expressions(const py::module &m)
 {

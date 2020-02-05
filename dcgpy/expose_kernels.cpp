@@ -230,7 +230,7 @@ void expose_kernel_set(const py::module &m, std::string type)
         .def("__call__", &kernel_set<T>::operator())
         .def(
             "__repr__",
-            +[](const kernel_set<T> &ks) -> std::string {
+            [](const kernel_set<T> &ks) -> std::string {
                 std::ostringstream oss;
                 oss << ks;
                 return oss.str();

@@ -23,7 +23,7 @@ Examples:
 >>> from dcgpy import *
 >>> def my_sum(x):
 ...     return sum(x)
->>> def print_my_sum(x)
+>>> def print_my_sum(x):
 ...     s = "+"
 ...     return "(" + s.join(x) + ") "
 >>> my_kernel = kernel_)"

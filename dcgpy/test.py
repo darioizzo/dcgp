@@ -38,6 +38,7 @@ class test_kernel(_ut.TestCase):
         y = gdual(2, "y", 2)
         z = gdual(3, "z", 2)
         self.assertEqual(my_kernel([x, y, z]), x + y + z)
+        self.assertEqual(my_kernel([x, y, z]), my_kernel([x, y, z]))
         self.assertEqual(my_kernel(["x", "y"]), "(x+y)")
 
     def test_gdual_vdouble(self):
@@ -51,6 +52,7 @@ class test_kernel(_ut.TestCase):
         y = gdual([2, -2], "y", 2)
         z = gdual([-2, 1], "z", 2)
         self.assertEqual(my_kernel([x, y, z]), x + y + z)
+        self.assertEqual(my_kernel([x, y, z]), my_kernel([x, y, z]))
         self.assertEqual(my_kernel(["x", "y"]), "(x+y)")
 
     def test_serialization_double(self):
@@ -67,8 +69,8 @@ class test_kernel(_ut.TestCase):
 
         for cpp_k in cpp_kv:
             cpp_k2 = cpk.loads(cpk.dumps(cpp_k))
-            self.assertEqual(cpp_k([x1, x2, x3]), cpp_k([x1, x2, x3]))
-            self.assertEqual(cpp_k2(["a", "b", "c"]), cpp_k2(["a", "b", "c"]))
+            self.assertEqual(cpp_k([x1, x2, x3]), cpp_k2([x1, x2, x3]))
+            self.assertEqual(cpp_k(["a", "b", "c"]), cpp_k2(["a", "b", "c"]))
 
         # pythonic kernels
         my_py_kernel = kernel(my_py_fun, my_py_fun_print, "my_py_fun")
@@ -76,7 +78,7 @@ class test_kernel(_ut.TestCase):
         self.assertEqual(my_py_kernel(
             [x1, x2, x3]), my_py_kernel([x1, x2, x3]))
         self.assertEqual(my_py_kernel(
-            ["a", "b", "c"]), my_py_kernel(["a", "b", "c"]))
+            ["a", "b", "c"]), my_py_kernel2(["a", "b", "c"]))
 
     def test_serialization_gdual_double(self):
         import cloudpickle as cpk
@@ -93,16 +95,16 @@ class test_kernel(_ut.TestCase):
 
         for cpp_k in cpp_kv:
             cpp_k2 = cpk.loads(cpk.dumps(cpp_k))
-            self.assertEqual(cpp_k([x1, x2, x3]), cpp_k([x1, x2, x3]))
-            self.assertEqual(cpp_k2(["a", "b", "c"]), cpp_k2(["a", "b", "c"]))
+            self.assertEqual(cpp_k([x1, x2, x3]), cpp_k2([x1, x2, x3]))
+            self.assertEqual(cpp_k(["a", "b", "c"]), cpp_k2(["a", "b", "c"]))
 
         # pythonic kernels
         my_py_kernel = kernel(my_py_fun, my_py_fun_print, "my_py_fun")
         my_py_kernel2 = cpk.loads(cpk.dumps(my_py_kernel))
         self.assertEqual(my_py_kernel(
-            [x1, x2, x3]), my_py_kernel([x1, x2, x3]))
+            [x1, x2, x3]), my_py_kernel2([x1, x2, x3]))
         self.assertEqual(my_py_kernel(
-            ["a", "b", "c"]), my_py_kernel(["a", "b", "c"]))
+            ["a", "b", "c"]), my_py_kernel2(["a", "b", "c"]))
 
     def test_serialization_gdual_vdouble(self):
         import cloudpickle as cpk
@@ -119,16 +121,16 @@ class test_kernel(_ut.TestCase):
 
         for cpp_k in cpp_kv:
             cpp_k2 = cpk.loads(cpk.dumps(cpp_k))
-            self.assertEqual(cpp_k([x1, x2, x3]), cpp_k([x1, x2, x3]))
-            self.assertEqual(cpp_k2(["a", "b", "c"]), cpp_k2(["a", "b", "c"]))
+            self.assertEqual(cpp_k([x1, x2, x3]), cpp_k2([x1, x2, x3]))
+            self.assertEqual(cpp_k(["a", "b", "c"]), cpp_k2(["a", "b", "c"]))
 
         # pythonic kernels
         my_py_kernel = kernel(my_py_fun, my_py_fun_print, "my_py_fun")
         my_py_kernel2 = cpk.loads(cpk.dumps(my_py_kernel))
         self.assertEqual(my_py_kernel(
-            [x1, x2, x3]), my_py_kernel([x1, x2, x3]))
+            [x1, x2, x3]), my_py_kernel2([x1, x2, x3]))
         self.assertEqual(my_py_kernel(
-            ["a", "b", "c"]), my_py_kernel(["a", "b", "c"]))
+            ["a", "b", "c"]), my_py_kernel2(["a", "b", "c"]))
 
 
 class test_kernel_set(_ut.TestCase):
