@@ -87,7 +87,9 @@ public:
         // PREAMBLE-------------------------------------------------------------------------------------------------
         // Check whether the problem is suitable for gd4cgp
         // If the UDP in pop is not a symbolic_regression UDP, udp_ptr will be NULL
-        auto udp_ptr = prob.extract<symbolic_regression>();
+        // We do not use directly the pagmo::problem::extract as otherwise we could not override it in the python
+        // bindings. Using this global function, instead, allows its implementation to be overridden in the bindings.
+        auto udp_ptr = details::extract_sr_cpp_py(prob);
         if (!udp_ptr) {
             throw std::invalid_argument(prob.get_name() + " does not seem to be a symbolic regression problem. "
                                         + get_name()

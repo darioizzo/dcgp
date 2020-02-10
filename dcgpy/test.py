@@ -387,10 +387,10 @@ class test_es4cgp(_ut.TestCase):
         algo.set_verbosity(0)
         # Testing some evolutions
         pop = algo.evolve(pop)
-        # In parallel
-        archi = pg.archipelago(prob = prob, algo =algo, n = 16, pop_size=4)
-        archi.evolve()
-        archi.wait_check()
+        # In parallel (no nested parallelism in python mp)
+        #archi = pg.archipelago(prob = prob, algo =algo, n = 16, pop_size=4)
+        #archi.evolve()
+        #archi.wait_check()
         # Pickling.
         self.assertTrue(repr(algo) == repr(pickle.loads(pickle.dumps(algo))))
 

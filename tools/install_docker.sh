@@ -52,6 +52,16 @@ cd install
 # Python deps
 /opt/python/${PYTHON_DIR}/bin/pip install numpy cloudpickle
 
+# Install pybind11
+curl -L https://github.com/pybind/pybind11/archive/v2.4.3.tar.gz > v2.4.3
+tar xvf v2.4.3 > /dev/null 2>&1
+cd pybind11-2.4.3
+mkdir build
+cd build
+cmake ../ -DPYBIND11_TEST=OFF > /dev/null
+make install > /dev/null 2>&1
+cd ../..
+
 # Install pagmo and pygmo
 curl -L  https://github.com/esa/pagmo2/archive/v${PAGMO_VERSION}.tar.gz > pagmo2.tar.gz
 tar xzf pagmo2.tar.gz
@@ -75,7 +85,7 @@ cmake -DBoost_NO_BOOST_CMAKE=ON \
 	-DPYTHON_EXECUTABLE=/opt/python/${PYTHON_DIR}/bin/python \
 	-DYACMA_PYTHON_MODULES_INSTALL_PATH=/opt/python/${PYTHON_DIR}/lib/python${PYTHON_VERSION_DOTTED}/site-packages ../;
 make -j2 install
-cd ../
+cd ../..
 
 # Install audi
 curl -L https://github.com/darioizzo/audi/archive/v${AUDI_VERSION}.tar.gz > v${AUDI_VERSION}
@@ -85,7 +95,7 @@ mkdir build
 cd build
 cmake -DBoost_NO_BOOST_CMAKE=ON -DAUDI_BUILD_AUDI=yes -DAUDI_BUILD_TESTS=no -DCMAKE_BUILD_TYPE=Release ../
 make install > /dev/null 2>&1
-cd ..
+cd ../..
 
 # Install dcgp headers
 cd /dcgp
@@ -117,7 +127,7 @@ auditwheel repair dist/dcgpy* -w ./dist2
 # Try to install it and run the tests.
 cd /
 /opt/python/${PYTHON_DIR}/bin/pip install /dcgp/build/wheel/dist2/dcgpy*
-/opt/python/${PYTHON_DIR}/bin/python -c "from dcgpy import test; test.run_test_suite()"
+/opt/python/${PYTHON_DIR}/bin/python -c "from dcgpy import test; test.run_test_suite(); import pygmo; pygmo.mp_island.shutdown_pool()"
 
 # Upload in PyPi
 # This variable will contain something if this is a tagged build (vx.y.z), otherwise it will be empty.
