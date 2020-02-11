@@ -53,6 +53,7 @@ jobs:
                         pagmo ^
                         pygmo ^
                         symengine ^
+                        pybind11 ^
                         boost-cpp ^
                         boost ^
                         tbb ^
