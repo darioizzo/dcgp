@@ -15,6 +15,7 @@
 #include <dcgp/problems/symbolic_regression.hpp>
 #include <dcgp/rng.hpp>
 #include <dcgp/s11n.hpp>
+#include <dcgp/std_overloads.hpp>
 
 namespace dcgp
 {
@@ -189,6 +190,8 @@ public:
 
             // 3 - We compute the mutants fitnesses calling the bfe
             fs = m_bfe(prob, dvs);
+            // TODO: This is only making sense for pythonic bfes fix the issue upstream
+            prob.increment_fevals(fs.size());
 
             // 4 - We reinsert the mutated individuals in the population if their fitness is
             // less than, or equal, to the one from the parent.
@@ -331,8 +334,8 @@ private:
                          const std::string &formula, pagmo::vector_double::size_type n_eph) const
     {
         std::vector<double> eph_val(best_x.data(), best_x.data() + n_eph);
-        pagmo::print(std::setw(7), gen, std::setw(15), fevals, std::setw(15), best_f, "\t", eph_val, "\t",
-                     formula.substr(0, 40) + " ...", '\n');
+        std::cout << std::setw(7) << gen << std::setw(15) << fevals << std::setw(15) << best_f << "\t" << eph_val <<
+            "\t" << formula.substr(0, 40) << " ..." << std::endl;
         m_log.emplace_back(gen, fevals, best_f, eph_val, formula);
     }
 

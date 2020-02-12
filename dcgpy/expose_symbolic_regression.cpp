@@ -1,3 +1,4 @@
+#include <pybind11/iostream.h>
 #include <pybind11/stl.h>
 #include <sstream>
 #include <string>
@@ -128,7 +129,13 @@ void expose_symbolic_regression(py::module &m)
              py::arg("ftol") = 1e-4, py::arg("learn_constants") = true)
         .def(py::init<unsigned, unsigned, double, bool, unsigned>(), py::arg("gen") = 1u, py::arg("mut_n") = 1u,
              py::arg("ftol") = 1e-4, py::arg("learn_constants") = true, py::arg("seed"))
-        .def("evolve", &dcgp::es4cgp::evolve)
+        .def("evolve",
+             [](const dcgp::es4cgp &instance, pagmo::population pop) {
+                 py::scoped_ostream_redirect stream(std::cout,                               // std::ostream&
+                                                    py::module::import("sys").attr("stdout") // Python output
+                 );
+                 return instance.evolve(pop);
+             })
         .def("set_verbosity", &dcgp::es4cgp::set_verbosity)
         .def("get_name", &dcgp::es4cgp::get_name)
         .def("get_extra_info", &dcgp::es4cgp::get_extra_info)

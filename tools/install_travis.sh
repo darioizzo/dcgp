@@ -35,7 +35,7 @@ elif [[ "${DCGP_BUILD}" == Python* ]]; then
     # Move out of the build dir.
     cd ../tools
     # Run the test suite
-    python -c "from dcgpy import test; test.run_test_suite(); import pygmo; pygmo.mp_island.shutdown_pool()";
+    python -c "from dcgpy import test; test.run_test_suite(); import pygmo; pygmo.mp_island.shutdown_pool(); pygmo.mp_bfe.shutdown_pool()";
 elif [[ "${DCGP_BUILD}" == "OSXDebug" ]]; then
     CXX=clang++ CC=clang cmake -DCMAKE_PREFIX_PATH=$deps_dir -DBoost_NO_BOOST_CMAKE=ON -DCMAKE_BUILD_TYPE=Debug -DDCGP_BUILD_DCGP=yes -DDCGP_BUILD_TESTS=yes -DDCGP_BUILD_EXAMPLES=no -DCMAKE_CXX_FLAGS="-g0 -O2" ../;
     make -j2 VERBOSE=1;
@@ -59,7 +59,7 @@ elif [[ "${DCGP_BUILD}" == OSXPython* ]]; then
     make install VERBOSE=1;
     # Move out of the build dir.
     cd ../tools
-    python -c "from dcgpy import test; test.run_test_suite(); import pygmo; pygmo.mp_island.shutdown_pool()";
+    python -c "from dcgpy import test; test.run_test_suite(); import pygmo; pygmo.mp_island.shutdown_pool(); pygmo.mp_bfe.shutdown_pool()";
 elif [[ "${DCGP_BUILD}" == manylinux* ]]; then
     cd ..;
     docker pull ${DOCKER_IMAGE};
