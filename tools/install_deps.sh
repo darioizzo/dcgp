@@ -22,8 +22,6 @@ if [[ "${DCGP_BUILD}" != manylinux* ]]; then
 
     if [[ "${DCGP_BUILD}" == "Python37" || "${DCGP_BUILD}" == "OSXPython37" ]]; then
         conda_pkgs="$conda_pkgs python=3.7 pyaudi pygmo"
-    elif [[ "${DCGP_BUILD}" == "Python27" || "${DCGP_BUILD}" == "OSXPython27" ]]; then
-        conda_pkgs="$conda_pkgs python=2.7 pyaudi pygmo"
     fi
 
     # We create the conda environment and activate it
