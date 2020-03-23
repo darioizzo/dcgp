@@ -31,9 +31,6 @@ if [[ "${DCGP_BUILD}" != manylinux* ]]; then
 
     # We install pybind11 from the specific commit needed to guarantee interoperability with pyaudi/pygmo
     export DCGPY_BUILD_DIR=`pwd`
-    PYTHON_MAJOR=${DCGP_BUILD:6:1}
-    PYTHON_MINOR=${DCGP_BUILD:7:1}
-
     git clone https://github.com/pybind/pybind11.git
     cd pybind11
     git checkout 4f72ef846fe8453596230ac285eeaa0ce3278bb4
@@ -43,8 +40,8 @@ if [[ "${DCGP_BUILD}" != manylinux* ]]; then
         -DPYBIND11_TEST=NO \
         -DCMAKE_INSTALL_PREFIX=$DCGPY_BUILD_DIR \
         -DCMAKE_PREFIX_PATH=$DCGPY_BUILD_DIR \
-        -DPYTHON_EXECUTABLE=$HOME/miniconda/bin/python$PYTHON_MAJOR.$PYTHON_MINOR \
-        -DPYTHON_LIBRARY=$HOME/miniconda/lib/libpython3.7m.so \
+        -DPYTHON_EXECUTABLE=$HOME/miniconda/bin/python3 \
+        -DPYTHON_LIBRARY=$HOME/miniconda/lib/libpython3.so \
         ..
     make install
     cd ../..
