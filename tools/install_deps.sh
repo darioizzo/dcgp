@@ -26,7 +26,7 @@ if [[ "${DCGP_BUILD}" != manylinux* ]]; then
 
     # We create the conda environment and activate it
     conda create -q -p $deps_dir -y
-    source activate $deps_dir
+    conda activate $deps_dir
     conda install $conda_pkgs -y
 fi
 
