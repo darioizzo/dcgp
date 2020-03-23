@@ -40,6 +40,8 @@ if [[ "${DCGP_BUILD}" != manylinux* ]]; then
         -DPYBIND11_TEST=NO \
         -DCMAKE_INSTALL_PREFIX=$DCGPY_BUILD_DIR \
         -DCMAKE_PREFIX_PATH=$DCGPY_BUILD_DIR \
+        -DPYTHON_EXECUTABLE=$HOME/miniconda/bin/python$PYTHON_MAJOR.$PYTHON_MINOR \
+        -DPYTHON_LIBRARY=$HOME/miniconda/lib/libpython3.7m.so \
         ..
     make install
     cd ../..
