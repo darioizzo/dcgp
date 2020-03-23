@@ -6,29 +6,21 @@ set -x
 # Exit on error.
 set -e
 
-AUDI_VERSION="1.7"
+AUDI_VERSION="1.8"
 PAGMO_VERSION="2.11.4"
 
-if [[ ${DCGP_BUILD} == *37 ]]; then
+if [[ ${DCGP_BUILD} == *38 ]]; then
+	PYTHON_DIR="cp38-cp38"
+	PYTHON_VERSION="38"
+	PYTHON_VERSION_DOTTED="3.8"
+elif [[ ${DCGP_BUILD} == *37 ]]; then
 	PYTHON_DIR="cp37-cp37m"
-	BOOST_PYTHON_LIBRARY_NAME="libboost_python37.so"
 	PYTHON_VERSION="37"
 	PYTHON_VERSION_DOTTED="3.7"
 elif [[ ${DCGP_BUILD} == *36 ]]; then
 	PYTHON_DIR="cp36-cp36m"
-	BOOST_PYTHON_LIBRARY_NAME="libboost_python36.so"
 	PYTHON_VERSION="36"
 	PYTHON_VERSION_DOTTED="3.6"
-elif [[ ${DCGP_BUILD} == *27mu ]]; then
-	PYTHON_DIR="cp27-cp27mu"
-	BOOST_PYTHON_LIBRARY_NAME="libboost_python27mu.so"
-	PYTHON_VERSION="27"
-	PYTHON_VERSION_DOTTED="2.7"
-elif [[ ${DCGP_BUILD} == *27 ]]; then
-	PYTHON_DIR="cp27-cp27m"
-	BOOST_PYTHON_LIBRARY_NAME="libboost_python27.so"
-	PYTHON_VERSION="27"
-	PYTHON_VERSION_DOTTED="2.7"
 else
 	echo "Invalid build type: ${DCGP_BUILD}"
 	exit 1
@@ -53,12 +45,13 @@ cd install
 /opt/python/${PYTHON_DIR}/bin/pip install numpy cloudpickle
 
 # Install pybind11
-curl -L https://github.com/pybind/pybind11/archive/v2.4.3.tar.gz > v2.4.3
-tar xvf v2.4.3 > /dev/null 2>&1
-cd pybind11-2.4.3
+git clone https://github.com/pybind/pybind11.git
+cd pybind11
+git checkout 4f72ef846fe8453596230ac285eeaa0ce3278bb4
 mkdir build
 cd build
-cmake ../ -DPYBIND11_TEST=OFF > /dev/null
+pwd
+cmake ../ -DPYBIND11_TEST=NO > /dev/null
 make install > /dev/null 2>&1
 cd ../..
 

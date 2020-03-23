@@ -18,7 +18,7 @@ if [[ "${DCGP_BUILD}" != manylinux* ]]; then
     conda config --add channels conda-forge --force
 
     # obake-devel is needed as far as the conda package audi does not list it as a dependency
-    conda_pkgs="cmake eigen boost boost-cpp tbb tbb-devel pagmo pagmo-devel audi symengine obake-devel pybind11 cxx-compiler"
+    conda_pkgs="cmake eigen boost boost-cpp tbb tbb-devel pagmo pagmo-devel audi symengine obake-devel cxx-compiler"
 
     if [[ "${DCGP_BUILD}" == "Python37" || "${DCGP_BUILD}" == "OSXPython37" ]]; then
         conda_pkgs="$conda_pkgs python=3.7 pyaudi pygmo"
@@ -30,10 +30,6 @@ if [[ "${DCGP_BUILD}" != manylinux* ]]; then
     conda create -q -p $deps_dir -y
     source activate $deps_dir
     conda install $conda_pkgs -y
-
-    #if [[ "${DCGP_BUILD}" == Python* ]]; then
-    #    conda install doxygen graphviz -y
-    #fi
 fi
 
 set +e
