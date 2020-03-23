@@ -26,6 +26,7 @@ elif [[ "${DCGP_BUILD}" == "CoverageGCC" ]]; then
     ctest -VV;
     bash <(curl -s https://codecov.io/bash) -x gcov-5;
 elif [[ "${DCGP_BUILD}" == Python* ]]; then
+    export DCGPY_BUILD_DIR=`pwd`
     # Install dcgp
     cmake \
         -DCMAKE_INSTALL_PREFIX=$deps_dir \
