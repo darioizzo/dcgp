@@ -40,7 +40,7 @@ elif [[ "${DCGP_BUILD}" == Python* ]]; then
         -DPYBIND11_TEST=NO \
         -DCMAKE_INSTALL_PREFIX=$DCGPY_BUILD_DIR \
         -DCMAKE_PREFIX_PATH=$DCGPY_BUILD_DIR \
-        -DPYTHON_EXECUTABLE=$HOME/miniconda/bin/python$PYTHON_MAJOR.$PYTHON_MINOR
+        -DPYTHON_EXECUTABLE=$HOME/miniconda/bin/python$PYTHON_MAJOR.$PYTHON_MINOR \
         ..
     make install
     cd ../..
