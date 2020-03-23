@@ -37,7 +37,8 @@ if [[ "${DCGP_BUILD}" != manylinux* ]]; then
     mkdir build
     cd build
     python --version
-    $HOME/miniconda/bin/python3 --version
+    which python
+    $HOME/local/bin/python3 --version
     python -c "from distutils import sysconfig as s;import sys;import struct;
 print('.'.join(str(v) for v in sys.version_info));
 print(sys.prefix);
@@ -50,7 +51,7 @@ print(s.get_config_var('LDVERSION') or s.get_config_var('VERSION'));
 print(s.get_config_var('LIBDIR') or '');
 print(s.get_config_var('MULTIARCH') or '');
 "
-    $HOME/miniconda/bin/python3 -c "from distutils import sysconfig as s;import sys;import struct;
+    $HOME/local/bin/python3 -c "from distutils import sysconfig as s;import sys;import struct;
 print('.'.join(str(v) for v in sys.version_info));
 print(sys.prefix);
 print(s.get_python_inc(plat_specific=True));
@@ -67,9 +68,8 @@ print(s.get_config_var('MULTIARCH') or '');
         -DPYBIND11_TEST=NO \
         -DCMAKE_INSTALL_PREFIX=$DCGPY_BUILD_DIR \
         -DCMAKE_PREFIX_PATH=$DCGPY_BUILD_DIR \
-        -DPYTHON_EXECUTABLE=$HOME/miniconda/bin/python3 \
-        -DPYTHON_LIBRARY=$HOME/miniconda/lib/libpython3.so \
-        -DPYBIND11_PYTHON_VERSION=
+        -DPYTHON_EXECUTABLE=$HOME/local/bin/python3 \
+        -DPYTHON_LIBRARY=$HOME/local/lib/libpython3.so \
         ..
     make install
     cd ../..
