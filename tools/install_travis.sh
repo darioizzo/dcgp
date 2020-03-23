@@ -26,21 +26,19 @@ elif [[ "${DCGP_BUILD}" == "CoverageGCC" ]]; then
     ctest -VV;
     bash <(curl -s https://codecov.io/bash) -x gcov-5;
 elif [[ "${DCGP_BUILD}" == Python* ]]; then
-    PYTHON_MAJOR=${DCGP_BUILD:6:1}
-    PYTHON_MINOR=${DCGP_BUILD:7:1}
+    #PYTHON_MAJOR=${DCGP_BUILD:6:1}
+    #PYTHON_MINOR=${DCGP_BUILD:7:1}
     # Install Pybind11 (making sure its the same used in our pipeline)
-    export DCGPY_BUILD_DIR=`pwd`
+    #export DCGPY_BUILD_DIR=`pwd`
     git clone https://github.com/pybind/pybind11.git
     cd pybind11
     git checkout 4f72ef846fe8453596230ac285eeaa0ce3278bb4
     mkdir build
     cd build
-    pwd
     cmake \
         -DPYBIND11_TEST=NO \
         -DCMAKE_INSTALL_PREFIX=$DCGPY_BUILD_DIR \
         -DCMAKE_PREFIX_PATH=$DCGPY_BUILD_DIR \
-        -DPYTHON_EXECUTABLE=$HOME/miniconda/bin/python$PYTHON_MAJOR.$PYTHON_MINOR \
         ..
     make install
     cd ../..
