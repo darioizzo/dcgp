@@ -26,6 +26,8 @@ elif [[ "${DCGP_BUILD}" == "CoverageGCC" ]]; then
     ctest -VV;
     bash <(curl -s https://codecov.io/bash) -x gcov-5;
 elif [[ "${DCGP_BUILD}" == Python* ]]; then
+    # We need this to be the directory where pybind11 was installed 
+    # in the script install_deps.sh
     export DCGPY_BUILD_DIR=`pwd`
     # Install dcgp
     cmake \
