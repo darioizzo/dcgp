@@ -29,21 +29,23 @@ if [[ "${DCGP_BUILD}" != manylinux* ]]; then
     source activate $deps_dir
     conda install $conda_pkgs -y
 
-    # We install pybind11 from the specific commit needed to guarantee interoperability with pyaudi/pygmo
-    export DCGPY_BUILD_DIR=`pwd`
-    git clone https://github.com/pybind/pybind11.git
-    cd pybind11
-    git checkout 4f72ef846fe8453596230ac285eeaa0ce3278bb4
-    mkdir build
-    cd build
-    cmake \
-        -DPYBIND11_TEST=NO \
-        -DCMAKE_INSTALL_PREFIX=$DCGPY_BUILD_DIR \
-        -DCMAKE_PREFIX_PATH=$DCGPY_BUILD_DIR \
-        -DPYTHON_EXECUTABLE=$HOME/local/bin/python3 \
-        ..
-    make install
-    cd ../..
+    if [[ "${DCGP_BUILD}" == "Python37" || "${DCGP_BUILD}" == "OSXPython37" ]]; then
+        # We install pybind11 from the specific commit needed to guarantee interoperability with pyaudi/pygmo
+        export DCGPY_BUILD_DIR=`pwd`
+        git clone https://github.com/pybind/pybind11.git
+        cd pybind11
+        git checkout 4f72ef846fe8453596230ac285eeaa0ce3278bb4
+        mkdir build
+        cd build
+        cmake \
+            -DPYBIND11_TEST=NO \
+            -DCMAKE_INSTALL_PREFIX=$DCGPY_BUILD_DIR \
+            -DCMAKE_PREFIX_PATH=$DCGPY_BUILD_DIR \
+            -DPYTHON_EXECUTABLE=$HOME/local/bin/python3 \
+            ..
+        make install
+        cd ../..
+    fi
 fi
 
 set +e
