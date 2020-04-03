@@ -29,8 +29,9 @@ if [[ "${DCGP_BUILD}" != manylinux* ]]; then
     source activate $deps_dir
     conda install $conda_pkgs -y
 
+    # For python builds, we install pybind11 from the specific commit
+    # needed to guarantee interoperability with pyaudi/pygmo
     if [[ "${DCGP_BUILD}" == "Python37" || "${DCGP_BUILD}" == "OSXPython37" ]]; then
-        # We install pybind11 from the specific commit needed to guarantee interoperability with pyaudi/pygmo
         export DCGPY_BUILD_DIR=`pwd`
         git clone https://github.com/pybind/pybind11.git
         cd pybind11
