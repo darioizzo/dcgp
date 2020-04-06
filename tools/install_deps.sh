@@ -8,9 +8,9 @@ set -e
 
 if [[ "${DCGP_BUILD}" != manylinux* ]]; then
     if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
-        wget https://repo.continuum.io/miniconda/Miniconda2-latest-MacOSX-x86_64.sh -O miniconda.sh;
+        wget https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh -O miniconda.sh;
     else
-        wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh -O miniconda.sh;
+        wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
     fi
     export deps_dir=$HOME/local
     export PATH="$HOME/miniconda/bin:$PATH"
@@ -25,9 +25,8 @@ if [[ "${DCGP_BUILD}" != manylinux* ]]; then
     fi
 
     # We create the conda environment and activate it
-    conda create -q -p $deps_dir -y
+    conda create -q -p $deps_dir -y $conda_pkgs
     source activate $deps_dir
-    conda install $conda_pkgs -y
 
     # For python builds, we install pybind11 from the specific commit
     # needed to guarantee interoperability with pyaudi/pygmo
