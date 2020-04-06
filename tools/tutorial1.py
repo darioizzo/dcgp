@@ -5,7 +5,7 @@ def main():
     import pygmo as pg
     # Sympy is nice to have for basic symbolic manipulation.
     from sympy import init_printing
-    from sympy.parsing.sympy_parser import *
+    from sympy.parsing.sympy_parser import parse_expr
     init_printing()
     # Fundamental for plotting.
     from matplotlib import pyplot as plt
