@@ -53,8 +53,10 @@ matrix:
           - ubuntu-toolchain-r-test
     - env: DCGP_BUILD="OSXDebug"
       os: osx
+      osx_image: xcode10.3
     - env: DCGP_BUILD="OSXRelease"
       os: osx
+      osx_image: xcode10.3
     - env: DCGP_BUILD="OSXPython37"
       os: osx
 
