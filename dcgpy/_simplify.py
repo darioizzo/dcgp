@@ -64,7 +64,8 @@ def _sympy_simplify(self, in_sym, subs_weights = False, erc = []):
         c = self.get_cols()
         a = self.get_arity()
         for i in range(r * c):
-            for j in range(a):
+            # a[i // r] is the arity of the current col
+            for j in range(a[i // r]):
                 ws = 'w' + str(n + i) + '_' + str(j)
                 ns[ws] = sympy.Symbol(ws, real = True)
 
@@ -79,8 +80,11 @@ def _sympy_simplify(self, in_sym, subs_weights = False, erc = []):
             wl = [w.constant_cf[0] for w in wl]
         for i in range(m):
             for j in range(r * c):
-                for k in range(a):
-                    pe[i] = pe[i].subs(ns['w' + str(n + j) + '_' + str(k)], wl[a * j + k])
+                for k in range(a[j // r]):
+                    # the number of weights before the current weight is given by the sum of the arities in the cols before
+                    # plus the sum of the arities of the nodes in the current col up to current row/node
+                    n_previous = sum(a[:j // r]) * r + a[j // r] * (j % r)
+                    pe[i] = pe[i].subs(ns['w' + str(n + j) + '_' + str(k)], wl[n_previous + k])
 
     # substitute the ephemeral random constants symbols with their values
     if len(erc) > 0:
