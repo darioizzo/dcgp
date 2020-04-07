@@ -165,4 +165,4 @@ private:
 
 } // end of namespace dcgp
 
-#endif // DCGP_kernel_H
+#endif // DCGP_KERNEL_H

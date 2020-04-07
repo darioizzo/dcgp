@@ -50,15 +50,14 @@ public:
      * @param[in] f function set. An std::vector of dcgp::kernel<expression::type>.
      * @param[in] seed seed for the random number generator (initial expression and mutations depend on this).
      */
-    expression_weighted(unsigned n,               // n. inputs
-                        unsigned m,               // n. outputs
-                        unsigned r,               // n. rows
-                        unsigned c,               // n. columns
-                        unsigned l,               // n. levels-back
-                        unsigned arity,           // basis functions' arity
-                        std::vector<kernel<T>> f, // functions
-                        unsigned seed             // seed for the pseudo-random numbers
-                        )
+    expression_weighted(unsigned n = 1u,                                     // n. inputs
+                        unsigned m = 1u,                                     // n. outputs
+                        unsigned r = 1u,                                     // n. rows
+                        unsigned c = 1u,                                     // n. columns
+                        unsigned l = 1u,                                     // n. levels-back
+                        unsigned arity = 2u,                                 // basis functions' arity
+                        std::vector<kernel<T>> f = kernel_set<T>({"sum"})(), // functions
+                        unsigned seed = dcgp::random_device::next())
         : expression<T>(n, m, r, c, l, std::vector<unsigned>(c, arity), f, 0u, seed)
     {
         // Default initialization of weights to 1.
@@ -81,20 +80,19 @@ public:
      * @param[in] r number of rows of the weighted dCGP.
      * @param[in] c number of columns of the weighted dCGP.
      * @param[in] l number of levels-back allowed for the weighted dCGP.
-     * @param[in] arity arity of the basis functions.
+     * @param[in] arities arities of the basis functions (per each column).
      * @param[in] f function set. An std::vector of dcgp::kernel<expression::type>.
      * @param[in] seed seed for the random number generator (initial expression and mutations depend on this).
      */
-    expression_weighted(unsigned n,                  // n. inputs
-                        unsigned m,                  // n. outputs
-                        unsigned r,                  // n. rows
-                        unsigned c,                  // n. columns
-                        unsigned l,                  // n. levels-back
-                        std::vector<unsigned> arity, // basis functions' arity
-                        std::vector<kernel<T>> f,    // functions
-                        unsigned seed                // seed for the pseudo-random numbers
-                        )
-        : expression<T>(n, m, r, c, l, arity, f, 0u, seed)
+    expression_weighted(unsigned n,                    // n. inputs
+                        unsigned m,                    // n. outputs
+                        unsigned r,                    // n. rows
+                        unsigned c,                    // n. columns
+                        unsigned l,                    // n. levels-back
+                        std::vector<unsigned> arities, // basis functions' arity
+                        std::vector<kernel<T>> f,      // functions
+                        unsigned seed = dcgp::random_device::next())
+        : expression<T>(n, m, r, c, l, arities, f, 0u, seed)
     {
         // Default initialization of weights to 1.
         unsigned n_connections = std::accumulate(this->get_arity().begin(), this->get_arity().end(), 0u) * r;
@@ -315,11 +313,10 @@ public:
     void set_eph_val(const std::vector<T> &) = delete;
     void set_eph_symb(const std::vector<T> &) = delete;
 
-        private :
-        // For numeric computations
-        template <typename U,
-                  typename std::enable_if<std::is_same<U, double>::value || is_gdual<U>::value, int>::type = 0>
-        U kernel_call(std::vector<U> &function_in, unsigned idx, unsigned node_id, unsigned weight_idx) const
+private:
+    // For numeric computations
+    template <typename U, typename std::enable_if<std::is_same<U, double>::value || is_gdual<U>::value, int>::type = 0>
+    U kernel_call(std::vector<U> &function_in, unsigned idx, unsigned node_id, unsigned weight_idx) const
     {
         // Weights (we transform the inputs a,b,c,d,e in w_1 a, w_2 b, w_3 c, etc...)
         for (auto j = 0u; j < this->_get_arity(node_id); ++j) {

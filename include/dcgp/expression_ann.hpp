@@ -75,7 +75,7 @@ public:
                    unsigned l,                    // n. levels-back
                    std::vector<unsigned> arity,   // basis functions' arity
                    std::vector<kernel<double>> f, // functions
-                   unsigned seed                  // seed for the pseudo-random numbers
+                   unsigned seed = dcgp::random_device::next()
                    )
         : expression<double>(n, m, r, c, l, arity, f, 0u, seed), m_biases(r * c, 0.), m_kernel_map(f.size())
 
@@ -134,15 +134,14 @@ public:
      * @param[in] f function set. An std::vector of dcgp::kernel<expression::type>. Can only contain allowed functions.
      * @param[in] seed seed for the random number generator (initial expression and mutations depend on this).
      */
-    expression_ann(unsigned n,                    // n. inputs
-                   unsigned m,                    // n. outputs
-                   unsigned r,                    // n. rows
-                   unsigned c,                    // n. columns
-                   unsigned l,                    // n. levels-back
-                   unsigned arity,                // basis functions' arity
-                   std::vector<kernel<double>> f, // functions
-                   unsigned seed                  // seed for the pseudo-random numbers
-                   )
+    expression_ann(unsigned n = 1u,                                               // n. inputs
+                   unsigned m = 1u,                                               // n. outputs
+                   unsigned r = 1u,                                               // n. rows
+                   unsigned c = 1u,                                               // n. columns
+                   unsigned l = 1u,                                               // n. levels-back
+                   unsigned arity = 2u,                                           // basis functions' arity
+                   std::vector<kernel<double>> f = kernel_set<double>({"sum"})(), // functions
+                   unsigned seed = dcgp::random_device::next())
         : expression<double>(n, m, r, c, l, std::vector<unsigned>(c, arity), f, 0u, seed), m_biases(r * c, 0.),
           m_kernel_map(f.size())
 

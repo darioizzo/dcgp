@@ -97,7 +97,9 @@ public:
         auto NP = pop.size();
         auto fevals0 = prob.get_fevals(); // fevals already made
         auto count = 1u;                  // regulates the screen output
-        auto udp_ptr = prob.extract<symbolic_regression>();
+        // We do not use directly the pagmo::problem::extract as otherwise we could not override it in the python
+        // bindings. Using this global function, instead, allows its implementation to be overridden in the bindings.
+        auto udp_ptr = details::extract_sr_cpp_py(prob);
         // PREAMBLE-------------------------------------------------------------------------------------------------
         // Check whether the problem is suitable for mes4cgp
         // If the UDP in pop is not a symbolic_regression UDP, udp_ptr will be NULL

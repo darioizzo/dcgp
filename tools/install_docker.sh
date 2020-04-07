@@ -6,29 +6,21 @@ set -x
 # Exit on error.
 set -e
 
-AUDI_VERSION="1.7"
+AUDI_VERSION="1.8"
 PAGMO_VERSION="2.11.4"
 
-if [[ ${DCGP_BUILD} == *37 ]]; then
+if [[ ${DCGP_BUILD} == *38 ]]; then
+	PYTHON_DIR="cp38-cp38"
+	PYTHON_VERSION="38"
+	PYTHON_VERSION_DOTTED="3.8"
+elif [[ ${DCGP_BUILD} == *37 ]]; then
 	PYTHON_DIR="cp37-cp37m"
-	BOOST_PYTHON_LIBRARY_NAME="libboost_python37.so"
 	PYTHON_VERSION="37"
 	PYTHON_VERSION_DOTTED="3.7"
 elif [[ ${DCGP_BUILD} == *36 ]]; then
 	PYTHON_DIR="cp36-cp36m"
-	BOOST_PYTHON_LIBRARY_NAME="libboost_python36.so"
 	PYTHON_VERSION="36"
 	PYTHON_VERSION_DOTTED="3.6"
-elif [[ ${DCGP_BUILD} == *27mu ]]; then
-	PYTHON_DIR="cp27-cp27mu"
-	BOOST_PYTHON_LIBRARY_NAME="libboost_python27mu.so"
-	PYTHON_VERSION="27"
-	PYTHON_VERSION_DOTTED="2.7"
-elif [[ ${DCGP_BUILD} == *27 ]]; then
-	PYTHON_DIR="cp27-cp27m"
-	BOOST_PYTHON_LIBRARY_NAME="libboost_python27.so"
-	PYTHON_VERSION="27"
-	PYTHON_VERSION_DOTTED="2.7"
 else
 	echo "Invalid build type: ${DCGP_BUILD}"
 	exit 1
@@ -51,6 +43,17 @@ cd install
 
 # Python deps
 /opt/python/${PYTHON_DIR}/bin/pip install numpy cloudpickle
+
+# Install pybind11
+git clone https://github.com/pybind/pybind11.git
+cd pybind11
+git checkout 4f72ef846fe8453596230ac285eeaa0ce3278bb4
+mkdir build
+cd build
+pwd
+cmake ../ -DPYBIND11_TEST=NO > /dev/null
+make install > /dev/null 2>&1
+cd ../..
 
 # Install pagmo and pygmo
 curl -L  https://github.com/esa/pagmo2/archive/v${PAGMO_VERSION}.tar.gz > pagmo2.tar.gz
@@ -75,7 +78,7 @@ cmake -DBoost_NO_BOOST_CMAKE=ON \
 	-DPYTHON_EXECUTABLE=/opt/python/${PYTHON_DIR}/bin/python \
 	-DYACMA_PYTHON_MODULES_INSTALL_PATH=/opt/python/${PYTHON_DIR}/lib/python${PYTHON_VERSION_DOTTED}/site-packages ../;
 make -j2 install
-cd ../
+cd ../..
 
 # Install audi
 curl -L https://github.com/darioizzo/audi/archive/v${AUDI_VERSION}.tar.gz > v${AUDI_VERSION}
@@ -85,7 +88,7 @@ mkdir build
 cd build
 cmake -DBoost_NO_BOOST_CMAKE=ON -DAUDI_BUILD_AUDI=yes -DAUDI_BUILD_TESTS=no -DCMAKE_BUILD_TYPE=Release ../
 make install > /dev/null 2>&1
-cd ..
+cd ../..
 
 # Install dcgp headers
 cd /dcgp
@@ -117,7 +120,7 @@ auditwheel repair dist/dcgpy* -w ./dist2
 # Try to install it and run the tests.
 cd /
 /opt/python/${PYTHON_DIR}/bin/pip install /dcgp/build/wheel/dist2/dcgpy*
-/opt/python/${PYTHON_DIR}/bin/python -c "from dcgpy import test; test.run_test_suite()"
+/opt/python/${PYTHON_DIR}/bin/python -c "from dcgpy import test; test.run_test_suite(); import pygmo; pygmo.mp_island.shutdown_pool(); pygmo.mp_bfe.shutdown_pool()"
 
 # Upload in PyPi
 # This variable will contain something if this is a tagged build (vx.y.z), otherwise it will be empty.

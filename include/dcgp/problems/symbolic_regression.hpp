@@ -4,6 +4,7 @@
 #include <audi/gdual.hpp>
 #include <boost/numeric/conversion/cast.hpp>
 #include <boost/range/algorithm/transform.hpp>
+#include <functional>
 #include <numeric> // std::accumulate
 #include <pagmo/io.hpp>
 #include <pagmo/population.hpp>
@@ -607,6 +608,16 @@ private:
     mutable std::pair<pagmo::vector_double, pagmo::vector_double> m_cache_fitness;
     mutable std::pair<pagmo::vector_double, pagmo::vector_double> m_cache_gradient;
 };
+
+namespace details
+{
+// This function is a global symbol put in the namespace. Its purpose is 
+// to be overridden in the python bindings so that it can extract from a py::object a 
+// c++ dcgp::symbolic_regression. Its use is in the UDAs evolve to access (both in C++ and python)
+// the correct UDP.
+inline std::function<const dcgp::symbolic_regression *(const pagmo::problem &)> extract_sr_cpp_py
+    = [](const pagmo::problem &p) { return p.extract<dcgp::symbolic_regression>(); };
+} // namespace details
 } // namespace dcgp
 
 PAGMO_S11N_PROBLEM_EXPORT_KEY(dcgp::symbolic_regression)
