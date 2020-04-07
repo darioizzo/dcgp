@@ -45,6 +45,7 @@ make install
 cd ../..
 
 # Install dcgp
+mkdir build
 cd build
 cmake \
     -DCMAKE_INSTALL_PREFIX=$deps_dir \
