@@ -61,6 +61,8 @@ matrix:
     #  os: osx
 
 script:
+    - mkdir build
+    - cd build
     # NOTE: currently, travis does not stop automatically if one of these
     # 2 scripts returns an error code. Thus, we run them together as a single
     # command, so that if install_deps.sh fails the whole build fails immediately
