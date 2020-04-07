@@ -55,7 +55,7 @@ elif [[ "${DCGP_BUILD}" == Python* ]]; then
     # Run the test suite
     python -c "from dcgpy import test; test.run_test_suite(); import pygmo; pygmo.mp_island.shutdown_pool(); pygmo.mp_bfe.shutdown_pool()";
 elif [[ "${DCGP_BUILD}" == "OSXDebug" ]]; then
-    CXX=clang++ CC=clang cmake \
+    cmake \
         -DCMAKE_INSTALL_PREFIX=$deps_dir \
         -DCMAKE_PREFIX_PATH=$deps_dir \
         -DBoost_NO_BOOST_CMAKE=ON \
@@ -68,7 +68,7 @@ elif [[ "${DCGP_BUILD}" == "OSXDebug" ]]; then
     make -j2 VERBOSE=1;
     ctest -VV;
 elif [[ "${DCGP_BUILD}" == "OSXRelease" ]]; then
-    CXX=clang++ CC=clang cmake \
+    cmake \
         -DCMAKE_INSTALL_PREFIX=$deps_dir \
         -DCMAKE_PREFIX_PATH=$deps_dir \
         -DBoost_NO_BOOST_CMAKE=ON \
@@ -77,8 +77,9 @@ elif [[ "${DCGP_BUILD}" == "OSXRelease" ]]; then
         -DDCGP_BUILD_TESTS=yes \
         -DDCGP_BUILD_EXAMPLES=no \
         ..
-    make -j2 VERBOSE=1;
-    ctest -VV;
+    make -j2 VERBOSE=1
+    make install
+    ctest -j4 -V
 elif [[ "${DCGP_BUILD}" == OSXPython* ]]; then
     # We need this to be the directory where pybind11 was installed 
     # in the script install_deps.sh

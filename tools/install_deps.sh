@@ -7,7 +7,7 @@ set -x
 set -e
 
 if [[ "${DCGP_BUILD}" != manylinux* ]]; then
-    if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
+    if [[ "${DCGP_BUILD}" == "OSX*" ]]; then
         wget https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh -O miniconda.sh;
     else
         wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
@@ -17,7 +17,6 @@ if [[ "${DCGP_BUILD}" != manylinux* ]]; then
     bash miniconda.sh -b -p $HOME/miniconda
     conda config --add channels conda-forge --force
 
-    # obake-devel is needed as far as the conda package audi does not list it as a dependency
     conda_pkgs="cmake eigen boost-cpp tbb-devel pagmo-devel audi symengine obake-devel cxx-compiler"
 
     if [[ "${DCGP_BUILD}" == "Python37" || "${DCGP_BUILD}" == "OSXPython37" ]]; then
@@ -27,6 +26,13 @@ if [[ "${DCGP_BUILD}" != manylinux* ]]; then
     # We create the conda environment and activate it
     conda create -q -p $deps_dir -y $conda_pkgs
     source activate $deps_dir
+
+    export deps_dir=$HOME/local
+    export PATH="$HOME/miniconda/bin:$PATH"
+    export PATH="$deps_dir/bin:$PATH"
+
+    export CXX=clang++
+    export CC=clang
 
     # For python builds, we install pybind11 from the specific commit
     # needed to guarantee interoperability with pyaudi/pygmo
