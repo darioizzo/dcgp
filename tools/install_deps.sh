@@ -31,9 +31,6 @@ if [[ "${DCGP_BUILD}" != manylinux* ]]; then
     export PATH="$HOME/miniconda/bin:$PATH"
     export PATH="$deps_dir/bin:$PATH"
 
-    export CXX=clang++
-    export CC=clang
-
     # For python builds, we install pybind11 from the specific commit
     # needed to guarantee interoperability with pyaudi/pygmo
     if [[ "${DCGP_BUILD}" == "Python37" || "${DCGP_BUILD}" == "OSXPython37" ]]; then

@@ -51,14 +51,15 @@ matrix:
     #    apt:
     #      sources:
     #      - ubuntu-toolchain-r-test
-    #- env: DCGP_BUILD="OSXDebug" DCGP_BUILD_TYPE="Debug"
-    #  os: osx
-    #  osx_image: xcode10.3
+    - env: DCGP_BUILD="OSXDebug" DCGP_BUILD_TYPE="Debug"
+      os: osx
+      osx_image: xcode10.3
     - env: DCGP_BUILD="OSXRelease" DCGP_BUILD_TYPE="Release"
       os: osx
       osx_image: xcode10.3
-    #- env: DCGP_BUILD="OSXPython37"
-    #  os: osx
+    - env: DCGP_BUILD="OSXPython37" DCGP_BUILD_TYPE="Release"
+      os: osx
+      osx_image: xcode10.3
 
 script:
     - mkdir build
