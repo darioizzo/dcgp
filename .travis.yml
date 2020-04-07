@@ -68,8 +68,8 @@ script:
     # command, so that if install_deps.sh fails the whole build fails immediately
     # rather than executing install_travis.sh as well. See
     # https://github.com/travis-ci/travis-ci/issues/1066
-    - if [[ "${AUDI_BUILD}" == OSX* ]]; then bash ../tools/travis_osx.sh; fi
-    - if [[ "${AUDI_BUILD}" != OSX* ]]; then bash ../tools/install_deps.sh && ../tools/install_travis.sh; fi
+    - if [[ "${DCGP_BUILD}" == OSX* ]]; then bash ../tools/travis_osx.sh; fi
+    - if [[ "${DCGP_BUILD}" != OSX* ]]; then bash ../tools/install_deps.sh && ../tools/install_travis.sh; fi
 notifications:
   email: false
 
