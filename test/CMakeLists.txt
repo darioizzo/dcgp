@@ -9,6 +9,7 @@ ENDMACRO(ADD_DCGP_TESTCASE)
 
 ADD_DCGP_TESTCASE(expression)
 ADD_DCGP_TESTCASE(differentiate)
+ADD_DCGP_TESTCASE(expression_weighted)
 ADD_DCGP_TESTCASE(expression_ann)
 ADD_DCGP_TESTCASE(kernel)
 ADD_DCGP_TESTCASE(function)

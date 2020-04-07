@@ -243,7 +243,7 @@ public:
      *
      * @throws std::invalid_argument if the node_id or input_id are not valid
      */
-    void set_weight(typename std::vector<T>::size_type node_id, typename std::vector<T>::size_type input_id, const T &w)
+    void set_weight(unsigned node_id, unsigned input_id, const T &w)
     {
         if (node_id < this->get_n() || node_id >= this->get_n() + this->get_r() * this->get_c()) {
             throw std::invalid_argument("Requested node id does not exist");
@@ -253,7 +253,7 @@ public:
         }
         // index of the node in the weight vector
         auto idx = this->get_gene_idx()[node_id] - (node_id - this->get_n());
-        m_weights[idx] = w;
+        m_weights[idx + input_id] = w;
     }
 
     /// Sets all weights
@@ -284,7 +284,7 @@ public:
      *
      * @throws std::invalid_argument if the node_id or input_id are not valid
      */
-    T get_weight(typename std::vector<T>::size_type node_id, typename std::vector<T>::size_type input_id) const
+    T get_weight(unsigned node_id, unsigned input_id) const
     {
         if (node_id < this->get_n() || node_id >= this->get_n() + this->get_r() * this->get_c()) {
             throw std::invalid_argument(
@@ -295,7 +295,7 @@ public:
         }
 
         auto idx = this->get_gene_idx()[node_id] - (node_id - this->get_n());
-        return m_weights[idx];
+        return m_weights[idx + input_id];
     }
 
     /// Gets the weights
