@@ -33,7 +33,7 @@ if [[ "${DCGP_BUILD}" != manylinux* ]]; then
 
     # For python builds, we install pybind11 from the specific commit
     # needed to guarantee interoperability with pyaudi/pygmo
-    if [[ "${DCGP_BUILD}" == "Python37" || "${DCGP_BUILD}" == "OSXPython37" ]]; then
+    if [[ "${DCGP_BUILD}" == *Python* ]]; then
         export DCGPY_BUILD_DIR=`pwd`
         git clone https://github.com/pybind/pybind11.git
         cd pybind11

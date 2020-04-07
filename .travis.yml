@@ -13,44 +13,44 @@ env:
 
 matrix:
   include:
-    #- env: DCGP_BUILD="DebugGCC"
-    #  dist: bionic
-    #  compiler: gcc
-    #  os: linux
-    #  addons:
-    #    apt:
-    #      sources:
-    #      - ubuntu-toolchain-r-test
-    #      packages:
-    #      - binutils-gold
-    #- env: DCGP_BUILD="ReleaseGCC"
-    #  dist: bionic
-    #  compiler: gcc
-    #  os: linux
-    #  addons:
-    #    apt:
-    #      sources:
-    #      - ubuntu-toolchain-r-test
-    #      packages:
-    #      - binutils-gold
-    #- env: DCGP_BUILD="CoverageGCC"
-    #  dist: bionic
-    #  compiler: gcc 
-    #  os: linux
-    #  addons:
-    #    apt:
-    #      sources:
-    #      - ubuntu-toolchain-r-test
-    #      packa1ges:
-    #      - binutils-gold
-    #- env: DCGP_BUILD="Python37"
-    #  dist: bionic
-    #  compiler: gcc
-    #  os: linux
-    #  addons:
-    #    apt:
-    #      sources:
-    #      - ubuntu-toolchain-r-test
+    - env: DCGP_BUILD="DebugGCC"
+      dist: bionic
+      compiler: gcc
+      os: linux
+      addons:
+        apt:
+          sources:
+          - ubuntu-toolchain-r-test
+          packages:
+          - binutils-gold
+    - env: DCGP_BUILD="ReleaseGCC"
+      dist: bionic
+      compiler: gcc
+      os: linux
+      addons:
+        apt:
+          sources:
+          - ubuntu-toolchain-r-test
+          packages:
+          - binutils-gold
+    - env: DCGP_BUILD="CoverageGCC"
+      dist: bionic
+      compiler: gcc 
+      os: linux
+      addons:
+        apt:
+          sources:
+          - ubuntu-toolchain-r-test
+          packa1ges:
+          - binutils-gold
+    - env: DCGP_BUILD="Python37"
+      dist: bionic
+      compiler: gcc
+      os: linux
+      addons:
+        apt:
+          sources:
+          - ubuntu-toolchain-r-test
     - env: DCGP_BUILD="OSXDebug" DCGP_BUILD_TYPE="Debug"
       os: osx
       osx_image: xcode10.3
