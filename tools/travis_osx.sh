@@ -15,10 +15,10 @@ conda config --add channels conda-forge --force
 conda_pkgs="cmake eigen boost-cpp tbb-devel pagmo-devel audi symengine obake-devel cxx-compiler"
 
 if [[ "${DCGP_BUILD}" == *Python37* ]]; then
-    build_cpp_tests=`no`
+    build_cpp_tests="no"
     conda_pkgs="$conda_pkgs python=3.7 pyaudi pygmo"
 else 
-    build_cpp_tests=`yes`
+    build_cpp_tests="yes"
 fi
 
 conda create -q -p $deps_dir -y $conda_pkgs
