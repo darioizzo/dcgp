@@ -50,7 +50,7 @@ public:
      */
     symbolic_regression()
         : m_points(1), m_labels(1), m_r(1), m_c(1), m_l(1), m_arity(2), m_f(kernel_set<double>({"sum"})()), m_n_eph(0),
-          m_multi_objective(true), m_parallel_batches(0u)
+          m_multi_objective(true), m_parallel_batches(0u), m_loss_s("MSE")
     {
     }
 
@@ -68,6 +68,7 @@ public:
      * @param[in] n_eph number of ephemeral constants.
      * @param[in] multi_objective when true, it will consider the model complexity as a second objective.
      * @param[in] parallel_batches number of parallel batches.
+     * @param[in] loss_s loss type as string, either "MSE" or "CE"
      *
      * @throws std::invalid_argument if points and labels are not consistent.
      * @throws std::invalid_argument if the CGP related parameters (i.e. *r*, *c*, etc...) are malformed.
@@ -81,10 +82,11 @@ public:
                         = kernel_set<double>({"sum", "diff", "mul", "pdiv"})(), // functions
                         unsigned n_eph = 0u,                                    // number of ephemeral constants
                         bool multi_objective = false,  // when true the fitness also returns the formula complexity
-                        unsigned parallel_batches = 0u // number of parallel batches
+                        unsigned parallel_batches = 0u, // number of parallel batches
+                        std::string loss = "MSE" // loss type
                         )
         : m_points(points), m_labels(labels), m_r(r), m_c(c), m_l(l), m_arity(arity), m_f(f), m_n_eph(n_eph),
-          m_multi_objective(multi_objective), m_parallel_batches(parallel_batches)
+          m_multi_objective(multi_objective), m_parallel_batches(parallel_batches), m_loss_s(loss)
     {
         unsigned n;
         unsigned m;
@@ -163,7 +165,7 @@ public:
         } else {
             // And we compute the MSE loss splitting the data in n batches.
             // TODO: make this work also when m_parallel_batches does not divide exactly the data size.
-            retval[0] = m_cgp.loss(m_points, m_labels, "MSE", m_parallel_batches);
+            retval[0] = m_cgp.loss(m_points, m_labels, m_loss_s, m_parallel_batches);
         }
         // In the multiobjective case we compute the formula complexity
         if (m_multi_objective) {
@@ -216,9 +218,9 @@ public:
             eph_val.emplace_back(x[i], m_dcgp.get_eph_symb()[i], 1u); // Only first derivative is needed
         }
         m_dcgp.set_eph_val(eph_val);
-        // 3 - We compute the MSE loss splitting the data in n batches.
+        // 3 - We compute the loss splitting the data in n batches.
         // TODO: make this work also when m_parallel_batches does not divide exactly the data size.
-        auto loss = m_dcgp.loss(m_dpoints, m_dlabels, "MSE", m_parallel_batches);
+        auto loss = m_dcgp.loss(m_dpoints, m_dlabels, m_loss_s, m_parallel_batches);
         // Now we extract fitness and gradient and store the values in th caches or in the return value
         m_cache_fitness.first = x;
         m_cache_fitness.second.resize(get_nobj());
@@ -290,7 +292,7 @@ public:
         }
         m_dcgp.set_eph_val(eph_val);
         // 3 - We compute the MSE loss and its differentials.
-        auto loss = m_dcgp.loss(m_dpoints, m_dlabels, "MSE", m_parallel_batches);
+        auto loss = m_dcgp.loss(m_dpoints, m_dlabels, m_loss_s, m_parallel_batches);
         // We make sure all symbols are in so that we get zeros when querying for a variable not in the gdual
         loss.extend_symbol_set(m_deph_symb);
 
@@ -394,6 +396,7 @@ public:
         pagmo::stream(ss, "\tData dimension (labels): ", m_labels[0].size(), "\n");
         pagmo::stream(ss, "\tData size: ", m_points.size(), "\n");
         pagmo::stream(ss, "\tKernels: ", m_cgp.get_f(), "\n");
+        pagmo::stream(ss, "\tLoss: ", m_loss_s, "\n");
         return ss.str();
     }
 
@@ -578,6 +581,7 @@ public:
         ar &m_n_eph;
         ar &m_multi_objective;
         ar &m_parallel_batches;
+        ar &m_loss_s;
         ar &m_cgp;
         ar &m_dcgp;
         ar &m_cache_fitness;
@@ -599,6 +603,7 @@ private:
     unsigned m_n_eph;
     bool m_multi_objective;
     unsigned m_parallel_batches;
+    std::string m_loss_s;
     // The fact that this is mutable may hamper the performances of the bfe as the thread safetly level
     // of the UDP in pagmo will force copies of the UDP to be made in all threads. This can in principle be
     // avoided, but likely resulting in prepature optimization. (see https://github.com/darioizzo/dcgp/pull/42)

@@ -1052,14 +1052,14 @@ a continuous part (i.e. the value of the parameters in the model) and an integer
 the model computational graph). The instantiated object can be used as UDP (User Defined Problem) in the pygmo optimization suite.
 
 The symbolic regression problem can be instantiated both as a single and as a two-objectives problem. In the second
-case, aside the Mean Squared Error, the model complexity will be considered as an objective.
+case, aside the chosen loss on the data, the model complexity will be considered as an objective.
 
     )";
 }
 
 std::string symbolic_regression_init_doc()
 {
-    return R"(__init__(points, labels, rows = 1, columns=16, levels_back=17, arity=2, kernels, n_eph=0, multi_objective=False, parallel_batches=0)
+    return R"(__init__(points, labels, rows = 1, columns=16, levels_back=17, arity=2, kernels, n_eph=0, multi_objective=False, parallel_batches=0, loss="MSE")
 
 Constructs a symbolic_regression optimization problem compatible with the pagmo UDP interface.
 
@@ -1074,6 +1074,7 @@ Args:
     n_eph (``int``): Number of ephemeral constants. 
     multi_objective (``bool``): when True the problem will be considered as multiobjective (loss and model complexity).
     parallel_batches (``int``): allows to split the data into batches for parallel evaluation.
+    loss (``str``): loss type used, one of "MSE" (for mean squared error) or "CE" (for cross entropy).
 
 Raises:
     unspecified: any exception thrown by failures at the intersection between C++ and Python (e.g.,

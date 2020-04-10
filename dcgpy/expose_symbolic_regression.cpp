@@ -67,23 +67,23 @@ void expose_symbolic_regression(py::module &m)
     sr_.def(py::init<>())
         // Constructor from list of lists
         .def(py::init<const std::vector<std::vector<double>> &, const std::vector<std::vector<double>> &, unsigned,
-                      unsigned, unsigned, unsigned, const std::vector<kernel<double>> &, unsigned, bool, unsigned>(),
+                      unsigned, unsigned, unsigned, const std::vector<kernel<double>> &, unsigned, bool, unsigned, std::string>(),
              py::arg("points"), py::arg("labels"), py::arg("rows") = 1, py::arg("cols") = 16,
              py::arg("levels_back") = 17, py::arg("arity") = 2, py::arg("kernels"), py::arg("n_eph") = 0u,
-             py::arg("multi_objective") = false, py::arg("parallel_batches") = 0u)
+             py::arg("multi_objective") = false, py::arg("parallel_batches") = 0u, py::arg("loss") = "MSE")
         // Constructor from Numpy Arrays
         .def(
             py::init([](const py::array_t<double> &points, const py::array_t<double> &labels, unsigned rows,
                         unsigned cols, unsigned levels_back, unsigned arity, const std::vector<kernel<double>> &kernels,
-                        unsigned n_eph, bool multi_objective, unsigned parallel_batches) {
+                        unsigned n_eph, bool multi_objective, unsigned parallel_batches, std::string loss) {
                 auto vvd_points = ndarr_to_vvector(points);
                 auto vvd_labels = ndarr_to_vvector(labels);
                 return ::new dcgp::symbolic_regression(vvd_points, vvd_labels, rows, cols, levels_back, arity, kernels,
-                                                       n_eph, multi_objective, parallel_batches);
+                                                       n_eph, multi_objective, parallel_batches, loss);
             }),
             symbolic_regression_init_doc().c_str(), py::arg("points"), py::arg("labels"), py::arg("rows") = 1,
             py::arg("cols") = 16, py::arg("levels_back") = 17, py::arg("arity") = 2, py::arg("kernels"),
-            py::arg("n_eph") = 0u, py::arg("multi_objective") = false, py::arg("parallel_batches") = 0u)
+            py::arg("n_eph") = 0u, py::arg("multi_objective") = false, py::arg("parallel_batches") = 0u, py::arg("loss") = "MSE")
         .def("get_nobj", &dcgp::symbolic_regression::get_nobj)
         .def("fitness", &dcgp::symbolic_regression::fitness)
         .def("gradient", &dcgp::symbolic_regression::gradient)
