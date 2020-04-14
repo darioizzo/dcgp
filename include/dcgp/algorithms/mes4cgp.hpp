@@ -142,6 +142,11 @@ public:
         // Gradient and Constants will be stored in these column vectors
         Eigen::MatrixXd G = Eigen::MatrixXd::Zero(_(n_eph), 1);
         Eigen::MatrixXd C = Eigen::MatrixXd::Zero(_(n_eph), 1);
+        // full pivoting LU decomposition of H to check that H is invertible, to find the inverse and see if H is positive definite
+        Eigen::FullPivLU<Eigen::MatrixXd> fullpivlu;
+        // auxilary index variables used to construct reduced size Hessian
+        unsigned row = 0u;
+        unsigned col = 0u;
         auto hs = prob.hessians_sparsity();
 
         // Main loop
@@ -187,25 +192,85 @@ public:
                     }
                     mutated_f[i] = prob.fitness(mutated_x[i]);
                 } else {
-                    // TODO IMPORTANT: guard against non invertible Hessians (for exmaple when an eph constant is not
-                    // picked up)
+                    // One Newton step (NOTE: here we invert an n_eph_active x n_eph_active matrix)
+                    // where n_eph_active is the number of epheremal consts that are part of the current expression
                     // We compute hessians and gradients stored in the pagmo format
                     auto hess = prob.hessians(mutated_x[i]);
                     auto grad = prob.gradient(mutated_x[i]);
-                    // We copy them into the Eigen format
-                    for (decltype(hess[0].size()) j = 0u; j < hess[0].size(); ++j) {
-                        H(_(hs[0][j].first), _(hs[0][j].second)) = hess[0][j];
-                        H(_(hs[0][j].second), _(hs[0][j].first)) = hess[0][j];
+                    // construct reduced hessian to avoid all zero rows/cols,
+                    // since they are linearly dependant and make the matrix non-invertible
+                    // find out how many epheremal constants are actually in expression
+                    // also collect indices of non-zero gradients
+                    std::vector<pagmo::vector_double::size_type> non_zero;
+                    for (decltype(grad.size()) j = 0u; j < grad.size(); ++j) {
+                        if (grad[j] != 0.){
+                            non_zero.emplace_back(j);
+                        }
                     }
-                    for (decltype(n_eph) j = 0u; j < n_eph; ++j) {
-                        C(_(j), 0) = mutated_x[i][j];
-                        G(_(j), 0) = grad[j];
-                    }
-                    // One Newton step (NOTE: here we invert an n_eph x n_eph matrix)
-                    C = C - H.inverse() * G;
-                    // We copy back the result into pagmo format
-                    for (decltype(n_eph) j = 0u; j < n_eph; ++j) {
-                        mutated_x[i][j] = C(_(j), 0);
+                    std::vector<pagmo::vector_double::size_type>::size_type n_non_zero = non_zero.size();
+                    if (n_non_zero == 1) {
+                        // Hessian is a scalar: same as for a single ephemeral constant, except here we take only non-zero gradient
+                        if (grad[non_zero[0]] != 0.) {
+                            mutated_x[i][non_zero[0]] = mutated_x[i][non_zero[0]] - grad[non_zero[0]] / hess[0][non_zero[0]];
+                        }
+                    } else if (n_non_zero > 1) {
+                        // Hessian is a matrix: use Eigen to invert Hessian
+                        // take a part of the original matrices as reduced size Eigen matrices
+                        auto H_red = H.topLeftCorner(n_non_zero, n_non_zero);
+                        auto G_red = G.topLeftCorner(n_non_zero, 1);
+                        auto C_red = C.topLeftCorner(n_non_zero, 1);
+                        // copy Hessian, gradient and epheremal constants to Eigen
+                        row = 0u;
+                        col = 0u;
+                        // construct reduced size Hessian without all-zero rows/cols [shape:(n_non_zero, n_non_zero)]
+                        for (decltype(hess[0].size()) j = 0u; j < hess[0].size(); ++j) {
+                            // hessian is only non-zero where both gradients are non_zero
+                            if (std::find(non_zero.begin(), non_zero.end(), hs[0][j].first) != non_zero.end()
+                                && std::find(non_zero.begin(), non_zero.end(), hs[0][j].second) != non_zero.end()) {
+                                    // we fill the lower diagonal matrix of H_red
+                                    H_red(_(row), _(col)) = hess[0][j];
+                                    // and mirror to upper
+                                    H_red(_(col), _(row)) = hess[0][j];
+                                    // sort out if we increment column or row
+                                    if (hs[0][j].first == hs[0][j].second) {
+                                        // it is a diagonal element
+                                        row = row + 1;
+                                        col = 0;
+                                    } else {
+                                        // off-diagonal, only increase columns count
+                                        col = col + 1;
+                                    }
+                            }
+                        }
+                        // reduced size gradient and epheremal constant vectors [shape:(n_non_zero, 1)]
+                        for (decltype(n_non_zero) j = 0u; j < n_non_zero; ++j) {
+                            C_red(_(j), 0) = mutated_x[i][non_zero[j]];
+                            G_red(_(j), 0) = grad[non_zero[j]];
+                        }
+                        // make sure that gradients are finite
+                        if (G_red.array().isFinite().all()) {
+                            // TODO: should we log/print what we decided to do?, i.e. Newton step or not?
+                            // compute full pivoting LU decomposition
+                            // NOTE: the eigenvalues of U (i.e. its diagonal elements) have the same sign structure as
+                            // the eigenvalues of H_red according to sylvesters theorem of intertia
+                            // so we can check that H_red is positive (semi) definite trough looking at the diagonal elements of U
+                            // (see e.g. https://math.stackexchange.com/questions/621040/compute-eigenvalues-of-a-square-matrix-given-lu-decomposition)
+                            fullpivlu.compute(H_red);
+                            if (fullpivlu.isInvertible() && (fullpivlu.matrixLU().diagonal().array() >= 0.).all()) {
+                                // H_red is invertible and positive (semi) definite
+                                // we are therefore approaching a minimum and the inverse is defined
+                                // it can however contain infinities in some elements
+                                // so we check that all elements of the inverse are finite and only then do a Newton step
+                                auto inv = fullpivlu.inverse();
+                                if (inv.array().isFinite().all()) {
+                                    C_red = C_red - fullpivlu.inverse() * G_red;
+                                    // copy modified constants back to pagmo (only if we modified)
+                                    for (decltype(non_zero.size()) j = 0u; j < non_zero.size(); ++j) {
+                                        mutated_x[i][non_zero[j]] = C(_(j), 0);
+                                    }
+                                }
+                            }
+                        }
                     }
                     mutated_f[i] = prob.fitness(mutated_x[i]);
                 }
