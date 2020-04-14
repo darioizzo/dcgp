@@ -198,8 +198,8 @@ public:
                     // One Newton step (NOTE: here we invert an n_eph_active x n_eph_active matrix)
                     // where n_eph_active is the number of epheremal consts that are part of the current expression
                     // We compute hessians and gradients stored in the pagmo format
-                    auto hess = prob.hessians(mutated_x[i]);
-                    auto grad = prob.gradient(mutated_x[i]);
+                    hess = prob.hessians(mutated_x[i]);
+                    grad = prob.gradient(mutated_x[i]);
                     // construct reduced hessian to avoid all zero rows/cols,
                     // since they are linearly dependant and make the matrix non-invertible
                     // find out how many epheremal constants are actually in expression

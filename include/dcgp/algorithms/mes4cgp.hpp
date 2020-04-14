@@ -182,11 +182,13 @@ public:
             // 2 - Life long learning is here obtained performing a single Newton iteration (thus favouring constants
             // appearing linearly)
             for (decltype(NP) i = 0u; i < NP; ++i) {
+                pagmo::vector_double grad;
+                std::vector<pagmo::vector_double> hess;
                 // For a single ephemeral constants we avoid to call the Eigen machinery as its an overkill.
                 // I never tested if this is actually also more efficient, but it certainly is more readable.
                 if (n_eph == 1u) {
-                    auto hess = prob.hessians(mutated_x[i]);
-                    auto grad = prob.gradient(mutated_x[i]);
+                    hess = prob.hessians(mutated_x[i]);
+                    grad = prob.gradient(mutated_x[i]);
                     if (grad[0] != 0.) {
                         mutated_x[i][0] = mutated_x[i][0] - grad[0] / hess[0][0];
                     }
@@ -195,8 +197,8 @@ public:
                     // One Newton step (NOTE: here we invert an n_eph_active x n_eph_active matrix)
                     // where n_eph_active is the number of epheremal consts that are part of the current expression
                     // We compute hessians and gradients stored in the pagmo format
-                    auto hess = prob.hessians(mutated_x[i]);
-                    auto grad = prob.gradient(mutated_x[i]);
+                    hess = prob.hessians(mutated_x[i]);
+                    grad = prob.gradient(mutated_x[i]);
                     // construct reduced hessian to avoid all zero rows/cols,
                     // since they are linearly dependant and make the matrix non-invertible
                     // find out how many epheremal constants are actually in expression
