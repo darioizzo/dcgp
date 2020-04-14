@@ -216,9 +216,9 @@ public:
                     } else if (n_non_zero > 1) {
                         // Hessian is a matrix: use Eigen to invert Hessian
                         // take a part of the original matrices as reduced size Eigen matrices
-                        auto H_red = H.topLeftCorner(n_non_zero, n_non_zero);
-                        auto G_red = G.topLeftCorner(n_non_zero, 1);
-                        auto C_red = C.topLeftCorner(n_non_zero, 1);
+                        auto H_red = H.topLeftCorner((Eigen::Index)n_non_zero, (Eigen::Index)n_non_zero);
+                        auto G_red = G.topLeftCorner((Eigen::Index)n_non_zero, 1);
+                        auto C_red = C.topLeftCorner((Eigen::Index)n_non_zero, 1);
                         // copy Hessian, gradient and epheremal constants to Eigen
                         row = 0u;
                         col = 0u;
