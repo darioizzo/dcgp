@@ -68,7 +68,7 @@ public:
      *
      * @throws std::invalid_argument if *max_mut* is 0 or *ftol* is negative
      */
-    es4cgp(unsigned gen = 1u, unsigned max_mut = 1u, double ftol = 1e-4, bool learn_constants = true,
+    es4cgp(unsigned gen = 1u, unsigned max_mut = 4u, double ftol = 1e-4, bool learn_constants = true,
            unsigned seed = random_device::next())
         : m_gen(gen), m_max_mut(max_mut), m_ftol(ftol), m_learn_constants(learn_constants), m_e(seed), m_seed(seed),
           m_verbosity(0u)
@@ -142,9 +142,10 @@ public:
         // ... and its continuous part
         auto best_xd = std::vector<double>(best_x.data(), best_x.data() + n_eph);
         auto mutated_eph_val = std::vector<double>(best_xd.size(), 0.);
-        // Normal distribution
+        // Normal distribution (to perturb the constants)
         std::normal_distribution<> normal{0., 1.};
-
+        // Uniform distribution (to pick the number of active mutations)
+        std::uniform_int_distribution<> dis(1u, m_max_mut);
         // A contiguous vector of chromosomes/fitness vectors for pagmo::bfe input\output is allocated here.
         pagmo::vector_double dvs(NP * dim);
         pagmo::vector_double fs(NP * n_obj);
@@ -165,19 +166,11 @@ public:
                     ++count;
                 }
             }
-
             // 1 - We generate new NP individuals mutating the best and we write on the dvs for pagmo::bfe to evaluate
             // their fitnesses.
-            // We first need to randomly assign the number of active mutations to each individual.
-            std::vector<unsigned> n_active_mutations(NP);
-            std::uniform_int_distribution<> dis(1, m_max_mut);
-            for (auto &item : n_active_mutations) {
-                item = dis(m_e);
-            }
             for (decltype(NP) i = 0u; i < NP; ++i) {
                 cgp.set(best_xu);
-                cgp.mutate_active(n_active_mutations[i]);
-
+                cgp.mutate_active(dis(m_e));
                 std::vector<unsigned> mutated_x = cgp.get();
                 std::transform(mutated_x.begin(), mutated_x.end(), dvs.data() + i * dim + n_eph,
                                [](unsigned a) { return boost::numeric_cast<double>(a); });

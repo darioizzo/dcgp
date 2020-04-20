@@ -62,16 +62,16 @@ public:
      * Constructs an evolutionary strategy algorithm for use with a :class:`dcgp::symbolic_regression` UDP.
      *
      * @param gen number of generations.
-     * @param mut_n number of active genes to be mutated.
+     * @param max_mut number of active genes to be mutated.
      * @param ftol the algorithm will exit when the loss is below this tolerance.
      * @param seed seed used by the internal random number generator (default is random).
      *
-     * @throws std::invalid_argument if *mut_n* is 0 or *ftol* is negative
+     * @throws std::invalid_argument if *max_mut* is 0 or *ftol* is negative
      */
-    mes4cgp(unsigned gen = 1u, unsigned mut_n = 1u, double ftol = 1e-4, unsigned seed = random_device::next())
-        : m_gen(gen), m_mut_n(mut_n), m_ftol(ftol), m_e(seed), m_seed(seed), m_verbosity(0u)
+    mes4cgp(unsigned gen = 1u, unsigned max_mut = 4u, double ftol = 1e-4, unsigned seed = random_device::next())
+        : m_gen(gen), m_max_mut(max_mut), m_ftol(ftol), m_e(seed), m_seed(seed), m_verbosity(0u)
     {
-        if (mut_n == 0u) {
+        if (max_mut == 0u) {
             throw std::invalid_argument("The number of active mutations is zero, it must be at least 1.");
         }
         if (ftol < 0.) {
@@ -143,7 +143,8 @@ public:
         Eigen::MatrixXd G = Eigen::MatrixXd::Zero(_(n_eph), 1);
         Eigen::MatrixXd C = Eigen::MatrixXd::Zero(_(n_eph), 1);
         auto hs = prob.hessians_sparsity();
-
+        // Uniform distribution (to pick the number of active mutations)
+        std::uniform_int_distribution<> dis(1u, m_max_mut);
         // Main loop
         for (decltype(m_gen) gen = 1u; gen <= m_gen; ++gen) {
             // Logs and prints (verbosity modes > 1: a line is added every m_verbosity generations)
@@ -160,15 +161,13 @@ public:
                     ++count;
                 }
             }
-
             // 1 - We generate new NP individuals mutating the integer part of the chromosome and leaving the continuous
             // part untouched
             std::vector<pagmo::vector_double> mutated_x(NP, best_x);
             std::vector<pagmo::vector_double> mutated_f(NP, best_f);
             for (decltype(NP) i = 0u; i < NP; ++i) {
                 cgp.set(best_xu);
-                // TODO: (crop the active mutation number to some value or create a distribution)
-                cgp.mutate_active(m_mut_n + static_cast<unsigned>(i));
+                cgp.mutate_active(dis(m_e));
                 std::vector<unsigned> mutated_xu = cgp.get();
                 std::transform(mutated_xu.begin(), mutated_xu.end(), mutated_x[i].data() + n_eph,
                                [](unsigned a) { return boost::numeric_cast<double>(a); });
@@ -336,7 +335,7 @@ public:
     {
         std::ostringstream ss;
         pagmo::stream(ss, "\tMaximum number of generations: ", m_gen);
-        pagmo::stream(ss, "\n\tNumber of active mutations: ", m_mut_n);
+        pagmo::stream(ss, "\n\tNumber of active mutations: ", m_max_mut);
         pagmo::stream(ss, "\n\tExit condition of the final loss (ftol): ", m_ftol);
         pagmo::stream(ss, "\n\tVerbosity: ", m_verbosity);
         pagmo::stream(ss, "\n\tSeed: ", m_seed);
@@ -383,7 +382,7 @@ public:
     void serialize(Archive &ar, unsigned)
     {
         ar &m_gen;
-        ar &m_mut_n;
+        ar &m_max_mut;
         ar &m_ftol;
         ar &m_e;
         ar &m_seed;
@@ -393,7 +392,7 @@ public:
 
 private:
     unsigned m_gen;
-    unsigned m_mut_n;
+    unsigned m_max_mut;
     double m_ftol;
     mutable detail::random_engine_type m_e;
     unsigned m_seed;

@@ -30,7 +30,7 @@ int main()
 
     // And we define an evolutionary startegy with 10000 generation and 2
     // active mutations (base)
-    dcgp::moes4cgp uda(10000, 5u, false);
+    dcgp::moes4cgp uda(10000, 4u, false);
     pagmo::algorithm algo{uda};
     algo.set_verbosity(500u);
 

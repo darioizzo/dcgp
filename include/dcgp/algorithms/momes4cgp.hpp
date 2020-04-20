@@ -64,7 +64,7 @@ public:
      *
      * @throws std::invalid_argument if *mut_n* is 0
      */
-    momes4cgp(unsigned gen = 1u, unsigned max_mut = 1u, unsigned seed = random_device::next())
+    momes4cgp(unsigned gen = 1u, unsigned max_mut = 4u, unsigned seed = random_device::next())
         : m_gen(gen), m_max_mut(max_mut), m_e(seed), m_seed(seed), m_verbosity(0u)
     {
         if (max_mut == 0u) {

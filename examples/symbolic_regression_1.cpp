@@ -25,11 +25,11 @@ int main()
     symbolic_regression udp(X, Y, 1, 20, 21, 2, kernel_set<double>({"sum", "diff", "mul", "pdiv"})(), n_eph);
 
     // We init a population with four individuals
-    pagmo::population pop{udp, 4};
+    pagmo::population pop{udp, 4u};
 
     // And we define an evolutionary startegy with 10000 generation and 2
     // active mutations (base)
-    dcgp::es4cgp uda(10000, 1u, 1e-8);
+    dcgp::es4cgp uda(10000, 4u, 1e-8);
     pagmo::algorithm algo{uda};
     algo.set_verbosity(500u);
 

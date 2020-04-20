@@ -61,7 +61,7 @@ public:
      *
      * @throws std::invalid_argument if *max_mut* is 0.
      */
-    moes4cgp(unsigned gen = 1u, unsigned max_mut = 1u, bool learn_constants = true,
+    moes4cgp(unsigned gen = 1u, unsigned max_mut = 4u, bool learn_constants = true,
              unsigned seed = random_device::next())
         : m_gen(gen), m_max_mut(max_mut), m_learn_constants(learn_constants), m_e(seed), m_seed(seed), m_verbosity(0u)
     {
@@ -120,8 +120,10 @@ public:
         auto cgp = udp_ptr->get_cgp();
         // How many ephemeral constants?
         auto n_eph = prob.get_ncx();
-        // Normal distribution will be used to adapt the constants
+        // Normal distribution (to perturb the constants)
         std::normal_distribution<> normal{0., 1.};
+        // Uniform distribution (to pick the number of active mutations)
+        std::uniform_int_distribution<> dis(1u, m_max_mut);
         // A contiguous vector of chromosomes/fitness vectors for pagmo::bfe input\output is allocated here.
         pagmo::vector_double dvs(NP * dim);
         pagmo::vector_double fs(NP * n_obj);
@@ -146,12 +148,6 @@ public:
             pagmo::population popnew(pop);
             // This will store the idx of the best individuals to select for the next generation.
             std::vector<pagmo::vector_double::size_type> best_idx(NP);
-            // We also need to randomly assign the number of active mutations to each individual.
-            std::vector<unsigned> n_active_mutations(NP);
-            std::uniform_int_distribution<> dis(1, m_max_mut);
-            for (auto &item : n_active_mutations) {
-                item = dis(m_e);
-            }
             // 1 - We generate new NP individuals mutating the chromosome
             std::vector<pagmo::vector_double> mutated_x(NP);
             for (decltype(NP) i = 0u; i < NP; ++i) {
@@ -164,7 +160,7 @@ public:
                 // Use it to set the CGP
                 cgp.set(mutated_xu);
                 // Mutate the expression
-                cgp.mutate_active(n_active_mutations[i]);
+                cgp.mutate_active(dis(m_e));
                 mutated_xu = cgp.get();
                 // Put it back
                 std::transform(mutated_xu.begin(), mutated_xu.end(), mutated_x[i].data() + n_eph,

@@ -23,13 +23,13 @@ int main()
     // We instantiate a symbolic regression problem with one ephemeral constants, and multiobjectove.
     auto n_eph = 1u;
     symbolic_regression udp(X, Y, 1u, 20u, 21u, 2u, kernel_set<double>({"sum", "diff", "mul", "pdiv"})(), n_eph, false,
-                            0u, "MSE", 32u);
+                            0u, "MSE");
 
     // We init a population with four individuals
-    pagmo::population pop{udp, 4u, 32u};
+    pagmo::population pop{udp, 4u};
 
     // We use an ES startegy also to learn constants
-    dcgp::es4cgp uda1(100000, 4u, -1e-8, true, 32u);
+    dcgp::es4cgp uda1(100000, 4u, 1e-8, true);
     pagmo::algorithm algo{uda1};
     algo.set_verbosity(500u);
 
