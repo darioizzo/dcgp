@@ -9,7 +9,9 @@ ENDMACRO(ADD_EXAMPLE)
 
 # Symbolic regression examples
 ADD_EXAMPLE(symbolic_regression_1)
+ADD_EXAMPLE(symbolic_regression_1mo)
 ADD_EXAMPLE(symbolic_regression_2)
+ADD_EXAMPLE(symbolic_regression_2mo)
 ADD_EXAMPLE(symbolic_regression_3)
 ADD_EXAMPLE(symbolic_regression_4)
 

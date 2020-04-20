@@ -83,7 +83,8 @@ public:
                         unsigned n_eph = 0u,                                    // number of ephemeral constants
                         bool multi_objective = false,  // when true the fitness also returns the formula complexity
                         unsigned parallel_batches = 0u, // number of parallel batches
-                        std::string loss = "MSE" // loss type
+                        std::string loss = "MSE", // loss type
+                        unsigned seed = random_device::next() //seed used to generate mutations by the cgp
                         )
         : m_points(points), m_labels(labels), m_r(r), m_c(c), m_l(l), m_arity(arity), m_f(f), m_n_eph(n_eph),
           m_multi_objective(multi_objective), m_parallel_batches(parallel_batches), m_loss_s(loss)
@@ -92,8 +93,8 @@ public:
         unsigned m;
         // We check the input against obvious sanity criteria.
         sanity_checks(n, m);
-        // We initialize the inner cgp expression
-        auto seed = random_device::next();
+        // We initialize the inner cgp expression (the random seed is needed but will not play any role as 
+        // the dcgp chromosome will be explicilty set in the UDAs before calling its operator)
         m_cgp = expression<double>(n, m, m_r, m_c, m_l, m_arity, m_f, m_n_eph, seed);
         // We initialize the inner dcgp expression
         kernel_set<audi::gdual_d> f_g;
