@@ -1157,7 +1157,7 @@ Returns:
 
 std::string es4cgp_doc()
 {
-    return R"(__init__(gen = 1, mut_n = 1, ftol = 1e-4, learn_constants = False, seed = random)
+    return R"(__init__(gen = 1, max_mut = 4, ftol = 1e-4, learn_constants = False, seed = random)
 
 Evolutionary strategies are popular global optimization meta-heuristics essentially based
 on the following simple pseudo-algorithm:
@@ -1189,7 +1189,7 @@ genes).
 
 Args:
     gen (``int``): number of generations.
-    mut_n (``int``): number of active genes to be mutated.
+    max_mut (``int``): number of active genes to be mutated.
     ftol (``float``): the algorithm will exit when the loss is below this tolerance.
     learn_constants (``bool``): when true a gaussian mutation is applied to the ephemeral constants (std = 0.1).
     seed (``int``): seed used by the internal random number generator (default is random).
@@ -1197,7 +1197,7 @@ Args:
 Raises:
     unspecified: any exception thrown by failures at the intersection between C++ and Python (e.g.,
       type conversion errors, mismatched function signatures, etc.)
-    ValueError: if  *mut_n* is 0 or *ftol* is negative.
+    ValueError: if  *max_mut* is 0 or *ftol* is negative.
 
     )";
 }
@@ -1223,7 +1223,7 @@ Examples:
     >>> import dcgpy
     >>> from pygmo import *
     >>> 
-    >>> algo = algorithm(dcgpy.es4cgp(gen = 2000, mut_n = 1, ftol = 1e-4, learn_constants=True))       
+    >>> algo = algorithm(dcgpy.es4cgp(gen = 2000, max_mut = 4, ftol = 1e-4, learn_constants=True))       
     >>> X, Y = dcgpy.generate_koza_quintic()    
     >>> udp = dcgpy.symbolic_regression(X, Y ,1,20,21,2, dcgpy.kernel_set_double(["sum", "diff", "mul"])(), 1, False, 0)
     >>> pop = population(udp, 4)
@@ -1247,6 +1247,92 @@ Examples:
     [(0, 0, 7398.139620548432, array([-1.22496858]), '[x0*c1**2 + c1**2]'), ...
 
 See also the docs of the relevant C++ method :cpp:func:`dcgp::es4cgp::get_log()`.
+)";
+}
+
+std::string moes4cgp_doc()
+{
+    return R"(__init__(gen = 1, max_mut = 4, learn_constants = False, seed = random)
+
+Multi-Objective Evolutionary strategies are able to trade off, in symbolic regression tasks, the 
+model complexity with its loss. This particular implementation follows the simple pseudo-code:
+
+* Start from a population (pop) of dimension N
+
+*  while i < gen
+
+*  > > Mutation: create a new population pop2 mutating each individual in pop.
+
+*  > > Evaluate all new chromosomes in pop2.
+
+*  > > Reinsertion: set pop to contain the best N individuals taken from pop and pop2 according to non dominated sorting.
+
+.. note::
+    MOES4CGP is tailored to solve :class:`dcgpy.symbolic_regression` problems and will not work on different problem types.
+
+Args:
+    gen (``int``): number of generations.
+    max_mut (``int``): maximum number of active genes to be mutated.
+    learn_constants (``bool``): when true a gaussian mutation is applied to the ephemeral constants (std = 0.1).
+    seed (``int``): seed used by the internal random number generator (default is random).
+
+Raises:
+    unspecified: any exception thrown by failures at the intersection between C++ and Python (e.g.,
+      type conversion errors, mismatched function signatures, etc.)
+    ValueError: if  *max_mut* is 0.
+
+    )";
+}
+
+std::string moes4cgp_get_log_doc()
+{
+    return R"(get_log()
+Returns a log containing relevant parameters recorded during the last call to ``evolve()``. The log frequency depends
+on the verbosity parameter (by default nothing is logged) which can be set calling the
+method :func:`~pygmo.algorithm.set_verbosity()` on an :class:`~pygmo.algorithm`
+constructed with a :class:`~dcgpy.moes4cgp`. A verbosity of ``N`` implies a log
+line each ``N`` generations.
+
+Returns:
+    ``list`` of ``tuples``: at each logged epoch, the values ``Gen``, ``Fevals``, ``Current best``, ``Best``, where:
+
+    * ``Gen`` (``int``), generation number.
+    * ``Fevals`` (``int``), number of functions evaluation made.
+    * ``Best loss`` (``float``), the best fitness found.
+    * ``Ndf size`` (``int``), number of models in the non dominated front.
+    * ``Compl.`` (``in``), minimum complexity across the models in the non dominated front.
+Examples:
+    >>> import dcgpy
+    >>> from pygmo import *
+    >>> 
+    >>> algo = algorithm(dcgpy.moes4cgp(gen = 90, max_mut = 2))       
+    >>> X, Y = dcgpy.generate_koza_quintic()    
+    >>> udp = dcgpy.symbolic_regression(X, Y ,1,20,21,2, dcgpy.kernel_set_double(["sum", "diff", "mul"])(), 1, True, 0)
+    >>> pop = population(udp, 100)
+    >>> algo.set_verbosity(10)
+    >>> pop = algo.evolve(pop) # doctest: +SKIP
+    Gen:        Fevals:     Best loss: Ndf size:   Compl.:
+       0              0        6.07319         3        92
+      10           1000        2.15419         5        10
+      20           2000        1.92403         8        33
+      30           3000       0.373663        12        72
+      40           4000        0.36954        13        72
+      50           5000       0.235749        16        73
+      60           6000       0.235749        12        73
+      70           7000       0.235749        13        73
+      80           8000       0.217968        12        75
+      90           9000       0.217968        12        75
+     100          10000       0.217968        12        75
+     110          11000       0.217968        14        75
+     120          12000       0.217968        14        75
+     130          13000       0.217968        13        75
+     140          14000       0.162293        12        52
+    Exit condition -- generations = 140
+    >>> uda = algo.extract(dcgpy.moes4cgp)
+    >>> uda.get_log() # doctest: +SKIP
+    [(0, 0, 6.0731942123423, 3, 92), ...
+
+See also the docs of the relevant C++ method :cpp:func:`dcgp::moes4cgp::get_log()`.
 )";
 }
 
@@ -1324,7 +1410,7 @@ See also the docs of the relevant C++ method :cpp:func:`dcgp::gd4cgp::get_log()`
 
 std::string mes4cgp_doc()
 {
-    return R"(__init__(gen = 1, mut_n = 1, ftol = 1e-4, learn_constants = False, seed = random)
+    return R"(__init__(gen = 1, max_mut = 1, ftol = 1e-4, learn_constants = False, seed = random)
 
 The term Memetic is widely used, in the context of meta-heuristic search, to indicate a synergy between any
 population-based approach with local improvement procedures. The resulting algorithms are also referred to, in the
@@ -1357,14 +1443,14 @@ outlined by the following pseudo-algorithm:
 
 Args:
     gen (``int``): number of generations.
-    mut_n (``int``): number of active genes to be mutated.
+    max_mut (``int``): number of active genes to be mutated.
     ftol (``float``): the algorithm will exit when the loss is below this tolerance.
     seed (``int``): seed used by the internal random number generator (default is random).
 
 Raises:
     unspecified: any exception thrown by failures at the intersection between C++ and Python (e.g.,
       type conversion errors, mismatched function signatures, etc.)
-    ValueError: if  *mut_n* is 0 or *ftol* is negative.
+    ValueError: if  *max_mut* is 0 or *ftol* is negative.
 
     )";
 }
@@ -1390,7 +1476,7 @@ Examples:
     >>> import dcgpy
     >>> from pygmo import *
     >>> 
-    >>> algo = algorithm(dcgpy.mes4cgp(gen = 90, mut_n = 1, ftol = 1e-4))       
+    >>> algo = algorithm(dcgpy.mes4cgp(gen = 90, max_mut = 4, ftol = 1e-4))       
     >>> X, Y = dcgpy.generate_koza_quintic()    
     >>> udp = dcgpy.symbolic_regression(X, Y ,1,20,21,2, dcgpy.kernel_set_double(["sum", "diff", "mul"])(), 1, False, 0)
     >>> pop = population(udp, 4)

@@ -30,13 +30,13 @@ namespace dcgp
  * is, ultimately, a two-objectives optimization problem.
  *
  * In this C++ class we offer an UDA (User Defined Algorithm for the pagmo optimization suite) which extends
- * :class:`dcgp::es4cgp` for a multiobjective problem. The resulting algorithm, is
+ * :class:`dcgp::es4cgp` for a multiobjective problem. The resulting approach, is
  * outlined by the following pseudo-algorithm:
  *
  * @code{.unparsed}
  * > Start from a population (pop) of dimension N
  * > while i < gen
- * > > Mutation: create a new population pop2 mutating N times the best individual.
+ * > > Mutation: create a new population pop2 mutating each individual in pop.
  * > > Reinsertion: set pop to contain the best N individuals taken from pop and pop2 according to non dominated
  * sorting.
  * @endcode

@@ -44,6 +44,8 @@ std::string symbolic_regression_predict_doc();
 std::string generic_uda_get_seed_doc();
 std::string es4cgp_doc();
 std::string es4cgp_get_log_doc();
+std::string moes4cgp_doc();
+std::string moes4cgp_get_log_doc();
 std::string gd4cgp_doc();
 std::string gd4cgp_get_log_doc();
 std::string mes4cgp_doc();

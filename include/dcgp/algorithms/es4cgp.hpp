@@ -30,7 +30,7 @@ namespace dcgp
  * @code{.unparsed}
  * > Start from a population (pop) of dimension N
  * > while i < gen
- * > > Mutation: create a new population pop2 mutating N times the best individual.
+ * > > Mutation: create a new population pop2 containing N different mutations of pop best.
  * > > Evaluate all new chromosomes in pop2
  * > > Reinsertion: set pop to contain the best N individuals taken from pop and pop2
  * @endcode

@@ -382,7 +382,7 @@ class test_es4cgp(_ut.TestCase):
         prob = pg.problem(udp)
         pop = pg.population(prob, 10)
         # Interface for the UDAs
-        uda = es4cgp(gen=20, mut_n=3, ftol=1e-3, learn_constants=True, seed=34)
+        uda = es4cgp(gen=20, max_mut=3, ftol=1e-3, learn_constants=True, seed=34)
         algo = pg.algorithm(uda)
         algo.set_verbosity(0)
         # Testing some evolutions
@@ -394,6 +394,38 @@ class test_es4cgp(_ut.TestCase):
         # Pickling.
         self.assertTrue(repr(algo) == repr(pickle.loads(pickle.dumps(algo))))
 
+class test_moes4cgp(_ut.TestCase):
+    def runTest(self):
+        from dcgpy import symbolic_regression, generate_koza_quintic, kernel_set_double, moes4cgp
+        import pygmo as pg
+        import pickle
+        X, Y = generate_koza_quintic()
+        # Interface for the UDPs
+        udp = symbolic_regression(
+            points=X,
+            labels=Y,
+            rows=1,
+            cols=20,
+            levels_back=21,
+            arity=2,
+            kernels=kernel_set_double(["sum", "diff", "mul", "pdiv"])(),
+            n_eph=2,
+            multi_objective=True,
+            parallel_batches=0)
+        prob = pg.problem(udp)
+        pop = pg.population(prob, 10)
+        # Interface for the UDAs
+        uda = moes4cgp(gen=5, max_mut=3, learn_constants=True)
+        algo = pg.algorithm(uda)
+        algo.set_verbosity(0)
+        # Testing some evolutions
+        pop = algo.evolve(pop)
+        # In parallel
+        archi = pg.archipelago(prob = prob, algo =algo, n = 16, pop_size=4)
+        archi.evolve()
+        archi.wait_check()
+        # Pickling.
+        self.assertTrue(repr(algo) == repr(pickle.loads(pickle.dumps(algo))))
 
 class test_mes4cgp(_ut.TestCase):
     def runTest(self):
@@ -416,7 +448,7 @@ class test_mes4cgp(_ut.TestCase):
         prob = pg.problem(udp)
         pop = pg.population(prob, 10)
         # Interface for the UDAs
-        uda = mes4cgp(gen=20, mut_n=3, ftol=1e-3, seed=34)
+        uda = mes4cgp(gen=20, max_mut=3, ftol=1e-3, seed=34)
         algo = pg.algorithm(uda)
         algo.set_verbosity(0)
         # Testing some evolutions
@@ -427,7 +459,6 @@ class test_mes4cgp(_ut.TestCase):
         archi.wait_check()
         # Pickling.
         self.assertTrue(repr(algo) == repr(pickle.loads(pickle.dumps(algo))))
-
 
 class test_momes4cgp(_ut.TestCase):
     def runTest(self):
@@ -506,9 +537,10 @@ def run_test_suite():
     suite.addTest(test_kernel_set())
     suite.addTest(test_expression())
     suite.addTest(test_symbolic_regression())
+    suite.addTest(test_es4cgp())
+    suite.addTest(test_moes4cgp())
     suite.addTest(test_mes4cgp())
     suite.addTest(test_momes4cgp())
-    suite.addTest(test_es4cgp())
     suite.addTest(test_gd4cgp())
 
     test_result = _ut.TextTestRunner(verbosity=2).run(suite)
