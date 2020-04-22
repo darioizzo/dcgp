@@ -146,7 +146,7 @@ public:
         // Normal distribution (to perturb the constants)
         std::normal_distribution<> normal{0., 1.};
         // Uniform distribution (to pick the number of active mutations)
-        std::uniform_int_distribution<> dis(1u, m_max_mut);
+        std::uniform_int_distribution<unsigned> dis(1u, m_max_mut);
         // A contiguous vector of chromosomes/fitness vectors is allocated here
         pagmo::vector_double dvs(NP * dim);
         pagmo::vector_double fs(NP * n_obj);
