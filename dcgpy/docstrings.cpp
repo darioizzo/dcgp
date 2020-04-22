@@ -1278,12 +1278,17 @@ Args:
     gen (``int``): number of generations.
     max_mut (``int``): maximum number of active genes to be mutated.
     learn_constants (``bool``): when true a gaussian mutation is applied to the ephemeral constants (std = 0.1).
+    use_bfe (``bool``):  when true the fitness evaluation will happen in parallel batches using the pygmo::bfe_mp.
     seed (``int``): seed used by the internal random number generator (default is random).
 
 Raises:
     unspecified: any exception thrown by failures at the intersection between C++ and Python (e.g.,
       type conversion errors, mismatched function signatures, etc.)
     ValueError: if  *max_mut* is 0.
+
+.. note::
+    When the use_bfe argument is True the algorithm cannot be used in a pygmo.archipelago as nested parallelism
+    would lead to AssertionError: daemonic processes are not allowed to have children.
 
     )";
 }

@@ -144,10 +144,10 @@ void expose_symbolic_regression(py::module &m)
     // MOES-4CGP (Multi-Objective Evolutionary Strategy for Cartesian Genetic Programming)
     py::class_<dcgp::moes4cgp> moes4cgp_(m, "moes4cgp", moes4cgp_doc().c_str());
     moes4cgp_
-        .def(py::init<unsigned, unsigned, bool>(), py::arg("gen") = 1u, py::arg("max_mut") = 4u,
-             py::arg("learn_constants") = true)
-        .def(py::init<unsigned, unsigned, bool, unsigned>(), py::arg("gen") = 1u, py::arg("max_mut") = 4u,
-             py::arg("learn_constants") = true, py::arg("seed"))
+        .def(py::init<unsigned, unsigned, bool, bool>(), py::arg("gen") = 1u, py::arg("max_mut") = 4u,
+             py::arg("learn_constants") = true, py::arg("use_bfe") = false)
+        .def(py::init<unsigned, unsigned, bool, bool, unsigned>(), py::arg("gen") = 1u, py::arg("max_mut") = 4u,
+             py::arg("learn_constants") = true, py::arg("use_bfe") = false, py::arg("seed"))
         .def("evolve", &dcgp::moes4cgp::evolve)
         .def("set_verbosity", &dcgp::moes4cgp::set_verbosity)
         .def("get_name", &dcgp::moes4cgp::get_name)

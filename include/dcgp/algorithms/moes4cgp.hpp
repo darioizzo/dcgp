@@ -61,9 +61,10 @@ public:
      *
      * @throws std::invalid_argument if *max_mut* is 0.
      */
-    moes4cgp(unsigned gen = 1u, unsigned max_mut = 4u, bool learn_constants = true,
+    moes4cgp(unsigned gen = 1u, unsigned max_mut = 4u, bool learn_constants = true, bool use_bfe = true,
              unsigned seed = random_device::next())
-        : m_gen(gen), m_max_mut(max_mut), m_learn_constants(learn_constants), m_e(seed), m_seed(seed), m_verbosity(0u)
+        : m_gen(gen), m_max_mut(max_mut), m_learn_constants(learn_constants), m_e(seed), m_use_bfe(use_bfe),
+          m_seed(seed), m_verbosity(0u)
     {
         if (max_mut == 0u) {
             throw std::invalid_argument("The maximum number of active mutations is zero, it must be at least 1.");
@@ -93,7 +94,7 @@ public:
         // bindings. Using this global function, instead, allows its implementation to be overridden in the bindings.
         auto udp_ptr = details::extract_sr_cpp_py(prob);
         // PREAMBLE-------------------------------------------------------------------------------------------------
-        // Check whether the problem is suitable for momes4cgp
+        // Check whether the problem is suitable for moes4cgp
         // If the UDP in pop is not a symbolic_regression UDP, udp_ptr will be NULL
         if (!udp_ptr) {
             throw std::invalid_argument(prob.get_name() + " does not seem to be a symbolic regression problem. "
@@ -175,8 +176,17 @@ public:
                 // above without the auxiliary mutated_x but readibility would be dimmisnished)
                 std::copy(mutated_x[i].begin(), mutated_x[i].end(), dvs.data() + i * dim);
             }
-            // 2 - We compute the mutants fitnesses calling the bfe
-            fs = m_bfe(prob, dvs);
+            // 2 - We compute the mutants fitnesses
+            if (m_use_bfe) {
+                fs = m_bfe(prob, dvs);
+            } else {
+                for (decltype(NP) i = 0u; i < NP; ++i) {
+                    pagmo::vector_double tmp_x(dim);
+                    std::copy(dvs.data() + i * dim, dvs.data() + (i + 1) * dim, tmp_x.begin());
+                    pagmo::vector_double tmp_f = prob.fitness(tmp_x);
+                    std::copy(tmp_f.begin(), tmp_f.end(), fs.data() + i * n_obj);
+                }
+            }
             // 3 - We insert the mutated individuals in the population
             std::vector<double> tmp_x(dim);
             std::vector<double> tmp_f(n_obj);
@@ -276,7 +286,7 @@ public:
      */
     std::string get_name() const
     {
-        return "MO-ES for CGP: MultiObjective Evolutionary Strategy for Cartesian Genetic Programming";
+        return "MO-ES for CGP: Multi-Objective Evolutionary Strategy for Cartesian Genetic Programming";
     }
 
     /// Extra info
@@ -290,6 +300,7 @@ public:
         pagmo::stream(ss, "\n\tMaximum number of active mutations: ", m_max_mut);
         pagmo::stream(ss, "\n\tLearn constants?: ", m_learn_constants);
         pagmo::stream(ss, "\n\tVerbosity: ", m_verbosity);
+        pagmo::stream(ss, "\n\tUsing bfe: ", m_use_bfe);
         pagmo::stream(ss, "\n\tSeed: ", m_seed);
         return ss.str();
     }
@@ -328,6 +339,7 @@ public:
         ar &m_max_mut;
         ar &m_learn_constants;
         ar &m_e;
+        ar &m_use_bfe;
         ar &m_seed;
         ar &m_verbosity;
         ar &m_log;
@@ -339,6 +351,7 @@ private:
     unsigned m_max_mut;
     bool m_learn_constants;
     mutable detail::random_engine_type m_e;
+    bool m_use_bfe;
     unsigned m_seed;
     unsigned m_verbosity;
     mutable log_type m_log;
