@@ -382,15 +382,15 @@ class test_es4cgp(_ut.TestCase):
         prob = pg.problem(udp)
         pop = pg.population(prob, 10)
         # Interface for the UDAs
-        uda = es4cgp(gen=20, max_mut=3, ftol=1e-3, learn_constants=True, seed=34)
+        uda = es4cgp(gen=20, max_mut=3, ftol=1e-3, learn_constants=True, use_bfe= False, seed=34)
         algo = pg.algorithm(uda)
         algo.set_verbosity(0)
         # Testing some evolutions
         pop = algo.evolve(pop)
         # In parallel (no nested parallelism in python mp)
-        #archi = pg.archipelago(prob = prob, algo =algo, n = 16, pop_size=4)
-        #archi.evolve()
-        #archi.wait_check()
+        archi = pg.archipelago(prob = prob, algo =algo, n = 16, pop_size=4)
+        archi.evolve()
+        archi.wait_check()
         # Pickling.
         self.assertTrue(repr(algo) == repr(pickle.loads(pickle.dumps(algo))))
 

@@ -129,10 +129,10 @@ void expose_symbolic_regression(py::module &m)
     // ES-4CGP (Evolutionary Strategy for Cartesian Genetic Programming)
     py::class_<dcgp::es4cgp> es4cgp_(m, "es4cgp", es4cgp_doc().c_str());
     es4cgp_
-        .def(py::init<unsigned, unsigned, double, bool>(), py::arg("gen") = 1u, py::arg("max_mut") = 4u,
-             py::arg("ftol") = 1e-4, py::arg("learn_constants") = true)
-        .def(py::init<unsigned, unsigned, double, bool, unsigned>(), py::arg("gen") = 1u, py::arg("max_mut") = 4u,
-             py::arg("ftol") = 1e-4, py::arg("learn_constants") = true, py::arg("seed"))
+        .def(py::init<unsigned, unsigned, double, bool, bool>(), py::arg("gen") = 1u, py::arg("max_mut") = 4u,
+             py::arg("ftol") = 1e-4, py::arg("learn_constants") = true, py::arg("use_bfe") = false)
+        .def(py::init<unsigned, unsigned, double, bool, bool, unsigned>(), py::arg("gen") = 1u, py::arg("max_mut") = 4u,
+             py::arg("ftol") = 1e-4, py::arg("learn_constants") = true, py::arg("use_bfe") = false, py::arg("seed"))
         .def("evolve", &dcgp::es4cgp::evolve)
         .def("set_verbosity", &dcgp::es4cgp::set_verbosity)
         .def("get_name", &dcgp::es4cgp::get_name)

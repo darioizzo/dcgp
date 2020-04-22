@@ -1192,6 +1192,7 @@ Args:
     max_mut (``int``): number of active genes to be mutated.
     ftol (``float``): the algorithm will exit when the loss is below this tolerance.
     learn_constants (``bool``): when true a gaussian mutation is applied to the ephemeral constants (std = 0.1).
+    use_bfe (``bool``):  when true the fitness evaluation will happen in parallel batches using the pygmo::bfe_mp.
     seed (``int``): seed used by the internal random number generator (default is random).
 
 Raises:
@@ -1199,6 +1200,9 @@ Raises:
       type conversion errors, mismatched function signatures, etc.)
     ValueError: if  *max_mut* is 0 or *ftol* is negative.
 
+.. note::
+    When the use_bfe argument is True the algorithm cannot be used in a pygmo.archipelago as nested parallelism
+    would lead to AssertionError: daemonic processes are not allowed to have children
     )";
 }
 
@@ -1400,7 +1404,7 @@ Examples:
         3              3              3        658.404         0.3375        4275.16
         4              4              4        632.004        0.50625        4068.54
     Exit condition -- max iterations = 4
-    >>> uda = algo.extract(es4cgp)
+    >>> uda = algo.extract(gd4cgp)
     >>> uda.get_log() # doctest: +SKIP
     [(0, 0, 0, 0.0, 0.1, 4588.5979303850145), ...
 

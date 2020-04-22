@@ -64,20 +64,21 @@ public:
      * @param ftol the algorithm will exit when the loss is below this tolerance. This is useful for cases where
      * an exact formula is seeked, rather than just an approximated one.
      * @param learn_constants when true a gaussian mutation is applied also to the ephemeral constants (std = 0.1).
+     * @param use_bfe when true the fitness evaluation will happen in parallel batches using the pagmo::default_bfe.
      * @param seed seed used by the internal random number generator (default is random).
      *
      * @throws std::invalid_argument if *max_mut* is 0 or *ftol* is negative
      */
     es4cgp(unsigned gen = 1u, unsigned max_mut = 4u, double ftol = 1e-4, bool learn_constants = true,
-           unsigned seed = random_device::next())
-        : m_gen(gen), m_max_mut(max_mut), m_ftol(ftol), m_learn_constants(learn_constants), m_e(seed), m_seed(seed),
-          m_verbosity(0u)
+           bool use_bfe = true, unsigned seed = random_device::next())
+        : m_gen(gen), m_max_mut(max_mut), m_ftol(ftol), m_learn_constants(learn_constants), m_use_bfe(use_bfe),
+          m_e(seed), m_seed(seed), m_verbosity(0u)
     {
         if (m_max_mut == 0u) {
             throw std::invalid_argument("The number of active mutations is zero, it must be at least 1.");
         }
         if (ftol < 0.) {
-           throw std::invalid_argument("The ftol is negative, it must be positive or zero.");
+            throw std::invalid_argument("The ftol is negative, it must be positive or zero.");
         }
     }
 
@@ -146,7 +147,7 @@ public:
         std::normal_distribution<> normal{0., 1.};
         // Uniform distribution (to pick the number of active mutations)
         std::uniform_int_distribution<> dis(1u, m_max_mut);
-        // A contiguous vector of chromosomes/fitness vectors for pagmo::bfe input\output is allocated here.
+        // A contiguous vector of chromosomes/fitness vectors is allocated here
         pagmo::vector_double dvs(NP * dim);
         pagmo::vector_double fs(NP * n_obj);
 
@@ -184,8 +185,17 @@ public:
                 }
             }
 
-            // 3 - We compute the mutants fitnesses calling the bfe
-            fs = m_bfe(prob, dvs);
+            // 3 - We compute the mutants fitnesses
+            if (m_use_bfe) {
+                fs = m_bfe(prob, dvs);
+            } else {
+                for (decltype(NP) i = 0u; i < NP; ++i) {
+                    pagmo::vector_double tmp_x(dim);
+                    std::copy(dvs.data() + i * dim, dvs.data() + (i + 1) * dim, tmp_x.begin());
+                    pagmo::vector_double tmp_f = prob.fitness(tmp_x);
+                    fs[i] = tmp_f[0];
+                }
+            }
             // TODO: This is only making sense for pythonic bfes fix the issue upstream
             // prob.increment_fevals(fs.size());
 
@@ -308,6 +318,7 @@ public:
         pagmo::stream(ss, "\n\tMaximum number of active mutations: ", m_max_mut);
         pagmo::stream(ss, "\n\tExit condition of the final loss (ftol): ", m_ftol);
         pagmo::stream(ss, "\n\tVerbosity: ", m_verbosity);
+        pagmo::stream(ss, "\n\tUsing bfe: ", m_use_bfe);
         pagmo::stream(ss, "\n\tSeed: ", m_seed);
         return ss.str();
     }
@@ -365,6 +376,7 @@ public:
         ar &m_ftol;
         ar &m_learn_constants;
         ar &m_e;
+        ar &m_use_bfe;
         ar &m_seed;
         ar &m_verbosity;
         ar &m_log;
@@ -377,6 +389,7 @@ private:
     double m_ftol;
     bool m_learn_constants;
     mutable detail::random_engine_type m_e;
+    bool m_use_bfe;
     unsigned m_seed;
     unsigned m_verbosity;
     mutable log_type m_log;
