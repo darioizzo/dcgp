@@ -110,7 +110,7 @@ BOOST_AUTO_TEST_CASE(s11n_test)
         boost::archive::binary_oarchive oarchive(ss);
         oarchive << uda;
     }
-    uda = es4cgp{10u, 2u, 1e-5, true, 23u};
+    uda = es4cgp{10u, 2u, 1e-5, true, false, 23u};
     {
         boost::archive::binary_iarchive iarchive(ss);
         iarchive >> uda;

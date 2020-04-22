@@ -63,7 +63,7 @@ public:
      */
     moes4cgp(unsigned gen = 1u, unsigned max_mut = 4u, bool learn_constants = true, bool use_bfe = true,
              unsigned seed = random_device::next())
-        : m_gen(gen), m_max_mut(max_mut), m_learn_constants(learn_constants), m_e(seed), m_use_bfe(use_bfe),
+        : m_gen(gen), m_max_mut(max_mut), m_learn_constants(learn_constants), m_use_bfe(use_bfe), m_e(seed),
           m_seed(seed), m_verbosity(0u)
     {
         if (max_mut == 0u) {
@@ -338,8 +338,8 @@ public:
         ar &m_gen;
         ar &m_max_mut;
         ar &m_learn_constants;
-        ar &m_e;
         ar &m_use_bfe;
+        ar &m_e;
         ar &m_seed;
         ar &m_verbosity;
         ar &m_log;
@@ -350,8 +350,8 @@ private:
     unsigned m_gen;
     unsigned m_max_mut;
     bool m_learn_constants;
-    mutable detail::random_engine_type m_e;
     bool m_use_bfe;
+    mutable detail::random_engine_type m_e;
     unsigned m_seed;
     unsigned m_verbosity;
     mutable log_type m_log;

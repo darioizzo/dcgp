@@ -388,8 +388,8 @@ private:
     unsigned m_max_mut;
     double m_ftol;
     bool m_learn_constants;
-    mutable detail::random_engine_type m_e;
     bool m_use_bfe;
+    mutable detail::random_engine_type m_e;
     unsigned m_seed;
     unsigned m_verbosity;
     mutable log_type m_log;

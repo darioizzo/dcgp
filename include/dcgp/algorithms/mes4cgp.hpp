@@ -144,7 +144,7 @@ public:
         Eigen::MatrixXd C = Eigen::MatrixXd::Zero(_(n_eph), 1);
         auto hs = prob.hessians_sparsity();
         // Uniform distribution (to pick the number of active mutations)
-        std::uniform_int_distribution<> dis(1u, m_max_mut);
+        std::uniform_int_distribution<unsigned> dis(1u, m_max_mut);
         // Main loop
         for (decltype(m_gen) gen = 1u; gen <= m_gen; ++gen) {
             // Logs and prints (verbosity modes > 1: a line is added every m_verbosity generations)

@@ -150,7 +150,7 @@ public:
             std::vector<pagmo::vector_double::size_type> best_idx(NP);
             // We also need to randomly assign the number of active mutations to each individual.
             std::vector<unsigned> n_active_mutations(NP);
-            std::uniform_int_distribution<> dis(0, m_max_mut);
+            std::uniform_int_distribution<unsigned> dis(0, m_max_mut);
             for(auto &item : n_active_mutations) {
                 item = dis(m_e);
             }
