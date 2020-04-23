@@ -81,7 +81,7 @@ inline py::array_t<double> vector_to_ndarr(const std::vector<double> &vv)
     }
 
     // Create the output array, of shape n
-    py::array_t<double> retval({n});
+    py::array_t<double> retval(n);
 
     // Get a mutable view into it and copy the data from vv.
     auto r = retval.mutable_unchecked<1>();
