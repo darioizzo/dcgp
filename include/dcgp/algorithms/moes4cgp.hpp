@@ -58,17 +58,23 @@ public:
      *
      * @param gen number of generations.
      * @param max_mut maximum number of active genes to be mutated.
+     * @param ftol the algorithm will exit when the loss is below this tolerance. This is useful for cases where
+     * an exact formula is seeked, rather than just an approximated one.
      * @param learn_constants when true a gaussian mutation is applied to the ephemeral constants (std = 0.1).
      * @param seed seed used by the internal random number generator (default is random).
      *
      * @throws std::invalid_argument if *max_mut* is 0.
      */
-    moes4cgp(unsigned gen = 1u, unsigned max_mut = 4u, bool learn_constants = true,
+    moes4cgp(unsigned gen = 1u, unsigned max_mut = 4u, double ftol = 0, bool learn_constants = true,
              unsigned seed = random_device::next())
-        : m_gen(gen), m_max_mut(max_mut), m_learn_constants(learn_constants), m_e(seed), m_seed(seed), m_verbosity(0u)
+        : m_gen(gen), m_max_mut(max_mut), m_ftol(ftol), m_learn_constants(learn_constants), m_e(seed), m_seed(seed),
+          m_verbosity(0u)
     {
         if (max_mut == 0u) {
             throw std::invalid_argument("The maximum number of active mutations is zero, it must be at least 1.");
+        }
+        if (ftol < 0.) {
+            throw std::invalid_argument("The ftol is negative, it must be positive or zero.");
         }
     }
 
@@ -143,6 +149,13 @@ public:
                     }
                     log_single_line(gen - 1, prob.get_fevals() - fevals0, pop);
                     ++count;
+                    // Check for ftol stopping condition
+                    if (pagmo::ideal(pop.get_f())[0] < m_ftol) {
+                        if (m_verbosity > 0u) {
+                            pagmo::print("Exit condition -- ftol < ", m_ftol, "\n");
+                        }
+                        return pop;
+                    }
                 }
             }
 
@@ -359,6 +372,7 @@ public:
 private:
     unsigned m_gen;
     unsigned m_max_mut;
+    double m_ftol;
     bool m_learn_constants;
     bool m_use_bfe;
     mutable detail::random_engine_type m_e;

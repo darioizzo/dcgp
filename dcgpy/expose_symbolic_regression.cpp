@@ -130,9 +130,9 @@ void expose_symbolic_regression(py::module &m)
     py::class_<dcgp::es4cgp> es4cgp_(m, "es4cgp", es4cgp_doc().c_str());
     es4cgp_
         .def(py::init<unsigned, unsigned, double, bool>(), py::arg("gen") = 1u, py::arg("max_mut") = 4u,
-             py::arg("ftol") = 1e-4, py::arg("learn_constants") = true)
+             py::arg("ftol") = 0, py::arg("learn_constants") = true)
         .def(py::init<unsigned, unsigned, double, bool, unsigned>(), py::arg("gen") = 1u, py::arg("max_mut") = 4u,
-             py::arg("ftol") = 1e-4, py::arg("learn_constants") = true, py::arg("seed"))
+             py::arg("ftol") = 0, py::arg("learn_constants") = true, py::arg("seed"))
         .def("evolve", &dcgp::es4cgp::evolve)
         .def("set_verbosity", &dcgp::es4cgp::set_verbosity)
         .def("get_name", &dcgp::es4cgp::get_name)
@@ -145,10 +145,10 @@ void expose_symbolic_regression(py::module &m)
     // MOES-4CGP (Multi-Objective Evolutionary Strategy for Cartesian Genetic Programming)
     py::class_<dcgp::moes4cgp> moes4cgp_(m, "moes4cgp", moes4cgp_doc().c_str());
     moes4cgp_
-        .def(py::init<unsigned, unsigned, bool>(), py::arg("gen") = 1u, py::arg("max_mut") = 4u,
-             py::arg("learn_constants") = true)
-        .def(py::init<unsigned, unsigned, bool, unsigned>(), py::arg("gen") = 1u, py::arg("max_mut") = 4u,
-             py::arg("learn_constants") = true, py::arg("seed"))
+        .def(py::init<unsigned, unsigned, double, bool>(), py::arg("gen") = 1u, py::arg("max_mut") = 4u,
+              py::arg("ftol") = 0, py::arg("learn_constants") = true)
+        .def(py::init<unsigned, unsigned, double, bool, unsigned>(), py::arg("gen") = 1u, py::arg("max_mut") = 4u,
+              py::arg("ftol") = 0, py::arg("learn_constants") = true, py::arg("seed"))
         .def("evolve", &dcgp::moes4cgp::evolve)
         .def("set_verbosity", &dcgp::moes4cgp::set_verbosity)
         .def("get_name", &dcgp::moes4cgp::get_name)

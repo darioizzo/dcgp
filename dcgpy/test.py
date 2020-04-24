@@ -417,7 +417,7 @@ class test_moes4cgp(_ut.TestCase):
         prob = pg.problem(udp)
         pop = pg.population(prob, 10)
         # Interface for the UDAs
-        uda = moes4cgp(gen=5, max_mut=3, learn_constants=True)
+        uda = moes4cgp(gen=5, max_mut=3, ftol=1e-3, learn_constants=True)
         algo = pg.algorithm(uda)
         algo.set_verbosity(0)
         # Testing some evolutions

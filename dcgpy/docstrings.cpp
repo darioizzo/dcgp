@@ -1289,13 +1289,14 @@ model complexity with its loss. This particular implementation follows the simpl
 Args:
     gen (``int``): number of generations.
     max_mut (``int``): maximum number of active genes to be mutated.
+    ftol (``float``): the algorithm will exit when the loss is below this tolerance.
     learn_constants (``bool``): when true a gaussian mutation is applied to the ephemeral constants (std = 0.1).
     seed (``int``): seed used by the internal random number generator (default is random).
 
 Raises:
     unspecified: any exception thrown by failures at the intersection between C++ and Python (e.g.,
       type conversion errors, mismatched function signatures, etc.)
-    ValueError: if  *max_mut* is 0.
+    ValueError: if  *max_mut* is 0 or *ftol* is < 0.
 
 .. note::
     If a :class:`~pygmo.bfe_mp` is set using the :func:`~dcgpy.es4cgp.set_bfe` , the algorithm cannot be used

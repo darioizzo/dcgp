@@ -70,7 +70,7 @@ public:
      *
      * @throws std::invalid_argument if *max_mut* is 0 or *ftol* is negative
      */
-    es4cgp(unsigned gen = 1u, unsigned max_mut = 4u, double ftol = 1e-4, bool learn_constants = true,
+    es4cgp(unsigned gen = 1u, unsigned max_mut = 4u, double ftol = 0, bool learn_constants = true,
            unsigned seed = random_device::next())
         : m_gen(gen), m_max_mut(max_mut), m_ftol(ftol), m_learn_constants(learn_constants), 
           m_e(seed), m_seed(seed), m_verbosity(0u)
