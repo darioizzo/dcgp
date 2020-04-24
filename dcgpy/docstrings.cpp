@@ -1145,6 +1145,18 @@ Raises:
 )";
 }
 
+std::string generic_set_bfe_doc()
+{
+    return R"(set_bfe(b)
+Set the batch function evaluation scheme.
+This method will set the batch function evaluation scheme to be used.
+Args:
+    b (:class:`~pygmo.bfe`): the batch function evaluation object
+Raises:
+    unspecified: any exception thrown by the underlying C++ method
+)";
+}
+
 std::string generic_uda_get_seed_doc()
 {
     return R"(get_seed()
@@ -1192,7 +1204,6 @@ Args:
     max_mut (``int``): number of active genes to be mutated.
     ftol (``float``): the algorithm will exit when the loss is below this tolerance.
     learn_constants (``bool``): when true a gaussian mutation is applied to the ephemeral constants (std = 0.1).
-    use_bfe (``bool``):  when true the fitness evaluation will happen in parallel batches using the pygmo::bfe_mp.
     seed (``int``): seed used by the internal random number generator (default is random).
 
 Raises:
@@ -1201,8 +1212,9 @@ Raises:
     ValueError: if  *max_mut* is 0 or *ftol* is negative.
 
 .. note::
-    When the use_bfe argument is True the algorithm cannot be used in a pygmo.archipelago as nested parallelism
-    would lead to AssertionError: daemonic processes are not allowed to have children
+    If a :class:`~pygmo.bfe_mp` is set using the :func:`~dcgpy.es4cgp.set_bfe` , the algorithm cannot be used
+    in a :class:`~pygmo.archipelago` as nested parallelism would lead to AssertionError: daemonic processes 
+    are not allowed to have children.
     )";
 }
 
@@ -1278,7 +1290,6 @@ Args:
     gen (``int``): number of generations.
     max_mut (``int``): maximum number of active genes to be mutated.
     learn_constants (``bool``): when true a gaussian mutation is applied to the ephemeral constants (std = 0.1).
-    use_bfe (``bool``):  when true the fitness evaluation will happen in parallel batches using the pygmo::bfe_mp.
     seed (``int``): seed used by the internal random number generator (default is random).
 
 Raises:
@@ -1287,9 +1298,9 @@ Raises:
     ValueError: if  *max_mut* is 0.
 
 .. note::
-    When the use_bfe argument is True the algorithm cannot be used in a pygmo.archipelago as nested parallelism
-    would lead to AssertionError: daemonic processes are not allowed to have children.
-
+    If a :class:`~pygmo.bfe_mp` is set using the :func:`~dcgpy.es4cgp.set_bfe` , the algorithm cannot be used
+    in a :class:`~pygmo.archipelago` as nested parallelism would lead to AssertionError: daemonic processes 
+    are not allowed to have children.
     )";
 }
 

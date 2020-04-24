@@ -1,6 +1,8 @@
 #ifndef DCGP_MOES4CGP_H
 #define DCGP_MOES4CGP_H
 
+#include <boost/optional.hpp>
+#include <boost/serialization/optional.hpp>
 #include <pagmo/algorithm.hpp>
 #include <pagmo/bfe.hpp>
 #include <pagmo/detail/custom_comparisons.hpp>
@@ -61,10 +63,9 @@ public:
      *
      * @throws std::invalid_argument if *max_mut* is 0.
      */
-    moes4cgp(unsigned gen = 1u, unsigned max_mut = 4u, bool learn_constants = true, bool use_bfe = true,
+    moes4cgp(unsigned gen = 1u, unsigned max_mut = 4u, bool learn_constants = true,
              unsigned seed = random_device::next())
-        : m_gen(gen), m_max_mut(max_mut), m_learn_constants(learn_constants), m_use_bfe(use_bfe), m_e(seed),
-          m_seed(seed), m_verbosity(0u)
+        : m_gen(gen), m_max_mut(max_mut), m_learn_constants(learn_constants), m_e(seed), m_seed(seed), m_verbosity(0u)
     {
         if (max_mut == 0u) {
             throw std::invalid_argument("The maximum number of active mutations is zero, it must be at least 1.");
@@ -177,8 +178,8 @@ public:
                 std::copy(mutated_x[i].begin(), mutated_x[i].end(), dvs.data() + i * dim);
             }
             // 2 - We compute the mutants fitnesses
-            if (m_use_bfe) {
-                fs = m_bfe(prob, dvs);
+            if (m_bfe) {
+                fs = (*m_bfe)(prob, dvs);
             } else {
                 for (decltype(NP) i = 0u; i < NP; ++i) {
                     pagmo::vector_double tmp_x(dim);
@@ -230,6 +231,15 @@ public:
     unsigned get_seed() const
     {
         return m_seed;
+    }
+
+    /// Sets the batch function evaluation scheme
+    /**
+     * @param b batch function evaluation object
+     */
+    void set_bfe(const pagmo::bfe &b)
+    {
+        m_bfe = b;
     }
 
     /// Sets the algorithm verbosity
@@ -355,8 +365,7 @@ private:
     unsigned m_seed;
     unsigned m_verbosity;
     mutable log_type m_log;
-    pagmo::bfe m_bfe;
-
+    boost::optional<pagmo::bfe> m_bfe;
 }; // namespace dcgp
 } // namespace dcgp
 

@@ -382,7 +382,7 @@ class test_es4cgp(_ut.TestCase):
         prob = pg.problem(udp)
         pop = pg.population(prob, 10)
         # Interface for the UDAs
-        uda = es4cgp(gen=20, max_mut=3, ftol=1e-3, learn_constants=True, use_bfe= False, seed=34)
+        uda = es4cgp(gen=20, max_mut=3, ftol=1e-3, learn_constants=True, seed=34)
         algo = pg.algorithm(uda)
         algo.set_verbosity(0)
         # Testing some evolutions
@@ -415,7 +415,7 @@ class test_moes4cgp(_ut.TestCase):
         prob = pg.problem(udp)
         pop = pg.population(prob, 10)
         # Interface for the UDAs
-        uda = moes4cgp(gen=5, max_mut=3, learn_constants=True, use_bfe=False)
+        uda = moes4cgp(gen=5, max_mut=3, learn_constants=True)
         algo = pg.algorithm(uda)
         algo.set_verbosity(0)
         # Testing some evolutions

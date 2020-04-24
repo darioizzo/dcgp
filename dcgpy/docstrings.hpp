@@ -41,6 +41,7 @@ std::string symbolic_regression_init_doc();
 std::string symbolic_regression_predict_doc();
 
 // UDAs
+std::string generic_set_bfe_doc();
 std::string generic_uda_get_seed_doc();
 std::string es4cgp_doc();
 std::string es4cgp_get_log_doc();

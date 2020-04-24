@@ -4,6 +4,7 @@
 #include <sstream>
 
 #include <pagmo/algorithm.hpp>
+#include <pagmo/bfe.hpp>
 #include <pagmo/io.hpp>
 #include <pagmo/population.hpp>
 #include <pagmo/problem.hpp>
@@ -18,15 +19,15 @@ using namespace dcgp;
 
 BOOST_AUTO_TEST_CASE(construction_test)
 {
-    BOOST_CHECK_NO_THROW(moes4cgp(0u, 1u, true, true));
-    BOOST_CHECK_THROW(moes4cgp(1u, 0u, true, true), std::invalid_argument);
+    BOOST_CHECK_NO_THROW(moes4cgp(0u, 1u, true));
+    BOOST_CHECK_THROW(moes4cgp(1u, 0u, true), std::invalid_argument);
 }
 
 BOOST_AUTO_TEST_CASE(evolve_test)
 {
     // We test that evolve fails on UDPs that are not suitable.
     kernel_set<double> basic_set({"sum", "diff", "mul", "div"});
-    moes4cgp uda(10u, 1u, true, false, 0u);
+    moes4cgp uda(10u, 1u, true, 0u);
     { // wrong problem (not symbolic)
         pagmo::population pop{pagmo::rosenbrock(10), 4};
         BOOST_CHECK_THROW(uda.evolve(pop), std::invalid_argument);
@@ -56,12 +57,12 @@ BOOST_AUTO_TEST_CASE(evolve_test)
     pagmo::population pop2{prob, 5u, 23u};
     pagmo::population pop3{prob, 5u, 23u};
 
-    moes4cgp uda1{10u, 1u, false, true, 23u};
+    moes4cgp uda1{10u, 1u, false, 23u};
     uda1.set_verbosity(1u);
     pop1 = uda1.evolve(pop1);
     BOOST_CHECK(uda1.get_log().size() > 0u);
 
-    moes4cgp uda2{10u, 1u, false, true, 23u};
+    moes4cgp uda2{10u, 1u, false, 23u};
     uda2.set_verbosity(1u);
     pop2 = uda2.evolve(pop2);
     BOOST_CHECK(uda2.get_log() == uda1.get_log());
@@ -74,8 +75,9 @@ BOOST_AUTO_TEST_CASE(evolve_test)
 BOOST_AUTO_TEST_CASE(bfe_nonbfe_test)
 {
     // We test that evolve fails on UDPs that are not suitable.
-    moes4cgp uda_bfe(10u, 2u, true, true, 0u);
-    moes4cgp uda_not_bfe(10u, 2u, true, false, 0u);
+    moes4cgp uda_bfe(10u, 2u, true, 0u);
+    uda_bfe.set_bfe(pagmo::bfe{});
+    moes4cgp uda_not_bfe(10u, 2u, true, 0u);
 
     // Here we test that evolution is identical for the two variants
     kernel_set<double> basic_set({"sum", "diff", "mul", "div"});
@@ -96,7 +98,7 @@ BOOST_AUTO_TEST_CASE(bfe_nonbfe_test)
 
 BOOST_AUTO_TEST_CASE(trivial_methods_test)
 {
-    moes4cgp uda{10u, 1u, false, true, 23u};
+    moes4cgp uda{10u, 1u, false, 23u};
     uda.set_verbosity(11u);
     BOOST_CHECK(uda.get_verbosity() == 11u);
     uda.set_seed(5u);
@@ -108,7 +110,7 @@ BOOST_AUTO_TEST_CASE(trivial_methods_test)
 
 BOOST_AUTO_TEST_CASE(s11n_test)
 {
-    moes4cgp uda{10u, 1u, false, false, 23u};
+    moes4cgp uda{10u, 1u, false, 23u};
 
     const auto orig = uda.get_extra_info();
 
@@ -117,7 +119,7 @@ BOOST_AUTO_TEST_CASE(s11n_test)
         boost::archive::binary_oarchive oarchive(ss);
         oarchive << uda;
     }
-    uda = moes4cgp{10u, 2u, true, true, 23u};
+    uda = moes4cgp{10u, 2u, true, 23u};
     {
         boost::archive::binary_iarchive iarchive(ss);
         iarchive >> uda;
