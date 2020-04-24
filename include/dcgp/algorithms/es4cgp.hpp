@@ -327,8 +327,9 @@ public:
         pagmo::stream(ss, "\tMaximum number of generations: ", m_gen);
         pagmo::stream(ss, "\n\tMaximum number of active mutations: ", m_max_mut);
         pagmo::stream(ss, "\n\tExit condition of the final loss (ftol): ", m_ftol);
+        pagmo::stream(ss, "\n\tLearn constants?: ", m_learn_constants);
         pagmo::stream(ss, "\n\tVerbosity: ", m_verbosity);
-        pagmo::stream(ss, "\n\tUsing bfe: ", m_use_bfe);
+        pagmo::stream(ss, "\n\tUsing bfe: ", ((m_bfe) ? "yes" : "no"));
         pagmo::stream(ss, "\n\tSeed: ", m_seed);
         return ss.str();
     }
@@ -386,7 +387,6 @@ public:
         ar &m_ftol;
         ar &m_learn_constants;
         ar &m_e;
-        ar &m_use_bfe;
         ar &m_seed;
         ar &m_verbosity;
         ar &m_log;
@@ -398,7 +398,6 @@ private:
     unsigned m_max_mut;
     double m_ftol;
     bool m_learn_constants;
-    bool m_use_bfe;
     mutable detail::random_engine_type m_e;
     unsigned m_seed;
     unsigned m_verbosity;

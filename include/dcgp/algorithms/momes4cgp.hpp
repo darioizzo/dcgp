@@ -64,11 +64,14 @@ public:
      *
      * @throws std::invalid_argument if *mut_n* is 0
      */
-    momes4cgp(unsigned gen = 1u, unsigned max_mut = 4u, unsigned seed = random_device::next())
-        : m_gen(gen), m_max_mut(max_mut), m_e(seed), m_seed(seed), m_verbosity(0u)
+    momes4cgp(unsigned gen = 1u, unsigned max_mut = 4u, double ftol = 0., unsigned seed = random_device::next())
+        : m_gen(gen), m_max_mut(max_mut), m_ftol(ftol), m_e(seed), m_seed(seed), m_verbosity(0u)
     {
         if (max_mut == 0u) {
             throw std::invalid_argument("The number of active mutations is zero, it must be at least 1.");
+        }
+        if (ftol < 0.) {
+            throw std::invalid_argument("The ftol is negative, it must be positive or zero.");
         }
     }
 
@@ -141,6 +144,13 @@ public:
                     }
                     log_single_line(gen - 1, prob.get_fevals() - fevals0, pop);
                     ++count;
+                    // Check for ftol stopping condition
+                    if (pagmo::ideal(pop.get_f())[0] < m_ftol) {
+                        if (m_verbosity > 0u) {
+                            pagmo::print("Exit condition -- ftol < ", m_ftol, "\n");
+                        }
+                        return pop;
+                    }
                 }
             }
 
@@ -151,7 +161,7 @@ public:
             // We also need to randomly assign the number of active mutations to each individual.
             std::vector<unsigned> n_active_mutations(NP);
             std::uniform_int_distribution<unsigned> dis(0, m_max_mut);
-            for(auto &item : n_active_mutations) {
+            for (auto &item : n_active_mutations) {
                 item = dis(m_e);
             }
 
@@ -317,6 +327,7 @@ public:
         std::ostringstream ss;
         pagmo::stream(ss, "\tMaximum number of generations: ", m_gen);
         pagmo::stream(ss, "\n\tMaximum number of active mutations: ", m_max_mut);
+        pagmo::stream(ss, "\n\tExit condition of the final loss (ftol): ", m_ftol);
         pagmo::stream(ss, "\n\tVerbosity: ", m_verbosity);
         pagmo::stream(ss, "\n\tSeed: ", m_seed);
         return ss.str();
@@ -328,7 +339,8 @@ public:
      * <tt>std::vector</tt> is a momes4cgp::log_line_type containing: Gen, Fevals, Best loss, Ndf size and Complexity
      * described in momes4cgp::set_verbosity().
      *
-     * @return an <tt> std::vector</tt> of momes4cgp::log_line_type containing the logged values Gen, Fevals, Best loss, Ndf size * * and Complexity
+     * @return an <tt> std::vector</tt> of momes4cgp::log_line_type containing the logged values Gen, Fevals, Best loss,
+     * Ndf size * * and Complexity
      */
     const log_type &get_log() const
     {
@@ -363,6 +375,7 @@ public:
     {
         ar &m_gen;
         ar &m_max_mut;
+        ar &m_ftol;
         ar &m_e;
         ar &m_seed;
         ar &m_verbosity;
@@ -372,6 +385,7 @@ public:
 private:
     unsigned m_gen;
     unsigned m_max_mut;
+    double m_ftol;
     mutable detail::random_engine_type m_e;
     unsigned m_seed;
     unsigned m_verbosity;
