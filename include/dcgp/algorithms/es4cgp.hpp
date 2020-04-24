@@ -70,7 +70,7 @@ public:
      *
      * @throws std::invalid_argument if *max_mut* is 0 or *ftol* is negative
      */
-    es4cgp(unsigned gen = 1u, unsigned max_mut = 4u, double ftol = 0, bool learn_constants = true,
+    es4cgp(unsigned gen = 1u, unsigned max_mut = 4u, double ftol = 0., bool learn_constants = true,
            unsigned seed = random_device::next())
         : m_gen(gen), m_max_mut(max_mut), m_ftol(ftol), m_learn_constants(learn_constants), 
           m_e(seed), m_seed(seed), m_verbosity(0u)
@@ -213,7 +213,7 @@ public:
                 }
             }
             // Check if ftol exit condition is met
-            if (best_f < m_ftol) {
+            if (pagmo::detail::greater_than_f(m_ftol, best_f)) {
                 if (m_verbosity > 0u) {
                     auto formula = udp_ptr->prettier(best_x);
                     log_single_line(gen, prob.get_fevals() - fevals0, best_f, best_x, formula, n_eph);

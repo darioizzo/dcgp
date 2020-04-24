@@ -130,9 +130,9 @@ void expose_symbolic_regression(py::module &m)
     py::class_<dcgp::es4cgp> es4cgp_(m, "es4cgp", es4cgp_doc().c_str());
     es4cgp_
         .def(py::init<unsigned, unsigned, double, bool>(), py::arg("gen") = 1u, py::arg("max_mut") = 4u,
-             py::arg("ftol") = 0, py::arg("learn_constants") = true)
+             py::arg("ftol") = 0., py::arg("learn_constants") = true)
         .def(py::init<unsigned, unsigned, double, bool, unsigned>(), py::arg("gen") = 1u, py::arg("max_mut") = 4u,
-             py::arg("ftol") = 0, py::arg("learn_constants") = true, py::arg("seed"))
+             py::arg("ftol") = 0., py::arg("learn_constants") = true, py::arg("seed"))
         .def("evolve", &dcgp::es4cgp::evolve)
         .def("set_verbosity", &dcgp::es4cgp::set_verbosity)
         .def("get_name", &dcgp::es4cgp::get_name)
@@ -146,9 +146,9 @@ void expose_symbolic_regression(py::module &m)
     py::class_<dcgp::moes4cgp> moes4cgp_(m, "moes4cgp", moes4cgp_doc().c_str());
     moes4cgp_
         .def(py::init<unsigned, unsigned, double, bool>(), py::arg("gen") = 1u, py::arg("max_mut") = 4u,
-              py::arg("ftol") = 0, py::arg("learn_constants") = true)
+             py::arg("ftol") = 0., py::arg("learn_constants") = true)
         .def(py::init<unsigned, unsigned, double, bool, unsigned>(), py::arg("gen") = 1u, py::arg("max_mut") = 4u,
-              py::arg("ftol") = 0, py::arg("learn_constants") = true, py::arg("seed"))
+             py::arg("ftol") = 0., py::arg("learn_constants") = true, py::arg("seed"))
         .def("evolve", &dcgp::moes4cgp::evolve)
         .def("set_verbosity", &dcgp::moes4cgp::set_verbosity)
         .def("get_name", &dcgp::moes4cgp::get_name)
@@ -161,8 +161,7 @@ void expose_symbolic_regression(py::module &m)
     // GD-4CGP (Gradient Descent for Cartesian Genetic Programming)
     py::class_<dcgp::gd4cgp> gd4cgp_(m, "gd4cgp", gd4cgp_doc().c_str());
     gd4cgp_
-        .def(py::init<unsigned, double, double>(), py::arg("max_iter") = 1u, py::arg("lr") = 1.,
-             py::arg("lr_min") = 1e-3)
+        .def(py::init<unsigned, double, double>(), py::arg("max_iter") = 1u, py::arg("lr") = 1., py::arg("lr_min") = 0.)
         .def("evolve", &dcgp::gd4cgp::evolve)
         .def("set_verbosity", &dcgp::gd4cgp::set_verbosity)
         .def("get_name", &dcgp::gd4cgp::get_name)
@@ -173,10 +172,9 @@ void expose_symbolic_regression(py::module &m)
     // MES-4CGP (Memetic Evolutionary Strategy for Cartesian Genetic Programming)
     py::class_<dcgp::mes4cgp> mes4cgp_(m, "mes4cgp", mes4cgp_doc().c_str());
     mes4cgp_
-        .def(py::init<unsigned, unsigned, double>(), py::arg("gen") = 1u, py::arg("max_mut") = 4u,
-             py::arg("ftol") = 1e-4)
+        .def(py::init<unsigned, unsigned, double>(), py::arg("gen") = 1u, py::arg("max_mut") = 4u, py::arg("ftol") = 0.)
         .def(py::init<unsigned, unsigned, double, unsigned>(), py::arg("gen") = 1u, py::arg("max_mut") = 4u,
-             py::arg("ftol") = 1e-4, py::arg("seed"))
+             py::arg("ftol") = 0., py::arg("seed"))
         .def("evolve", &dcgp::mes4cgp::evolve)
         .def("set_verbosity", &dcgp::mes4cgp::set_verbosity)
         .def("get_name", &dcgp::mes4cgp::get_name)
@@ -188,9 +186,11 @@ void expose_symbolic_regression(py::module &m)
     // MOMES-4CGP (Multi-Objective Memetic Evolutionary Strategy for Cartesian Genetic Programming)
     py::class_<dcgp::momes4cgp> momes4cgp_(m, "momes4cgp", momes4cgp_doc().c_str());
 
-    momes4cgp_.def(py::init<unsigned, unsigned>(), py::arg("gen") = 1u, py::arg("max_mut") = 4u);
     momes4cgp_
-        .def(py::init<unsigned, unsigned, unsigned>(), py::arg("gen") = 1u, py::arg("max_mut") = 4u, py::arg("seed"))
+        .def(py::init<unsigned, double, unsigned>(), py::arg("gen") = 1u, py::arg("max_mut") = 4u,
+             py::arg("ftol") = 0., )
+        .def(py::init<unsigned, unsigned, double, unsigned>(), py::arg("gen") = 1u, py::arg("max_mut") = 4u,
+             py::arg("ftol") = 0., py::arg("seed"))
         .def("evolve", &dcgp::momes4cgp::evolve)
         .def("set_verbosity", &dcgp::momes4cgp::set_verbosity)
         .def("get_name", &dcgp::momes4cgp::get_name)

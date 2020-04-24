@@ -68,7 +68,7 @@ public:
      *
      * @throws std::invalid_argument if *max_mut* is 0 or *ftol* is negative
      */
-    mes4cgp(unsigned gen = 1u, unsigned max_mut = 4u, double ftol = 1e-4, unsigned seed = random_device::next())
+    mes4cgp(unsigned gen = 1u, unsigned max_mut = 4u, double ftol = 0., unsigned seed = random_device::next())
         : m_gen(gen), m_max_mut(max_mut), m_ftol(ftol), m_e(seed), m_seed(seed), m_verbosity(0u)
     {
         if (max_mut == 0u) {
@@ -235,7 +235,7 @@ public:
                 //    mutated_f[i] = prob.fitness(mutated_x[i]);
             }
             // Check if ftol exit condition is met
-            if (pagmo::detail::less_than_f(best_f[0], m_ftol)) {
+            if (pagmo::detail::greater_than_f(m_ftol, best_f[0])) {
                 auto formula = udp_ptr->prettier(best_x);
                 log_single_line(gen, prob.get_fevals() - fevals0, best_f[0], formula, best_x, n_eph);
                 if (pagmo::detail::less_than_f(best_f[0], pop.get_f()[best_idx][0])) {

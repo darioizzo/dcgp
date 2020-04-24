@@ -145,7 +145,7 @@ public:
                     log_single_line(gen - 1, prob.get_fevals() - fevals0, pop);
                     ++count;
                     // Check for ftol stopping condition
-                    if (pagmo::ideal(pop.get_f())[0] < m_ftol) {
+                    if (pagmo::detail::greater_than_f(m_ftol, pagmo::ideal(pop.get_f())[0])) {
                         if (m_verbosity > 0u) {
                             pagmo::print("Exit condition -- ftol < ", m_ftol, "\n");
                         }
