@@ -387,11 +387,13 @@ class test_es4cgp(_ut.TestCase):
         algo.set_verbosity(0)
         # Testing some evolutions
         pop = algo.evolve(pop)
-        # In parallel (no nested parallelism in python mp)
+        # In parallel
         archi = pg.archipelago(prob = prob, algo =algo, n = 16, pop_size=4)
         archi.evolve()
         archi.wait_check()
-        # Pickling.
+        # In parallel via bfe
+        uda.set_bfe(pg.bfe(pg.mp_bfe()))
+        pop = uda.evolve(pop)
         self.assertTrue(repr(algo) == repr(pickle.loads(pickle.dumps(algo))))
 
 class test_moes4cgp(_ut.TestCase):
@@ -424,6 +426,9 @@ class test_moes4cgp(_ut.TestCase):
         archi = pg.archipelago(prob = prob, algo =algo, n = 16, pop_size=4)
         archi.evolve()
         archi.wait_check()
+        # In parallel via bfe
+        uda.set_bfe(pg.bfe(pg.mp_bfe()))
+        pop = uda.evolve(pop)
         # Pickling.
         self.assertTrue(repr(algo) == repr(pickle.loads(pickle.dumps(algo))))
 
