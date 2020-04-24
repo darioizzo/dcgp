@@ -187,8 +187,8 @@ void expose_symbolic_regression(py::module &m)
     py::class_<dcgp::momes4cgp> momes4cgp_(m, "momes4cgp", momes4cgp_doc().c_str());
 
     momes4cgp_
-        .def(py::init<unsigned, double, unsigned>(), py::arg("gen") = 1u, py::arg("max_mut") = 4u,
-             py::arg("ftol") = 0., )
+        .def(py::init<unsigned, unsigned, double>(), py::arg("gen") = 1u, py::arg("max_mut") = 4u,
+             py::arg("ftol") = 0.)
         .def(py::init<unsigned, unsigned, double, unsigned>(), py::arg("gen") = 1u, py::arg("max_mut") = 4u,
              py::arg("ftol") = 0., py::arg("seed"))
         .def("evolve", &dcgp::momes4cgp::evolve)

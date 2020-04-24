@@ -1326,7 +1326,7 @@ Examples:
     >>> import dcgpy
     >>> from pygmo import *
     >>> 
-    >>> algo = algorithm(dcgpy.moes4cgp(gen = 90, max_mut = 2))       
+    >>> algo = algorithm(dcgpy.moes4cgp(gen = 90, max_mut = 2, ftol = 0.1))       
     >>> X, Y = dcgpy.generate_koza_quintic()    
     >>> udp = dcgpy.symbolic_regression(X, Y ,1,20,21,2, dcgpy.kernel_set_double(["sum", "diff", "mul"])(), 1, True, 0)
     >>> pop = population(udp, 100)
@@ -1551,7 +1551,8 @@ outlined by the following pseudo-algorithm:
 
 Args:
     gen (``int``): number of generations.
-    max_mut (``int``): maximum number of active genes to be mutated. The minimum is zero (this allow the memetic learning to act in consecutive gens)
+    max_mut (``int``): maximum number of active genes to be mutated.
+    ftol (``float``): the algorithm will exit when the loss is below this tolerance.
     seed (``int``): seed used by the internal random number generator (default is random).
 
 Raises:

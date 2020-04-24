@@ -184,7 +184,7 @@ public:
                                [](unsigned a) { return boost::numeric_cast<double>(a); });
             }
 
-            // 2 - Life long learning (i.e. touching the continuous part) is  obtained performing a single Newton
+            // 2 - Life long learning (i.e. touching the continuous part) is obtained performing a single Newton
             // iteration (thus favouring constants appearing linearly)
             for (decltype(NP) i = 0u; i < NP; ++i) {
                 pagmo::vector_double grad;
@@ -199,7 +199,7 @@ public:
                     }
                 } else {
                     // TODO IMPORTANT: guard against non invertible Hessians (for exmaple when an eph constant is not
-                    // picked up) We compute hessians and gradients stored in the pagmo format
+                    // picked up). We compute hessians and gradients stored in the pagmo format
                     hess = prob.hessians(mutated_x[i]);
                     grad = prob.gradient(mutated_x[i]);
                     // We copy them into the Eigen format

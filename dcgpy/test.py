@@ -382,7 +382,7 @@ class test_es4cgp(_ut.TestCase):
         prob = pg.problem(udp)
         pop = pg.population(prob, 10)
         # Interface for the UDAs
-        uda = es4cgp(gen=20, max_mut=3, ftol=1e-3, learn_constants=True, seed=34)
+        uda = es4cgp(gen=5, max_mut=3, ftol=1e-3, learn_constants=True, seed=34)
         algo = pg.algorithm(uda)
         algo.set_verbosity(0)
         # Testing some evolutions
@@ -417,7 +417,7 @@ class test_moes4cgp(_ut.TestCase):
         prob = pg.problem(udp)
         pop = pg.population(prob, 10)
         # Interface for the UDAs
-        uda = moes4cgp(gen=5, max_mut=3, ftol=1e-3, learn_constants=True)
+        uda = moes4cgp(gen=5, max_mut=3, ftol=1e-3, learn_constants=True, seed = 32)
         algo = pg.algorithm(uda)
         algo.set_verbosity(0)
         # Testing some evolutions
@@ -453,7 +453,7 @@ class test_mes4cgp(_ut.TestCase):
         prob = pg.problem(udp)
         pop = pg.population(prob, 10)
         # Interface for the UDAs
-        uda = mes4cgp(gen=20, max_mut=3, ftol=1e-3, seed=34)
+        uda = mes4cgp(gen=5, max_mut=3, ftol=1e-3, seed=34)
         algo = pg.algorithm(uda)
         algo.set_verbosity(0)
         # Testing some evolutions
@@ -486,7 +486,7 @@ class test_momes4cgp(_ut.TestCase):
         prob = pg.problem(udp)
         pop = pg.population(prob, 10)
         # Interface for the UDAs
-        uda = momes4cgp(gen=5, max_mut=3)
+        uda = momes4cgp(gen=5, max_mut=3, ftol = 0., seed=32)
         algo = pg.algorithm(uda)
         algo.set_verbosity(0)
         # Testing some evolutions
