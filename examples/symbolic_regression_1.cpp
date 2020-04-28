@@ -22,7 +22,7 @@ int main()
 
     // We instantiate a symbolic regression problem with no ephemeral constants.
     auto n_eph = 0u;
-    symbolic_regression udp(X, Y, 1, 20, 21, 2, kernel_set<double>({"sum", "diff", "mul", "pdiv"})(), n_eph);
+    symbolic_regression udp(X, Y, 1u, 20u, 21u, 2u, kernel_set<double>({"sum", "diff", "mul", "pdiv"})(), n_eph);
 
     // We init a population with four individuals
     pagmo::population pop{udp, 4u};

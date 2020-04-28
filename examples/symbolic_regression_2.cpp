@@ -29,7 +29,7 @@ int main()
     pagmo::population pop{udp, 4u};
 
     // We use an ES startegy also to learn constants
-    dcgp::es4cgp uda1(100000, 4u, 1e-8, true);
+    dcgp::es4cgp uda1(100000u, 4u, 1e-8, true);
     pagmo::algorithm algo{uda1};
     algo.set_verbosity(500u);
 
