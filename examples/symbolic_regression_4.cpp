@@ -34,7 +34,7 @@ int main()
     // We instantiate it with 100 generations and 4 active mutations maximum per individual.
     dcgp::momes4cgp uda{1000u, 4u, 1e-8};
     pagmo::algorithm algo{uda};
-    algo.set_verbosity(10u);
+    algo.set_verbosity(50u);
 
     // We solve the problem
     pop = algo.evolve(pop);

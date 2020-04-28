@@ -15,9 +15,6 @@ ADD_EXAMPLE(symbolic_regression_2mo)
 ADD_EXAMPLE(symbolic_regression_3)
 ADD_EXAMPLE(symbolic_regression_4)
 
-
-
-
 # Solving differential equations examples
 ADD_EXAMPLE(tsoulos_ode1)
 ADD_EXAMPLE(tsoulos_nlode3)
