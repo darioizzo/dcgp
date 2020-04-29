@@ -231,8 +231,8 @@ public:
                         // We remove the rows and columns corresponding to ephemeral constants not
                         // in the expression
                         for (decltype(zero.size()) j = 0u; j < zero.size(); ++j) {
-                            remove_row(H, non_zero[j]);
-                            remove_column(H, non_zero[j]);
+                            remove_row(H, non_zero[j] - j);
+                            remove_column(H, non_zero[j] - j);
                         }
                         // We now construct the (active) gradient and the (active) constant column vectors.
                         for (decltype(n_non_zero) j = 0u; j < n_non_zero; ++j) {
