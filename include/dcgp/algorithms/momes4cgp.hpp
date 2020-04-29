@@ -402,8 +402,8 @@ public:
 private:
     static inline void remove_row(Eigen::MatrixXd &matrix, pagmo::vector_double::size_type row_to_remove)
     {
-        unsigned n_rows = static_cast<unsigned>(matrix.rows()) - 1u;
-        unsigned n_cols = static_cast<unsigned>(matrix.cols());
+        Eigen::Index n_rows = matrix.rows() - 1u;
+        Eigen::Index n_cols = matrix.cols();
 
         if (row_to_remove < n_rows)
             matrix.block(row_to_remove, 0, n_rows - row_to_remove, n_cols)
@@ -414,8 +414,8 @@ private:
 
     static inline void remove_column(Eigen::MatrixXd &matrix, pagmo::vector_double::size_type col_to_remove)
     {
-        unsigned n_rows = static_cast<unsigned>(matrix.rows());
-        unsigned n_cols = static_cast<unsigned>(matrix.cols()) - 1u;
+        Eigen::Index n_rows = matrix.rows();
+        Eigen::Index n_cols = matrix.cols() - 1u;
 
         if (col_to_remove < n_cols)
             matrix.block(0, col_to_remove, n_rows, n_cols - col_to_remove)
