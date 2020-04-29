@@ -25,7 +25,7 @@ int main()
     // Note that here we also set a batch parallelism to 5 so that 5 batches of 2 points
     // will be created and handled in parallel.
     auto n_eph = 1u;
-    symbolic_regression udp(X, Y, 1u, 15u, 16u, 2u, kernel_set<double>({"sum", "diff", "mul"})(), n_eph, true);
+    symbolic_regression udp(X, Y, 1u, 15u, 16u, 2u, kernel_set<double>({"sum", "diff", "mul", "pdiv"})(), n_eph, true);
 
     // We init a large population (100) of individuals.
     pagmo::population pop{udp, 4u};

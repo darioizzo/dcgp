@@ -138,7 +138,17 @@ public:
         std::vector<unsigned> best_xu(best_x.size() - n_eph);
         std::transform(best_x.data() + n_eph, best_x.data() + best_x.size(), best_xu.begin(),
                        [](double a) { return boost::numeric_cast<unsigned>(a); });
+        // The Hessian sparsity is defined here and it will not change.
         auto hs = prob.hessians_sparsity();
+        // (active) Hessian
+        Eigen::MatrixXd H;
+        // (active) Gradient
+        Eigen::MatrixXd G;
+        // (active) Constants
+        Eigen::MatrixXd C;
+        // Full pivoting LU decomposition to check that H is invertible, find the inverse
+        // and see if H is positive definite
+        Eigen::FullPivLU<Eigen::MatrixXd> fullpivlu;
         // Uniform distribution (to pick the number of active mutations)
         std::uniform_int_distribution<unsigned> dis(1u, m_max_mut);
         // Main loop
@@ -208,11 +218,11 @@ public:
                     } else if (n_non_zero > 1u) {
                         // The (active) Hessian stored in a square Eigen matrix. Rows and Cols
                         // will be removed later so that size will be n_non_zero x n_non_zero
-                        Eigen::MatrixXd H = Eigen::MatrixXd::Zero(_(n_eph), _(n_eph));
+                        H = Eigen::MatrixXd::Zero(_(n_eph), _(n_eph));
                         // (active) Gradient stored in a column vector
-                        Eigen::MatrixXd G = Eigen::MatrixXd::Zero(_(n_non_zero), 1u);
+                        G = Eigen::MatrixXd::Zero(_(n_non_zero), 1u);
                         // (active) Constants stored in a column vector
-                        Eigen::MatrixXd C = Eigen::MatrixXd::Zero(_(n_non_zero), 1u);
+                        C = Eigen::MatrixXd::Zero(_(n_non_zero), 1u);
                         // Full pivoting LU decomposition to check that H is invertible, find the inverse
                         // and see if H is positive definite
                         Eigen::FullPivLU<Eigen::MatrixXd> fullpivlu;
@@ -267,26 +277,8 @@ public:
                     best_x = mutated_x[i];
                     std::copy(mutated_x[i].data() + n_eph, mutated_x[i].data() + mutated_x[i].size(), best_xu.begin());
                 }
-                // TODO: else some gradient descent steps
-                //    COPY FROM best_x THE EPH VALUES INTO mutated_x
-                //    for (decltype(5u) k = 0u; k < 10u; ++k) {
-                //        auto grad = prob.gradient(mutated_x[i]);
-                //        auto loss_gradient_norm = std::sqrt(std::inner_product(grad.begin(), grad.end(),
-                //        grad.begin(), 0.));
-                //        // We only do a few steps if the gradient is not zero and finite.
-                //        if (loss_gradient_norm > 1e-13 && std::isfinite(loss_gradient_norm)) {
-                //            std::transform(
-                //                grad.begin(), grad.end(), mutated_x[i].data(), mutated_x[i].data(),
-                //                [lr, loss_gradient_norm](double a, double b) { return b - a / loss_gradient_norm *
-                //                lr;
-                //                });
-                //        } else {
-                //            break;
-                //        }
-                //    }
-                //    mutated_f[i] = prob.fitness(mutated_x[i]);
             }
-            // Check if ftol exit condition is met
+            // 4 - Exit if ftol is reached
             if (pagmo::detail::greater_than_f(m_ftol, best_f[0])) {
                 auto formula = udp_ptr->prettier(best_x);
                 log_single_line(gen, prob.get_fevals() - fevals0, best_f[0], formula, best_x, n_eph);
@@ -297,6 +289,7 @@ public:
                 return pop;
             }
         }
+
         if (pagmo::detail::less_than_f(best_f[0], pop.get_f()[best_idx][0])) {
             pop.set_xf(worst_idx, best_x, best_f);
         }
