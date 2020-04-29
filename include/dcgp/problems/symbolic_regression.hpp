@@ -516,12 +516,12 @@ public:
 
 private:
     // Collapses a vectorized cf into one (taking the mean)
-    static double collapse(const audi::vectorized<double> &vec)
+    static inline double collapse(const audi::vectorized<double> &vec)
     {
         return std::accumulate(vec.begin(), vec.end(), 0.) / static_cast<double>(vec.size());
     };
 
-    // TODO: protect from segfault
+    // Transpose of a vector vector
     static inline std::vector<std::vector<double>> transpose(const std::vector<std::vector<double>> &points) 
     {
         std::vector<std::vector<double>> result(points[0].size(), std::vector<double>(points.size()));
@@ -531,7 +531,7 @@ private:
             }
         return result;
     }
-    // TODO: protect from segfault
+    // Builds the vectorized gduals from the data
     static inline std::vector<audi::gdual_v> points_to_gdual_v(const std::vector<std::vector<double>> &points) 
     {
         std::vector<audi::gdual_v> retval(points[0].size());

@@ -21,7 +21,7 @@ int main()
     gym::generate_P1(X, Y);
 
     // We instantiate a symbolic regression problem with one only ephemeral constants.
-    auto n_eph = 1u;
+    auto n_eph = 3u;
     symbolic_regression udp(X, Y, 1u, 15u, 16u, 2u, kernel_set<double>({"sum", "diff", "mul"})(), n_eph);
 
     // We init a population with four individuals.
