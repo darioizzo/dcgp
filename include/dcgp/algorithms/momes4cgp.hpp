@@ -405,9 +405,9 @@ private:
         Eigen::Index n_rows = matrix.rows() - 1u;
         Eigen::Index n_cols = matrix.cols();
 
-        if (row_to_remove < n_rows)
-            matrix.block(row_to_remove, 0, n_rows - row_to_remove, n_cols)
-                = matrix.block(row_to_remove + 1, 0, n_rows - row_to_remove, n_cols);
+        if (_(row_to_remove) < n_rows)
+            matrix.block(_(row_to_remove), 0, n_rows - _(row_to_remove), n_cols)
+                = matrix.block(_(row_to_remove) + 1, 0, n_rows - _(row_to_remove), n_cols);
 
         matrix.conservativeResize(n_rows, n_cols);
     }
@@ -417,9 +417,9 @@ private:
         Eigen::Index n_rows = matrix.rows();
         Eigen::Index n_cols = matrix.cols() - 1u;
 
-        if (col_to_remove < n_cols)
-            matrix.block(0, col_to_remove, n_rows, n_cols - col_to_remove)
-                = matrix.block(0, col_to_remove + 1, n_rows, n_cols - col_to_remove);
+        if (_(col_to_remove) < n_cols)
+            matrix.block(0, _(col_to_remove), n_rows, n_cols - _(col_to_remove))
+                = matrix.block(0, _(col_to_remove) + 1, n_rows, n_cols - _(col_to_remove));
 
         matrix.conservativeResize(n_rows, n_cols);
     }
