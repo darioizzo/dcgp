@@ -227,5 +227,7 @@ void expose_symbolic_regression(py::module &m)
     expose_data_from_the_gym<&gym::generate_kirby2>(m, "generate_kirby2", generate_kirby2_doc());
     expose_data_from_the_gym<&gym::generate_lanczos2>(m, "generate_lanczos2", generate_lanczos2_doc());
     expose_data_from_the_gym<&gym::generate_misra1b>(m, "generate_misra1b", generate_misra1b_doc());
+    expose_data_from_the_gym<&gym::generate_luca1>(m, "generate_luca1", generate_luca1_doc());
+
 }
 } // namespace dcgpy

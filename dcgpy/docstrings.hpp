@@ -82,6 +82,8 @@ std::string generate_gauss1_doc();
 std::string generate_kirby2_doc();
 std::string generate_lanczos2_doc();
 std::string generate_misra1b_doc();
+// MISC data
+std::string generate_luca1_doc();
 
 } // namespace dcgpy
 

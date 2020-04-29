@@ -7,6 +7,8 @@
 #include <vector>
 
 #include <dcgp/nist_data.hpp>
+#include <dcgp/misc_data.hpp>
+
 
 namespace dcgp
 {
@@ -302,6 +304,15 @@ inline void generate_misra1b(std::vector<std::vector<double>> &points, std::vect
     points = misra1b_points;
     labels = misra1b_labels;
 }
+
+inline void generate_luca1(std::vector<std::vector<double>> &points, std::vector<std::vector<double>> &labels)
+{
+    points.clear();
+    labels.clear();
+    points = luca1_points;
+    labels = luca1_labels;
+}
+
 } // namespace gym
 } // namespace dcgp
 

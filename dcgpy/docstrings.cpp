@@ -889,6 +889,26 @@ Examples:
     )";
 }
 
+std::string generate_luca1_doc()
+{
+    return R"(
+
+These data are the result of an industrial study. Since the original data were subject to intellectual property
+restrictions the data has been altered adding an unkown amount of noise and artifacts. The abscissa is some unknown
+material property while in the y axis we can read a temperature value in Celsius.
+
+Returns:
+    A tuple containing the points (``2D NumPy float array``) and labels (``2D NumPy float array``).
+
+Examples:
+
+>>> from dcgpy import *
+>>> import matplotlib.pyplot as plt 
+>>> X, Y = generate_luca1()
+>>> plt.plot(X,Y, '.')
+    )";
+}
+
 std::string generate_chwirut2_doc()
 {
     return R"(
