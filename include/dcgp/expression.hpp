@@ -723,9 +723,11 @@ public:
         }
     }
 
-    /// Mutates one of the active function genes
+    /// Mutates active function genes
     /**
-     * Mutates exactly one of the active function genes within its allowed bounds.
+     * Mutates \p N active function genes within their allowed bounds.
+     *
+     * @param[in] N Number of active function genes to be mutated
      */
     void mutate_active_fgene(unsigned N = 1u)
     {
@@ -743,11 +745,13 @@ public:
         }
     }
 
-    /// Mutates one of the active connection genes
+    /// Mutates active connection genes
     /**
-     * Mutates exactly one of the active connection genes within its allowed
-     * bounds.
+     * Mutates \p N active connection genes within their allowed bounds.
+     *
+     * @param[in] N Number of active connection genes to be mutated
      */
+
     void mutate_active_cgene(unsigned N = 1u)
     {
         // If no active function gene exists, do nothing
@@ -764,24 +768,28 @@ public:
         }
     }
 
-    /// Mutates one of the active output genes
+    /// Mutates active output genes
     /**
-     * Mutates exactly one of the output genes within its allowed bounds.
+     * Mutates \p N active output genes within their allowed bounds.
+     *
+     * @param[in] N Number of output genes to be mutated
      */
-    void mutate_ogene(unsigned N = 1)
+    void mutate_ogene(unsigned N = 1u)
     {
         unsigned idx;
-        if (m_m > 1) {
+        if (m_m > 1u) {
             for (auto i = 0u; i < N; ++i) {
                 idx = std::uniform_int_distribution<unsigned>(static_cast<unsigned>(m_active_genes.size() - m_m),
                                                               static_cast<unsigned>(m_active_genes.size() - 1u))(m_e);
+                idx = m_active_genes[idx];
+                mutate(idx);
             }
 
         } else {
             idx = static_cast<unsigned>(m_active_genes.size() - 1u);
+            idx = m_active_genes[idx];
+            mutate(idx);
         }
-        idx = m_active_genes[idx];
-        mutate(idx);
     }
 
     /// Sets the internal seed
