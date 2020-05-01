@@ -770,7 +770,7 @@ public:
 
     /// Mutates active output genes
     /**
-     * Mutates \p N active output genes within their allowed bounds.
+     * Mutates \p N times random active output genes within their allowed bounds.
      *
      * @param[in] N Number of output genes to be mutated
      */
@@ -891,10 +891,11 @@ protected:
      * of the active nodes and active genes. Each time the chromosome is changed, these structures need also to be
      * changed. A call to this method takes care of this. In derived classes (such as for example expression_ann), one
      * can add more of these chromosome dependant data, and will thus need to override this method, making sure to still
-     * have it called by the new method and adding there the new data book-keeping.
+     * have it called by the new method and adding there the new data book-keeping. Hence the method must be marked
+     * as virtual.
      */
 
-    void update_data_structures()
+    virtual void update_data_structures()
     {
         assert(m_x.size() == m_lb.size());
 
