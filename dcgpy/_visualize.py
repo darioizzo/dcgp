@@ -18,7 +18,7 @@ def _dcgpann_visualize(self, show_connections = True, fill_color = 'w', active_c
 
     >>> from dcgpy import *
     >>> nonlinearities = dcgpy.kernel_set_double(["sig", "ReLu", "tanh"])
-    >>> dcgpann = dcgpy.expression_ann_double(inputs=3, outputs=4, rows=15, cols=8, levels_back=2, arity=4, kernels=nonlinearities(), seed=32)
+    >>> dcgpann = dcgpy.expression_ann(inputs=3, outputs=4, rows=15, cols=8, levels_back=2, arity=4, kernels=nonlinearities(), seed=32)
     >>> dcgpann.randomise_weights()
     >>> dcgpann.visualize(show_nonlinearities=False)
     """
