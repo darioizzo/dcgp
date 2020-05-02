@@ -4,13 +4,13 @@
 #include <algorithm>
 #include <audi/back_compatibility.hpp>
 #include <audi/io.hpp>
+#include <pagmo/s11n.hpp>
 #include <random>
 #include <stdexcept>
-#include <pagmo/s11n.hpp>
-
 
 #include <dcgp/expression_ann.hpp>
 #include <dcgp/kernel_set.hpp>
+#include <dcgp/wrapped_functions_s11n_implement.hpp>
 using namespace dcgp;
 
 void test_against_numerical_derivatives(unsigned n, unsigned m, unsigned r, unsigned c, unsigned lb,
