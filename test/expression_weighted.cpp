@@ -3,11 +3,11 @@
 
 #include <dcgp/expression_weighted.hpp>
 #include <dcgp/kernel_set.hpp>
+#include <pagmo/s11n.hpp>
 
 #include "helpers.hpp"
 
 using namespace dcgp;
-
 
 BOOST_AUTO_TEST_CASE(get_set_weight_test)
 {
@@ -35,4 +35,27 @@ BOOST_AUTO_TEST_CASE(get_set_weight_test)
     weights[9] = 10.;
     // check all weights together
     CHECK_CLOSE_V(ex.get_weights(), weights, 1e-12);
+}
+
+BOOST_AUTO_TEST_CASE(s11n_test)
+{
+    // Random seed
+    std::random_device rd;
+    kernel_set<double> basic_set({"sum", "diff", "mul", "div"});
+    expression_weighted<double> ex(2u, 2u, 20u, 20u, 3u, 2u, basic_set(), rd());
+
+    const auto orig = boost::lexical_cast<std::string>(ex);
+
+    std::stringstream ss;
+    {
+        boost::archive::binary_oarchive oarchive(ss);
+        oarchive << ex;
+    }
+    ex = expression_weighted<double>(2, 2, 2, 2, 3, 2, basic_set(), rd());
+    {
+        boost::archive::binary_iarchive iarchive(ss);
+        iarchive >> ex;
+    }
+
+    BOOST_CHECK(orig == boost::lexical_cast<std::string>(ex));
 }

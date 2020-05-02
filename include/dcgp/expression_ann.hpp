@@ -75,8 +75,7 @@ public:
                    unsigned l,                    // n. levels-back
                    std::vector<unsigned> arity,   // basis functions' arity
                    std::vector<kernel<double>> f, // functions
-                   unsigned seed = dcgp::random_device::next()
-                   )
+                   unsigned seed = dcgp::random_device::next())
         : expression<double>(n, m, r, c, l, arity, f, 0u, seed), m_biases(r * c, 0.), m_kernel_map(f.size())
 
     {
@@ -770,6 +769,27 @@ public:
 
     /*@}*/
 
+    /// Object serialization
+    /**
+     * This method will save/load \p this into the archive \p ar.
+     *
+     * @param ar target archive.
+     *
+     * @throws unspecified any exception thrown by the serialization of the expression and of primitive types.
+     */
+    template <typename Archive>
+    void serialize(Archive &ar, unsigned)
+    {
+        // invoke serialization of the base class
+        ar &boost::serialization::base_object<expression<double>>(*this);
+        ar &m_weights;
+        ar &m_weights_symbols;
+        ar &m_biases;
+        ar &m_biases_symbols;
+        ar &m_connected;
+        ar &m_kernel_map;
+    }
+
     // Delete ephemeral constants methods.
     void set_eph_val(const std::vector<double> &) = delete;
     void set_eph_symb(const std::vector<double> &) = delete;
@@ -1016,8 +1036,7 @@ private:
     std::vector<std::vector<std::pair<unsigned, unsigned>>> m_connected;
     // Kernel map (this is here to avoid string comparisons)
     std::vector<kernel_type> m_kernel_map;
-}; // namespace dcgp
-
+};
 } // end of namespace dcgp
 
 #endif // DCGP_EXPRESSION_H

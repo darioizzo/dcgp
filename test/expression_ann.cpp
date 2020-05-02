@@ -6,6 +6,8 @@
 #include <audi/io.hpp>
 #include <random>
 #include <stdexcept>
+#include <pagmo/s11n.hpp>
+
 
 #include <dcgp/expression_ann.hpp>
 #include <dcgp/kernel_set.hpp>
@@ -323,4 +325,27 @@ BOOST_AUTO_TEST_CASE(n_active_weights)
         BOOST_CHECK(ex.n_active_weights(false) == 8u);
         BOOST_CHECK(ex.n_active_weights(true) == 7u);
     }
+}
+
+BOOST_AUTO_TEST_CASE(s11n_test)
+{
+    // Random seed
+    std::random_device rd;
+    kernel_set<double> ann_set({"sig", "tanh", "ReLu"});
+    expression_ann ex(2u, 2u, 2u, 2u, 5u, 2u, ann_set(), rd());
+
+    const auto orig = boost::lexical_cast<std::string>(ex);
+
+    std::stringstream ss;
+    {
+        boost::archive::binary_oarchive oarchive(ss);
+        oarchive << ex;
+    }
+    ex = expression_ann(1u, 1u, 34u, 32u, 12u, 4u, ann_set(), rd());
+    {
+        boost::archive::binary_iarchive iarchive(ss);
+        iarchive >> ex;
+    }
+
+    BOOST_CHECK(orig == boost::lexical_cast<std::string>(ex));
 }

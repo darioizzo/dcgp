@@ -309,6 +309,23 @@ public:
         return m_weights;
     }
 
+    /// Object serialization
+    /**
+     * This method will save/load \p this into the archive \p ar.
+     *
+     * @param ar target archive.
+     *
+     * @throws unspecified any exception thrown by the serialization of the expression and of primitive types.
+     */
+    template <typename Archive>
+    void serialize(Archive &ar, unsigned)
+    {
+        // invoke serialization of the base class
+        ar &boost::serialization::base_object<expression<T>>(*this);
+        ar &m_weights;
+        ar &m_weights_symbols;
+    }
+
     // Delete ephemeral constants methods.
     void set_eph_val(const std::vector<T> &) = delete;
     void set_eph_symb(const std::vector<T> &) = delete;
@@ -341,5 +358,9 @@ private:
 };
 
 } // end of namespace dcgp
+
+BOOST_CLASS_EXPORT_GUID(dcgp::expression_weighted<double>, "expression_weighted_double")
+BOOST_CLASS_EXPORT_GUID(dcgp::expression_weighted<audi::gdual_d>, "expression_weighted_gdual_d")
+BOOST_CLASS_EXPORT_GUID(dcgp::expression_weighted<audi::gdual_v>, "expression_weighted_gdual_v")
 
 #endif // DCGP_EXPRESSION_H
