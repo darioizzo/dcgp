@@ -30,20 +30,20 @@ void expose_expression(const py::module &m, std::string type)
         .def(py::init<unsigned, unsigned, unsigned, unsigned, unsigned, unsigned, std::vector<kernel<T>>, unsigned,
                       unsigned>(),
              py::arg("inputs"), py::arg("outputs"), py::arg("rows"), py::arg("cols"), py::arg("levels_back"),
-             py::arg("arity"), py::arg("kernels"), py::arg("n_eph"), py::arg("seed"), expression_init_doc(type).c_str())
+             py::arg("arity") = 2u, py::arg("kernels"), py::arg("n_eph") = 0u, py::arg("seed"), expression_init_doc(type).c_str())
         // From vector arity
         .def(py::init<unsigned, unsigned, unsigned, unsigned, unsigned, std::vector<unsigned>, std::vector<kernel<T>>,
                       unsigned, unsigned>(),
              py::arg("inputs"), py::arg("outputs"), py::arg("rows"), py::arg("cols"), py::arg("levels_back"),
-             py::arg("arity"), py::arg("kernels"), py::arg("n_eph"), py::arg("seed"), expression_init_doc(type).c_str())
+             py::arg("arity") = 2u, py::arg("kernels"), py::arg("n_eph") = 0u, py::arg("seed"), expression_init_doc(type).c_str())
         // Constructors with no seed
         .def(py::init<unsigned, unsigned, unsigned, unsigned, unsigned, std::vector<unsigned>, std::vector<kernel<T>>,
                       unsigned>(),
              py::arg("inputs"), py::arg("outputs"), py::arg("rows"), py::arg("cols"), py::arg("levels_back"),
-             py::arg("arity"), py::arg("kernels"), py::arg("n_eph"), expression_init_doc(type).c_str())
+             py::arg("arity") = 2u, py::arg("kernels"), py::arg("n_eph") = 0u, expression_init_doc(type).c_str())
         .def(py::init<unsigned, unsigned, unsigned, unsigned, unsigned, unsigned, std::vector<kernel<T>>, unsigned>(),
              py::arg("inputs"), py::arg("outputs"), py::arg("rows"), py::arg("cols"), py::arg("levels_back"),
-             py::arg("arity"), py::arg("kernels"), py::arg("n_eph"), expression_init_doc(type).c_str())
+             py::arg("arity") = 2u, py::arg("kernels"), py::arg("n_eph") = 0u, expression_init_doc(type).c_str())
         .def(
             "__repr__",
             [](const expression<T> &instance) -> std::string {
