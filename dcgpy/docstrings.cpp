@@ -52,7 +52,7 @@ Examples:
 
 std::string expression_init_doc(const std::string &type)
 {
-    return R"(__init__(inputs, outputs, rows, columns, levels_back, arity, kernels, n_eph, seed = randint)
+    return R"(__init__(inputs, outputs, rows, cols, levels_back, arity = 2, kernels, n_eph = 0, seed = randint)
 
 Constructs a CGP expression operating on )"
            + type + R"(
@@ -60,9 +60,10 @@ Constructs a CGP expression operating on )"
 Args:
     inputs (``int``): number of inputs
     outputs (``int``): number of outputs
-    rows (``int``): number of rows in the cartesian program
-    columns (``int``): number of columns in the cartesian program
-    levels_back (``int``): number of levels-back in the cartesian program
+    rows (``int``): number of rows of the cartesian representation of the expression as an acyclic graph.
+    cols (``int``): number of columns of the cartesian representation of the expression as an acyclic graph.
+    levels_back (``int``): number of levels-back allowed. This, essentially, controls the minimum number of allowed
+        operations in the formula. If uncertain set it to cols + 1
     arity (``int`` on ``list``): arity of the kernels. Assumed equal for all columns unless its specified by a list. The list must contain a number of entries equal to the number of columns.
     kernels (``List[dcgpy.kernel_)"
            + type + R"(]``): kernel functions
