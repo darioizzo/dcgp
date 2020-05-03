@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Installation guide &mdash; dCGP 1.4.3 documentation</title>
+  <title>Installation guide &mdash; dCGP 1.5 documentation</title>
   
 
   
@@ -21,11 +21,12 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-        <script type="text/javascript" src="_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
         <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
@@ -66,7 +67,7 @@
             
             
               <div class="version">
-                1.4.3
+                1.5
               </div>
             
           
@@ -95,14 +96,14 @@
 <li class="toctree-l2"><a class="reference internal" href="#c">C++</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#python">Python</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#installing-with-conda">Installing with conda</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#installing-with-pip">Installing with pip</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#installing-with-pip-deprecated">Installing with pip (deprecated)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#building">Building</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick start examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="docs/index.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docs/index.html">API documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials/index.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="theory/index.html">Background</a></li>
 <li class="toctree-l1"><a class="reference internal" href="credits.html">Credits</a></li>
@@ -175,13 +176,13 @@
 /* CSS overrides for sphinx_rtd_theme */
 
 /* 24px margin */
-.nbinput.nblast,
-.nboutput.nblast {
+.nbinput.nblast.container,
+.nboutput.nblast.container {
     margin-bottom: 19px;  /* padding has already 5px */
 }
 
 /* ... except between code cells! */
-.nblast + .nbinput {
+.nblast.container + .nbinput.container {
     margin-top: -19px;
 }
 
@@ -240,10 +241,10 @@ to add <code class="docutils literal notranslate"><span class="pre">conda-forge<
 <p>Please refer to the <a class="reference external" href="https://conda.io/en/latest/">conda documentation</a> for instructions
 on how to setup and manage your conda installation.</p>
 </div>
-<div class="section" id="installing-with-pip">
-<h3>Installing with pip<a class="headerlink" href="#installing-with-pip" title="Permalink to this headline">¶</a></h3>
-<p>We also provide the pip packages (mainly for linux 64 bit architectures). Check on the
-<a class="reference external" href="https://pypi.org/project/dcgpy/">PyPi dcgpy page</a> if the needed package is provided.</p>
+<div class="section" id="installing-with-pip-deprecated">
+<h3>Installing with pip (deprecated)<a class="headerlink" href="#installing-with-pip-deprecated" title="Permalink to this headline">¶</a></h3>
+<p>We also provide the pip packages (mainly for linux 64 bit architectures and older versions).
+Check on the <a class="reference external" href="https://pypi.org/project/dcgpy/">PyPi dcgpy page</a> if the needed package is provided.</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> pip install dcgpy
 </pre></div>
 </div>
@@ -283,7 +284,7 @@ according to the Python version (2 or 3) you want to compile the module for.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Dario Izzo, Francesco Biscani, Alessio Mereta
+        &copy; Copyright 2020, Dario Izzo, Francesco Biscani
 
     </p>
   </div>

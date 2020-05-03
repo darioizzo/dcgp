@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>kernel &mdash; dCGP 1.4.3 documentation</title>
+  <title>kernel &mdash; dCGP 1.5 documentation</title>
   
 
   
@@ -21,11 +21,12 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
         <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
@@ -66,7 +67,7 @@
             
             
               <div class="version">
-                1.4.3
+                1.5
               </div>
             
           
@@ -93,7 +94,7 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Quick start examples</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Documentation</a><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">API documentation</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="index.html">C++ Documentation</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="index.html#kernels">Kernels</a><ul class="current">
 <li class="toctree-l4 current"><a class="current reference internal" href="#">kernel</a></li>
@@ -156,7 +157,7 @@
     
       <li><a href="../../index.html">Docs</a> &raquo;</li>
         
-          <li><a href="../index.html">Documentation</a> &raquo;</li>
+          <li><a href="../index.html">API documentation</a> &raquo;</li>
         
           <li><a href="index.html">C++ Documentation</a> &raquo;</li>
         
@@ -184,13 +185,13 @@
 /* CSS overrides for sphinx_rtd_theme */
 
 /* 24px margin */
-.nbinput.nblast,
-.nboutput.nblast {
+.nbinput.nblast.container,
+.nboutput.nblast.container {
     margin-bottom: 19px;  /* padding has already 5px */
 }
 
 /* ... except between code cells! */
-.nblast + .nbinput {
+.nblast.container + .nbinput.container {
     margin-top: -19px;
 }
 
@@ -205,9 +206,9 @@
 </style>
 <div class="section" id="kernel">
 <h1>kernel<a class="headerlink" href="#kernel" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
+<dl class="cpp class">
 <dt id="_CPPv4I0EN4dcgp6kernelE">
-<span class="target" id="classdcgp_1_1kernel"></span>template&lt;typename <code class="sig-name descname">T</code>&gt;<br /><em class="property">class </em><code class="sig-name descname">kernel</code><a class="headerlink" href="#_CPPv4I0EN4dcgp6kernelE" title="Permalink to this definition">¶</a><br /></dt>
+template&lt;typename <code class="sig-name descname">T</code>&gt;<br /><span class="target" id="classdcgp_1_1kernel"></span><em class="property">class </em><code class="sig-prename descclassname">dcgp<code class="sig-prename descclassname">::</code></code><code class="sig-name descname">kernel</code><a class="headerlink" href="#_CPPv4I0EN4dcgp6kernelE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Basis function. </p>
 <p>This class represents the function defining the generic CGP node. To be constructed it accepts two functions having prototype <code class="docutils literal notranslate"><span class="pre">T</span></code>(const std::vector&lt;<code class="docutils literal notranslate"><span class="pre">T</span></code>&gt;&amp;) and std::string(const std::vector&lt;std::string&gt;&amp;) computing, respectively, the function value on generic inputs and the textual representation of the operation.</p>
 <p>The intended use, for an example with <code class="docutils literal notranslate"><span class="pre">T</span></code> = <code class="docutils literal notranslate"><span class="pre">double</span></code> would then be something like: <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kr">inline</span> <span class="kt">double</span> <span class="nf">my_sum</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">in</span><span class="p">)</span>
@@ -241,9 +242,9 @@
 </p>
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric">Public Functions</p>
-<dl class="function">
+<dl class="cpp function">
 <dt id="_CPPv4I00EN4dcgp6kernel6kernelERR1URR1VNSt6stringE">
-<span class="target" id="classdcgp_1_1kernel_1ab78ad1e0f42e6b167d12e7df4f37b264"></span>template&lt;typename <code class="sig-name descname">U</code>, typename <code class="sig-name descname">V</code>&gt;<br /><code class="sig-name descname">kernel</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I00EN4dcgp6kernel6kernelERR1URR1VNSt6stringE" title="dcgp::kernel::kernel::U">U</a> &amp;&amp;<em>f</em>, <a class="reference internal" href="#_CPPv4I00EN4dcgp6kernel6kernelERR1URR1VNSt6stringE" title="dcgp::kernel::kernel::V">V</a> &amp;&amp;<em>pf</em>, std::string <em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I00EN4dcgp6kernel6kernelERR1URR1VNSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
+template&lt;typename <code class="sig-name descname">U</code>, typename <code class="sig-name descname">V</code>&gt;<br /><span class="target" id="classdcgp_1_1kernel_1ab78ad1e0f42e6b167d12e7df4f37b264"></span><code class="sig-name descname">kernel</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I00EN4dcgp6kernel6kernelERR1URR1VNSt6stringE" title="dcgp::kernel::kernel::U">U</a> &amp;&amp;<em>f</em>, <a class="reference internal" href="#_CPPv4I00EN4dcgp6kernel6kernelERR1URR1VNSt6stringE" title="dcgp::kernel::kernel::V">V</a> &amp;&amp;<em>pf</em>, std::string <em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I00EN4dcgp6kernel6kernelERR1URR1VNSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Constructor. </p>
 <p>Constructs a kernel that can be used as kernel in a dCGP expression</p>
 <p><dl class="simple">
@@ -257,9 +258,9 @@
 </p>
 </dd></dl>
 
-<dl class="function">
+<dl class="cpp function">
 <dt id="_CPPv4NK4dcgp6kernelclERKNSt6vectorI1TEE">
-<span class="target" id="classdcgp_1_1kernel_1a3cc2a4e230049b3713a59aca942627f5"></span><a class="reference external" href="http://darioizzo.github.io/audi/functions.html#_CPPv4I0E1TRK1TRK1T" title="(in audi v1.7)">T</a> <code class="sig-name descname">operator()</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;<a class="reference external" href="http://darioizzo.github.io/audi/functions.html#_CPPv4I0E1TRK1TRK1T" title="(in audi v1.7)">T</a>&gt; &amp;<em>in</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp6kernelclERKNSt6vectorI1TEE" title="Permalink to this definition">¶</a><br /></dt>
+<span class="target" id="classdcgp_1_1kernel_1a3cc2a4e230049b3713a59aca942627f5"></span><a class="reference internal" href="#_CPPv4I0EN4dcgp6kernelE" title="dcgp::kernel::T">T</a> <code class="sig-name descname">operator()</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;<a class="reference internal" href="#_CPPv4I0EN4dcgp6kernelE" title="dcgp::kernel::T">T</a>&gt; &amp;<em>in</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp6kernelclERKNSt6vectorI1TEE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Parenthesis operator. </p>
 <p>Evaluates the kernel in the point <code class="docutils literal notranslate"><span class="pre">in</span></code> </p>
 <p><dl class="simple">
@@ -273,9 +274,9 @@
 </p>
 </dd></dl>
 
-<dl class="function">
+<dl class="cpp function">
 <dt id="_CPPv4NK4dcgp6kernelclERKNSt16initializer_listI1TEE">
-<span class="target" id="classdcgp_1_1kernel_1a6111e48bc880c82c915389a83ec39ded"></span><a class="reference external" href="http://darioizzo.github.io/audi/functions.html#_CPPv4I0E1TRK1TRK1T" title="(in audi v1.7)">T</a> <code class="sig-name descname">operator()</code><span class="sig-paren">(</span><em class="property">const</em> std::initializer_list&lt;<a class="reference external" href="http://darioizzo.github.io/audi/functions.html#_CPPv4I0E1TRK1TRK1T" title="(in audi v1.7)">T</a>&gt; &amp;<em>in</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp6kernelclERKNSt16initializer_listI1TEE" title="Permalink to this definition">¶</a><br /></dt>
+<span class="target" id="classdcgp_1_1kernel_1a6111e48bc880c82c915389a83ec39ded"></span><a class="reference internal" href="#_CPPv4I0EN4dcgp6kernelE" title="dcgp::kernel::T">T</a> <code class="sig-name descname">operator()</code><span class="sig-paren">(</span><em class="property">const</em> std::initializer_list&lt;<a class="reference internal" href="#_CPPv4I0EN4dcgp6kernelE" title="dcgp::kernel::T">T</a>&gt; &amp;<em>in</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp6kernelclERKNSt16initializer_listI1TEE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Parenthesis operator. </p>
 <p>Evaluates the kernel in the point <code class="docutils literal notranslate"><span class="pre">in</span></code> </p>
 <p><dl class="simple">
@@ -289,7 +290,7 @@
 </p>
 </dd></dl>
 
-<dl class="function">
+<dl class="cpp function">
 <dt id="_CPPv4NK4dcgp6kernelclERKNSt6vectorINSt6stringEEE">
 <span class="target" id="classdcgp_1_1kernel_1a9d488e4764fc00904f28cc0b8331dea1"></span>std::string <code class="sig-name descname">operator()</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;std::string&gt; &amp;<em>in</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp6kernelclERKNSt6vectorINSt6stringEEE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Parenthesis operator. </p>
@@ -305,7 +306,7 @@
 </p>
 </dd></dl>
 
-<dl class="function">
+<dl class="cpp function">
 <dt id="_CPPv4NK4dcgp6kernel8get_nameEv">
 <span class="target" id="classdcgp_1_1kernel_1ab57254a894f9108a693337d09776cafc"></span><em class="property">const</em> std::string &amp;<code class="sig-name descname">get_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp6kernel8get_nameEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Kernel name. </p>
@@ -320,9 +321,9 @@
 </div>
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric">Friends</p>
-<dl class="function">
-<dt id="_CPPv4lsRNSt7ostreamERK6kernelI1TE">
-<span class="target" id="classdcgp_1_1kernel_1a1f620b72353526882766124db7489b6b"></span>std::ostream &amp;<code class="sig-name descname">operator&lt;&lt;</code><span class="sig-paren">(</span>std::ostream &amp;<em>os</em>, <em class="property">const</em> kernel&lt;<a class="reference external" href="http://darioizzo.github.io/audi/functions.html#_CPPv4I0E1TRK1TRK1T" title="(in audi v1.7)">T</a>&gt; &amp;<em>d</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4lsRNSt7ostreamERK6kernelI1TE" title="Permalink to this definition">¶</a><br /></dt>
+<dl class="cpp function">
+<dt id="_CPPv4N4dcgp6kernellsERNSt7ostreamERK6kernelI1TE">
+<span class="target" id="classdcgp_1_1kernel_1a1f620b72353526882766124db7489b6b"></span><em class="property">friend</em> std::ostream &amp;<code class="sig-name descname">operator&lt;&lt;</code><span class="sig-paren">(</span>std::ostream &amp;<em>os</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN4dcgp6kernelE" title="dcgp::kernel">kernel</a>&lt;<a class="reference internal" href="#_CPPv4I0EN4dcgp6kernelE" title="dcgp::kernel::T">T</a>&gt; &amp;<em>d</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp6kernellsERNSt7ostreamERK6kernelI1TE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Overloaded stream operator. </p>
 <p>Will stream the function name</p>
 <p><dl class="simple">
@@ -362,7 +363,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Dario Izzo, Francesco Biscani, Alessio Mereta
+        &copy; Copyright 2020, Dario Izzo, Francesco Biscani
 
     </p>
   </div>

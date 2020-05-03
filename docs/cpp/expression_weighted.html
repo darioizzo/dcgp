@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>expression_weighted (dCGP-W) &mdash; dCGP 1.4.3 documentation</title>
+  <title>expression_weighted (dCGP-W) &mdash; dCGP 1.5 documentation</title>
   
 
   
@@ -21,11 +21,12 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
         <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
@@ -66,7 +67,7 @@
             
             
               <div class="version">
-                1.4.3
+                1.5
               </div>
             
           
@@ -93,7 +94,7 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Quick start examples</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Documentation</a><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">API documentation</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="index.html">C++ Documentation</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="index.html#kernels">Kernels</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="index.html#types-of-dcgps">Types of dCGPs</a><ul class="current">
@@ -156,7 +157,7 @@
     
       <li><a href="../../index.html">Docs</a> &raquo;</li>
         
-          <li><a href="../index.html">Documentation</a> &raquo;</li>
+          <li><a href="../index.html">API documentation</a> &raquo;</li>
         
           <li><a href="index.html">C++ Documentation</a> &raquo;</li>
         
@@ -184,13 +185,13 @@
 /* CSS overrides for sphinx_rtd_theme */
 
 /* 24px margin */
-.nbinput.nblast,
-.nboutput.nblast {
+.nbinput.nblast.container,
+.nboutput.nblast.container {
     margin-bottom: 19px;  /* padding has already 5px */
 }
 
 /* ... except between code cells! */
-.nblast + .nbinput {
+.nblast.container + .nbinput.container {
     margin-top: -19px;
 }
 
@@ -213,9 +214,9 @@ thus allowing to train the weights using algorithms such as stochastic gradient 
 <img alt="weighted dCGP expression" src="../../_images/expression_weighted.png" />
 <p class="caption"><span class="caption-text">A weighted dCGP expression</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
 </div>
-<dl class="class">
+<dl class="cpp class">
 <dt id="_CPPv4I0EN4dcgp19expression_weightedE">
-<span class="target" id="classdcgp_1_1expression__weighted"></span>template&lt;typename <code class="sig-name descname">T</code>&gt;<br /><em class="property">class </em><code class="sig-name descname">expression_weighted</code> : <em class="property">public</em> dcgp::expression&lt;<a class="reference internal" href="#_CPPv4I0EN4dcgp19expression_weightedE" title="dcgp::expression_weighted::T">T</a>&gt;<a class="headerlink" href="#_CPPv4I0EN4dcgp19expression_weightedE" title="Permalink to this definition">¶</a><br /></dt>
+template&lt;typename <code class="sig-name descname">T</code>&gt;<br /><span class="target" id="classdcgp_1_1expression__weighted"></span><em class="property">class </em><code class="sig-prename descclassname">dcgp<code class="sig-prename descclassname">::</code></code><code class="sig-name descname">expression_weighted</code> : <em class="property">public</em> dcgp::<a class="reference internal" href="expression.html#_CPPv4I0EN4dcgp10expressionE" title="dcgp::expression">expression</a>&lt;<a class="reference internal" href="#_CPPv4I0EN4dcgp19expression_weightedE" title="dcgp::expression_weighted::T">T</a>&gt;<a class="headerlink" href="#_CPPv4I0EN4dcgp19expression_weightedE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>A weighted dCGP expression. </p>
 <p>This class represents a mathematical expression as encoded using CGP with the addition of weights on the connections. It contains algorithms to compute the value (numerical and symbolical) of the expression and its derivatives, as well as to mutate the expression.</p>
 <p><dl class="simple">
@@ -227,18 +228,18 @@ thus allowing to train the weights using algorithms such as stochastic gradient 
 </p>
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric">Public Functions</p>
-<dl class="function">
+<dl class="cpp function">
 <dt id="_CPPv4N4dcgp19expression_weighted19expression_weightedEjjjjjjNSt6vectorI6kernelI1TEEEj">
-<span class="target" id="classdcgp_1_1expression__weighted_1a89d017529c1fdd0ce9e19c2ea4060847"></span><code class="sig-name descname">expression_weighted</code><span class="sig-paren">(</span>unsigned <em>n</em>, unsigned <em>m</em>, unsigned <em>r</em>, unsigned <em>c</em>, unsigned <em>l</em>, unsigned <em>arity</em>, std::vector&lt;kernel&lt;<a class="reference external" href="http://darioizzo.github.io/audi/functions.html#_CPPv4I0E1TRK1TRK1T" title="(in audi v1.7)">T</a>&gt;&gt; <em>f</em>, unsigned <em>seed</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp19expression_weighted19expression_weightedEjjjjjjNSt6vectorI6kernelI1TEEEj" title="Permalink to this definition">¶</a><br /></dt>
+<span class="target" id="classdcgp_1_1expression__weighted_1a1db3121dfa6410cfec3dee3ae5f7975f"></span><code class="sig-name descname">expression_weighted</code><span class="sig-paren">(</span>unsigned <em>n</em> = 1u, unsigned <em>m</em> = 1u, unsigned <em>r</em> = 1u, unsigned <em>c</em> = 1u, unsigned <em>l</em> = 1u, unsigned <em>arity</em> = 2u, std::vector&lt;<a class="reference internal" href="kernel.html#_CPPv4I0EN4dcgp6kernelE" title="dcgp::kernel">kernel</a>&lt;<a class="reference internal" href="#_CPPv4I0EN4dcgp19expression_weightedE" title="dcgp::expression_weighted::T">T</a>&gt;&gt; <em>f</em> = <a class="reference internal" href="kernel_set.html#_CPPv4I0EN4dcgp10kernel_setE" title="dcgp::kernel_set">kernel_set</a>&lt;<a class="reference internal" href="#_CPPv4I0EN4dcgp19expression_weightedE" title="dcgp::expression_weighted::T">T</a>&gt;({&quot;sum&quot;})(), unsigned <em>seed</em> = dcgp::random_device::next()<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp19expression_weighted19expression_weightedEjjjjjjNSt6vectorI6kernelI1TEEEj" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Constructor. </p>
 <p>Constructs a weighted dCGP expression.</p>
 <p><dl class="simple">
 <dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">n</span></code>: number of inputs (independent variables). </p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">m</span></code>: number of outputs (dependent variables). </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">r</span></code>: number of rows of the weighted dCGP. </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">c</span></code>: number of columns of the weighted dCGP. </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">l</span></code>: number of levels-back allowed for the weighted dCGP. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">r</span></code>: number of rows of the cartesian representation of the expression as an acyclic graph. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">c</span></code>: number of columns of the cartesian representation of the expression as an acyclic graph. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">l</span></code>: number of levels-back allowed. This, essentially, controls the minimum number of allowed operations in the formula. If uncertain set it to c + 1 </p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">arity</span></code>: arities of the basis functions for each column. </p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">f</span></code>: function set. An std::vector of dcgp::kernel&lt;expression::type&gt;. </p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">seed</span></code>: seed for the random number generator (initial expression and mutations depend on this). </p></li>
@@ -248,19 +249,19 @@ thus allowing to train the weights using algorithms such as stochastic gradient 
 </p>
 </dd></dl>
 
-<dl class="function">
+<dl class="cpp function">
 <dt id="_CPPv4N4dcgp19expression_weighted19expression_weightedEjjjjjNSt6vectorIjEENSt6vectorI6kernelI1TEEEj">
-<span class="target" id="classdcgp_1_1expression__weighted_1a0f1bb2222db0219a949313cde48f4c27"></span><code class="sig-name descname">expression_weighted</code><span class="sig-paren">(</span>unsigned <em>n</em>, unsigned <em>m</em>, unsigned <em>r</em>, unsigned <em>c</em>, unsigned <em>l</em>, std::vector&lt;unsigned&gt; <em>arity</em>, std::vector&lt;kernel&lt;<a class="reference external" href="http://darioizzo.github.io/audi/functions.html#_CPPv4I0E1TRK1TRK1T" title="(in audi v1.7)">T</a>&gt;&gt; <em>f</em>, unsigned <em>seed</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp19expression_weighted19expression_weightedEjjjjjNSt6vectorIjEENSt6vectorI6kernelI1TEEEj" title="Permalink to this definition">¶</a><br /></dt>
+<span class="target" id="classdcgp_1_1expression__weighted_1a7a712581e3eb7e2386fe46c3e9c95061"></span><code class="sig-name descname">expression_weighted</code><span class="sig-paren">(</span>unsigned <em>n</em>, unsigned <em>m</em>, unsigned <em>r</em>, unsigned <em>c</em>, unsigned <em>l</em>, std::vector&lt;unsigned&gt; <em>arities</em>, std::vector&lt;<a class="reference internal" href="kernel.html#_CPPv4I0EN4dcgp6kernelE" title="dcgp::kernel">kernel</a>&lt;<a class="reference internal" href="#_CPPv4I0EN4dcgp19expression_weightedE" title="dcgp::expression_weighted::T">T</a>&gt;&gt; <em>f</em>, unsigned <em>seed</em> = dcgp::random_device::next()<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp19expression_weighted19expression_weightedEjjjjjNSt6vectorIjEENSt6vectorI6kernelI1TEEEj" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Constructor. </p>
 <p>Constructs a weighted dCGP expression</p>
 <p><dl class="simple">
 <dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">n</span></code>: number of inputs (independent variables). </p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">m</span></code>: number of outputs (dependent variables). </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">r</span></code>: number of rows of the weighted dCGP. </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">c</span></code>: number of columns of the weighted dCGP. </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">l</span></code>: number of levels-back allowed for the weighted dCGP. </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">arity</span></code>: arity of the basis functions. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">r</span></code>: number of rows of the cartesian representation of the expression as an acyclic graph. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">c</span></code>: number of columns of the cartesian representation of the expression as an acyclic graph. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">l</span></code>: number of levels-back allowed. This, essentially, controls the minimum number of allowed operations in the formula. If uncertain set it to c + 1 </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">arities</span></code>: arities of the basis functions (per each column). </p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">f</span></code>: function set. An std::vector of dcgp::kernel&lt;expression::type&gt;. </p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">seed</span></code>: seed for the random number generator (initial expression and mutations depend on this). </p></li>
 </ul>
@@ -269,9 +270,9 @@ thus allowing to train the weights using algorithms such as stochastic gradient 
 </p>
 </dd></dl>
 
-<dl class="function">
+<dl class="cpp function">
 <dt id="_CPPv4NK4dcgp19expression_weightedclERKNSt6vectorI1TEE">
-<span class="target" id="classdcgp_1_1expression__weighted_1acdff4472248a6c45a29dc62f1afea4e6"></span>std::vector&lt;<a class="reference external" href="http://darioizzo.github.io/audi/functions.html#_CPPv4I0E1TRK1TRK1T" title="(in audi v1.7)">T</a>&gt; <code class="sig-name descname">operator()</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;<a class="reference external" href="http://darioizzo.github.io/audi/functions.html#_CPPv4I0E1TRK1TRK1T" title="(in audi v1.7)">T</a>&gt; &amp;<em>in</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp19expression_weightedclERKNSt6vectorI1TEE" title="Permalink to this definition">¶</a><br /></dt>
+<span class="target" id="classdcgp_1_1expression__weighted_1acdff4472248a6c45a29dc62f1afea4e6"></span>std::vector&lt;<a class="reference internal" href="#_CPPv4I0EN4dcgp19expression_weightedE" title="dcgp::expression_weighted::T">T</a>&gt; <code class="sig-name descname">operator()</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;<a class="reference internal" href="#_CPPv4I0EN4dcgp19expression_weightedE" title="dcgp::expression_weighted::T">T</a>&gt; &amp;<em>in</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp19expression_weightedclERKNSt6vectorI1TEE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Evaluates the dCGP-weighted expression. </p>
 <p>This evaluates the dCGP-weighted expression. This method overrides the base class method. NOTE we cannot template this and the following function as they are virtual in the base class.</p>
 <p><dl class="simple">
@@ -285,7 +286,7 @@ thus allowing to train the weights using algorithms such as stochastic gradient 
 </p>
 </dd></dl>
 
-<dl class="function">
+<dl class="cpp function">
 <dt id="_CPPv4NK4dcgp19expression_weightedclERKNSt6vectorINSt6stringEEE">
 <span class="target" id="classdcgp_1_1expression__weighted_1acb1f325e9e710dfcc58e15f5bca021a8"></span>std::vector&lt;std::string&gt; <code class="sig-name descname">operator()</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;std::string&gt; &amp;<em>in</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp19expression_weightedclERKNSt6vectorINSt6stringEEE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Evaluates the dCGP-weighted expression. </p>
@@ -301,9 +302,9 @@ thus allowing to train the weights using algorithms such as stochastic gradient 
 </p>
 </dd></dl>
 
-<dl class="function">
+<dl class="cpp function">
 <dt id="_CPPv4I0_15functor_enablerI1UEENK4dcgp19expression_weightedclENSt6vectorI1UEERKNSt16initializer_listI1UEE">
-<span class="target" id="classdcgp_1_1expression__weighted_1a270e1838475bcd4eb53a1573f5fc0269"></span>template&lt;typename <code class="sig-name descname">U</code>, functor_enabler&lt;<a class="reference internal" href="#_CPPv4I0_15functor_enablerI1UEENK4dcgp19expression_weightedclENSt6vectorI1UEERKNSt16initializer_listI1UEE" title="dcgp::expression_weighted::operator()::U">U</a>&gt; = 0&gt;<br />std::vector&lt;<a class="reference internal" href="#_CPPv4I0_15functor_enablerI1UEENK4dcgp19expression_weightedclENSt6vectorI1UEERKNSt16initializer_listI1UEE" title="dcgp::expression_weighted::operator()::U">U</a>&gt; <code class="sig-name descname">operator()</code><span class="sig-paren">(</span><em class="property">const</em> std::initializer_list&lt;<a class="reference internal" href="#_CPPv4I0_15functor_enablerI1UEENK4dcgp19expression_weightedclENSt6vectorI1UEERKNSt16initializer_listI1UEE" title="dcgp::expression_weighted::operator()::U">U</a>&gt; &amp;<em>in</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0_15functor_enablerI1UEENK4dcgp19expression_weightedclENSt6vectorI1UEERKNSt16initializer_listI1UEE" title="Permalink to this definition">¶</a><br /></dt>
+template&lt;typename <code class="sig-name descname">U</code>, functor_enabler&lt;<a class="reference internal" href="#_CPPv4I0_15functor_enablerI1UEENK4dcgp19expression_weightedclENSt6vectorI1UEERKNSt16initializer_listI1UEE" title="dcgp::expression_weighted::operator()::U">U</a>&gt; = 0&gt;<br /><span class="target" id="classdcgp_1_1expression__weighted_1a270e1838475bcd4eb53a1573f5fc0269"></span>std::vector&lt;<a class="reference internal" href="#_CPPv4I0_15functor_enablerI1UEENK4dcgp19expression_weightedclENSt6vectorI1UEERKNSt16initializer_listI1UEE" title="dcgp::expression_weighted::operator()::U">U</a>&gt; <code class="sig-name descname">operator()</code><span class="sig-paren">(</span><em class="property">const</em> std::initializer_list&lt;<a class="reference internal" href="#_CPPv4I0_15functor_enablerI1UEENK4dcgp19expression_weightedclENSt6vectorI1UEERKNSt16initializer_listI1UEE" title="dcgp::expression_weighted::operator()::U">U</a>&gt; &amp;<em>in</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0_15functor_enablerI1UEENK4dcgp19expression_weightedclENSt6vectorI1UEERKNSt16initializer_listI1UEE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Evaluates the dCGP expression. </p>
 <p>This evaluates the dCGP expression. According to the template parameter it will compute the value (double) the Taylor expansion (gdual) or a symbolic representation (std::string). Any other type will result in a compilation-time error (SFINAE). This is identical to the other overload and is provided only for convenience</p>
 <p><dl class="simple">
@@ -317,9 +318,9 @@ thus allowing to train the weights using algorithms such as stochastic gradient 
 </p>
 </dd></dl>
 
-<dl class="function">
-<dt id="_CPPv4N4dcgp19expression_weighted10set_weightENSt6vectorI1TE9size_typeENSt6vectorI1TE9size_typeERK1T">
-<span class="target" id="classdcgp_1_1expression__weighted_1a723dc0df718c2550814285d9dd43e92b"></span>void <code class="sig-name descname">set_weight</code><span class="sig-paren">(</span><em class="property">typename</em> std::vector&lt;<a class="reference external" href="http://darioizzo.github.io/audi/functions.html#_CPPv4I0E1TRK1TRK1T" title="(in audi v1.7)">T</a>&gt;::size_type <em>node_id</em>, <em class="property">typename</em> std::vector&lt;<a class="reference external" href="http://darioizzo.github.io/audi/functions.html#_CPPv4I0E1TRK1TRK1T" title="(in audi v1.7)">T</a>&gt;::size_type <em>input_id</em>, <em class="property">const</em> <a class="reference external" href="http://darioizzo.github.io/audi/functions.html#_CPPv4I0E1TRK1TRK1T" title="(in audi v1.7)">T</a> &amp;<em>w</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp19expression_weighted10set_weightENSt6vectorI1TE9size_typeENSt6vectorI1TE9size_typeERK1T" title="Permalink to this definition">¶</a><br /></dt>
+<dl class="cpp function">
+<dt id="_CPPv4N4dcgp19expression_weighted10set_weightEjjRK1T">
+<span class="target" id="classdcgp_1_1expression__weighted_1ac194b67726bdf1cc4fadd76ab51d3d49"></span>void <code class="sig-name descname">set_weight</code><span class="sig-paren">(</span>unsigned <em>node_id</em>, unsigned <em>input_id</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN4dcgp19expression_weightedE" title="dcgp::expression_weighted::T">T</a> &amp;<em>w</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp19expression_weighted10set_weightEjjRK1T" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Sets a weight. </p>
 <p>Sets a connection weight to a new value</p>
 <p><dl class="simple">
@@ -337,9 +338,9 @@ thus allowing to train the weights using algorithms such as stochastic gradient 
 </p>
 </dd></dl>
 
-<dl class="function">
+<dl class="cpp function">
 <dt id="_CPPv4N4dcgp19expression_weighted11set_weightsERKNSt6vectorI1TEE">
-<span class="target" id="classdcgp_1_1expression__weighted_1a820f4d854a0191f3428848a457dd6aec"></span>void <code class="sig-name descname">set_weights</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;<a class="reference external" href="http://darioizzo.github.io/audi/functions.html#_CPPv4I0E1TRK1TRK1T" title="(in audi v1.7)">T</a>&gt; &amp;<em>ws</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp19expression_weighted11set_weightsERKNSt6vectorI1TEE" title="Permalink to this definition">¶</a><br /></dt>
+<span class="target" id="classdcgp_1_1expression__weighted_1a820f4d854a0191f3428848a457dd6aec"></span>void <code class="sig-name descname">set_weights</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;<a class="reference internal" href="#_CPPv4I0EN4dcgp19expression_weightedE" title="dcgp::expression_weighted::T">T</a>&gt; &amp;<em>ws</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp19expression_weighted11set_weightsERKNSt6vectorI1TEE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Sets all weights. </p>
 <p>Sets all the connection weights at once</p>
 <p><dl class="simple">
@@ -355,9 +356,9 @@ thus allowing to train the weights using algorithms such as stochastic gradient 
 </p>
 </dd></dl>
 
-<dl class="function">
-<dt id="_CPPv4NK4dcgp19expression_weighted10get_weightENSt6vectorI1TE9size_typeENSt6vectorI1TE9size_typeE">
-<span class="target" id="classdcgp_1_1expression__weighted_1a790867d033ced4364ba91d36d71aed48"></span><a class="reference external" href="http://darioizzo.github.io/audi/functions.html#_CPPv4I0E1TRK1TRK1T" title="(in audi v1.7)">T</a> <code class="sig-name descname">get_weight</code><span class="sig-paren">(</span><em class="property">typename</em> std::vector&lt;<a class="reference external" href="http://darioizzo.github.io/audi/functions.html#_CPPv4I0E1TRK1TRK1T" title="(in audi v1.7)">T</a>&gt;::size_type <em>node_id</em>, <em class="property">typename</em> std::vector&lt;<a class="reference external" href="http://darioizzo.github.io/audi/functions.html#_CPPv4I0E1TRK1TRK1T" title="(in audi v1.7)">T</a>&gt;::size_type <em>input_id</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp19expression_weighted10get_weightENSt6vectorI1TE9size_typeENSt6vectorI1TE9size_typeE" title="Permalink to this definition">¶</a><br /></dt>
+<dl class="cpp function">
+<dt id="_CPPv4NK4dcgp19expression_weighted10get_weightEjj">
+<span class="target" id="classdcgp_1_1expression__weighted_1a94d1d3881afbb74bcd409f3d97fa0cc2"></span><a class="reference internal" href="#_CPPv4I0EN4dcgp19expression_weightedE" title="dcgp::expression_weighted::T">T</a> <code class="sig-name descname">get_weight</code><span class="sig-paren">(</span>unsigned <em>node_id</em>, unsigned <em>input_id</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp19expression_weighted10get_weightEjj" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Gets a weight. </p>
 <p>Gets the value of a connection weight</p>
 <p><dl class="simple">
@@ -376,9 +377,9 @@ thus allowing to train the weights using algorithms such as stochastic gradient 
 </p>
 </dd></dl>
 
-<dl class="function">
+<dl class="cpp function">
 <dt id="_CPPv4NK4dcgp19expression_weighted11get_weightsEv">
-<span class="target" id="classdcgp_1_1expression__weighted_1a2908c8feb77b4f14d00168e429c35417"></span><em class="property">const</em> std::vector&lt;<a class="reference external" href="http://darioizzo.github.io/audi/functions.html#_CPPv4I0E1TRK1TRK1T" title="(in audi v1.7)">T</a>&gt; &amp;<code class="sig-name descname">get_weights</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp19expression_weighted11get_weightsEv" title="Permalink to this definition">¶</a><br /></dt>
+<span class="target" id="classdcgp_1_1expression__weighted_1a2908c8feb77b4f14d00168e429c35417"></span><em class="property">const</em> std::vector&lt;<a class="reference internal" href="#_CPPv4I0EN4dcgp19expression_weightedE" title="dcgp::expression_weighted::T">T</a>&gt; &amp;<code class="sig-name descname">get_weights</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp19expression_weighted11get_weightsEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Gets the weights. </p>
 <p>Gets the values of all the weights</p>
 <p><dl class="simple">
@@ -388,12 +389,30 @@ thus allowing to train the weights using algorithms such as stochastic gradient 
 </p>
 </dd></dl>
 
+<dl class="cpp function">
+<dt id="_CPPv4I0EN4dcgp19expression_weighted9serializeEvR7Archivej">
+template&lt;typename <code class="sig-name descname">Archive</code>&gt;<br /><span class="target" id="classdcgp_1_1expression__weighted_1a7d004de438aa3d725d47fae55dd8fe90"></span>void <code class="sig-name descname">serialize</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0EN4dcgp19expression_weighted9serializeEvR7Archivej" title="dcgp::expression_weighted::serialize::Archive">Archive</a> &amp;<em>ar</em>, unsigned<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN4dcgp19expression_weighted9serializeEvR7Archivej" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Object serialization. </p>
+<p>This method will save/load <code class="docutils literal notranslate"><span class="pre">this</span></code> into the archive <code class="docutils literal notranslate"><span class="pre">ar</span></code>.</p>
+<p><dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ar</span></code>: target archive.</p></li>
+</ul>
+</dd>
+<dt><strong>Exceptions</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">unspecified</span></code>: any exception thrown by the serialization of the expression and of primitive types. </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
 </div>
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric">Friends</p>
-<dl class="function">
-<dt id="_CPPv4lsRNSt7ostreamERK19expression_weighted">
-<span class="target" id="classdcgp_1_1expression__weighted_1a5c09e3e2f450b73266358cbc2d0e8c76"></span>std::ostream &amp;<code class="sig-name descname">operator&lt;&lt;</code><span class="sig-paren">(</span>std::ostream &amp;<em>os</em>, <em class="property">const</em> expression_weighted &amp;<em>d</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4lsRNSt7ostreamERK19expression_weighted" title="Permalink to this definition">¶</a><br /></dt>
+<dl class="cpp function">
+<dt id="_CPPv4N4dcgp19expression_weightedlsERNSt7ostreamERK19expression_weighted">
+<span class="target" id="classdcgp_1_1expression__weighted_1a5c09e3e2f450b73266358cbc2d0e8c76"></span><em class="property">friend</em> std::ostream &amp;<code class="sig-name descname">operator&lt;&lt;</code><span class="sig-paren">(</span>std::ostream &amp;<em>os</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN4dcgp19expression_weightedE" title="dcgp::expression_weighted">expression_weighted</a> &amp;<em>d</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp19expression_weightedlsERNSt7ostreamERK19expression_weighted" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Overloaded stream operator. </p>
 <p>Will return a formatted string containing a human readable representation of the class</p>
 <p><dl class="simple">
@@ -428,7 +447,7 @@ thus allowing to train the weights using algorithms such as stochastic gradient 
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Dario Izzo, Francesco Biscani, Alessio Mereta
+        &copy; Copyright 2020, Dario Izzo, Francesco Biscani
 
     </p>
   </div>

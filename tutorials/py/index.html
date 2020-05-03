@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Python &mdash; dCGP 1.4.3 documentation</title>
+  <title>Python &mdash; dCGP 1.5 documentation</title>
   
 
   
@@ -21,11 +21,12 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
         <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
@@ -66,7 +67,7 @@
             
             
               <div class="version">
-                1.4.3
+                1.5
               </div>
             
           
@@ -93,7 +94,7 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Quick start examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../docs/index.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/index.html">API documentation</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../index.html">Tutorials</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../cpp/index.html">C++</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Python</a><ul>
@@ -102,21 +103,29 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#symbolic-regression">Symbolic Regression</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../notebooks/symbolic_regression_1.html">A first tutorial</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../notebooks/symbolic_regression_1.html">A basic tutorial on symbolic regression</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../notebooks/symbolic_regression_2.html">Learning constants using evolution</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../notebooks/symbolic_regression_3.html">Multi-objective memetic approach</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../notebooks/evo_in_parallel.html">Evolving CGPs in multiple threads</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../notebooks/real_world1.html">A real-world case (Engineering)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../notebooks/real_world2.html">A real-world case (physics)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../notebooks/evo_in_parallel.html">Symbolic Regression and the Island Model</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#legacy">Legacy</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../notebooks/learning_constants.html">Learning constants in a symbolic regression task</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../notebooks/learning_constants2.html">Learning constants in a symbolic regression task (PART II)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../notebooks/solving_odes.html">Solving differential equations with dCGP</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../notebooks/weighted_symbolic_regression.html">Weighted dCGP for a symbolic regression task</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../notebooks/finding_prime_integrals.html">Discovery of prime integrals with dCGP</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#neural-networks">Neural Networks</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../notebooks/An_intro_to_dCGPANNs.html">Representing an Artificial Neural Network as a Cartesian Genetic Program</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../notebooks/dCGPANNs_for_classification.html">Training a FFNN in dCGPANN vs. Keras (classification)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../notebooks/dCGPANNs_for_function_approximation.html">Training a FFNN in dCGPANN vs. Keras (regression)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#other">Other</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../notebooks/solving_odes.html">Solving differential equations with dCGP</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../notebooks/weighted_symbolic_regression.html">Weighted dCGP for a symbolic regression task</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../notebooks/finding_prime_integrals.html">Discovery of prime integrals with dCGP</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#deprecated">Deprecated</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../notebooks/learning_constants.html">Learning constants in a symbolic regression task (deprecated)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../notebooks/learning_constants2.html">Learning constants in a symbolic regression task (PART II) (deprecated)</a></li>
 </ul>
 </li>
 </ul>
@@ -196,13 +205,13 @@
 /* CSS overrides for sphinx_rtd_theme */
 
 /* 24px margin */
-.nbinput.nblast,
-.nboutput.nblast {
+.nbinput.nblast.container,
+.nboutput.nblast.container {
     margin-bottom: 19px;  /* padding has already 5px */
 }
 
 /* ... except between code cells! */
-.nblast + .nbinput {
+.nblast.container + .nbinput.container {
     margin-top: -19px;
 }
 
@@ -229,25 +238,41 @@
 <h2>Symbolic Regression<a class="headerlink" href="#symbolic-regression" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/symbolic_regression_1.html">A first tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/symbolic_regression_1.html">A basic tutorial on symbolic regression</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../notebooks/symbolic_regression_2.html">Learning constants using evolution</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../notebooks/symbolic_regression_3.html">Multi-objective memetic approach</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/evo_in_parallel.html">Evolving CGPs in multiple threads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/real_world1.html">A real-world case (Engineering)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/real_world2.html">A real-world case (physics)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/evo_in_parallel.html">Symbolic Regression and the Island Model</a></li>
 </ul>
 </div>
 </div>
-<div class="section" id="legacy">
-<h2>Legacy<a class="headerlink" href="#legacy" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="neural-networks">
+<h2>Neural Networks<a class="headerlink" href="#neural-networks" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/learning_constants.html">Learning constants in a symbolic regression task</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/learning_constants2.html">Learning constants in a symbolic regression task (PART II)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/solving_odes.html">Solving differential equations with dCGP</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/weighted_symbolic_regression.html">Weighted dCGP for a symbolic regression task</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/finding_prime_integrals.html">Discovery of prime integrals with dCGP</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../notebooks/An_intro_to_dCGPANNs.html">Representing an Artificial Neural Network as a Cartesian Genetic Program</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../notebooks/dCGPANNs_for_classification.html">Training a FFNN in dCGPANN vs. Keras (classification)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../notebooks/dCGPANNs_for_function_approximation.html">Training a FFNN in dCGPANN vs. Keras (regression)</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="other">
+<h2>Other<a class="headerlink" href="#other" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/solving_odes.html">Solving differential equations with dCGP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/weighted_symbolic_regression.html">Weighted dCGP for a symbolic regression task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/finding_prime_integrals.html">Discovery of prime integrals with dCGP</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="deprecated">
+<h2>Deprecated<a class="headerlink" href="#deprecated" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/learning_constants.html">Learning constants in a symbolic regression task (deprecated)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/learning_constants2.html">Learning constants in a symbolic regression task (PART II) (deprecated)</a></li>
 </ul>
 </div>
 </div>
@@ -273,7 +298,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Dario Izzo, Francesco Biscani, Alessio Mereta
+        &copy; Copyright 2020, Dario Izzo, Francesco Biscani
 
     </p>
   </div>

@@ -1,7 +1,7 @@
 .. docs tab
 
-Documentation
-=============
+API documentation
+=================
 
 The documentation is split into two parts. The C++ documentation and the Python documentation. 
 We try to keep the APIs as similar as possible, but since templates are not available in python, 

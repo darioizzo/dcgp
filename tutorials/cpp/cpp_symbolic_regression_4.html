@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Finding an entire non dominated front of formulas. &mdash; dCGP 1.4.3 documentation</title>
+  <title>Finding an entire non dominated front of formulas. &mdash; dCGP 1.5 documentation</title>
   
 
   
@@ -21,11 +21,12 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
         <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
@@ -66,7 +67,7 @@
             
             
               <div class="version">
-                1.4.3
+                1.5
               </div>
             
           
@@ -93,7 +94,7 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Quick start examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../docs/index.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/index.html">API documentation</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../index.html">Tutorials</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="index.html">C++</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="index.html#symbolic-regression">Symbolic Regression</a><ul class="current">
@@ -184,13 +185,13 @@
 /* CSS overrides for sphinx_rtd_theme */
 
 /* 24px margin */
-.nbinput.nblast,
-.nboutput.nblast {
+.nbinput.nblast.container,
+.nboutput.nblast.container {
     margin-bottom: 19px;  /* padding has already 5px */
 }
 
 /* ... except between code cells! */
-.nblast + .nbinput {
+.nblast.container + .nbinput.container {
     margin-top: -19px;
 }
 
@@ -285,22 +286,22 @@ the problem vladi6 from the dcgp::gym, that is: 6*cos(x*sin(y))</p>
 <span class="p">{</span>
     <span class="c1">// We load the data (using problem vladi6 from the gym)</span>
     <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&gt;</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">;</span>
-    <span class="n">gym</span><span class="o">::</span><span class="n">generate_sinecosine</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">);</span>
+    <span class="n">gym</span><span class="o">::</span><span class="n">generate_P1</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">);</span>
 
     <span class="c1">// We instantiate a symbolic regression problem with one only ephemeral constants.</span>
     <span class="c1">// Note that here we also set a batch parallelism to 5 so that 5 batches of 2 points</span>
     <span class="c1">// will be created and handled in parallel.</span>
     <span class="k">auto</span> <span class="n">n_eph</span> <span class="o">=</span> <span class="mi">1u</span><span class="p">;</span>
-    <span class="n">symbolic_regression</span> <span class="n">udp</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="mi">1u</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">101</span><span class="p">,</span> <span class="mi">2u</span><span class="p">,</span> <span class="n">kernel_set</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">({</span><span class="s">&quot;sum&quot;</span><span class="p">,</span> <span class="s">&quot;diff&quot;</span><span class="p">,</span> <span class="s">&quot;mul&quot;</span><span class="p">,</span> <span class="s">&quot;sin&quot;</span><span class="p">,</span> <span class="s">&quot;cos&quot;</span><span class="p">})(),</span> <span class="n">n_eph</span><span class="p">,</span> <span class="nb">true</span><span class="p">,</span> <span class="mi">5u</span><span class="p">);</span>
+    <span class="n">symbolic_regression</span> <span class="n">udp</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="mi">1u</span><span class="p">,</span> <span class="mi">15u</span><span class="p">,</span> <span class="mi">16u</span><span class="p">,</span> <span class="mi">2u</span><span class="p">,</span> <span class="n">kernel_set</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">({</span><span class="s">&quot;sum&quot;</span><span class="p">,</span> <span class="s">&quot;diff&quot;</span><span class="p">,</span> <span class="s">&quot;mul&quot;</span><span class="p">,</span> <span class="s">&quot;pdiv&quot;</span><span class="p">})(),</span> <span class="n">n_eph</span><span class="p">,</span> <span class="nb">true</span><span class="p">);</span>
 
     <span class="c1">// We init a large population (100) of individuals.</span>
-    <span class="n">pagmo</span><span class="o">::</span><span class="n">population</span> <span class="n">pop</span><span class="p">{</span><span class="n">udp</span><span class="p">,</span> <span class="mi">100</span><span class="p">};</span>
+    <span class="n">pagmo</span><span class="o">::</span><span class="n">population</span> <span class="n">pop</span><span class="p">{</span><span class="n">udp</span><span class="p">,</span> <span class="mi">4u</span><span class="p">};</span>
 
     <span class="c1">// We here use the Multi-Objective Memetic Evolutionary Strategy: an original algorithm provided in this dCGP project.</span>
     <span class="c1">// We instantiate it with 100 generations and 4 active mutations maximum per individual.</span>
-    <span class="n">dcgp</span><span class="o">::</span><span class="n">momes4cgp</span> <span class="n">uda</span><span class="p">{</span><span class="mi">250u</span><span class="p">,</span> <span class="mi">4u</span><span class="p">};</span>
+    <span class="n">dcgp</span><span class="o">::</span><span class="n">momes4cgp</span> <span class="n">uda</span><span class="p">{</span><span class="mi">1000u</span><span class="p">,</span> <span class="mi">4u</span><span class="p">,</span> <span class="mf">1e-8</span><span class="p">};</span>
     <span class="n">pagmo</span><span class="o">::</span><span class="n">algorithm</span> <span class="n">algo</span><span class="p">{</span><span class="n">uda</span><span class="p">};</span>
-    <span class="n">algo</span><span class="p">.</span><span class="n">set_verbosity</span><span class="p">(</span><span class="mi">10u</span><span class="p">);</span>
+    <span class="n">algo</span><span class="p">.</span><span class="n">set_verbosity</span><span class="p">(</span><span class="mi">50u</span><span class="p">);</span>
 
     <span class="c1">// We solve the problem</span>
     <span class="n">pop</span> <span class="o">=</span> <span class="n">algo</span><span class="p">.</span><span class="n">evolve</span><span class="p">(</span><span class="n">pop</span><span class="p">);</span>
@@ -388,7 +389,7 @@ the problem vladi6 from the dcgp::gym, that is: 6*cos(x*sin(y))</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Dario Izzo, Francesco Biscani, Alessio Mereta
+        &copy; Copyright 2020, Dario Izzo, Francesco Biscani
 
     </p>
   </div>

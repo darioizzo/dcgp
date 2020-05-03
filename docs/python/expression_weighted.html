@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>expression_weighted (dCGP-W) &mdash; dCGP 1.4.3 documentation</title>
+  <title>expression_weighted (dCGP-W) &mdash; dCGP 1.5 documentation</title>
   
 
   
@@ -21,11 +21,12 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
         <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
@@ -66,7 +67,7 @@
             
             
               <div class="version">
-                1.4.3
+                1.5
               </div>
             
           
@@ -93,7 +94,7 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Quick start examples</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Documentation</a><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">API documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../cpp/index.html">C++ Documentation</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="index.html">Python Documentation</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="index.html#kernels">Kernels</a></li>
@@ -156,7 +157,7 @@
     
       <li><a href="../../index.html">Docs</a> &raquo;</li>
         
-          <li><a href="../index.html">Documentation</a> &raquo;</li>
+          <li><a href="../index.html">API documentation</a> &raquo;</li>
         
           <li><a href="index.html">Python Documentation</a> &raquo;</li>
         
@@ -184,13 +185,13 @@
 /* CSS overrides for sphinx_rtd_theme */
 
 /* 24px margin */
-.nbinput.nblast,
-.nboutput.nblast {
+.nbinput.nblast.container,
+.nboutput.nblast.container {
     margin-bottom: 19px;  /* padding has already 5px */
 }
 
 /* ... except between code cells! */
-.nblast + .nbinput {
+.nblast.container + .nbinput.container {
     margin-top: -19px;
 }
 
@@ -213,18 +214,20 @@ They differ from the type they operate upon: double, gdual, vectorized gdual.</p
 <hr class="docutils" />
 <div class="section" id="expression-weighted-double">
 <h2>expression_weighted_double<a class="headerlink" href="#expression-weighted-double" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
+<dl class="py class">
 <dt id="dcgpy.expression_weighted_double">
-<em class="property">class </em><code class="sig-prename descclassname">dcgpy.</code><code class="sig-name descname">expression_weighted_double</code><span class="sig-paren">(</span><em class="sig-param">inputs</em>, <em class="sig-param">outputs</em>, <em class="sig-param">rows</em>, <em class="sig-param">columns</em>, <em class="sig-param">levels_back</em>, <em class="sig-param">arity</em>, <em class="sig-param">kernels</em>, <em class="sig-param">n_eph</em>, <em class="sig-param">seed = randint</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_weighted_double" title="Permalink to this definition">¶</a></dt>
-<dd><p>Constructs a CGP expression operating on double</p>
+<em class="property">class </em><code class="sig-prename descclassname">dcgpy.</code><code class="sig-name descname">expression_weighted_double</code><span class="sig-paren">(</span><em class="sig-param">inputs</em>, <em class="sig-param">outputs</em>, <em class="sig-param">rows</em>, <em class="sig-param">cols</em>, <em class="sig-param">levels_back</em>, <em class="sig-param">arity = 2</em>, <em class="sig-param">kernels</em>, <em class="sig-param">n_eph = 0</em>, <em class="sig-param">seed = randint</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_weighted_double" title="Permalink to this definition">¶</a></dt>
+<dd><p>A weighted CGP expression</p>
+<p>Constructs a CGP expression operating on double</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>inputs</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – number of inputs</p></li>
 <li><p><strong>outputs</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – number of outputs</p></li>
-<li><p><strong>rows</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – number of rows in the cartesian program</p></li>
-<li><p><strong>columns</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – number of columns in the cartesian program</p></li>
-<li><p><strong>levels_back</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – number of levels-back in the cartesian program</p></li>
+<li><p><strong>rows</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – number of rows of the cartesian representation of the expression as an acyclic graph.</p></li>
+<li><p><strong>cols</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – number of columns of the cartesian representation of the expression as an acyclic graph.</p></li>
+<li><p><strong>levels_back</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – number of levels-back allowed. This, essentially, controls the minimum number of allowed
+operations in the formula. If uncertain set it to cols + 1</p></li>
 <li><p><strong>arity</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code> on <code class="docutils literal notranslate"><span class="pre">list</span></code>) – arity of the kernels. Assumed equal for all columns unless its specified by a list. The list must contain a number of entries equal to the number of columns.</p></li>
 <li><p><strong>kernels</strong> (<code class="docutils literal notranslate"><span class="pre">List[dcgpy.kernel_double]</span></code>) – kernel functions</p></li>
 <li><p><strong>n_eph</strong> (<em>int</em>) – Number of ephemeral constants. Their values and their symbols can be set via dedicated methods.</p></li>
@@ -232,7 +235,7 @@ They differ from the type they operate upon: double, gdual, vectorized gdual.</p
 </ul>
 </dd>
 </dl>
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="dcgpy.expression_weighted_double.eph_val">
 <code class="sig-name descname">eph_val</code><a class="headerlink" href="#dcgpy.expression_weighted_double.eph_val" title="Permalink to this definition">¶</a></dt>
 <dd><p>Values of the ephemeral constants.</p>
@@ -243,7 +246,7 @@ They differ from the type they operate upon: double, gdual, vectorized gdual.</p
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="dcgpy.expression_weighted_double.eph_symb">
 <code class="sig-name descname">eph_symb</code><a class="headerlink" href="#dcgpy.expression_weighted_double.eph_symb" title="Permalink to this definition">¶</a></dt>
 <dd><p>Symbols used for the ephemeral constants.</p>
@@ -255,7 +258,7 @@ They differ from the type they operate upon: double, gdual, vectorized gdual.</p
 </dd></dl>
 
 <p>Examples:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dcgpy</span> <span class="k">import</span> <span class="o">*</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dcgpy</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">dcgp</span> <span class="o">=</span> <span class="n">expression_double</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">kernel_set</span><span class="p">([</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span><span class="s2">&quot;diff&quot;</span><span class="p">,</span><span class="s2">&quot;mul&quot;</span><span class="p">,</span><span class="s2">&quot;div&quot;</span><span class="p">])(),</span> <span class="mi">0</span><span class="n">u</span><span class="p">,</span> <span class="mi">32</span><span class="n">u</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">dcgp</span><span class="p">)</span>
 <span class="gp">...</span>
@@ -263,9 +266,9 @@ They differ from the type they operate upon: double, gdual, vectorized gdual.</p
 <span class="gp">&gt;&gt;&gt; </span><span class="n">sym_out</span> <span class="o">=</span> <span class="n">dcgp</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">])</span>
 </pre></div>
 </div>
-<dl class="method">
+<dl class="py method">
 <dt id="dcgpy.expression_weighted_double.get_weight">
-<code class="sig-name descname">get_weight</code><span class="sig-paren">(</span><em class="sig-param">node_id</em>, <em class="sig-param">input_id</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_weighted_double.get_weight" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_weight</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node_id</span></em>, <em class="sig-param"><span class="n">input_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_weighted_double.get_weight" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets a weight.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -287,15 +290,15 @@ They differ from the type they operate upon: double, gdual, vectorized gdual.</p
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="dcgpy.expression_weighted_double.get_weights">
 <code class="sig-name descname">get_weights</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_weighted_double.get_weights" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all weights</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="dcgpy.expression_weighted_double.set_weight">
-<code class="sig-name descname">set_weight</code><span class="sig-paren">(</span><em class="sig-param">node_id</em>, <em class="sig-param">input_id</em>, <em class="sig-param">weight</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_weighted_double.set_weight" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">set_weight</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node_id</span></em>, <em class="sig-param"><span class="n">input_id</span></em>, <em class="sig-param"><span class="n">weight</span></em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_weighted_double.set_weight" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets a weight.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -315,9 +318,9 @@ They differ from the type they operate upon: double, gdual, vectorized gdual.</p
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="dcgpy.expression_weighted_double.set_weights">
-<code class="sig-name descname">set_weights</code><span class="sig-paren">(</span><em class="sig-param">weights</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_weighted_double.set_weights" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">set_weights</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">weights</span></em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_weighted_double.set_weights" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets all weights.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -335,18 +338,20 @@ They differ from the type they operate upon: double, gdual, vectorized gdual.</p
 <hr class="docutils" />
 <div class="section" id="expression-weighted-gdual-double">
 <h2>expression_weighted_gdual_double<a class="headerlink" href="#expression-weighted-gdual-double" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
+<dl class="py class">
 <dt id="dcgpy.expression_weighted_gdual_double">
-<em class="property">class </em><code class="sig-prename descclassname">dcgpy.</code><code class="sig-name descname">expression_weighted_gdual_double</code><span class="sig-paren">(</span><em class="sig-param">inputs</em>, <em class="sig-param">outputs</em>, <em class="sig-param">rows</em>, <em class="sig-param">columns</em>, <em class="sig-param">levels_back</em>, <em class="sig-param">arity</em>, <em class="sig-param">kernels</em>, <em class="sig-param">n_eph</em>, <em class="sig-param">seed = randint</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_weighted_gdual_double" title="Permalink to this definition">¶</a></dt>
-<dd><p>Constructs a CGP expression operating on gdual_double</p>
+<em class="property">class </em><code class="sig-prename descclassname">dcgpy.</code><code class="sig-name descname">expression_weighted_gdual_double</code><span class="sig-paren">(</span><em class="sig-param">inputs</em>, <em class="sig-param">outputs</em>, <em class="sig-param">rows</em>, <em class="sig-param">cols</em>, <em class="sig-param">levels_back</em>, <em class="sig-param">arity = 2</em>, <em class="sig-param">kernels</em>, <em class="sig-param">n_eph = 0</em>, <em class="sig-param">seed = randint</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_weighted_gdual_double" title="Permalink to this definition">¶</a></dt>
+<dd><p>A weighted CGP expression</p>
+<p>Constructs a CGP expression operating on gdual_double</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>inputs</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – number of inputs</p></li>
 <li><p><strong>outputs</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – number of outputs</p></li>
-<li><p><strong>rows</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – number of rows in the cartesian program</p></li>
-<li><p><strong>columns</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – number of columns in the cartesian program</p></li>
-<li><p><strong>levels_back</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – number of levels-back in the cartesian program</p></li>
+<li><p><strong>rows</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – number of rows of the cartesian representation of the expression as an acyclic graph.</p></li>
+<li><p><strong>cols</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – number of columns of the cartesian representation of the expression as an acyclic graph.</p></li>
+<li><p><strong>levels_back</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – number of levels-back allowed. This, essentially, controls the minimum number of allowed
+operations in the formula. If uncertain set it to cols + 1</p></li>
 <li><p><strong>arity</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code> on <code class="docutils literal notranslate"><span class="pre">list</span></code>) – arity of the kernels. Assumed equal for all columns unless its specified by a list. The list must contain a number of entries equal to the number of columns.</p></li>
 <li><p><strong>kernels</strong> (<code class="docutils literal notranslate"><span class="pre">List[dcgpy.kernel_gdual_double]</span></code>) – kernel functions</p></li>
 <li><p><strong>n_eph</strong> (<em>int</em>) – Number of ephemeral constants. Their values and their symbols can be set via dedicated methods.</p></li>
@@ -354,7 +359,7 @@ They differ from the type they operate upon: double, gdual, vectorized gdual.</p
 </ul>
 </dd>
 </dl>
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="dcgpy.expression_weighted_gdual_double.eph_val">
 <code class="sig-name descname">eph_val</code><a class="headerlink" href="#dcgpy.expression_weighted_gdual_double.eph_val" title="Permalink to this definition">¶</a></dt>
 <dd><p>Values of the ephemeral constants.</p>
@@ -365,7 +370,7 @@ They differ from the type they operate upon: double, gdual, vectorized gdual.</p
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="dcgpy.expression_weighted_gdual_double.eph_symb">
 <code class="sig-name descname">eph_symb</code><a class="headerlink" href="#dcgpy.expression_weighted_gdual_double.eph_symb" title="Permalink to this definition">¶</a></dt>
 <dd><p>Symbols used for the ephemeral constants.</p>
@@ -377,7 +382,7 @@ They differ from the type they operate upon: double, gdual, vectorized gdual.</p
 </dd></dl>
 
 <p>Examples:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dcgpy</span> <span class="k">import</span> <span class="o">*</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dcgpy</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">dcgp</span> <span class="o">=</span> <span class="n">expression_gdual_double</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">kernel_set</span><span class="p">([</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span><span class="s2">&quot;diff&quot;</span><span class="p">,</span><span class="s2">&quot;mul&quot;</span><span class="p">,</span><span class="s2">&quot;div&quot;</span><span class="p">])(),</span> <span class="mi">0</span><span class="n">u</span><span class="p">,</span> <span class="mi">32</span><span class="n">u</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">dcgp</span><span class="p">)</span>
 <span class="gp">...</span>
@@ -385,9 +390,9 @@ They differ from the type they operate upon: double, gdual, vectorized gdual.</p
 <span class="gp">&gt;&gt;&gt; </span><span class="n">sym_out</span> <span class="o">=</span> <span class="n">dcgp</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">])</span>
 </pre></div>
 </div>
-<dl class="method">
+<dl class="py method">
 <dt id="dcgpy.expression_weighted_gdual_double.get_weight">
-<code class="sig-name descname">get_weight</code><span class="sig-paren">(</span><em class="sig-param">node_id</em>, <em class="sig-param">input_id</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_weighted_gdual_double.get_weight" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_weight</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node_id</span></em>, <em class="sig-param"><span class="n">input_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_weighted_gdual_double.get_weight" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets a weight.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -409,15 +414,15 @@ They differ from the type they operate upon: double, gdual, vectorized gdual.</p
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="dcgpy.expression_weighted_gdual_double.get_weights">
 <code class="sig-name descname">get_weights</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_weighted_gdual_double.get_weights" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all weights</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="dcgpy.expression_weighted_gdual_double.set_weight">
-<code class="sig-name descname">set_weight</code><span class="sig-paren">(</span><em class="sig-param">node_id</em>, <em class="sig-param">input_id</em>, <em class="sig-param">weight</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_weighted_gdual_double.set_weight" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">set_weight</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node_id</span></em>, <em class="sig-param"><span class="n">input_id</span></em>, <em class="sig-param"><span class="n">weight</span></em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_weighted_gdual_double.set_weight" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets a weight.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -437,9 +442,9 @@ They differ from the type they operate upon: double, gdual, vectorized gdual.</p
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="dcgpy.expression_weighted_gdual_double.set_weights">
-<code class="sig-name descname">set_weights</code><span class="sig-paren">(</span><em class="sig-param">weights</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_weighted_gdual_double.set_weights" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">set_weights</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">weights</span></em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_weighted_gdual_double.set_weights" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets all weights.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -457,18 +462,20 @@ They differ from the type they operate upon: double, gdual, vectorized gdual.</p
 <hr class="docutils" />
 <div class="section" id="expression-weighted-gdual-vdouble">
 <h2>expression_weighted_gdual_vdouble<a class="headerlink" href="#expression-weighted-gdual-vdouble" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
+<dl class="py class">
 <dt id="dcgpy.expression_weighted_gdual_vdouble">
-<em class="property">class </em><code class="sig-prename descclassname">dcgpy.</code><code class="sig-name descname">expression_weighted_gdual_vdouble</code><span class="sig-paren">(</span><em class="sig-param">inputs</em>, <em class="sig-param">outputs</em>, <em class="sig-param">rows</em>, <em class="sig-param">columns</em>, <em class="sig-param">levels_back</em>, <em class="sig-param">arity</em>, <em class="sig-param">kernels</em>, <em class="sig-param">n_eph</em>, <em class="sig-param">seed = randint</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_weighted_gdual_vdouble" title="Permalink to this definition">¶</a></dt>
-<dd><p>Constructs a CGP expression operating on gdual_vdouble</p>
+<em class="property">class </em><code class="sig-prename descclassname">dcgpy.</code><code class="sig-name descname">expression_weighted_gdual_vdouble</code><span class="sig-paren">(</span><em class="sig-param">inputs</em>, <em class="sig-param">outputs</em>, <em class="sig-param">rows</em>, <em class="sig-param">cols</em>, <em class="sig-param">levels_back</em>, <em class="sig-param">arity = 2</em>, <em class="sig-param">kernels</em>, <em class="sig-param">n_eph = 0</em>, <em class="sig-param">seed = randint</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_weighted_gdual_vdouble" title="Permalink to this definition">¶</a></dt>
+<dd><p>A weighted CGP expression</p>
+<p>Constructs a CGP expression operating on gdual_vdouble</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>inputs</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – number of inputs</p></li>
 <li><p><strong>outputs</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – number of outputs</p></li>
-<li><p><strong>rows</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – number of rows in the cartesian program</p></li>
-<li><p><strong>columns</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – number of columns in the cartesian program</p></li>
-<li><p><strong>levels_back</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – number of levels-back in the cartesian program</p></li>
+<li><p><strong>rows</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – number of rows of the cartesian representation of the expression as an acyclic graph.</p></li>
+<li><p><strong>cols</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – number of columns of the cartesian representation of the expression as an acyclic graph.</p></li>
+<li><p><strong>levels_back</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – number of levels-back allowed. This, essentially, controls the minimum number of allowed
+operations in the formula. If uncertain set it to cols + 1</p></li>
 <li><p><strong>arity</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code> on <code class="docutils literal notranslate"><span class="pre">list</span></code>) – arity of the kernels. Assumed equal for all columns unless its specified by a list. The list must contain a number of entries equal to the number of columns.</p></li>
 <li><p><strong>kernels</strong> (<code class="docutils literal notranslate"><span class="pre">List[dcgpy.kernel_gdual_vdouble]</span></code>) – kernel functions</p></li>
 <li><p><strong>n_eph</strong> (<em>int</em>) – Number of ephemeral constants. Their values and their symbols can be set via dedicated methods.</p></li>
@@ -476,7 +483,7 @@ They differ from the type they operate upon: double, gdual, vectorized gdual.</p
 </ul>
 </dd>
 </dl>
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="dcgpy.expression_weighted_gdual_vdouble.eph_val">
 <code class="sig-name descname">eph_val</code><a class="headerlink" href="#dcgpy.expression_weighted_gdual_vdouble.eph_val" title="Permalink to this definition">¶</a></dt>
 <dd><p>Values of the ephemeral constants.</p>
@@ -487,7 +494,7 @@ They differ from the type they operate upon: double, gdual, vectorized gdual.</p
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="dcgpy.expression_weighted_gdual_vdouble.eph_symb">
 <code class="sig-name descname">eph_symb</code><a class="headerlink" href="#dcgpy.expression_weighted_gdual_vdouble.eph_symb" title="Permalink to this definition">¶</a></dt>
 <dd><p>Symbols used for the ephemeral constants.</p>
@@ -499,7 +506,7 @@ They differ from the type they operate upon: double, gdual, vectorized gdual.</p
 </dd></dl>
 
 <p>Examples:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dcgpy</span> <span class="k">import</span> <span class="o">*</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dcgpy</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">dcgp</span> <span class="o">=</span> <span class="n">expression_gdual_vdouble</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">kernel_set</span><span class="p">([</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span><span class="s2">&quot;diff&quot;</span><span class="p">,</span><span class="s2">&quot;mul&quot;</span><span class="p">,</span><span class="s2">&quot;div&quot;</span><span class="p">])(),</span> <span class="mi">0</span><span class="n">u</span><span class="p">,</span> <span class="mi">32</span><span class="n">u</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">dcgp</span><span class="p">)</span>
 <span class="gp">...</span>
@@ -507,9 +514,9 @@ They differ from the type they operate upon: double, gdual, vectorized gdual.</p
 <span class="gp">&gt;&gt;&gt; </span><span class="n">sym_out</span> <span class="o">=</span> <span class="n">dcgp</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">])</span>
 </pre></div>
 </div>
-<dl class="method">
+<dl class="py method">
 <dt id="dcgpy.expression_weighted_gdual_vdouble.get_weight">
-<code class="sig-name descname">get_weight</code><span class="sig-paren">(</span><em class="sig-param">node_id</em>, <em class="sig-param">input_id</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_weighted_gdual_vdouble.get_weight" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_weight</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node_id</span></em>, <em class="sig-param"><span class="n">input_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_weighted_gdual_vdouble.get_weight" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets a weight.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -531,15 +538,15 @@ They differ from the type they operate upon: double, gdual, vectorized gdual.</p
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="dcgpy.expression_weighted_gdual_vdouble.get_weights">
 <code class="sig-name descname">get_weights</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_weighted_gdual_vdouble.get_weights" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all weights</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="dcgpy.expression_weighted_gdual_vdouble.set_weight">
-<code class="sig-name descname">set_weight</code><span class="sig-paren">(</span><em class="sig-param">node_id</em>, <em class="sig-param">input_id</em>, <em class="sig-param">weight</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_weighted_gdual_vdouble.set_weight" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">set_weight</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node_id</span></em>, <em class="sig-param"><span class="n">input_id</span></em>, <em class="sig-param"><span class="n">weight</span></em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_weighted_gdual_vdouble.set_weight" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets a weight.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -559,9 +566,9 @@ They differ from the type they operate upon: double, gdual, vectorized gdual.</p
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="dcgpy.expression_weighted_gdual_vdouble.set_weights">
-<code class="sig-name descname">set_weights</code><span class="sig-paren">(</span><em class="sig-param">weights</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_weighted_gdual_vdouble.set_weights" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">set_weights</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">weights</span></em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_weighted_gdual_vdouble.set_weights" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets all weights.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -598,7 +605,7 @@ They differ from the type they operate upon: double, gdual, vectorized gdual.</p
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Dario Izzo, Francesco Biscani, Alessio Mereta
+        &copy; Copyright 2020, Dario Izzo, Francesco Biscani
 
     </p>
   </div>

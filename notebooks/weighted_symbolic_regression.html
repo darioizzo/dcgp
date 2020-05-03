@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Weighted dCGP for a symbolic regression task &mdash; dCGP 1.4.3 documentation</title>
+  <title>Weighted dCGP for a symbolic regression task &mdash; dCGP 1.5 documentation</title>
   
 
   
@@ -21,11 +21,12 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
         <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
@@ -66,7 +67,7 @@
             
             
               <div class="version">
-                1.4.3
+                1.5
               </div>
             
           
@@ -93,23 +94,20 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick start examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../docs/index.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docs/index.html">API documentation</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../tutorials/index.html">Tutorials</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/cpp/index.html">C++</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../tutorials/py/index.html">Python</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="../tutorials/py/index.html#core">Core</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../tutorials/py/index.html#symbolic-regression">Symbolic Regression</a></li>
-<li class="toctree-l3 current"><a class="reference internal" href="../tutorials/py/index.html#legacy">Legacy</a><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="learning_constants.html">Learning constants in a symbolic regression task</a></li>
-<li class="toctree-l4"><a class="reference internal" href="learning_constants2.html">Learning constants in a symbolic regression task (PART II)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../tutorials/py/index.html#neural-networks">Neural Networks</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../tutorials/py/index.html#other">Other</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="solving_odes.html">Solving differential equations with dCGP</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">Weighted dCGP for a symbolic regression task</a></li>
 <li class="toctree-l4"><a class="reference internal" href="finding_prime_integrals.html">Discovery of prime integrals with dCGP</a></li>
-<li class="toctree-l4"><a class="reference internal" href="An_intro_to_dCGPANNs.html">Representing an Artificial Neural Network as a Cartesian Genetic Program</a></li>
-<li class="toctree-l4"><a class="reference internal" href="dCGPANNs_for_classification.html">Training a FFNN in dCGPANN vs. Keras (classification)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="dCGPANNs_for_function_approximation.html">Training a FFNN in dCGPANN vs. Keras (regression)</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../tutorials/py/index.html#deprecated">Deprecated</a></li>
 </ul>
 </li>
 </ul>
@@ -189,16 +187,16 @@
 /* CSS for nbsphinx extension */
 
 /* remove conflicting styling from Sphinx themes */
-div.nbinput,
-div.nbinput div.prompt,
-div.nbinput div.input_area,
-div.nbinput div[class*=highlight],
-div.nbinput div[class*=highlight] pre,
-div.nboutput,
-div.nbinput div.prompt,
-div.nbinput div.output_area,
-div.nboutput div[class*=highlight],
-div.nboutput div[class*=highlight] pre {
+div.nbinput.container,
+div.nbinput.container div.prompt,
+div.nbinput.container div.input_area,
+div.nbinput.container div[class*=highlight],
+div.nbinput.container div[class*=highlight] pre,
+div.nboutput.container,
+div.nboutput.container div.prompt,
+div.nboutput.container div.output_area,
+div.nboutput.container div[class*=highlight],
+div.nboutput.container div[class*=highlight] pre {
     background: none;
     border: none;
     padding: 0 0;
@@ -207,13 +205,13 @@ div.nboutput div[class*=highlight] pre {
 }
 
 /* avoid gaps between output lines */
-div.nboutput div[class*=highlight] pre {
+div.nboutput.container div[class*=highlight] pre {
     line-height: normal;
 }
 
 /* input/output containers */
-div.nbinput,
-div.nboutput {
+div.nbinput.container,
+div.nboutput.container {
     display: -webkit-flex;
     display: flex;
     align-items: flex-start;
@@ -221,92 +219,91 @@ div.nboutput {
     width: 100%;
 }
 @media (max-width: 540px) {
-    div.nbinput,
-    div.nboutput {
+    div.nbinput.container,
+    div.nboutput.container {
         flex-direction: column;
     }
 }
 
 /* input container */
-div.nbinput {
+div.nbinput.container {
     padding-top: 5px;
 }
 
 /* last container */
-div.nblast {
+div.nblast.container {
     padding-bottom: 5px;
 }
 
 /* input prompt */
-div.nbinput div.prompt pre {
+div.nbinput.container div.prompt pre {
     color: #307FC1;
 }
 
 /* output prompt */
-div.nboutput div.prompt pre {
+div.nboutput.container div.prompt pre {
     color: #BF5B3D;
 }
 
 /* all prompts */
-div.nbinput div.prompt,
-div.nboutput div.prompt {
+div.nbinput.container div.prompt,
+div.nboutput.container div.prompt {
     min-width: 5ex;
-    padding-top: 0.4em;
-    padding-right: 0.4em;
+    padding-top: 0.3rem;
+    padding-right: 0.3rem;
     text-align: right;
     flex: 0;
 }
 @media (max-width: 540px) {
-    div.nbinput div.prompt,
-    div.nboutput div.prompt {
+    div.nbinput.container div.prompt,
+    div.nboutput.container div.prompt {
         text-align: left;
         padding: 0.4em;
     }
-    div.nboutput div.prompt.empty {
+    div.nboutput.container div.prompt.empty {
         padding: 0;
     }
 }
 
 /* disable scrollbars on prompts */
-div.nbinput div.prompt pre,
-div.nboutput div.prompt pre {
+div.nbinput.container div.prompt pre,
+div.nboutput.container div.prompt pre {
     overflow: hidden;
 }
 
 /* input/output area */
-div.nbinput div.input_area,
-div.nboutput div.output_area {
-    padding: 0.4em;
+div.nbinput.container div.input_area,
+div.nboutput.container div.output_area {
     -webkit-flex: 1;
     flex: 1;
     overflow: auto;
 }
 @media (max-width: 540px) {
-    div.nbinput div.input_area,
-    div.nboutput div.output_area {
+    div.nbinput.container div.input_area,
+    div.nboutput.container div.output_area {
         width: 100%;
     }
 }
 
 /* input area */
-div.nbinput div.input_area {
+div.nbinput.container div.input_area {
     border: 1px solid #e0e0e0;
     border-radius: 2px;
     background: #f5f5f5;
 }
 
 /* override MathJax center alignment in output cells */
-div.nboutput div[class*=MathJax] {
+div.nboutput.container div[class*=MathJax] {
     text-align: left !important;
 }
 
 /* override sphinx.ext.imgmath center alignment in output cells */
-div.nboutput div.math p {
+div.nboutput.container div.math p {
     text-align: left;
 }
 
 /* standard error */
-div.nboutput div.output_area.stderr {
+div.nboutput.container div.output_area.stderr {
     background: #fdd;
 }
 
@@ -350,6 +347,27 @@ div.nboutput div.output_area.stderr {
 .ansi-bold { font-weight: bold; }
 .ansi-underline { text-decoration: underline; }
 
+
+div.nbinput.container div.input_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight].math,
+div.nboutput.container div.output_area.rendered_html,
+div.nboutput.container div.output_area > div.output_javascript,
+div.nboutput.container div.output_area:not(.rendered_html) > img{
+    padding: 0.3rem;
+}
+
+/* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
+div.nbinput.container div.input_area > div[class^='highlight'],
+div.nboutput.container div.output_area > div[class^='highlight']{
+    overflow-y: hidden;
+}
+
+/* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
+.prompt a.copybtn {
+    display: none;
+}
+
 /* Some additional styling taken form the Jupyter notebook CSS */
 div.rendered_html table {
   border: none;
@@ -387,13 +405,13 @@ div.rendered_html tbody tr:hover {
 /* CSS overrides for sphinx_rtd_theme */
 
 /* 24px margin */
-.nbinput.nblast,
-.nboutput.nblast {
+.nbinput.nblast.container,
+.nboutput.nblast.container {
     margin-bottom: 19px;  /* padding has already 5px */
 }
 
 /* ... except between code cells! */
-.nblast + .nbinput {
+.nblast.container + .nbinput.container {
     margin-top: -19px;
 }
 
@@ -417,7 +435,7 @@ div.rendered_html tbody tr:hover {
 <span class="kn">from</span> <span class="nn">dcgpy</span> <span class="kn">import</span> <span class="n">expression_weighted_gdual_vdouble</span> <span class="k">as</span> <span class="n">expression</span>
 <span class="kn">from</span> <span class="nn">dcgpy</span> <span class="kn">import</span> <span class="n">kernel_set_gdual_vdouble</span> <span class="k">as</span> <span class="n">kernel_set</span>
 <span class="kn">import</span> <span class="nn">pyaudi</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">math</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="o">%</span><span class="k">matplotlib</span> inline
@@ -456,7 +474,7 @@ div.rendered_html tbody tr:hover {
                 <span class="n">dCGP</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">chromosome</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
                 <span class="n">dCGP</span><span class="o">.</span><span class="n">set_weights</span><span class="p">(</span><span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
                 <span class="k">if</span> <span class="p">(</span><span class="n">fitness</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">best_fitness</span><span class="p">)</span> <span class="ow">and</span> <span class="n">screen_output</span><span class="p">:</span>
-                    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;New best found: gen: &quot;</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="s2">&quot; value: &quot;</span><span class="p">,</span> <span class="n">fitness</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">simplify</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">],</span><span class="bp">True</span><span class="p">))</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;New best found: gen: &quot;</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="s2">&quot; value: &quot;</span><span class="p">,</span> <span class="n">fitness</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">simplify</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">],</span><span class="kc">True</span><span class="p">))</span>
                 <span class="n">best_chromosome</span> <span class="o">=</span> <span class="n">chromosome</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
                 <span class="n">best_fitness</span> <span class="o">=</span> <span class="n">fitness</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
                 <span class="n">best_weights</span> <span class="o">=</span> <span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
@@ -540,7 +558,7 @@ div.rendered_html tbody tr:hover {
     <span class="n">n</span> <span class="o">=</span> <span class="n">ex</span><span class="o">.</span><span class="n">get_n</span><span class="p">()</span>
     <span class="n">r</span> <span class="o">=</span> <span class="n">ex</span><span class="o">.</span><span class="n">get_rows</span><span class="p">()</span>
     <span class="n">c</span> <span class="o">=</span> <span class="n">ex</span><span class="o">.</span><span class="n">get_cols</span><span class="p">()</span>
-    <span class="n">a</span> <span class="o">=</span> <span class="n">ex</span><span class="o">.</span><span class="n">get_arity</span><span class="p">()</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">ex</span><span class="o">.</span><span class="n">get_arity</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">r</span> <span class="o">*</span> <span class="n">c</span> <span class="o">*</span> <span class="n">a</span><span class="p">)</span>
 
     <span class="c1"># random initialization of weights</span>
@@ -553,9 +571,9 @@ div.rendered_html tbody tr:hover {
 
     <span class="c1"># get active weights</span>
     <span class="n">an</span> <span class="o">=</span> <span class="n">ex</span><span class="o">.</span><span class="n">get_active_nodes</span><span class="p">()</span>
-    <span class="n">is_active</span> <span class="o">=</span> <span class="p">[</span><span class="bp">False</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="n">r</span> <span class="o">*</span> <span class="n">c</span><span class="p">)</span> <span class="c1"># bool vector of active nodes</span>
+    <span class="n">is_active</span> <span class="o">=</span> <span class="p">[</span><span class="kc">False</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="n">r</span> <span class="o">*</span> <span class="n">c</span><span class="p">)</span> <span class="c1"># bool vector of active nodes</span>
     <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">an</span><span class="p">)):</span>
-        <span class="n">is_active</span><span class="p">[</span><span class="n">an</span><span class="p">[</span><span class="n">k</span><span class="p">]]</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="n">is_active</span><span class="p">[</span><span class="n">an</span><span class="p">[</span><span class="n">k</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="n">aw</span><span class="o">=</span><span class="p">[]</span> <span class="c1"># list of active weights</span>
     <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">an</span><span class="p">)):</span>
         <span class="k">if</span> <span class="n">an</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">n</span><span class="p">:</span>
@@ -569,7 +587,7 @@ div.rendered_html tbody tr:hover {
 
         <span class="c1"># random choice of the weights w.r.t. which we&#39;ll minimize the error</span>
         <span class="n">num_vars</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">aw</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="c1"># number of weights (2 or 3)</span>
-        <span class="n">awidx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">aw</span><span class="p">),</span> <span class="n">num_vars</span><span class="p">,</span> <span class="n">replace</span> <span class="o">=</span> <span class="bp">False</span><span class="p">)</span> <span class="c1"># indexes of chosen weights</span>
+        <span class="n">awidx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">aw</span><span class="p">),</span> <span class="n">num_vars</span><span class="p">,</span> <span class="n">replace</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="c1"># indexes of chosen weights</span>
         <span class="n">ss</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># symbols</span>
         <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">awidx</span><span class="p">)):</span>
             <span class="n">ss</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;w&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">aw</span><span class="p">[</span><span class="n">awidx</span><span class="p">[</span><span class="n">j</span><span class="p">]][</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">aw</span><span class="p">[</span><span class="n">awidx</span><span class="p">[</span><span class="n">j</span><span class="p">]][</span><span class="mi">1</span><span class="p">]))</span>
@@ -596,7 +614,7 @@ div.rendered_html tbody tr:hover {
             <span class="k">continue</span>
 
         <span class="c1"># compute the updates</span>
-        <span class="n">updates</span> <span class="o">=</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">H</span><span class="p">)</span> <span class="err">@</span> <span class="n">dw</span>
+        <span class="n">updates</span> <span class="o">=</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">H</span><span class="p">)</span> <span class="o">@</span> <span class="n">dw</span>
 
         <span class="c1"># update the weights</span>
         <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">updates</span><span class="p">)):</span>
@@ -632,8 +650,8 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -642,175 +660,99 @@ div.rendered_html tbody tr:hover {
 <span class="n">offsprings</span> <span class="o">=</span> <span class="mi">4</span>
 <span class="n">max_gen</span><span class="o">=</span><span class="mi">200</span>
 <span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="n">kernels</span> <span class="o">=</span> <span class="n">kernel_set</span><span class="p">([</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span> <span class="s2">&quot;mul&quot;</span><span class="p">,</span> <span class="s2">&quot;diff&quot;</span><span class="p">,</span> <span class="s2">&quot;pdiv&quot;</span><span class="p">])()</span>
+<span class="n">kernels</span> <span class="o">=</span> <span class="n">kernel_set</span><span class="p">([</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span> <span class="s2">&quot;mul&quot;</span><span class="p">,</span> <span class="s2">&quot;diff&quot;</span><span class="p">,</span> <span class="s2">&quot;div&quot;</span><span class="p">])()</span>
 <span class="n">newtonParams</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s1">&#39;steps&#39;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
 <span class="p">}</span>
-<span class="k">print</span><span class="p">(</span><span class="s2">&quot;restart: </span><span class="se">\t</span><span class="s2"> gen: </span><span class="se">\t</span><span class="s2"> expression:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;restart: </span><span class="se">\t</span><span class="s2"> gen: </span><span class="se">\t</span><span class="s2"> expression:&quot;</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nexp</span><span class="p">):</span>
-    <span class="n">dCGP</span> <span class="o">=</span> <span class="n">expression</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">rows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">levels_back</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">arity</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">kernels</span><span class="o">=</span><span class="n">kernels</span><span class="p">,</span> <span class="n">seed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1233456</span><span class="p">))</span>
+    <span class="n">dCGP</span> <span class="o">=</span> <span class="n">expression</span><span class="p">(</span><span class="n">inputs</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">outputs</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">rows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">levels_back</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">arity</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">kernels</span><span class="o">=</span><span class="n">kernels</span><span class="p">,</span> <span class="n">seed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1233456</span><span class="p">))</span>
     <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dCGP</span><span class="o">.</span><span class="n">get_n</span><span class="p">(),</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">get_n</span><span class="p">()</span> <span class="o">+</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">get_rows</span><span class="p">()</span> <span class="o">*</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">get_cols</span><span class="p">()):</span>
-        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dCGP</span><span class="o">.</span><span class="n">get_arity</span><span class="p">()):</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dCGP</span><span class="o">.</span><span class="n">get_arity</span><span class="p">()[</span><span class="mi">0</span><span class="p">]):</span>
             <span class="n">dCGP</span><span class="o">.</span><span class="n">set_weight</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">gdual</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)]))</span>
-    <span class="n">g</span><span class="p">,</span> <span class="n">best_chromosome</span><span class="p">,</span> <span class="n">best_weights</span> <span class="o">=</span> <span class="n">run_experiment</span><span class="p">(</span><span class="n">dCGP</span><span class="p">,</span> <span class="n">offsprings</span><span class="p">,</span> <span class="n">max_gen</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">yt</span><span class="p">,</span> <span class="n">newtonParams</span><span class="p">,</span> <span class="n">screen_output</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">g</span><span class="p">,</span> <span class="n">best_chromosome</span><span class="p">,</span> <span class="n">best_weights</span> <span class="o">=</span> <span class="n">run_experiment</span><span class="p">(</span><span class="n">dCGP</span><span class="p">,</span> <span class="n">offsprings</span><span class="p">,</span> <span class="n">max_gen</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">yt</span><span class="p">,</span> <span class="n">newtonParams</span><span class="p">,</span> <span class="n">screen_output</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
     <span class="n">dCGP</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">best_chromosome</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">g</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">max_gen</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
-        <span class="k">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\t\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">res</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">simplify</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">],</span><span class="bp">True</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\t\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">res</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">simplify</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">],</span><span class="kc">True</span><span class="p">))</span>
+
 <span class="n">res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+restart:         gen:    expression:
+1                109     [0.999999999999997*x**5 - 3.14159265358976*x**3 + 0.999999999999932*x]
+4                43      [1.0*x**5 - 3.14159265358979*x**3 + 0.999999999999996*x]
+7                29      [1.0*x**5 - 3.1415926535898*x**3 + 1.0*x]
+8                97      [1.0*x**5 - 3.1415926535898*x**3 + 1.00000000000001*x]
+10               36      [1.0*x**5 - 3.1415926535898*x**3 + 1.0*x]
+12               40      [1.0*x**5 - 3.14159265358979*x**3 + 0.999999999999989*x]
+13               79      [1.0*x**5 - 3.14159265358979*x**3 + 0.999999999999998*x]
+15               92      [1.0*x**5 - 3.14159265358979*x**3 + 0.999999999999998*x]
+16               133     [1.0*x**5 - 3.14159265358979*x**3 + 0.999999999999997*x]
+18               97      [1.0*x**5 - 3.1415926535898*x**3 + 1.00000000000001*x]
+19               46      [0.999999999999999*x**5 - 3.14159265358979*x**3 + 0.999999999999991*x]
+24               151     [0.999999999999999*x**5 - 3.14159265358979*x**3 + 0.999999999999987*x]
+25               33      [1.0*x**5 - 3.14159265358979*x**3 + 0.999999999999998*x]
+30               131     [1.0*x**5 - 3.14159265358979*x**3 + 1.0*x]
+32               23      [1.0*x**5 - 3.14159265358979*x**3 + 1.0*x]
+33               81      [1.0*x**5 - 3.1415926535898*x**3 + 1.00000000000001*x]
+34               16      [1.0*x**5 - 3.14159265358979*x**3 + 1.00000000000001*x]
+36               48      [0.999999999999999*x**5 - 3.14159265358979*x**3 + 1.0*x]
+39               150     [1.0*x**5 - 3.1415926535898*x**3 + 1.0*x]
+45               50      [0.999999999999995*x**5 - 3.14159265358974*x**3 + 0.999999999999874*x]
+46               189     [1.0*x**5 - 3.1415926535898*x**3 + 1.0*x]
+49               67      [1.0*x**5 - 3.14159265358979*x**3 + 0.999999999999997*x]
+55               29      [1.0*x**5 - 3.1415926535898*x**3 + 1.00000000000001*x]
+56               48      [1.0*x**5 - 3.14159265358979*x**3 + 1.0*x]
+60               51      [1.0*x**5 - 3.14159265358979*x**3 + 0.999999999999988*x]
+71               90      [0.999999999999999*x**5 - 3.14159265358979*x**3 + 1004.92559245124*x**3/(1004.92559245124*x**2 - 3157.0668586492) - 3157.06685864919*x/(1004.92559245124*x**2 - 3157.0668586492)]
+74               43      [1.0*x**5 - 3.14159265358979*x**3 + 1.0*x]
+77               142     [1.0*x**5 - 3.14159265358979*x**3 + 1.0*x]
+80               192     [0.999999999999999*x**5 - 3.14159265358979*x**3 + 0.999999999999988*x]
+82               62      [0.999999999999999*x**5 - 3.14159265358979*x**3 + 0.999999999999993*x]
+85               52      [1.0*x**5 - 3.14159265358979*x**3 + 0.999999999999997*x]
+86               32      [0.999999999999999*x**5 - 3.14159265358979*x**3 + 0.999999999999992*x]
+87               83      [1.0*x**5 - 3.14159265358979*x**3 + 0.999999999999992*x]
+89               149     [0.999999999999998*x**5 - 3.14159265358978*x**3 + 0.999999999999981*x]
+91               141     [1.0*x**5 - 3.14159265358979*x**3 + 0.999999999999999*x]
+95               96      [1.0*x**5 - 3.1415926535898*x**3 + 1.00000000000001*x]
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">mean_gen</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="o">&lt;</span><span class="p">(</span><span class="n">max_gen</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="o">*</span> <span class="n">newtonParams</span><span class="p">[</span><span class="s1">&#39;steps&#39;</span><span class="p">]</span>
-<span class="k">print</span><span class="p">(</span><span class="s2">&quot;ERT Expected run time = avg. number of dCGP evaluations needed: &quot;</span><span class="p">,</span> <span class="n">mean_gen</span> <span class="o">*</span> <span class="n">offsprings</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ERT Expected run time = avg. number of dCGP evaluations needed: &quot;</span><span class="p">,</span> <span class="n">mean_gen</span> <span class="o">*</span> <span class="n">offsprings</span><span class="p">)</span>
 </pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+ERT Expected run time = avg. number of dCGP evaluations needed:  174288.8888888889
+</pre></div></div>
 </div>
 </div>
 <div class="section" id="Problem-P2:-x^5---\pi-x^3-+-\frac{2\pi}x">
 <h2>Problem P2: <span class="math notranslate nohighlight">\(x^5 - \pi x^3 + \frac{2\pi}x\)</span><a class="headerlink" href="#Problem-P2:-x^5---\pi-x^3-+-\frac{2\pi}x" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span> <span class="c1"># we include points close to zero here to favour learning of 1/x</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">gdual</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 <span class="n">yt</span> <span class="o">=</span> <span class="n">data_P2</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># We run nexp experiments and accumulate statistic for the ERT</span>
-<span class="n">nexp</span> <span class="o">=</span> <span class="mi">100</span>
-<span class="n">offsprings</span> <span class="o">=</span> <span class="mi">4</span>
-<span class="n">max_gen</span><span class="o">=</span><span class="mi">200</span>
-<span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="n">kernels</span> <span class="o">=</span> <span class="n">kernel_set</span><span class="p">([</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span> <span class="s2">&quot;mul&quot;</span><span class="p">,</span> <span class="s2">&quot;diff&quot;</span><span class="p">,</span> <span class="s2">&quot;pdiv&quot;</span><span class="p">])()</span>
-<span class="n">newtonParams</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;steps&#39;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
-<span class="p">}</span>
-<span class="k">print</span><span class="p">(</span><span class="s2">&quot;restart: </span><span class="se">\t</span><span class="s2"> gen: </span><span class="se">\t</span><span class="s2"> expression:&quot;</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nexp</span><span class="p">):</span>
-    <span class="n">dCGP</span> <span class="o">=</span> <span class="n">expression</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">rows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">levels_back</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">arity</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">kernels</span><span class="o">=</span><span class="n">kernels</span><span class="p">,</span> <span class="n">seed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1233456</span><span class="p">))</span>
-    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dCGP</span><span class="o">.</span><span class="n">get_n</span><span class="p">(),</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">get_n</span><span class="p">()</span> <span class="o">+</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">get_rows</span><span class="p">()</span> <span class="o">*</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">get_cols</span><span class="p">()):</span>
-        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dCGP</span><span class="o">.</span><span class="n">get_arity</span><span class="p">()):</span>
-            <span class="n">dCGP</span><span class="o">.</span><span class="n">set_weight</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">gdual</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)]))</span>
-    <span class="n">g</span><span class="p">,</span> <span class="n">best_chromosome</span><span class="p">,</span> <span class="n">best_weights</span> <span class="o">=</span> <span class="n">run_experiment</span><span class="p">(</span><span class="n">dCGP</span><span class="p">,</span> <span class="n">offsprings</span><span class="p">,</span> <span class="n">max_gen</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">yt</span><span class="p">,</span> <span class="n">newtonParams</span><span class="p">,</span> <span class="n">screen_output</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
-    <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
-    <span class="n">dCGP</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">best_chromosome</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">g</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">max_gen</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
-        <span class="k">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\t\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">res</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">simplify</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">],</span><span class="bp">True</span><span class="p">))</span>
-<span class="n">res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="section" id="Problem-P3:-\frac{e-x^5-+-x^3}{x-+-1}">
-<h2>Problem P3: <span class="math notranslate nohighlight">\(\frac{e x^5 + x^3}{x + 1}\)</span><a class="headerlink" href="#Problem-P3:-\frac{e-x^5-+-x^3}{x-+-1}" title="Permalink to this headline">¶</a></h2>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[367]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">0.9</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span>
-<span class="n">x</span> <span class="o">=</span> <span class="n">gdual</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-<span class="n">yt</span> <span class="o">=</span> <span class="n">data_P3</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># We run nexp experiments and accumulate statistic for the ERT</span>
-<span class="n">nexp</span> <span class="o">=</span> <span class="mi">100</span>
-<span class="n">offsprings</span> <span class="o">=</span> <span class="mi">4</span>
-<span class="n">max_gen</span><span class="o">=</span><span class="mi">200</span>
-<span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="n">kernels</span> <span class="o">=</span> <span class="n">kernel_set</span><span class="p">([</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span> <span class="s2">&quot;mul&quot;</span><span class="p">,</span> <span class="s2">&quot;diff&quot;</span><span class="p">,</span> <span class="s2">&quot;pdiv&quot;</span><span class="p">])()</span>
-<span class="n">newtonParams</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;steps&#39;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
-<span class="p">}</span>
-<span class="k">print</span><span class="p">(</span><span class="s2">&quot;restart: </span><span class="se">\t</span><span class="s2"> gen: </span><span class="se">\t</span><span class="s2"> expression:&quot;</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nexp</span><span class="p">):</span>
-    <span class="n">dCGP</span> <span class="o">=</span> <span class="n">expression</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">rows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">levels_back</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">arity</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">kernels</span><span class="o">=</span><span class="n">kernels</span><span class="p">,</span> <span class="n">seed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1233456</span><span class="p">))</span>
-    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dCGP</span><span class="o">.</span><span class="n">get_n</span><span class="p">(),</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">get_n</span><span class="p">()</span> <span class="o">+</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">get_rows</span><span class="p">()</span> <span class="o">*</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">get_cols</span><span class="p">()):</span>
-        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dCGP</span><span class="o">.</span><span class="n">get_arity</span><span class="p">()):</span>
-            <span class="n">dCGP</span><span class="o">.</span><span class="n">set_weight</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">gdual</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)]))</span>
-    <span class="n">g</span><span class="p">,</span> <span class="n">best_chromosome</span><span class="p">,</span> <span class="n">best_weights</span> <span class="o">=</span> <span class="n">run_experiment</span><span class="p">(</span><span class="n">dCGP</span><span class="p">,</span> <span class="n">offsprings</span><span class="p">,</span> <span class="n">max_gen</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">yt</span><span class="p">,</span> <span class="n">newtonParams</span><span class="p">,</span> <span class="n">screen_output</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
-    <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
-    <span class="n">dCGP</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">best_chromosome</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">g</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">max_gen</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
-        <span class="k">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\t\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">res</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">simplify</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">],</span><span class="bp">True</span><span class="p">))</span>
-<span class="n">res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="section" id="Problem-P4:-\sin(\pi-x)-+-\frac-1x">
-<h2>Problem P4: <span class="math notranslate nohighlight">\(\sin(\pi x) + \frac 1x\)</span><a class="headerlink" href="#Problem-P4:-\sin(\pi-x)-+-\frac-1x" title="Permalink to this headline">¶</a></h2>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span>
-<span class="n">x</span> <span class="o">=</span> <span class="n">gdual</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-<span class="n">yt</span> <span class="o">=</span> <span class="n">data_P4</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># We run nexp experiments and accumulate statistic for the ERT</span>
-<span class="n">nexp</span> <span class="o">=</span> <span class="mi">100</span>
-<span class="n">offsprings</span> <span class="o">=</span> <span class="mi">4</span>
-<span class="n">max_gen</span><span class="o">=</span><span class="mi">200</span>
-<span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="n">kernels</span> <span class="o">=</span> <span class="n">kernel_set</span><span class="p">([</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span> <span class="s2">&quot;mul&quot;</span><span class="p">,</span> <span class="s2">&quot;diff&quot;</span><span class="p">,</span> <span class="s2">&quot;pdiv&quot;</span><span class="p">,</span> <span class="s2">&quot;sin&quot;</span><span class="p">])()</span>
-<span class="n">newtonParams</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;steps&#39;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
-<span class="p">}</span>
-<span class="k">print</span><span class="p">(</span><span class="s2">&quot;restart: </span><span class="se">\t</span><span class="s2"> gen: </span><span class="se">\t</span><span class="s2"> expression:&quot;</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nexp</span><span class="p">):</span>
-    <span class="n">dCGP</span> <span class="o">=</span> <span class="n">expression</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">rows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">levels_back</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">arity</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">kernels</span><span class="o">=</span><span class="n">kernels</span><span class="p">,</span> <span class="n">seed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1233456</span><span class="p">))</span>
-    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dCGP</span><span class="o">.</span><span class="n">get_n</span><span class="p">(),</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">get_n</span><span class="p">()</span> <span class="o">+</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">get_rows</span><span class="p">()</span> <span class="o">*</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">get_cols</span><span class="p">()):</span>
-        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dCGP</span><span class="o">.</span><span class="n">get_arity</span><span class="p">()):</span>
-            <span class="n">dCGP</span><span class="o">.</span><span class="n">set_weight</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">gdual</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)]))</span>
-    <span class="n">g</span><span class="p">,</span> <span class="n">best_chromosome</span><span class="p">,</span> <span class="n">best_weights</span> <span class="o">=</span> <span class="n">run_experiment</span><span class="p">(</span><span class="n">dCGP</span><span class="p">,</span> <span class="n">offsprings</span><span class="p">,</span> <span class="n">max_gen</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">yt</span><span class="p">,</span> <span class="n">newtonParams</span><span class="p">,</span> <span class="n">screen_output</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
-    <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
-    <span class="n">dCGP</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">best_chromosome</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">g</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">max_gen</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
-        <span class="k">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\t\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">res</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">simplify</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">],</span><span class="bp">True</span><span class="p">))</span>
-<span class="n">res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="section" id="Problem-P5:-ex^5---\pi-x^3-+-x">
-<h2>Problem P5: <span class="math notranslate nohighlight">\(ex^5 - \pi x^3 + x\)</span><a class="headerlink" href="#Problem-P5:-ex^5---\pi-x^3-+-x" title="Permalink to this headline">¶</a></h2>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span>
-<span class="n">x</span> <span class="o">=</span> <span class="n">gdual</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-<span class="n">yt</span> <span class="o">=</span> <span class="n">data_P5</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -824,21 +766,188 @@ div.rendered_html tbody tr:hover {
 <span class="n">offsprings</span> <span class="o">=</span> <span class="mi">4</span>
 <span class="n">max_gen</span><span class="o">=</span><span class="mi">200</span>
 <span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="n">kernels</span> <span class="o">=</span> <span class="n">kernel_set</span><span class="p">([</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span> <span class="s2">&quot;mul&quot;</span><span class="p">,</span> <span class="s2">&quot;diff&quot;</span><span class="p">,</span> <span class="s2">&quot;pdiv&quot;</span><span class="p">])()</span>
+<span class="n">kernels</span> <span class="o">=</span> <span class="n">kernel_set</span><span class="p">([</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span> <span class="s2">&quot;mul&quot;</span><span class="p">,</span> <span class="s2">&quot;diff&quot;</span><span class="p">,</span> <span class="s2">&quot;div&quot;</span><span class="p">])()</span>
 <span class="n">newtonParams</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s1">&#39;steps&#39;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
 <span class="p">}</span>
-<span class="k">print</span><span class="p">(</span><span class="s2">&quot;restart: </span><span class="se">\t</span><span class="s2"> gen: </span><span class="se">\t</span><span class="s2"> expression:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;restart: </span><span class="se">\t</span><span class="s2"> gen: </span><span class="se">\t</span><span class="s2"> expression:&quot;</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nexp</span><span class="p">):</span>
     <span class="n">dCGP</span> <span class="o">=</span> <span class="n">expression</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">rows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">levels_back</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">arity</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">kernels</span><span class="o">=</span><span class="n">kernels</span><span class="p">,</span> <span class="n">seed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1233456</span><span class="p">))</span>
     <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dCGP</span><span class="o">.</span><span class="n">get_n</span><span class="p">(),</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">get_n</span><span class="p">()</span> <span class="o">+</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">get_rows</span><span class="p">()</span> <span class="o">*</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">get_cols</span><span class="p">()):</span>
-        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dCGP</span><span class="o">.</span><span class="n">get_arity</span><span class="p">()):</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dCGP</span><span class="o">.</span><span class="n">get_arity</span><span class="p">()[</span><span class="mi">0</span><span class="p">]):</span>
             <span class="n">dCGP</span><span class="o">.</span><span class="n">set_weight</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">gdual</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)]))</span>
-    <span class="n">g</span><span class="p">,</span> <span class="n">best_chromosome</span><span class="p">,</span> <span class="n">best_weights</span> <span class="o">=</span> <span class="n">run_experiment</span><span class="p">(</span><span class="n">dCGP</span><span class="p">,</span> <span class="n">offsprings</span><span class="p">,</span> <span class="n">max_gen</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">yt</span><span class="p">,</span> <span class="n">newtonParams</span><span class="p">,</span> <span class="n">screen_output</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">g</span><span class="p">,</span> <span class="n">best_chromosome</span><span class="p">,</span> <span class="n">best_weights</span> <span class="o">=</span> <span class="n">run_experiment</span><span class="p">(</span><span class="n">dCGP</span><span class="p">,</span> <span class="n">offsprings</span><span class="p">,</span> <span class="n">max_gen</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">yt</span><span class="p">,</span> <span class="n">newtonParams</span><span class="p">,</span> <span class="n">screen_output</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
     <span class="n">dCGP</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">best_chromosome</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">g</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">max_gen</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
-        <span class="k">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\t\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">res</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">simplify</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">],</span><span class="bp">True</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\t\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">res</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">simplify</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">],</span><span class="kc">True</span><span class="p">))</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+restart:         gen:    expression:
+1                64      [1.00000000001522*x**5 - 1.27654166639185e-10*x**4 - 3.14159265332916*x**3 + 6.28318530717146/x]
+3                160     [0.999999999999802*x**5 - 3.14159265358324*x**3 - 4.58664018735164e-11*x + 6.28318530718224/x]
+6                43      [1.00000000000018*x**5 - 3.14159265361377*x**3 + 6.28318530717944/x]
+7                35      [1.0*x**5 - 3.14159265358979*x**3 + 6.28318530717959/x]
+8                63      [1.0*x**5 - 3.14159265358978*x**3 + 6.28318530717959/x]
+11               168     [1.0*x**5 - 3.14159265358979*x**3 - 3.01980662698043e-14*x + 6.28318530717959/x]
+13               24      [0.999999999999994*x**5 - 3.14159265359058*x**3 + 2.78627727461556e-13*x + 6.28318530717957/x]
+14               143     [0.99999999997825*x**5 - 3.14159265281984*x**3 - 6.06404304548391e-9*x + 6.28318530741037/x]
+16               187     [1.0*x**5 - 3.14159265358979*x**3 + 6.28318530717959/x]
+21               82      [1.0*x**5 - 3.14159265358979*x**3 + 6.28318530717959/x]
+27               7       [1.0*x**5 - 3.14159265358984*x**3 + 1.84329364468004e-13*x**2 + 6.28318530717957/x]
+28               67      [0.999999999996586*x**5 - 3.14159265349105*x**3 - 2.21245651961797e-9 + 6.28318530745686/x]
+34               153     [1.0*x**5 - 3.14159265358979*x**3 + 6.28318530717959/x]
+39               115     [0.999999999999999*x**5 - 3.14159265358978*x**3 + 6.28318530717959/x]
+43               84      [0.999999999999923*x**5 + 6.42597086653041e-13*x**4 - 3.14159265359109*x**3 + 6.28318530717962/x]
+50               149     [0.99999999995493*x**5 - 3.14159265203297*x**3 - 1.17409352674938e-8*x + 6.28318530777391/x]
+51               149     [1.00000000012198*x**5 - 3.14159265780051*x**3 + 3.16978514547372e-8*x + 6.28318530601517/x]
+52               64      [1.0*x**5 - 3.1415926535898*x**3 + 6.28318530717959/x]
+54               79      [-6.32238025396602e-16*x**7 + 1.00000000000002*x**5 - 3.14159265358992*x**3 + 6.28318530717958/x]
+55               69      [0.999999999999999*x**5 - 3.14159265358979*x**3 + 6.28318530717959/x]
+57               51      [1.0*x**5 - 3.14159265358979*x**3 + 6.28318530717958/x]
+58               180     [0.999999999997159*x**5 + 2.56552832733729e-11*x**4 - 3.14159265364781*x**3 + 6.28318530750492/x]
+62               96      [1.0*x**5 - 3.14159265358979*x**3 + 6.28318530717959/x]
+64               130     [1.0*x**5 - 3.1415926535898*x**3 + 6.28318530717959/x]
+67               154     [0.99999999999999*x**5 + 7.88553657836724e-14*x**4 - 3.14159265358995*x**3 - 6.63622336613371e-14*x**2 + 6.2831853071796/x]
+70               26      [1.00000000000018*x**5 - 3.1415926535975*x**3 + 1.64577260147692e-11*x**2 + 6.28318530721673/x]
+75               48      [1.0*x**5 - 3.14159265358979*x**3 + 6.28318530717961/x]
+76               138     [1.0*x**5 - 3.14159265358979*x**3 + 6.28318530717959/x]
+78               82      [1.0*x**5 - 3.14159265358982*x**3 + 6.28318530719116/x]
+84               165     [1.0*x**5 - 3.14159265358979*x**3 + 6.28318530717959/x]
+89               136     [1.00000000000278*x**5 - 3.14159265388607*x**3 + 1.09744339194339e-9*x**2 + 6.28318530643488/x]
+90               188     [1.00000000000001*x**5 - 3.91763911922868e-14*x**4 - 3.14159265358973*x**3 + 6.28318530717958/x]
+91               108     [1.0*x**5 - 3.14159265358979*x**3 + 6.2831853071796/x]
+99               64      [1.0*x**5 - 3.14159265358979*x**3 - 0.36315536377679/(x*(2.18996409662261e-16*x**3 - 0.0577979712554117))]
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">mean_gen</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="o">&lt;</span><span class="p">(</span><span class="n">max_gen</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="o">*</span> <span class="n">newtonParams</span><span class="p">[</span><span class="s1">&#39;steps&#39;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ERT Expected run time = avg. number of dCGP evaluations needed: &quot;</span><span class="p">,</span> <span class="n">mean_gen</span> <span class="o">*</span> <span class="n">offsprings</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+ERT Expected run time = avg. number of dCGP evaluations needed:  195352.94117647057
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Problem-P3:-\frac{e-x^5-+-x^3}{x-+-1}">
+<h2>Problem P3: <span class="math notranslate nohighlight">\(\frac{e x^5 + x^3}{x + 1}\)</span><a class="headerlink" href="#Problem-P3:-\frac{e-x^5-+-x^3}{x-+-1}" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">0.9</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">gdual</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">yt</span> <span class="o">=</span> <span class="n">data_P3</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># We run nexp experiments and accumulate statistic for the ERT</span>
+<span class="n">nexp</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">offsprings</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">max_gen</span><span class="o">=</span><span class="mi">200</span>
+<span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">kernels</span> <span class="o">=</span> <span class="n">kernel_set</span><span class="p">([</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span> <span class="s2">&quot;mul&quot;</span><span class="p">,</span> <span class="s2">&quot;diff&quot;</span><span class="p">,</span> <span class="s2">&quot;div&quot;</span><span class="p">])()</span>
+<span class="n">newtonParams</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;steps&#39;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;restart: </span><span class="se">\t</span><span class="s2"> gen: </span><span class="se">\t</span><span class="s2"> expression:&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nexp</span><span class="p">):</span>
+    <span class="n">dCGP</span> <span class="o">=</span> <span class="n">expression</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">rows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">levels_back</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">arity</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">kernels</span><span class="o">=</span><span class="n">kernels</span><span class="p">,</span> <span class="n">seed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1233456</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dCGP</span><span class="o">.</span><span class="n">get_n</span><span class="p">(),</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">get_n</span><span class="p">()</span> <span class="o">+</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">get_rows</span><span class="p">()</span> <span class="o">*</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">get_cols</span><span class="p">()):</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dCGP</span><span class="o">.</span><span class="n">get_arity</span><span class="p">()[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="n">dCGP</span><span class="o">.</span><span class="n">set_weight</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">gdual</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)]))</span>
+    <span class="n">g</span><span class="p">,</span> <span class="n">best_chromosome</span><span class="p">,</span> <span class="n">best_weights</span> <span class="o">=</span> <span class="n">run_experiment</span><span class="p">(</span><span class="n">dCGP</span><span class="p">,</span> <span class="n">offsprings</span><span class="p">,</span> <span class="n">max_gen</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">yt</span><span class="p">,</span> <span class="n">newtonParams</span><span class="p">,</span> <span class="n">screen_output</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+    <span class="n">dCGP</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">best_chromosome</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">g</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">max_gen</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\t\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">res</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">simplify</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">],</span><span class="kc">True</span><span class="p">))</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+restart:         gen:    expression:
+8                186     [0.899166850493274*x**5/(0.330784998479351*x + 0.330784998479351) + 0.330784998479352*x**3/(0.330784998479351*x + 0.330784998479351)]
+14               161     [1.20883912632723*x**5/(0.444707062259436*x + 0.444707062259436) + 0.444707062259438*x**3/(0.444707062259436*x + 0.444707062259436)]
+73               125     [2.71828182845905*x**5/(x + 1) + 1.0*x**3/(x + 1)]
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">mean_gen</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="o">&lt;</span><span class="p">(</span><span class="n">max_gen</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="o">*</span> <span class="n">newtonParams</span><span class="p">[</span><span class="s1">&#39;steps&#39;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ERT Expected run time = avg. number of dCGP evaluations needed: &quot;</span><span class="p">,</span> <span class="n">mean_gen</span> <span class="o">*</span> <span class="n">offsprings</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Problem-P4:-\sin(\pi-x)-+-\frac-1x">
+<h2>Problem P4: <span class="math notranslate nohighlight">\(\sin(\pi x) + \frac 1x\)</span><a class="headerlink" href="#Problem-P4:-\sin(\pi-x)-+-\frac-1x" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">gdual</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">yt</span> <span class="o">=</span> <span class="n">data_P4</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># We run nexp experiments and accumulate statistic for the ERT</span>
+<span class="n">nexp</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">offsprings</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">max_gen</span><span class="o">=</span><span class="mi">200</span>
+<span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">kernels</span> <span class="o">=</span> <span class="n">kernel_set</span><span class="p">([</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span> <span class="s2">&quot;mul&quot;</span><span class="p">,</span> <span class="s2">&quot;diff&quot;</span><span class="p">,</span> <span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="s2">&quot;sin&quot;</span><span class="p">])()</span>
+<span class="n">newtonParams</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;steps&#39;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;restart: </span><span class="se">\t</span><span class="s2"> gen: </span><span class="se">\t</span><span class="s2"> expression:&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nexp</span><span class="p">):</span>
+    <span class="n">dCGP</span> <span class="o">=</span> <span class="n">expression</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">rows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">levels_back</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">arity</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">kernels</span><span class="o">=</span><span class="n">kernels</span><span class="p">,</span> <span class="n">seed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1233456</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dCGP</span><span class="o">.</span><span class="n">get_n</span><span class="p">(),</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">get_n</span><span class="p">()</span> <span class="o">+</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">get_rows</span><span class="p">()</span> <span class="o">*</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">get_cols</span><span class="p">()):</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dCGP</span><span class="o">.</span><span class="n">get_arity</span><span class="p">()[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="n">dCGP</span><span class="o">.</span><span class="n">set_weight</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">gdual</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)]))</span>
+    <span class="n">g</span><span class="p">,</span> <span class="n">best_chromosome</span><span class="p">,</span> <span class="n">best_weights</span> <span class="o">=</span> <span class="n">run_experiment</span><span class="p">(</span><span class="n">dCGP</span><span class="p">,</span> <span class="n">offsprings</span><span class="p">,</span> <span class="n">max_gen</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">yt</span><span class="p">,</span> <span class="n">newtonParams</span><span class="p">,</span> <span class="n">screen_output</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+    <span class="n">dCGP</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">best_chromosome</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">g</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">max_gen</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\t\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">res</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">simplify</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">],</span><span class="kc">True</span><span class="p">))</span>
 <span class="n">res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -849,12 +958,6 @@ div.rendered_html tbody tr:hover {
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 restart:         gen:    expression:
-0                38      [2.71828182845905*x**5 - 3.1415926535898*x**3 + 1.00000000000002*x]
-1                102     [2.71828182845905*x**5 - 3.14159265358979*x**3 + 1.0*x]
-2                23      [2.71828182845905*x**5 - 3.14159265358982*x**3 + 1.00000000000005*x]
-3                35      [2.71828182845878*x**5 - 3.14159265358636*x**3 + 0.999999999993344*x]
-7                71      [2.71828182845905*x**5 - 3.14159265358979*x**3 + 1.0*x]
-8                101     [2.71828182845905*x**5 - 3.1415926535898*x**3 + 1.0*x]
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
@@ -862,7 +965,38 @@ restart:         gen:    expression:
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-/usr/lib/python3/dist-packages/numpy/linalg/linalg.py:1776: RuntimeWarning: invalid value encountered in det
+/home/dario/.local/lib/python3.7/site-packages/numpy/linalg/linalg.py:2116: RuntimeWarning: invalid value encountered in det
+  r = _umath_linalg.det(a, signature=signature)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+2                1       [0.999999999999999*sin(3.14159265358979*x) + 1.0/x]
+6                132     [1.0*sin(3.14159265358979*x) - 3.6500836381227e-16 + 1.0/x]
+7                89      [0.999999999999999*sin(3.14159265358979*x) + 1.0/x]
+8                133     [0.999999999999997*sin(3.14159265358979*x) + 1.0/x]
+10               120     [0.999999999999999*sin(3.14159265358979*x) + 4.68530917602041e-17 + 1.0/x]
+12               55      [-7.89209275531109e-11*x + 1.0000000000362*sin(3.14159265367275*x + 37.6991118429053) - 9.47051130607999e-10 + 1.00000000000142/x]
+14               66      [1.00000000000032*sin(3.14159265358985*x + 2.53915412165946e-16) + 0.999999999999973/x]
+16               12      [1.0*sin(3.14159265358979*x) + 1.0/x]
+19               2       [0.999999949216629*sin(3.14159264435007*x) + 9.36443001715427e-18 + 1.00000000433431/x]
+20               123     [1.0*sin(3.14159265358979*x) + (7.86221303890169e-17*sin(3.14159265358979*x) + 1.0)/x]
+21               17      [9.62453199799219*x*sin(3.1415927053321*x)/(9.62453191537768*x - 1.06372808316533e-16) + 9.62453191084485/(9.62453191537768*x - 1.06372808316533e-16)]
+22               13      [0.999999999998995*sin(3.14159265358961*x) + 1.00000000000009/x]
+24               69      [0.999999999999953*sin(x*(9.25302298900841e-17*x + 3.14159265358979)) + 1.0/x]
+26               105     [1.0*sin(x*(1.77990517211438e-16*x + 3.14159265358979)) + 5.6656141275367e-17 + 1.0/x]
+27               115     [-1.24427033889047e-16*x*sin(3.14159265358979*x) + 1.0*sin(3.14159265358979*x) + 1.0/x]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/home/dario/.local/lib/python3.7/site-packages/numpy/linalg/linalg.py:2116: RuntimeWarning: overflow encountered in det
   r = _umath_linalg.det(a, signature=signature)
 </pre></div></div>
 </div>
@@ -871,54 +1005,88 @@ restart:         gen:    expression:
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-11               116     [2.71828182845904*x**5 - 3.1415926535898*x**3 + 1.00000000000001*x]
-20               100     [2.71828182845905*x**5 - 3.14159265358981*x**3 + 1.00000000000003*x]
-21               19      [2.71828182845905*x**5 - 3.1415926535898*x**3 + 1.0*x]
-22               53      [2.71828182845905*x**5 - 3.14159265358983*x**3 + 1.00000000000007*x]
-23               160     [2.71828182845905*x**5 - 3.1415926535898*x**3 + 1.00000000000002*x]
-24               17      [2.71828182845905*x**5 - 3.14159265358981*x**3 + 1.00000000000003*x]
-25               98      [2.71828182845905*x**5 - 3.14159265358979*x**3 + 0.999999999999999*x]
-29               51      [2.71828182845905*x**5 - 3.14159265358987*x**3 + 1.00000000000014*x]
-30               119     [2.71828182845905*x**5 - 3.14159265358981*x**3 + 1.00000000000002*x]
-32               8       [2.71828182845905*x**5 - 3.14159265358979*x**3 + 1.0*x]
-33               40      [2.71828182845905*x**5 - 3.1415926535898*x**3 + 1.00000000000001*x]
-34               56      [2.71828182845905*x**5 - 3.14159265358979*x**3 + 0.999999999999995*x]
-35               170     [2.71828182845904*x**5 - 3.14159265358979*x**3 + 1.00000000000001*x]
-38               25      [2.71828182845905*x**5 - 3.14159265358981*x**3 + 1.00000000000003*x]
-39               136     [2.71828182845905*x**5 - 3.14159265358981*x**3 + 1.00000000000003*x]
-41               64      [2.71828182845904*x**5 - 3.14159265358978*x**3 + 0.999999999999961*x]
-42               16      [2.71828182845904*x**5 - 3.14159265358979*x**3 + 0.999999999999988*x]
-47               100     [2.71828182845904*x**5 - 3.14159265358976*x**3 + 0.999999999999933*x]
-48               53      [2.71828182845904*x**5 - 3.14159265358978*x**3 + 0.99999999999997*x]
-49               46      [2.71828182845905*x**5 - 3.14159265358979*x**3 + 1.0*x]
-57               35      [2.71828182845904*x**5 - 3.14159265358979*x**3 + 0.999999999999987*x]
-58               27      [2.71828182845905*x**5 - 3.14159265358982*x**3 + 1.00000000000004*x]
-59               73      [2.71828182845905*x**5 - 3.1415926535898*x**3 + 1.00000000000001*x]
-60               34      [2.71828182845905*x**5 - 3.1415926535898*x**3 + 1.0*x]
-61               22      [2.71828182845905*x**5 - 3.14159265358982*x**3 + 1.00000000000004*x]
-63               66      [2.71828182845905*x**5 - 3.14159265358981*x**3 + 1.00000000000003*x]
-64               62      [2.71828182845905*x**5 - 3.14159265358981*x**3 + 1.00000000000003*x]
-65               73      [2.71828182845905*x**5 - 3.14159265358981*x**3 + 1.00000000000003*x]
-66               20      [2.71828182845905*x**5 - 3.14159265358982*x**3 + 1.00000000000006*x]
-68               46      [2.71828182845905*x**5 - 3.14159265358982*x**3 + 1.00000000000004*x]
-72               14      [2.71828182845905*x**5 - 3.14159265358986*x**3 + 1.00000000000009*x]
-75               47      [2.71828182845905*x**5 - 3.1415926535898*x**3 + 1.00000000000002*x]
-77               44      [2.71828182845905*x**5 - 3.1415926535898*x**3 + 1.00000000000001*x]
-80               29      [2.71828182845905*x**5 - 3.14159265358982*x**3 + 1.00000000000006*x]
-82               111     [2.71828182845905*x**5 - 3.1415926535898*x**3 + 1.00000000000002*x]
-86               54      [2.71828182845904*x**5 - 3.14159265358978*x**3 + 0.999999999999977*x]
-94               79      [2.71828182845904*x**5 - 3.14159265358979*x**3 + 0.99999999999999*x]
-97               88      [2.71828182845905*x**5 - 3.1415926535898*x**3 + 1.00000000000001*x]
-99               47      [2.71828182845905*x**5 - 3.1415926535898*x**3 + 1.00000000000001*x]
+34               64      [0.999999999999999*sin(3.14159265358979*x) - 1.29978496930744e-16 + 1.0/x]
+36               46      [1.76206042739191e-16*x*sin(3.14159265358979*x)/(x*sin(3.14159265358979*x) + 1) + 1.0*sin(3.14159265358979*x) + 1.76206042739191e-16/(x*sin(3.14159265358979*x) + 1) + 1.0/x]
+38               95      [1.0*sin(x*(1.3303626169174e-16*x + 3.14159265358979)) + 1.69425620306735e-16 + 1.0/x]
+40               143     [8.12378036198924e-33*x + 1.0*sin(3.14159265358981*x) - 1.80264032596514e-16 + 1.0/x]
+42               16      [1.00000000004875*sin(3.14159265359866*x) + 0.542336605776001*sin(2.35272399768743e-12*x**2) + 2541.81495243938/(2541.81495245225*x - 2.15281241329688) - 2.15281241328598/(x*(2541.81495245225*x - 2.15281241329688)) + 972.092685040695*sin(2.35272399768743e-12*x**2)/(x**2*(2541.81495245225*x - 2.15281241329688))]
+44               24      [1.0*sin(3.14159265358979*x) + 1.0/x]
+45               162     [6.02619053589549e-16*sin(3.14159265355456*x)**2 + 0.999999999994157*sin(3.14159265355456*x) - 4.51719913513711e-16 + 1.00000000000032/x]
+47               42      [-1.87473626494473e-29*x**2 - 1.8747362649445e-29*x/sin(3.14159265359048*x) + 1.00000000000011*sin(3.14159265359048*x) + 0.999999999999994/x]
+48               28      [1.00000000000002*sin(3.14159265358992*x) + 0.999999999999999/x]
+49               18      [1.0*sin(3.14159265358979*x) + 1.0/x]
+50               41      [1.0*sin(3.14159265358979*x) - 4.08683517342902e-17 + 1.0/x]
+52               61      [1.0*sin(3.14159265358979*x) + 1.0/x]
+53               49      [1.0*sin(3.14159265358979*x) + 1.0/x]
+55               29      [1.0*sin(3.14159265358979*x) + (1.0 - 6.66045855255763e-18*sin(3.14159265358979*x))/x]
+56               15      [6.58379173825623*x + 5.64744625319335*sin(6.11418858333298*x) + 5.2879457406247*sin(16.7761307129903*x)]
+57               32      [-0.974501474950861*sin(0.863186354404554*x) + 9.07750333059453*sin(1.6599296272374*x + 2.06966097571612*sin(4.75780034524026*x)) - 5.38968705261534*sin(3.48198655314495*x - 1.09415284338664*sin(4.75780034524026*x))]
+59               76      [1.0*sin(3.14159265358979*x) + 4.45769125393131e-16 + 1.0/x]
+60               7       [1.00000000000001*sin(3.1415926535899*x) + 4.70822994414938e-17 + 1.0/x]
+63               76      [5.19135160727313*sin(3.59576183848133*x) + 8.66296848504959*sin(12.5211187903134*x - 0.987545240550494*sin(3.59576183848133*x))]
+68               150     [1.0*sin(3.14159265358979*x) + 1.0/x]
+72               58      [1.0*sin(3.14159265358979*x) + 1.25427228495141e-16 + 1.0/x]
+73               89      [1.0*sin(3.14159265358979*x) + 1.0/x]
+75               49      [1.0*sin(3.14159265358979*x) + 1.0/x]
+79               76      [1.0*sin(3.14159265358979*x) + 3.94677549026297e-17 + 1.0/x]
+83               76      [1.0*sin(3.14159265358979*x) + 1.0/x]
+85               12      [1.0*sin(3.14159265358979*x) + 1.0/x]
+87               94      [1.000000000001*sin(3.14159265359084*x) + (0.999999999999751 - 1.35525271560688e-20/sin(3.14159265359084*x))/x]
+92               19      [0.999999980945392*sin(3.14159265012292*x) + 1.00000000162629/x]
+93               153     [-0.999999999999999*sin(3.14159265358979*x + 3.14159265358979) + 1.0/x]
+97               48      [1.0*sin(3.14159265358979*x) + 1.0/x]
 </pre></div></div>
 </div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">mean_gen</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="o">&lt;</span><span class="p">(</span><span class="n">max_gen</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="o">*</span> <span class="n">newtonParams</span><span class="p">[</span><span class="s1">&#39;steps&#39;</span><span class="p">]</span>
-<span class="k">print</span><span class="p">(</span><span class="s2">&quot;ERT Expected run time = avg. number of dCGP evaluations needed: &quot;</span><span class="p">,</span> <span class="n">mean_gen</span> <span class="o">*</span> <span class="n">offsprings</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ERT Expected run time = avg. number of dCGP evaluations needed: &quot;</span><span class="p">,</span> <span class="n">mean_gen</span> <span class="o">*</span> <span class="n">offsprings</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Problem-P5:-ex^5---\pi-x^3-+-x">
+<h2>Problem P5: <span class="math notranslate nohighlight">\(ex^5 - \pi x^3 + x\)</span><a class="headerlink" href="#Problem-P5:-ex^5---\pi-x^3-+-x" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">gdual</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">yt</span> <span class="o">=</span> <span class="n">data_P5</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># We run nexp experiments and accumulate statistic for the ERT</span>
+<span class="n">nexp</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">offsprings</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">max_gen</span><span class="o">=</span><span class="mi">200</span>
+<span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">kernels</span> <span class="o">=</span> <span class="n">kernel_set</span><span class="p">([</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span> <span class="s2">&quot;mul&quot;</span><span class="p">,</span> <span class="s2">&quot;diff&quot;</span><span class="p">,</span> <span class="s2">&quot;div&quot;</span><span class="p">])()</span>
+<span class="n">newtonParams</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;steps&#39;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;restart: </span><span class="se">\t</span><span class="s2"> gen: </span><span class="se">\t</span><span class="s2"> expression:&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nexp</span><span class="p">):</span>
+    <span class="n">dCGP</span> <span class="o">=</span> <span class="n">expression</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">rows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">levels_back</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">arity</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">kernels</span><span class="o">=</span><span class="n">kernels</span><span class="p">,</span> <span class="n">seed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1233456</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dCGP</span><span class="o">.</span><span class="n">get_n</span><span class="p">(),</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">get_n</span><span class="p">()</span> <span class="o">+</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">get_rows</span><span class="p">()</span> <span class="o">*</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">get_cols</span><span class="p">()):</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dCGP</span><span class="o">.</span><span class="n">get_arity</span><span class="p">()[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="n">dCGP</span><span class="o">.</span><span class="n">set_weight</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">gdual</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)]))</span>
+    <span class="n">g</span><span class="p">,</span> <span class="n">best_chromosome</span><span class="p">,</span> <span class="n">best_weights</span> <span class="o">=</span> <span class="n">run_experiment</span><span class="p">(</span><span class="n">dCGP</span><span class="p">,</span> <span class="n">offsprings</span><span class="p">,</span> <span class="n">max_gen</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">yt</span><span class="p">,</span> <span class="n">newtonParams</span><span class="p">,</span> <span class="n">screen_output</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+    <span class="n">dCGP</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">best_chromosome</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">g</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">max_gen</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\t\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">res</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">simplify</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">],</span><span class="kc">True</span><span class="p">))</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -927,14 +1095,76 @@ restart:         gen:    expression:
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-ERT Expected run time = avg. number of dCGP evaluations needed:  122071.111111
+restart:         gen:    expression:
+2                130     [2.71828182845905*x**5 - 3.14159265358981*x**3 + 1.00000000000003*x]
+5                144     [2.71828182845904*x**5 - 3.14159265358974*x**3 + 0.999999999999915*x]
+6                129     [2.71828182845905*x**5 - 3.1415926535898*x**3 + 1.00000000000001*x]
+7                48      [2.71828182845904*x**5 - 3.14159265358978*x**3 + 0.999999999999982*x]
+9                25      [2.71828182845905*x**5 - 3.1415926535898*x**3 + 1.00000000000002*x]
+10               6       [2.71828182845904*x**5 - 3.14159265358976*x**3 + 0.999999999999928*x]
+11               22      [2.71828182845904*x**5 - 3.14159265358978*x**3 + 0.999999999999977*x]
+13               113     [2.71828182845904*x**5 - 3.14159265358978*x**3 + 0.999999999999985*x]
+15               9       [2.71828182845904*x**5 - 3.14159265358978*x**3 + 0.999999999999969*x]
+16               46      [2.71828182845796*x**5 - 3.1415926535816*x**3 + 0.999999999987821*x]
+17               77      [2.71828182845905*x**5 - 3.1415926535898*x**3 + 1.00000000000001*x]
+18               189     [2.71828182845905*x**5 - 3.1415926535898*x**3 + 1.00000000000001*x]
+20               181     [2.71828182765082*x**5 + 4.81282166780353e-9*x**4 - 3.14159266134502*x**3 + 1.0000000050856*x]
+21               163     [2.71828182845905*x**5 - 3.14159265358981*x**3 + 1.00000000000003*x]
+22               16      [2.71828182844251*x**5 - 3.14159265338736*x**3 + 0.999999999457422*x]
+24               37      [2.71828182845905*x**5 - 3.14159265358981*x**3 + 1.00000000000002*x]
+27               119     [2.71828182845942*x**5 - 3.14159265359449*x**3 + 1.00000000000628*x]
+28               4       [2.71828182845905*x**5 - 3.1415926535898*x**3 + 1.00000000000001*x]
+29               42      [2.71828181857779*x**5 - 3.14159237432049*x**3 - 7.49766685257696e-7*x**2 + 1.00000053196694*x]
+42               33      [2.71828182845902*x**5 - 3.14159265358958*x**3 + 0.999999999999598*x]
+44               8       [2.71828182845905*x**5 - 3.1415926535898*x**3 + 1.00000000000001*x]
+45               189     [2.71828182845905*x**5 - 3.14159265358982*x**3 + 1.00000000000005*x]
+49               5       [2.71828182845905*x**5 - 3.14159265358981*x**3 + 1.00000000000002*x]
+53               21      [2.71828182845904*x**5 - 3.14159265358977*x**3 + 0.99999999999993*x]
+55               27      [2.71828182845904*x**5 - 3.14159265358977*x**3 + 0.999999999999773*x]
+63               83      [2.71828182845904*x**5 - 3.14159265358979*x**3 + 0.99999999999998*x]
+65               29      [2.71828182845904*x**5 - 3.14159265358979*x**3 + 0.999999999999992*x]
+68               149     [2.71828182845905*x**5 + x**3*(1.51490803020543 - 2.20219730313442*x**2)/(0.700981172914968*x**2 - 0.458140436777564) + x*(0.625363773202351*x**2 - 0.458140436777565)/(0.700981172914968*x**2 - 0.458140436777564)]
+69               66      [2.71828182845905*x**5 - 3.14159265358978*x**3 + 0.999999999999967*x]
+71               65      [2.71828182845905*x**5 - 3.14159265358988*x**3 + 1.00000000000015*x]
+73               181     [2.71828182845904*x**5 - 3.14159265358973*x**3 + 0.999999999999894*x]
+74               150     [2.71828182845904*x**5 - 3.14159265358979*x**3 + 0.999999999999995*x]
+78               12      [2.71828182845904*x**5 - 3.14159265358978*x**3 + 0.999999999999977*x]
+80               118     [2.71828182845905*x**5 - 3.14159265358981*x**3 + 1.00000000000002*x]
+81               137     [2.71828182845906*x**5 - 3.14159265359007*x**3 + 1.00000000000047*x]
+84               50      [2.71828182845905*x**5 - 3.14159265358981*x**3 + 1.00000000000002*x]
+85               33      [2.71828182845904*x**5 - 3.1415926535897*x**3 + 0.999999999999851*x]
+87               93      [2.71828182845905*x**5 - 3.14159265358981*x**3 + 1.00000000000003*x]
+88               60      [2.71828182845904*x**5 - 3.14159265358978*x**3 + 0.99999999999997*x]
+89               88      [2.71828182845905*x**5 - 3.14159265358979*x**3 + 0.999999999999997*x]
+91               15      [2.71828182845905*x**5 - 3.14159265358982*x**3 + 1.00000000000004*x]
+92               162     [2.71828182845904*x**5 - 3.14159265358977*x**3 + 0.999999999999982*x]
+95               61      [2.71828182845905*x**5 - 3.14159265358982*x**3 + 1.00000000000003*x]
+98               68      [2.71828182845905*x**5 - 3.14159265358982*x**3 + 1.00000000000006*x]
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">mean_gen</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="o">&lt;</span><span class="p">(</span><span class="n">max_gen</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="o">*</span> <span class="n">newtonParams</span><span class="p">[</span><span class="s1">&#39;steps&#39;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ERT Expected run time = avg. number of dCGP evaluations needed: &quot;</span><span class="p">,</span> <span class="n">mean_gen</span> <span class="o">*</span> <span class="n">offsprings</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+ERT Expected run time = avg. number of dCGP evaluations needed:  132245.45454545456
 </pre></div></div>
 </div>
 </div>
 <div class="section" id="Problem-P6:-\frac{e-x^2-1}{\pi-(x-+-2)}">
 <h2>Problem P6: <span class="math notranslate nohighlight">\(\frac{e x^2-1}{\pi (x + 2)}\)</span><a class="headerlink" href="#Problem-P6:-\frac{e-x^2-1}{\pi-(x-+-2)}" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -944,8 +1174,8 @@ ERT Expected run time = avg. number of dCGP evaluations needed:  122071.111111
 </pre></div>
 </div>
 </div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -954,22 +1184,53 @@ ERT Expected run time = avg. number of dCGP evaluations needed:  122071.111111
 <span class="n">offsprings</span> <span class="o">=</span> <span class="mi">4</span>
 <span class="n">max_gen</span><span class="o">=</span><span class="mi">200</span>
 <span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="n">kernels</span> <span class="o">=</span> <span class="n">kernel_set</span><span class="p">([</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span> <span class="s2">&quot;mul&quot;</span><span class="p">,</span> <span class="s2">&quot;diff&quot;</span><span class="p">,</span> <span class="s2">&quot;pdiv&quot;</span><span class="p">])()</span>
+<span class="n">kernels</span> <span class="o">=</span> <span class="n">kernel_set</span><span class="p">([</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span> <span class="s2">&quot;mul&quot;</span><span class="p">,</span> <span class="s2">&quot;diff&quot;</span><span class="p">,</span> <span class="s2">&quot;div&quot;</span><span class="p">])()</span>
 <span class="n">newtonParams</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s1">&#39;steps&#39;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
 <span class="p">}</span>
-<span class="k">print</span><span class="p">(</span><span class="s2">&quot;restart: </span><span class="se">\t</span><span class="s2"> gen: </span><span class="se">\t</span><span class="s2"> expression:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;restart: </span><span class="se">\t</span><span class="s2"> gen: </span><span class="se">\t</span><span class="s2"> expression:&quot;</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nexp</span><span class="p">):</span>
     <span class="n">dCGP</span> <span class="o">=</span> <span class="n">expression</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">rows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">levels_back</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">arity</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">kernels</span><span class="o">=</span><span class="n">kernels</span><span class="p">,</span> <span class="n">seed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1233456</span><span class="p">))</span>
     <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dCGP</span><span class="o">.</span><span class="n">get_n</span><span class="p">(),</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">get_n</span><span class="p">()</span> <span class="o">+</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">get_rows</span><span class="p">()</span> <span class="o">*</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">get_cols</span><span class="p">()):</span>
-        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dCGP</span><span class="o">.</span><span class="n">get_arity</span><span class="p">()):</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dCGP</span><span class="o">.</span><span class="n">get_arity</span><span class="p">()[</span><span class="mi">0</span><span class="p">]):</span>
             <span class="n">dCGP</span><span class="o">.</span><span class="n">set_weight</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">gdual</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)]))</span>
-    <span class="n">g</span><span class="p">,</span> <span class="n">best_chromosome</span><span class="p">,</span> <span class="n">best_weights</span> <span class="o">=</span> <span class="n">run_experiment</span><span class="p">(</span><span class="n">dCGP</span><span class="p">,</span> <span class="n">offsprings</span><span class="p">,</span> <span class="n">max_gen</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">yt</span><span class="p">,</span> <span class="n">newtonParams</span><span class="p">,</span> <span class="n">screen_output</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">g</span><span class="p">,</span> <span class="n">best_chromosome</span><span class="p">,</span> <span class="n">best_weights</span> <span class="o">=</span> <span class="n">run_experiment</span><span class="p">(</span><span class="n">dCGP</span><span class="p">,</span> <span class="n">offsprings</span><span class="p">,</span> <span class="n">max_gen</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">yt</span><span class="p">,</span> <span class="n">newtonParams</span><span class="p">,</span> <span class="n">screen_output</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
     <span class="n">dCGP</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">best_chromosome</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">g</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">max_gen</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
-        <span class="k">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\t\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">res</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">simplify</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">],</span><span class="bp">True</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\t\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">res</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">simplify</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">],</span><span class="kc">True</span><span class="p">))</span>
 <span class="n">res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+restart:         gen:    expression:
+7                121     [0.658810478707329*x**2/(0.76140528857091*x + 1.52281057714182) - 0.242362830744741/(0.76140528857091*x + 1.52281057714182)]
+12               70      [x*(0.710716298622762*x - 6.5421001949062e-12)/(0.82139426426137*x + 1.64278852852271) - 0.261457914778349/(0.82139426426137*x + 1.64278852852271)]
+18               184     [x*(0.000123063420861819*x**3 + 0.000387617697492767*x**2 + 0.00026373499528672*x - 3.84934325911654e-5)/((0.0332304392124186*x + 0.0664608784094327)*(0.00428004451413307*x**2 + 0.0134810245653551*x + 0.00984187107586485)) - 0.0235684911144266/(0.128798914957873*x + 0.148085179001607)]
+37               56      [-0.56551064554709*x/(1.74078576306486*x + 3.48157152619754) - 1.40565254304111 + (1.50622528661617*x**2 + 3.01245057329103*x + 4.33977055108826)/(1.74078576306486*x + 3.48157152619754)]
+42               154     [0.0804769112118696*x**2/(0.093009367314253*x + 0.186018734628506) - 0.0296058011238267/(0.093009367314253*x + 0.186018734628506)]
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/home/dario/miniconda3/envs/dcgpy/lib/python3.7/site-packages/ipykernel_launcher.py:63: RuntimeWarning: invalid value encountered in matmul
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">mean_gen</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="o">&lt;</span><span class="p">(</span><span class="n">max_gen</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="o">*</span> <span class="n">newtonParams</span><span class="p">[</span><span class="s1">&#39;steps&#39;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ERT Expected run time = avg. number of dCGP evaluations needed: &quot;</span><span class="p">,</span> <span class="n">mean_gen</span> <span class="o">*</span> <span class="n">offsprings</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -977,7 +1238,7 @@ ERT Expected run time = avg. number of dCGP evaluations needed:  122071.111111
 <div class="section" id="Problem-P7:-\sin(e-x)-+-\cos(\pi-x)">
 <h2>Problem P7: <span class="math notranslate nohighlight">\(\sin(e x) + \cos(\pi x)\)</span><a class="headerlink" href="#Problem-P7:-\sin(e-x)-+-\cos(\pi-x)" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[348]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -987,8 +1248,8 @@ ERT Expected run time = avg. number of dCGP evaluations needed:  122071.111111
 </pre></div>
 </div>
 </div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -997,22 +1258,81 @@ ERT Expected run time = avg. number of dCGP evaluations needed:  122071.111111
 <span class="n">offsprings</span> <span class="o">=</span> <span class="mi">4</span>
 <span class="n">max_gen</span><span class="o">=</span><span class="mi">200</span>
 <span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="n">kernels</span> <span class="o">=</span> <span class="n">kernel_set</span><span class="p">([</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span> <span class="s2">&quot;mul&quot;</span><span class="p">,</span> <span class="s2">&quot;diff&quot;</span><span class="p">,</span> <span class="s2">&quot;pdiv&quot;</span><span class="p">,</span> <span class="s2">&quot;sin&quot;</span><span class="p">,</span> <span class="s2">&quot;cos&quot;</span><span class="p">])()</span>
+<span class="n">kernels</span> <span class="o">=</span> <span class="n">kernel_set</span><span class="p">([</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span> <span class="s2">&quot;mul&quot;</span><span class="p">,</span> <span class="s2">&quot;diff&quot;</span><span class="p">,</span> <span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="s2">&quot;sin&quot;</span><span class="p">,</span> <span class="s2">&quot;cos&quot;</span><span class="p">])()</span>
 <span class="n">newtonParams</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s1">&#39;steps&#39;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
 <span class="p">}</span>
-<span class="k">print</span><span class="p">(</span><span class="s2">&quot;restart: </span><span class="se">\t</span><span class="s2"> gen: </span><span class="se">\t</span><span class="s2"> expression:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;restart: </span><span class="se">\t</span><span class="s2"> gen: </span><span class="se">\t</span><span class="s2"> expression:&quot;</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nexp</span><span class="p">):</span>
     <span class="n">dCGP</span> <span class="o">=</span> <span class="n">expression</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">rows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">levels_back</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">arity</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">kernels</span><span class="o">=</span><span class="n">kernels</span><span class="p">,</span> <span class="n">seed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1233456</span><span class="p">))</span>
     <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dCGP</span><span class="o">.</span><span class="n">get_n</span><span class="p">(),</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">get_n</span><span class="p">()</span> <span class="o">+</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">get_rows</span><span class="p">()</span> <span class="o">*</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">get_cols</span><span class="p">()):</span>
-        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dCGP</span><span class="o">.</span><span class="n">get_arity</span><span class="p">()):</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dCGP</span><span class="o">.</span><span class="n">get_arity</span><span class="p">()[</span><span class="mi">0</span><span class="p">]):</span>
             <span class="n">dCGP</span><span class="o">.</span><span class="n">set_weight</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">gdual</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)]))</span>
-    <span class="n">g</span><span class="p">,</span> <span class="n">best_chromosome</span><span class="p">,</span> <span class="n">best_weights</span> <span class="o">=</span> <span class="n">run_experiment</span><span class="p">(</span><span class="n">dCGP</span><span class="p">,</span> <span class="n">offsprings</span><span class="p">,</span> <span class="n">max_gen</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">yt</span><span class="p">,</span> <span class="n">newtonParams</span><span class="p">,</span> <span class="n">screen_output</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">g</span><span class="p">,</span> <span class="n">best_chromosome</span><span class="p">,</span> <span class="n">best_weights</span> <span class="o">=</span> <span class="n">run_experiment</span><span class="p">(</span><span class="n">dCGP</span><span class="p">,</span> <span class="n">offsprings</span><span class="p">,</span> <span class="n">max_gen</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">yt</span><span class="p">,</span> <span class="n">newtonParams</span><span class="p">,</span> <span class="n">screen_output</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
     <span class="n">dCGP</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">best_chromosome</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">g</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">max_gen</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
-        <span class="k">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\t\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">res</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">simplify</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">],</span><span class="bp">True</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\t\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">res</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">simplify</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">],</span><span class="kc">True</span><span class="p">))</span>
 <span class="n">res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+restart:         gen:    expression:
+2                10      [1.0*sin(2.71828182845905*x) + 0.999999999999999*cos(3.14159265358979*x)]
+5                177     [0.999999999990239*sin(2.71828182845446*x) + 0.99999999827576*cos(3.1415926695047*x)]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/home/dario/miniconda3/envs/dcgpy/lib/python3.7/site-packages/ipykernel_launcher.py:63: RuntimeWarning: invalid value encountered in matmul
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+10               52      [0.999999996606054*sin(2.71828182686597*x) + 1.0*cos(3.14159265358979*x)]
+12               166     [1.00000021604097*cos(3.14159255591115*x) + 1.00000000001092*cos(2.71828182846416*x - 7.85398185936523)]
+14               84      [1.00000000002564*sin(2.71828182859488*x) + 1.0*cos(3.14159265358979*x)]
+15               137     [1.0*sin(2.71828182845905*x) + 1.0*cos(3.14159265358979*x)]
+17               25      [1.0*sin(2.71828182845905*x) + 1.0*cos(3.14159265358979*x)]
+19               145     [-0.999999999999992*sin(x*(2.59471453823685e-12*sin(2.29774027604273*x**2) - 2.718281828461)) + 1.0*cos(3.14159265358979*x)]
+21               51      [1.0*sin(2.71828182845904*x) + 1.00000000000002*cos(3.14159265358978*x)]
+26               8       [1.0*sin(2.71828182845905*x) + 1.0*cos(3.14159265358979*x)]
+29               116     [-3.5489631288284e-16*sin(2.71828182845905*x)**2 + 1.0*sin(2.71828182845905*x) + 1.0*cos(3.14159265358979*x)]
+31               82      [0.999999999612255*sin(2.71828182743606*x + 8.09654622736853e-11*cos(3.14159265362908*x)) + 1.00000000000211*cos(3.14159265362908*x)]
+32               132     [1.00000000003824*sin(2.71828182866167*x) + 1.0*cos(3.14159265358979*x)]
+44               188     [1.0*sin(2.71828182845905*x) + 1.0*cos(3.14159265358979*x)]
+48               122     [1.00000000001473*sin(25.5560520538422*x) + 0.999999991979214*cos(3.14159272762242*x)]
+49               88      [1.0*sin(2.71828182845905*x) + 1.0*cos(3.14159265358979*x)]
+50               55      [0.999999999999999*sin(2.71828182845904*x - 8.91009907439534e-10*cos(31.4159265256615*x)) - 1.00000002272797*cos(31.4159265256615*x)]
+52               86      [1.0*sin(2.71828182845905*x) + 1.0*cos(3.14159265358979*x)]
+54               106     [1.0*sin(2.71828182845905*x) + 1.0*cos(3.14159265358979*x)]
+59               81      [1.0*sin(2.71828182845905*x) + 1.00000000226596*cos(3.14159263267476*x)]
+63               110     [1.08304336385657e-7*x*sin(2.71828183307158*x)*cos(3.14159262986457*x) + 1.00000000982667*sin(2.71828183307158*x) + 0.999999952852321*cos(3.14159262986457*x)]
+67               73      [1.0*sin(2.71828182845905*x) + 1.0*cos(3.14159265358979*x)]
+82               53      [0.999999999999999*sin(2.71828182845904*x) - 1.0*cos(31.4159265358979*x)]
+87               77      [1.0*sin(2.71828182845905*x) + 1.0*cos(3.14159265358979*x)]
+93               86      [1.0*sin(2.71828182845905*x) + 1.0*cos(3.14159265358979*x)]
+98               175     [2.68964745528915e-8*x**2 + 1.0*sin(2.71828182845905*x) + 1.00000000821958*cos(3.14159270860771*x)]
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">mean_gen</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="o">&lt;</span><span class="p">(</span><span class="n">max_gen</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="o">*</span> <span class="n">newtonParams</span><span class="p">[</span><span class="s1">&#39;steps&#39;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ERT Expected run time = avg. number of dCGP evaluations needed: &quot;</span><span class="p">,</span> <span class="n">mean_gen</span> <span class="o">*</span> <span class="n">offsprings</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1039,7 +1359,7 @@ ERT Expected run time = avg. number of dCGP evaluations needed:  122071.111111
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Dario Izzo, Francesco Biscani, Alessio Mereta
+        &copy; Copyright 2020, Dario Izzo, Francesco Biscani
 
     </p>
   </div>

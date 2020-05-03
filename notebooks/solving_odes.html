@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Solving differential equations with dCGP &mdash; dCGP 1.4.3 documentation</title>
+  <title>Solving differential equations with dCGP &mdash; dCGP 1.5 documentation</title>
   
 
   
@@ -21,11 +21,12 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
         <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
@@ -39,7 +40,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Weighted dCGP for a symbolic regression task" href="weighted_symbolic_regression.html" />
-    <link rel="prev" title="Learning constants in a symbolic regression task (PART II)" href="learning_constants2.html" /> 
+    <link rel="prev" title="Training a FFNN in dCGPANN vs. Keras (regression)" href="dCGPANNs_for_function_approximation.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -66,7 +67,7 @@
             
             
               <div class="version">
-                1.4.3
+                1.5
               </div>
             
           
@@ -93,23 +94,20 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick start examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../docs/index.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docs/index.html">API documentation</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../tutorials/index.html">Tutorials</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/cpp/index.html">C++</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../tutorials/py/index.html">Python</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="../tutorials/py/index.html#core">Core</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../tutorials/py/index.html#symbolic-regression">Symbolic Regression</a></li>
-<li class="toctree-l3 current"><a class="reference internal" href="../tutorials/py/index.html#legacy">Legacy</a><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="learning_constants.html">Learning constants in a symbolic regression task</a></li>
-<li class="toctree-l4"><a class="reference internal" href="learning_constants2.html">Learning constants in a symbolic regression task (PART II)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../tutorials/py/index.html#neural-networks">Neural Networks</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../tutorials/py/index.html#other">Other</a><ul class="current">
 <li class="toctree-l4 current"><a class="current reference internal" href="#">Solving differential equations with dCGP</a></li>
 <li class="toctree-l4"><a class="reference internal" href="weighted_symbolic_regression.html">Weighted dCGP for a symbolic regression task</a></li>
 <li class="toctree-l4"><a class="reference internal" href="finding_prime_integrals.html">Discovery of prime integrals with dCGP</a></li>
-<li class="toctree-l4"><a class="reference internal" href="An_intro_to_dCGPANNs.html">Representing an Artificial Neural Network as a Cartesian Genetic Program</a></li>
-<li class="toctree-l4"><a class="reference internal" href="dCGPANNs_for_classification.html">Training a FFNN in dCGPANN vs. Keras (classification)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="dCGPANNs_for_function_approximation.html">Training a FFNN in dCGPANN vs. Keras (regression)</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../tutorials/py/index.html#deprecated">Deprecated</a></li>
 </ul>
 </li>
 </ul>
@@ -189,16 +187,16 @@
 /* CSS for nbsphinx extension */
 
 /* remove conflicting styling from Sphinx themes */
-div.nbinput,
-div.nbinput div.prompt,
-div.nbinput div.input_area,
-div.nbinput div[class*=highlight],
-div.nbinput div[class*=highlight] pre,
-div.nboutput,
-div.nbinput div.prompt,
-div.nbinput div.output_area,
-div.nboutput div[class*=highlight],
-div.nboutput div[class*=highlight] pre {
+div.nbinput.container,
+div.nbinput.container div.prompt,
+div.nbinput.container div.input_area,
+div.nbinput.container div[class*=highlight],
+div.nbinput.container div[class*=highlight] pre,
+div.nboutput.container,
+div.nboutput.container div.prompt,
+div.nboutput.container div.output_area,
+div.nboutput.container div[class*=highlight],
+div.nboutput.container div[class*=highlight] pre {
     background: none;
     border: none;
     padding: 0 0;
@@ -207,13 +205,13 @@ div.nboutput div[class*=highlight] pre {
 }
 
 /* avoid gaps between output lines */
-div.nboutput div[class*=highlight] pre {
+div.nboutput.container div[class*=highlight] pre {
     line-height: normal;
 }
 
 /* input/output containers */
-div.nbinput,
-div.nboutput {
+div.nbinput.container,
+div.nboutput.container {
     display: -webkit-flex;
     display: flex;
     align-items: flex-start;
@@ -221,92 +219,91 @@ div.nboutput {
     width: 100%;
 }
 @media (max-width: 540px) {
-    div.nbinput,
-    div.nboutput {
+    div.nbinput.container,
+    div.nboutput.container {
         flex-direction: column;
     }
 }
 
 /* input container */
-div.nbinput {
+div.nbinput.container {
     padding-top: 5px;
 }
 
 /* last container */
-div.nblast {
+div.nblast.container {
     padding-bottom: 5px;
 }
 
 /* input prompt */
-div.nbinput div.prompt pre {
+div.nbinput.container div.prompt pre {
     color: #307FC1;
 }
 
 /* output prompt */
-div.nboutput div.prompt pre {
+div.nboutput.container div.prompt pre {
     color: #BF5B3D;
 }
 
 /* all prompts */
-div.nbinput div.prompt,
-div.nboutput div.prompt {
+div.nbinput.container div.prompt,
+div.nboutput.container div.prompt {
     min-width: 5ex;
-    padding-top: 0.4em;
-    padding-right: 0.4em;
+    padding-top: 0.3rem;
+    padding-right: 0.3rem;
     text-align: right;
     flex: 0;
 }
 @media (max-width: 540px) {
-    div.nbinput div.prompt,
-    div.nboutput div.prompt {
+    div.nbinput.container div.prompt,
+    div.nboutput.container div.prompt {
         text-align: left;
         padding: 0.4em;
     }
-    div.nboutput div.prompt.empty {
+    div.nboutput.container div.prompt.empty {
         padding: 0;
     }
 }
 
 /* disable scrollbars on prompts */
-div.nbinput div.prompt pre,
-div.nboutput div.prompt pre {
+div.nbinput.container div.prompt pre,
+div.nboutput.container div.prompt pre {
     overflow: hidden;
 }
 
 /* input/output area */
-div.nbinput div.input_area,
-div.nboutput div.output_area {
-    padding: 0.4em;
+div.nbinput.container div.input_area,
+div.nboutput.container div.output_area {
     -webkit-flex: 1;
     flex: 1;
     overflow: auto;
 }
 @media (max-width: 540px) {
-    div.nbinput div.input_area,
-    div.nboutput div.output_area {
+    div.nbinput.container div.input_area,
+    div.nboutput.container div.output_area {
         width: 100%;
     }
 }
 
 /* input area */
-div.nbinput div.input_area {
+div.nbinput.container div.input_area {
     border: 1px solid #e0e0e0;
     border-radius: 2px;
     background: #f5f5f5;
 }
 
 /* override MathJax center alignment in output cells */
-div.nboutput div[class*=MathJax] {
+div.nboutput.container div[class*=MathJax] {
     text-align: left !important;
 }
 
 /* override sphinx.ext.imgmath center alignment in output cells */
-div.nboutput div.math p {
+div.nboutput.container div.math p {
     text-align: left;
 }
 
 /* standard error */
-div.nboutput div.output_area.stderr {
+div.nboutput.container div.output_area.stderr {
     background: #fdd;
 }
 
@@ -350,6 +347,27 @@ div.nboutput div.output_area.stderr {
 .ansi-bold { font-weight: bold; }
 .ansi-underline { text-decoration: underline; }
 
+
+div.nbinput.container div.input_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight].math,
+div.nboutput.container div.output_area.rendered_html,
+div.nboutput.container div.output_area > div.output_javascript,
+div.nboutput.container div.output_area:not(.rendered_html) > img{
+    padding: 0.3rem;
+}
+
+/* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
+div.nbinput.container div.input_area > div[class^='highlight'],
+div.nboutput.container div.output_area > div[class^='highlight']{
+    overflow-y: hidden;
+}
+
+/* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
+.prompt a.copybtn {
+    display: none;
+}
+
 /* Some additional styling taken form the Jupyter notebook CSS */
 div.rendered_html table {
   border: none;
@@ -387,13 +405,13 @@ div.rendered_html tbody tr:hover {
 /* CSS overrides for sphinx_rtd_theme */
 
 /* 24px margin */
-.nbinput.nblast,
-.nboutput.nblast {
+.nbinput.nblast.container,
+.nboutput.nblast.container {
     margin-bottom: 19px;  /* padding has already 5px */
 }
 
 /* ... except between code cells! */
-.nblast + .nbinput {
+.nblast.container + .nbinput.container {
     margin-top: -19px;
 }
 
@@ -410,7 +428,7 @@ div.rendered_html tbody tr:hover {
 <h1>Solving differential equations with dCGP<a class="headerlink" href="#Solving-differential-equations-with-dCGP" title="Permalink to this headline">¶</a></h1>
 <p>Lets first import dcgpy and pyaudi and set up things as to use dCGP on gduals defined over vectorized floats</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -418,7 +436,7 @@ div.rendered_html tbody tr:hover {
 <span class="kn">from</span> <span class="nn">dcgpy</span> <span class="kn">import</span> <span class="n">kernel_set_gdual_vdouble</span> <span class="k">as</span> <span class="n">kernel_set</span>
 <span class="kn">from</span> <span class="nn">pyaudi</span> <span class="kn">import</span> <span class="n">gdual_vdouble</span> <span class="k">as</span> <span class="n">gdual</span>
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">sin</span><span class="p">,</span> <span class="n">cos</span>
 <span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">randint</span>
 <span class="n">np</span><span class="o">.</span><span class="n">seterr</span><span class="p">(</span><span class="nb">all</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span> <span class="c1"># avoids numpy complaining about early on malformed expressions being evalkuated</span>
@@ -429,7 +447,7 @@ div.rendered_html tbody tr:hover {
 <div class="section" id="The-kernel-functions">
 <h2>The kernel functions<a class="headerlink" href="#The-kernel-functions" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[125]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -441,31 +459,24 @@ div.rendered_html tbody tr:hover {
 <div class="section" id="Instantiate-a-(1-input,-1-output)-dCGP-and-we-inspect-a-randomly-created-program">
 <h2>Instantiate a (1 input, 1 output) dCGP and we inspect a randomly created program<a class="headerlink" href="#Instantiate-a-(1-input,-1-output)-dCGP-and-we-inspect-a-randomly-created-program" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">dCGP_example</span> <span class="o">=</span> <span class="n">expression</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">rows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">levels_back</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">arity</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">kernels</span><span class="o">=</span><span class="n">kernels</span><span class="p">,</span> <span class="n">seed</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+<span></span><span class="n">dCGP_example</span> <span class="o">=</span> <span class="n">expression</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">rows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">levels_back</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">arity</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">kernels</span><span class="o">=</span><span class="n">kernels</span><span class="p">,</span> <span class="n">seed</span> <span class="o">=</span> <span class="mi">2134</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span><span class="mi">6</span><span class="p">]</span>
-<span class="n">dCGP_example</span><span class="o">.</span><span class="n">visualize</span><span class="p">()</span> <span class="c1">#requires pygraphwiz module installed</span>
-<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Represented expression: &quot;</span><span class="p">,</span> <span class="n">dCGP_example</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">])[</span><span class="mi">0</span><span class="p">])</span>
-<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Simplified expression: &quot;</span><span class="p">,</span> <span class="n">dCGP_example</span><span class="o">.</span><span class="n">simplify</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">]))</span> <span class="c1">#requires sympy module installed</span>
+<span class="n">dCGP_example</span><span class="o">.</span><span class="n">visualize</span><span class="p">()</span> <span class="c1">#requires graphwiz module installed (pip install graphviz --user)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Represented expression: &quot;</span><span class="p">,</span> <span class="n">dCGP_example</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">])[</span><span class="mi">0</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Simplified expression: &quot;</span><span class="p">,</span> <span class="n">dCGP_example</span><span class="o">.</span><span class="n">simplify</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">]))</span> <span class="c1">#requires sympy module installed</span>
 </pre></div>
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/notebooks_solving_odes_7_0.png" src="../_images/notebooks_solving_odes_7_0.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -473,20 +484,20 @@ div.rendered_html tbody tr:hover {
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Represented expression:  (x+x)
-Simplified expression:  [2*x]
+Represented expression:  ((x+x)*(x*x))
+Simplified expression:  [2*x**3]
 </pre></div></div>
 </div>
 </div>
 <div class="section" id="Define-the-ES-that-will-evolve-solutions">
 <h2>Define the ES that will evolve solutions<a class="headerlink" href="#Define-the-ES-that-will-evolve-solutions" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[115]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="c1"># We run an evolutionary strategy ES(1 + offspring)</span>
-<span class="k">def</span> <span class="nf">run_experiment</span><span class="p">(</span><span class="n">max_gen</span><span class="p">,</span> <span class="n">offsprings</span><span class="p">,</span> <span class="n">quadratic_error</span><span class="p">,</span> <span class="n">initial_conditions_error</span><span class="p">,</span> <span class="n">dCGP</span><span class="p">,</span> <span class="n">screen_output</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">run_experiment</span><span class="p">(</span><span class="n">max_gen</span><span class="p">,</span> <span class="n">offsprings</span><span class="p">,</span> <span class="n">quadratic_error</span><span class="p">,</span> <span class="n">initial_conditions_error</span><span class="p">,</span> <span class="n">dCGP</span><span class="p">,</span> <span class="n">screen_output</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="n">chromosome</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">offsprings</span>
     <span class="n">fitness</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span><span class="n">offsprings</span>
     <span class="n">best_chromosome</span> <span class="o">=</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
@@ -502,7 +513,7 @@ Simplified expression:  [2*x]
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">offsprings</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">fitness</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">best_fitness</span><span class="p">:</span>
                 <span class="k">if</span> <span class="p">(</span><span class="n">fitness</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">best_fitness</span><span class="p">)</span> <span class="ow">and</span> <span class="n">screen_output</span><span class="p">:</span>
-                    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;New best found: gen: &quot;</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="s2">&quot; value: &quot;</span><span class="p">,</span> <span class="n">fitness</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;New best found: gen: &quot;</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="s2">&quot; value: &quot;</span><span class="p">,</span> <span class="n">fitness</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
                 <span class="n">best_chromosome</span> <span class="o">=</span> <span class="n">chromosome</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
                 <span class="n">best_fitness</span> <span class="o">=</span> <span class="n">fitness</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
                 <span class="n">dCGP</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">best_chromosome</span><span class="p">)</span>
@@ -519,7 +530,7 @@ Simplified expression:  [2*x]
 <p>we demand its punctual validity over a grid of <span class="math notranslate nohighlight">\(N\)</span> equally spaced points.</p>
 <p>The solution to the ODE is <span class="math notranslate nohighlight">\(y = x + \frac 2x\)</span></p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[126]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -537,7 +548,7 @@ Simplified expression:  [2*x]
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[127]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -551,7 +562,7 @@ Simplified expression:  [2*x]
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[128]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -564,7 +575,7 @@ Simplified expression:  [2*x]
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[135]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -573,7 +584,7 @@ Simplified expression:  [2*x]
 <span class="n">offsprings</span> <span class="o">=</span> <span class="mi">10</span>
 <span class="n">stop</span> <span class="o">=</span> <span class="mi">500</span>
 <span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">print</span><span class="p">(</span><span class="s2">&quot;restart: </span><span class="se">\t</span><span class="s2"> gen: </span><span class="se">\t</span><span class="s2"> expression:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;restart: </span><span class="se">\t</span><span class="s2"> gen: </span><span class="se">\t</span><span class="s2"> expression:&quot;</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nexp</span><span class="p">):</span>
     <span class="n">dCGP</span> <span class="o">=</span> <span class="n">expression</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">rows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">levels_back</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">arity</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">kernels</span><span class="o">=</span><span class="n">kernels</span><span class="p">,</span> <span class="n">seed</span> <span class="o">=</span> <span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">100000</span><span class="p">))</span>
     <span class="n">g</span><span class="p">,</span> <span class="n">best_chromosome</span> <span class="o">=</span> <span class="n">run_experiment</span><span class="p">(</span><span class="n">max_gen</span> <span class="o">=</span> <span class="n">stop</span><span class="p">,</span> <span class="n">offsprings</span> <span class="o">=</span> <span class="n">offsprings</span><span class="p">,</span> \
@@ -581,7 +592,7 @@ Simplified expression:  [2*x]
     <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
     <span class="n">dCGP</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">best_chromosome</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">g</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">stop</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
-        <span class="k">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\t\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">res</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">dCGP</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">]),</span> <span class="s2">&quot; a.k.a &quot;</span><span class="p">,</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">simplify</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">]))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\t\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">res</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">dCGP</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">]),</span> <span class="s2">&quot; a.k.a &quot;</span><span class="p">,</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">simplify</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">]))</span>
 <span class="n">res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -592,50 +603,44 @@ Simplified expression:  [2*x]
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 restart:         gen:    expression:
-0                194     [&#39;(x+((x+x)/(x*x)))&#39;]  a.k.a  [x + 2/x]
-1                44      [&#39;(x+(((x/x)/x)*(((x/x)+(x/x))*(x/x))))&#39;]  a.k.a  [x + 2/x]
-4                483     [&#39;((x/(x/x))+(((x/x)/x)+((x/x)/x)))&#39;]  a.k.a  [x + 2/x]
-6                423     [&#39;(x+(((x/x)+(x/x))/x))&#39;]  a.k.a  [x + 2/x]
-13               292     [&#39;(((x/x)/x)+(x+((x/x)/x)))&#39;]  a.k.a  [x + 2/x]
-14               248     [&#39;(sin((x-x))+(((exp((x-x))+((x-x)+exp(sin((x-x)))))/x)+(x+(x-x))))&#39;]  a.k.a  [x + 2/x]
-19               456     [&#39;((x+(x/(x*x)))+(x/(x*x)))&#39;]  a.k.a  [x + 2/x]
-21               321     [&#39;(((x+x)-x)+((x+x)/(((x+x)-x)*((x+x)-x))))&#39;]  a.k.a  [x + 2/x]
-26               348     [&#39;(((x/x)/x)+(x+((x/x)/x)))&#39;]  a.k.a  [x + 2/x]
-27               149     [&#39;(x+(((x+x)+(x+x))/((x+x)*x)))&#39;]  a.k.a  [x + 2/x]
-29               205     [&#39;((((x/x)/x)+((x/x)/x))+x)&#39;]  a.k.a  [x + 2/x]
-32               223     [&#39;((((x/x)+(x/x))/((x/x)*x))+log(exp(x)))&#39;]  a.k.a  [x + 2/x]
-34               142     [&#39;(x+(((x/x)+(x/x))/x))&#39;]  a.k.a  [x + 2/x]
-35               426     [&#39;(x+(((x+x)/x)/x))&#39;]  a.k.a  [x + 2/x]
-36               371     [&#39;(x+((x+x)/(x*x)))&#39;]  a.k.a  [x + 2/x]
-37               344     [&#39;(((x/x)/x)+(x+((x/x)/x)))&#39;]  a.k.a  [x + 2/x]
-39               228     [&#39;(((((x/((x-x)+x))/x)*((x/x)+(x/((x-x)+x))))*(x/x))+x)&#39;]  a.k.a  [x + 2/x]
-44               134     [&#39;(x+(((x/x)+(x/x))/x))&#39;]  a.k.a  [x + 2/x]
-46               217     [&#39;(((x/x)/x)+(x+((x/x)/x)))&#39;]  a.k.a  [x + 2/x]
-48               492     [&#39;((((x/x)+(x/x))/x)+x)&#39;]  a.k.a  [x + 2/x]
-52               316     [&#39;(((x/(x*x))+(x/(x*x)))+x)&#39;]  a.k.a  [x + 2/x]
-56               219     [&#39;((((x/x)+(x/x))/x)+x)&#39;]  a.k.a  [x + 2/x]
-57               265     [&#39;((x/(x*x))+(x+(x/(x*x))))&#39;]  a.k.a  [x + 2/x]
-61               438     [&#39;((x+(x/(x*x)))+(x/(x*x)))&#39;]  a.k.a  [x + 2/x]
-62               228     [&#39;(((x+x)/(x*x))+x)&#39;]  a.k.a  [x + 2/x]
-63               239     [&#39;((x+((x+x)/((x+x)*x)))+((x+x)/((x+x)*x)))&#39;]  a.k.a  [x + 2/x]
-64               166     [&#39;exp(log((x+(((x/x)+(x/x))/x))))&#39;]  a.k.a  [x + 2/x]
-65               192     [&#39;(x+(((x+x)/x)/x))&#39;]  a.k.a  [x + 2/x]
-70               65      [&#39;((((x*x)/x)+(cos((exp(((x*x)/x))-exp(x)))/x))+(cos((exp(((x*x)/x))-exp(x)))/x))&#39;]  a.k.a  [x + 2/x]
-72               191     [&#39;((((exp(x)+exp(x))/x)/exp(x))+x)&#39;]  a.k.a  [x + 2/x]
-75               231     [&#39;(x+((x/(x*x))+(x/(x*x))))&#39;]  a.k.a  [x + 2/x]
-79               396     [&#39;(((x/x)/x)+(x+((x/x)/x)))&#39;]  a.k.a  [x + 2/x]
-81               19      [&#39;(((x+x)/(x*x))+x)&#39;]  a.k.a  [x + 2/x]
-83               322     [&#39;((cos(x)/(cos(x)*x))+((cos(x)/(cos(x)*x))+x))&#39;]  a.k.a  [x + 2/x]
-84               393     [&#39;(((x/x)*(((x/x)+(x/x))/x))+x)&#39;]  a.k.a  [x + 2/x]
-87               361     [&#39;(((x/(x*x))+(x/(x*x)))+x)&#39;]  a.k.a  [x + 2/x]
-88               457     [&#39;((((x/x)/x)+x)+((x/x)/x))&#39;]  a.k.a  [x + 2/x]
-89               112     [&#39;((((sin(x)+sin(x))/x)/sin(x))+x)&#39;]  a.k.a  [x + 2/x]
-90               151     [&#39;(x+((((x/x)*(x/x))*(((x/x)*(x/x))+(x/x)))/x))&#39;]  a.k.a  [x + 2/x]
-91               122     [&#39;((((x/x)*(x*(x/x)))+((x/x)/x))+((x/x)*((x/x)/x)))&#39;]  a.k.a  [x + 2/x]
-94               169     [&#39;(x+(((x+x)/x)/x))&#39;]  a.k.a  [x + 2/x]
-95               249     [&#39;(((x+x)/(x*x))+x)&#39;]  a.k.a  [x + 2/x]
-96               382     [&#39;(((x+x)/(x*x))+x)&#39;]  a.k.a  [x + 2/x]
-97               133     [&#39;((((x/x)+(x/x))/x)+x)&#39;]  a.k.a  [x + 2/x]
+5                414     [&#39;(((x/(x*x))+(x/(x*x)))+x)&#39;]  a.k.a  [x + 2/x]
+10               285     [&#39;((x+(x/(x*x)))+(x/(x*x)))&#39;]  a.k.a  [x + 2/x]
+12               456     [&#39;(x+(((x+x)/x)/x))&#39;]  a.k.a  [x + 2/x]
+13               227     [&#39;(((x/x)/x)-((((x/x)-x)-((x/x)/x))-(x/x)))&#39;]  a.k.a  [x + 2/x]
+19               146     [&#39;((((x+x)/x)/x)+x)&#39;]  a.k.a  [x + 2/x]
+20               117     [&#39;log(exp((x+(((x+x)/x)/x))))&#39;]  a.k.a  [x + log(exp(2/x))]
+22               402     [&#39;(x+((x+x)/(x*x)))&#39;]  a.k.a  [x + 2/x]
+25               38      [&#39;(((x/(x*x))+x)+(x/(x*x)))&#39;]  a.k.a  [x + 2/x]
+26               69      [&#39;((((x/x)/x)+((x/x)/x))+(x/(x/x)))&#39;]  a.k.a  [x + 2/x]
+28               123     [&#39;(x+((cos((x-x))+cos((x-x)))/x))&#39;]  a.k.a  [x + 2/x]
+29               469     [&#39;((((x+x)/x)/x)+x)&#39;]  a.k.a  [x + 2/x]
+33               31      [&#39;(x+(((x/x)+(x/x))/x))&#39;]  a.k.a  [x + 2/x]
+40               204     [&#39;(x+((x+x)/(x*x)))&#39;]  a.k.a  [x + 2/x]
+43               446     [&#39;(x+((x+x)/(x*x)))&#39;]  a.k.a  [x + 2/x]
+44               354     [&#39;(((x/x)/(x/(x/x)))+(((x/x)/(x/(x/x)))+(x/(x/x))))&#39;]  a.k.a  [x + 2/x]
+45               392     [&#39;(((exp((x-x))/x)+x)+((x/x)/x))&#39;]  a.k.a  [x + 2/x]
+46               164     [&#39;((((x*x)*(x/(x*x)))+(x/(x*x)))+(x/(x*x)))&#39;]  a.k.a  [x + 2/x]
+50               74      [&#39;(((x+x)/(x*x))+x)&#39;]  a.k.a  [x + 2/x]
+51               248     [&#39;((((sin(x)/sin(x))/x)+x)+((sin(x)/sin(x))/x))&#39;]  a.k.a  [x + 2/x]
+52               129     [&#39;log(exp((x+((x+x)/(x*x)))))&#39;]  a.k.a  [x + log(exp(2/x))]
+53               346     [&#39;((x/(x*x))+(x+(x/(x*x))))&#39;]  a.k.a  [x + 2/x]
+57               24      [&#39;((x/(x*x))+(x+(x/(x*x))))&#39;]  a.k.a  [x + 2/x]
+59               408     [&#39;(x+(((x/x)+(x/x))/x))&#39;]  a.k.a  [x + 2/x]
+66               302     [&#39;(x+(((x/x)+(x/x))/(x*(x/x))))&#39;]  a.k.a  [x + 2/x]
+71               370     [&#39;((x+(x/(x*x)))+(x/(x*x)))&#39;]  a.k.a  [x + 2/x]
+81               382     [&#39;(x+((((x*x)/x)+x)/(x*x)))&#39;]  a.k.a  [x + 2/x]
+83               258     [&#39;(x+((((x+x)/x)/x)/(((x+x)/x)/((x+x)/x))))&#39;]  a.k.a  [x + 2/x]
+84               281     [&#39;(x+(((x+x)/x)/x))&#39;]  a.k.a  [x + 2/x]
+85               84      [&#39;(x+(((x*x)+(x*x))/((x*x)*x)))&#39;]  a.k.a  [x + 2/x]
+86               341     [&#39;(((x+x)/(x*x))+x)&#39;]  a.k.a  [x + 2/x]
+87               383     [&#39;(x+((((x/x)/x)*(x/x))+(((x/x)/x)*((x/x)*(x/x)))))&#39;]  a.k.a  [x + 2/x]
+88               137     [&#39;(x+(((x+x)/x)/x))&#39;]  a.k.a  [x + 2/x]
+92               433     [&#39;((x/(x*x))+((x/(x*x))+x))&#39;]  a.k.a  [x + 2/x]
+93               142     [&#39;((x/(x*x))+((x/(x*x))+x))&#39;]  a.k.a  [x + 2/x]
+95               426     [&#39;(x+(((x+x)/x)/x))&#39;]  a.k.a  [x + 2/x]
+96               136     [&#39;(x+(((x+x)/x)/x))&#39;]  a.k.a  [x + 2/x]
+98               296     [&#39;((x+((x/x)/x))+((x/x)/x))&#39;]  a.k.a  [x + 2/x]
+99               230     [&#39;(((((x+x)+(x+x))/(x+x))/x)+x)&#39;]  a.k.a  [x + 2/x]
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -644,8 +649,8 @@ restart:         gen:    expression:
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">ERT</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="o">&lt;</span><span class="p">(</span><span class="n">stop</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
-<span class="k">print</span><span class="p">(</span><span class="s2">&quot;ERT Expected run time - avg. number of function evaluations needed: &quot;</span><span class="p">,</span> <span class="n">ERT</span> <span class="o">*</span> <span class="n">offsprings</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Avg. number of function evaluations from Tsoulos paper: &quot;</span><span class="p">,</span> <span class="mi">653</span> <span class="o">*</span> <span class="mi">200</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ERT Expected run time - avg. number of function evaluations needed: &quot;</span><span class="p">,</span> <span class="n">ERT</span> <span class="o">*</span> <span class="n">offsprings</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Avg. number of function evaluations from Tsoulos paper: &quot;</span><span class="p">,</span> <span class="mi">653</span> <span class="o">*</span> <span class="mi">200</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -720,7 +725,7 @@ Avg. number of function evaluations from Tsoulos paper:  130600
 <span class="n">stop</span> <span class="o">=</span> <span class="mi">500</span>
 <span class="n">offsprings</span> <span class="o">=</span> <span class="mi">10</span>
 <span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">print</span><span class="p">(</span><span class="s2">&quot;restart: </span><span class="se">\t</span><span class="s2"> gen: </span><span class="se">\t</span><span class="s2"> expression:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;restart: </span><span class="se">\t</span><span class="s2"> gen: </span><span class="se">\t</span><span class="s2"> expression:&quot;</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nexp</span><span class="p">):</span>
     <span class="n">dCGP</span> <span class="o">=</span> <span class="n">expression</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">rows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">levels_back</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">arity</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">kernels</span><span class="o">=</span><span class="n">kernels</span><span class="p">,</span> <span class="n">seed</span> <span class="o">=</span> <span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">100000</span><span class="p">))</span>
     <span class="n">g</span><span class="p">,</span> <span class="n">best_chromosome</span> <span class="o">=</span> <span class="n">run_experiment</span><span class="p">(</span><span class="n">max_gen</span> <span class="o">=</span> <span class="n">stop</span><span class="p">,</span> <span class="n">offsprings</span> <span class="o">=</span> <span class="n">offsprings</span><span class="p">,</span> \
@@ -728,7 +733,7 @@ Avg. number of function evaluations from Tsoulos paper:  130600
     <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
     <span class="n">dCGP</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">best_chromosome</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">g</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">stop</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
-        <span class="k">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\t\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">res</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">dCGP</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">]),</span> <span class="s2">&quot; a.k.a &quot;</span><span class="p">,</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">simplify</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">]))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\t\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">res</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">dCGP</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">]),</span> <span class="s2">&quot; a.k.a &quot;</span><span class="p">,</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">simplify</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">]))</span>
 <span class="n">res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -760,8 +765,8 @@ restart:         gen:    expression:
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">ERT</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="o">&lt;</span><span class="p">(</span><span class="n">stop</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
-<span class="k">print</span><span class="p">(</span><span class="s2">&quot;ERT Expected run time - avg. number of function evaluations needed: &quot;</span><span class="p">,</span> <span class="n">ERT</span> <span class="o">*</span> <span class="n">offsprings</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Avg. number of function evaluations from Tsoulos paper: &quot;</span><span class="p">,</span> <span class="mi">742</span> <span class="o">*</span> <span class="mi">200</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ERT Expected run time - avg. number of function evaluations needed: &quot;</span><span class="p">,</span> <span class="n">ERT</span> <span class="o">*</span> <span class="n">offsprings</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Avg. number of function evaluations from Tsoulos paper: &quot;</span><span class="p">,</span> <span class="mi">742</span> <span class="o">*</span> <span class="mi">200</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -839,7 +844,7 @@ Avg. number of function evaluations from Tsoulos paper:  148400
 <span class="n">stop</span> <span class="o">=</span> <span class="mi">500</span>
 <span class="n">offsprings</span> <span class="o">=</span> <span class="mi">10</span>
 <span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">print</span><span class="p">(</span><span class="s2">&quot;restart: </span><span class="se">\t</span><span class="s2"> gen: </span><span class="se">\t</span><span class="s2"> expression:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;restart: </span><span class="se">\t</span><span class="s2"> gen: </span><span class="se">\t</span><span class="s2"> expression:&quot;</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nexp</span><span class="p">):</span>
     <span class="n">dCGP</span> <span class="o">=</span> <span class="n">expression</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">rows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">levels_back</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">arity</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">kernels</span><span class="o">=</span><span class="n">kernels</span><span class="p">,</span> <span class="n">seed</span> <span class="o">=</span> <span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">100000</span><span class="p">))</span>
     <span class="n">g</span><span class="p">,</span> <span class="n">best_chromosome</span> <span class="o">=</span> <span class="n">run_experiment</span><span class="p">(</span><span class="n">max_gen</span> <span class="o">=</span> <span class="n">stop</span><span class="p">,</span> <span class="n">offsprings</span> <span class="o">=</span> <span class="n">offsprings</span><span class="p">,</span> \
@@ -847,7 +852,7 @@ Avg. number of function evaluations from Tsoulos paper:  148400
     <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
     <span class="n">dCGP</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">best_chromosome</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">g</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">stop</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
-        <span class="k">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\t\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">res</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">dCGP</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">]),</span> <span class="s2">&quot; a.k.a &quot;</span><span class="p">,</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">simplify</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">]))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\t\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">res</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">dCGP</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">]),</span> <span class="s2">&quot; a.k.a &quot;</span><span class="p">,</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">simplify</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">]))</span>
 <span class="n">res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -886,8 +891,8 @@ restart:         gen:    expression:
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">ERT</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="o">&lt;</span><span class="p">(</span><span class="n">stop</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
-<span class="k">print</span><span class="p">(</span><span class="s2">&quot;ERT Expected run time - avg. number of function evaluations needed: &quot;</span><span class="p">,</span> <span class="n">ERT</span> <span class="o">*</span> <span class="n">offsprings</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Avg. number of function evaluations from Tsoulos paper: &quot;</span><span class="p">,</span> <span class="mi">441</span> <span class="o">*</span> <span class="mi">200</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ERT Expected run time - avg. number of function evaluations needed: &quot;</span><span class="p">,</span> <span class="n">ERT</span> <span class="o">*</span> <span class="n">offsprings</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Avg. number of function evaluations from Tsoulos paper: &quot;</span><span class="p">,</span> <span class="mi">441</span> <span class="o">*</span> <span class="mi">200</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -964,7 +969,7 @@ Avg. number of function evaluations from Tsoulos paper:  88200
 <span class="n">stop</span> <span class="o">=</span> <span class="mi">500</span>
 <span class="n">offsprings</span> <span class="o">=</span> <span class="mi">10</span>
 <span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">print</span><span class="p">(</span><span class="s2">&quot;restart: </span><span class="se">\t</span><span class="s2"> gen: </span><span class="se">\t</span><span class="s2"> expression:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;restart: </span><span class="se">\t</span><span class="s2"> gen: </span><span class="se">\t</span><span class="s2"> expression:&quot;</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nexp</span><span class="p">):</span>
     <span class="n">dCGP</span> <span class="o">=</span> <span class="n">expression</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">rows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">levels_back</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">arity</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">kernels</span><span class="o">=</span><span class="n">kernels</span><span class="p">,</span> <span class="n">seed</span> <span class="o">=</span> <span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">100000</span><span class="p">))</span>
     <span class="n">g</span><span class="p">,</span> <span class="n">best_chromosome</span> <span class="o">=</span> <span class="n">run_experiment</span><span class="p">(</span><span class="n">max_gen</span> <span class="o">=</span> <span class="n">stop</span><span class="p">,</span> <span class="n">offsprings</span> <span class="o">=</span> <span class="n">offsprings</span><span class="p">,</span> \
@@ -972,7 +977,7 @@ Avg. number of function evaluations from Tsoulos paper:  88200
     <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
     <span class="n">dCGP</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">best_chromosome</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">g</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">stop</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
-        <span class="k">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\t\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">res</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">dCGP</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">]),</span> <span class="s2">&quot; a.k.a &quot;</span><span class="p">,</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">simplify</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">]))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\t\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">res</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">dCGP</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">]),</span> <span class="s2">&quot; a.k.a &quot;</span><span class="p">,</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">simplify</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">]))</span>
 <span class="n">res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1081,8 +1086,8 @@ restart:         gen:    expression:
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">ERT</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="o">&lt;</span><span class="p">(</span><span class="n">stop</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
-<span class="k">print</span><span class="p">(</span><span class="s2">&quot;ERT Expected run time - avg. number of function evaluations needed: &quot;</span><span class="p">,</span> <span class="n">ERT</span> <span class="o">*</span> <span class="n">offsprings</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Avg. number of function evaluations from Tsoulos paper: &quot;</span><span class="p">,</span> <span class="mi">191</span> <span class="o">*</span> <span class="mi">200</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ERT Expected run time - avg. number of function evaluations needed: &quot;</span><span class="p">,</span> <span class="n">ERT</span> <span class="o">*</span> <span class="n">offsprings</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Avg. number of function evaluations from Tsoulos paper: &quot;</span><span class="p">,</span> <span class="mi">191</span> <span class="o">*</span> <span class="mi">200</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1168,15 +1173,15 @@ Avg. number of function evaluations from Tsoulos paper:  38200
 <span class="n">stop</span> <span class="o">=</span> <span class="mi">500</span>
 <span class="n">offsprings</span> <span class="o">=</span> <span class="mi">10</span>
 <span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">print</span><span class="p">(</span><span class="s2">&quot;restart: </span><span class="se">\t</span><span class="s2"> gen: </span><span class="se">\t</span><span class="s2"> expression:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;restart: </span><span class="se">\t</span><span class="s2"> gen: </span><span class="se">\t</span><span class="s2"> expression:&quot;</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nexp</span><span class="p">):</span>
     <span class="n">dCGP</span> <span class="o">=</span> <span class="n">expression</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">rows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">levels_back</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">arity</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">kernels</span><span class="o">=</span><span class="n">kernels</span><span class="p">,</span> <span class="n">seed</span> <span class="o">=</span> <span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">100000</span><span class="p">))</span>
     <span class="n">g</span><span class="p">,</span> <span class="n">best_chromosome</span> <span class="o">=</span> <span class="n">run_experiment</span><span class="p">(</span><span class="n">max_gen</span> <span class="o">=</span> <span class="n">stop</span><span class="p">,</span> <span class="n">offsprings</span> <span class="o">=</span> <span class="n">offsprings</span><span class="p">,</span> \
-            <span class="n">quadratic_error</span><span class="o">=</span><span class="n">qe_PDE1</span><span class="p">,</span> <span class="n">initial_conditions_error</span><span class="o">=</span><span class="n">ic_PDE1</span><span class="p">,</span> <span class="n">screen_output</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">dCGP</span><span class="o">=</span><span class="n">dCGP</span><span class="p">)</span>
+            <span class="n">quadratic_error</span><span class="o">=</span><span class="n">qe_PDE1</span><span class="p">,</span> <span class="n">initial_conditions_error</span><span class="o">=</span><span class="n">ic_PDE1</span><span class="p">,</span> <span class="n">screen_output</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">dCGP</span><span class="o">=</span><span class="n">dCGP</span><span class="p">)</span>
     <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
     <span class="n">dCGP</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">best_chromosome</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">g</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">stop</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
-        <span class="k">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\t\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">res</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">dCGP</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">,</span><span class="s2">&quot;y&quot;</span><span class="p">]),</span> <span class="s2">&quot; a.k.a &quot;</span><span class="p">,</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">simplify</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">,</span><span class="s2">&quot;y&quot;</span><span class="p">]))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\t\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">res</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">dCGP</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">,</span><span class="s2">&quot;y&quot;</span><span class="p">]),</span> <span class="s2">&quot; a.k.a &quot;</span><span class="p">,</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">simplify</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">,</span><span class="s2">&quot;y&quot;</span><span class="p">]))</span>
 <span class="n">res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1214,8 +1219,8 @@ restart:         gen:    expression:
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">ERT</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="o">&lt;</span><span class="p">(</span><span class="n">stop</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
-<span class="k">print</span><span class="p">(</span><span class="s2">&quot;ERT Expected Run Time - avg. number of function evaluations needed: &quot;</span><span class="p">,</span> <span class="n">ERT</span> <span class="o">*</span> <span class="n">offsprings</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Avg. number of function evaluations from Tsoulos paper: &quot;</span><span class="p">,</span> <span class="mi">203</span> <span class="o">*</span> <span class="mi">200</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ERT Expected Run Time - avg. number of function evaluations needed: &quot;</span><span class="p">,</span> <span class="n">ERT</span> <span class="o">*</span> <span class="n">offsprings</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Avg. number of function evaluations from Tsoulos paper: &quot;</span><span class="p">,</span> <span class="mi">203</span> <span class="o">*</span> <span class="mi">200</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1311,15 +1316,15 @@ Avg. number of function evaluations from Tsoulos paper:  40600
 <span class="n">stop</span> <span class="o">=</span> <span class="mi">2000</span>
 <span class="n">offsprings</span> <span class="o">=</span> <span class="mi">10</span>
 <span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">print</span><span class="p">(</span><span class="s2">&quot;restart: </span><span class="se">\t</span><span class="s2"> gen: </span><span class="se">\t</span><span class="s2"> expression:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;restart: </span><span class="se">\t</span><span class="s2"> gen: </span><span class="se">\t</span><span class="s2"> expression:&quot;</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nexp</span><span class="p">):</span>
     <span class="n">dCGP</span> <span class="o">=</span> <span class="n">expression</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">rows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">levels_back</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">arity</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">kernels</span><span class="o">=</span><span class="n">kernels</span><span class="p">,</span> <span class="n">seed</span> <span class="o">=</span> <span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">100000</span><span class="p">))</span>
     <span class="n">g</span><span class="p">,</span> <span class="n">best_chromosome</span> <span class="o">=</span> <span class="n">run_experiment</span><span class="p">(</span><span class="n">max_gen</span> <span class="o">=</span> <span class="n">stop</span><span class="p">,</span> <span class="n">offsprings</span> <span class="o">=</span> <span class="n">offsprings</span><span class="p">,</span> \
-            <span class="n">quadratic_error</span><span class="o">=</span><span class="n">qe_PDE6</span><span class="p">,</span> <span class="n">initial_conditions_error</span><span class="o">=</span><span class="n">ic_PDE6</span><span class="p">,</span> <span class="n">screen_output</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">dCGP</span><span class="o">=</span><span class="n">dCGP</span><span class="p">)</span>
+            <span class="n">quadratic_error</span><span class="o">=</span><span class="n">qe_PDE6</span><span class="p">,</span> <span class="n">initial_conditions_error</span><span class="o">=</span><span class="n">ic_PDE6</span><span class="p">,</span> <span class="n">screen_output</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">dCGP</span><span class="o">=</span><span class="n">dCGP</span><span class="p">)</span>
     <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
     <span class="n">dCGP</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">best_chromosome</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">g</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">stop</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
-        <span class="k">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\t\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">res</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">dCGP</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">,</span><span class="s2">&quot;y&quot;</span><span class="p">]),</span> <span class="s2">&quot; a.k.a &quot;</span><span class="p">,</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">simplify</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">,</span><span class="s2">&quot;y&quot;</span><span class="p">]),</span> <span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">qe_PDE6</span><span class="p">(</span><span class="n">dCGP</span><span class="p">,</span><span class="n">grid</span><span class="p">)</span><span class="o">+</span><span class="n">ic_PDE6</span><span class="p">(</span><span class="n">dCGP</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\t\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">res</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">dCGP</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">,</span><span class="s2">&quot;y&quot;</span><span class="p">]),</span> <span class="s2">&quot; a.k.a &quot;</span><span class="p">,</span> <span class="n">dCGP</span><span class="o">.</span><span class="n">simplify</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">,</span><span class="s2">&quot;y&quot;</span><span class="p">]),</span> <span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">qe_PDE6</span><span class="p">(</span><span class="n">dCGP</span><span class="p">,</span><span class="n">grid</span><span class="p">)</span><span class="o">+</span><span class="n">ic_PDE6</span><span class="p">(</span><span class="n">dCGP</span><span class="p">))</span>
 <span class="n">res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1344,8 +1349,8 @@ restart:         gen:    expression:
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">ERT</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="o">&lt;</span><span class="p">(</span><span class="n">stop</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
-<span class="k">print</span><span class="p">(</span><span class="s2">&quot;ERT Expected Run Time - avg. number of function evaluations needed: &quot;</span><span class="p">,</span> <span class="n">ERT</span> <span class="o">*</span> <span class="n">offsprings</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Avg. number of function evaluations from Tsoulos paper: &quot;</span><span class="p">,</span> <span class="mi">797</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span> <span class="c1"># here we assume tsoulos used the maximum population size since PDE6 is the most difficult problem</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ERT Expected Run Time - avg. number of function evaluations needed: &quot;</span><span class="p">,</span> <span class="n">ERT</span> <span class="o">*</span> <span class="n">offsprings</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Avg. number of function evaluations from Tsoulos paper: &quot;</span><span class="p">,</span> <span class="mi">797</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span> <span class="c1"># here we assume tsoulos used the maximum population size since PDE6 is the most difficult problem</span>
 </pre></div>
 </div>
 </div>
@@ -1372,7 +1377,7 @@ Avg. number of function evaluations from Tsoulos paper:  797000
         <a href="weighted_symbolic_regression.html" class="btn btn-neutral float-right" title="Weighted dCGP for a symbolic regression task" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="learning_constants2.html" class="btn btn-neutral float-left" title="Learning constants in a symbolic regression task (PART II)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="dCGPANNs_for_function_approximation.html" class="btn btn-neutral float-left" title="Training a FFNN in dCGPANN vs. Keras (regression)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -1381,7 +1386,7 @@ Avg. number of function evaluations from Tsoulos paper:  797000
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Dario Izzo, Francesco Biscani, Alessio Mereta
+        &copy; Copyright 2020, Dario Izzo, Francesco Biscani
 
     </p>
   </div>

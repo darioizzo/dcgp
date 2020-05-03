@@ -86,17 +86,6 @@ In particular we provide UDPs (in pagmo's jargon user defined problems) that can
   momes4cgp
 
 
-We also make available, as a gym to test the capabilities of various proposed methodologies, a number of data sets
-coming from different scientific sources. These are collected in what we call the ``dcgpy gym``.
-
-.. toctree::
-  :maxdepth: 1
-
-  koza_quintic
-  p_problems
-  vladislavleva_problems
-  nist_problems
-
 
 
   

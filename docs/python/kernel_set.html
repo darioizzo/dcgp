@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Kernel set &mdash; dCGP 1.4.3 documentation</title>
+  <title>Kernel set &mdash; dCGP 1.5 documentation</title>
   
 
   
@@ -21,11 +21,12 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
         <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
@@ -66,7 +67,7 @@
             
             
               <div class="version">
-                1.4.3
+                1.5
               </div>
             
           
@@ -93,7 +94,7 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Quick start examples</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Documentation</a><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">API documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../cpp/index.html">C++ Documentation</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="index.html">Python Documentation</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="index.html#kernels">Kernels</a><ul class="current">
@@ -156,7 +157,7 @@
     
       <li><a href="../../index.html">Docs</a> &raquo;</li>
         
-          <li><a href="../index.html">Documentation</a> &raquo;</li>
+          <li><a href="../index.html">API documentation</a> &raquo;</li>
         
           <li><a href="index.html">Python Documentation</a> &raquo;</li>
         
@@ -184,13 +185,13 @@
 /* CSS overrides for sphinx_rtd_theme */
 
 /* 24px margin */
-.nbinput.nblast,
-.nboutput.nblast {
+.nbinput.nblast.container,
+.nboutput.nblast.container {
     margin-bottom: 19px;  /* padding has already 5px */
 }
 
 /* ... except between code cells! */
-.nblast + .nbinput {
+.nblast.container + .nbinput.container {
     margin-top: -19px;
 }
 
@@ -207,9 +208,9 @@
 <h1>Kernel set<a class="headerlink" href="#kernel-set" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="kernel-set-double">
 <h2>kernel_set_double<a class="headerlink" href="#kernel-set-double" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
+<dl class="py class">
 <dt id="dcgpy.kernel_set_double">
-<em class="property">class </em><code class="sig-prename descclassname">dcgpy.</code><code class="sig-name descname">kernel_set_double</code><span class="sig-paren">(</span><em class="sig-param">kernels</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.kernel_set_double" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">dcgpy.</code><code class="sig-name descname">kernel_set_double</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">kernels</span></em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.kernel_set_double" title="Permalink to this definition">¶</a></dt>
 <dd><p>Helper to construct a set of kernel functions from their common name</p>
 <p>Constructs a set of common kernel functions from their common name. The kernel
 functions can be then retrieved via the call operator.</p>
@@ -219,22 +220,22 @@ functions can be then retrieved via the call operator.</p>
 </dd>
 </dl>
 <p>Examples:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dcgpy</span> <span class="k">import</span> <span class="o">*</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dcgpy</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">kernels</span> <span class="o">=</span> <span class="n">kernel_set_double</span><span class="p">([</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span> <span class="s2">&quot;diff&quot;</span><span class="p">,</span> <span class="s2">&quot;mul&quot;</span><span class="p">,</span> <span class="s2">&quot;div&quot;</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">kernels</span><span class="p">()[</span><span class="mi">0</span><span class="p">]([</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">])</span>
 </pre></div>
 </div>
-<dl class="method">
+<dl class="py method">
 <dt id="dcgpy.kernel_set_double.push_back">
 <code class="sig-name descname">push_back</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.kernel_set_double.push_back" title="Permalink to this definition">¶</a></dt>
-<dd><p><strong>push_back(kernel_name)</strong></p>
+<dd><p>push_back(kernel_name)</p>
 <p>Adds one more kernel to the set by common name.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>kernel_name</strong> (<code class="docutils literal notranslate"><span class="pre">string</span></code>) – a string containing the kernel name</p>
 </dd>
 </dl>
-<p><strong>push_back(kernel)</strong></p>
+<p>push_back(kernel)</p>
 <p>Adds one more kernel to the set.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -248,9 +249,9 @@ functions can be then retrieved via the call operator.</p>
 </div>
 <div class="section" id="kernel-set-gdual-double">
 <h2>kernel_set_gdual_double<a class="headerlink" href="#kernel-set-gdual-double" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
+<dl class="py class">
 <dt id="dcgpy.kernel_set_gdual_double">
-<em class="property">class </em><code class="sig-prename descclassname">dcgpy.</code><code class="sig-name descname">kernel_set_gdual_double</code><span class="sig-paren">(</span><em class="sig-param">kernels</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.kernel_set_gdual_double" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">dcgpy.</code><code class="sig-name descname">kernel_set_gdual_double</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">kernels</span></em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.kernel_set_gdual_double" title="Permalink to this definition">¶</a></dt>
 <dd><p>Helper to construct a set of kernel functions from their common name</p>
 <p>Constructs a set of common kernel functions from their common name. The kernel
 functions can be then retrieved via the call operator.</p>
@@ -260,22 +261,22 @@ functions can be then retrieved via the call operator.</p>
 </dd>
 </dl>
 <p>Examples:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dcgpy</span> <span class="k">import</span> <span class="o">*</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dcgpy</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">kernels</span> <span class="o">=</span> <span class="n">kernel_set_gdual_double</span><span class="p">([</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span> <span class="s2">&quot;diff&quot;</span><span class="p">,</span> <span class="s2">&quot;mul&quot;</span><span class="p">,</span> <span class="s2">&quot;div&quot;</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">kernels</span><span class="p">()[</span><span class="mi">0</span><span class="p">]([</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">])</span>
 </pre></div>
 </div>
-<dl class="method">
+<dl class="py method">
 <dt id="dcgpy.kernel_set_gdual_double.push_back">
 <code class="sig-name descname">push_back</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.kernel_set_gdual_double.push_back" title="Permalink to this definition">¶</a></dt>
-<dd><p><strong>push_back(kernel_name)</strong></p>
+<dd><p>push_back(kernel_name)</p>
 <p>Adds one more kernel to the set by common name.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>kernel_name</strong> (<code class="docutils literal notranslate"><span class="pre">string</span></code>) – a string containing the kernel name</p>
 </dd>
 </dl>
-<p><strong>push_back(kernel)</strong></p>
+<p>push_back(kernel)</p>
 <p>Adds one more kernel to the set.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -289,9 +290,9 @@ functions can be then retrieved via the call operator.</p>
 </div>
 <div class="section" id="kernel-set-gdual-vdouble">
 <h2>kernel_set_gdual_vdouble<a class="headerlink" href="#kernel-set-gdual-vdouble" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
+<dl class="py class">
 <dt id="dcgpy.kernel_set_gdual_vdouble">
-<em class="property">class </em><code class="sig-prename descclassname">dcgpy.</code><code class="sig-name descname">kernel_set_gdual_vdouble</code><span class="sig-paren">(</span><em class="sig-param">kernels</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.kernel_set_gdual_vdouble" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">dcgpy.</code><code class="sig-name descname">kernel_set_gdual_vdouble</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">kernels</span></em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.kernel_set_gdual_vdouble" title="Permalink to this definition">¶</a></dt>
 <dd><p>Helper to construct a set of kernel functions from their common name</p>
 <p>Constructs a set of common kernel functions from their common name. The kernel
 functions can be then retrieved via the call operator.</p>
@@ -301,22 +302,22 @@ functions can be then retrieved via the call operator.</p>
 </dd>
 </dl>
 <p>Examples:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dcgpy</span> <span class="k">import</span> <span class="o">*</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dcgpy</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">kernels</span> <span class="o">=</span> <span class="n">kernel_set_gdual_vdouble</span><span class="p">([</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span> <span class="s2">&quot;diff&quot;</span><span class="p">,</span> <span class="s2">&quot;mul&quot;</span><span class="p">,</span> <span class="s2">&quot;div&quot;</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">kernels</span><span class="p">()[</span><span class="mi">0</span><span class="p">]([</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">])</span>
 </pre></div>
 </div>
-<dl class="method">
+<dl class="py method">
 <dt id="dcgpy.kernel_set_gdual_vdouble.push_back">
 <code class="sig-name descname">push_back</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.kernel_set_gdual_vdouble.push_back" title="Permalink to this definition">¶</a></dt>
-<dd><p><strong>push_back(kernel_name)</strong></p>
+<dd><p>push_back(kernel_name)</p>
 <p>Adds one more kernel to the set by common name.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>kernel_name</strong> (<code class="docutils literal notranslate"><span class="pre">string</span></code>) – a string containing the kernel name</p>
 </dd>
 </dl>
-<p><strong>push_back(kernel)</strong></p>
+<p>push_back(kernel)</p>
 <p>Adds one more kernel to the set.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -350,7 +351,7 @@ functions can be then retrieved via the call operator.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Dario Izzo, Francesco Biscani, Alessio Mereta
+        &copy; Copyright 2020, Dario Izzo, Francesco Biscani
 
     </p>
   </div>

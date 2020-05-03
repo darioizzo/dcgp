@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>C++ Documentation &mdash; dCGP 1.4.3 documentation</title>
+  <title>C++ Documentation &mdash; dCGP 1.5 documentation</title>
   
 
   
@@ -21,11 +21,12 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
         <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
@@ -39,7 +40,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="kernel" href="kernel.html" />
-    <link rel="prev" title="Documentation" href="../index.html" /> 
+    <link rel="prev" title="API documentation" href="../index.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -66,7 +67,7 @@
             
             
               <div class="version">
-                1.4.3
+                1.5
               </div>
             
           
@@ -93,7 +94,7 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Quick start examples</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Documentation</a><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">API documentation</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">C++ Documentation</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#kernels">Kernels</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="kernel.html">kernel</a></li>
@@ -168,7 +169,7 @@
     
       <li><a href="../../index.html">Docs</a> &raquo;</li>
         
-          <li><a href="../index.html">Documentation</a> &raquo;</li>
+          <li><a href="../index.html">API documentation</a> &raquo;</li>
         
       <li>C++ Documentation</li>
     
@@ -194,13 +195,13 @@
 /* CSS overrides for sphinx_rtd_theme */
 
 /* 24px margin */
-.nbinput.nblast,
-.nboutput.nblast {
+.nbinput.nblast.container,
+.nboutput.nblast.container {
     margin-bottom: 19px;  /* padding has already 5px */
 }
 
 /* ... except between code cells! */
-.nblast + .nbinput {
+.nblast.container + .nbinput.container {
     margin-top: -19px;
 }
 
@@ -216,7 +217,7 @@
 <div class="section" id="c-documentation">
 <h1><a class="toc-backref" href="#id1">C++ Documentation</a><a class="headerlink" href="#c-documentation" title="Permalink to this headline">¶</a></h1>
 <div class="contents topic" id="contents">
-<p class="topic-title first">Contents</p>
+<p class="topic-title">Contents</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#c-documentation" id="id1">C++ Documentation</a></p>
 <ul>
@@ -233,10 +234,10 @@
 <a class="reference internal image-reference" href="../../_images/kernels.png"><img alt="dCGP kernels" src="../../_images/kernels.png" style="width: 198.8px; height: 177.20000000000002px;" /></a>
 </div>
 <p><strong>Kernels</strong>, (also called <strong>non-linearities</strong> in the ANN literature) describe the fundamental computational units of a CGP.
-Things like addition, multiplication, trigonomoetric functions are all kernels. The templated class <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">dcgp::kernel</span></code> allow
+Things like addition, multiplication, trigonomoetric functions are all kernels. The templated class <a class="reference internal" href="kernel.html#_CPPv4I0EN4dcgp6kernelE" title="dcgp::kernel"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">dcgp::kernel</span></code></a> allow
 the user the definition of their own kernels able to operate on the choosen type.</p>
 <p>The most popular kernels are already coded and shipped with dcgpy. A python list containing multiple kernels can be easily
-instantiated via the <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">dcgp::kernel_set</span></code>.</p>
+instantiated via the <a class="reference internal" href="kernel_set.html#_CPPv4I0EN4dcgp10kernel_setE" title="dcgp::kernel_set"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">dcgp::kernel_set</span></code></a>.</p>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="kernel.html">kernel</a></li>
@@ -257,7 +258,7 @@ we use the term expression to name the related, different, classes.</p>
 <li><p><strong>expression_ann</strong>: this represents an Artificial Neural Network inclusive of biases and weights, via a CGP and allows to learn the model parameters using backproagation. (original with dCGP - 2018)</p></li>
 </ul>
 <p>Each of the above CGPs can operate over different numerical types, hence the corresponding classes are templated.
-For example a <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">dcgp::expression</span></code> can operate over doubles (<code class="docutils literal notranslate"><span class="pre">T</span></code> = <code class="docutils literal notranslate"><span class="pre">double</span></code>), in which case the
+For example a <a class="reference internal" href="expression.html#_CPPv4I0EN4dcgp10expressionE" title="dcgp::expression"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">dcgp::expression</span></code></a> can operate over doubles (<code class="docutils literal notranslate"><span class="pre">T</span></code> = <code class="docutils literal notranslate"><span class="pre">double</span></code>), in which case the
 result of evaluating the inner computational graph is a <code class="docutils literal notranslate"><span class="pre">double</span></code>, but also on a <code class="docutils literal notranslate"><span class="pre">gdual</span></code> (<code class="docutils literal notranslate"><span class="pre">T</span></code> = <a class="reference external" href="http://darioizzo.github.io/audi/gdual.html#_CPPv4I0E5gdual" title="(in audi v1.7)"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">audi::gdual</span></code></a> <code class="docutils literal notranslate"><span class="pre">&lt;Cf&gt;</span></code>)
 with <code class="docutils literal notranslate"><span class="pre">Cf</span></code> = <code class="docutils literal notranslate"><span class="pre">double</span></code>, in which case, the result of evaluating the inner computational graph will
 be a <a class="reference external" href="http://darioizzo.github.io/audi/gdual.html#_CPPv4I0E5gdual" title="(in audi v1.7)"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">audi::gdual</span></code></a> <code class="docutils literal notranslate"><span class="pre">&lt;Cf&gt;</span></code> and hence it will contain all the program derivatives
@@ -280,10 +281,10 @@ This type offers order of magnitude speed ups whenever a CGP needs derivatives a
 <a class="reference internal image-reference" href="../../_images/non_linear_regression.png"><img alt="non-linear regression" src="../../_images/non_linear_regression.png" style="width: 282.79999999999995px; height: 197.39999999999998px;" /></a>
 </div>
 <p>Mathematically, a symbolic regression problem is a global optimization problem. In order to facilitate its solution,
-a number of classes have been designed to interface a <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">dcgp::expression</span></code> to the optimisation suite pygmo.
+a number of classes have been designed to interface a <a class="reference internal" href="expression.html#_CPPv4I0EN4dcgp10expressionE" title="dcgp::expression"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">dcgp::expression</span></code></a> to the optimisation suite pygmo.
 In particular we provide UDPs (in pagmo’s jargon user defined problems) that can be used to build
-<a class="reference external" href="https://esa.github.io/pagmo2/docs/cpp/problem.html#_CPPv4N5pagmo7problemE" title="(in pagmo v2.12.0)"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">pagmo::problem</span></code></a> objects (representing symbolic regression problems) and UDAs
-(in pagmo’s jargon user defined algorithms) that can be used to build <a class="reference external" href="https://esa.github.io/pagmo2/docs/cpp/algorithm.html#_CPPv4N5pagmo9algorithmE" title="(in pagmo v2.12.0)"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">pagmo::algorithm</span></code></a> objects.</p>
+<a class="reference external" href="https://esa.github.io/pagmo2/docs/cpp/problem.html#_CPPv4N5pagmo7problemE" title="(in pagmo v2.16.0)"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">pagmo::problem</span></code></a> objects (representing symbolic regression problems) and UDAs
+(in pagmo’s jargon user defined algorithms) that can be used to build <a class="reference external" href="https://esa.github.io/pagmo2/docs/cpp/algorithm.html#_CPPv4N5pagmo9algorithmE" title="(in pagmo v2.16.0)"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">pagmo::algorithm</span></code></a> objects.</p>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="symbolic_regression.html">Symbolic Regression (UDP)</a></li>
@@ -292,10 +293,6 @@ In particular we provide UDPs (in pagmo’s jargon user defined problems) that c
 <li class="toctree-l1"><a class="reference internal" href="mes4cgp.html">Memetic Evolutionary Strategy (UDA)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="momes4cgp.html">Multi-Objective Memetic Evolutionary Strategy (UDA)</a></li>
 </ul>
-</div>
-<p>We also make available, as a gym to test the capabilities of various proposed methodologies, a number of data sets
-coming from different scientific sources. These are collected in what we call the <code class="docutils literal notranslate"><span class="pre">dcgpy</span> <span class="pre">gym</span></code>.</p>
-<div class="toctree-wrapper compound">
 </div>
 </div>
 </div>
@@ -311,7 +308,7 @@ coming from different scientific sources. These are collected in what we call th
         <a href="kernel.html" class="btn btn-neutral float-right" title="kernel" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="../index.html" class="btn btn-neutral float-left" title="Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="../index.html" class="btn btn-neutral float-left" title="API documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -320,7 +317,7 @@ coming from different scientific sources. These are collected in what we call th
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Dario Izzo, Francesco Biscani, Alessio Mereta
+        &copy; Copyright 2020, Dario Izzo, Francesco Biscani
 
     </p>
   </div>

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>expression (dCGP) &mdash; dCGP 1.4.3 documentation</title>
+  <title>expression (dCGP) &mdash; dCGP 1.5 documentation</title>
   
 
   
@@ -21,11 +21,12 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
         <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
@@ -66,7 +67,7 @@
             
             
               <div class="version">
-                1.4.3
+                1.5
               </div>
             
           
@@ -93,7 +94,7 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Quick start examples</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Documentation</a><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">API documentation</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="index.html">C++ Documentation</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="index.html#kernels">Kernels</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="index.html#types-of-dcgps">Types of dCGPs</a><ul class="current">
@@ -156,7 +157,7 @@
     
       <li><a href="../../index.html">Docs</a> &raquo;</li>
         
-          <li><a href="../index.html">Documentation</a> &raquo;</li>
+          <li><a href="../index.html">API documentation</a> &raquo;</li>
         
           <li><a href="index.html">C++ Documentation</a> &raquo;</li>
         
@@ -184,13 +185,13 @@
 /* CSS overrides for sphinx_rtd_theme */
 
 /* 24px margin */
-.nbinput.nblast,
-.nboutput.nblast {
+.nbinput.nblast.container,
+.nboutput.nblast.container {
     margin-bottom: 19px;  /* padding has already 5px */
 }
 
 /* ... except between code cells! */
-.nblast + .nbinput {
+.nblast.container + .nbinput.container {
     margin-top: -19px;
 }
 
@@ -213,9 +214,9 @@ the class would operate in the differential algebra of truncated Taylor polynomi
 <img alt="dCGP expression" src="../../_images/expression.png" />
 <p class="caption"><span class="caption-text">A dCGP expression</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
 </div>
-<dl class="class">
+<dl class="cpp class">
 <dt id="_CPPv4I0EN4dcgp10expressionE">
-<span class="target" id="classdcgp_1_1expression"></span>template&lt;typename <code class="sig-name descname">T</code>&gt;<br /><em class="property">class </em><code class="sig-name descname">expression</code><a class="headerlink" href="#_CPPv4I0EN4dcgp10expressionE" title="Permalink to this definition">¶</a><br /></dt>
+template&lt;typename <code class="sig-name descname">T</code>&gt;<br /><span class="target" id="classdcgp_1_1expression"></span><em class="property">class </em><code class="sig-prename descclassname">dcgp<code class="sig-prename descclassname">::</code></code><code class="sig-name descname">expression</code><a class="headerlink" href="#_CPPv4I0EN4dcgp10expressionE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>A dCGP expression. </p>
 <p>This class represents a mathematical expression as encoded using CGP and contains algorithms to compute its value (numerical and symbolical) and its derivatives as well as to mutate the expression.</p>
 <p><dl class="simple">
@@ -228,20 +229,20 @@ the class would operate in the differential algebra of truncated Taylor polynomi
 <p>Subclassed by <a class="reference internal" href="expression_weighted.html#classdcgp_1_1expression__weighted"><span class="std std-ref">dcgp::expression_weighted&lt; T &gt;</span></a></p>
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric">Public Types</p>
-<dl class="enum">
+<dl class="cpp enum">
 <dt id="_CPPv4N4dcgp10expression9loss_typeE">
 <span class="target" id="classdcgp_1_1expression_1a217a58822d8dc23e141be010550c3e1b"></span><em class="property">enum </em><code class="sig-name descname">loss_type</code><a class="headerlink" href="#_CPPv4N4dcgp10expression9loss_typeE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Loss types. </p>
 <p><em>Values:</em></p>
-<dl class="enumerator">
-<dt id="_CPPv4N4dcgp10expression3MSEE">
-<span class="target" id="classdcgp_1_1expression_1a217a58822d8dc23e141be010550c3e1baa9fc1a03386ae38b64e06c8172994963"></span><code class="sig-name descname">MSE</code><a class="headerlink" href="#_CPPv4N4dcgp10expression3MSEE" title="Permalink to this definition">¶</a><br /></dt>
+<dl class="cpp enumerator">
+<dt id="_CPPv4N4dcgp10expression9loss_type3MSEE">
+<span class="target" id="classdcgp_1_1expression_1a217a58822d8dc23e141be010550c3e1baa9fc1a03386ae38b64e06c8172994963"></span><em class="property">enumerator </em><code class="sig-name descname">MSE</code><a class="headerlink" href="#_CPPv4N4dcgp10expression9loss_type3MSEE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Mean Squared Error. </p>
 </dd></dl>
 
-<dl class="enumerator">
-<dt id="_CPPv4N4dcgp10expression2CEE">
-<span class="target" id="classdcgp_1_1expression_1a217a58822d8dc23e141be010550c3e1ba7a86131338bf955e0a56311f264aa6aa"></span><code class="sig-name descname">CE</code><a class="headerlink" href="#_CPPv4N4dcgp10expression2CEE" title="Permalink to this definition">¶</a><br /></dt>
+<dl class="cpp enumerator">
+<dt id="_CPPv4N4dcgp10expression9loss_type2CEE">
+<span class="target" id="classdcgp_1_1expression_1a217a58822d8dc23e141be010550c3e1ba7a86131338bf955e0a56311f264aa6aa"></span><em class="property">enumerator </em><code class="sig-name descname">CE</code><a class="headerlink" href="#_CPPv4N4dcgp10expression9loss_type2CEE" title="Permalink to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -249,18 +250,18 @@ the class would operate in the differential algebra of truncated Taylor polynomi
 </div>
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric">Public Functions</p>
-<dl class="function">
+<dl class="cpp function">
 <dt id="_CPPv4N4dcgp10expression10expressionEjjjjjNSt6vectorIjEENSt6vectorI6kernelI1TEEEjj">
-<span class="target" id="classdcgp_1_1expression_1ad281f39bc2043d7f61fb306a036570ed"></span><code class="sig-name descname">expression</code><span class="sig-paren">(</span>unsigned <em>n</em>, unsigned <em>m</em>, unsigned <em>r</em>, unsigned <em>c</em>, unsigned <em>l</em>, std::vector&lt;unsigned&gt; <em>arity</em>, std::vector&lt;kernel&lt;<a class="reference external" href="http://darioizzo.github.io/audi/functions.html#_CPPv4I0E1TRK1TRK1T" title="(in audi v1.7)">T</a>&gt;&gt; <em>f</em>, unsigned <em>n_eph</em>, unsigned <em>seed</em> = dcgp::random_device::next()<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10expression10expressionEjjjjjNSt6vectorIjEENSt6vectorI6kernelI1TEEEjj" title="Permalink to this definition">¶</a><br /></dt>
+<span class="target" id="classdcgp_1_1expression_1ad281f39bc2043d7f61fb306a036570ed"></span><code class="sig-name descname">expression</code><span class="sig-paren">(</span>unsigned <em>n</em>, unsigned <em>m</em>, unsigned <em>r</em>, unsigned <em>c</em>, unsigned <em>l</em>, std::vector&lt;unsigned&gt; <em>arity</em>, std::vector&lt;<a class="reference internal" href="kernel.html#_CPPv4I0EN4dcgp6kernelE" title="dcgp::kernel">kernel</a>&lt;<a class="reference internal" href="#_CPPv4I0EN4dcgp10expressionE" title="dcgp::expression::T">T</a>&gt;&gt; <em>f</em>, unsigned <em>n_eph</em>, unsigned <em>seed</em> = dcgp::random_device::next()<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10expression10expressionEjjjjjNSt6vectorIjEENSt6vectorI6kernelI1TEEEjj" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Constructor. </p>
 <p>Constructs a dCGP expression with variable arity</p>
 <p><dl class="simple">
 <dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">n</span></code>: number of inputs (independent variables). </p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">m</span></code>: number of outputs (dependent variables). </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">r</span></code>: number of rows of the dCGP. </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">c</span></code>: number of columns of the dCGP. </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">l</span></code>: number of levels-back allowed in the dCGP. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">r</span></code>: number of rows of the cartesian representation of the expression as an acyclic graph. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">c</span></code>: number of columns of the cartesian representation of the expression as an acyclic graph. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">l</span></code>: number of levels-back allowed. This, essentially, controls the minimum number of allowed operations in the formula. If uncertain set it to c + 1 </p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">arity</span></code>: arities of the basis functions for each column. </p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">f</span></code>: function set. An std::vector of dcgp::kernel&lt;expression::type&gt;. </p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">n_eph</span></code>: Number of ephemeral constants. Their values and their symbols can be set via the dedicate methods. </p></li>
@@ -271,18 +272,18 @@ the class would operate in the differential algebra of truncated Taylor polynomi
 </p>
 </dd></dl>
 
-<dl class="function">
+<dl class="cpp function">
 <dt id="_CPPv4N4dcgp10expression10expressionEjjjjjjNSt6vectorI6kernelI1TEEEjj">
-<span class="target" id="classdcgp_1_1expression_1abb68fef9a92fba11bdcaa4143c9dcd15"></span><code class="sig-name descname">expression</code><span class="sig-paren">(</span>unsigned <em>n</em> = 1u, unsigned <em>m</em> = 1u, unsigned <em>r</em> = 1u, unsigned <em>c</em> = 1u, unsigned <em>l</em> = 1u, unsigned <em>arity</em> = 1u, std::vector&lt;kernel&lt;<a class="reference external" href="http://darioizzo.github.io/audi/functions.html#_CPPv4I0E1TRK1TRK1T" title="(in audi v1.7)">T</a>&gt;&gt; <em>f</em> = kernel_set &lt; T &gt;({&quot;sum&quot;})(), unsigned <em>n_eph</em> = 0u, unsigned <em>seed</em> = dcgp::random_device::next()<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10expression10expressionEjjjjjjNSt6vectorI6kernelI1TEEEjj" title="Permalink to this definition">¶</a><br /></dt>
+<span class="target" id="classdcgp_1_1expression_1abb68fef9a92fba11bdcaa4143c9dcd15"></span><code class="sig-name descname">expression</code><span class="sig-paren">(</span>unsigned <em>n</em> = 1u, unsigned <em>m</em> = 1u, unsigned <em>r</em> = 1u, unsigned <em>c</em> = 1u, unsigned <em>l</em> = 1u, unsigned <em>arity</em> = 1u, std::vector&lt;<a class="reference internal" href="kernel.html#_CPPv4I0EN4dcgp6kernelE" title="dcgp::kernel">kernel</a>&lt;<a class="reference internal" href="#_CPPv4I0EN4dcgp10expressionE" title="dcgp::expression::T">T</a>&gt;&gt; <em>f</em> = <a class="reference internal" href="kernel_set.html#_CPPv4I0EN4dcgp10kernel_setE" title="dcgp::kernel_set">kernel_set</a>&lt;<a class="reference internal" href="#_CPPv4I0EN4dcgp10expressionE" title="dcgp::expression::T">T</a>&gt;({&quot;sum&quot;})(), unsigned <em>n_eph</em> = 0u, unsigned <em>seed</em> = dcgp::random_device::next()<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10expression10expressionEjjjjjjNSt6vectorI6kernelI1TEEEjj" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Constructor. </p>
 <p>Constructs a dCGP expression with uniform arity</p>
 <p><dl class="simple">
 <dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">n</span></code>: number of inputs (independent variables). </p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">m</span></code>: number of outputs (dependent variables). </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">r</span></code>: number of rows of the dCGP. </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">c</span></code>: number of columns of the dCGP. </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">l</span></code>: number of levels-back allowed in the dCGP. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">r</span></code>: number of rows of the cartesian representation of the expression as an acyclic graph. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">c</span></code>: number of columns of the cartesian representation of the expression as an acyclic graph. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">l</span></code>: number of levels-back allowed. This, essentially, controls the minimum number of allowed operations in the formula. If uncertain set it to c + 1 </p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">arity</span></code>: arity of the basis functions. </p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">f</span></code>: function set. An std::vector of dcgp::kernel&lt;expression::type&gt;. </p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">n_eph</span></code>: Number of ephemeral constants. Their values and their symbols can be set via the dedicate methods. </p></li>
@@ -293,39 +294,39 @@ the class would operate in the differential algebra of truncated Taylor polynomi
 </p>
 </dd></dl>
 
-<dl class="function">
+<dl class="cpp function">
 <dt id="_CPPv4N4dcgp10expressionD0Ev">
-<span class="target" id="classdcgp_1_1expression_1afb1805d8cab484266efe17c65c8d0856"></span><em class="property">virtual</em> <code class="sig-name descname">~expression</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10expressionD0Ev" title="Permalink to this definition">¶</a><br /></dt>
+<span class="target" id="classdcgp_1_1expression_1afb1805d8cab484266efe17c65c8d0856"></span><code class="sig-name descname">~expression</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10expressionD0Ev" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Virtual destructor. </p>
 </dd></dl>
 
-<dl class="function">
+<dl class="cpp function">
 <dt id="_CPPv4N4dcgp10expression10expressionERK10expression">
-<span class="target" id="classdcgp_1_1expression_1a7b3518015d704a205b3381da4e69db9d"></span><code class="sig-name descname">expression</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N4dcgp10expression10expressionEjjjjjNSt6vectorIjEENSt6vectorI6kernelI1TEEEjj" title="dcgp::expression::expression">expression</a>&amp;<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10expression10expressionERK10expression" title="Permalink to this definition">¶</a><br /></dt>
+<span class="target" id="classdcgp_1_1expression_1a7b3518015d704a205b3381da4e69db9d"></span><code class="sig-name descname">expression</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N4dcgp10expression10expressionERK10expression" title="dcgp::expression::expression">expression</a>&amp;<span class="sig-paren">)</span> = default<a class="headerlink" href="#_CPPv4N4dcgp10expression10expressionERK10expression" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Copy constructor. </p>
 </dd></dl>
 
-<dl class="function">
+<dl class="cpp function">
 <dt id="_CPPv4N4dcgp10expression10expressionERR10expression">
-<span class="target" id="classdcgp_1_1expression_1a6e5e16b8a0078912171fbc7c53569dd0"></span><code class="sig-name descname">expression</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N4dcgp10expression10expressionEjjjjjNSt6vectorIjEENSt6vectorI6kernelI1TEEEjj" title="dcgp::expression::expression">expression</a>&amp;&amp;<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10expression10expressionERR10expression" title="Permalink to this definition">¶</a><br /></dt>
+<span class="target" id="classdcgp_1_1expression_1a6e5e16b8a0078912171fbc7c53569dd0"></span><code class="sig-name descname">expression</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N4dcgp10expression10expressionERR10expression" title="dcgp::expression::expression">expression</a>&amp;&amp;<span class="sig-paren">)</span> = default<a class="headerlink" href="#_CPPv4N4dcgp10expression10expressionERR10expression" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Copy assignment operator. </p>
 </dd></dl>
 
-<dl class="function">
+<dl class="cpp function">
 <dt id="_CPPv4N4dcgp10expressionaSERK10expression">
-<span class="target" id="classdcgp_1_1expression_1a3d177d01beea21088be985b4641d237e"></span>expression &amp;<code class="sig-name descname">operator=</code><span class="sig-paren">(</span><em class="property">const</em> expression&amp;<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10expressionaSERK10expression" title="Permalink to this definition">¶</a><br /></dt>
+<span class="target" id="classdcgp_1_1expression_1a3d177d01beea21088be985b4641d237e"></span><a class="reference internal" href="#_CPPv4I0EN4dcgp10expressionE" title="dcgp::expression">expression</a> &amp;<code class="sig-name descname">operator=</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN4dcgp10expressionE" title="dcgp::expression">expression</a>&amp;<span class="sig-paren">)</span> = default<a class="headerlink" href="#_CPPv4N4dcgp10expressionaSERK10expression" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Move constructor. </p>
 </dd></dl>
 
-<dl class="function">
+<dl class="cpp function">
 <dt id="_CPPv4N4dcgp10expressionaSERR10expression">
-<span class="target" id="classdcgp_1_1expression_1a7e510dd15be1b83dabf6c9e0d4272e3e"></span>expression &amp;<code class="sig-name descname">operator=</code><span class="sig-paren">(</span>expression&amp;&amp;<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10expressionaSERR10expression" title="Permalink to this definition">¶</a><br /></dt>
+<span class="target" id="classdcgp_1_1expression_1a7e510dd15be1b83dabf6c9e0d4272e3e"></span><a class="reference internal" href="#_CPPv4I0EN4dcgp10expressionE" title="dcgp::expression">expression</a> &amp;<code class="sig-name descname">operator=</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0EN4dcgp10expressionE" title="dcgp::expression">expression</a>&amp;&amp;<span class="sig-paren">)</span> = default<a class="headerlink" href="#_CPPv4N4dcgp10expressionaSERR10expression" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Move assignment operator. </p>
 </dd></dl>
 
-<dl class="function">
+<dl class="cpp function">
 <dt id="_CPPv4NK4dcgp10expressionclERKNSt6vectorI1TEE">
-<span class="target" id="classdcgp_1_1expression_1a4a0d0118b4733b4aa18e9d25c60f885b"></span><em class="property">virtual</em> std::vector&lt;<a class="reference external" href="http://darioizzo.github.io/audi/functions.html#_CPPv4I0E1TRK1TRK1T" title="(in audi v1.7)">T</a>&gt; <code class="sig-name descname">operator()</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;<a class="reference external" href="http://darioizzo.github.io/audi/functions.html#_CPPv4I0E1TRK1TRK1T" title="(in audi v1.7)">T</a>&gt; &amp;<em>point</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp10expressionclERKNSt6vectorI1TEE" title="Permalink to this definition">¶</a><br /></dt>
+<span class="target" id="classdcgp_1_1expression_1a4a0d0118b4733b4aa18e9d25c60f885b"></span>std::vector&lt;<a class="reference internal" href="#_CPPv4I0EN4dcgp10expressionE" title="dcgp::expression::T">T</a>&gt; <code class="sig-name descname">operator()</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;<a class="reference internal" href="#_CPPv4I0EN4dcgp10expressionE" title="dcgp::expression::T">T</a>&gt; &amp;<em>point</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp10expressionclERKNSt6vectorI1TEE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Evaluates the dCGP expression. </p>
 <p>This evaluates the dCGP expression.</p>
 <p><dl class="simple">
@@ -339,7 +340,7 @@ the class would operate in the differential algebra of truncated Taylor polynomi
 </p>
 </dd></dl>
 
-<dl class="function">
+<dl class="cpp function">
 <dt id="_CPPv4NK4dcgp10expressionclERKNSt16initializer_listIdEE">
 <span class="target" id="classdcgp_1_1expression_1adff544922d3fd6d2c3ae73e681b0eb55"></span>std::vector&lt;double&gt; <code class="sig-name descname">operator()</code><span class="sig-paren">(</span><em class="property">const</em> std::initializer_list&lt;double&gt; &amp;<em>in</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp10expressionclERKNSt16initializer_listIdEE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Evaluates the dCGP expression (from initializer list) </p>
@@ -355,9 +356,9 @@ the class would operate in the differential algebra of truncated Taylor polynomi
 </p>
 </dd></dl>
 
-<dl class="function">
+<dl class="cpp function">
 <dt id="_CPPv4NK4dcgp10expressionclERKNSt6vectorINSt6stringEEE">
-<span class="target" id="classdcgp_1_1expression_1aff663ec9ff3163084e10e578100332ca"></span><em class="property">virtual</em> std::vector&lt;std::string&gt; <code class="sig-name descname">operator()</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;std::string&gt; &amp;<em>in</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp10expressionclERKNSt6vectorINSt6stringEEE" title="Permalink to this definition">¶</a><br /></dt>
+<span class="target" id="classdcgp_1_1expression_1aff663ec9ff3163084e10e578100332ca"></span>std::vector&lt;std::string&gt; <code class="sig-name descname">operator()</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;std::string&gt; &amp;<em>in</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp10expressionclERKNSt6vectorINSt6stringEEE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Evaluates the dCGP expression (symbolic) </p>
 <p>This evaluates the symbolic form of a dCGP expression from symbols.</p>
 <p><dl class="simple">
@@ -371,7 +372,7 @@ the class would operate in the differential algebra of truncated Taylor polynomi
 </p>
 </dd></dl>
 
-<dl class="function">
+<dl class="cpp function">
 <dt id="_CPPv4NK4dcgp10expressionclERKNSt16initializer_listINSt6stringEEE">
 <span class="target" id="classdcgp_1_1expression_1ac7034420e3287155baaaa3626ea5dfb0"></span>std::vector&lt;std::string&gt; <code class="sig-name descname">operator()</code><span class="sig-paren">(</span><em class="property">const</em> std::initializer_list&lt;std::string&gt; &amp;<em>in</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp10expressionclERKNSt16initializer_listINSt6stringEEE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Evaluates the dCGP expression (symbolic from initializer list) </p>
@@ -387,9 +388,9 @@ the class would operate in the differential algebra of truncated Taylor polynomi
 </p>
 </dd></dl>
 
-<dl class="function">
+<dl class="cpp function">
 <dt id="_CPPv4NK4dcgp10expression4lossERKNSt6vectorI1TEERKNSt6vectorI1TEE9loss_type">
-<span class="target" id="classdcgp_1_1expression_1a7c192820a7d123d449c492aee6071b2b"></span><a class="reference external" href="http://darioizzo.github.io/audi/functions.html#_CPPv4I0E1TRK1TRK1T" title="(in audi v1.7)">T</a> <code class="sig-name descname">loss</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;<a class="reference external" href="http://darioizzo.github.io/audi/functions.html#_CPPv4I0E1TRK1TRK1T" title="(in audi v1.7)">T</a>&gt; &amp;<em>point</em>, <em class="property">const</em> std::vector&lt;<a class="reference external" href="http://darioizzo.github.io/audi/functions.html#_CPPv4I0E1TRK1TRK1T" title="(in audi v1.7)">T</a>&gt; &amp;<em>prediction</em>, <a class="reference internal" href="#_CPPv4N4dcgp10expression9loss_typeE" title="dcgp::expression::loss_type">loss_type</a> <em>loss_e</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp10expression4lossERKNSt6vectorI1TEERKNSt6vectorI1TEE9loss_type" title="Permalink to this definition">¶</a><br /></dt>
+<span class="target" id="classdcgp_1_1expression_1a7c192820a7d123d449c492aee6071b2b"></span><a class="reference internal" href="#_CPPv4I0EN4dcgp10expressionE" title="dcgp::expression::T">T</a> <code class="sig-name descname">loss</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;<a class="reference internal" href="#_CPPv4I0EN4dcgp10expressionE" title="dcgp::expression::T">T</a>&gt; &amp;<em>point</em>, <em class="property">const</em> std::vector&lt;<a class="reference internal" href="#_CPPv4I0EN4dcgp10expressionE" title="dcgp::expression::T">T</a>&gt; &amp;<em>prediction</em>, <a class="reference internal" href="#_CPPv4N4dcgp10expression9loss_typeE" title="dcgp::expression::loss_type">loss_type</a> <em>loss_e</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp10expression4lossERKNSt6vectorI1TEERKNSt6vectorI1TEE9loss_type" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Evaluates the model loss (single data point) </p>
 <p>Returns the model loss over a single point of data of the dCGP output.</p>
 <p><dl class="simple">
@@ -405,9 +406,9 @@ the class would operate in the differential algebra of truncated Taylor polynomi
 </p>
 </dd></dl>
 
-<dl class="function">
+<dl class="cpp function">
 <dt id="_CPPv4NK4dcgp10expression4lossERKNSt6vectorINSt6vectorI1TEEEERKNSt6vectorINSt6vectorI1TEEEERKNSt6stringEj">
-<span class="target" id="classdcgp_1_1expression_1a12043fadc81ec487c5508f6716087cf5"></span><a class="reference external" href="http://darioizzo.github.io/audi/functions.html#_CPPv4I0E1TRK1TRK1T" title="(in audi v1.7)">T</a> <code class="sig-name descname">loss</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;std::vector&lt;<a class="reference external" href="http://darioizzo.github.io/audi/functions.html#_CPPv4I0E1TRK1TRK1T" title="(in audi v1.7)">T</a>&gt;&gt; &amp;<em>points</em>, <em class="property">const</em> std::vector&lt;std::vector&lt;<a class="reference external" href="http://darioizzo.github.io/audi/functions.html#_CPPv4I0E1TRK1TRK1T" title="(in audi v1.7)">T</a>&gt;&gt; &amp;<em>labels</em>, <em class="property">const</em> std::string &amp;<em>loss_s</em>, unsigned <em>parallel</em> = 0u<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp10expression4lossERKNSt6vectorINSt6vectorI1TEEEERKNSt6vectorINSt6vectorI1TEEEERKNSt6stringEj" title="Permalink to this definition">¶</a><br /></dt>
+<span class="target" id="classdcgp_1_1expression_1a12043fadc81ec487c5508f6716087cf5"></span><a class="reference internal" href="#_CPPv4I0EN4dcgp10expressionE" title="dcgp::expression::T">T</a> <code class="sig-name descname">loss</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;std::vector&lt;<a class="reference internal" href="#_CPPv4I0EN4dcgp10expressionE" title="dcgp::expression::T">T</a>&gt;&gt; &amp;<em>points</em>, <em class="property">const</em> std::vector&lt;std::vector&lt;<a class="reference internal" href="#_CPPv4I0EN4dcgp10expressionE" title="dcgp::expression::T">T</a>&gt;&gt; &amp;<em>labels</em>, <em class="property">const</em> std::string &amp;<em>loss_s</em>, unsigned <em>parallel</em> = 0u<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp10expression4lossERKNSt6vectorINSt6vectorI1TEEEERKNSt6vectorINSt6vectorI1TEEEERKNSt6stringEj" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Evaluates the model loss (on a batch) </p>
 <p>Evaluates the model loss over a batch.</p>
 <p><dl class="simple">
@@ -424,7 +425,7 @@ the class would operate in the differential algebra of truncated Taylor polynomi
 </p>
 </dd></dl>
 
-<dl class="function">
+<dl class="cpp function">
 <dt id="_CPPv4N4dcgp10expression3setERKNSt6vectorIjEE">
 <span class="target" id="classdcgp_1_1expression_1a4f9b3af2add7da4b16d3cde0116aae64"></span>void <code class="sig-name descname">set</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;unsigned&gt; &amp;<em>xu</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10expression3setERKNSt6vectorIjEE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Sets the chromosome. </p>
@@ -442,7 +443,7 @@ the class would operate in the differential algebra of truncated Taylor polynomi
 </p>
 </dd></dl>
 
-<dl class="function">
+<dl class="cpp function">
 <dt id="_CPPv4N4dcgp10expression10set_f_geneEjj">
 <span class="target" id="classdcgp_1_1expression_1a51f752bcd1bcba27c40c435301bba18f"></span>void <code class="sig-name descname">set_f_gene</code><span class="sig-paren">(</span>unsigned <em>node_id</em>, unsigned <em>f_id</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10expression10set_f_geneEjj" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Sets the function gene of a node. </p>
@@ -461,9 +462,9 @@ the class would operate in the differential algebra of truncated Taylor polynomi
 </p>
 </dd></dl>
 
-<dl class="function">
+<dl class="cpp function">
 <dt id="_CPPv4N4dcgp10expression11set_eph_valERKNSt6vectorI1TEE">
-<span class="target" id="classdcgp_1_1expression_1a0691b32746937718a3a06b025d337f22"></span>void <code class="sig-name descname">set_eph_val</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;<a class="reference external" href="http://darioizzo.github.io/audi/functions.html#_CPPv4I0E1TRK1TRK1T" title="(in audi v1.7)">T</a>&gt; &amp;<em>eph_val</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10expression11set_eph_valERKNSt6vectorI1TEE" title="Permalink to this definition">¶</a><br /></dt>
+<span class="target" id="classdcgp_1_1expression_1a0691b32746937718a3a06b025d337f22"></span>void <code class="sig-name descname">set_eph_val</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;<a class="reference internal" href="#_CPPv4I0EN4dcgp10expressionE" title="dcgp::expression::T">T</a>&gt; &amp;<em>eph_val</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10expression11set_eph_valERKNSt6vectorI1TEE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Sets the values of ephemeral constants. </p>
 <p>Sets the values of ephemeral constants</p>
 <p><dl class="simple">
@@ -479,7 +480,7 @@ the class would operate in the differential algebra of truncated Taylor polynomi
 </p>
 </dd></dl>
 
-<dl class="function">
+<dl class="cpp function">
 <dt id="_CPPv4N4dcgp10expression12set_eph_symbERKNSt6vectorINSt6stringEEE">
 <span class="target" id="classdcgp_1_1expression_1a8027b6c3ea2bf29d33cf2a76926e1282"></span>void <code class="sig-name descname">set_eph_symb</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;std::string&gt; &amp;<em>eph_symb</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10expression12set_eph_symbERKNSt6vectorINSt6stringEEE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Sets the values of ephemeral constants. </p>
@@ -497,9 +498,9 @@ the class would operate in the differential algebra of truncated Taylor polynomi
 </p>
 </dd></dl>
 
-<dl class="function">
+<dl class="cpp function">
 <dt id="_CPPv4NK4dcgp10expression11get_eph_valEv">
-<span class="target" id="classdcgp_1_1expression_1aaadc161b1138fa6a5cefb07fd8efa7aa"></span><em class="property">const</em> std::vector&lt;<a class="reference external" href="http://darioizzo.github.io/audi/functions.html#_CPPv4I0E1TRK1TRK1T" title="(in audi v1.7)">T</a>&gt; &amp;<code class="sig-name descname">get_eph_val</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp10expression11get_eph_valEv" title="Permalink to this definition">¶</a><br /></dt>
+<span class="target" id="classdcgp_1_1expression_1aaadc161b1138fa6a5cefb07fd8efa7aa"></span><em class="property">const</em> std::vector&lt;<a class="reference internal" href="#_CPPv4I0EN4dcgp10expressionE" title="dcgp::expression::T">T</a>&gt; &amp;<code class="sig-name descname">get_eph_val</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp10expression11get_eph_valEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Gets the values of ephemeral constants. </p>
 <p>Gets the values of ephemeral constants</p>
 <p><dl class="simple">
@@ -509,7 +510,7 @@ the class would operate in the differential algebra of truncated Taylor polynomi
 </p>
 </dd></dl>
 
-<dl class="function">
+<dl class="cpp function">
 <dt id="_CPPv4NK4dcgp10expression12get_eph_symbEv">
 <span class="target" id="classdcgp_1_1expression_1a08201cd6ce1635a3d523381280909d36"></span><em class="property">const</em> std::vector&lt;std::string&gt; &amp;<code class="sig-name descname">get_eph_symb</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp10expression12get_eph_symbEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Gets the symbols of ephemeral constants. </p>
@@ -521,7 +522,7 @@ the class would operate in the differential algebra of truncated Taylor polynomi
 </p>
 </dd></dl>
 
-<dl class="function">
+<dl class="cpp function">
 <dt id="_CPPv4NK4dcgp10expression3getEv">
 <span class="target" id="classdcgp_1_1expression_1aa4af8cc0b43c3b1b16dd7a1a0c0dbbb7"></span><em class="property">const</em> std::vector&lt;unsigned&gt; &amp;<code class="sig-name descname">get</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp10expression3getEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Gets the chromosome. </p>
@@ -533,7 +534,7 @@ the class would operate in the differential algebra of truncated Taylor polynomi
 </p>
 </dd></dl>
 
-<dl class="function">
+<dl class="cpp function">
 <dt id="_CPPv4NK4dcgp10expression6get_lbEv">
 <span class="target" id="classdcgp_1_1expression_1ab176b81bcdb862cce59ebb8e96e81c2b"></span><em class="property">const</em> std::vector&lt;unsigned&gt; &amp;<code class="sig-name descname">get_lb</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp10expression6get_lbEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Gets the lower bounds. </p>
@@ -545,7 +546,7 @@ the class would operate in the differential algebra of truncated Taylor polynomi
 </p>
 </dd></dl>
 
-<dl class="function">
+<dl class="cpp function">
 <dt id="_CPPv4NK4dcgp10expression6get_ubEv">
 <span class="target" id="classdcgp_1_1expression_1a80e4e6fddc592aa2113b4b25d73010f6"></span><em class="property">const</em> std::vector&lt;unsigned&gt; &amp;<code class="sig-name descname">get_ub</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp10expression6get_ubEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Gets the upper bounds. </p>
@@ -557,7 +558,7 @@ the class would operate in the differential algebra of truncated Taylor polynomi
 </p>
 </dd></dl>
 
-<dl class="function">
+<dl class="cpp function">
 <dt id="_CPPv4NK4dcgp10expression16get_active_genesEv">
 <span class="target" id="classdcgp_1_1expression_1a8882e8cccd110967528e8ec8614c612c"></span><em class="property">const</em> std::vector&lt;unsigned&gt; &amp;<code class="sig-name descname">get_active_genes</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp10expression16get_active_genesEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Gets the active genes. </p>
@@ -569,7 +570,7 @@ the class would operate in the differential algebra of truncated Taylor polynomi
 </p>
 </dd></dl>
 
-<dl class="function">
+<dl class="cpp function">
 <dt id="_CPPv4NK4dcgp10expression16get_active_nodesEv">
 <span class="target" id="classdcgp_1_1expression_1a8c3f715244093ebab3d528b16860d86f"></span><em class="property">const</em> std::vector&lt;unsigned&gt; &amp;<code class="sig-name descname">get_active_nodes</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp10expression16get_active_nodesEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Gets the active nodes. </p>
@@ -581,7 +582,7 @@ the class would operate in the differential algebra of truncated Taylor polynomi
 </p>
 </dd></dl>
 
-<dl class="function">
+<dl class="cpp function">
 <dt id="_CPPv4NK4dcgp10expression5get_nEv">
 <span class="target" id="classdcgp_1_1expression_1a576744c9d080d5c1b024048b4cff211b"></span>unsigned <code class="sig-name descname">get_n</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp10expression5get_nEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Gets the number of inputs. </p>
@@ -593,7 +594,7 @@ the class would operate in the differential algebra of truncated Taylor polynomi
 </p>
 </dd></dl>
 
-<dl class="function">
+<dl class="cpp function">
 <dt id="_CPPv4NK4dcgp10expression5get_mEv">
 <span class="target" id="classdcgp_1_1expression_1a038bcdf2a2f227af8f298f7679a59d6c"></span>unsigned <code class="sig-name descname">get_m</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp10expression5get_mEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Gets the number of outputs. </p>
@@ -605,7 +606,7 @@ the class would operate in the differential algebra of truncated Taylor polynomi
 </p>
 </dd></dl>
 
-<dl class="function">
+<dl class="cpp function">
 <dt id="_CPPv4NK4dcgp10expression5get_rEv">
 <span class="target" id="classdcgp_1_1expression_1a6261b745207f9b6a48f13a8879b2351f"></span>unsigned <code class="sig-name descname">get_r</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp10expression5get_rEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Gets the number of rows. </p>
@@ -617,7 +618,7 @@ the class would operate in the differential algebra of truncated Taylor polynomi
 </p>
 </dd></dl>
 
-<dl class="function">
+<dl class="cpp function">
 <dt id="_CPPv4NK4dcgp10expression5get_cEv">
 <span class="target" id="classdcgp_1_1expression_1a9737903503247e69b6c2e18501103c50"></span>unsigned <code class="sig-name descname">get_c</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp10expression5get_cEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Gets the number of columns. </p>
@@ -629,7 +630,7 @@ the class would operate in the differential algebra of truncated Taylor polynomi
 </p>
 </dd></dl>
 
-<dl class="function">
+<dl class="cpp function">
 <dt id="_CPPv4NK4dcgp10expression5get_lEv">
 <span class="target" id="classdcgp_1_1expression_1aa53f63dd9a9970942e3604a1ad1016cf"></span>unsigned <code class="sig-name descname">get_l</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp10expression5get_lEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Gets the number of levels-back. </p>
@@ -641,7 +642,7 @@ the class would operate in the differential algebra of truncated Taylor polynomi
 </p>
 </dd></dl>
 
-<dl class="function">
+<dl class="cpp function">
 <dt id="_CPPv4NK4dcgp10expression9get_arityEv">
 <span class="target" id="classdcgp_1_1expression_1accb51f609f4ae9e64f964a17ea8fa484"></span><em class="property">const</em> std::vector&lt;unsigned&gt; &amp;<code class="sig-name descname">get_arity</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp10expression9get_arityEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Gets the arity. </p>
@@ -653,7 +654,7 @@ the class would operate in the differential algebra of truncated Taylor polynomi
 </p>
 </dd></dl>
 
-<dl class="function">
+<dl class="cpp function">
 <dt id="_CPPv4NK4dcgp10expression9get_arityEj">
 <span class="target" id="classdcgp_1_1expression_1a7902f559b837a8e5fd3ce5d5f7e98644"></span>unsigned <code class="sig-name descname">get_arity</code><span class="sig-paren">(</span>unsigned <em>node_id</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp10expression9get_arityEj" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Gets the arity of a particular node. </p>
@@ -669,9 +670,9 @@ the class would operate in the differential algebra of truncated Taylor polynomi
 </p>
 </dd></dl>
 
-<dl class="function">
+<dl class="cpp function">
 <dt id="_CPPv4NK4dcgp10expression5get_fEv">
-<span class="target" id="classdcgp_1_1expression_1afd314c2e2e9f177bc27829bf25c0bc63"></span><em class="property">const</em> std::vector&lt;kernel&lt;<a class="reference external" href="http://darioizzo.github.io/audi/functions.html#_CPPv4I0E1TRK1TRK1T" title="(in audi v1.7)">T</a>&gt;&gt; &amp;<code class="sig-name descname">get_f</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp10expression5get_fEv" title="Permalink to this definition">¶</a><br /></dt>
+<span class="target" id="classdcgp_1_1expression_1afd314c2e2e9f177bc27829bf25c0bc63"></span><em class="property">const</em> std::vector&lt;<a class="reference internal" href="kernel.html#_CPPv4I0EN4dcgp6kernelE" title="dcgp::kernel">kernel</a>&lt;<a class="reference internal" href="#_CPPv4I0EN4dcgp10expressionE" title="dcgp::expression::T">T</a>&gt;&gt; &amp;<code class="sig-name descname">get_f</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp10expression5get_fEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Gets the function set. </p>
 <p>Gets the set of functions used in the dCGP expression</p>
 <p><dl class="simple">
@@ -681,7 +682,7 @@ the class would operate in the differential algebra of truncated Taylor polynomi
 </p>
 </dd></dl>
 
-<dl class="function">
+<dl class="cpp function">
 <dt id="_CPPv4NK4dcgp10expression12get_gene_idxEv">
 <span class="target" id="classdcgp_1_1expression_1a33d6e5acb80dae4cd936fd0209783f6d"></span><em class="property">const</em> std::vector&lt;unsigned&gt; &amp;<code class="sig-name descname">get_gene_idx</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp10expression12get_gene_idxEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Gets gene_idx. </p>
@@ -693,7 +694,7 @@ the class would operate in the differential algebra of truncated Taylor polynomi
 </p>
 </dd></dl>
 
-<dl class="function">
+<dl class="cpp function">
 <dt id="_CPPv4N4dcgp10expression6mutateEj">
 <span class="target" id="classdcgp_1_1expression_1ad24f59475b88e7aefb434ef770e690d0"></span>void <code class="sig-name descname">mutate</code><span class="sig-paren">(</span>unsigned <em>idx</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10expression6mutateEj" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Mutates randomly one gene. </p>
@@ -711,7 +712,7 @@ the class would operate in the differential algebra of truncated Taylor polynomi
 </p>
 </dd></dl>
 
-<dl class="function">
+<dl class="cpp function">
 <dt id="_CPPv4N4dcgp10expression6mutateENSt6vectorIjEE">
 <span class="target" id="classdcgp_1_1expression_1aa4c5f60edcb70d4796e532f2842ef122"></span>void <code class="sig-name descname">mutate</code><span class="sig-paren">(</span>std::vector&lt;unsigned&gt; <em>idxs</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10expression6mutateENSt6vectorIjEE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Mutates multiple genes at once. </p>
@@ -729,7 +730,7 @@ the class would operate in the differential algebra of truncated Taylor polynomi
 </p>
 </dd></dl>
 
-<dl class="function">
+<dl class="cpp function">
 <dt id="_CPPv4N4dcgp10expression13mutate_randomEj">
 <span class="target" id="classdcgp_1_1expression_1a17b6b6ac27a2d745c9f99965303ca757"></span>void <code class="sig-name descname">mutate_random</code><span class="sig-paren">(</span>unsigned <em>N</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10expression13mutate_randomEj" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Mutates N random genes. </p>
@@ -743,7 +744,7 @@ the class would operate in the differential algebra of truncated Taylor polynomi
 </p>
 </dd></dl>
 
-<dl class="function">
+<dl class="cpp function">
 <dt id="_CPPv4N4dcgp10expression13mutate_activeEj">
 <span class="target" id="classdcgp_1_1expression_1a5db413e253396fb830ba9911f10e8290"></span>void <code class="sig-name descname">mutate_active</code><span class="sig-paren">(</span>unsigned <em>N</em> = 1<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10expression13mutate_activeEj" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Mutates active genes. </p>
@@ -757,35 +758,56 @@ the class would operate in the differential algebra of truncated Taylor polynomi
 </p>
 </dd></dl>
 
-<dl class="function">
+<dl class="cpp function">
 <dt id="_CPPv4N4dcgp10expression19mutate_active_fgeneEj">
 <span class="target" id="classdcgp_1_1expression_1a3d01cdc8af88d94260501a3a896b1449"></span>void <code class="sig-name descname">mutate_active_fgene</code><span class="sig-paren">(</span>unsigned <em>N</em> = 1u<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10expression19mutate_active_fgeneEj" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Mutates one of the active function genes. </p>
-<p>Mutates exactly one of the active function genes within its allowed bounds. </p>
+<dd><p>Mutates active function genes. </p>
+<p>Mutates <code class="docutils literal notranslate"><span class="pre">N</span></code> active function genes within their allowed bounds.</p>
+<p><dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">N</span></code>: Number of active function genes to be mutated </p></li>
+</ul>
+</dd>
+</dl>
+</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="cpp function">
 <dt id="_CPPv4N4dcgp10expression19mutate_active_cgeneEj">
 <span class="target" id="classdcgp_1_1expression_1a0118c09744680cfa3c22700eb1d9ad39"></span>void <code class="sig-name descname">mutate_active_cgene</code><span class="sig-paren">(</span>unsigned <em>N</em> = 1u<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10expression19mutate_active_cgeneEj" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Mutates one of the active connection genes. </p>
-<p>Mutates exactly one of the active connection genes within its allowed bounds. </p>
+<dd><p>Mutates active connection genes. </p>
+<p>Mutates <code class="docutils literal notranslate"><span class="pre">N</span></code> active connection genes within their allowed bounds.</p>
+<p><dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">N</span></code>: Number of active connection genes to be mutated </p></li>
+</ul>
+</dd>
+</dl>
+</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="cpp function">
 <dt id="_CPPv4N4dcgp10expression12mutate_ogeneEj">
-<span class="target" id="classdcgp_1_1expression_1a758e3ac88035e1fb8948e3d09e8472ba"></span>void <code class="sig-name descname">mutate_ogene</code><span class="sig-paren">(</span>unsigned <em>N</em> = 1<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10expression12mutate_ogeneEj" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Mutates one of the active output genes. </p>
-<p>Mutates exactly one of the output genes within its allowed bounds. </p>
+<span class="target" id="classdcgp_1_1expression_1ac047ab012501d31c9f69e2fb3d4f0e2e"></span>void <code class="sig-name descname">mutate_ogene</code><span class="sig-paren">(</span>unsigned <em>N</em> = 1u<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10expression12mutate_ogeneEj" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Mutates active output genes. </p>
+<p>Mutates <code class="docutils literal notranslate"><span class="pre">N</span></code> times random active output genes within their allowed bounds.</p>
+<p><dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">N</span></code>: Number of output genes to be mutated </p></li>
+</ul>
+</dd>
+</dl>
+</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="cpp function">
 <dt id="_CPPv4N4dcgp10expression4seedEl">
 <span class="target" id="classdcgp_1_1expression_1a088aa8d532b4d83a088fa4cc3ec7bb10"></span>void <code class="sig-name descname">seed</code><span class="sig-paren">(</span>long <em>seed</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10expression4seedEl" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Sets the internal seed. </p>
 <p>Sets the internal seed used to perform mutations and other things. </p>
 </dd></dl>
 
-<dl class="function">
+<dl class="cpp function">
 <dt id="_CPPv4NK4dcgp10expression9is_activeEKj">
 <span class="target" id="classdcgp_1_1expression_1a324576beabb571d3d882a09958c8337c"></span>bool <code class="sig-name descname">is_active</code><span class="sig-paren">(</span><em class="property">const</em> unsigned <em>node_id</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp10expression9is_activeEKj" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Checks if a given node is active. </p>
@@ -800,12 +822,30 @@ the class would operate in the differential algebra of truncated Taylor polynomi
 </p>
 </dd></dl>
 
+<dl class="cpp function">
+<dt id="_CPPv4I0EN4dcgp10expression9serializeEvR7Archivej">
+template&lt;typename <code class="sig-name descname">Archive</code>&gt;<br /><span class="target" id="classdcgp_1_1expression_1a16dca0ffb853179af8f2907cc70f6402"></span>void <code class="sig-name descname">serialize</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0EN4dcgp10expression9serializeEvR7Archivej" title="dcgp::expression::serialize::Archive">Archive</a> &amp;<em>ar</em>, unsigned<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN4dcgp10expression9serializeEvR7Archivej" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Object serialization. </p>
+<p>This method will save/load <code class="docutils literal notranslate"><span class="pre">this</span></code> into the archive <code class="docutils literal notranslate"><span class="pre">ar</span></code>.</p>
+<p><dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ar</span></code>: target archive.</p></li>
+</ul>
+</dd>
+<dt><strong>Exceptions</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">unspecified</span></code>: any exception thrown by the serialization of the expression and of primitive types. </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
 </div>
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric">Friends</p>
-<dl class="function">
-<dt id="_CPPv4lsRNSt7ostreamERK10expression">
-<span class="target" id="classdcgp_1_1expression_1a214aa46f452981db5c7e37e80475e9fe"></span>std::ostream &amp;<code class="sig-name descname">operator&lt;&lt;</code><span class="sig-paren">(</span>std::ostream &amp;<em>os</em>, <em class="property">const</em> expression &amp;<em>d</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4lsRNSt7ostreamERK10expression" title="Permalink to this definition">¶</a><br /></dt>
+<dl class="cpp function">
+<dt id="_CPPv4N4dcgp10expressionlsERNSt7ostreamERK10expression">
+<span class="target" id="classdcgp_1_1expression_1a214aa46f452981db5c7e37e80475e9fe"></span><em class="property">friend</em> std::ostream &amp;<code class="sig-name descname">operator&lt;&lt;</code><span class="sig-paren">(</span>std::ostream &amp;<em>os</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN4dcgp10expressionE" title="dcgp::expression">expression</a> &amp;<em>d</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10expressionlsERNSt7ostreamERK10expression" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Overloaded stream operator. </p>
 <p>Will return a formatted string containing a human readable representation of the class</p>
 <p><dl class="simple">
@@ -840,7 +880,7 @@ the class would operate in the differential algebra of truncated Taylor polynomi
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Dario Izzo, Francesco Biscani, Alessio Mereta
+        &copy; Copyright 2020, Dario Izzo, Francesco Biscani
 
     </p>
   </div>

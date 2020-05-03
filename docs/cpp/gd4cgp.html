@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Gradient Descent (UDA) &mdash; dCGP 1.4.3 documentation</title>
+  <title>Gradient Descent (UDA) &mdash; dCGP 1.5 documentation</title>
   
 
   
@@ -21,11 +21,12 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
         <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
@@ -66,7 +67,7 @@
             
             
               <div class="version">
-                1.4.3
+                1.5
               </div>
             
           
@@ -93,7 +94,7 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Quick start examples</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Documentation</a><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">API documentation</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="index.html">C++ Documentation</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="index.html#kernels">Kernels</a></li>
 <li class="toctree-l3"><a class="reference internal" href="index.html#types-of-dcgps">Types of dCGPs</a></li>
@@ -158,7 +159,7 @@
     
       <li><a href="../../index.html">Docs</a> &raquo;</li>
         
-          <li><a href="../index.html">Documentation</a> &raquo;</li>
+          <li><a href="../index.html">API documentation</a> &raquo;</li>
         
           <li><a href="index.html">C++ Documentation</a> &raquo;</li>
         
@@ -186,13 +187,13 @@
 /* CSS overrides for sphinx_rtd_theme */
 
 /* 24px margin */
-.nbinput.nblast,
-.nboutput.nblast {
+.nbinput.nblast.container,
+.nboutput.nblast.container {
     margin-bottom: 19px;  /* padding has already 5px */
 }
 
 /* ... except between code cells! */
-.nblast + .nbinput {
+.nblast.container + .nbinput.container {
     margin-top: -19px;
 }
 
@@ -207,22 +208,22 @@
 </style>
 <div class="section" id="gradient-descent-uda">
 <h1>Gradient Descent (UDA)<a class="headerlink" href="#gradient-descent-uda" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
+<dl class="cpp class">
 <dt id="_CPPv4N4dcgp6gd4cgpE">
-<span class="target" id="classdcgp_1_1gd4cgp"></span><em class="property">class </em><code class="sig-name descname">gd4cgp</code> : <em class="property">public</em> not_population_based<a class="headerlink" href="#_CPPv4N4dcgp6gd4cgpE" title="Permalink to this definition">¶</a><br /></dt>
+<span class="target" id="classdcgp_1_1gd4cgp"></span><em class="property">class </em><code class="sig-prename descclassname">dcgp<code class="sig-prename descclassname">::</code></code><code class="sig-name descname">gd4cgp</code> : <em class="property">public</em> not_population_based<a class="headerlink" href="#_CPPv4N4dcgp6gd4cgpE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Gradient descent for a Cartesian Genetic Program. </p>
 <p><img alt="../../_images/gd.png" src="../../_images/gd.png" /></p>
 <p>In a symbolic regression problem, models parameters are typically present in the form of ephemeral constants (i.e. extra input terminals). The actual values of the constants have a profound effect on the resulting loss and its an open question how to balance the learning of the model parameters (continuous optimization) with learning the model itself (integer optimization)</p>
 <p>In this class we provide a simple gradient descent algorithm able to tackle :class:<code class="docutils literal notranslate"><a class="reference internal" href="symbolic_regression.html#classdcgp_1_1symbolic__regression"><span class="std std-ref"><span class="pre">dcgp::symbolic_regression</span></span></a></code> problems The gradient descent will only modify the continuous part of the chromosome, leaving the integer part (i.e. the actual model) unchanged. </p>
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric">Public Types</p>
-<dl class="type">
+<dl class="cpp type">
 <dt id="_CPPv4N4dcgp6gd4cgp13log_line_typeE">
 <span class="target" id="classdcgp_1_1gd4cgp_1a801928866b1947ba291b33373f0a1dae"></span><em class="property">typedef </em>std::tuple&lt;unsigned, unsigned long long, unsigned long long, double, double, double&gt; <code class="sig-name descname">log_line_type</code><a class="headerlink" href="#_CPPv4N4dcgp6gd4cgp13log_line_typeE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Single entry of the log (iter, fevals, gevals, gradient_magnitude, lr, best) </p>
 </dd></dl>
 
-<dl class="type">
+<dl class="cpp type">
 <dt id="_CPPv4N4dcgp6gd4cgp8log_typeE">
 <span class="target" id="classdcgp_1_1gd4cgp_1aca8bf4fc43a6cc6173103dba2a637893"></span><em class="property">typedef </em>std::vector&lt;<a class="reference internal" href="#_CPPv4N4dcgp6gd4cgp13log_line_typeE" title="dcgp::gd4cgp::log_line_type">log_line_type</a>&gt; <code class="sig-name descname">log_type</code><a class="headerlink" href="#_CPPv4N4dcgp6gd4cgp8log_typeE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>The log. </p>
@@ -231,7 +232,7 @@
 </div>
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric">Public Functions</p>
-<dl class="function">
+<dl class="cpp function">
 <dt id="_CPPv4N4dcgp6gd4cgp6gd4cgpEjdd">
 <span class="target" id="classdcgp_1_1gd4cgp_1ad71c843f7ba3cd680371f51012762de2"></span><code class="sig-name descname">gd4cgp</code><span class="sig-paren">(</span>unsigned <em>max_iter</em> = 1u, double <em>lr</em> = 1., double <em>lr_min</em> = 1e-3<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp6gd4cgp6gd4cgpEjdd" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Constructor. </p>
@@ -251,9 +252,9 @@
 </p>
 </dd></dl>
 
-<dl class="function">
+<dl class="cpp function">
 <dt id="_CPPv4NK4dcgp6gd4cgp6evolveEN5pagmo10populationE">
-<span class="target" id="classdcgp_1_1gd4cgp_1a4cc8360d2505b47c9dfe28159f7b2505"></span>pagmo::<a class="reference external" href="https://esa.github.io/pagmo2/docs/cpp/population.html#_CPPv4N5pagmo10populationE" title="(in pagmo v2.12.0)">population</a> <code class="sig-name descname">evolve</code><span class="sig-paren">(</span>pagmo::<a class="reference external" href="https://esa.github.io/pagmo2/docs/cpp/population.html#_CPPv4N5pagmo10populationE" title="(in pagmo v2.12.0)">population</a> <em>pop</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp6gd4cgp6evolveEN5pagmo10populationE" title="Permalink to this definition">¶</a><br /></dt>
+<span class="target" id="classdcgp_1_1gd4cgp_1a4cc8360d2505b47c9dfe28159f7b2505"></span>pagmo::<a class="reference external" href="https://esa.github.io/pagmo2/docs/cpp/population.html#_CPPv4N5pagmo10populationE" title="(in pagmo v2.16.0)">population</a> <code class="sig-name descname">evolve</code><span class="sig-paren">(</span>pagmo::<a class="reference external" href="https://esa.github.io/pagmo2/docs/cpp/population.html#_CPPv4N5pagmo10populationE" title="(in pagmo v2.16.0)">population</a> <em>pop</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp6gd4cgp6evolveEN5pagmo10populationE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Algorithm evolve method. </p>
 <p>Evolves the population for a maximum number of generations</p>
 <p><dl class="simple">
@@ -273,7 +274,7 @@
 </p>
 </dd></dl>
 
-<dl class="function">
+<dl class="cpp function">
 <dt id="_CPPv4N4dcgp6gd4cgp13set_verbosityEj">
 <span class="target" id="classdcgp_1_1gd4cgp_1ab9064d9cc46b716d6583dabfbe46ec11"></span>void <code class="sig-name descname">set_verbosity</code><span class="sig-paren">(</span>unsigned <em>level</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp6gd4cgp13set_verbosityEj" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Sets the algorithm verbosity. </p>
@@ -306,7 +307,7 @@
 </p>
 </dd></dl>
 
-<dl class="function">
+<dl class="cpp function">
 <dt id="_CPPv4NK4dcgp6gd4cgp13get_verbosityEv">
 <span class="target" id="classdcgp_1_1gd4cgp_1ab5ae740c1cae2d0f90b853407e843694"></span>unsigned <code class="sig-name descname">get_verbosity</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp6gd4cgp13get_verbosityEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Gets the verbosity level. </p>
@@ -317,7 +318,7 @@
 </p>
 </dd></dl>
 
-<dl class="function">
+<dl class="cpp function">
 <dt id="_CPPv4NK4dcgp6gd4cgp8get_nameEv">
 <span class="target" id="classdcgp_1_1gd4cgp_1ae3a9e598cb339fa1ee510e2a45766bba"></span>std::string <code class="sig-name descname">get_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp6gd4cgp8get_nameEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Algorithm name. </p>
@@ -328,7 +329,7 @@
 </p>
 </dd></dl>
 
-<dl class="function">
+<dl class="cpp function">
 <dt id="_CPPv4NK4dcgp6gd4cgp14get_extra_infoEv">
 <span class="target" id="classdcgp_1_1gd4cgp_1ac91098f5276951ad425c83bee4585720"></span>std::string <code class="sig-name descname">get_extra_info</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp6gd4cgp14get_extra_infoEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Extra info. </p>
@@ -339,7 +340,7 @@
 </p>
 </dd></dl>
 
-<dl class="function">
+<dl class="cpp function">
 <dt id="_CPPv4NK4dcgp6gd4cgp7get_logEv">
 <span class="target" id="classdcgp_1_1gd4cgp_1a999332aa483df1150008213b8a9ca520"></span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N4dcgp6gd4cgp8log_typeE" title="dcgp::gd4cgp::log_type">log_type</a> &amp;<code class="sig-name descname">get_log</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp6gd4cgp7get_logEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Get log. </p>
@@ -376,7 +377,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Dario Izzo, Francesco Biscani, Alessio Mereta
+        &copy; Copyright 2020, Dario Izzo, Francesco Biscani
 
     </p>
   </div>
