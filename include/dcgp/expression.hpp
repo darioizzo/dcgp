@@ -59,9 +59,10 @@ public:
      *
      * @param[in] n number of inputs (independent variables).
      * @param[in] m number of outputs (dependent variables).
-     * @param[in] r number of rows of the dCGP.
-     * @param[in] c number of columns of the dCGP.
-     * @param[in] l number of levels-back allowed in the dCGP.
+     * @param[in] r number of rows of the cartesian representation of the expression as an acyclic graph.
+     * @param[in] c number of columns of the cartesian representation of the expression as an acyclic graph.
+     * @param[in] l number of levels-back allowed. This, essentially, controls the minimum number of allowed
+     *  operations in the formula. If uncertain set it to c + 1
      * @param[in] arity arities of the basis functions for each column.
      * @param[in] f function set. An std::vector of dcgp::kernel<expression::type>.
      * @param[in] n_eph Number of ephemeral constants. Their values and their symbols can be set via the dedicate
@@ -104,9 +105,10 @@ public:
      *
      * @param[in] n number of inputs (independent variables).
      * @param[in] m number of outputs (dependent variables).
-     * @param[in] r number of rows of the dCGP.
-     * @param[in] c number of columns of the dCGP.
-     * @param[in] l number of levels-back allowed in the dCGP.
+     * @param[in] r number of rows of the cartesian representation of the expression as an acyclic graph.
+     * @param[in] c number of columns of the cartesian representation of the expression as an acyclic graph.
+     * @param[in] l number of levels-back allowed. This, essentially, controls the minimum number of allowed
+     *  operations in the formula. If uncertain set it to c + 1
      * @param[in] arity arity of the basis functions.
      * @param[in] f function set. An std::vector of dcgp::kernel<expression::type>.
      * @param[in] n_eph Number of ephemeral constants. Their values and their symbols can be set via the dedicate

@@ -65,9 +65,10 @@ public:
      *
      * @param[in] n number of inputs (independent variables).
      * @param[in] m number of outputs (dependent variables).
-     * @param[in] r number of rows of the dCGPANN.
-     * @param[in] c number of columns of the dCGPANN.
-     * @param[in] l number of levels-back allowed for the dCGPANN.
+     * @param[in] r number of rows of the cartesian representation of the network as an acyclic graph.
+     * @param[in] c number of columns of the cartesian representation of the network as an acyclic graph.
+     * @param[in] l number of levels-back allowed. This, essentially, controls the minimum number of allowed
+     *  operations in the network. If uncertain set it to c + 1
      * @param[in] arity arities of the basis functions for each column.
      * @param[in] f function set. An std::vector of dcgp::kernel<expression::type>. Can only contain allowed functions.
      * @param[in] seed seed for the random number generator (initial expression and mutations depend on this).
@@ -130,9 +131,10 @@ public:
      *
      * @param[in] n number of inputs (independent variables).
      * @param[in] m number of outputs (dependent variables).
-     * @param[in] r number of rows of the dCGPANN.
-     * @param[in] c number of columns of the dCGPANN.
-     * @param[in] l number of levels-back allowed for the dCGPANN.
+     * @param[in] r number of rows of the cartesian representation of the network as an acyclic graph.
+     * @param[in] c number of columns of the cartesian representation of the network as an acyclic graph.
+     * @param[in] l number of levels-back allowed. This, essentially, controls the minimum number of allowed
+     *  operations in the network. If uncertain set it to c + 1
      * @param[in] arity uniform arity for all basis functions.
      * @param[in] f function set. An std::vector of dcgp::kernel<expression::type>. Can only contain allowed functions.
      * @param[in] seed seed for the random number generator (initial expression and mutations depend on this).

@@ -45,9 +45,10 @@ public:
      *
      * @param[in] n number of inputs (independent variables).
      * @param[in] m number of outputs (dependent variables).
-     * @param[in] r number of rows of the weighted dCGP.
-     * @param[in] c number of columns of the weighted dCGP.
-     * @param[in] l number of levels-back allowed for the weighted dCGP.
+     * @param[in] r number of rows of the cartesian representation of the expression as an acyclic graph.
+     * @param[in] c number of columns of the cartesian representation of the expression as an acyclic graph.
+     * @param[in] l number of levels-back allowed. This, essentially, controls the minimum number of allowed
+     *  operations in the formula. If uncertain set it to c + 1
      * @param[in] arity arities of the basis functions for each column.
      * @param[in] f function set. An std::vector of dcgp::kernel<expression::type>.
      * @param[in] seed seed for the random number generator (initial expression and mutations depend on this).
@@ -79,9 +80,10 @@ public:
      *
      * @param[in] n number of inputs (independent variables).
      * @param[in] m number of outputs (dependent variables).
-     * @param[in] r number of rows of the weighted dCGP.
-     * @param[in] c number of columns of the weighted dCGP.
-     * @param[in] l number of levels-back allowed for the weighted dCGP.
+     * @param[in] r number of rows of the cartesian representation of the expression as an acyclic graph.
+     * @param[in] c number of columns of the cartesian representation of the expression as an acyclic graph.
+     * @param[in] l number of levels-back allowed. This, essentially, controls the minimum number of allowed
+     *  operations in the formula. If uncertain set it to c + 1
      * @param[in] arities arities of the basis functions (per each column).
      * @param[in] f function set. An std::vector of dcgp::kernel<expression::type>.
      * @param[in] seed seed for the random number generator (initial expression and mutations depend on this).
