@@ -4,6 +4,7 @@
 #include <sstream>
 
 #include <pagmo/algorithm.hpp>
+#include <pagmo/bfe.hpp>
 #include <pagmo/io.hpp>
 #include <pagmo/population.hpp>
 #include <pagmo/problem.hpp>
@@ -65,6 +66,27 @@ BOOST_AUTO_TEST_CASE(evolve_test)
     uda2.set_seed(23u);
     pop3 = uda2.evolve(pop3);
     BOOST_CHECK(uda1.get_log() == uda2.get_log());
+}
+
+BOOST_AUTO_TEST_CASE(bfe_nonbfe_test)
+{
+    // We test that evolve fails on UDPs that are not suitable.
+    es4cgp uda_bfe(10u, 2u, 1e-4, true, 0u);
+    uda_bfe.set_bfe(pagmo::bfe{});
+    es4cgp uda_not_bfe(10u, 2u, 1e-4, true, 0u);
+
+    // Here we test that evolution is identical for the two variants
+    pagmo::problem prob{symbolic_regression({{1., 2.}, {0.3, -0.32}}, {{3. / 2.}, {0.02 / 0.32}})};
+    pagmo::population pop1{prob, 5u, 23u};
+    pagmo::population pop2{prob, 5u, 23u};
+
+    uda_bfe.set_verbosity(1u);
+    pop1 = uda_bfe.evolve(pop1);
+    BOOST_CHECK(uda_bfe.get_log().size() > 0u);
+
+    uda_not_bfe.set_verbosity(1u);
+    pop2 = uda_not_bfe.evolve(pop2);
+    BOOST_CHECK(uda_not_bfe.get_log() == uda_bfe.get_log());
 }
 
 BOOST_AUTO_TEST_CASE(trivial_methods_test)

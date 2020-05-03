@@ -34,7 +34,7 @@ def main():
 
 
     # We instantiate here the evolutionary strategy we want to use to search for models.
-    uda  = dcgpy.es4cgp(gen = 10000, mut_n = 2)
+    uda  = dcgpy.es4cgp(gen = 10000, max_mut = 2)
 
     prob = pg.problem(udp)
     algo = pg.algorithm(uda)

@@ -41,9 +41,12 @@ std::string symbolic_regression_init_doc();
 std::string symbolic_regression_predict_doc();
 
 // UDAs
+std::string generic_set_bfe_doc();
 std::string generic_uda_get_seed_doc();
 std::string es4cgp_doc();
 std::string es4cgp_get_log_doc();
+std::string moes4cgp_doc();
+std::string moes4cgp_get_log_doc();
 std::string gd4cgp_doc();
 std::string gd4cgp_get_log_doc();
 std::string mes4cgp_doc();
@@ -79,6 +82,8 @@ std::string generate_gauss1_doc();
 std::string generate_kirby2_doc();
 std::string generate_lanczos2_doc();
 std::string generate_misra1b_doc();
+// MISC data
+std::string generate_luca1_doc();
 
 } // namespace dcgpy
 

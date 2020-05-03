@@ -13,13 +13,13 @@ def encode_ffnn(inputs, outputs, layers_size, kernels, levels_back):
         levels_back (``int``): number of levels-back in the cartesian program
 
     Returns:
-        A ``expression_ann_double`` encoding the requested network.
+        A ``expression_ann`` encoding the requested network.
 
     Raises:
         ValueError: if the kernel list contains unknown kernel names or if layers_size and kernels are malformed
     """
 
-    from dcgpy import expression_ann_double, kernel_set_double
+    from dcgpy import expression_ann, kernel_set_double
 
     if (len(kernels) != len(layers_size) + 1):
         raise ValueError("The size of layers_size must be one less than the size of kernels (as this also includes the output nonlinearity) ")
@@ -32,7 +32,7 @@ def encode_ffnn(inputs, outputs, layers_size, kernels, levels_back):
     cols = len(extended_layer_size)
     rows = max(extended_layer_size)
     # We create a dCGPANN expression that is able to encode the FFNN
-    retval = expression_ann_double(inputs, outputs, rows, cols, levels_back, arity, kernel_list)
+    retval = expression_ann(inputs, outputs, rows, cols, levels_back, arity, kernel_list)
     # We hand write the chromosome.
     start_prev_col = [0] + [inputs + c * rows for c in range(cols)]
     x = retval.get()

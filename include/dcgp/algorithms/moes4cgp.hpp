@@ -1,8 +1,10 @@
-#ifndef DCGP_MOMES4CGP_H
-#define DCGP_MOMES4CGP_H
+#ifndef DCGP_MOES4CGP_H
+#define DCGP_MOES4CGP_H
 
-#include <Eigen/Dense>
+#include <boost/optional.hpp>
+#include <boost/serialization/optional.hpp>
 #include <pagmo/algorithm.hpp>
+#include <pagmo/bfe.hpp>
 #include <pagmo/detail/custom_comparisons.hpp>
 #include <pagmo/io.hpp>
 #include <pagmo/population.hpp>
@@ -19,11 +21,10 @@
 
 namespace dcgp
 {
-/// Multi-Objective, Memetic Evolutionary Strategy for a Cartesian Genetic Program
+/// Multi-Objective, Evolutionary Strategy for a Cartesian Genetic Program
 /**
  *
  * \image html multiple_objectives.png "Multi-objective"
- * \image html neo-darwinism.jpg "Neo-darwinism"
  *
  * Symbolic regression tasks seek for good mathematical models to represent input data. By increasing
  * the model complexity it is always (theoretically) possible to find almost perfect fits of any input data.
@@ -31,20 +32,18 @@ namespace dcgp
  * is, ultimately, a two-objectives optimization problem.
  *
  * In this C++ class we offer an UDA (User Defined Algorithm for the pagmo optimization suite) which extends
- * :class:`dcgp::mes4cgp` for a multiobjective problem. The resulting algorithm, is
+ * :class:`dcgp::es4cgp` for a multiobjective problem. The resulting approach, is
  * outlined by the following pseudo-algorithm:
  *
  * @code{.unparsed}
  * > Start from a population (pop) of dimension N
  * > while i < gen
- * > > Mutation: create a new population pop2 mutating N times the best individual (only the integer part is affected)
- * > > Life long learning: apply a one step of a second order Newton method to each individual (only the continuous part
- *     is affected)
+ * > > Mutation: create a new population pop2 mutating each individual in pop.
  * > > Reinsertion: set pop to contain the best N individuals taken from pop and pop2 according to non dominated
  * sorting.
  * @endcode
  */
-class momes4cgp
+class moes4cgp
 {
 public:
     /// Single entry of the log (gen, fevals, best loss, ndf size, max. complexity)
@@ -54,21 +53,25 @@ public:
 
     /// Constructor
     /**
-     * Constructs a multi-objective memetic evolutionary strategy algorithm for use with a
+     * Constructs a multi-objective evolutionary strategy algorithm for use with a
      * :class:`dcgp::symbolic_regression` UDP.
      *
      * @param gen number of generations.
-     * @param max_mut maximum number of active genes to be mutated. The minimum is 0 as to allow multiple steps of
-     * Newton descent.
+     * @param max_mut maximum number of active genes to be mutated.
+     * @param ftol the algorithm will exit when the loss is below this tolerance. This is useful for cases where
+     * an exact formula is seeked, rather than just an approximated one.
+     * @param learn_constants when true a gaussian mutation is applied to the ephemeral constants (std = 0.1).
      * @param seed seed used by the internal random number generator (default is random).
      *
-     * @throws std::invalid_argument if *mut_n* is 0
+     * @throws std::invalid_argument if *max_mut* is 0.
      */
-    momes4cgp(unsigned gen = 1u, unsigned max_mut = 4u, double ftol = 0., unsigned seed = random_device::next())
-        : m_gen(gen), m_max_mut(max_mut), m_ftol(ftol), m_e(seed), m_seed(seed), m_verbosity(0u)
+    moes4cgp(unsigned gen = 1u, unsigned max_mut = 4u, double ftol = 0., bool learn_constants = true,
+             unsigned seed = random_device::next())
+        : m_gen(gen), m_max_mut(max_mut), m_ftol(ftol), m_learn_constants(learn_constants), m_e(seed), m_seed(seed),
+          m_verbosity(0u)
     {
         if (max_mut == 0u) {
-            throw std::invalid_argument("The number of active mutations is zero, it must be at least 1.");
+            throw std::invalid_argument("The maximum number of active mutations is zero, it must be at least 1.");
         }
         if (ftol < 0.) {
             throw std::invalid_argument("The ftol is negative, it must be positive or zero.");
@@ -88,6 +91,7 @@ public:
     pagmo::population evolve(pagmo::population pop) const
     {
         const auto &prob = pop.get_problem();
+        auto dim = prob.get_nx();
         auto n_obj = prob.get_nobj();
         const auto bounds = prob.get_bounds();
         auto NP = pop.size();
@@ -97,7 +101,7 @@ public:
         // bindings. Using this global function, instead, allows its implementation to be overridden in the bindings.
         auto udp_ptr = details::extract_sr_cpp_py(prob);
         // PREAMBLE-------------------------------------------------------------------------------------------------
-        // Check whether the problem is suitable for momes4cgp
+        // Check whether the problem is suitable for moes4cgp
         // If the UDP in pop is not a symbolic_regression UDP, udp_ptr will be NULL
         if (!udp_ptr) {
             throw std::invalid_argument(prob.get_name() + " does not seem to be a symbolic regression problem. "
@@ -124,12 +128,13 @@ public:
         auto cgp = udp_ptr->get_cgp();
         // How many ephemeral constants?
         auto n_eph = prob.get_ncx();
-        // The hessian will be stored in a square Eigen for inversion
-        Eigen::MatrixXd H = Eigen::MatrixXd::Zero(_(n_eph), _(n_eph));
-        // Gradient and Constants will be stored in these column vectors
-        Eigen::MatrixXd G = Eigen::MatrixXd::Zero(_(n_eph), 1);
-        Eigen::MatrixXd C = Eigen::MatrixXd::Zero(_(n_eph), 1);
-        auto hs = prob.hessians_sparsity();
+        // Normal distribution (to perturb the constants)
+        std::normal_distribution<> normal{0., 1.};
+        // Uniform distribution (to pick the number of active mutations)
+        std::uniform_int_distribution<unsigned> dis(1u, m_max_mut);
+        // A contiguous vector of chromosomes/fitness vectors for pagmo::bfe input\output is allocated here.
+        pagmo::vector_double dvs(NP * dim);
+        pagmo::vector_double fs(NP * n_obj);
 
         // Main loop
         for (decltype(m_gen) gen = 1u; gen <= m_gen; ++gen) {
@@ -158,18 +163,11 @@ public:
             pagmo::population popnew(pop);
             // This will store the idx of the best individuals to select for the next generation.
             std::vector<pagmo::vector_double::size_type> best_idx(NP);
-            // We also need to randomly assign the number of active mutations to each individual.
-            std::vector<unsigned> n_active_mutations(NP);
-            std::uniform_int_distribution<unsigned> dis(0, m_max_mut);
-            for (auto &item : n_active_mutations) {
-                item = dis(m_e);
-            }
-
-            // 1 - We generate new NP individuals mutating the integer part of the chromosome and leaving the continuous
-            // part untouched
+            // 1 - We generate new NP individuals mutating the chromosome
             std::vector<pagmo::vector_double> mutated_x(NP);
             for (decltype(NP) i = 0u; i < NP; ++i) {
                 mutated_x[i] = pop.get_x()[i];
+                // a - mutate the integer part
                 // We extract the integer part of the individual
                 std::vector<unsigned> mutated_xu(mutated_x[i].size() - n_eph);
                 std::transform(mutated_x[i].data() + n_eph, mutated_x[i].data() + mutated_x[i].size(),
@@ -177,111 +175,47 @@ public:
                 // Use it to set the CGP
                 cgp.set(mutated_xu);
                 // Mutate the expression
-                cgp.mutate_active(n_active_mutations[i]);
+                cgp.mutate_active(dis(m_e));
                 mutated_xu = cgp.get();
                 // Put it back
                 std::transform(mutated_xu.begin(), mutated_xu.end(), mutated_x[i].data() + n_eph,
                                [](unsigned a) { return boost::numeric_cast<double>(a); });
+                // b - mutate the continuous part if requested
+                if (m_learn_constants) {
+                    for (decltype(n_eph) j = 0u; j < n_eph; ++j) {
+                        mutated_x[i][j] = mutated_x[i][j] + 0.1 * normal(m_e);
+                    }
+                }
+                // c - copy the mutated chromosome into dv (note that one could write the code
+                // above without the auxiliary mutated_x but readibility would be dimmisnished)
+                std::copy(mutated_x[i].begin(), mutated_x[i].end(), dvs.data() + i * dim);
             }
-
-            // 2 - Life long learning (i.e. touching the continuous part) is obtained performing a single Newton
-            // iteration (thus favouring constants appearing linearly)
+            // 2 - We compute the mutants fitnesses
+            if (m_bfe) {
+                fs = (*m_bfe)(prob, dvs);
+            } else {
+                for (decltype(NP) i = 0u; i < NP; ++i) {
+                    pagmo::vector_double tmp_x(dim);
+                    std::copy(dvs.data() + i * dim, dvs.data() + (i + 1) * dim, tmp_x.begin());
+                    pagmo::vector_double tmp_f = prob.fitness(tmp_x);
+                    std::copy(tmp_f.begin(), tmp_f.end(), fs.data() + i * n_obj);
+                }
+            }
+            // 3 - We insert the mutated individuals in the population
+            std::vector<double> tmp_x(dim);
+            std::vector<double> tmp_f(n_obj);
             for (decltype(NP) i = 0u; i < NP; ++i) {
-                // Defining the gradient and hessian returned by the UDP.
-                auto hess = prob.hessians(mutated_x[i]);
-                auto grad = prob.gradient(mutated_x[i]);
-                // For a single ephemeral constant we avoid to call the Eigen machinery. This
-                // makes the code more readable and results in a few lines rather than tens of.
-                if (n_eph == 1u) {
-                    if (hess[0][0] != 0. && std::isfinite(grad[0]) & std::isfinite(hess[0][0])) {
-                        mutated_x[i][0] = mutated_x[i][0] - grad[0] / hess[0][0];
-                    }
-                } else { // We have at least two ephemeral constants defined and thus need to deal with matrices.
-                    // We find out how many epheremal constants are actually in expression
-                    // collecting the indices of non-zero gradients
-                    std::vector<pagmo::vector_double::size_type> non_zero, zero;
-                    for (decltype(grad.size()) j = 0u; j < grad.size(); ++j) {
-                        if (grad[j] != 0.) {
-                            non_zero.emplace_back(j);
-                        } else {
-                            zero.emplace_back(j);
-                        }
-                    }
-                    auto n_non_zero = non_zero.size();
-                    if (n_non_zero == 1u) {
-                        // Only one ephemeral constant is in the expression, as above, we avoid to call the
-                        // Eigen machinery. This makes the code more readable.
-                        if (hess[0][non_zero[0]] != 0. && std::isfinite(grad[non_zero[0]])
-                            && std::isfinite(hess[0][non_zero[0]])) {
-                            mutated_x[i][non_zero[0]]
-                                = mutated_x[i][non_zero[0]] - grad[non_zero[0]] / hess[0][non_zero[0]];
-                        }
-                    } else if (n_non_zero > 1u) {
-                        // The (active) Hessian stored in a square Eigen matrix. Rows and Cols
-                        // will be removed later so that size will be n_non_zero x n_non_zero
-                        H = Eigen::MatrixXd::Zero(_(n_eph), _(n_eph));
-                        // (active) Gradient stored in a column vector
-                        G = Eigen::MatrixXd::Zero(_(n_non_zero), 1u);
-                        // (active) Constants stored in a column vector
-                        C = Eigen::MatrixXd::Zero(_(n_non_zero), 1u);
-                        // Full pivoting LU decomposition to check that H is invertible, find the inverse
-                        // and see if H is positive definite
-                        Eigen::FullPivLU<Eigen::MatrixXd> fullpivlu;
-                        // We construct the hessian including all the zero elements
-                        for (decltype(hess[0].size()) j = 0u; j < hess[0].size(); ++j) {
-                            H(_(hs[0][j].first), _(hs[0][j].second)) = hess[0][j];
-                            H(_(hs[0][j].second), _(hs[0][j].first)) = hess[0][j];
-                        }
-                        // We remove the rows and columns corresponding to ephemeral constants not
-                        // in the expression
-                        for (decltype(zero.size()) j = 0u; j < zero.size(); ++j) {
-                            remove_row(H, non_zero[j] - j);
-                            remove_column(H, non_zero[j] - j);
-                        }
-                        // We now construct the (active) gradient and the (active) constant column vectors.
-                        for (decltype(n_non_zero) j = 0u; j < n_non_zero; ++j) {
-                            G(_(j), 0) = grad[non_zero[j]];
-                            C(_(j), 0) = mutated_x[i][non_zero[j]];
-                        }
-                        // And we perform a Newton step
-                        if (G.array().isFinite().all()) {
-                            fullpivlu.compute(H);
-                            // NOTE: the eigenvalues of U (i.e. its diagonal elements) have the same sign structure as
-                            // the eigenvalues of H according to Sylvesters theorem of intertia
-                            // so we can check that H is positive (semi) definite trough looking at the diagonal
-                            // elements of U (see e.g.
-                            // https://math.stackexchange.com/questions/621040/compute-eigenvalues-of-a-square-matrix-given-lu-decomposition)
-                            if (fullpivlu.isInvertible() && (fullpivlu.matrixLU().diagonal().array() >= 0.).all()) {
-                                // H is invertible and positive (semi) definite
-                                // we are therefore approaching a minimum and the inverse is defined
-                                // it can however contain infinities in some elements
-                                // so we check that all elements of the inverse are finite and only then do a Newton
-                                // step
-                                auto H_inv = fullpivlu.inverse();
-                                if (H_inv.array().isFinite().all()) {
-                                    C = C - H_inv * G;
-                                    // copy modified constants back to the chromosome
-                                    for (decltype(non_zero.size()) j = 0u; j < non_zero.size(); ++j) {
-                                        mutated_x[i][non_zero[j]] = C(_(j), 0);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                // We use prob to evaluate the fitness so its feval counter is increased.
-                auto f = prob.fitness(mutated_x[i]);
-                // Diversity mechanism. If the fitness is already present we do not insert the individual.
-                // Do I need this copy? @bluescarni? Can I use the get in the find directly? its a ref I think
-                // so yes in theory....
-                auto fs = popnew.get_f();
-                if (std::find(fs.begin(), fs.end(), f) == fs.end() && std::isfinite(f[0])) {
-                    popnew.push_back(mutated_x[i], f);
+                std::copy(dvs.data() + i * dim, dvs.data() + (i + 1) * dim, tmp_x.begin());
+                std::copy(fs.data() + i * n_obj, fs.data() + (i + 1) * n_obj, tmp_f.begin());
+                auto current_fs = popnew.get_f();
+                if (std::find(current_fs.begin(), current_fs.end(), tmp_f) == current_fs.end()
+                    && std::isfinite(tmp_f[0])) {
+                    popnew.push_back(tmp_x, tmp_f);
                 }
             }
-            // 3 - We select a new population using non dominated sorting
+            // 4 - We select a new population using non dominated sorting
             best_idx = pagmo::select_best_N_mo(popnew.get_f(), NP);
-            // We insert into the population
+            // 5 - We insert into the population
             for (pagmo::population::size_type i = 0; i < NP; ++i) {
                 pop.set_xf(i, popnew.get_x()[best_idx[i]], popnew.get_f()[best_idx[i]]);
             }
@@ -312,6 +246,15 @@ public:
         return m_seed;
     }
 
+    /// Sets the batch function evaluation scheme
+    /**
+     * @param b batch function evaluation object
+     */
+    void set_bfe(const pagmo::bfe &b)
+    {
+        m_bfe = b;
+    }
+
     /// Sets the algorithm verbosity
     /**
      * Sets the verbosity level of the screen output and of the
@@ -340,8 +283,7 @@ public:
 
 
      * @endcode
-     * Gen is the generation number, Fevals the number of function evaluation used, Best loss is the best loss in
-     the
+     * Gen is the generation number, Fevals the number of function evaluation used, Best loss is the best loss in the
      * population, Ndf size is the size of the non dominated front (i.e. the number of models that are optimal) and
      * compl. is the complexity of the lowest loss model.
      *
@@ -367,7 +309,7 @@ public:
      */
     std::string get_name() const
     {
-        return "MOM-ES for CGP: MultiObjective Memetic Evolutionary Strategy for Cartesian Genetic Programming";
+        return "MO-ES for CGP: Multi-Objective Evolutionary Strategy for Cartesian Genetic Programming";
     }
 
     /// Extra info
@@ -377,10 +319,12 @@ public:
     std::string get_extra_info() const
     {
         std::ostringstream ss;
-        pagmo::stream(ss, "\tMaximum number of generations: ", m_gen);
+        pagmo::stream(ss, "\tNumber of generations: ", m_gen);
         pagmo::stream(ss, "\n\tMaximum number of active mutations: ", m_max_mut);
         pagmo::stream(ss, "\n\tExit condition of the final loss (ftol): ", m_ftol);
+        pagmo::stream(ss, "\n\tLearn constants?: ", m_learn_constants);
         pagmo::stream(ss, "\n\tVerbosity: ", m_verbosity);
+        pagmo::stream(ss, "\n\tUsing bfe: ", ((m_bfe) ? "yes" : "no"));
         pagmo::stream(ss, "\n\tSeed: ", m_seed);
         return ss.str();
     }
@@ -388,11 +332,11 @@ public:
     /// Get log
     /**
      * A log containing relevant quantities monitoring the last call to evolve. Each element of the returned
-     * <tt>std::vector</tt> is a momes4cgp::log_line_type containing: Gen, Fevals, Best loss, Ndf size and
-     * Complexity described in momes4cgp::set_verbosity().
+     * <tt>std::vector</tt> is a moes4cgp::log_line_type containing: Gen, Fevals, Best loss, Ndf size and Complexity
+     * described in moes4cgp::set_verbosity().
      *
-     * @return an <tt> std::vector</tt> of momes4cgp::log_line_type containing the logged values Gen, Fevals, Best
-     * loss, Ndf size * * and Complexity
+     * @return an <tt> std::vector</tt> of moes4cgp::log_line_type containing the logged values Gen, Fevals, Best loss,
+     * Ndf size and Complexity
      */
     const log_type &get_log() const
     {
@@ -400,39 +344,6 @@ public:
     }
 
 private:
-    static inline void remove_row(Eigen::MatrixXd &matrix, pagmo::vector_double::size_type row_to_remove)
-    {
-        Eigen::Index n_rows = matrix.rows() - 1u;
-        Eigen::Index n_cols = matrix.cols();
-
-        if (_(row_to_remove) < n_rows)
-            matrix.block(_(row_to_remove), 0, n_rows - _(row_to_remove), n_cols)
-                = matrix.block(_(row_to_remove) + 1, 0, n_rows - _(row_to_remove), n_cols);
-
-        matrix.conservativeResize(n_rows, n_cols);
-    }
-
-    static inline void remove_column(Eigen::MatrixXd &matrix, pagmo::vector_double::size_type col_to_remove)
-    {
-        Eigen::Index n_rows = matrix.rows();
-        Eigen::Index n_cols = matrix.cols() - 1u;
-
-        if (_(col_to_remove) < n_cols)
-            matrix.block(0, _(col_to_remove), n_rows, n_cols - _(col_to_remove))
-                = matrix.block(0, _(col_to_remove) + 1, n_rows, n_cols - _(col_to_remove));
-
-        matrix.conservativeResize(n_rows, n_cols);
-    }
-    // Eigen stores indexes and sizes as signed types, while dCGP (and pagmo)
-    // uses STL containers thus sizes and indexes are unsigned. To
-    // make the conversion as painless as possible this template is provided
-    // allowing, for example, syntax of the type D(_(i),_(j)) to adress an Eigen matrix
-    // when i and j are unsigned
-    template <typename I>
-    static Eigen::DenseIndex _(I n)
-    {
-        return static_cast<Eigen::DenseIndex>(n);
-    }
     // This prints to screen and logs one single line.
     void log_single_line(unsigned gen, unsigned long long fevals, const pagmo::population &pop) const
     {
@@ -450,24 +361,27 @@ public:
     {
         ar &m_gen;
         ar &m_max_mut;
-        ar &m_ftol;
+        ar &m_learn_constants;
         ar &m_e;
         ar &m_seed;
         ar &m_verbosity;
         ar &m_log;
+        ar &m_bfe;
     }
 
 private:
     unsigned m_gen;
     unsigned m_max_mut;
     double m_ftol;
+    bool m_learn_constants;
     mutable detail::random_engine_type m_e;
     unsigned m_seed;
     unsigned m_verbosity;
     mutable log_type m_log;
+    boost::optional<pagmo::bfe> m_bfe;
 };
 } // namespace dcgp
 
-PAGMO_S11N_ALGORITHM_EXPORT_KEY(dcgp::momes4cgp)
+PAGMO_S11N_ALGORITHM_EXPORT_KEY(dcgp::moes4cgp)
 
 #endif

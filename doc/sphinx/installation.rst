@@ -56,10 +56,10 @@ to add ``conda-forge`` to the channels:
 Please refer to the `conda documentation <https://conda.io/en/latest/>`__ for instructions
 on how to setup and manage your conda installation.
 
-Installing with pip
-^^^^^^^^^^^^^^^^^^^
-We also provide the pip packages (mainly for linux 64 bit architectures). Check on the 
-`PyPi dcgpy page <https://pypi.org/project/dcgpy/>`_ if the needed package is provided.
+Installing with pip (deprecated)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+We also provide the pip packages (mainly for linux 64 bit architectures and older versions).
+Check on the `PyPi dcgpy page <https://pypi.org/project/dcgpy/>`_ if the needed package is provided.
 
 .. code-block:: console
 

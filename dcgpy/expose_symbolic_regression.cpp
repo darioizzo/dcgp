@@ -7,6 +7,7 @@
 #include <dcgp/algorithms/es4cgp.hpp>
 #include <dcgp/algorithms/gd4cgp.hpp>
 #include <dcgp/algorithms/mes4cgp.hpp>
+#include <dcgp/algorithms/moes4cgp.hpp>
 #include <dcgp/algorithms/momes4cgp.hpp>
 #include <dcgp/gym.hpp>
 #include <dcgp/kernel.hpp>
@@ -21,6 +22,7 @@
 
 PAGMO_S11N_ALGORITHM_IMPLEMENT(dcgp::es4cgp)
 PAGMO_S11N_ALGORITHM_IMPLEMENT(dcgp::mes4cgp)
+PAGMO_S11N_ALGORITHM_IMPLEMENT(dcgp::moes4cgp)
 PAGMO_S11N_ALGORITHM_IMPLEMENT(dcgp::momes4cgp)
 PAGMO_S11N_ALGORITHM_IMPLEMENT(dcgp::gd4cgp)
 PAGMO_S11N_PROBLEM_IMPLEMENT(dcgp::symbolic_regression)
@@ -67,7 +69,8 @@ void expose_symbolic_regression(py::module &m)
     sr_.def(py::init<>())
         // Constructor from list of lists
         .def(py::init<const std::vector<std::vector<double>> &, const std::vector<std::vector<double>> &, unsigned,
-                      unsigned, unsigned, unsigned, const std::vector<kernel<double>> &, unsigned, bool, unsigned, std::string>(),
+                      unsigned, unsigned, unsigned, const std::vector<kernel<double>> &, unsigned, bool, unsigned,
+                      std::string>(),
              py::arg("points"), py::arg("labels"), py::arg("rows") = 1, py::arg("cols") = 16,
              py::arg("levels_back") = 17, py::arg("arity") = 2, py::arg("kernels"), py::arg("n_eph") = 0u,
              py::arg("multi_objective") = false, py::arg("parallel_batches") = 0u, py::arg("loss") = "MSE")
@@ -83,7 +86,8 @@ void expose_symbolic_regression(py::module &m)
             }),
             symbolic_regression_init_doc().c_str(), py::arg("points"), py::arg("labels"), py::arg("rows") = 1,
             py::arg("cols") = 16, py::arg("levels_back") = 17, py::arg("arity") = 2, py::arg("kernels"),
-            py::arg("n_eph") = 0u, py::arg("multi_objective") = false, py::arg("parallel_batches") = 0u, py::arg("loss") = "MSE")
+            py::arg("n_eph") = 0u, py::arg("multi_objective") = false, py::arg("parallel_batches") = 0u,
+            py::arg("loss") = "MSE")
         .def("get_nobj", &dcgp::symbolic_regression::get_nobj)
         .def("fitness", &dcgp::symbolic_regression::fitness)
         .def("gradient", &dcgp::symbolic_regression::gradient)
@@ -125,29 +129,39 @@ void expose_symbolic_regression(py::module &m)
     // ES-4CGP (Evolutionary Strategy for Cartesian Genetic Programming)
     py::class_<dcgp::es4cgp> es4cgp_(m, "es4cgp", es4cgp_doc().c_str());
     es4cgp_
-        .def(py::init<unsigned, unsigned, double, bool>(), py::arg("gen") = 1u, py::arg("mut_n") = 1u,
-             py::arg("ftol") = 1e-4, py::arg("learn_constants") = true)
-        .def(py::init<unsigned, unsigned, double, bool, unsigned>(), py::arg("gen") = 1u, py::arg("mut_n") = 1u,
-             py::arg("ftol") = 1e-4, py::arg("learn_constants") = true, py::arg("seed"))
-        .def("evolve",
-             [](const dcgp::es4cgp &instance, pagmo::population pop) {
-                 py::scoped_ostream_redirect stream(std::cout,                               // std::ostream&
-                                                    py::module::import("sys").attr("stdout") // Python output
-                 );
-                 return instance.evolve(pop);
-             })
+        .def(py::init<unsigned, unsigned, double, bool>(), py::arg("gen") = 1u, py::arg("max_mut") = 4u,
+             py::arg("ftol") = 0., py::arg("learn_constants") = true)
+        .def(py::init<unsigned, unsigned, double, bool, unsigned>(), py::arg("gen") = 1u, py::arg("max_mut") = 4u,
+             py::arg("ftol") = 0., py::arg("learn_constants") = true, py::arg("seed"))
+        .def("evolve", &dcgp::es4cgp::evolve)
         .def("set_verbosity", &dcgp::es4cgp::set_verbosity)
         .def("get_name", &dcgp::es4cgp::get_name)
         .def("get_extra_info", &dcgp::es4cgp::get_extra_info)
         .def("get_seed", &dcgp::es4cgp::get_seed, generic_uda_get_seed_doc().c_str())
+        .def("set_bfe", &dcgp::es4cgp::set_bfe, generic_set_bfe_doc().c_str(), py::arg("b"))
         .def("get_log", &generic_log_getter<dcgp::es4cgp>, es4cgp_get_log_doc().c_str())
         .def(py::pickle(&udx_pickle_getstate<dcgp::es4cgp>, &udx_pickle_setstate<dcgp::es4cgp>))
         .def("__repr__", &dcgp::es4cgp::get_extra_info);
+    // MOES-4CGP (Multi-Objective Evolutionary Strategy for Cartesian Genetic Programming)
+    py::class_<dcgp::moes4cgp> moes4cgp_(m, "moes4cgp", moes4cgp_doc().c_str());
+    moes4cgp_
+        .def(py::init<unsigned, unsigned, double, bool>(), py::arg("gen") = 1u, py::arg("max_mut") = 4u,
+             py::arg("ftol") = 0., py::arg("learn_constants") = true)
+        .def(py::init<unsigned, unsigned, double, bool, unsigned>(), py::arg("gen") = 1u, py::arg("max_mut") = 4u,
+             py::arg("ftol") = 0., py::arg("learn_constants") = true, py::arg("seed"))
+        .def("evolve", &dcgp::moes4cgp::evolve)
+        .def("set_verbosity", &dcgp::moes4cgp::set_verbosity)
+        .def("get_name", &dcgp::moes4cgp::get_name)
+        .def("get_extra_info", &dcgp::moes4cgp::get_extra_info)
+        .def("get_seed", &dcgp::moes4cgp::get_seed, generic_uda_get_seed_doc().c_str())
+        .def("set_bfe", &dcgp::moes4cgp::set_bfe, generic_set_bfe_doc().c_str(), py::arg("b"))
+        .def("get_log", &generic_log_getter<dcgp::moes4cgp>, moes4cgp_get_log_doc().c_str())
+        .def(py::pickle(&udx_pickle_getstate<dcgp::moes4cgp>, &udx_pickle_setstate<dcgp::moes4cgp>))
+        .def("__repr__", &dcgp::moes4cgp::get_extra_info);
     // GD-4CGP (Gradient Descent for Cartesian Genetic Programming)
     py::class_<dcgp::gd4cgp> gd4cgp_(m, "gd4cgp", gd4cgp_doc().c_str());
     gd4cgp_
-        .def(py::init<unsigned, double, double>(), py::arg("max_iter") = 1u, py::arg("lr") = 1.,
-             py::arg("lr_min") = 1e-3)
+        .def(py::init<unsigned, double, double>(), py::arg("max_iter") = 1u, py::arg("lr") = 1., py::arg("lr_min") = 0.)
         .def("evolve", &dcgp::gd4cgp::evolve)
         .def("set_verbosity", &dcgp::gd4cgp::set_verbosity)
         .def("get_name", &dcgp::gd4cgp::get_name)
@@ -158,9 +172,9 @@ void expose_symbolic_regression(py::module &m)
     // MES-4CGP (Memetic Evolutionary Strategy for Cartesian Genetic Programming)
     py::class_<dcgp::mes4cgp> mes4cgp_(m, "mes4cgp", mes4cgp_doc().c_str());
     mes4cgp_
-        .def(py::init<unsigned, unsigned, double>(), py::arg("gen") = 1u, py::arg("mut_n") = 1u, py::arg("ftol") = 1e-4)
-        .def(py::init<unsigned, unsigned, double, unsigned>(), py::arg("gen") = 1u, py::arg("mut_n") = 1u,
-             py::arg("ftol") = 1e-4, py::arg("seed"))
+        .def(py::init<unsigned, unsigned, double>(), py::arg("gen") = 1u, py::arg("max_mut") = 4u, py::arg("ftol") = 0.)
+        .def(py::init<unsigned, unsigned, double, unsigned>(), py::arg("gen") = 1u, py::arg("max_mut") = 4u,
+             py::arg("ftol") = 0., py::arg("seed"))
         .def("evolve", &dcgp::mes4cgp::evolve)
         .def("set_verbosity", &dcgp::mes4cgp::set_verbosity)
         .def("get_name", &dcgp::mes4cgp::get_name)
@@ -172,9 +186,11 @@ void expose_symbolic_regression(py::module &m)
     // MOMES-4CGP (Multi-Objective Memetic Evolutionary Strategy for Cartesian Genetic Programming)
     py::class_<dcgp::momes4cgp> momes4cgp_(m, "momes4cgp", momes4cgp_doc().c_str());
 
-    momes4cgp_.def(py::init<unsigned, unsigned>(), py::arg("gen") = 1u, py::arg("max_mut") = 1u);
     momes4cgp_
-        .def(py::init<unsigned, unsigned, unsigned>(), py::arg("gen") = 1u, py::arg("max_mut") = 1u, py::arg("seed"))
+        .def(py::init<unsigned, unsigned, double>(), py::arg("gen") = 1u, py::arg("max_mut") = 4u,
+             py::arg("ftol") = 0.)
+        .def(py::init<unsigned, unsigned, double, unsigned>(), py::arg("gen") = 1u, py::arg("max_mut") = 4u,
+             py::arg("ftol") = 0., py::arg("seed"))
         .def("evolve", &dcgp::momes4cgp::evolve)
         .def("set_verbosity", &dcgp::momes4cgp::set_verbosity)
         .def("get_name", &dcgp::momes4cgp::get_name)
@@ -211,5 +227,8 @@ void expose_symbolic_regression(py::module &m)
     expose_data_from_the_gym<&gym::generate_kirby2>(m, "generate_kirby2", generate_kirby2_doc());
     expose_data_from_the_gym<&gym::generate_lanczos2>(m, "generate_lanczos2", generate_lanczos2_doc());
     expose_data_from_the_gym<&gym::generate_misra1b>(m, "generate_misra1b", generate_misra1b_doc());
+    // MISC data
+    expose_data_from_the_gym<&gym::generate_luca1>(m, "generate_luca1", generate_luca1_doc());
+
 }
 } // namespace dcgpy

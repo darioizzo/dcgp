@@ -4,7 +4,15 @@ from pyaudi import gdual_double as gdual
 
 # 1- Instantiate a random expression using the 4 basic arithmetic operations
 ks = kernel_set(["sum", "diff", "div", "mul"])
-ex = expression(1, 1, 1, 6, 6, 2, ks(), 4232123212)
+ex = expression(inputs = 1, 
+                outputs = 1, 
+                rows = 1, 
+                cols = 6, 
+                levels_back = 6, 
+                arity = 2, 
+                kernels = ks(), 
+                n_eph = 0, 
+                seed = 4232123212)
 
 # 2 - Define the symbol set (in our case, 1 input variable named "x") and print the expression
 in_sym = ["x"]

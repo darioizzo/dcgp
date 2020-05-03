@@ -22,13 +22,13 @@ int main()
 
     // We instantiate a symbolic regression problem with one only ephemeral constants.
     auto n_eph = 1u;
-    symbolic_regression udp(X, Y, 1u, 15u, 16u, 2u, kernel_set<double>({"sum", "diff", "mul"})(), n_eph);
+    symbolic_regression udp(X, Y, 1u, 15u, 16u, 2u, kernel_set<double>({"sum", "diff", "mul", "pdiv"})(), n_eph);
 
     // We init a population with four individuals.
-    pagmo::population pop{udp, 4};
+    pagmo::population pop{udp, 4u};
 
     // We instantiate the memetic solver setting 1000 maximum generation and one active mutation (minimum)
-    dcgp::mes4cgp uda(1000u, 1u, 1e-8);
+    dcgp::mes4cgp uda(1000u, 4u, 1e-8);
     pagmo::algorithm algo{uda};
     algo.set_verbosity(50u);
 

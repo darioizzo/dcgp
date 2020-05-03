@@ -81,9 +81,10 @@ public:
                         std::vector<kernel<double>> f
                         = kernel_set<double>({"sum", "diff", "mul", "pdiv"})(), // functions
                         unsigned n_eph = 0u,                                    // number of ephemeral constants
-                        bool multi_objective = false,  // when true the fitness also returns the formula complexity
+                        bool multi_objective = false,   // when true the fitness also returns the formula complexity
                         unsigned parallel_batches = 0u, // number of parallel batches
-                        std::string loss = "MSE" // loss type
+                        std::string loss = "MSE",       // loss type
+                        unsigned seed = random_device::next() // seed used to generate mutations by the cgp
                         )
         : m_points(points), m_labels(labels), m_r(r), m_c(c), m_l(l), m_arity(arity), m_f(f), m_n_eph(n_eph),
           m_multi_objective(multi_objective), m_parallel_batches(parallel_batches), m_loss_s(loss)
@@ -92,39 +93,25 @@ public:
         unsigned m;
         // We check the input against obvious sanity criteria.
         sanity_checks(n, m);
-        // We initialize the inner cgp expression
-        auto seed = random_device::next();
+        // We initialize the inner cgp expression (the random seed is needed but will not play any role as
+        // the dcgp chromosome will be explicilty set in the UDAs before calling its operator)
         m_cgp = expression<double>(n, m, m_r, m_c, m_l, m_arity, m_f, m_n_eph, seed);
         // We initialize the inner dcgp expression
-        kernel_set<audi::gdual_d> f_g;
+        kernel_set<audi::gdual_v> f_g;
         for (const auto &ker : f) {
             auto name = ker.get_name();
-            // If protected division is used in the cgp the unprotected one will be used in the dCGP
-            // as to keep derivative sanity
+            // TODO: find a better pattern. If protected division is used in the cgp the
+            // unprotected one will be used in the dCGP as to keep derivative sanity
             if (name.compare("pdiv") == 0) {
                 f_g.push_back("div");
             } else {
                 f_g.push_back(ker.get_name());
             }
         }
-        m_dcgp = expression<audi::gdual_d>(n, m, m_r, m_c, m_l, m_arity, f_g(), m_n_eph, seed);
+        m_dcgp = expression<audi::gdual_v>(n, m, m_r, m_c, m_l, m_arity, f_g(), m_n_eph, seed);
         // We initialize the dpoints/dduals
-        m_dpoints.clear();
-        m_dlabels.clear();
-        for (const auto &point : m_points) {
-            std::vector<audi::gdual_d> point_gdual;
-            for (const auto &item : point) {
-                point_gdual.emplace_back(item);
-            }
-            m_dpoints.push_back(point_gdual);
-        }
-        for (const auto &label : m_labels) {
-            std::vector<audi::gdual_d> label_gdual;
-            for (const auto &item : label) {
-                label_gdual.emplace_back(item);
-            }
-            m_dlabels.push_back(label_gdual);
-        }
+        m_dpoints = points_to_gdual_v(points);
+        m_dlabels = points_to_gdual_v(labels);
         // We create the symbol set of the differentials here for efficiency.
         // They are used in the gradient computation.
         for (const auto &symb : m_dcgp.get_eph_symb()) {
@@ -133,6 +120,13 @@ public:
         // We create the symbols of the input variables here
         for (decltype(m_points[0].size()) i = 0u; i < m_points[0].size(); ++i) {
             m_symbols.push_back("x" + std::to_string(i));
+        }
+        if (m_loss_s == "MSE") {
+            m_loss_e = dcgp::expression<audi::gdual_v>::loss_type::MSE; // Mean Squared Error
+        } else if (m_loss_s == "CE") {
+            m_loss_e = dcgp::expression<audi::gdual_v>::loss_type::CE; // Cross Entropy
+        } else {
+            throw std::invalid_argument("The requested loss was: " + m_loss_s + " while only MSE and CE are allowed");
         }
     }
 
@@ -213,25 +207,27 @@ public:
                        [](double a) { return boost::numeric_cast<unsigned>(a); });
         m_dcgp.set(xu);
         // 2 - We use the floating point part of the chromosome to set ephemeral constants.
-        std::vector<audi::gdual_d> eph_val;
+        std::vector<audi::gdual_v> eph_val;
         for (decltype(m_n_eph) i = 0u; i < m_n_eph; ++i) {
             eph_val.emplace_back(x[i], m_dcgp.get_eph_symb()[i], 1u); // Only first derivative is needed
         }
         m_dcgp.set_eph_val(eph_val);
         // 3 - We compute the loss splitting the data in n batches.
         // TODO: make this work also when m_parallel_batches does not divide exactly the data size.
-        auto loss = m_dcgp.loss(m_dpoints, m_dlabels, m_loss_s, m_parallel_batches);
-        // Now we extract fitness and gradient and store the values in th caches or in the return value
+        auto loss = m_dcgp.loss(m_dpoints, m_dlabels, m_loss_e);
+        // Now we extract fitness and gradient and store the values in the caches or in the return value
         m_cache_fitness.first = x;
         m_cache_fitness.second.resize(get_nobj());
-        m_cache_fitness.second[0] = loss.constant_cf();
+        m_cache_fitness.second[0] = collapse(loss.constant_cf());
+
         loss.extend_symbol_set(m_deph_symb);
         if (!(loss.get_order() == 0u)) { // this happens when input terminals of the eph constants are inactive
                                          // (gradient is then zero)
             for (decltype(m_n_eph) i = 0u; i < m_n_eph; ++i) {
                 std::vector<unsigned> coeff(m_n_eph, 0.);
                 coeff[i] = 1.;
-                retval[i] = loss.get_derivative(coeff);
+                auto dvec = loss.get_derivative(coeff);
+                retval[i] = collapse(dvec);
             }
         }
         return retval;
@@ -286,20 +282,20 @@ public:
         m_dcgp.set(xu);
         // 2 - We use the floating point part of the chromosome to set the ephemeral constants values of the dcgp
         // member.
-        std::vector<audi::gdual_d> eph_val;
+        std::vector<audi::gdual_v> eph_val;
         for (decltype(m_n_eph) i = 0u; i < m_n_eph; ++i) {
             eph_val.emplace_back(x[i], m_dcgp.get_eph_symb()[i], 2u); // First and second order derivative are needed
         }
         m_dcgp.set_eph_val(eph_val);
         // 3 - We compute the MSE loss and its differentials.
-        auto loss = m_dcgp.loss(m_dpoints, m_dlabels, m_loss_s, m_parallel_batches);
+        auto loss = m_dcgp.loss(m_dpoints, m_dlabels, m_loss_e);
         // We make sure all symbols are in so that we get zeros when querying for a variable not in the gdual
         loss.extend_symbol_set(m_deph_symb);
 
         // Now we extract fitness, gradient and hessians from the gdual and store the values (retval or cache)
         m_cache_fitness.first = x;
         m_cache_fitness.second.resize(get_nobj());
-        m_cache_fitness.second[0] = loss.constant_cf();
+        m_cache_fitness.second[0] = collapse(loss.constant_cf());
         // We compute the gradient and the hessian only if
         // the loss depends on at least one ephemeral constant.
         // Otherwise the initialization values will be returned, that is zeros.
@@ -308,14 +304,16 @@ public:
             for (decltype(m_n_eph) i = 0u; i < m_n_eph; ++i) {
                 std::vector<unsigned> coeff(m_n_eph, 0.);
                 coeff[i] = 1.;
-                m_cache_gradient.second[i] = loss.get_derivative(coeff);
+                auto deriv = loss.get_derivative(coeff);
+                m_cache_gradient.second[i] = collapse(deriv);
             }
             // hessian (we return it)
             for (decltype(hd) i = 0u; i < hd; ++i) {
                 std::vector<unsigned> coeff(m_n_eph, 0.);
                 coeff[hs[0][i].first] = 1;
                 coeff[hs[0][i].second] += 1;
-                retval[0][i] = loss.get_derivative(coeff);
+                auto deriv = loss.get_derivative(coeff);
+                retval[0][i] = collapse(deriv);
             }
         }
         return retval;
@@ -517,6 +515,33 @@ public:
     }
 
 private:
+    // Collapses a vectorized cf into one (taking the mean)
+    static inline double collapse(const audi::vectorized<double> &vec)
+    {
+        return std::accumulate(vec.begin(), vec.end(), 0.) / static_cast<double>(vec.size());
+    };
+
+    // Transpose of a vector vector
+    static inline std::vector<std::vector<double>> transpose(const std::vector<std::vector<double>> &points) 
+    {
+        std::vector<std::vector<double>> result(points[0].size(), std::vector<double>(points.size()));
+        for (std::vector<double>::size_type i = 0; i < points[0].size(); i++)
+            for (std::vector<int>::size_type j = 0; j < points.size(); j++) {
+                result[i][j] = points[j][i];
+            }
+        return result;
+    }
+    // Builds the vectorized gduals from the data
+    static inline std::vector<audi::gdual_v> points_to_gdual_v(const std::vector<std::vector<double>> &points) 
+    {
+        std::vector<audi::gdual_v> retval(points[0].size());
+        auto pointsT = transpose(points);
+        for (decltype(pointsT.size()) i = 0u; i < pointsT.size(); ++i) {
+            retval[i] = audi::gdual_v(pointsT[i]);
+        }
+        return retval;
+    }
+
     // This setter can be marked const as m_cgp is mutable
     void set_cgp(const pagmo::vector_double &x) const
     {
@@ -582,6 +607,7 @@ public:
         ar &m_multi_objective;
         ar &m_parallel_batches;
         ar &m_loss_s;
+        ar &m_loss_e;
         ar &m_cgp;
         ar &m_dcgp;
         ar &m_cache_fitness;
@@ -590,8 +616,8 @@ public:
 private:
     std::vector<std::vector<double>> m_points;
     std::vector<std::vector<double>> m_labels;
-    std::vector<std::vector<audi::gdual_d>> m_dpoints;
-    std::vector<std::vector<audi::gdual_d>> m_dlabels;
+    std::vector<audi::gdual_v> m_dpoints;
+    std::vector<audi::gdual_v> m_dlabels;
     std::vector<std::string> m_deph_symb;
     std::vector<std::string> m_symbols;
 
@@ -604,20 +630,20 @@ private:
     bool m_multi_objective;
     unsigned m_parallel_batches;
     std::string m_loss_s;
+    dcgp::expression<audi::gdual_v>::loss_type m_loss_e;
     // The fact that this is mutable may hamper the performances of the bfe as the thread safetly level
     // of the UDP in pagmo will force copies of the UDP to be made in all threads. This can in principle be
     // avoided, but likely resulting in prepature optimization. (see https://github.com/darioizzo/dcgp/pull/42)
     mutable expression<double> m_cgp;
-    // TODO: this should be vectorized gduals
-    mutable expression<audi::gdual_d> m_dcgp;
+    mutable expression<audi::gdual_v> m_dcgp;
     mutable std::pair<pagmo::vector_double, pagmo::vector_double> m_cache_fitness;
     mutable std::pair<pagmo::vector_double, pagmo::vector_double> m_cache_gradient;
 };
 
 namespace details
 {
-// This function is a global symbol put in the namespace. Its purpose is 
-// to be overridden in the python bindings so that it can extract from a py::object a 
+// This function is a global symbol put in the namespace. Its purpose is
+// to be overridden in the python bindings so that it can extract from a py::object a
 // c++ dcgp::symbolic_regression. Its use is in the UDAs evolve to access (both in C++ and python)
 // the correct UDP.
 inline std::function<const dcgp::symbolic_regression *(const pagmo::problem &)> extract_sr_cpp_py

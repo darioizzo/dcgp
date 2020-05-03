@@ -8,7 +8,25 @@ using namespace dcgp;
 int main() {
     // 1- Instantiate a random expression using the 4 basic arithmetic operations
     kernel_set<audi::gdual_d> basic_set({"sum", "diff", "div", "mul"});
-    expression<audi::gdual_d> ex(1, 1, 1, 6, 6, 2, basic_set(), 1u);
+    // Number of independent variables (input dimensionality of the expression)
+    unsigned n_input = 1u;
+    // Number of outputs (output dimensionality of the expression)
+    unsigned n_output = 1u;
+    // Number of rows of the cartesian representation of the acyclic graph
+    unsigned rows = 1u;
+    // Number of columns of the cartesian representation of the acyclic graph
+    unsigned cols = 6u;
+    // Number of level-back (controlling the minimum number of allowed operations in the formula,
+    // if uncertain set it to cols + 1)
+    unsigned lb = 7u;
+    // Arity of the various kernels (the fundamental blocks that build up the expression)
+    unsigned arity = 2u;
+    // Maximum number of costants in the formula (ephemeral constants)
+    unsigned n_eph = 0u;
+    // Random seed used to generate the initial formula and all of its subsequent mutations
+    unsigned seed = 4232123212u;
+
+    expression<audi::gdual_d> ex(n_input, n_output, rows, cols, lb, arity, basic_set(), n_eph, seed);
 
     // 2 - Define the symbol set (in our case, 1 input variable named "x") and visualize the expression
     std::vector<std::string> in_sym({"x"});

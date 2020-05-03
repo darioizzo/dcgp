@@ -30,27 +30,26 @@ void expose_expression(const py::module &m, std::string type)
         .def(py::init<unsigned, unsigned, unsigned, unsigned, unsigned, unsigned, std::vector<kernel<T>>, unsigned,
                       unsigned>(),
              py::arg("inputs"), py::arg("outputs"), py::arg("rows"), py::arg("cols"), py::arg("levels_back"),
-             py::arg("arity"), py::arg("kernels"), py::arg("n_eph"), py::arg("seed"), expression_init_doc(type).c_str())
+             py::arg("arity") = 2u, py::arg("kernels"), py::arg("n_eph") = 0u, py::arg("seed"), expression_init_doc(type).c_str())
         // From vector arity
         .def(py::init<unsigned, unsigned, unsigned, unsigned, unsigned, std::vector<unsigned>, std::vector<kernel<T>>,
                       unsigned, unsigned>(),
              py::arg("inputs"), py::arg("outputs"), py::arg("rows"), py::arg("cols"), py::arg("levels_back"),
-             py::arg("arity"), py::arg("kernels"), py::arg("n_eph"), py::arg("seed"), expression_init_doc(type).c_str())
+             py::arg("arity"), py::arg("kernels"), py::arg("n_eph") = 0u, py::arg("seed"))
         // Constructors with no seed
         .def(py::init<unsigned, unsigned, unsigned, unsigned, unsigned, std::vector<unsigned>, std::vector<kernel<T>>,
                       unsigned>(),
              py::arg("inputs"), py::arg("outputs"), py::arg("rows"), py::arg("cols"), py::arg("levels_back"),
-             py::arg("arity"), py::arg("kernels"), py::arg("n_eph"), expression_init_doc(type).c_str())
+             py::arg("arity"), py::arg("kernels"), py::arg("n_eph") = 0u)
         .def(py::init<unsigned, unsigned, unsigned, unsigned, unsigned, unsigned, std::vector<kernel<T>>, unsigned>(),
              py::arg("inputs"), py::arg("outputs"), py::arg("rows"), py::arg("cols"), py::arg("levels_back"),
-             py::arg("arity"), py::arg("kernels"), py::arg("n_eph"), expression_init_doc(type).c_str())
-        .def(
-            "__repr__",
-            [](const expression<T> &instance) -> std::string {
-                std::ostringstream oss;
-                oss << instance;
-                return oss.str();
-            })
+             py::arg("arity") = 2u, py::arg("kernels"), py::arg("n_eph") = 0u)
+        .def("__repr__",
+             [](const expression<T> &instance) -> std::string {
+                 std::ostringstream oss;
+                 oss << instance;
+                 return oss.str();
+             })
         .def(
             "__call__", [](const expression<T> &instance, const std::vector<T> &v) { return instance(v); },
             "Call operator from values")
@@ -122,16 +121,26 @@ void expose_expression_weighted(const py::module &m, std::string type)
 {
     std::string class_name = "expression_weighted_" + type;
     auto wexp_ = py::class_<expression_weighted<T>, expression<T>>(m, class_name.c_str(), "A weighted CGP expression");
-    wexp_.def(py::init<>())
+    wexp_
+        .def(py::init<>())
+        // From scalar arity
+        .def(py::init<unsigned, unsigned, unsigned, unsigned, unsigned, unsigned, std::vector<kernel<T>>, unsigned>(),
+             py::arg("inputs"), py::arg("outputs"), py::arg("rows"), py::arg("cols"), py::arg("levels_back"),
+             py::arg("arity") = 2u, py::arg("kernels"), py::arg("seed"), expression_init_doc(type).c_str())
+        // From vector arity
         .def(py::init<unsigned, unsigned, unsigned, unsigned, unsigned, std::vector<unsigned>, std::vector<kernel<T>>,
                       unsigned>(),
              py::arg("inputs"), py::arg("outputs"), py::arg("rows"), py::arg("cols"), py::arg("levels_back"),
-             py::arg("arity"), py::arg("kernels"), py::arg("seed"), expression_init_doc(type).c_str())
+             py::arg("arity"), py::arg("kernels"), py::arg("seed"))
         // Constructor with no seed
+        .def(py::init<unsigned, unsigned, unsigned, unsigned, unsigned, unsigned, std::vector<kernel<T>>>(),
+             py::arg("inputs"), py::arg("outputs"), py::arg("rows"), py::arg("cols"), py::arg("levels_back"),
+             py::arg("arity") = 2u, py::arg("kernels"))
         .def(
             py::init<unsigned, unsigned, unsigned, unsigned, unsigned, std::vector<unsigned>, std::vector<kernel<T>>>(),
             py::arg("inputs"), py::arg("outputs"), py::arg("rows"), py::arg("cols"), py::arg("levels_back"),
-            py::arg("arity"), py::arg("kernels"), expression_init_doc(type).c_str())
+            py::arg("arity"), py::arg("kernels"))
+
         .def("__repr__",
              [](const expression_weighted<T> &instance) -> std::string {
                  std::ostringstream oss;
@@ -169,7 +178,7 @@ void expose_expression_ann(const py::module &m)
         .def(py::init<unsigned, unsigned, unsigned, unsigned, unsigned, std::vector<unsigned>,
                       std::vector<kernel<double>>>(),
              py::arg("inputs"), py::arg("outputs"), py::arg("rows"), py::arg("cols"), py::arg("levels_back"),
-             py::arg("arity"), py::arg("kernels"), expression_init_doc("double").c_str())
+             py::arg("arity"), py::arg("kernels"))
         .def("__repr__",
              [](const expression_ann &instance) -> std::string {
                  std::ostringstream oss;

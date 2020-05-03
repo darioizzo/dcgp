@@ -10,8 +10,7 @@
 #include <string>
 #include <vector>
 
-#include <audi/functions.hpp>
-#include <audi/io.hpp>
+#include <audi/audi.hpp>
 
 #include <tbb/parallel_for.h>
 #include <tbb/spin_mutex.h>
@@ -60,9 +59,10 @@ public:
      *
      * @param[in] n number of inputs (independent variables).
      * @param[in] m number of outputs (dependent variables).
-     * @param[in] r number of rows of the dCGP.
-     * @param[in] c number of columns of the dCGP.
-     * @param[in] l number of levels-back allowed in the dCGP.
+     * @param[in] r number of rows of the cartesian representation of the expression as an acyclic graph.
+     * @param[in] c number of columns of the cartesian representation of the expression as an acyclic graph.
+     * @param[in] l number of levels-back allowed. This, essentially, controls the minimum number of allowed
+     *  operations in the formula. If uncertain set it to c + 1
      * @param[in] arity arities of the basis functions for each column.
      * @param[in] f function set. An std::vector of dcgp::kernel<expression::type>.
      * @param[in] n_eph Number of ephemeral constants. Their values and their symbols can be set via the dedicate
@@ -105,9 +105,10 @@ public:
      *
      * @param[in] n number of inputs (independent variables).
      * @param[in] m number of outputs (dependent variables).
-     * @param[in] r number of rows of the dCGP.
-     * @param[in] c number of columns of the dCGP.
-     * @param[in] l number of levels-back allowed in the dCGP.
+     * @param[in] r number of rows of the cartesian representation of the expression as an acyclic graph.
+     * @param[in] c number of columns of the cartesian representation of the expression as an acyclic graph.
+     * @param[in] l number of levels-back allowed. This, essentially, controls the minimum number of allowed
+     *  operations in the formula. If uncertain set it to c + 1
      * @param[in] arity arity of the basis functions.
      * @param[in] f function set. An std::vector of dcgp::kernel<expression::type>.
      * @param[in] n_eph Number of ephemeral constants. Their values and their symbols can be set via the dedicate
@@ -723,9 +724,11 @@ public:
         }
     }
 
-    /// Mutates one of the active function genes
+    /// Mutates active function genes
     /**
-     * Mutates exactly one of the active function genes within its allowed bounds.
+     * Mutates \p N active function genes within their allowed bounds.
+     *
+     * @param[in] N Number of active function genes to be mutated
      */
     void mutate_active_fgene(unsigned N = 1u)
     {
@@ -743,11 +746,13 @@ public:
         }
     }
 
-    /// Mutates one of the active connection genes
+    /// Mutates active connection genes
     /**
-     * Mutates exactly one of the active connection genes within its allowed
-     * bounds.
+     * Mutates \p N active connection genes within their allowed bounds.
+     *
+     * @param[in] N Number of active connection genes to be mutated
      */
+
     void mutate_active_cgene(unsigned N = 1u)
     {
         // If no active function gene exists, do nothing
@@ -764,24 +769,28 @@ public:
         }
     }
 
-    /// Mutates one of the active output genes
+    /// Mutates active output genes
     /**
-     * Mutates exactly one of the output genes within its allowed bounds.
+     * Mutates \p N times random active output genes within their allowed bounds.
+     *
+     * @param[in] N Number of output genes to be mutated
      */
-    void mutate_ogene(unsigned N = 1)
+    void mutate_ogene(unsigned N = 1u)
     {
         unsigned idx;
-        if (m_m > 1) {
+        if (m_m > 1u) {
             for (auto i = 0u; i < N; ++i) {
                 idx = std::uniform_int_distribution<unsigned>(static_cast<unsigned>(m_active_genes.size() - m_m),
                                                               static_cast<unsigned>(m_active_genes.size() - 1u))(m_e);
+                idx = m_active_genes[idx];
+                mutate(idx);
             }
 
         } else {
             idx = static_cast<unsigned>(m_active_genes.size() - 1u);
+            idx = m_active_genes[idx];
+            mutate(idx);
         }
-        idx = m_active_genes[idx];
-        mutate(idx);
     }
 
     /// Sets the internal seed
@@ -883,10 +892,11 @@ protected:
      * of the active nodes and active genes. Each time the chromosome is changed, these structures need also to be
      * changed. A call to this method takes care of this. In derived classes (such as for example expression_ann), one
      * can add more of these chromosome dependant data, and will thus need to override this method, making sure to still
-     * have it called by the new method and adding there the new data book-keeping.
+     * have it called by the new method and adding there the new data book-keeping. Hence the method must be marked
+     * as virtual.
      */
 
-    void update_data_structures()
+    virtual void update_data_structures()
     {
         assert(m_x.size() == m_lb.size());
 
@@ -1059,6 +1069,14 @@ private:
     }
 
 public:
+    /// Object serialization
+    /**
+     * This method will save/load \p this into the archive \p ar.
+     *
+     * @param ar target archive.
+     *
+     * @throws unspecified any exception thrown by the serialization of the expression and of primitive types.
+     */
     template <typename Archive>
     void serialize(Archive &ar, unsigned)
     {

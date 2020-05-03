@@ -2,11 +2,6 @@
 #define DCGP_EXPRESSION_ANN_H
 
 #include <algorithm>
-#include <audi/io.hpp>
-#include <dcgp/config.hpp>
-#include <dcgp/expression.hpp>
-#include <dcgp/kernel.hpp>
-#include <dcgp/type_traits.hpp>
 #include <functional>
 #include <initializer_list>
 #include <iostream>
@@ -16,9 +11,18 @@
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include <vector>
+
 #include <tbb/parallel_for.h>
 #include <tbb/spin_mutex.h>
-#include <vector>
+
+#include <audi/io.hpp>
+
+#include <dcgp/config.hpp>
+#include <dcgp/expression.hpp>
+#include <dcgp/kernel.hpp>
+#include <dcgp/s11n.hpp>
+#include <dcgp/type_traits.hpp>
 
 namespace dcgp
 {
@@ -61,9 +65,10 @@ public:
      *
      * @param[in] n number of inputs (independent variables).
      * @param[in] m number of outputs (dependent variables).
-     * @param[in] r number of rows of the dCGPANN.
-     * @param[in] c number of columns of the dCGPANN.
-     * @param[in] l number of levels-back allowed for the dCGPANN.
+     * @param[in] r number of rows of the cartesian representation of the network as an acyclic graph.
+     * @param[in] c number of columns of the cartesian representation of the network as an acyclic graph.
+     * @param[in] l number of levels-back allowed. This, essentially, controls the minimum number of allowed
+     *  operations in the network. If uncertain set it to c + 1
      * @param[in] arity arities of the basis functions for each column.
      * @param[in] f function set. An std::vector of dcgp::kernel<expression::type>. Can only contain allowed functions.
      * @param[in] seed seed for the random number generator (initial expression and mutations depend on this).
@@ -75,8 +80,7 @@ public:
                    unsigned l,                    // n. levels-back
                    std::vector<unsigned> arity,   // basis functions' arity
                    std::vector<kernel<double>> f, // functions
-                   unsigned seed = dcgp::random_device::next()
-                   )
+                   unsigned seed = dcgp::random_device::next())
         : expression<double>(n, m, r, c, l, arity, f, 0u, seed), m_biases(r * c, 0.), m_kernel_map(f.size())
 
     {
@@ -127,9 +131,10 @@ public:
      *
      * @param[in] n number of inputs (independent variables).
      * @param[in] m number of outputs (dependent variables).
-     * @param[in] r number of rows of the dCGPANN.
-     * @param[in] c number of columns of the dCGPANN.
-     * @param[in] l number of levels-back allowed for the dCGPANN.
+     * @param[in] r number of rows of the cartesian representation of the network as an acyclic graph.
+     * @param[in] c number of columns of the cartesian representation of the network as an acyclic graph.
+     * @param[in] l number of levels-back allowed. This, essentially, controls the minimum number of allowed
+     *  operations in the network. If uncertain set it to c + 1
      * @param[in] arity uniform arity for all basis functions.
      * @param[in] f function set. An std::vector of dcgp::kernel<expression::type>. Can only contain allowed functions.
      * @param[in] seed seed for the random number generator (initial expression and mutations depend on this).
@@ -770,6 +775,27 @@ public:
 
     /*@}*/
 
+    /// Object serialization
+    /**
+     * This method will save/load \p this into the archive \p ar.
+     *
+     * @param ar target archive.
+     *
+     * @throws unspecified any exception thrown by the serialization of the expression and of primitive types.
+     */
+    template <typename Archive>
+    void serialize(Archive &ar, unsigned)
+    {
+        // invoke serialization of the base class
+        ar &boost::serialization::base_object<expression<double>>(*this);
+        ar &m_weights;
+        ar &m_weights_symbols;
+        ar &m_biases;
+        ar &m_biases_symbols;
+        ar &m_connected;
+        ar &m_kernel_map;
+    }
+
     // Delete ephemeral constants methods.
     void set_eph_val(const std::vector<double> &) = delete;
     void set_eph_symb(const std::vector<double> &) = delete;
@@ -891,7 +917,7 @@ private:
 
     // This overrides the base class update_data_structures and updates also the m_connected (as well as
     // m_active_nodes and genes). It is called upon construction and each time active genes are changed.
-    void update_data_structures()
+    void update_data_structures() override
     {
         expression<double>::update_data_structures();
         m_connected.clear();
@@ -1016,8 +1042,7 @@ private:
     std::vector<std::vector<std::pair<unsigned, unsigned>>> m_connected;
     // Kernel map (this is here to avoid string comparisons)
     std::vector<kernel_type> m_kernel_map;
-}; // namespace dcgp
-
+};
 } // end of namespace dcgp
 
 #endif // DCGP_EXPRESSION_H

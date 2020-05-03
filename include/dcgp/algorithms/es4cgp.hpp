@@ -1,6 +1,8 @@
 #ifndef DCGP_ES4CGP_H
 #define DCGP_ES4CGP_H
 
+#include <boost/optional.hpp>
+#include <boost/serialization/optional.hpp>
 #include <pagmo/algorithm.hpp>
 #include <pagmo/bfe.hpp>
 #include <pagmo/detail/custom_comparisons.hpp>
@@ -30,7 +32,7 @@ namespace dcgp
  * @code{.unparsed}
  * > Start from a population (pop) of dimension N
  * > while i < gen
- * > > Mutation: create a new population pop2 mutating N times the best individual
+ * > > Mutation: create a new population pop2 containing N different mutations of pop best.
  * > > Evaluate all new chromosomes in pop2
  * > > Reinsertion: set pop to contain the best N individuals taken from pop and pop2
  * @endcode
@@ -60,19 +62,20 @@ public:
      * Constructs an evolutionary strategy algorithm for use with a cgp::symbolic_regression UDP.
      *
      * @param gen number of generations.
-     * @param mut_n number of active genes to be mutated.
-     * @param ftol the algorithm will exit when the loss is below this tolerance.
-     * @param learn_constants when true a gaussian mutation is applied to the ephemeral constants (std = 0.1).
+     * @param max_mut maximum number of active genes to be mutated for each individual.
+     * @param ftol the algorithm will exit when the loss is below this tolerance. This is useful for cases where
+     * an exact formula is seeked, rather than just an approximated one.
+     * @param learn_constants when true a gaussian mutation is applied also to the ephemeral constants (std = 0.1).
      * @param seed seed used by the internal random number generator (default is random).
      *
-     * @throws std::invalid_argument if *mut_n* is 0 or *ftol* is negative
+     * @throws std::invalid_argument if *max_mut* is 0 or *ftol* is negative
      */
-    es4cgp(unsigned gen = 1u, unsigned mut_n = 1u, double ftol = 1e-4, bool learn_constants = true,
+    es4cgp(unsigned gen = 1u, unsigned max_mut = 4u, double ftol = 0., bool learn_constants = true,
            unsigned seed = random_device::next())
-        : m_gen(gen), m_mut_n(mut_n), m_ftol(ftol), m_learn_constants(learn_constants), m_e(seed), m_seed(seed),
-          m_verbosity(0u)
+        : m_gen(gen), m_max_mut(max_mut), m_ftol(ftol), m_learn_constants(learn_constants), 
+          m_e(seed), m_seed(seed), m_verbosity(0u)
     {
-        if (mut_n == 0u) {
+        if (m_max_mut == 0u) {
             throw std::invalid_argument("The number of active mutations is zero, it must be at least 1.");
         }
         if (ftol < 0.) {
@@ -141,10 +144,11 @@ public:
         // ... and its continuous part
         auto best_xd = std::vector<double>(best_x.data(), best_x.data() + n_eph);
         auto mutated_eph_val = std::vector<double>(best_xd.size(), 0.);
-        // Normal distribution
+        // Normal distribution (to perturb the constants)
         std::normal_distribution<> normal{0., 1.};
-
-        // A contiguous vector of chromosomes/fitness vectors for pagmo::bfe input\output is allocated here.
+        // Uniform distribution (to pick the number of active mutations)
+        std::uniform_int_distribution<unsigned> dis(1u, m_max_mut);
+        // A contiguous vector of chromosomes/fitness vectors is allocated here
         pagmo::vector_double dvs(NP * dim);
         pagmo::vector_double fs(NP * n_obj);
 
@@ -164,17 +168,11 @@ public:
                     ++count;
                 }
             }
-
             // 1 - We generate new NP individuals mutating the best and we write on the dvs for pagmo::bfe to evaluate
             // their fitnesses.
             for (decltype(NP) i = 0u; i < NP; ++i) {
                 cgp.set(best_xu);
-                // We first mutate the integer part, but we leave an individual
-                // unmutated to allow for eph constants, instead, to be mutated.
-                if (i > 0 || n_eph == 0) {
-                    // TODO: (crop it to some value or create a distribution)
-                    cgp.mutate_active(m_mut_n + static_cast<unsigned>(i));
-                }
+                cgp.mutate_active(dis(m_e));
                 std::vector<unsigned> mutated_x = cgp.get();
                 std::transform(mutated_x.begin(), mutated_x.end(), dvs.data() + i * dim + n_eph,
                                [](unsigned a) { return boost::numeric_cast<double>(a); });
@@ -188,10 +186,19 @@ public:
                 }
             }
 
-            // 3 - We compute the mutants fitnesses calling the bfe
-            fs = m_bfe(prob, dvs);
+            // 3 - We compute the mutants fitnesses
+            if (m_bfe) {
+                fs = (*m_bfe)(prob, dvs);
+            } else {
+                for (decltype(NP) i = 0u; i < NP; ++i) {
+                    pagmo::vector_double tmp_x(dim);
+                    std::copy(dvs.data() + i * dim, dvs.data() + (i + 1) * dim, tmp_x.begin());
+                    pagmo::vector_double tmp_f = prob.fitness(tmp_x);
+                    fs[i] = tmp_f[0];
+                }
+            }
             // TODO: This is only making sense for pythonic bfes fix the issue upstream
-            prob.increment_fevals(fs.size());
+            // prob.increment_fevals(fs.size());
 
             // 4 - We reinsert the mutated individuals in the population if their fitness is
             // less than, or equal, to the one from the parent.
@@ -206,7 +213,7 @@ public:
                 }
             }
             // Check if ftol exit condition is met
-            if (best_f < m_ftol) {
+            if (pagmo::detail::greater_than_f(m_ftol, best_f)) {
                 if (m_verbosity > 0u) {
                     auto formula = udp_ptr->prettier(best_x);
                     log_single_line(gen, prob.get_fevals() - fevals0, best_f, best_x, formula, n_eph);
@@ -246,6 +253,15 @@ public:
     unsigned get_seed() const
     {
         return m_seed;
+    }
+
+    /// Sets the batch function evaluation scheme
+    /**
+     * @param b batch function evaluation object
+     */
+    void set_bfe(const pagmo::bfe &b)
+    {
+        m_bfe = b;
     }
 
     /// Sets the algorithm verbosity
@@ -309,9 +325,11 @@ public:
     {
         std::ostringstream ss;
         pagmo::stream(ss, "\tMaximum number of generations: ", m_gen);
-        pagmo::stream(ss, "\n\tNumber of active mutations: ", m_mut_n);
+        pagmo::stream(ss, "\n\tMaximum number of active mutations: ", m_max_mut);
         pagmo::stream(ss, "\n\tExit condition of the final loss (ftol): ", m_ftol);
+        pagmo::stream(ss, "\n\tLearn constants?: ", m_learn_constants);
         pagmo::stream(ss, "\n\tVerbosity: ", m_verbosity);
+        pagmo::stream(ss, "\n\tUsing bfe: ", ((m_bfe) ? "yes" : "no"));
         pagmo::stream(ss, "\n\tSeed: ", m_seed);
         return ss.str();
     }
@@ -334,8 +352,8 @@ private:
                          const std::string &formula, pagmo::vector_double::size_type n_eph) const
     {
         std::vector<double> eph_val(best_x.data(), best_x.data() + n_eph);
-        std::cout << std::setw(7) << gen << std::setw(15) << fevals << std::setw(15) << best_f << "\t" << eph_val <<
-            "\t" << formula.substr(0, 40) << " ..." << std::endl;
+        std::cout << std::setw(7) << gen << std::setw(15) << fevals << std::setw(15) << best_f << "\t" << eph_val
+                  << "\t" << formula.substr(0, 40) << " ..." << std::endl;
         m_log.emplace_back(gen, fevals, best_f, eph_val, formula);
     }
 
@@ -365,7 +383,7 @@ public:
     void serialize(Archive &ar, unsigned)
     {
         ar &m_gen;
-        ar &m_mut_n;
+        ar &m_max_mut;
         ar &m_ftol;
         ar &m_learn_constants;
         ar &m_e;
@@ -377,14 +395,14 @@ public:
 
 private:
     unsigned m_gen;
-    unsigned m_mut_n;
+    unsigned m_max_mut;
     double m_ftol;
     bool m_learn_constants;
     mutable detail::random_engine_type m_e;
     unsigned m_seed;
     unsigned m_verbosity;
     mutable log_type m_log;
-    pagmo::bfe m_bfe;
+    boost::optional<pagmo::bfe> m_bfe;
 };
 } // namespace dcgp
 
