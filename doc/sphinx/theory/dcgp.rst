@@ -14,7 +14,7 @@ weights (that can be associated with every connection in the graph, similarly to
 
 The derivatives are obtained by means of Automatic Differentiation through the
 `AuDi <http://darioizzo.github.io/audi/>`_ library, that implements the Taylor truncated
-polynomial algebra. See :ref:`reference` for more details.
+polynomial algebra. 
 
 The use of the derivatives of the outputs (and hence of any fitness function that is a
 combination of these) with respect to inputs/weights enables a number of new applications

@@ -7,7 +7,8 @@ namespace dcgpy
 
 std::string kernel_init_doc(const std::string &type)
 {
-    return R"(__init__(callable_f, callable_s, name)
+    return R"(kernel_)"
+           + type + R"((callable_f, callable_s, name)
 
 Constructs a kernel function from callables.
 
@@ -33,7 +34,8 @@ Examples:
 
 std::string kernel_set_init_doc(const std::string &type)
 {
-    return R"(__init__(kernels)
+    return R"(kernel_set_)"
+           + type + R"((kernels)
 
 Constructs a set of common kernel functions from their common name. The kernel
 functions can be then retrieved via the call operator.
@@ -52,7 +54,8 @@ Examples:
 
 std::string expression_init_doc(const std::string &type)
 {
-    return R"(__init__(inputs, outputs, rows, cols, levels_back, arity = 2, kernels, n_eph = 0, seed = randint)
+    return R"(expression_)"
+           + type + R"((inputs, outputs, rows, cols, levels_back, arity = 2, kernels, n_eph = 0, seed = randint)
 
 Constructs a CGP expression operating on )"
            + type + R"(
@@ -84,23 +87,23 @@ Examples:
 ...
 >>> num_out = dcgp([in])
 >>> sym_out = dcgp(["x"])
-    )";
+)";
 }
 
 std::string kernel_set_push_back_str_doc()
 {
-    return R"(**push_back(kernel_name)**
+    return R"(push_back(kernel_name)
 
 Adds one more kernel to the set by common name.
 
 Args:
     kernel_name (``string``): a string containing the kernel name
-    )";
+)";
 }
 
 std::string kernel_set_push_back_ker_doc(const std::string &type)
 {
-    return R"(**push_back(kernel)**
+    return R"(push_back(kernel)
 
 Adds one more kernel to the set.
 
@@ -1080,7 +1083,7 @@ case, aside the chosen loss on the data, the model complexity will be considered
 
 std::string symbolic_regression_init_doc()
 {
-    return R"(__init__(points, labels, rows = 1, columns=16, levels_back=17, arity=2, kernels, n_eph=0, multi_objective=False, parallel_batches=0, loss="MSE")
+    return R"(symbolic_regression(points, labels, rows = 1, columns=16, levels_back=17, arity=2, kernels, n_eph=0, multi_objective=False, parallel_batches=0, loss="MSE")
 
 Constructs a symbolic_regression optimization problem compatible with the pagmo UDP interface.
 
@@ -1169,10 +1172,13 @@ Raises:
 std::string generic_set_bfe_doc()
 {
     return R"(set_bfe(b)
+
 Set the batch function evaluation scheme.
 This method will set the batch function evaluation scheme to be used.
+
 Args:
     b (:class:`~pygmo.bfe`): the batch function evaluation object
+
 Raises:
     unspecified: any exception thrown by the underlying C++ method
 )";
@@ -1190,7 +1196,7 @@ Returns:
 
 std::string es4cgp_doc()
 {
-    return R"(__init__(gen = 1, max_mut = 4, ftol = 1e-4, learn_constants = False, seed = random)
+    return R"(es4cgp(gen = 1, max_mut = 4, ftol = 0, learn_constants = False, seed = random)
 
 Evolutionary strategies are popular global optimization meta-heuristics essentially based
 on the following simple pseudo-algorithm:
@@ -1233,10 +1239,10 @@ Raises:
     ValueError: if  *max_mut* is 0 or *ftol* is negative.
 
 .. note::
-    If a :class:`~pygmo.bfe_mp` is set using the :func:`~dcgpy.es4cgp.set_bfe` , the algorithm cannot be used
+    If a :class:`~pygmo.bfe_mp` is set using the :func:`~dcgpy.es4cgp.set_bfe`, the algorithm cannot be used
     in a :class:`~pygmo.archipelago` as nested parallelism would lead to AssertionError: daemonic processes 
     are not allowed to have children.
-    )";
+)";
 }
 
 std::string es4cgp_get_log_doc()
@@ -1289,7 +1295,7 @@ See also the docs of the relevant C++ method :cpp:func:`dcgp::es4cgp::get_log()`
 
 std::string moes4cgp_doc()
 {
-    return R"(__init__(gen = 1, max_mut = 4, learn_constants = False, seed = random)
+    return R"(moes4cgp(gen = 1, max_mut = 4, learn_constants = False, seed = random)
 
 Multi-Objective Evolutionary strategies are able to trade off, in symbolic regression tasks, the 
 model complexity with its loss. This particular implementation follows the simple pseudo-code:
@@ -1323,7 +1329,7 @@ Raises:
     If a :class:`~pygmo.bfe_mp` is set using the :func:`~dcgpy.es4cgp.set_bfe` , the algorithm cannot be used
     in a :class:`~pygmo.archipelago` as nested parallelism would lead to AssertionError: daemonic processes 
     are not allowed to have children.
-    )";
+)";
 }
 
 std::string moes4cgp_get_log_doc()
@@ -1380,7 +1386,7 @@ See also the docs of the relevant C++ method :cpp:func:`dcgp::moes4cgp::get_log(
 
 std::string gd4cgp_doc()
 {
-    return R"(__init__(max_iter = 1, lr = 1., lr_min = 1e-3)
+    return R"(gd4cgp(max_iter = 1, lr = 1., lr_min = 1e-3)
 
 In a symbolic regression problem, models parameters are typically present in the form of
 ephemeral constants (i.e. extra input terminals). The actual values of the constants have a profound
@@ -1452,7 +1458,7 @@ See also the docs of the relevant C++ method :cpp:func:`dcgp::gd4cgp::get_log()`
 
 std::string mes4cgp_doc()
 {
-    return R"(__init__(gen = 1, max_mut = 1, ftol = 1e-4, learn_constants = False, seed = random)
+    return R"(mes4cgp(gen = 1, max_mut = 1, ftol = 1e-4, learn_constants = False, seed = random)
 
 The term Memetic is widely used, in the context of meta-heuristic search, to indicate a synergy between any
 population-based approach with local improvement procedures. The resulting algorithms are also referred to, in the
@@ -1546,7 +1552,7 @@ See also the docs of the relevant C++ method :cpp:func:`dcgp::mes4cgp::get_log()
 
 std::string momes4cgp_doc()
 {
-    return R"(__init__(gen = 1, max_mut = 1, seed = random)
+    return R"(momes4cgp(gen = 1, max_mut = 1, seed = random)
 
 Symbolic regression tasks seek for good mathematical models to represent input data. By increasing
 the model complexity it is always (theoretically) possible to find almost perfect fits of any input data.

@@ -13,6 +13,9 @@ namespace py = pybind11;
 
 PYBIND11_MODULE(core, m)
 {
+    py::options options;
+    options.disable_function_signatures();
+
     expose_kernels(m);
     expose_expressions(m);
     expose_symbolic_regression(m);

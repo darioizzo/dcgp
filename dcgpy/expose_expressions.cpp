@@ -30,22 +30,20 @@ void expose_expression(const py::module &m, std::string type)
         .def(py::init<unsigned, unsigned, unsigned, unsigned, unsigned, unsigned, std::vector<kernel<T>>, unsigned,
                       unsigned>(),
              py::arg("inputs"), py::arg("outputs"), py::arg("rows"), py::arg("cols"), py::arg("levels_back"),
-             py::arg("arity") = 2u, py::arg("kernels"), py::arg("n_eph") = 0u, py::arg("seed"),
-             expression_init_doc(type).c_str())
+             py::arg("arity") = 2u, py::arg("kernels"), py::arg("n_eph") = 0u, py::arg("seed"), expression_init_doc(type).c_str())
         // From vector arity
         .def(py::init<unsigned, unsigned, unsigned, unsigned, unsigned, std::vector<unsigned>, std::vector<kernel<T>>,
                       unsigned, unsigned>(),
              py::arg("inputs"), py::arg("outputs"), py::arg("rows"), py::arg("cols"), py::arg("levels_back"),
-             py::arg("arity"), py::arg("kernels"), py::arg("n_eph") = 0u, py::arg("seed"),
-             expression_init_doc(type).c_str())
+             py::arg("arity"), py::arg("kernels"), py::arg("n_eph") = 0u, py::arg("seed"))
         // Constructors with no seed
         .def(py::init<unsigned, unsigned, unsigned, unsigned, unsigned, std::vector<unsigned>, std::vector<kernel<T>>,
                       unsigned>(),
              py::arg("inputs"), py::arg("outputs"), py::arg("rows"), py::arg("cols"), py::arg("levels_back"),
-             py::arg("arity"), py::arg("kernels"), py::arg("n_eph") = 0u, expression_init_doc(type).c_str())
+             py::arg("arity"), py::arg("kernels"), py::arg("n_eph") = 0u)
         .def(py::init<unsigned, unsigned, unsigned, unsigned, unsigned, unsigned, std::vector<kernel<T>>, unsigned>(),
              py::arg("inputs"), py::arg("outputs"), py::arg("rows"), py::arg("cols"), py::arg("levels_back"),
-             py::arg("arity") = 2u, py::arg("kernels"), py::arg("n_eph") = 0u, expression_init_doc(type).c_str())
+             py::arg("arity") = 2u, py::arg("kernels"), py::arg("n_eph") = 0u)
         .def("__repr__",
              [](const expression<T> &instance) -> std::string {
                  std::ostringstream oss;
@@ -133,15 +131,15 @@ void expose_expression_weighted(const py::module &m, std::string type)
         .def(py::init<unsigned, unsigned, unsigned, unsigned, unsigned, std::vector<unsigned>, std::vector<kernel<T>>,
                       unsigned>(),
              py::arg("inputs"), py::arg("outputs"), py::arg("rows"), py::arg("cols"), py::arg("levels_back"),
-             py::arg("arity"), py::arg("kernels"), py::arg("seed"), expression_init_doc(type).c_str())
+             py::arg("arity"), py::arg("kernels"), py::arg("seed"))
         // Constructor with no seed
         .def(py::init<unsigned, unsigned, unsigned, unsigned, unsigned, unsigned, std::vector<kernel<T>>>(),
              py::arg("inputs"), py::arg("outputs"), py::arg("rows"), py::arg("cols"), py::arg("levels_back"),
-             py::arg("arity") = 2u, py::arg("kernels"), expression_init_doc(type).c_str())
+             py::arg("arity") = 2u, py::arg("kernels"))
         .def(
             py::init<unsigned, unsigned, unsigned, unsigned, unsigned, std::vector<unsigned>, std::vector<kernel<T>>>(),
             py::arg("inputs"), py::arg("outputs"), py::arg("rows"), py::arg("cols"), py::arg("levels_back"),
-            py::arg("arity"), py::arg("kernels"), expression_init_doc(type).c_str())
+            py::arg("arity"), py::arg("kernels"))
 
         .def("__repr__",
              [](const expression_weighted<T> &instance) -> std::string {
@@ -180,7 +178,7 @@ void expose_expression_ann(const py::module &m)
         .def(py::init<unsigned, unsigned, unsigned, unsigned, unsigned, std::vector<unsigned>,
                       std::vector<kernel<double>>>(),
              py::arg("inputs"), py::arg("outputs"), py::arg("rows"), py::arg("cols"), py::arg("levels_back"),
-             py::arg("arity"), py::arg("kernels"), expression_init_doc("double").c_str())
+             py::arg("arity"), py::arg("kernels"))
         .def("__repr__",
              [](const expression_ann &instance) -> std::string {
                  std::ostringstream oss;
