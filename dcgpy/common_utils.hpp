@@ -209,7 +209,7 @@ inline UDX udx_pickle_setstate(py::tuple state)
 
     auto ptr = PyBytes_AsString(state[0].ptr());
     if (!ptr) {
-        py_throw(PyExc_TypeError, "a bytes object is needed to deserialize a problem / algorithm");
+        py_throw(PyExc_TypeError, "a bytes object is needed in the dcgp serialization setstate");
     }
 
     std::istringstream iss;

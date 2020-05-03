@@ -1,7 +1,6 @@
 #ifndef DCGP_EXPRESSION_WEIGHTED_H
 #define DCGP_EXPRESSION_WEIGHTED_H
 
-#include <audi/audi.hpp>
 #include <initializer_list>
 #include <iostream>
 #include <random>
@@ -10,9 +9,12 @@
 #include <string>
 #include <vector>
 
+#include <audi/audi.hpp>
+
 #include <dcgp/config.hpp>
 #include <dcgp/expression.hpp>
 #include <dcgp/kernel.hpp>
+#include <dcgp/s11n.hpp>
 #include <dcgp/type_traits.hpp>
 
 namespace dcgp
@@ -346,9 +348,10 @@ private:
     template <typename U, typename std::enable_if<std::is_same<U, std::string>::value, int>::type = 0>
     U kernel_call(std::vector<U> &function_in, unsigned idx, unsigned node_id, unsigned weight_idx) const
     {
-        // Weights
+        // Weights (we transform the inputs x,y in (w_1*x), (w_2*y). The parenthesis is necessary
+        // to avoid false representations such as w_1*x/w_2*y.
         for (auto j = 0u; j < this->_get_arity(node_id); ++j) {
-            function_in[j] = m_weights_symbols[weight_idx + j] + "*" + function_in[j];
+            function_in[j] = "(" + m_weights_symbols[weight_idx + j] + "*" + function_in[j] + ")";
         }
         return this->get_f()[this->get()[idx]](function_in);
     }
@@ -358,9 +361,5 @@ private:
 };
 
 } // end of namespace dcgp
-
-BOOST_CLASS_EXPORT_GUID(dcgp::expression_weighted<double>, "expression_weighted_double")
-BOOST_CLASS_EXPORT_GUID(dcgp::expression_weighted<audi::gdual_d>, "expression_weighted_gdual_d")
-BOOST_CLASS_EXPORT_GUID(dcgp::expression_weighted<audi::gdual_v>, "expression_weighted_gdual_v")
 
 #endif // DCGP_EXPRESSION_H

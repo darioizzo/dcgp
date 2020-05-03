@@ -5,6 +5,8 @@
 #include <dcgp/kernel_set.hpp>
 #include <dcgp/wrapped_functions_s11n_implement.hpp>
 #include <pagmo/s11n.hpp>
+#include <pagmo/io.hpp>
+
 
 #include "helpers.hpp"
 
@@ -44,7 +46,8 @@ BOOST_AUTO_TEST_CASE(s11n_test)
     std::random_device rd;
     kernel_set<double> basic_set({"sum", "diff", "mul", "div"});
     expression_weighted<double> ex(2u, 2u, 20u, 20u, 3u, 2u, basic_set(), rd());
-
+    // We change the weight values to test that non default values are deserialized
+    ex.set_weights(std::vector<double>(ex.get_weights().size(), 0.123));
     const auto orig = boost::lexical_cast<std::string>(ex);
 
     std::stringstream ss;

@@ -2,11 +2,6 @@
 #define DCGP_EXPRESSION_ANN_H
 
 #include <algorithm>
-#include <audi/io.hpp>
-#include <dcgp/config.hpp>
-#include <dcgp/expression.hpp>
-#include <dcgp/kernel.hpp>
-#include <dcgp/type_traits.hpp>
 #include <functional>
 #include <initializer_list>
 #include <iostream>
@@ -16,9 +11,18 @@
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include <vector>
+
 #include <tbb/parallel_for.h>
 #include <tbb/spin_mutex.h>
-#include <vector>
+
+#include <audi/io.hpp>
+
+#include <dcgp/config.hpp>
+#include <dcgp/expression.hpp>
+#include <dcgp/kernel.hpp>
+#include <dcgp/s11n.hpp>
+#include <dcgp/type_traits.hpp>
 
 namespace dcgp
 {
