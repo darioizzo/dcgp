@@ -36,6 +36,7 @@ Table of contents:
   tutorials/index
   theory/index
   credits
+  changelog
 
 ---------------------------------------------------------------
 

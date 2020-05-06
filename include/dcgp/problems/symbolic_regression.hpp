@@ -175,7 +175,7 @@ public:
             // A second definition for the complexity is the length of the expression
             // after it has been simplified. We use symengine to perform such a simplification
             // which will make sense only if nans and infs are not in the expression.
-            double l_prettier = l_pretty;
+            double l_prettier = 0;
             if (std::isfinite(retval[0])) {
                 for (decltype(pretty.size()) i = 0u; i < pretty.size(); ++i) {
                     try {
@@ -186,8 +186,9 @@ public:
                         l_prettier += static_cast<double>(
                             string.length()
                             - static_cast<decltype(string.length())>(std::count(string.begin(), string.end(), ' ')));
-                    } catch (...) { //TODO: this should be understood. Why is symengine sometime not able to
-                                    //construct an expression from a cgp expression that is finite?
+                    } catch (...) { // TODO: this should be understood. Why is symengine sometime not able to
+                        // construct an expression from a cgp expression that is finite?
+                        l_prettier += static_cast<double>(pretty[i].length());
                     }
                 }
             }
