@@ -8,7 +8,7 @@
 
 [![DOI](https://zenodo.org/badge/38923383.svg)](https://zenodo.org/badge/latestdoi/38923383)
 
-# d-CGP
+# dCGP
 Implementation of differentiable Cartesian Genetic Programming (dCGP)
 
 The dCGP is a development in the field of Genetic Programming that adds the information about the derivatives of the program output with respect to the input values and various parameters (weights, biases, etc..). In doing so, it enables a number of new applications currently the subject of active research.
@@ -27,11 +27,7 @@ Preliminary documentation can be found at http://darioizzo.github.io/dcgp/
 A web based version of dCGP can be found here: https://esa.github.io/dcgp-web/ thanks to Mike Heddes!
 
 ## dcgpy
-If you have a win 64bit system or a linux based system (32 or 64 bits), the python package dcgpy (python binding of the C++ code) can be installed via:
-
- ```pip install dcgpy```
-
-otherwise you will have to compile it by activating the BUILD_DCGPY option in CMake
+The main functionalities of dCGP are exposed into a Python module called dcgpy which can be installed from the conda package ```dcgp-python```  (OSx, linux and Win), pip (deprecated) or by building the module.
 
 ## Compiling the source code or using the header only library
 ### Dependencies
