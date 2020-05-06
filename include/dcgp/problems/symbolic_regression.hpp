@@ -172,17 +172,26 @@ public:
             double l_pretty = std::accumulate(pretty.begin(), pretty.end(), 0., [](double a, std::string b) {
                 return a + static_cast<double>(b.length());
             });
-            double l_prettier = 0.;
-            for (decltype(pretty.size()) i = 0u; i < pretty.size(); ++i) {
-                SymEngine::Expression prettier(pretty[i]);
-                pagmo::stream(ss, prettier);
-                auto string = ss.str();
-                // We remove whitespaces too
-                l_prettier += static_cast<double>(
-                    string.length()
-                    - static_cast<decltype(string.length())>(std::count(string.begin(), string.end(), ' ')));
+            // A second definition for the complexity is the length of the expression
+            // after it has been simplified. We use symengine to perform such a simplification
+            // which will make sense only if nans and infs are not in the expression.
+            double l_prettier = l_pretty;
+            if (std::isfinite(retval[0])) {
+                for (decltype(pretty.size()) i = 0u; i < pretty.size(); ++i) {
+                    try {
+                        SymEngine::Expression prettier(pretty[i]);
+                        pagmo::stream(ss, prettier);
+                        auto string = ss.str();
+                        // We remove whitespaces too
+                        l_prettier += static_cast<double>(
+                            string.length()
+                            - static_cast<decltype(string.length())>(std::count(string.begin(), string.end(), ' ')));
+                    } catch (...) { //TODO: this should be understood. Why is symengine sometime not able to
+                                    //construct an expression from a cgp expression that is finite?
+                    }
+                }
             }
-            // Here we define the formula complexity
+            // Here we define the formula complexity as the shortest between the two.
             retval[1] = std::min(l_pretty, l_prettier);
         }
         return retval;
@@ -522,7 +531,7 @@ private:
     };
 
     // Transpose of a vector vector
-    static inline std::vector<std::vector<double>> transpose(const std::vector<std::vector<double>> &points) 
+    static inline std::vector<std::vector<double>> transpose(const std::vector<std::vector<double>> &points)
     {
         std::vector<std::vector<double>> result(points[0].size(), std::vector<double>(points.size()));
         for (std::vector<double>::size_type i = 0; i < points[0].size(); i++)
@@ -532,7 +541,7 @@ private:
         return result;
     }
     // Builds the vectorized gduals from the data
-    static inline std::vector<audi::gdual_v> points_to_gdual_v(const std::vector<std::vector<double>> &points) 
+    static inline std::vector<audi::gdual_v> points_to_gdual_v(const std::vector<std::vector<double>> &points)
     {
         std::vector<audi::gdual_v> retval(points[0].size());
         auto pointsT = transpose(points);
