@@ -19,6 +19,7 @@ Symbolic Regression
   ../../notebooks/symbolic_regression_3.ipynb
   ../../notebooks/real_world1.ipynb
   ../../notebooks/real_world2.ipynb
+  ../../notebooks/real_world3.ipynb
   ../../notebooks/evo_in_parallel.ipynb
 
 Neural Networks
