@@ -12,23 +12,24 @@ int main() {
     unsigned n_input = 1u;
     // Number of outputs (output dimensionality of the expression)
     unsigned n_output = 1u;
-    // Number of rows of the cartesian representation of the acyclic graph
+    // Number of rows of the cartesian representation of the expression
     unsigned rows = 1u;
-    // Number of columns of the cartesian representation of the acyclic graph
+    // Number of columns of the cartesian representation of the expression
     unsigned cols = 6u;
-    // Number of level-back (controlling the minimum number of allowed operations in the formula,
+    // Number of levels-back (controlling the minimum number of allowed operations in the formula,
     // if uncertain set it to cols + 1)
     unsigned lb = 7u;
     // Arity of the various kernels (the fundamental blocks that build up the expression)
     unsigned arity = 2u;
-    // Maximum number of costants in the formula (ephemeral constants)
+    // Maximum number of costants in the formula (a.k.a. ephemeral constants)
     unsigned n_eph = 0u;
     // Random seed used to generate the initial formula and all of its subsequent mutations
     unsigned seed = 4232123212u;
 
     expression<audi::gdual_d> ex(n_input, n_output, rows, cols, lb, arity, basic_set(), n_eph, seed);
 
-    // 2 - Define the symbol set (in our case, 1 input variable named "x") and visualize the expression
+    // 2 - Define the symbol set to be used in visualizing the expression
+    // (in our case, 1 input variable named "x") and visualize the expression
     std::vector<std::string> in_sym({"x"});
     audi::print("Expression: ", ex(in_sym)[0], "\n");
 

@@ -14,8 +14,9 @@ ex = expression(inputs = 1,
                 n_eph = 0, 
                 seed = 4232123212)
 
-# 2 - Define the symbol set (in our case, 1 input variable named "x") and print the expression
-in_sym = ["x"]
+
+# 2 - Define the symbol set to be used in visualizing the expression
+# (in our case, 1 input variable named "x") and visualize the expressionin_sym = ["x"]
 print("Expression:", ex(in_sym)[0])
 
 # 3 - Print the simplified expression
