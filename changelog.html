@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Differentiable Cartesian Genetic Programming &mdash; dCGP 1.5.1 documentation</title>
+  <title>Changelog &mdash; dCGP 1.5.1 documentation</title>
   
 
   
@@ -39,7 +39,7 @@
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Installation guide" href="installation.html" /> 
+    <link rel="prev" title="Credits" href="credits.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -53,7 +53,7 @@
           
 
           
-            <a href="#" class="icon icon-home"> dCGP
+            <a href="index.html" class="icon icon-home"> dCGP
           
 
           
@@ -90,14 +90,22 @@
               
             
             
-              <ul>
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick start examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="docs/index.html">API documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials/index.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="theory/index.html">Background</a></li>
 <li class="toctree-l1"><a class="reference internal" href="credits.html">Credits</a></li>
-<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#unreleased">1.5.1 (Unreleased)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id2">1.5 (6/7/2020)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#new">New</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#changes">Changes</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 
             
@@ -112,7 +120,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="#">dCGP</a>
+          <a href="index.html">dCGP</a>
         
       </nav>
 
@@ -141,15 +149,15 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="#">Docs</a> &raquo;</li>
+      <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>Differentiable Cartesian Genetic Programming</li>
+      <li>Changelog</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/changelog.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -186,49 +194,39 @@
     text-align: unset;
 }
 </style>
-<div class="section" id="differentiable-cartesian-genetic-programming">
-<h1>Differentiable Cartesian Genetic Programming<a class="headerlink" href="#differentiable-cartesian-genetic-programming" title="Permalink to this headline">¶</a></h1>
-<p>Differentiable Cartesian Genetic Programming (dCGP) is a recent development in the field of Genetic Programming
-that adds the information about the derivatives of the output nodes (the programs, or expressions encoded) with
-respect to the input nodes (the input values) and/or weights. In doing so, it enables a number of new applications
-currently the subject of active research.</p>
-<p>The evolution of the genetic program can now be supported by using the information on the derivatives, hence enabling
-for the equivalent of back-propagation in Neural Networks. The fitness function can be defined in terms of the
-derivatives, allowing to go beyond simple regression tasks and, additionally, solve differential equations, learn
-differential models, capture conserved quantities in dynamical systems.</p>
-<p>Beyond the standard <strong>CGP</strong> we provide two new encodings called <strong>dCGP-W</strong> and <strong>dCGPANN</strong>.
-The first one adds weights to the standard CGP nodes connections, while the second one allows to encode and evolve
-Artificial Neural Networks, while learning its parameters too, using an underlying CGP representation.</p>
-<div class="figure align-center" id="id1">
-<a class="reference internal image-reference" href="_images/expression_home.png"><img alt="dCGP expression" src="_images/expression_home.png" style="width: 800px;" /></a>
-<p class="caption"><span class="caption-text">A dCGP expression and its differential expansion in a specified point</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+<div class="section" id="changelog">
+<span id="id1"></span><h1>Changelog<a class="headerlink" href="#changelog" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="unreleased">
+<h2>1.5.1 (Unreleased)<a class="headerlink" href="#unreleased" title="Permalink to this headline">¶</a></h2>
 </div>
-<hr class="docutils" />
-<div class="section" id="table-of-contents">
-<h2>Table of contents:<a class="headerlink" href="#table-of-contents" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick start examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="docs/index.html">API documentation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials/index.html">Tutorials</a></li>
-<li class="toctree-l1"><a class="reference internal" href="theory/index.html">Background</a></li>
-<li class="toctree-l1"><a class="reference internal" href="credits.html">Credits</a></li>
-<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<div class="section" id="id2">
+<h2>1.5 (6/7/2020)<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="new">
+<h3>New<a class="headerlink" href="#new" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>A new UDA is introduced to solve symbolic regression problems.
+Its called moes (Multi-Objective Evolutionary Startegy) and completes the
+evolutionary approaches in dcgp which can now be selected to be memetic or not
+and single objective or multi-objective.</p></li>
 </ul>
 </div>
+<div class="section" id="changes">
+<h3>Changes<a class="headerlink" href="#changes" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>The underlying computations of the symbolic regression optimizationlroblem (UDP)
+is now performed by obake using a vectorized type. Speed improvements are observed
+of orders nbetween x4 and x100 depending on cases.</p></li>
+<li><p>The problem on nans appearing and exceptions being thrown has been solved
+by guarding against symengine exceptions and by discarding zero columns and rows
+when inverting hessians for the Newton step of memetic algorithms.</p></li>
+<li><p>BREAKING: the API has been made uniform for the four UDAs: es4cgp, moes4cgp, mes4cgp, momes4cgp
+as well as the mutation mechanism. Named parameters have thus changed and default values too.</p></li>
+<li><p>The UDA es4cgp is no longer using a thread bfe to compute the loss. This avoids crashes when pythonic,
+non thread-safe kernels are used. A bfe can still be set by the user (deprecated in python) after
+the UDA has been instantiated.</p></li>
+<li><p>Documentation has been improved and all tutorials and examples updated to the new API.</p></li>
+</ul>
 </div>
-<hr class="docutils" />
-<div class="section" id="references">
-<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
-<dl class="citation">
-<dt class="label" id="dcgp1"><span class="brackets">dCGP1</span></dt>
-<dd><p>Dario Izzo, Francesco Biscani, and Alessio Mereta. “Differentiable genetic programming.” In European Conference on Genetic Programming, pp. 35-51. Springer, 2017. <a class="reference external" href="https://arxiv.org/pdf/1611.04766v1.pdf">Arxiv version (2016)</a></p>
-</dd>
-<dt class="label" id="dcgp2"><span class="brackets">dCGP2</span></dt>
-<dd><p>Marcus Märtens and Dario Izzo. Neural network architecture search with differentiable cartesian genetic programming for regression. In Proceedings of the Genetic and Evolutionary Computation Conference Companion (pp. 181-182). ACM. <a class="reference external" href="https://arxiv.org/abs/1907.01939">Arxiv version (2018)</a></p>
-</dd>
-</dl>
 </div>
 </div>
 
@@ -240,8 +238,8 @@ Artificial Neural Networks, while learning its parameters too, using an underlyi
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="installation.html" class="btn btn-neutral float-right" title="Installation guide" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
+        <a href="credits.html" class="btn btn-neutral float-left" title="Credits" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

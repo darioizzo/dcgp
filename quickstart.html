@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Quick start examples &mdash; dCGP 1.5 documentation</title>
+  <title>Quick start examples &mdash; dCGP 1.5.1 documentation</title>
   
 
   
@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                1.5
+                1.5.1
               </div>
             
           
@@ -102,6 +102,7 @@
 <li class="toctree-l1"><a class="reference internal" href="tutorials/index.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="theory/index.html">Background</a></li>
 <li class="toctree-l1"><a class="reference internal" href="credits.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
 </ul>
 
             
@@ -240,7 +241,8 @@ put the following text into a <code class="docutils literal notranslate"><span c
 42
 43
 44
-45</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+45
+46</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;dcgp/expression.hpp&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;dcgp/kernel_set.hpp&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;audi/gdual.hpp&gt;</span><span class="cp"></span>
@@ -254,23 +256,24 @@ put the following text into a <code class="docutils literal notranslate"><span c
     <span class="kt">unsigned</span> <span class="n">n_input</span> <span class="o">=</span> <span class="mi">1u</span><span class="p">;</span>
     <span class="c1">// Number of outputs (output dimensionality of the expression)</span>
     <span class="kt">unsigned</span> <span class="n">n_output</span> <span class="o">=</span> <span class="mi">1u</span><span class="p">;</span>
-    <span class="c1">// Number of rows of the cartesian representation of the acyclic graph</span>
+    <span class="c1">// Number of rows of the cartesian representation of the expression</span>
     <span class="kt">unsigned</span> <span class="n">rows</span> <span class="o">=</span> <span class="mi">1u</span><span class="p">;</span>
-    <span class="c1">// Number of columns of the cartesian representation of the acyclic graph</span>
+    <span class="c1">// Number of columns of the cartesian representation of the expression</span>
     <span class="kt">unsigned</span> <span class="n">cols</span> <span class="o">=</span> <span class="mi">6u</span><span class="p">;</span>
-    <span class="c1">// Number of level-back (controlling the minimum number of allowed operations in the formula,</span>
+    <span class="c1">// Number of levels-back (controlling the minimum number of allowed operations in the formula,</span>
     <span class="c1">// if uncertain set it to cols + 1)</span>
     <span class="kt">unsigned</span> <span class="n">lb</span> <span class="o">=</span> <span class="mi">7u</span><span class="p">;</span>
     <span class="c1">// Arity of the various kernels (the fundamental blocks that build up the expression)</span>
     <span class="kt">unsigned</span> <span class="n">arity</span> <span class="o">=</span> <span class="mi">2u</span><span class="p">;</span>
-    <span class="c1">// Maximum number of costants in the formula (ephemeral constants)</span>
+    <span class="c1">// Maximum number of costants in the formula (a.k.a. ephemeral constants)</span>
     <span class="kt">unsigned</span> <span class="n">n_eph</span> <span class="o">=</span> <span class="mi">0u</span><span class="p">;</span>
     <span class="c1">// Random seed used to generate the initial formula and all of its subsequent mutations</span>
     <span class="kt">unsigned</span> <span class="n">seed</span> <span class="o">=</span> <span class="mi">4232123212u</span><span class="p">;</span>
 
     <span class="n">expression</span><span class="o">&lt;</span><span class="n">audi</span><span class="o">::</span><span class="n">gdual_d</span><span class="o">&gt;</span> <span class="n">ex</span><span class="p">(</span><span class="n">n_input</span><span class="p">,</span> <span class="n">n_output</span><span class="p">,</span> <span class="n">rows</span><span class="p">,</span> <span class="n">cols</span><span class="p">,</span> <span class="n">lb</span><span class="p">,</span> <span class="n">arity</span><span class="p">,</span> <span class="n">basic_set</span><span class="p">(),</span> <span class="n">n_eph</span><span class="p">,</span> <span class="n">seed</span><span class="p">);</span>
 
-    <span class="c1">// 2 - Define the symbol set (in our case, 1 input variable named &quot;x&quot;) and visualize the expression</span>
+    <span class="c1">// 2 - Define the symbol set to be used in visualizing the expression</span>
+    <span class="c1">// (in our case, 1 input variable named &quot;x&quot;) and visualize the expression</span>
     <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">in_sym</span><span class="p">({</span><span class="s">&quot;x&quot;</span><span class="p">});</span>
     <span class="n">audi</span><span class="o">::</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;Expression: &quot;</span><span class="p">,</span> <span class="n">ex</span><span class="p">(</span><span class="n">in_sym</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
 
@@ -351,7 +354,8 @@ use by running the following script:</p>
 33
 34
 35
-36</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dcgpy</span> <span class="kn">import</span> <span class="n">expression_gdual_double</span> <span class="k">as</span> <span class="n">expression</span>
+36
+37</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dcgpy</span> <span class="kn">import</span> <span class="n">expression_gdual_double</span> <span class="k">as</span> <span class="n">expression</span>
 <span class="kn">from</span> <span class="nn">dcgpy</span> <span class="kn">import</span> <span class="n">kernel_set_gdual_double</span> <span class="k">as</span> <span class="n">kernel_set</span>
 <span class="kn">from</span> <span class="nn">pyaudi</span> <span class="kn">import</span> <span class="n">gdual_double</span> <span class="k">as</span> <span class="n">gdual</span>
 
@@ -367,8 +371,9 @@ use by running the following script:</p>
                 <span class="n">n_eph</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> 
                 <span class="n">seed</span> <span class="o">=</span> <span class="mi">4232123212</span><span class="p">)</span>
 
-<span class="c1"># 2 - Define the symbol set (in our case, 1 input variable named &quot;x&quot;) and print the expression</span>
-<span class="n">in_sym</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">]</span>
+
+<span class="c1"># 2 - Define the symbol set to be used in visualizing the expression</span>
+<span class="c1"># (in our case, 1 input variable named &quot;x&quot;) and visualize the expressionin_sym = [&quot;x&quot;]</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Expression:&quot;</span><span class="p">,</span> <span class="n">ex</span><span class="p">(</span><span class="n">in_sym</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
 
 <span class="c1"># 3 - Print the simplified expression</span>
