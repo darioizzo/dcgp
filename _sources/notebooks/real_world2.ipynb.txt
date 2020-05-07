@@ -4,7 +4,7 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "# A real-world case (physics)\n",
+    "# A real-world case (Physics: dynamics)\n",
     "\n",
     "In this tutorial we will be using data from a real-world case. The data comes from a piecewise continuous function representing the gravitational interaction between two swarm of particles. It is of interest to represent such an interaction with a one only continuous function, albeit introducing some error. If succesfull, this would allow to have some analytical insight on the qualitative stability of the resulting orbits, as well as to make use of methods requiring high order continuity to study the resulting dynamical system.\n",
     "\n",

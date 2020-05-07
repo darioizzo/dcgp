@@ -1,0 +1,1900 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>A real-world case (Biomimetics: space technology) &mdash; dCGP 1.5.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Symbolic Regression and the Island Model" href="evo_in_parallel.html" />
+    <link rel="prev" title="A real-world case (Physics: dynamics)" href="real_world2.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> dCGP
+          
+
+          
+            
+            <img src="../_static/logo2.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.5.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick start examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docs/index.html">API documentation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../tutorials/index.html">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/cpp/index.html">C++</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../tutorials/py/index.html">Python</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../tutorials/py/index.html#core">Core</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../tutorials/py/index.html#symbolic-regression">Symbolic Regression</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="symbolic_regression_1.html">A basic tutorial on symbolic regression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="symbolic_regression_2.html">Learning constants using evolution</a></li>
+<li class="toctree-l4"><a class="reference internal" href="symbolic_regression_3.html">Multi-objective memetic approach</a></li>
+<li class="toctree-l4"><a class="reference internal" href="real_world1.html">A real-world case (Engineering: materials)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="real_world2.html">A real-world case (Physics: dynamics)</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">A real-world case (Biomimetics: space technology)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="evo_in_parallel.html">Symbolic Regression and the Island Model</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../tutorials/py/index.html#neural-networks">Neural Networks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../tutorials/py/index.html#other">Other</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../tutorials/py/index.html#deprecated">Deprecated</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../theory/index.html">Background</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../credits.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">dCGP</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content style-external-links">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../tutorials/index.html">Tutorials</a> &raquo;</li>
+        
+          <li><a href="../tutorials/py/index.html">Python</a> &raquo;</li>
+        
+      <li>A real-world case (Biomimetics: space technology)</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/notebooks/real_world3.ipynb.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput.container,
+div.nbinput.container div.prompt,
+div.nbinput.container div.input_area,
+div.nbinput.container div[class*=highlight],
+div.nbinput.container div[class*=highlight] pre,
+div.nboutput.container,
+div.nboutput.container div.prompt,
+div.nboutput.container div.output_area,
+div.nboutput.container div[class*=highlight],
+div.nboutput.container div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput.container div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput.container,
+div.nboutput.container {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput.container,
+    div.nboutput.container {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput.container {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast.container {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput.container div.prompt pre {
+    color: #307FC1;
+}
+
+/* output prompt */
+div.nboutput.container div.prompt pre {
+    color: #BF5B3D;
+}
+
+/* all prompts */
+div.nbinput.container div.prompt,
+div.nboutput.container div.prompt {
+    min-width: 5ex;
+    padding-top: 0.3rem;
+    padding-right: 0.3rem;
+    text-align: right;
+    flex: 0;
+}
+@media (max-width: 540px) {
+    div.nbinput.container div.prompt,
+    div.nboutput.container div.prompt {
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput.container div.prompt.empty {
+        padding: 0;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput.container div.prompt pre,
+div.nboutput.container div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput.container div.input_area,
+div.nboutput.container div.output_area {
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput.container div.input_area,
+    div.nboutput.container div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput.container div.input_area {
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    background: #f5f5f5;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput.container div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.imgmath center alignment in output cells */
+div.nboutput.container div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput.container div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+
+div.nbinput.container div.input_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight].math,
+div.nboutput.container div.output_area.rendered_html,
+div.nboutput.container div.output_area > div.output_javascript,
+div.nboutput.container div.output_area:not(.rendered_html) > img{
+    padding: 0.3rem;
+}
+
+/* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
+div.nbinput.container div.input_area > div[class^='highlight'],
+div.nboutput.container div.output_area > div[class^='highlight']{
+    overflow-y: hidden;
+}
+
+/* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
+.prompt a.copybtn {
+    display: none;
+}
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+div.rendered_html th {
+  font-weight: bold;
+}
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
+
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="A-real-world-case-(Biomimetics:-space-technology)">
+<h1>A real-world case (Biomimetics: space technology)<a class="headerlink" href="#A-real-world-case-(Biomimetics:-space-technology)" title="Permalink to this headline">¶</a></h1>
+<p>Here we use a some data produced by precisely modelling a nanostructured solar array inspired by the moth eye. We analyze the relations (found by <strong>dcgpy</strong> <strong>symbolic_regression</strong> using <strong>mes</strong>) between the cell efficiency and 12 different model parameters (thickness, etc..).</p>
+<ul class="simple">
+<li><p>The data were generated in the context of the European Space Agency Ariadna study on bio-inspired solar cells (<a class="reference external" href="http://www.esa.int/gsp/ACT/projects/diatom/">http://www.esa.int/gsp/ACT/projects/diatom/</a>).</p></li>
+<li><p>The fits were generated evolving 126 populations (size 8) via <strong>dcgpy.mes(10000, max_mut=15)</strong> on an AMD EPYC 7702 64-Core Processor (~20 minutes to complete)</p></li>
+</ul>
+<p>Data points are pickled into a file named <em>moth_data.pk</em> in the form of a tuple of two arrays Xs, Ys.</p>
+<p>The fitted expressions are pickled into a file named <em>result.pk</em> in a list: result[prob_id][0] = fitnesses result[prob_id][1] = chromosomes</p>
+<p>This tutorial is informative as it shows the wide diversity and quality of models produced by unconnected evolutions and their difference with respect to the fit error.</p>
+<div class="section" id="Preliminaries">
+<h2>Preliminaries<a class="headerlink" href="#Preliminaries" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Core imports</span>
+<span class="kn">import</span> <span class="nn">dcgpy</span> <span class="c1"># This was compiled in bertha from github HEAD (v1.5 is unreleased)</span>
+<span class="kn">import</span> <span class="nn">pygmo</span> <span class="k">as</span> <span class="nn">pg</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="c1"># Sympy is nice to have for basic symbolic manipulation.</span>
+<span class="kn">from</span> <span class="nn">sympy</span> <span class="kn">import</span> <span class="n">init_printing</span>
+<span class="kn">from</span> <span class="nn">sympy.parsing.sympy_parser</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">init_printing</span><span class="p">()</span>
+<span class="c1"># Plotting</span>
+<span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="c1"># Pickling</span>
+<span class="kn">import</span> <span class="nn">pickle</span> <span class="k">as</span> <span class="nn">pk</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Load the data to fit</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;moth_data.pk&quot;</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">Xs</span><span class="p">,</span><span class="n">Ys</span>  <span class="o">=</span> <span class="n">pk</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+<span class="c1"># Load the best solutions found running dcgpy.mes(10000, max_mut=15) on 126 separate runs</span>
+<span class="c1">#with open(&quot;eph_3_r_1_c_16_lb_17_sum_diff_mul_diff_exp.pk&quot;, &quot;rb&quot;) as f:</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;eph_4_r_1_c_16_lb_15_sum_diff_mul_div_exp_gaussian.pk&quot;</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">pk</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+<span class="n">kernel_list</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span> <span class="s2">&quot;diff&quot;</span><span class="p">,</span> <span class="s2">&quot;mul&quot;</span><span class="p">,</span> <span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="s2">&quot;exp&quot;</span><span class="p">,</span> <span class="s2">&quot;gaussian&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># We define the kernel set that was used to produce the runs</span>
+<span class="n">ss</span> <span class="o">=</span> <span class="n">dcgpy</span><span class="o">.</span><span class="n">kernel_set_double</span><span class="p">(</span><span class="n">kernel_list</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Since we have not pickled all the objects used during the experiment, we need to reconstruct the</span>
+<span class="c1"># udp and the data in a good format.</span>
+<span class="k">def</span> <span class="nf">reconstruct_udp</span><span class="p">(</span><span class="n">prob_id</span><span class="p">):</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">Xs</span><span class="p">[</span><span class="n">prob_id</span><span class="p">],</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">Xs</span><span class="p">[</span><span class="n">prob_id</span><span class="p">]),</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">Ys</span><span class="p">[</span><span class="n">prob_id</span><span class="p">],</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">Ys</span><span class="p">[</span><span class="n">prob_id</span><span class="p">]),</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">udp</span> <span class="o">=</span> <span class="n">dcgpy</span><span class="o">.</span><span class="n">symbolic_regression</span><span class="p">(</span><span class="n">points</span> <span class="o">=</span> <span class="n">X</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">Y</span><span class="p">,</span> <span class="n">kernels</span><span class="o">=</span><span class="n">ss</span><span class="p">(),</span> <span class="n">n_eph</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">rows</span> <span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">levels_back</span><span class="o">=</span><span class="mi">17</span><span class="p">,</span> <span class="n">multi_objective</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">udp</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># We also want to know (at a glance) if the experimental setup worked well in terms of MSEs</span>
+<span class="n">mses</span> <span class="o">=</span> <span class="p">[</span><span class="nb">min</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">results</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Best  fit: prob-id &quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">mses</span><span class="p">),</span> <span class="s2">&quot;| Value: &quot;</span><span class="p">,</span> <span class="n">mses</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">mses</span><span class="p">)][</span><span class="mi">0</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Worst fit: prob-id &quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">mses</span><span class="p">),</span> <span class="s2">&quot;| Value: &quot;</span><span class="p">,</span> <span class="n">mses</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">mses</span><span class="p">)][</span><span class="mi">0</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;On average: &quot;</span><span class="p">,</span> <span class="nb">sum</span><span class="p">(</span><span class="n">mses</span><span class="p">)</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">mses</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Best  fit: prob-id  4 | Value:  3.359546731194255e-06
+Worst fit: prob-id  0 | Value:  2.3801558148325692e-05
+On average:  [1.0948612e-05]
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="The-best-fits-found">
+<h2>The best fits found<a class="headerlink" href="#The-best-fits-found" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># The data and best fits at a glance</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">8.5</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">ax</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">axes</span><span class="p">,(</span><span class="mi">12</span><span class="p">))[:</span><span class="mi">12</span><span class="p">]):</span>
+    <span class="n">udp</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="n">reconstruct_udp</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">best_run</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">best_dv</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="n">best_run</span><span class="p">]</span>
+    <span class="n">Y_pred</span> <span class="o">=</span> <span class="n">udp</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">best_dv</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y_pred</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mf">3.0</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mf">0.26</span><span class="p">,</span> <span class="mf">0.34</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \left( 0.26, \  0.34\right)$</div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_real_world3_8_1.png" src="../_images/notebooks_real_world3_8_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Lets peek into the best fits functional forms. Each of the 12 problems is here</span>
+<span class="c1">## assigned an id</span>
+<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">display</span><span class="p">,</span> <span class="n">Math</span>
+<span class="k">for</span> <span class="n">prob_id</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">12</span><span class="p">):</span>
+    <span class="n">udp</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="n">reconstruct_udp</span><span class="p">(</span><span class="n">prob_id</span><span class="p">)</span>
+    <span class="n">best_run</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="n">prob_id</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">best_x</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="n">prob_id</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="n">best_run</span><span class="p">]</span>
+    <span class="n">best_f</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="n">prob_id</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="n">best_run</span><span class="p">]</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">parse_expr</span><span class="p">(</span><span class="n">udp</span><span class="o">.</span><span class="n">prettier</span><span class="p">(</span><span class="n">best_x</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">simplify</span><span class="p">()</span>
+    <span class="n">display</span><span class="p">(</span><span class="s2">&quot;prob_id: </span><span class="si">{}</span><span class="s2">, err: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prob_id</span><span class="p">,</span> <span class="n">best_f</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">Math</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">_repr_latex_</span><span class="p">())))</span>
+
+<span class="c1"># NOTE: selecting the fit with the best MSE may not be ideal as best formulas do get unnecessarily complex</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 0, err: 2.3801558148325692e-05&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle - c_{1} - \frac{c_{2}}{x_{0}} + \frac{c_{2}}{2 x_{0}^{2}} + c_{3} e^{- 4 x_{0}^{2}} - c_{4} x_{0} e^{- 4 x_{0}^{2}} + c_{4}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 1, err: 1.5481952594443556e-05&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle \frac{c_{1} - c_{2} e^{x_{0}} + x_{0} \left(c_{2} e^{x_{0}} + c_{2} - c_{4} - x_{0} + \left(- c_{1} + c_{2} e^{x_{0}} + c_{3}\right) e^{x_{0}}\right)}{x_{0}}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 2, err: 4.866500757662433e-06&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle \left(c_{1} + c_{4} x_{0} + \left(- c_{3} + \left(c_{2} - x_{0}\right) e^{\left(x_{0}^{2} e^{x_{0}^{2}} - 1\right) e^{- x_{0}^{2}}}\right) e^{x_{0}^{2}}\right) e^{- x_{0}^{2}}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 3, err: 7.993101895616535e-06&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle - c_{1} x_{0} e^{x_{0}^{2}} + c_{1} + c_{2} e^{x_{0}^{2}} + c_{3} - c_{4} x_{0} + e^{- e^{- 2 x_{0}^{2}}} - e^{- x_{0}^{2}}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 4, err: 3.359546731194255e-06&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle c_{1} x_{0} - c_{2} + c_{3} e^{- x_{0}} + c_{4} - \frac{c_{4}}{x_{0}} - e^{- e^{2 x_{0}}}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 5, err: 1.686027444316002e-05&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle c_{1} x_{0} + c_{1} e^{- x_{0}^{4}} + \frac{c_{1}}{x_{0}^{2}} + c_{2} - 2 c_{3} - \frac{c_{3}}{x_{0}^{3}} - 2 c_{4} x_{0} - \frac{c_{4}}{x_{0}^{2}}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 6, err: 9.922429392571683e-06&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle - c_{2} - c_{3} e^{- x_{0}^{2}} + \frac{2 c_{4}}{c_{1} + x_{0}} - e^{- \left(c_{1} + x_{0}\right)^{2}} + e^{- c_{4}^{2}}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 7, err: 8.515167695863056e-06&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle - c_{1} e^{e^{- x_{0}^{2}}} + c_{2} + c_{3} x_{0} - c_{4} e^{- x_{0}^{2}} + x_{0} e^{- x_{0}^{2}}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 8, err: 5.7033656245193685e-06&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle \frac{\left(x_{0} \left(c_{1} x_{0} - c_{3} + e^{c_{2}}\right) e^{c_{1} x_{0} \left(c_{3} - e^{c_{2}}\right)} + \left(- c_{2} x_{0} + c_{4}\right) e^{x_{0}^{2}}\right) e^{- x_{0} \left(c_{1} \left(c_{3} - e^{c_{2}}\right) + x_{0}\right)}}{x_{0}}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 9, err: 4.523905989067585e-06&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle 2 c_{1} + \frac{c_{1}}{x_{0}^{2}} + c_{2} - c_{3} x_{0} + \frac{4 c_{4}}{x_{0}} + \frac{c_{4}}{x_{0}^{3}}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 10, err: 1.9017543270061446e-05&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle \frac{c_{2} e^{\frac{1}{x_{0}}} - c_{3} + x_{0} \left(- c_{1} x_{0} + c_{4}\right)}{x_{0}}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 11, err: 1.1337997121125522e-05&#39;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle \frac{c_{2} \left(c_{4} - x_{0}^{4}\right) - c_{3} x_{0} \left(c_{4} - x_{0}^{4}\right) + x_{0} \left(- c_{1} x_{0}^{2} - c_{2} x_{0} + c_{4}\right)}{x_{0} \left(c_{4} - x_{0}^{4}\right)}$</div></div>
+</div>
+</div>
+<div class="section" id="Looking-for-elegant-forms">
+<h2>Looking for elegant forms<a class="headerlink" href="#Looking-for-elegant-forms" title="Permalink to this headline">¶</a></h2>
+<p>Some of the best fits found seem to be unnecessarily complex, we here look in the results for more elegant forms with a marginally worse MSA</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Lets take for each problem the best 50 fits found and plot the corresponding final MSE</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">ax</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">axes</span><span class="p">,(</span><span class="mi">12</span><span class="p">))[:</span><span class="mi">12</span><span class="p">]):</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">semilogy</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">])[:</span><span class="mi">50</span><span class="p">])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">title</span><span class="o">.</span><span class="n">set_text</span><span class="p">(</span><span class="s2">&quot;Prob id: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;run n.&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;mse&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="c1"># Conclusion: there are many formulas with similar error that can be considered as equally good fits</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_real_world3_11_0.png" src="../_images/notebooks_real_world3_11_0.png" />
+</div>
+</div>
+</div>
+<div class="section" id="Showing-the-best-5-fits">
+<h2>Showing the best 5 fits<a class="headerlink" href="#Showing-the-best-5-fits" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="k">for</span> <span class="n">prob_id</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">12</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;---------------------------------------------------------&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Best five fits for id: &quot;</span><span class="p">,</span> <span class="n">prob_id</span><span class="p">)</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="n">prob_id</span><span class="p">]</span>
+    <span class="n">fits</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">best_idxs</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">126</span><span class="p">),</span> <span class="n">key</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">fits</span><span class="p">[</span><span class="n">x</span><span class="p">])</span>
+    <span class="k">for</span> <span class="n">best_isl</span> <span class="ow">in</span> <span class="n">best_idxs</span><span class="p">[:</span><span class="mi">5</span><span class="p">]:</span>
+        <span class="n">best_x</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">best_isl</span><span class="p">]</span>
+        <span class="n">best_f</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">best_isl</span><span class="p">]</span>
+        <span class="n">udp</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="n">reconstruct_udp</span><span class="p">(</span><span class="n">prob_id</span><span class="p">)</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">parse_expr</span><span class="p">(</span><span class="n">udp</span><span class="o">.</span><span class="n">prettier</span><span class="p">(</span><span class="n">best_x</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">simplify</span><span class="p">()</span>
+        <span class="n">display</span><span class="p">(</span><span class="s2">&quot;prob_id: </span><span class="si">{}</span><span class="s2">, err: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prob_id</span><span class="p">,</span> <span class="n">best_f</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">Math</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">_repr_latex_</span><span class="p">())))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;---------------------------------------------------------&quot;</span><span class="p">)</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+---------------------------------------------------------
+Best five fits for id:  0
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 0, err: 2.3801558148325692e-05&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle - c_{1} - \frac{c_{2}}{x_{0}} + \frac{c_{2}}{2 x_{0}^{2}} + c_{3} e^{- 4 x_{0}^{2}} - c_{4} x_{0} e^{- 4 x_{0}^{2}} + c_{4}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 0, err: 2.380412125841117e-05&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle \frac{c_{2}}{x_{0}} + c_{3} + c_{4} \left(\frac{c_{2}}{x_{0}} - x_{0}\right)^{2} - x_{0} \left(c_{1} - \frac{x_{0}}{\frac{c_{2}}{x_{0}} - x_{0}}\right) + \frac{x_{0}}{\frac{c_{2}}{x_{0}} - x_{0}}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 0, err: 2.3804219347209996e-05&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle \frac{c_{4} + \left(c_{4} + x_{0}^{2}\right) \left(- c_{1} + c_{2} x_{0} + c_{3} x_{0}^{2}\right)}{c_{4} + x_{0}^{2}}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 0, err: 2.3808190703491017e-05&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle \frac{c_{1} e^{- x_{0}^{2}}}{x_{0}} - \frac{c_{2}}{x_{0}} - c_{3} - \frac{c_{4}}{x_{0}^{2}} - 1$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 0, err: 2.3809219218852146e-05&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle c_{1} x_{0} - c_{2} x_{0}^{2} + \frac{c_{3}}{x_{0}^{2}} - c_{4}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+---------------------------------------------------------
+---------------------------------------------------------
+Best five fits for id:  1
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 1, err: 1.5481952594443556e-05&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle \frac{c_{1} - c_{2} e^{x_{0}} + x_{0} \left(c_{2} e^{x_{0}} + c_{2} - c_{4} - x_{0} + \left(- c_{1} + c_{2} e^{x_{0}} + c_{3}\right) e^{x_{0}}\right)}{x_{0}}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 1, err: 1.5486489454637892e-05&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle \frac{c_{2} x_{0} \left(1 - x_{0}\right) + \left(c_{1} + x_{0} \left(- c_{2} x_{0} + c_{2} + c_{3} x_{0} + c_{4}\right)\right) e^{x_{0}^{2}}}{x_{0}}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 1, err: 1.5494780218604477e-05&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle c_{1} x_{0} + c_{2} - \frac{c_{2}}{x_{0}} - c_{3} + c_{4} e^{- e^{- 2 x_{0}^{2}}}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 1, err: 1.549478021860451e-05&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle - \frac{c_{1}}{x_{0}} + c_{2} + c_{3} e^{- e^{- 2 x_{0}^{2}}} - c_{4} x_{0}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 1, err: 1.5524996126148153e-05&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle - c_{1} + \frac{c_{2} e^{x_{0}^{2}}}{x_{0}} + c_{3} x_{0} + c_{4} e^{- x_{0}^{2}}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+---------------------------------------------------------
+---------------------------------------------------------
+Best five fits for id:  2
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 2, err: 4.866500757662433e-06&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle \left(c_{1} + c_{4} x_{0} + \left(- c_{3} + \left(c_{2} - x_{0}\right) e^{\left(x_{0}^{2} e^{x_{0}^{2}} - 1\right) e^{- x_{0}^{2}}}\right) e^{x_{0}^{2}}\right) e^{- x_{0}^{2}}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 2, err: 4.8981961254319396e-06&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle c_{1} + c_{2} x_{0}^{3} + c_{3} e^{- x_{0}^{2}} - c_{4} x_{0}^{2}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 2, err: 4.9140689166325595e-06&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle c_{1} x_{0} + c_{2} e^{2 x_{0}} + 2 c_{3} e^{- x_{0}} - c_{4} + 2 e^{- x_{0}^{2}}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 2, err: 5.004121929538379e-06&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle \left(\left(- c_{1} x_{0} + c_{2} x_{0} - c_{4} - x_{0}\right) e^{x_{0}^{2}} + \left(c_{2} x_{0} + c_{3} - c_{4} - x_{0}\right) e^{2 x_{0}^{2}} + 1\right) e^{- 2 x_{0}^{2}}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 2, err: 5.0208570048206605e-06&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle \frac{c_{1}^{2} e^{- x_{0}}}{c_{3}} - c_{2} + c_{4} e^{- x_{0}^{2}} - e^{- \frac{c_{1}^{2}}{x_{0}^{2}}}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+---------------------------------------------------------
+---------------------------------------------------------
+Best five fits for id:  3
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 3, err: 7.993101895616535e-06&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle - c_{1} x_{0} e^{x_{0}^{2}} + c_{1} + c_{2} e^{x_{0}^{2}} + c_{3} - c_{4} x_{0} + e^{- e^{- 2 x_{0}^{2}}} - e^{- x_{0}^{2}}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 3, err: 8.116838729621195e-06&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle c_{1} x_{0} + c_{2} e^{e^{2 x_{0}}} + c_{3} e^{x_{0}} + c_{4} + e^{- e^{2 x_{0}}}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 3, err: 8.13057337419324e-06&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle \left(c_{3} + \left(c_{3} + \left(c_{2} + e^{x_{0}}\right) e^{x_{0}}\right) \left(e^{x_{0}} + e^{e^{x_{0}}}\right) + \left(- c_{1} e^{x_{0} + e^{x_{0}}} + c_{2} - c_{4} + e^{x_{0}}\right) e^{x_{0}}\right) e^{- x_{0}}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 3, err: 8.19691765672383e-06&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle c_{2} + x_{0} \left(c_{1} x_{0} - c_{3}\right) - x_{0} + \left(c_{2} - x_{0}\right) e^{x_{0}} + \left(- c_{2} - c_{4} + x_{0}\right) e^{x_{0}^{2}}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 3, err: 8.224153596665173e-06&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle c_{1} + 2 c_{4} x_{0} - \left(c_{2} + c_{3} e^{x_{0}^{2}}\right) e^{x_{0}^{2}} - e^{c_{2}} + e^{x_{0}}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+---------------------------------------------------------
+---------------------------------------------------------
+Best five fits for id:  4
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 4, err: 3.359546731194255e-06&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle c_{1} x_{0} - c_{2} + c_{3} e^{- x_{0}} + c_{4} - \frac{c_{4}}{x_{0}} - e^{- e^{2 x_{0}}}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 4, err: 3.3734252967348888e-06&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle c_{1} - c_{2} x_{0} - \frac{c_{3}}{x_{0}} - c_{4} e^{e^{- 2 x_{0}^{2}}}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 4, err: 3.3746957690291797e-06&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle \frac{x_{0} \left(c_{2} - c_{4} x_{0}\right) + \left(c_{1} + c_{3} x_{0}\right) e^{e^{- 2 x_{0}^{2}}}}{x_{0}}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 4, err: 3.3811044286786395e-06&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle c_{1} e^{x_{0}^{2}} + \frac{c_{2}}{x_{0}} + c_{3} - c_{3} e^{- 2 x_{0}^{2}} - c_{4} e^{- x_{0}^{2}}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 4, err: 3.3842683416733736e-06&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle \frac{- c_{4} + x_{0} \left(- c_{2} + c_{3} x_{0}\right) + \left(c_{1} x_{0} + c_{4}\right) e^{x_{0} - e^{2 x_{0}}}}{x_{0}}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+---------------------------------------------------------
+---------------------------------------------------------
+Best five fits for id:  5
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 5, err: 1.686027444316002e-05&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle c_{1} x_{0} + c_{1} e^{- x_{0}^{4}} + \frac{c_{1}}{x_{0}^{2}} + c_{2} - 2 c_{3} - \frac{c_{3}}{x_{0}^{3}} - 2 c_{4} x_{0} - \frac{c_{4}}{x_{0}^{2}}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 5, err: 1.686067254813111e-05&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle \frac{x_{0}^{3} \left(- c_{2} + c_{4} e^{x_{0}}\right) + \left(- c_{1} x_{0} + c_{3}\right) e^{x_{0}}}{x_{0}^{3}}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 5, err: 1.686069307097475e-05&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle \frac{c_{2} x_{0}^{2} + c_{4} + x_{0}^{2} - x_{0} \left(c_{1} + c_{3} x_{0}\right) \left(c_{4} + x_{0}^{2}\right)}{x_{0} \left(c_{4} + x_{0}^{2}\right)}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 5, err: 1.6860856181522074e-05&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle \frac{c_{1}}{x_{0}^{3}} + c_{2} x_{0} - c_{3} - \frac{c_{4}}{x_{0}}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 5, err: 1.686098183474468e-05&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle c_{1} e^{x_{0}} + c_{2} + \frac{c_{3}}{x_{0}^{2}} - \frac{c_{4}}{x_{0}^{3}}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+---------------------------------------------------------
+---------------------------------------------------------
+Best five fits for id:  6
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 6, err: 9.922429392571683e-06&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle - c_{2} - c_{3} e^{- x_{0}^{2}} + \frac{2 c_{4}}{c_{1} + x_{0}} - e^{- \left(c_{1} + x_{0}\right)^{2}} + e^{- c_{4}^{2}}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 6, err: 9.936575700754542e-06&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle \frac{c_{2} + x_{0}^{2} \left(c_{1} x_{0} \left(c_{4} + x_{0}\right) + c_{3}\right) - x_{0} \left(c_{1} x_{0} \left(c_{4} + x_{0}\right) + c_{4}\right)}{x_{0}^{2}}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 6, err: 9.936942645025763e-06&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle c_{1} e^{- e^{- 2 x_{0}^{2}}} + \frac{c_{2} e^{- x_{0}^{2}}}{x_{0}} + c_{3} + c_{4} - \frac{c_{4}}{x_{0}}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 6, err: 9.937353947520078e-06&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle - c_{1} + c_{2} e^{x_{0}} - \frac{c_{3}}{x_{0}} + \frac{c_{4} e^{- e^{2 x_{0}}}}{c_{2} + e^{x_{0}}}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 6, err: 9.938981126078224e-06&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle c_{1} + c_{2} e^{- x_{0}} - \frac{c_{3} e^{- x_{0}^{2} - x_{0}}}{x_{0}} + \frac{c_{4} e^{- x_{0}}}{x_{0}}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+---------------------------------------------------------
+---------------------------------------------------------
+Best five fits for id:  7
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 7, err: 8.515167695863056e-06&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle - c_{1} e^{e^{- x_{0}^{2}}} + c_{2} + c_{3} x_{0} - c_{4} e^{- x_{0}^{2}} + x_{0} e^{- x_{0}^{2}}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 7, err: 8.519576231706857e-06&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle - c_{1} e^{x_{0}} + c_{1} e^{- e^{2 x_{0}}} - c_{2} + c_{3} e^{x_{0} - e^{2 x_{0}}} - c_{3} e^{- 2 e^{2 x_{0}}} + c_{4} e^{e^{x_{0}}}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 7, err: 8.522266408037304e-06&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle c_{1} e^{- x_{0}^{2}} + c_{2} - c_{3} x_{0} - c_{4} x_{0} e^{- x_{0}^{2}} + e^{e^{- x_{0}^{2}}}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 7, err: 8.569811491073491e-06&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle - c_{1} x_{0} + c_{2} e^{x_{0}} + c_{3} + c_{4} e^{- e^{2 x_{0}}} + e^{- e^{- 2 e^{2 x_{0}}}} - e^{- e^{2 x_{0}}}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 7, err: 8.596454393800356e-06&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle \left(- c_{1} + c_{2} x_{0} + \left(- c_{3} + c_{4} e^{x_{0}^{2}} + x_{0}\right) e^{x_{0}^{2}}\right) e^{- x_{0}^{2}}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+---------------------------------------------------------
+---------------------------------------------------------
+Best five fits for id:  8
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 8, err: 5.7033656245193685e-06&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle \frac{\left(x_{0} \left(c_{1} x_{0} - c_{3} + e^{c_{2}}\right) e^{c_{1} x_{0} \left(c_{3} - e^{c_{2}}\right)} + \left(- c_{2} x_{0} + c_{4}\right) e^{x_{0}^{2}}\right) e^{- x_{0} \left(c_{1} \left(c_{3} - e^{c_{2}}\right) + x_{0}\right)}}{x_{0}}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 8, err: 5.703378409998452e-06&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle c_{1} e^{- x_{0}^{2}} + c_{2} + c_{3} x_{0} e^{- x_{0}^{2}} + \frac{c_{4}}{x_{0}} + x_{0} e^{- x_{0}^{2}}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 8, err: 5.7033784099984615e-06&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle c_{1} e^{- x_{0}^{2}} + \frac{c_{2}}{x_{0}} - c_{3} - c_{4} x_{0} e^{- x_{0}^{2}}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 8, err: 5.705047245789752e-06&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle c_{1} - c_{2} c_{3} - c_{2} c_{4} e^{- x_{0}^{2}} + c_{2} + \frac{c_{2}}{x_{0}} - c_{3} x_{0} - c_{4} x_{0} e^{- x_{0}^{2}} + x_{0} + 1$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 8, err: 5.705078353147797e-06&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle - c_{1} x_{0} + \frac{c_{2}}{x_{0}} - c_{3} + c_{4} x_{0} e^{- x_{0}^{2}} - x_{0}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+---------------------------------------------------------
+---------------------------------------------------------
+Best five fits for id:  9
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 9, err: 4.523905989067585e-06&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle 2 c_{1} + \frac{c_{1}}{x_{0}^{2}} + c_{2} - c_{3} x_{0} + \frac{4 c_{4}}{x_{0}} + \frac{c_{4}}{x_{0}^{3}}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 9, err: 4.523956586681867e-06&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle - c_{1} x_{0} - c_{2} - c_{3} - \frac{c_{3}}{x_{0}^{2}} + \frac{3 c_{4}}{x_{0}} + \frac{c_{4}}{x_{0}^{3}}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 9, err: 4.524279590137839e-06&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle \frac{c_{2} - c_{4} x_{0} + x_{0}^{3} \left(c_{1} + c_{3} c_{4} x_{0}\right) + x_{0}}{x_{0}^{3}}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 9, err: 4.524279590138164e-06&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle \frac{- c_{4} + x_{0}^{3} \left(- c_{1} x_{0} + c_{2}\right) + x_{0} \left(c_{1} + c_{3}\right)}{x_{0}^{3}}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 9, err: 4.651129097622205e-06&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle c_{1} x_{0} + \frac{c_{2}}{x_{0}} + \frac{c_{3}}{x_{0}^{2}} + \frac{c_{4} e^{- x_{0}}}{x_{0}}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+---------------------------------------------------------
+---------------------------------------------------------
+Best five fits for id:  10
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 10, err: 1.9017543270061446e-05&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle \frac{c_{2} e^{\frac{1}{x_{0}}} - c_{3} + x_{0} \left(- c_{1} x_{0} + c_{4}\right)}{x_{0}}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 10, err: 1.9104544589813626e-05&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle - \frac{c_{1}}{\frac{c_{4}}{x_{0}^{3}} - x_{0}} + c_{3} + \frac{c_{4} e^{\frac{1}{x_{0}}}}{x_{0}^{3}}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 10, err: 1.9158737383062652e-05&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle c_{1} x_{0}^{2} + c_{2} + \frac{c_{3}^{2}}{x_{0}^{6}} - \frac{c_{3}}{x_{0}} + \frac{c_{3}}{x_{0}^{5}} - \frac{c_{3}}{x_{0}^{6}} + c_{4} x_{0}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 10, err: 1.9240171327253178e-05&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle - 2 c_{1} + \frac{c_{2}}{x_{0}^{3}} - \frac{c_{3}}{x_{0}^{4}} - \frac{c_{4}}{x_{0}}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 10, err: 1.9291883990542647e-05&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle - c_{1} x_{0} + c_{2} e^{x_{0}^{2}} - c_{3} + \frac{c_{4}}{x_{0}^{4}}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+---------------------------------------------------------
+---------------------------------------------------------
+Best five fits for id:  11
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 11, err: 1.1337997121125522e-05&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle \frac{c_{2} \left(c_{4} - x_{0}^{4}\right) - c_{3} x_{0} \left(c_{4} - x_{0}^{4}\right) + x_{0} \left(- c_{1} x_{0}^{2} - c_{2} x_{0} + c_{4}\right)}{x_{0} \left(c_{4} - x_{0}^{4}\right)}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 11, err: 1.135016956476325e-05&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle - c_{1} - \frac{c_{3}}{x_{0} - e^{c_{3}}} + \frac{c_{2} + \frac{c_{4}}{x_{0}} + e^{c_{4}}}{x_{0}}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 11, err: 1.1360665073366816e-05&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle - c_{1} + \frac{c_{1}}{x_{0}^{4}} + c_{2} - \frac{c_{3}}{x_{0}^{2}} - c_{4} x_{0} + \frac{c_{4}}{x_{0}^{3}}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 11, err: 1.1364062900679142e-05&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle - c_{1} x_{0} + c_{2} x_{0}^{2} - c_{2} x_{0} e^{- e^{- 2 x_{0}^{2}}} + c_{3} e^{e^{- 2 x_{0}^{2}}} + c_{4}$</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;prob_id: 11, err: 1.138267448015574e-05&#39;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="math notranslate nohighlight">
+$\displaystyle \displaystyle \left(- c_{2} e^{x_{0}^{2} + e^{- 2 x_{0}^{2}}} + \left(c_{1} + \left(c_{3} - c_{4} x_{0}\right) e^{x_{0}^{2}}\right) e^{x_{0}^{2}} - 1\right) e^{- x_{0}^{2} - e^{- 2 x_{0}^{2}}}$</div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+---------------------------------------------------------
+</pre></div></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="evo_in_parallel.html" class="btn btn-neutral float-right" title="Symbolic Regression and the Island Model" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="real_world2.html" class="btn btn-neutral float-left" title="A real-world case (Physics: dynamics)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Dario Izzo, Francesco Biscani
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

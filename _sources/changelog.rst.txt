@@ -20,18 +20,20 @@ New
 Changes
 ~~~~~~~
 
-- The underlying computations of the symbolic regression optimizationlroblem (UDP) 
+- BREAKING: the API has been made uniform for the four UDAs: :class:`dcgpy.es4cgp`, :class:`dcgpy.mes4cgp`, 
+  :class:`dcgpy.moes4cgp`, :class:`dcgpy.momes4cgp` as well as the mutation mechanism. 
+  Named parameters have thus changed and default values too. Note that, for example, what
+  was *n_mut* in some algos, is now *max_mut*.
+
+- The underlying computations of the symbolic regression optimization problem (UDP) 
   is now performed by obake using a vectorized type. Speed improvements are observed
-  of orders nbetween x4 and x100 depending on cases.
+  of magnitudes between x4 and x100.
 
-- The problem on nans appearing and exceptions being thrown has been solved
-  by guarding against symengine exceptions and by discarding zero columns and rows
-  when inverting hessians for the Newton step of memetic algorithms.
+- The problem on nans appearing and exceptions being thrown has been solved 
+  for :class:`dcgpy.symbolic_regression` by guarding against symengine exceptions
+  and by discarding zero columns and rows when inverting hessians for the Newton step of memetic algorithms.
 
-- BREAKING: the API has been made uniform for the four UDAs: es4cgp, moes4cgp, mes4cgp, momes4cgp
-  as well as the mutation mechanism. Named parameters have thus changed and default values too.
-
-- The UDA es4cgp is no longer using a thread bfe to compute the loss. This avoids crashes when pythonic, 
+- The UDA :class:`dcgpy.es4cgp` is no longer using a thread bfe to compute the loss. This avoids crashes when pythonic, 
   non thread-safe kernels are used. A bfe can still be set by the user (deprecated in python) after
   the UDA has been instantiated.
   

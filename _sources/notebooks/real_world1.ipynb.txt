@@ -4,7 +4,7 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "# A real-world case (Engineering)\n",
+    "# A real-world case (Engineering: materials)\n",
     "In this tutorial we will be using data from a real-world case. The original data are protected by industrial policies and hence the ones shipped with dcgpy have a level of noise added that prevents their misuse.\n",
     "\n",
     "This case is very informative as it shows how, in line with any other machine learning approach, also for symbolic regeression raw data have to be preprocessed with care as to obtain the maximum efficiency of the regression pipeline."
