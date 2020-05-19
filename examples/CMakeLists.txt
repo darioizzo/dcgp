@@ -7,7 +7,7 @@ MACRO(ADD_EXAMPLE arg1)
     set_property(TARGET ${arg1} PROPERTY CXX_STANDARD_REQUIRED YES)
 ENDMACRO(ADD_EXAMPLE)
 
-# Symbolic regression examples
+# Symbolic regression examples (for the web docs)
 ADD_EXAMPLE(symbolic_regression_1)
 ADD_EXAMPLE(symbolic_regression_1mo)
 ADD_EXAMPLE(symbolic_regression_2)
@@ -17,6 +17,8 @@ ADD_EXAMPLE(symbolic_regression_4)
 
 # UDAs
 ADD_EXAMPLE(es4cgp)
+ADD_EXAMPLE(moes4cgp)
+
 
 # Solving differential equations examples
 ADD_EXAMPLE(tsoulos_ode1)

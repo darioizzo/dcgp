@@ -197,13 +197,10 @@ public:
                     fs[i] = tmp_f[0];
                 }
             }
-            // TODO: This is only making sense for pythonic bfes fix the issue upstream
-            // prob.increment_fevals(fs.size());
-
-            // 4 - We reinsert the mutated individuals in the population if their fitness is
-            // less than, or equal, to the one from the parent.
+            // 4 - We insert the mutated individuals in the population if their fitness is not worse than 
+            // the parent's 
             for (decltype(NP) i = 0u; i < NP; ++i) {
-                if (pagmo::detail::less_than_f(fs[i], best_f)) {
+                if (!pagmo::detail::greater_than_f(fs[i], best_f)) {
                     best_f = fs[i];
                     // best_x is updated here
                     std::copy(dvs.data() + i * dim, dvs.data() + (i + 1) * dim, best_x.begin());

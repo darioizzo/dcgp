@@ -9,7 +9,7 @@
 #include <symengine/expression.h>
 #include <vector>
 
-#include <dcgp/algorithms/es4cgp.hpp>
+#include <dcgp/algorithms/moes4cgp.hpp>
 #include <dcgp/gym.hpp>
 #include <dcgp/kernel_set.hpp>
 #include <dcgp/problems/symbolic_regression.hpp>
@@ -46,14 +46,14 @@ int main(int ac, char *av[])
     std::vector<std::vector<double>> X, Y;
     gym::generate_P1(X, Y);
     // We instantiate a symbolic regression problem with no ephemeral constants.
-    symbolic_regression udp(X, Y, 1u, 16u, 17u, 2u, kernel_set<double>({"sum", "diff", "mul", "pdiv"})(), n_eph, false,
+    symbolic_regression udp(X, Y, 1u, 16u, 17u, 2u, kernel_set<double>({"sum", "diff", "mul", "pdiv"})(), n_eph, true,
                             0u, "MSE");
 
     // We init the population
     pagmo::population pop{udp, pop_size};
 
     // And we define an evolutionary startegy
-    dcgp::es4cgp uda(gen, max_mut, 1e-8, true);
+    dcgp::moes4cgp uda(gen, max_mut, 1e-8, true);
     if (bfe) {
         uda.set_bfe(pagmo::bfe{});
     }

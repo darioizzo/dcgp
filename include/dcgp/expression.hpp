@@ -693,11 +693,11 @@ public:
         for (auto i = 0u; i < N; ++i) {
             // If only one value is allowed for the gene, (lb==ub),
             // then we will not do anything as mutation does not apply
-            auto idx = std::uniform_int_distribution<unsigned>(0, m_lb.size() - 1)(m_e);
+            auto idx = std::uniform_int_distribution<>(0, m_lb.size() - 1)(m_e);
             if (m_lb[idx] < m_ub[idx]) {
                 unsigned new_value;
                 do {
-                    new_value = std::uniform_int_distribution<unsigned>(m_lb[idx], m_ub[idx])(m_e);
+                    new_value = std::uniform_int_distribution<>(m_lb[idx], m_ub[idx])(m_e);
                 } while (new_value == m_x[idx]);
                 m_x[idx] = new_value;
                 flag = true;
@@ -717,14 +717,14 @@ public:
     void mutate_inactive(unsigned N = 1u)
     {
         for (auto i = 0u; i < N; ++i) {
-            auto idx = std::uniform_int_distribution<unsigned>(0, m_lb.size() - 1)(m_e);
+            auto idx = std::uniform_int_distribution<>(0, m_lb.size() - 1)(m_e);
             if (!is_active_gene(idx)) {
                 // If only one value is allowed for the gene, (lb==ub),
                 // then we will not do anything as mutation does not apply
                 if (m_lb[idx] < m_ub[idx]) {
                     unsigned new_value;
                     do {
-                        new_value = std::uniform_int_distribution<unsigned>(m_lb[idx], m_ub[idx])(m_e);
+                        new_value = std::uniform_int_distribution<>(m_lb[idx], m_ub[idx])(m_e);
                     } while (new_value == m_x[idx]);
                     m_x[idx] = new_value;
                     // no need to update the data structures as the gene was inactive
