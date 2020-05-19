@@ -172,7 +172,7 @@ public:
             // their fitnesses.
             for (decltype(NP) i = 0u; i < NP; ++i) {
                 cgp.set(best_xu);
-                cgp.mutate_active(dis(m_e));
+                cgp.mutate_random(dis(m_e));
                 std::vector<unsigned> mutated_x = cgp.get();
                 std::transform(mutated_x.begin(), mutated_x.end(), dvs.data() + i * dim + n_eph,
                                [](unsigned a) { return boost::numeric_cast<double>(a); });
@@ -180,7 +180,7 @@ public:
                 // We then mutate the continuous part if requested
                 if (m_learn_constants) {
                     for (decltype(best_xd.size()) j = 0u; j < best_xd.size(); ++j) {
-                        mutated_eph_val[j] = best_xd[j] + 0.1 * normal(m_e);
+                        mutated_eph_val[j] = best_xd[j] + 10. * normal(m_e);
                     }
                     std::copy(mutated_eph_val.begin(), mutated_eph_val.end(), dvs.data() + i * dim);
                 }

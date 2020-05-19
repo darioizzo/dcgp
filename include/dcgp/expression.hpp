@@ -89,9 +89,9 @@ public:
         for (auto i = 0u; i < m_x.size(); ++i) {
             m_x[i] = std::uniform_int_distribution<unsigned>(m_lb[i], m_ub[i])(m_e);
         }
-        // We init the ephemeral constants with 1,2,3,4,5 ...
-        for (auto i = 1u; i <= n_eph; ++i) {
-            m_eph_val.push_back(static_cast<T>(i));
+        // We init the ephemeral constants in [-10, 10]
+        for (auto i = 0u; i < n_eph; ++i) {
+            m_eph_val.push_back(static_cast<T>(std::uniform_real_distribution<double>(-10., 10.)(m_e)));
         }
         // We init the ephemeral constants with c1,c2,c3,c4,c5 ...
         for (auto i = 1u; i <= n_eph; ++i) {
@@ -706,6 +706,33 @@ public:
         if (flag) update_data_structures();
     }
 
+    /// Mutates inactive genes randomly up to \p N
+    /**
+     * Mutates inactive random genes within their bounds up to \p N. 
+     * The guarantee to actually mutate N would cost and is deemed unnecessary.
+     *
+     * @param[in] N maximum number of inactive genes to be mutated
+     *
+     */
+    void mutate_inactive(unsigned N = 1u)
+    {
+        for (auto i = 0u; i < N; ++i) {
+            auto idx = std::uniform_int_distribution<unsigned>(0, m_lb.size() - 1)(m_e);
+            if (!is_active_gene(idx)) {
+                // If only one value is allowed for the gene, (lb==ub),
+                // then we will not do anything as mutation does not apply
+                if (m_lb[idx] < m_ub[idx]) {
+                    unsigned new_value;
+                    do {
+                        new_value = std::uniform_int_distribution<unsigned>(m_lb[idx], m_ub[idx])(m_e);
+                    } while (new_value == m_x[idx]);
+                    m_x[idx] = new_value;
+                    // no need to update the data structures as the gene was inactive
+                }
+            }
+        }
+    }
+
     /// Mutates active genes
     /**
      * Mutates \p N active genes within their allowed bounds.
@@ -714,14 +741,15 @@ public:
      * @param[in] N Number of active genes to be mutated
      *
      */
-    void mutate_active(unsigned N = 1)
+    void mutate_active(unsigned N = 1u)
     {
+        std::vector<unsigned> idxs(N, 0u);
         for (auto i = 0u; i < N; ++i) {
             unsigned idx
                 = std::uniform_int_distribution<unsigned>(0, static_cast<unsigned>(m_active_genes.size() - 1u))(m_e);
-            idx = m_active_genes[idx];
-            mutate(idx);
+            idxs[i] = m_active_genes[idx];
         }
+        mutate(idxs);
     }
 
     /// Mutates active function genes
@@ -809,9 +837,21 @@ public:
      *
      * @return True if the node *node_id* is active in the CGP expression.
      */
-    bool is_active(const unsigned node_id) const
+    bool is_active_node(const unsigned node_id) const
     {
         return (std::find(m_active_nodes.begin(), m_active_nodes.end(), node_id) != m_active_nodes.end());
+    }
+
+    /// Checks if a given gene is active
+    /**
+     *
+     * @param[in] idx the idx of the gene to be checked
+     *
+     * @return True if the gene *idx* is active in the CGP expression.
+     */
+    bool is_active_gene(const unsigned idx) const
+    {
+        return (std::find(m_active_genes.begin(), m_active_genes.end(), idx) != m_active_genes.end());
     }
 
     /// Overloaded stream operator
