@@ -63,16 +63,18 @@ int main(int ac, char *av[])
     // We evolve the population
     pop = algo.evolve(pop);
 
-    // We print on screen the best found
-    auto idx = pop.best_idx();
-    auto prettier = udp.prettier(pop.get_x()[idx]);
-    trim_left_if(prettier, is_any_of("["));
-    trim_right_if(prettier, is_any_of("]"));
-    pagmo::print("\nBest fitness: ", pop.get_f()[idx], "\n");
-    pagmo::print("Chromosome: ", pop.get_x()[idx], "\n");
-    pagmo::print("Pretty Formula: ", udp.pretty(pop.get_x()[idx]), "\n");
-    pagmo::print("Prettier Formula: ", prettier, "\n");
-    pagmo::print("Expanded Formula: ", SymEngine::expand(SymEngine::Expression(prettier)), "\n");
+    // Finally we print on screen the non dominated front.
+    pagmo::print("\nNon dominated Front at the end:\n");
+    auto ndf = pagmo::non_dominated_front_2d(pop.get_f());
+    for (decltype(ndf.size()) i = 0u; i < ndf.size(); ++i) {
+        auto idx = ndf[i];
+        auto prettier = udp.prettier(pop.get_x()[idx]);
+        trim_left_if(prettier, is_any_of("["));
+        trim_right_if(prettier, is_any_of("]"));
+        pagmo::print(std::setw(2), i + 1, " - Loss: ", std::setw(13), std::left, pop.get_f()[idx][0], std::setw(15),
+                     "Complexity: ", std::left, std::setw(5), pop.get_f()[idx][1], std::setw(10), "Formula: ", prettier,
+                     "\n");
+    }
 
     return false;
 }

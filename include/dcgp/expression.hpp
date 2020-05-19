@@ -376,6 +376,24 @@ public:
         update_data_structures();
     }
 
+    /// Sets the chromosome from range
+    /**
+     * Sets a given chromosome as genotype for the expression and updates
+     * the active nodes and active genes information accordingly
+     *
+     * @param[in] begin iterator to the first element of the range
+     * @param[in] end iterator to the end element of the range
+     *
+     * @throw std::invalid_argument if the chromosome is out of bounds or has the wrong size.
+     */
+    template <class InputIt>
+    void set_from_range(InputIt begin, InputIt end)
+    {
+        check_cgp_encoding(begin, end);
+        std::transform(begin, end, m_x.begin(), [](auto x){return static_cast<unsigned>(x);});
+        update_data_structures();
+    }
+
     /// Sets the function gene of a node
     /** Sets for a valid node (i.e. not an input node) a new kernel
      *
@@ -708,7 +726,7 @@ public:
 
     /// Mutates inactive genes randomly up to \p N
     /**
-     * Mutates inactive random genes within their bounds up to \p N. 
+     * Mutates inactive random genes within their bounds up to \p N.
      * The guarantee to actually mutate N would cost and is deemed unnecessary.
      *
      * @param[in] N maximum number of inactive genes to be mutated
@@ -894,20 +912,30 @@ protected:
      */
     bool check_cgp_encoding(const std::vector<unsigned> &xu) const
     {
+        return check_cgp_encoding(xu.begin(), xu.end());
+    }
+
+    template <class InputIt>
+    bool check_cgp_encoding(InputIt begin, InputIt end) const
+    {
+        unsigned size = static_cast<unsigned>(std::distance(begin, end));
         // Checking for length
-        if (xu.size() != m_lb.size()) {
-            throw std::invalid_argument("Inconsistent chromosome: length of the chromosome is : "
-                                        + std::to_string(xu.size())
+        if (size != m_lb.size()) {
+            throw std::invalid_argument("Inconsistent chromosome: length of the chromosome is : " + std::to_string(size)
                                         + ", while it should be: " + std::to_string(m_lb.size()));
         }
         // Checking for bounds on all genes
-        for (auto i = 0u; i < xu.size(); ++i) {
-            if ((xu[i] > m_ub[i]) || (xu[i] < m_lb[i])) {
-                throw std::invalid_argument("Inconsistent chromosome: out of bounds. The component " + std::to_string(i)
-                                            + " of the chromosome is " + std::to_string(xu[i])
-                                            + " while the bounds are: [" + std::to_string(m_lb[i]) + " " + ", "
-                                            + std::to_string(m_ub[i]) + "]");
+        auto lb_iter = m_lb.begin();
+        auto ub_iter = m_ub.begin();
+        while (begin != end) {
+            if ((*begin > *ub_iter) || (*begin < *lb_iter)) {
+                throw std::invalid_argument("Inconsistent chromosome: out of bounds. A component of the chromosome is "
+                                            + std::to_string(*begin) + " while the bounds are: ["
+                                            + std::to_string(*lb_iter) + " " + ", " + std::to_string(*ub_iter) + "]");
             }
+            ++begin;
+            ++lb_iter;
+            ++ub_iter;
         }
         return true;
     }
