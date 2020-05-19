@@ -1,5 +1,5 @@
 set(_DCGP_REQUIRED_BOOST_LIBS)
-list(APPEND _DCGP_REQUIRED_BOOST_LIBS timer chrono serialization system unit_test_framework)
+list(APPEND _DCGP_REQUIRED_BOOST_LIBS timer chrono serialization system unit_test_framework program_options)
 
 message(STATUS "Required Boost libraries: ${_DCGP_REQUIRED_BOOST_LIBS}")
 find_package(Boost 1.55.0 REQUIRED COMPONENTS "${_DCGP_REQUIRED_BOOST_LIBS}")
