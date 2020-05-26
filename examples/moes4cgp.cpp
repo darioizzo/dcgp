@@ -52,6 +52,15 @@ int main(int ac, char *av[])
     // We init the population
     pagmo::population pop{udp, pop_size};
 
+    for (decltype(pop_size) i = 0u; i < pop_size; ++i) {
+        auto prettier = udp.prettier(pop.get_x()[i]);
+        trim_left_if(prettier, is_any_of("["));
+        trim_right_if(prettier, is_any_of("]"));
+        pagmo::print(std::setw(2), i + 1, " - Loss: ", std::setw(13), std::left, pop.get_f()[i][0], std::setw(15),
+                     "Complexity: ", std::left, std::setw(5), pop.get_f()[i][1], std::setw(10), "Formula: ", prettier,
+                     "\n");
+    }
+
     // And we define an evolutionary startegy
     dcgp::moes4cgp uda(gen, max_mut, 1e-8, true);
     if (bfe) {
