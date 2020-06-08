@@ -23,7 +23,10 @@ bibliography: paper.bib
 
 # Summary
 
-Genetic Programming (GP), is a computational technique based on the idea of representing a computer program in some dedicated data-structure (e.g. a tree) to then evolve it using genetic algorithms as to improve its *fitness* at solving a predefined task. The idea flourished in the late 80s mainly thanks to the work of John Koza [@koza:2010], and (using the words of Koza) has always had a "hidden skeleton in the closet": the difficulty to find and evolve real valued parameters in the expressed program. A recent development called **differentiable
+Genetic Programming (GP), is a computational technique based on the idea of representing a computer program in some dedicated data-structure (e.g. a tree) to then evolve it using genetic algorithms as to improve its ability at solving a predefined task. How good a certain program is at solving the task is typically encapsulated in its *fitness*: a vector of floating point values defining various aspects of the program. In a typical example, the *fitness* would be the program output error with respect to the predefined correct behaviour over a number of inputs. Generation after generation, the genetic algorithm would then improve such a fitness in the attempt to
+have the program behave correctly.
+
+The idea flourished in the late 80s mainly thanks to the work of John Koza [@koza:2010], and (using the words of Koza) has always had a "hidden skeleton in the closet": the difficulty to find and evolve real valued parameters in the expressed program. A recent development called **differentiable
 genetic programming** [@izzo:2017], was introduced to address exactly this issue by allowing to learn constants in computer programs using the
 differential information of the program outputs as obtained using automated differentiation techniques. 
 
@@ -31,10 +34,12 @@ The evolution of a **differentiable genetic program** can be supported by using 
 
 In this work we introduce the C++ library `dcgp` and the Python package `dcgpy`, tools we developed to allow research into the applications enabled by **differentiable genetic programming**. In the rest of this paper, we will refer mainly to `dcgp`, with the understanding that the a corresponding behaviour can always be also obtained in `dcgpy`.
 
+A different library called CGP-Library \cite{turner} is already available as a cross platform C implementation of Cartesian Genetic Programming, designed to be simple to use and extendable. The `dcgp` library here introduced,differs in several aspects: it allows to perform derivatives on the represented programs (hence implementing a differentiable form of genetic programming), it allows to use Python to use runtime scripting, it is thread-safe and it allows to define kernels as generic functors.
+
 # Methods 
 
-In `dcgp` computer programs are encoded using the Cartesian Genetic Programming (CGP) encoding [@miller:2011], that is an acyclic graph
-representation. A Cartesian genetic program, in its original form, is depicted in \autoref{fig:cgp} and is defined by the number of inputs $n$, the number of outputs $m$, the number of rows $r$, the number of columns $c$, the levels-back $l$, the arity $a$ of its functional units (*kernels*) and the set of possible *kernels*. With reference to \autoref{fig:cgp}, each of the $n + rc$ nodes in a CGP is assigned a unique id. The vector of integers:
+In `dcgp` computer programs are encoded using the Cartesian Genetic Programming (CGP) encoding [@miller:2011], that is an acyclic graph representation. 
+A Cartesian genetic program, in its original form, is depicted in \autoref{fig:cgp} and is defined by the number of inputs $n$, the number of outputs $m$, the number of rows $r$, the number of columns $c$, the levels-back $l$, the arity $a$ of its functional units (*kernels*) and the set of possible *kernels*. With reference to \autoref{fig:cgp}, each of the $n + rc$ nodes in a CGP is assigned a unique id. The vector of integers:
 $$
 \mathbf x_I = [F_0, C_{0,0}, C_{0,1}, ...,  C_{0, a}, F_1, C_{1,0}, ....., O_1, O_2, ..., O_m]
 $$
@@ -45,12 +50,18 @@ defines entirely the value of the terminal nodes and thus the computer program.
 Several *kernels* are already available in `dcgp`, but the user can define his own both in the C++ and in the Python version, allowing for the possibility to consider kernels that are, themselves, genetic programs. 
 
 In `dcgp` the CGP representations of programs are all derived from a base C++ templated class `dcgp::expression<T>`. The use of the
-template parameter `T` allows to compute the nodes of the acyclic graph defining the computer program, and thus its outputs, using different computational types. In particular, the use of **generalized dual numbers**, implemented as a new type in the library `audi` [@audi:2020], are enabled and can be used to obtain the derivatives, at any order, of the program outputs with respect to parameters present in its encoding. **Generalized dual numbers** implement the algebra of truncated Taylor polynomials and act, in this context, as a high order, forward mode, automated differentiation method.
+template parameter `T` allows to compute the nodes of the acyclic graph defining the computer program, and thus its outputs, using different computational types. 
+In particular, the use of **generalized dual numbers**, implemented as a new type in the library `audi` [@audi:2020], are enabled and can be used to obtain the derivatives, at any order, of the program outputs with respect to parameters present in its encoding. 
+**Generalized dual numbers** are elements of the algebra of truncated Taylor polynomials and act, in this context, as a high order, forward mode, automated differentiation method. 
+The library `audi` makes computations in this algebra rather straight-forward by defining all the basic arithmetics rules for the new type `audi::gdual<T>` which, essentially, represents a multivariate Taylor polynomial and thus contains all the derivatives of the considered expansion.
 
 The two classes `dcgp::expression_weighted<T>` and `dcgp::expression_ann` derive from the base class `dcgp::expression<T>` and offer
-new, extended, kinds of CGP representations. `dcgp::expression_weighted<T>` adds a weight to each node connection and thus creates a program rich in floating point constants to be learned. `dcgp::expression_ann` adds also a bias to each node, thus making it possible to represent generic artificial neural networks. Since forward mode automated differentiation is highly unefficient whenever a high number of parameters are to be learned (a typical situation when training ANN weights and biases), ```dcgp::expression_ann``` is only allowed to operate on the type ```double```. Its weights and biases can be learned using backward mode automated differentiation (back propagation) and a stochastic gradient descent algorithm implemented specifically for the class.
+new, extended, kinds of CGP representations. `dcgp::expression_weighted<T>` adds a weight to each node connection and thus creates a program rich in floating point constants to be learned. `dcgp::expression_ann` adds also a bias to each node, thus making it possible to represent generic artificial neural networks. 
+Since forward mode automated differentiation is highly unefficient whenever a high number of parameters are to be learned (a typical situation when training ANN weights and biases), ```dcgp::expression_ann``` is only allowed to operate on the type ```double```. 
+Its weights and biases can be learned using backward mode automated differentiation (back propagation) and a stochastic gradient descent algorithm implemented specifically for the class.
 
-All computer programs represented in `dcgp` can be *mutated* via the corresponding methods of the ```dcgp::expression<T>``` base class, and thus evolved. Mutations can be chosen selectively to affect only specific part of the chromosome, thus affecting only the *kernels*, the connections or the output nodes. As an example, the different consequences of such mutations are visualized, in the case of a `dcgp::expression_ann`, in \autoref{fig:ann_mut} and studied preliminarily in [@martens:2019].
+All computer programs represented in `dcgp` can be *mutated* via the corresponding methods of the ```dcgp::expression<T>``` base class, and thus evolved. Mutations can be chosen selectively to affect only specific part of the chromosome, thus affecting only the *kernels*, the connections or the output nodes. As an example, the different consequences of such mutations are visualized, in the case of a `dcgp::expression_ann`, in \autoref{fig:ann_mut} and studied preliminarily in [@martens:2019]. No crossover is implemented at the level of 
+the ```dcgp::expression<T>```, as the original technique employed to evolve Cartesian genetic programs [@miller:2011] was purely mutation based. We do intend to add this possibility in future versions.
 
 ![Effects of mutations on a dCGPANN.\label{fig:ann_mut}](ann_mut.png)
 
