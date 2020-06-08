@@ -23,7 +23,7 @@ bibliography: paper.bib
 
 # Summary
 
-Genetic Programming (GP), is a computational technique based on the idea of representing a computer program in some dedicated data-structure (e.g. a tree) to then evolve it using genetic algorithms as to improve its ability at solving a predefined task. How good a certain program is at solving the task is typically encapsulated in its *fitness*: a vector of floating point values defining various aspects of the program. In a typical example, the *fitness* would be the program output error with respect to the predefined correct behaviour over a number of inputs. Generation after generation, the genetic algorithm would then improve such a fitness in the attempt to
+Genetic Programming (GP), is a computational technique based on the idea of representing a computer program in some dedicated data-structure (e.g. a tree) to then evolve it using genetic algorithms as to improve its ability at solving a predefined task. How good a certain program is at solving the task is typically encapsulated in its *fitness*: a vector of floating point values defining various aspects of the program. In a typical example, the *fitness* would be the program output error with respect to a predefined behaviour over a number of inputs. Generation after generation, the genetic algorithm would then improve such a fitness in the attempt to
 have the program behave correctly.
 
 The idea flourished in the late 80s mainly thanks to the work of John Koza [@koza:2010], and (using the words of Koza) has always had a "hidden skeleton in the closet": the difficulty to find and evolve real valued parameters in the expressed program. A recent development called **differentiable
@@ -34,7 +34,7 @@ The evolution of a **differentiable genetic program** can be supported by using 
 
 In this work we introduce the C++ library `dcgp` and the Python package `dcgpy`, tools we developed to allow research into the applications enabled by **differentiable genetic programming**. In the rest of this paper, we will refer mainly to `dcgp`, with the understanding that the a corresponding behaviour can always be also obtained in `dcgpy`.
 
-A different library called CGP-Library \cite{turner} is already available as a cross platform C implementation of Cartesian Genetic Programming, designed to be simple to use and extendable. The `dcgp` library here introduced,differs in several aspects: it allows to perform derivatives on the represented programs (hence implementing a differentiable form of genetic programming), it allows to use Python to use runtime scripting, it is thread-safe and it allows to define kernels as generic functors.
+A different library called CGP-Library [@turner:2015] is already available as a cross platform C implementation of Cartesian Genetic Programming, designed to be simple to use and extendable. The `dcgp` library here introduced,differs in several aspects: it allows to perform derivatives on the represented programs (hence implementing a differentiable form of genetic programming), it allows to use Python to use runtime scripting, it is thread-safe and it allows to define kernels as generic functors.
 
 # Methods 
 
