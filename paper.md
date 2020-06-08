@@ -34,7 +34,7 @@ The evolution of a **differentiable genetic program** can be supported by using 
 
 In this work we introduce the C++ library `dcgp` and the Python package `dcgpy`, tools we developed to allow research into the applications enabled by **differentiable genetic programming**. In the rest of this paper, we will refer mainly to `dcgp`, with the understanding that the a corresponding behaviour can always be also obtained in `dcgpy`.
 
-A different library called CGP-Library [@turner:2015] is already available as a cross platform C implementation of Cartesian Genetic Programming, designed to be simple to use and extendable. The `dcgp` library here introduced,differs in several aspects: it allows to perform derivatives on the represented programs (hence implementing a differentiable form of genetic programming), it allows to use Python to use runtime scripting, it is thread-safe and it allows to define kernels as generic functors.
+A different library called CGP-Library [@turner:2015] is already available as a cross platform C implementation of Cartesian Genetic Programming, designed to be simple to use and extendable. The `dcgp` library here introduced, differs in several aspects: it allows to perform derivatives on the represented programs (hence implementing a differentiable form of genetic programming), it allows to use Python to use runtime scripting, it is thread-safe and it allows to define kernels as generic functors.
 
 # Methods 
 
