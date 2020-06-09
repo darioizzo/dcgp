@@ -99,7 +99,7 @@ python -c "from dcgpy import test; test.run_test_suite(); import pygmo; pygmo.mp
 
 ### Installing with pip (deprecated)
 
-We also provide the pip packages (mainly for linux 64 bit architectures and older versions).
+We also provide the pip packages (mainly for linux 64 bit architectures and versions <= 1.4.1).
 Check on the `PyPi dcgpy page <https://pypi.org/project/dcgpy/>`_ if the needed package is provided.
 
 ```
