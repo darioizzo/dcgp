@@ -68,8 +68,6 @@ make install
 
 The headers will be installed in the CMAKE_INSTALL_PREFIX/include directory. 
 
------------------------------------------------------------------------
-
 Python
 ------
 The main functionalities of dCGP are exposed into a Python module called ``dcgpy`` which
