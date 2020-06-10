@@ -235,10 +235,10 @@
 <a class="reference internal image-reference" href="../../_images/kernels.png"><img alt="dCGP kernels" src="../../_images/kernels.png" style="width: 198.8px; height: 177.20000000000002px;" /></a>
 </div>
 <p><strong>Kernels</strong>, (also called <strong>non-linearities</strong> in the ANN literature) describe the fundamental computational units of a CGP.
-Things like addition, multiplication, trigonomoetric functions are all kernels. The templated class <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">dcgp::kernel</span></code> allow
+Things like addition, multiplication, trigonomoetric functions are all kernels. The templated class <a class="reference internal" href="kernel.html#_CPPv4I0EN4dcgp6kernelE" title="dcgp::kernel"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">dcgp::kernel</span></code></a> allow
 the user the definition of their own kernels able to operate on the choosen type.</p>
 <p>The most popular kernels are already coded and shipped with dcgpy. A python list containing multiple kernels can be easily
-instantiated via the <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">dcgp::kernel_set</span></code>.</p>
+instantiated via the <a class="reference internal" href="kernel_set.html#_CPPv4I0EN4dcgp10kernel_setE" title="dcgp::kernel_set"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">dcgp::kernel_set</span></code></a>.</p>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="kernel.html">kernel</a></li>
@@ -259,7 +259,7 @@ we use the term expression to name the related, different, classes.</p>
 <li><p><strong>expression_ann</strong>: this represents an Artificial Neural Network inclusive of biases and weights, via a CGP and allows to learn the model parameters using backproagation. (original with dCGP - 2018)</p></li>
 </ul>
 <p>Each of the above CGPs can operate over different numerical types, hence the corresponding classes are templated.
-For example a <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">dcgp::expression</span></code> can operate over doubles (<code class="docutils literal notranslate"><span class="pre">T</span></code> = <code class="docutils literal notranslate"><span class="pre">double</span></code>), in which case the
+For example a <a class="reference internal" href="expression.html#_CPPv4I0EN4dcgp10expressionE" title="dcgp::expression"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">dcgp::expression</span></code></a> can operate over doubles (<code class="docutils literal notranslate"><span class="pre">T</span></code> = <code class="docutils literal notranslate"><span class="pre">double</span></code>), in which case the
 result of evaluating the inner computational graph is a <code class="docutils literal notranslate"><span class="pre">double</span></code>, but also on a <code class="docutils literal notranslate"><span class="pre">gdual</span></code> (<code class="docutils literal notranslate"><span class="pre">T</span></code> = <a class="reference external" href="http://darioizzo.github.io/audi/gdual.html#_CPPv4I0E5gdual" title="(in audi v1.7)"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">audi::gdual</span></code></a> <code class="docutils literal notranslate"><span class="pre">&lt;Cf&gt;</span></code>)
 with <code class="docutils literal notranslate"><span class="pre">Cf</span></code> = <code class="docutils literal notranslate"><span class="pre">double</span></code>, in which case, the result of evaluating the inner computational graph will
 be a <a class="reference external" href="http://darioizzo.github.io/audi/gdual.html#_CPPv4I0E5gdual" title="(in audi v1.7)"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">audi::gdual</span></code></a> <code class="docutils literal notranslate"><span class="pre">&lt;Cf&gt;</span></code> and hence it will contain all the program derivatives
@@ -282,7 +282,7 @@ This type offers order of magnitude speed ups whenever a CGP needs derivatives a
 <a class="reference internal image-reference" href="../../_images/non_linear_regression.png"><img alt="non-linear regression" src="../../_images/non_linear_regression.png" style="width: 282.79999999999995px; height: 197.39999999999998px;" /></a>
 </div>
 <p>Mathematically, a symbolic regression problem is a global optimization problem. In order to facilitate its solution,
-a number of classes have been designed to interface a <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">dcgp::expression</span></code> to the optimisation suite pygmo.
+a number of classes have been designed to interface a <a class="reference internal" href="expression.html#_CPPv4I0EN4dcgp10expressionE" title="dcgp::expression"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">dcgp::expression</span></code></a> to the optimisation suite pygmo.
 In particular we provide UDPs (in pagmo’s jargon user defined problems) that can be used to build
 <a class="reference external" href="https://esa.github.io/pagmo2/docs/cpp/problem.html#_CPPv4N5pagmo7problemE" title="(in pagmo v2.16.0)"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">pagmo::problem</span></code></a> objects (representing symbolic regression problems) and UDAs
 (in pagmo’s jargon user defined algorithms) that can be used to build <a class="reference external" href="https://esa.github.io/pagmo2/docs/cpp/algorithm.html#_CPPv4N5pagmo9algorithmE" title="(in pagmo v2.16.0)"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">pagmo::algorithm</span></code></a> objects.</p>
