@@ -53,6 +53,7 @@ using f_enabler = typename std::enable_if<std::is_same<T, double>::value || is_g
 
 template <typename T, f_enabler<T> = 0>
 struct my_diff_func {
+    /// Call operator
     T operator()(const std::vector<T> &in) const
     {
         T retval(in[0]);
@@ -68,6 +69,7 @@ template <typename T>
 inline constexpr auto my_diff = my_diff_func<T>{};
 
 struct print_my_diff_func {
+    /// Call operator
     std::string operator()(const std::vector<std::string> &in) const
     {
         std::string retval(in[0]);
@@ -83,6 +85,7 @@ inline constexpr auto print_my_diff = print_my_diff_func{};
 
 template <typename T, f_enabler<T> = 0>
 struct my_mul_func {
+    /// Call operator
     T operator()(const std::vector<T> &in) const
     {
         T retval(in[0]);
@@ -98,6 +101,7 @@ template <typename T>
 inline constexpr auto my_mul = my_mul_func<T>{};
 
 struct print_my_mul_func {
+    /// Call operator
     std::string operator()(const std::vector<std::string> &in) const
     {
         std::string retval(in[0]);
@@ -113,6 +117,7 @@ inline constexpr auto print_my_mul = print_my_mul_func{};
 
 template <typename T, f_enabler<T> = 0>
 struct my_div_func {
+    /// Call operator
     T operator()(const std::vector<T> &in) const
     {
         T retval(in[0]);
@@ -128,6 +133,7 @@ template <typename T>
 inline constexpr auto my_div = my_div_func<T>{};
 
 struct print_my_div_func {
+    /// Call operator
     std::string operator()(const std::vector<std::string> &in) const
     {
         std::string retval(in[0]);
@@ -144,6 +150,7 @@ inline constexpr auto print_my_div = print_my_div_func{};
 // Protected divide function (double overload):
 template <typename T, typename = void>
 struct my_pdiv_func {
+    /// Call operator
     T operator()(const std::vector<T> &in) const
     {
         T retval(in[0]);
@@ -170,6 +177,7 @@ struct my_pdiv_func {
 // Because the gradients created when using gdual are mathematically invalid.
 template <typename T>
 struct my_pdiv_func<T, std::enable_if_t<is_gdual<T>::value>> {
+    /// Call operator
     T operator()(const std::vector<T> &) const
     {
         throw std::invalid_argument("The protected division is not supported for gdual types.");
@@ -181,6 +189,7 @@ template <typename T>
 inline constexpr auto my_pdiv = my_pdiv_func<T>{};
 
 struct print_my_pdiv_func {
+    /// Call operator
     std::string operator()(const std::vector<std::string> &in) const
     {
         std::string retval(in[0]);
@@ -202,6 +211,7 @@ inline constexpr auto print_my_pdiv = print_my_pdiv_func{};
 // sigmoid function: 1 / (1 + exp(- (a + b + c + d+ .. + ))
 template <typename T, f_enabler<T> = 0>
 struct my_sig_func {
+    /// Call operator
     T operator()(const std::vector<T> &in) const
     {
         T retval(in[0]);
@@ -217,6 +227,7 @@ template <typename T>
 inline constexpr auto my_sig = my_sig_func<T>{};
 
 struct print_my_sig_func {
+    /// Call operator
     std::string operator()(const std::vector<std::string> &in) const
     {
         std::string retval(in[0]);
@@ -233,6 +244,7 @@ inline constexpr auto print_my_sig = print_my_sig_func{};
 // tanh function:
 template <typename T, f_enabler<T> = 0>
 struct my_tanh_func {
+    /// Call operator
     T operator()(const std::vector<T> &in) const
     {
         T retval(in[0]);
@@ -248,6 +260,7 @@ template <typename T>
 inline constexpr auto my_tanh = my_tanh_func<T>{};
 
 struct print_my_tanh_func {
+    /// Call operator
     std::string operator()(const std::vector<std::string> &in) const
     {
         std::string retval(in[0]);
@@ -264,6 +277,7 @@ inline constexpr auto print_my_tanh = print_my_tanh_func{};
 // ReLu function (double overload):
 template <typename T, typename = void>
 struct my_relu_func {
+    /// Call operator
     T operator()(const std::vector<T> &in) const
     {
         T retval(in[0]);
@@ -281,6 +295,7 @@ struct my_relu_func {
 // ReLu function (gdual overload):
 template <typename T>
 struct my_relu_func<T, std::enable_if_t<is_gdual<T>::value>> {
+    /// Call operator
     T operator()(const std::vector<T> &in) const
     {
         T retval(in[0]);
@@ -299,6 +314,7 @@ template <typename T>
 inline constexpr auto my_relu = my_relu_func<T>{};
 
 struct print_my_relu_func {
+    /// Call operator
     std::string operator()(const std::vector<std::string> &in) const
     {
         std::string retval(in[0]);
@@ -315,6 +331,7 @@ inline constexpr auto print_my_relu = print_my_relu_func{};
 // Exponential linear unit (ELU) function (double overload):
 template <typename T, typename = void>
 struct my_elu_func {
+    /// Call operator
     T operator()(const std::vector<T> &in) const
     {
         T retval(in[0]);
@@ -332,6 +349,7 @@ struct my_elu_func {
 // Exponential linear unit (ELU) function (gdual overload):
 template <typename T>
 struct my_elu_func<T, std::enable_if_t<is_gdual<T>::value>> {
+    /// Call operator
     T operator()(const std::vector<T> &in) const
     {
         T retval(in[0]);
@@ -350,6 +368,7 @@ template <typename T>
 inline constexpr auto my_elu = my_elu_func<T>{};
 
 struct print_my_elu_func {
+    /// Call operator
     std::string operator()(const std::vector<std::string> &in) const
     {
         std::string retval(in[0]);
@@ -366,6 +385,7 @@ inline constexpr auto print_my_elu = print_my_elu_func{};
 // Inverse square root function: x / sqrt(1+x^2):
 template <typename T, f_enabler<T> = 0>
 struct my_isru_func {
+    /// Call operator
     T operator()(const std::vector<T> &in) const
     {
         T retval(in[0]);
@@ -381,6 +401,7 @@ template <typename T>
 inline constexpr auto my_isru = my_isru_func<T>{};
 
 struct print_my_isru_func {
+    /// Call operator
     std::string operator()(const std::vector<std::string> &in) const
     {
         std::string retval(in[0]);
@@ -396,6 +417,7 @@ inline constexpr auto print_my_isru = print_my_isru_func{};
 
 template <typename T, f_enabler<T> = 0>
 struct my_sum_func {
+    /// Call operator
     T operator()(const std::vector<T> &in) const
     {
         T retval(in[0]);
@@ -411,6 +433,7 @@ template <typename T>
 inline constexpr auto my_sum = my_sum_func<T>{};
 
 struct print_my_sum_func {
+    /// Call operator
     std::string operator()(const std::vector<std::string> &in) const
     {
         std::string retval(in[0]);
@@ -430,6 +453,7 @@ inline constexpr auto print_my_sum = print_my_sum_func{};
 // sine
 template <typename T, f_enabler<T> = 0>
 struct my_sin_func {
+    /// Call operator
     T operator()(const std::vector<T> &in) const
     {
         return sin(in[0]);
@@ -441,6 +465,7 @@ template <typename T>
 inline constexpr auto my_sin = my_sin_func<T>{};
 
 struct print_my_sin_func {
+    /// Call operator
     std::string operator()(const std::vector<std::string> &in) const
     {
         return "sin(" + in[0] + ")";
@@ -453,6 +478,7 @@ inline constexpr auto print_my_sin = print_my_sin_func{};
 // cosine
 template <typename T, f_enabler<T> = 0>
 struct my_cos_func {
+    /// Call operator
     T operator()(const std::vector<T> &in) const
     {
         return cos(in[0]);
@@ -464,6 +490,7 @@ template <typename T>
 inline constexpr auto my_cos = my_cos_func<T>{};
 
 struct print_my_cos_func {
+    /// Call operator
     std::string operator()(const std::vector<std::string> &in) const
     {
         return "cos(" + in[0] + ")";
@@ -476,6 +503,7 @@ inline constexpr auto print_my_cos = print_my_cos_func{};
 // logarithm
 template <typename T, f_enabler<T> = 0>
 struct my_log_func {
+    /// Call operator
     T operator()(const std::vector<T> &in) const
     {
         return audi::log(in[0]);
@@ -487,6 +515,7 @@ template <typename T>
 inline constexpr auto my_log = my_log_func<T>{};
 
 struct print_my_log_func {
+    /// Call operator
     std::string operator()(const std::vector<std::string> &in) const
     {
         return "log(" + in[0] + ")";
@@ -500,6 +529,7 @@ inline constexpr auto print_my_log = print_my_log_func{};
 // This exponential discards all inputs except the first one
 template <typename T, f_enabler<T> = 0>
 struct my_exp_func {
+    /// Call operator
     T operator()(const std::vector<T> &in) const
     {
         return audi::exp(in[0]);
@@ -511,6 +541,7 @@ template <typename T>
 inline constexpr auto my_exp = my_exp_func<T>{};
 
 struct print_my_exp_func {
+    /// Call operator
     std::string operator()(const std::vector<std::string> &in) const
     {
         return "exp(" + in[0] + ")";
@@ -524,6 +555,7 @@ inline constexpr auto print_my_exp = print_my_exp_func{};
 // This gaussian discards all inputs except the first one
 template <typename T, f_enabler<T> = 0>
 struct my_gaussian_func {
+    /// Call operator
     T operator()(const std::vector<T> &in) const
     {
         return audi::exp(-in[0] * in[0]);
@@ -535,6 +567,7 @@ template <typename T>
 inline constexpr auto my_gaussian = my_gaussian_func<T>{};
 
 struct print_my_gaussian_func {
+    /// Call operator
     std::string operator()(const std::vector<std::string> &in) const
     {
         return "exp(-" + in[0] + "**2)";
@@ -548,6 +581,7 @@ inline constexpr auto print_my_gaussian = print_my_gaussian_func{};
 // This square root discards all inputs except the first one
 template <typename T, f_enabler<T> = 0>
 struct my_sqrt_func {
+    /// Call operator
     T operator()(const std::vector<T> &in) const
     {
         return audi::sqrt(in[0]);
@@ -559,6 +593,7 @@ template <typename T>
 inline constexpr auto my_sqrt = my_sqrt_func<T>{};
 
 struct print_my_sqrt_func {
+    /// Call operator
     std::string operator()(const std::vector<std::string> &in) const
     {
         return "sqrt(" + in[0] + ")";
@@ -572,6 +607,7 @@ inline constexpr auto print_my_sqrt = print_my_sqrt_func{};
 // This protected square root discards all inputs except the first one
 template <typename T, f_enabler<T> = 0>
 struct my_psqrt_func {
+    /// Call operator
     T operator()(const std::vector<T> &in) const
     {
         return audi::sqrt(audi::abs(in[0]));
@@ -583,6 +619,7 @@ template <typename T>
 inline constexpr auto my_psqrt = my_psqrt_func<T>{};
 
 struct print_my_psqrt_func {
+    /// Call operator
     std::string operator()(const std::vector<std::string> &in) const
     {
         return "sqrt(abs(" + in[0] + "))";

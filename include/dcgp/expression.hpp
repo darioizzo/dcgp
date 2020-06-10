@@ -903,43 +903,6 @@ public:
     }
 
 protected:
-    /// Validity of the CGP encoding
-    /**
-     * Checks if a CGP encoding (i.e. a sequence of integers) is a valid expression
-     * by verifying its length and the bounds
-     *
-     * @param[in] xu chromosome
-     */
-    bool check_cgp_encoding(const std::vector<unsigned> &xu) const
-    {
-        return check_cgp_encoding(xu.begin(), xu.end());
-    }
-
-    template <class InputIt>
-    bool check_cgp_encoding(InputIt begin, InputIt end) const
-    {
-        unsigned size = static_cast<unsigned>(std::distance(begin, end));
-        // Checking for length
-        if (size != m_lb.size()) {
-            throw std::invalid_argument("Inconsistent chromosome: length of the chromosome is : " + std::to_string(size)
-                                        + ", while it should be: " + std::to_string(m_lb.size()));
-        }
-        // Checking for bounds on all genes
-        auto lb_iter = m_lb.begin();
-        auto ub_iter = m_ub.begin();
-        while (begin != end) {
-            if ((*begin > *ub_iter) || (*begin < *lb_iter)) {
-                throw std::invalid_argument("Inconsistent chromosome: out of bounds. A component of the chromosome is "
-                                            + std::to_string(*begin) + " while the bounds are: ["
-                                            + std::to_string(*lb_iter) + " " + ", " + std::to_string(*ub_iter) + "]");
-            }
-            ++begin;
-            ++lb_iter;
-            ++ub_iter;
-        }
-        return true;
-    }
-
     /// Unchecked get arity
     /**
      * The public method get_arity, has some checks thet are significantly impacting speed if used in performance
@@ -1069,6 +1032,43 @@ protected:
     }
 
 private:
+    /// Validity of the CGP encoding
+    /**
+     * Checks if a CGP encoding (i.e. a sequence of integers) is a valid expression
+     * by verifying its length and the bounds
+     *
+     * @param[in] xu chromosome
+     */
+    bool check_cgp_encoding(const std::vector<unsigned> &xu) const
+    {
+        return check_cgp_encoding(xu.begin(), xu.end());
+    }
+
+    template <class InputIt>
+    bool check_cgp_encoding(InputIt begin, InputIt end) const
+    {
+        unsigned size = static_cast<unsigned>(std::distance(begin, end));
+        // Checking for length
+        if (size != m_lb.size()) {
+            throw std::invalid_argument("Inconsistent chromosome: length of the chromosome is : " + std::to_string(size)
+                                        + ", while it should be: " + std::to_string(m_lb.size()));
+        }
+        // Checking for bounds on all genes
+        auto lb_iter = m_lb.begin();
+        auto ub_iter = m_ub.begin();
+        while (begin != end) {
+            if ((*begin > *ub_iter) || (*begin < *lb_iter)) {
+                throw std::invalid_argument("Inconsistent chromosome: out of bounds. A component of the chromosome is "
+                                            + std::to_string(*begin) + " while the bounds are: ["
+                                            + std::to_string(*lb_iter) + " " + ", " + std::to_string(*ub_iter) + "]");
+            }
+            ++begin;
+            ++lb_iter;
+            ++ub_iter;
+        }
+        return true;
+    }
+    
     void sanity_checks()
     {
         if (m_n == 0) throw std::invalid_argument("Number of inputs is 0");
