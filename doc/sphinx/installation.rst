@@ -8,12 +8,12 @@ C++
 
 dCGP is a header-only library which has the following third party dependencies:
 
-* `Boost <http://www.boost.org/>`_, various C++ utilities.
-* `Eigen <http://eigen.tuxfamily.org/index.php?title=Main_Page>`_, linear algebra library.
-* `Pagmo <https://github.com/esa/pagmo2>`_, parallel optimization library.
-* `tbb <https://github.com/intel/tbb>`_, lets you easily write parallel C++ programs that take full advantage of multicore performance.
-* `AuDi <http://darioizzo.github.io/audi/>`_, high order automated differentiation library.
-* `Symengine <https://github.com/symengine/symengine>`_, symbolic manipulation of math expressions.
+* `Boost <http://www.boost.org/>`_, various C++ utilities. (>=1.72).
+* `Eigen <http://eigen.tuxfamily.org/index.php?title=Main_Page>`_, linear algebra library. (>=3.3.0)
+* `Pagmo <https://github.com/esa/pagmo2>`_, parallel optimization library. (>=2.15).
+* `tbb <https://github.com/intel/tbb>`_, lets you easily write parallel C++ programs that take full advantage of multicore performance. (>=2020.1).
+* `AuDi <http://darioizzo.github.io/audi/>`_, high order automated differentiation library. (>=1.8).
+* `Symengine <https://github.com/symengine/symengine>`_, symbolic manipulation of math expressions. (>=0.6).
 
 After making sure the dependencies above are installed and found in your system, you may download
 the latest dCGP code via git:
@@ -22,7 +22,21 @@ the latest dCGP code via git:
 
    $ git clone https://github.com/darioizzo/dcgp.git
 
-and configure your build using CMake. When done, type (in your build directory):
+and configure your build using CMake. 
+
+When done, type (in your build directory):
+
+.. code-block:: console
+
+   $ make 
+
+When finished, to run the tests type:
+
+.. code-block:: console
+
+   $ make test
+
+If succesfull, you may now install cgp:
 
 .. code-block:: console
 
@@ -30,6 +44,8 @@ and configure your build using CMake. When done, type (in your build directory):
 
 The headers will be installed in the CMAKE_INSTALL_PREFIX/include directory. 
 To check that all went well compile the :ref:`quick-start example <getting_started_c++>`.
+
+
 
 -----------------------------------------------------------------------
 
@@ -40,11 +56,11 @@ can be installed from conda (OSx, linux and Win), pip (only linux) or by buildin
 
 The following third party dependencies are required to have full access to the ``dcgpy`` API:
 
-* `numpy <https://numpy.org/>`_, The fundamental package for scientific computing with Python.
-* `matplotlib <https://matplotlib.org/>`_,  A comprehensive library for creating static, animated, and interactive visualizations in Python..
-* `pyaudi <http://darioizzo.github.io/audi/>`_, A library that implements the differential algebra of Taylor truncated polynomials.
-* `sympy <https://www.sympy.org/en/index.html>`_, A Python library for symbolic mathematics.
-* `graphviz https://graphviz.readthedocs.io/en/stable/>`_, A simple pure-Python interface for the Graphviz graph-drawing software.
+* `numpy <https://numpy.org/>`_, The fundamental package for scientific computing with Python. (>=1.18)
+* `matplotlib <https://matplotlib.org/>`_,  A comprehensive library for creating static, animated, and interactive visualizations in Python. (>=3.2)
+* `pyaudi <http://darioizzo.github.io/audi/>`_, A library that implements the differential algebra of Taylor truncated polynomials. (>=1.8)
+* `sympy <https://www.sympy.org/en/index.html>`_, A Python library for symbolic mathematics. (>=1.6)
+* `graphviz https://graphviz.readthedocs.io/en/stable/>`_, A simple pure-Python interface for the Graphviz graph-drawing software. (>=2.42)
 
 
 Installing with conda
@@ -65,9 +81,16 @@ to add ``conda-forge`` to the channels:
 Please refer to the `conda documentation <https://conda.io/en/latest/>`__ for instructions
 on how to setup and manage your conda installation.
 
+You may test the successfull installation by running the python tests typing:
+
+.. code-block:: console
+
+   $ python -c "from dcgpy import test; test.run_test_suite(); import pygmo; pygmo.mp_island.shutdown_pool(); pygmo.mp_bfe.shutdown_pool()"
+
+
 Installing with pip (deprecated)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-We also provide the pip packages (mainly for linux 64 bit architectures and older versions).
+We also provide the pip packages (mainly for linux 64 bit architectures and versions <= 1.4.1).
 Check on the `PyPi dcgpy page <https://pypi.org/project/dcgpy/>`_ if the needed package is provided.
 
 .. code-block:: console
