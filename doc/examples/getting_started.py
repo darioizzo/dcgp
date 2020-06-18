@@ -16,7 +16,8 @@ ex = expression(inputs = 1,
 
 
 # 2 - Define the symbol set to be used in visualizing the expression
-# (in our case, 1 input variable named "x") and visualize the expressionin_sym = ["x"]
+# (in our case, 1 input variable named "x") and visualize the expression
+in_sym = ["x"]
 print("Expression:", ex(in_sym)[0])
 
 # 3 - Print the simplified expression
