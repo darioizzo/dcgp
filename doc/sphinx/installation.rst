@@ -8,12 +8,12 @@ C++
 
 dCGP is a header-only library which has the following third party dependencies:
 
-* `Boost <http://www.boost.org/>`_, various C++ utilities (>=1.72).
-* `Eigen <http://eigen.tuxfamily.org/index.php?title=Main_Page>`_, linear algebra library (>=3.3.0)
-* `Pagmo <https://github.com/esa/pagmo2>`_, parallel optimization library (>=2.15).
-* `tbb <https://github.com/intel/tbb>`_, lets you easily write parallel C++ programs that take full advantage of multicore performance (>=2020.1).
-* `AuDi <http://darioizzo.github.io/audi/>`_, high order automated differentiation library (>=1.8).
-* `Symengine <https://github.com/symengine/symengine>`_, symbolic manipulation of math expressions (>=0.6).
+* `Boost <http://www.boost.org/>`_, various C++ utilities. (>=1.72).
+* `Eigen <http://eigen.tuxfamily.org/index.php?title=Main_Page>`_, linear algebra library. (>=3.3.0)
+* `Pagmo <https://github.com/esa/pagmo2>`_, parallel optimization library. (>=2.15).
+* `tbb <https://github.com/intel/tbb>`_, lets you easily write parallel C++ programs that take full advantage of multicore performance. (>=2020.1).
+* `AuDi <http://darioizzo.github.io/audi/>`_, high order automated differentiation library. (>=1.8).
+* `Symengine <https://github.com/symengine/symengine>`_, symbolic manipulation of math expressions. (>=0.6).
 
 After making sure the dependencies above are installed and found in your system, you may download
 the latest dCGP code via git:
@@ -56,11 +56,11 @@ can be installed from conda (OSx, linux and Win), pip (only linux) or by buildin
 
 The following third party dependencies are required to have full access to the ``dcgpy`` API:
 
-* `numpy <https://numpy.org/>`_, The fundamental package for scientific computing with Python.
-* `matplotlib <https://matplotlib.org/>`_,  A comprehensive library for creating static, animated, and interactive visualizations in Python..
-* `pyaudi <http://darioizzo.github.io/audi/>`_, A library that implements the differential algebra of Taylor truncated polynomials.
-* `sympy <https://www.sympy.org/en/index.html>`_, A Python library for symbolic mathematics.
-* `graphviz https://graphviz.readthedocs.io/en/stable/>`_, A simple pure-Python interface for the Graphviz graph-drawing software.
+* `numpy <https://numpy.org/>`_, The fundamental package for scientific computing with Python. (>=1.18)
+* `matplotlib <https://matplotlib.org/>`_,  A comprehensive library for creating static, animated, and interactive visualizations in Python. (>=3.2)
+* `pyaudi <http://darioizzo.github.io/audi/>`_, A library that implements the differential algebra of Taylor truncated polynomials. (>=1.8)
+* `sympy <https://www.sympy.org/en/index.html>`_, A Python library for symbolic mathematics. (>=1.6)
+* `graphviz https://graphviz.readthedocs.io/en/stable/>`_, A simple pure-Python interface for the Graphviz graph-drawing software. (>=2.42)
 
 
 Installing with conda
