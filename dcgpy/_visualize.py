@@ -170,7 +170,12 @@ def _graphviz_visualize(self, in_sym = [], draw_inactive = True, draw_weights = 
         >>> graph = ex.visualize(['x', 'c'], True, False)
     """
 
-    from graphviz import Digraph
+    try:
+        from graphviz import Digraph
+    except ImportError:
+        print("Failed to import the required module graphviz")
+        raise
+    
 
     n = self.get_n()
 

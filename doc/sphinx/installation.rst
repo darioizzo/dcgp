@@ -54,6 +54,15 @@ Python
 The main functionalities of dCGP are exposed into a Python module called ``dcgpy`` which
 can be installed from conda (OSx, linux and Win), pip (only linux) or by building the module.
 
+The following third party dependencies are required to have full access to the ``dcgpy`` API:
+
+* `numpy <https://numpy.org/>`_, The fundamental package for scientific computing with Python.
+* `matplotlib <https://matplotlib.org/>`_,  A comprehensive library for creating static, animated, and interactive visualizations in Python..
+* `pyaudi <http://darioizzo.github.io/audi/>`_, A library that implements the differential algebra of Taylor truncated polynomials.
+* `sympy <https://www.sympy.org/en/index.html>`_, A Python library for symbolic mathematics.
+* `graphviz https://graphviz.readthedocs.io/en/stable/>`_, A simple pure-Python interface for the Graphviz graph-drawing software.
+
+
 Installing with conda
 ^^^^^^^^^^^^^^^^^^^^^
 ``dcgpy`` is available in the `conda <https://conda.io/en/latest/>`__ package manager
