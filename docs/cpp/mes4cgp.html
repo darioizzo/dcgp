@@ -26,7 +26,7 @@
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/language_data.js"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
         <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
@@ -386,24 +386,6 @@
 <p>A log containing relevant quantities monitoring the last call to evolve. Each element of the returned <code class="docutils literal notranslate"><span class="pre">std::vector</span></code> is a <a class="reference internal" href="#classdcgp_1_1mes4cgp_1a2aaa8cc7e93e6434f78aa49d2adb5929"><span class="std std-ref">mes4cgp::log_line_type</span></a> containing: Gen, Fevals, Current best, Best as described in <a class="reference internal" href="#classdcgp_1_1mes4cgp_1ab172dc34b057e48f03dd5243983c77dc"><span class="std std-ref">mes4cgp::set_verbosity()</span></a>.</p>
 <p><dl class="simple">
 <dt><strong>Return</strong></dt><dd><p>an <code class="docutils literal notranslate"> <span class="pre">std::vector</span></code> of <a class="reference internal" href="#classdcgp_1_1mes4cgp_1a2aaa8cc7e93e6434f78aa49d2adb5929"><span class="std std-ref">mes4cgp::log_line_type</span></a> containing the logged values Gen, Fevals, Current best, Best </p>
-</dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="cpp function">
-<dt id="_CPPv4I0EN4dcgp7mes4cgp9serializeEvR7Archivej">
-template&lt;typename <code class="sig-name descname">Archive</code>&gt;<br /><span class="target" id="classdcgp_1_1mes4cgp_1ae78fd53e074dbe43f64509d97b7a64d1"></span>void <code class="sig-name descname">serialize</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0EN4dcgp7mes4cgp9serializeEvR7Archivej" title="dcgp::mes4cgp::serialize::Archive">Archive</a> &amp;<em>ar</em>, unsigned<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN4dcgp7mes4cgp9serializeEvR7Archivej" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Object serialization. </p>
-<p>This method will save/load <code class="docutils literal notranslate"><span class="pre">this</span></code> into the archive <code class="docutils literal notranslate"><span class="pre">ar</span></code>.</p>
-<p><dl class="simple">
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">ar</span></code>: target archive.</p></li>
-</ul>
-</dd>
-<dt><strong>Exceptions</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">unspecified</span></code>: any exception thrown by the serialization of the expression and of primitive types. </p></li>
-</ul>
 </dd>
 </dl>
 </p>

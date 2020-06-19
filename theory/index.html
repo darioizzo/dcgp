@@ -26,7 +26,7 @@
         <script src="../_static/doctools.js"></script>
         <script src="../_static/language_data.js"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
         <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
@@ -193,6 +193,13 @@
 </style>
 <div class="section" id="background">
 <h1>Background<a class="headerlink" href="#background" title="Permalink to this headline">¶</a></h1>
+<p>Cartesian Genetic Programming (CGP) is a tree based representation of a computer program introduced by
+Julian F. Miller and Peter Thomson in 1997. Several open source codes exist that implement some
+form of CGP, Miller himself maintain a resource page <a class="reference external" href="https://www.cartesiangp.com/resources">here</a>.</p>
+<p>The dcgpy library here introduced, differs in several aspects from all existing implementations:
+it allows to perform any-order derivatives on the represented programs (hence implementing a
+differentiable form of genetic programming), it allows to use Python to use runtime scripting,
+it is thread-safe and it allows to define kernels as generic functors.</p>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="cgp.html">Cartesian Genetic Programming (CGP)</a></li>

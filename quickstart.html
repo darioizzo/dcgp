@@ -26,7 +26,7 @@
         <script src="_static/doctools.js"></script>
         <script src="_static/language_data.js"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
         <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
@@ -293,7 +293,7 @@ put the following text into a <code class="docutils literal notranslate"><span c
 <p>To compile it, create also, in the same folder, a <code class="docutils literal notranslate"><span class="pre">CmakeLists.txt</span></code> file with the following content:</p>
 <div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">project</span><span class="p">(</span><span class="s">getting_started</span><span class="p">)</span>
 
-<span class="nb">cmake_minimum_required</span><span class="p">(</span><span class="s">VERSION</span> <span class="s">3.2</span><span class="p">)</span>
+<span class="nb">cmake_minimum_required</span><span class="p">(</span><span class="s">VERSION</span> <span class="s">3.8</span><span class="p">)</span>
 
 <span class="nb">find_package</span><span class="p">(</span><span class="s">dcgp</span> <span class="s">REQUIRED</span><span class="p">)</span>
 
@@ -355,7 +355,8 @@ use by running the following script:</p>
 34
 35
 36
-37</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dcgpy</span> <span class="kn">import</span> <span class="n">expression_gdual_double</span> <span class="k">as</span> <span class="n">expression</span>
+37
+38</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dcgpy</span> <span class="kn">import</span> <span class="n">expression_gdual_double</span> <span class="k">as</span> <span class="n">expression</span>
 <span class="kn">from</span> <span class="nn">dcgpy</span> <span class="kn">import</span> <span class="n">kernel_set_gdual_double</span> <span class="k">as</span> <span class="n">kernel_set</span>
 <span class="kn">from</span> <span class="nn">pyaudi</span> <span class="kn">import</span> <span class="n">gdual_double</span> <span class="k">as</span> <span class="n">gdual</span>
 
@@ -373,7 +374,8 @@ use by running the following script:</p>
 
 
 <span class="c1"># 2 - Define the symbol set to be used in visualizing the expression</span>
-<span class="c1"># (in our case, 1 input variable named &quot;x&quot;) and visualize the expressionin_sym = [&quot;x&quot;]</span>
+<span class="c1"># (in our case, 1 input variable named &quot;x&quot;) and visualize the expression</span>
+<span class="n">in_sym</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">]</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Expression:&quot;</span><span class="p">,</span> <span class="n">ex</span><span class="p">(</span><span class="n">in_sym</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
 
 <span class="c1"># 3 - Print the simplified expression</span>

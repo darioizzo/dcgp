@@ -26,7 +26,7 @@
         <script src="../_static/doctools.js"></script>
         <script src="../_static/language_data.js"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
         <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
@@ -535,7 +535,7 @@ div.rendered_html tbody tr:hover {
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Starting error: 0.34546311353140685
+Starting error: 0.3784204557734959
 Net complexity (number of active weights): 1120
 Net complexity (number of unique active weights): 1120
 Net complexity (number of active nodes): 73
@@ -547,7 +547,7 @@ Net complexity (number of active nodes): 73
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-&lt;matplotlib.axes._subplots.AxesSubplot at 0x7f408fc86090&gt;
+&lt;matplotlib.axes._subplots.AxesSubplot at 0x7f487c858910&gt;
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -584,7 +584,7 @@ Net complexity (number of active nodes): 73
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-100%|██████████| 5000/5000 [00:31&lt;00:00, 158.41it/s]
+100%|██████████| 5000/5000 [00:33&lt;00:00, 150.70it/s]
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
@@ -592,8 +592,8 @@ Net complexity (number of active nodes): 73
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Time (s):  31.56667455501156
-End MSE:  0.01377328855105661
+Time (s):  33.18543911201414
+End MSE:  0.016128249531917035
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -690,9 +690,9 @@ Using TensorFlow backend.
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Time (s):  125.54014513199218
-800/800 [==============================] - 0s 56us/step
-End MSE:  0.011436145324259996
+Time (s):  115.98968720703851
+800/800 [==============================] - 0s 52us/step
+End MSE:  0.018288641115650536
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -706,7 +706,7 @@ End MSE:  0.011436145324259996
 <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;dCGP vs Keras&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;epochs&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;RMSE&#39;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;RMSE&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -721,7 +721,7 @@ End MSE:  0.011436145324259996
 <div class="section" id="Repeating-ten-times-the-same-comparison">
 <h2>Repeating ten times the same comparison<a class="headerlink" href="#Repeating-ten-times-the-same-comparison" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -751,7 +751,7 @@ End MSE:  0.011436145324259996
     <span class="n">plt</span><span class="o">.</span><span class="n">semilogy</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">res</span><span class="p">),</span> <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;C1&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;dCGP vs Keras&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;epochs&#39;</span><span class="p">)</span>
-<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;RMSE&#39;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;RMSE&#39;</span><span class="p">)</span>
 
 </pre></div>
 </div>
@@ -761,16 +761,16 @@ End MSE:  0.011436145324259996
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-100%|██████████| 5000/5000 [00:30&lt;00:00, 163.77it/s]
-100%|██████████| 5000/5000 [00:22&lt;00:00, 218.28it/s]
-100%|██████████| 5000/5000 [00:33&lt;00:00, 148.84it/s]
-100%|██████████| 5000/5000 [00:27&lt;00:00, 181.35it/s]
-100%|██████████| 5000/5000 [00:22&lt;00:00, 218.70it/s]
-100%|██████████| 5000/5000 [00:26&lt;00:00, 186.03it/s]
-100%|██████████| 5000/5000 [00:28&lt;00:00, 177.42it/s]
-100%|██████████| 5000/5000 [00:23&lt;00:00, 209.11it/s]
-100%|██████████| 5000/5000 [00:23&lt;00:00, 212.32it/s]
-100%|██████████| 5000/5000 [00:25&lt;00:00, 195.39it/s]
+100%|██████████| 5000/5000 [00:35&lt;00:00, 142.21it/s]
+100%|██████████| 5000/5000 [00:33&lt;00:00, 148.42it/s]
+100%|██████████| 5000/5000 [00:31&lt;00:00, 156.85it/s]
+100%|██████████| 5000/5000 [00:32&lt;00:00, 154.94it/s]
+100%|██████████| 5000/5000 [00:32&lt;00:00, 152.80it/s]
+100%|██████████| 5000/5000 [00:31&lt;00:00, 159.39it/s]
+100%|██████████| 5000/5000 [00:30&lt;00:00, 161.65it/s]
+100%|██████████| 5000/5000 [00:33&lt;00:00, 149.42it/s]
+100%|██████████| 5000/5000 [00:30&lt;00:00, 162.77it/s]
+100%|██████████| 5000/5000 [00:31&lt;00:00, 161.24it/s]
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">

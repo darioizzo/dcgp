@@ -26,7 +26,7 @@
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/language_data.js"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
         <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
@@ -228,7 +228,7 @@
 
 <dl class="cpp function">
 <dt id="_CPPv4N4dcgp19symbolic_regression19symbolic_regressionERKNSt6vectorINSt6vectorIdEEEERKNSt6vectorINSt6vectorIdEEEEjjjjNSt6vectorI6kernelIdEEEjbjNSt6stringEj">
-<span class="target" id="classdcgp_1_1symbolic__regression_1acad84d9d86df55f0d4405a1562c7b27f"></span><code class="sig-name descname">symbolic_regression</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;std::vector&lt;double&gt;&gt; &amp;<em>points</em>, <em class="property">const</em> std::vector&lt;std::vector&lt;double&gt;&gt; &amp;<em>labels</em>, unsigned <em>r</em> = 1u, unsigned <em>c</em> = 10u, unsigned <em>l</em> = 11u, unsigned <em>arity</em> = 2u, std::vector&lt;<a class="reference internal" href="kernel.html#_CPPv4I0EN4dcgp6kernelE" title="dcgp::kernel">kernel</a>&lt;double&gt;&gt; <em>f</em> = <a class="reference internal" href="kernel_set.html#_CPPv4I0EN4dcgp10kernel_setE" title="dcgp::kernel_set">kernel_set</a>&lt;double&gt;({&quot;sum&quot;, &quot;diff&quot;, &quot;mul&quot;, &quot;pdiv&quot;})(), unsigned <em>n_eph</em> = 0u, bool <em>multi_objective</em> = false, unsigned <em>parallel_batches</em> = 0u, std::string <em>loss_s</em> = &quot;MSE&quot;, unsigned <em>seed</em> = random_device::next()<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp19symbolic_regression19symbolic_regressionERKNSt6vectorINSt6vectorIdEEEERKNSt6vectorINSt6vectorIdEEEEjjjjNSt6vectorI6kernelIdEEEjbjNSt6stringEj" title="Permalink to this definition">¶</a><br /></dt>
+<span class="target" id="classdcgp_1_1symbolic__regression_1acea8387636c86036a78d8e2aabe98215"></span><code class="sig-name descname">symbolic_regression</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;std::vector&lt;double&gt;&gt; &amp;<em>points</em>, <em class="property">const</em> std::vector&lt;std::vector&lt;double&gt;&gt; &amp;<em>labels</em>, unsigned <em>r</em> = 1u, unsigned <em>c</em> = 10u, unsigned <em>l</em> = 11u, unsigned <em>arity</em> = 2u, std::vector&lt;<a class="reference internal" href="kernel.html#_CPPv4I0EN4dcgp6kernelE" title="dcgp::kernel">kernel</a>&lt;double&gt;&gt; <em>f</em> = <a class="reference internal" href="kernel_set.html#_CPPv4I0EN4dcgp10kernel_setE" title="dcgp::kernel_set">kernel_set</a>&lt;double&gt;({&quot;sum&quot;, &quot;diff&quot;, &quot;mul&quot;, &quot;pdiv&quot;})(), unsigned <em>n_eph</em> = 0u, bool <em>multi_objective</em> = false, unsigned <em>parallel_batches</em> = 0u, std::string <em>loss</em> = &quot;MSE&quot;, unsigned <em>seed</em> = random_device::next()<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp19symbolic_regression19symbolic_regressionERKNSt6vectorINSt6vectorIdEEEERKNSt6vectorINSt6vectorIdEEEEjjjjNSt6vectorI6kernelIdEEEjbjNSt6stringEj" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Constructor. </p>
 <p>Constructs a <a class="reference internal" href="#classdcgp_1_1symbolic__regression"><span class="std std-ref">symbolic_regression</span></a> optimization problem compatible with the pagmo UDP interface.</p>
 <p><dl class="simple">
@@ -243,8 +243,7 @@
 <li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">n_eph</span></code>: number of ephemeral constants. </p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">multi_objective</span></code>: when true, it will consider the model complexity as a second objective. </p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">parallel_batches</span></code>: number of parallel batches. </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">loss_s</span></code>: loss type as string, either “MSE” or “CE”. </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">seed</span></code>: seed used fot the internal random number generator.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">loss_s</span></code>: loss type as string, either “MSE” or “CE”</p></li>
 </ul>
 </dd>
 <dt><strong>Exceptions</strong></dt><dd><ul class="breatheparameterlist simple">
@@ -465,24 +464,6 @@
 <span class="target" id="classdcgp_1_1symbolic__regression_1aad96f250ec449d6f154c479896f12bdf"></span>pagmo::<a class="reference external" href="https://esa.github.io/pagmo2/docs/cpp/miscellanea/type_traits.html#_CPPv4N5pagmo13thread_safetyE" title="(in pagmo v2.16.0)">thread_safety</a> <code class="sig-name descname">get_thread_safety</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp19symbolic_regression17get_thread_safetyEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Thread safety for this udp. </p>
 <p>This is set to none as pitonic kernels could be in the inner expression </p>
-</dd></dl>
-
-<dl class="cpp function">
-<dt id="_CPPv4I0EN4dcgp19symbolic_regression9serializeEvR7Archivej">
-template&lt;typename <code class="sig-name descname">Archive</code>&gt;<br /><span class="target" id="classdcgp_1_1symbolic__regression_1a4940788d6e61d0b662e49dbd56e22b36"></span>void <code class="sig-name descname">serialize</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0EN4dcgp19symbolic_regression9serializeEvR7Archivej" title="dcgp::symbolic_regression::serialize::Archive">Archive</a> &amp;<em>ar</em>, unsigned<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN4dcgp19symbolic_regression9serializeEvR7Archivej" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Object serialization. </p>
-<p>This method will save/load <code class="docutils literal notranslate"><span class="pre">this</span></code> into the archive <code class="docutils literal notranslate"><span class="pre">ar</span></code>.</p>
-<p><dl class="simple">
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">ar</span></code>: target archive.</p></li>
-</ul>
-</dd>
-<dt><strong>Exceptions</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">unspecified</span></code>: any exception thrown by the serialization of the expression and of primitive types. </p></li>
-</ul>
-</dd>
-</dl>
-</p>
 </dd></dl>
 
 </div>

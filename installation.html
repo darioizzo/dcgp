@@ -26,7 +26,7 @@
         <script src="_static/doctools.js"></script>
         <script src="_static/language_data.js"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
         <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
@@ -202,19 +202,28 @@
 <h2>C++<a class="headerlink" href="#c" title="Permalink to this headline">¶</a></h2>
 <p>dCGP is a header-only library which has the following third party dependencies:</p>
 <ul class="simple">
-<li><p><a class="reference external" href="http://www.boost.org/">Boost</a>, various C++ utilities.</p></li>
-<li><p><a class="reference external" href="http://eigen.tuxfamily.org/index.php?title=Main_Page">Eigen</a>, linear algebra library.</p></li>
-<li><p><a class="reference external" href="https://github.com/esa/pagmo2">Pagmo</a>, parallel optimization library.</p></li>
-<li><p><a class="reference external" href="https://github.com/intel/tbb">tbb</a>, lets you easily write parallel C++ programs that take full advantage of multicore performance.</p></li>
-<li><p><a class="reference external" href="http://darioizzo.github.io/audi/">AuDi</a>, high order automated differentiation library.</p></li>
-<li><p><a class="reference external" href="https://github.com/symengine/symengine">Symengine</a>, symbolic manipulation of math expressions.</p></li>
+<li><p><a class="reference external" href="http://www.boost.org/">Boost</a>, various C++ utilities. (&gt;=1.72).</p></li>
+<li><p><a class="reference external" href="http://eigen.tuxfamily.org/index.php?title=Main_Page">Eigen</a>, linear algebra library. (&gt;=3.3.0)</p></li>
+<li><p><a class="reference external" href="https://github.com/esa/pagmo2">Pagmo</a>, parallel optimization library. (&gt;=2.15).</p></li>
+<li><p><a class="reference external" href="https://github.com/intel/tbb">tbb</a>, lets you easily write parallel C++ programs that take full advantage of multicore performance. (&gt;=2020.1).</p></li>
+<li><p><a class="reference external" href="http://darioizzo.github.io/audi/">AuDi</a>, high order automated differentiation library. (&gt;=1.8).</p></li>
+<li><p><a class="reference external" href="https://github.com/symengine/symengine">Symengine</a>, symbolic manipulation of math expressions. (&gt;=0.6).</p></li>
 </ul>
 <p>After making sure the dependencies above are installed and found in your system, you may download
 the latest dCGP code via git:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> git clone https://github.com/darioizzo/dcgp.git
 </pre></div>
 </div>
-<p>and configure your build using CMake. When done, type (in your build directory):</p>
+<p>and configure your build using CMake.</p>
+<p>When done, type (in your build directory):</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> make
+</pre></div>
+</div>
+<p>When finished, to run the tests type:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> make <span class="nb">test</span>
+</pre></div>
+</div>
+<p>If succesfull, you may now install cgp:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> make install
 </pre></div>
 </div>
@@ -226,6 +235,14 @@ To check that all went well compile the <a class="reference internal" href="quic
 <h2>Python<a class="headerlink" href="#python" title="Permalink to this headline">¶</a></h2>
 <p>The main functionalities of dCGP are exposed into a Python module called <code class="docutils literal notranslate"><span class="pre">dcgpy</span></code> which
 can be installed from conda (OSx, linux and Win), pip (only linux) or by building the module.</p>
+<p>The following third party dependencies are required to have full access to the <code class="docutils literal notranslate"><span class="pre">dcgpy</span></code> API:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://numpy.org/">numpy</a>, The fundamental package for scientific computing with Python. (&gt;=1.18)</p></li>
+<li><p><a class="reference external" href="https://matplotlib.org/">matplotlib</a>,  A comprehensive library for creating static, animated, and interactive visualizations in Python. (&gt;=3.2)</p></li>
+<li><p><a class="reference external" href="http://darioizzo.github.io/audi/">pyaudi</a>, A library that implements the differential algebra of Taylor truncated polynomials. (&gt;=1.8)</p></li>
+<li><p><a class="reference external" href="https://www.sympy.org/en/index.html">sympy</a>, A Python library for symbolic mathematics. (&gt;=1.6)</p></li>
+<li><p><a class="reference external" href="https://graphviz.readthedocs.io/en/stable/">graphviz</a>, A simple pure-Python interface for the Graphviz graph-drawing software. (&gt;=2.42)</p></li>
+</ul>
 <div class="section" id="installing-with-conda">
 <h3>Installing with conda<a class="headerlink" href="#installing-with-conda" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">dcgpy</span></code> is available in the <a class="reference external" href="https://conda.io/en/latest/">conda</a> package manager
@@ -241,10 +258,14 @@ to add <code class="docutils literal notranslate"><span class="pre">conda-forge<
 </div>
 <p>Please refer to the <a class="reference external" href="https://conda.io/en/latest/">conda documentation</a> for instructions
 on how to setup and manage your conda installation.</p>
+<p>You may test the successfull installation by running the python tests typing:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> python -c <span class="s2">&quot;from dcgpy import test; test.run_test_suite(); import pygmo; pygmo.mp_island.shutdown_pool(); pygmo.mp_bfe.shutdown_pool()&quot;</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="installing-with-pip-deprecated">
 <h3>Installing with pip (deprecated)<a class="headerlink" href="#installing-with-pip-deprecated" title="Permalink to this headline">¶</a></h3>
-<p>We also provide the pip packages (mainly for linux 64 bit architectures and older versions).
+<p>We also provide the pip packages (mainly for linux 64 bit architectures and versions &lt;= 1.4.1).
 Check on the <a class="reference external" href="https://pypi.org/project/dcgpy/">PyPi dcgpy page</a> if the needed package is provided.</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> pip install dcgpy
 </pre></div>
