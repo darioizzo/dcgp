@@ -23,6 +23,7 @@ To compile it, create also, in the same folder, a ``CmakeLists.txt`` file with t
     project(getting_started)
 
     cmake_minimum_required(VERSION 3.2)
+    cmake_policy(SET CMP0057 NEW)
 
     find_package(dcgp REQUIRED)
 
