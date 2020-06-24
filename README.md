@@ -41,6 +41,18 @@ dCGP is a header-only library which has the following third party dependencies:
 * [AuDi](http://darioizzo.github.io/audi/), high order automated differentiation library (>=1.8).
 * [Symengine](https://github.com/symengine/symengine), symbolic manipulation of math expressions (>=0.6).
 
+In case you plan to use the package manager ``conda`` to install the necessary dependencies, the following packages will be required: 
+
+```
+boost-cpp, eigen, pagmo-devel, tbb, audi, symengine, obake-devel
+```
+while we also suggest to install:
+```
+cmake, cxx-compiler
+```
+
+------------------------------------------------------------
+
 After making sure the dependencies above are installed and found in your system, you may download
 the latest dCGP code via git:
 
