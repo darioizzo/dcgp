@@ -486,7 +486,7 @@ struct print_my_cos_nu_func {
 
 inline constexpr auto print_my_cos_nu = print_my_cos_nu_func{};
 
-// cosine function (non unary version):
+// gaussian function (non unary version):
 template <typename T, f_enabler<T> = 0>
 struct my_gaussian_nu_func {
     T operator()(const std::vector<T> &in) const
@@ -516,6 +516,118 @@ struct print_my_gaussian_nu_func {
 };
 
 inline constexpr auto print_my_gaussian_nu = print_my_gaussian_nu_func{};
+
+// inv sum function:
+template <typename T, f_enabler<T> = 0>
+struct my_inv_sum_func {
+    T operator()(const std::vector<T> &in) const
+    {
+        T retval(in[0]);
+        for (auto i = 1u; i < in.size(); ++i) {
+            retval += in[i];
+        }
+        return -retval;
+    }
+    DCGP_S11N_EMPTY_SERIALIZE_MEMFN()
+};
+
+template <typename T>
+inline constexpr auto my_inv_sum = my_inv_sum_func<T>{};
+
+struct print_my_inv_sum_func {
+    std::string operator()(const std::vector<std::string> &in) const
+    {
+        std::string retval(in[0]);
+        for (auto i = 1u; i < in.size(); ++i) {
+            retval += "+" + in[i];
+        }
+        return "-(" + retval +")";
+    }
+    DCGP_S11N_EMPTY_SERIALIZE_MEMFN()
+};
+
+inline constexpr auto print_my_inv_sum = print_my_inv_sum_func{};
+
+// abs function:
+template <typename T, f_enabler<T> = 0>
+struct my_abs_func {
+    T operator()(const std::vector<T> &in) const
+    {
+        T retval(in[0]);
+        for (auto i = 1u; i < in.size(); ++i) {
+            retval += in[i];
+        }
+        return audi::abs(retval);
+    }
+    DCGP_S11N_EMPTY_SERIALIZE_MEMFN()
+};
+
+template <typename T>
+inline constexpr auto my_abs = my_abs_func<T>{};
+
+struct print_my_abs_func {
+    std::string operator()(const std::vector<std::string> &in) const
+    {
+        std::string retval(in[0]);
+        for (auto i = 1u; i < in.size(); ++i) {
+            retval += "+" + in[i];
+        }
+        return "abs(" + retval + ")";
+    }
+    DCGP_S11N_EMPTY_SERIALIZE_MEMFN()
+};
+
+inline constexpr auto print_my_abs = print_my_abs_func{};
+
+// step function:
+template <typename T, typename = void>
+struct my_step_func {
+    T operator()(const std::vector<T> &in) const
+    {
+        T retval(in[0]);
+        for (auto i = 1u; i < in.size(); ++i) {
+            retval += in[i];
+        }
+        return retval < T(0.) ? T(0.) : T(1.);
+    }
+    DCGP_S11N_EMPTY_SERIALIZE_MEMFN()
+};
+
+// step function (gdual overload):
+template <typename T>
+struct my_step_func<T, std::enable_if_t<is_gdual<T>::value>> {
+    T operator()(const std::vector<T> &in) const
+    {
+        T retval(in[0]);
+        for (auto i = 1u; i < in.size(); ++i) {
+            retval += in[i];
+        }
+        if (retval.constant_cf() < T(0.).constant_cf()) {
+            retval = T(0.);
+        } else {
+            retval = T(1.);
+        }
+        return retval;
+    }
+    DCGP_S11N_EMPTY_SERIALIZE_MEMFN()
+};
+
+template <typename T>
+inline constexpr auto my_step = my_step_func<T>{};
+
+struct print_my_step_func {
+    std::string operator()(const std::vector<std::string> &in) const
+    {
+        std::string retval(in[0]);
+        for (auto i = 1u; i < in.size(); ++i) {
+            retval += "+" + in[i];
+        }
+        return "step(" + retval + ")";
+    }
+    DCGP_S11N_EMPTY_SERIALIZE_MEMFN()
+};
+
+inline constexpr auto print_my_step = print_my_step_func{};
 
 /*--------------------------------------------------------------------------
  *                               UNARY FUNCTIONS
@@ -727,5 +839,11 @@ DCGP_S11N_FUNCTION_EXPORT_KEY_MULTI(my_cos_nu)
 DCGP_S11N_FUNCTION_EXPORT_KEY_STRING(print_my_cos_nu)
 DCGP_S11N_FUNCTION_EXPORT_KEY_MULTI(my_gaussian_nu)
 DCGP_S11N_FUNCTION_EXPORT_KEY_STRING(print_my_gaussian_nu)
+DCGP_S11N_FUNCTION_EXPORT_KEY_MULTI(my_inv_sum)
+DCGP_S11N_FUNCTION_EXPORT_KEY_STRING(print_my_inv_sum)
+DCGP_S11N_FUNCTION_EXPORT_KEY_MULTI(my_abs)
+DCGP_S11N_FUNCTION_EXPORT_KEY_STRING(print_my_abs)
+DCGP_S11N_FUNCTION_EXPORT_KEY_MULTI(my_step)
+DCGP_S11N_FUNCTION_EXPORT_KEY_STRING(print_my_step)
 
 #endif // DCGP_WRAPPED_FUNCTIONS_H

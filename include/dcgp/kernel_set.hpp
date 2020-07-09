@@ -96,6 +96,12 @@ public:
             m_kernels.emplace_back(my_cos_nu<T>, print_my_cos_nu, kernel_name);
         else if (kernel_name == "gaussian_nu")
             m_kernels.emplace_back(my_gaussian_nu<T>, print_my_gaussian_nu, kernel_name);
+        else if (kernel_name == "inv_sum")
+            m_kernels.emplace_back(my_inv_sum<T>, print_my_inv_sum, kernel_name);
+        else if (kernel_name == "abs")
+            m_kernels.emplace_back(my_abs<T>, print_my_abs, kernel_name);
+        else if (kernel_name == "step")
+            m_kernels.emplace_back(my_step<T>, print_my_step, kernel_name);
         else
             throw std::invalid_argument("Unimplemented function " + kernel_name + " for this type");
     }
