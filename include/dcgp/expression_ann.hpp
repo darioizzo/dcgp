@@ -62,7 +62,9 @@ public:
         /// non unary sine
         SIN_NU,
         /// non unary cosine
-        COS_NU
+        COS_NU,
+        /// non unary cosine
+        GAUSSIAN_NU
     };
     /// Constructor
     /** Constructs a dCGPANN expression
@@ -92,9 +94,10 @@ public:
         for (const auto &ker : f) {
             if (ker.get_name() != "tanh" && ker.get_name() != "sig" && ker.get_name() != "ReLu"
                 && ker.get_name() != "ELU" && ker.get_name() != "ISRU" && ker.get_name() != "sin_nu"
-                && ker.get_name() != "cos_nu" && ker.get_name() != "sum") {
-                throw std::invalid_argument("Only tanh, sig, ReLu, ELU, ISRU, sin_nu, cos_nu and sum Kernels are valid "
-                                            "for dCGP-ANN expressions");
+                && ker.get_name() != "cos_nu" && ker.get_name() != "sum" && ker.get_name() != "gaussian") {
+                throw std::invalid_argument(
+                    "Only tanh, sig, ReLu, ELU, ISRU, sin_nu, cos_nu, gaussian_nu and sum Kernels are valid "
+                    "for dCGP-ANN expressions");
             }
         }
         // Initialize the kernel map
@@ -115,6 +118,8 @@ public:
                 m_kernel_map[i] = kernel_type::SIN_NU;
             } else if (f[i].get_name() == "cos_nu") {
                 m_kernel_map[i] = kernel_type::COS_NU;
+            } else if (f[i].get_name() == "gaussian_nu") {
+                m_kernel_map[i] = kernel_type::GAUSSIAN_NU;
             }
         }
         // Default initialization of weights to 1.
@@ -187,6 +192,8 @@ public:
                 m_kernel_map[i] = kernel_type::SIN_NU;
             } else if (f[i].get_name() == "cos_nu") {
                 m_kernel_map[i] = kernel_type::COS_NU;
+            } else if (f[i].get_name() == "gaussian_nu") {
+                m_kernel_map[i] = kernel_type::GAUSSIAN_NU;
             }
         }
         // Default initialization of weights to 1.
@@ -519,6 +526,8 @@ public:
             it = std::find(m_kernel_map.begin(), m_kernel_map.end(), kernel_type::SIN_NU);
         } else if (name == "cos_nu") {
             it = std::find(m_kernel_map.begin(), m_kernel_map.end(), kernel_type::COS_NU);
+        } else if (name == "gaussian_nu") {
+            it = std::find(m_kernel_map.begin(), m_kernel_map.end(), kernel_type::GAUSSIAN_NU);
         }
 
         if (it == m_kernel_map.end()) {
@@ -936,6 +945,11 @@ private:
                     case kernel_type::COS_NU: {
                         auto cumin = std::accumulate(function_in.begin(), function_in.end(), 0.);
                         d_node[node_id] = -std::sin(cumin);
+                        break;
+                    }
+                    case kernel_type::GAUSSIAN_NU: {
+                        auto cumin = std::accumulate(function_in.begin(), function_in.end(), 0.);
+                        d_node[node_id] = -2 * cumin * node[node_id];
                         break;
                     }
                 }
