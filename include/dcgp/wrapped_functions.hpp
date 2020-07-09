@@ -424,6 +424,68 @@ struct print_my_sum_func {
 
 inline constexpr auto print_my_sum = print_my_sum_func{};
 
+// sine function (non unary version):
+template <typename T, f_enabler<T> = 0>
+struct my_sin_nu_func {
+    T operator()(const std::vector<T> &in) const
+    {
+        T retval(in[0]);
+        for (auto i = 1u; i < in.size(); ++i) {
+            retval += in[i];
+        }
+        return audi::sin(retval);
+    }
+    DCGP_S11N_EMPTY_SERIALIZE_MEMFN()
+};
+
+template <typename T>
+inline constexpr auto my_sin_nu = my_sin_nu_func<T>{};
+
+struct print_my_sin_nu_func {
+    std::string operator()(const std::vector<std::string> &in) const
+    {
+        std::string retval(in[0]);
+        for (auto i = 1u; i < in.size(); ++i) {
+            retval += "+" + in[i];
+        }
+        return "sin(" + retval + ")";
+    }
+    DCGP_S11N_EMPTY_SERIALIZE_MEMFN()
+};
+
+inline constexpr auto print_my_sin_nu = print_my_sin_nu_func{};
+
+// c0sine function (non unary version):
+template <typename T, f_enabler<T> = 0>
+struct my_cos_nu_func {
+    T operator()(const std::vector<T> &in) const
+    {
+        T retval(in[0]);
+        for (auto i = 1u; i < in.size(); ++i) {
+            retval += in[i];
+        }
+        return audi::cos(retval);
+    }
+    DCGP_S11N_EMPTY_SERIALIZE_MEMFN()
+};
+
+template <typename T>
+inline constexpr auto my_cos_nu = my_cos_nu_func<T>{};
+
+struct print_my_cos_nu_func {
+    std::string operator()(const std::vector<std::string> &in) const
+    {
+        std::string retval(in[0]);
+        for (auto i = 1u; i < in.size(); ++i) {
+            retval += "+" + in[i];
+        }
+        return "cos(" + retval + ")";
+    }
+    DCGP_S11N_EMPTY_SERIALIZE_MEMFN()
+};
+
+inline constexpr auto print_my_cos_nu = print_my_cos_nu_func{};
+
 /*--------------------------------------------------------------------------
  *                               UNARY FUNCTIONS
  *------------------------------------------------------------------------**/

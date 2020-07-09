@@ -90,6 +90,10 @@ public:
             m_kernels.emplace_back(my_sqrt<T>, print_my_sqrt, kernel_name);
         else if (kernel_name == "psqrt")
             m_kernels.emplace_back(my_psqrt<T>, print_my_psqrt, kernel_name);
+        else if (kernel_name == "sin_nu")
+            m_kernels.emplace_back(my_sin_nu<T>, print_my_sin_nu, kernel_name);
+        else if (kernel_name == "cos_nu")
+            m_kernels.emplace_back(my_cos_nu<T>, print_my_cos_nu, kernel_name);
         else
             throw std::invalid_argument("Unimplemented function " + kernel_name + " for this type");
     }
