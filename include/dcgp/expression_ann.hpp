@@ -94,7 +94,7 @@ public:
         for (const auto &ker : f) {
             if (ker.get_name() != "tanh" && ker.get_name() != "sig" && ker.get_name() != "ReLu"
                 && ker.get_name() != "ELU" && ker.get_name() != "ISRU" && ker.get_name() != "sin_nu"
-                && ker.get_name() != "cos_nu" && ker.get_name() != "sum" && ker.get_name() != "gaussian") {
+                && ker.get_name() != "cos_nu" && ker.get_name() != "gaussian_nu" && ker.get_name() != "sum") {
                 throw std::invalid_argument(
                     "Only tanh, sig, ReLu, ELU, ISRU, sin_nu, cos_nu, gaussian_nu and sum Kernels are valid "
                     "for dCGP-ANN expressions");
@@ -169,9 +169,10 @@ public:
         for (const auto &ker : f) {
             if (ker.get_name() != "tanh" && ker.get_name() != "sig" && ker.get_name() != "ReLu"
                 && ker.get_name() != "ELU" && ker.get_name() != "ISRU" && ker.get_name() != "sin_nu"
-                && ker.get_name() != "cos_nu" && ker.get_name() != "sum") {
-                throw std::invalid_argument("Only tanh, sig, ReLu, ELU, ISRU, sin_nu, cos_nu and sum Kernels are valid "
-                                            "for dCGP-ANN expressions");
+                && ker.get_name() != "cos_nu" && ker.get_name() != "gaussian_nu" && ker.get_name() != "sum") {
+                throw std::invalid_argument(
+                    "Only tanh, sig, ReLu, ELU, ISRU, sin_nu, cos_nu, gaussian_nu and sum Kernels are valid "
+                    "for dCGP-ANN expressions");
             }
         }
         // Initialize the kernel map
