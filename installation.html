@@ -96,7 +96,6 @@
 <li class="toctree-l2"><a class="reference internal" href="#c">C++</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#python">Python</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#installing-with-conda">Installing with conda</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#installing-with-pip-deprecated">Installing with pip (deprecated)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#building">Building</a></li>
 </ul>
 </li>
@@ -207,14 +206,23 @@
 <li><p><a class="reference external" href="https://github.com/esa/pagmo2">Pagmo</a>, parallel optimization library. (&gt;=2.15).</p></li>
 <li><p><a class="reference external" href="https://github.com/intel/tbb">tbb</a>, lets you easily write parallel C++ programs that take full advantage of multicore performance. (&gt;=2020.1).</p></li>
 <li><p><a class="reference external" href="http://darioizzo.github.io/audi/">AuDi</a>, high order automated differentiation library. (&gt;=1.8).</p></li>
+<li><p><cite>obake &lt;https://github.com/bluescarni/obake&gt;</cite>,  symbolic manipulation of sparse polynomials. (&gt;=0.6.0).</p></li>
 <li><p><a class="reference external" href="https://github.com/symengine/symengine">Symengine</a>, symbolic manipulation of math expressions. (&gt;=0.6).</p></li>
 </ul>
+<p>In case you are familiar with the conda package manager an environent ready for the dcgp installation can be created via the single command</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> conda create -n build_dcgp cmake cxx-compiler boost-cpp pagmo-devel tbb-devel audi symengine obake-devel
+</pre></div>
+</div>
 <p>After making sure the dependencies above are installed and found in your system, you may download
 the latest dCGP code via git:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> git clone https://github.com/darioizzo/dcgp.git
 </pre></div>
 </div>
-<p>and configure your build using CMake.</p>
+<p>and configure your build using CMake. For example, if you are using conda, make a build directory and type:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> cmake -DBoost_NO_BOOST_CMAKE<span class="o">=</span>ON -DCMAKE_INSTALL_PREFIX<span class="o">=</span>~/miniconda3/envs/build_dcgp/ -DCMAKE_PREFIX_PATH<span class="o">=</span>~/miniconda3/envs/build_dcgp/ ../
+</pre></div>
+</div>
+<p>where the conda environment has been assumed in <code class="docutils literal notranslate"><span class="pre">`~/miniconda3/envs/build_dcgp/`</span></code>.</p>
 <p>When done, type (in your build directory):</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> make
 </pre></div>
@@ -223,7 +231,7 @@ the latest dCGP code via git:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> make <span class="nb">test</span>
 </pre></div>
 </div>
-<p>If succesfull, you may now install cgp:</p>
+<p>If successfull, you may now install cgp:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> make install
 </pre></div>
 </div>
@@ -256,6 +264,7 @@ to add <code class="docutils literal notranslate"><span class="pre">conda-forge<
 <span class="gp">$</span> conda install dcgp-python
 </pre></div>
 </div>
+<p>note that all the required dependencies will be installed automatically, as well as the C++ <code class="docutils literal notranslate"><span class="pre">`dcgp`</span></code> headers.</p>
 <p>Please refer to the <a class="reference external" href="https://conda.io/en/latest/">conda documentation</a> for instructions
 on how to setup and manage your conda installation.</p>
 <p>You may test the successfull installation by running the python tests typing:</p>
@@ -263,20 +272,26 @@ on how to setup and manage your conda installation.</p>
 </pre></div>
 </div>
 </div>
-<div class="section" id="installing-with-pip-deprecated">
-<h3>Installing with pip (deprecated)<a class="headerlink" href="#installing-with-pip-deprecated" title="Permalink to this headline">¶</a></h3>
-<p>We also provide the pip packages (mainly for linux 64 bit architectures and versions &lt;= 1.4.1).
-Check on the <a class="reference external" href="https://pypi.org/project/dcgpy/">PyPi dcgpy page</a> if the needed package is provided.</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> pip install dcgpy
-</pre></div>
-</div>
-</div>
 <div class="section" id="building">
 <h3>Building<a class="headerlink" href="#building" title="Permalink to this headline">¶</a></h3>
-<p>To build the module you need to have the Boost Python libraries installed and to activate the BUILD_DCGPY option from within CMake (and deselect BUILD_DCGP)</p>
-<p>Check carefully what Python version is detected and what libraries are linked to. In particular select the correct boost_python
-according to the Python version (2 or 3) you want to compile the module for.</p>
-<p>The CMAKE_INSTALL_PREFIX will be used to construct the final location of headers and Python module after install.</p>
+<p>To build the python module you need to first install the dcgp C++ header library and its dependencies (see above) as well as the additional dependency:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/pybind/pybind11">pybind11</a>, Seamless operability between C++11 and Python. (&gt;=2.5.0).</p></li>
+</ul>
+<p>In case you are familiar with the conda package manager an environent ready for the python module installation can be created via the single command</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> conda create -n build_dcgp cmake cxx-compiler boost-cpp pagmo-devel tbb-devel audi symengine obake-devel pybind11
+</pre></div>
+</div>
+<p>Install the latest dCGP code via git:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> git clone https://github.com/darioizzo/dcgp.git
+</pre></div>
+</div>
+<p>After installing the C++ dcgp library (see above) and making sure your environment is correctly set up to find all dependencies, you can
+configure your python module build using CMake. For example, if you are using conda, in the build directory type:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> cmake -DBoost_NO_BOOST_CMAKE<span class="o">=</span>ON -DCMAKE_INSTALL_PREFIX<span class="o">=</span>~/miniconda3/envs/build_dcgp/ -DCMAKE_PREFIX_PATH<span class="o">=</span>~/miniconda3/envs/build_dcgp/ -DDCGP_BUILD_DCGP<span class="o">=</span>OFF -DDCGP_BUILD_DCGPY<span class="o">=</span>ON ../
+</pre></div>
+</div>
+<p>where the conda environment has been assumed in <code class="docutils literal notranslate"><span class="pre">`~/miniconda3/envs/build_dcgp/`</span></code>.</p>
 <p>When done, type (in your build directory):</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> make install
 </pre></div>
