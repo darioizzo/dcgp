@@ -192,9 +192,12 @@ public:
                         l_prettier += static_cast<double>(pretty[i].length());
                     }
                 }
+                // Here we define the formula complexity as the shortest between the two.
+                retval[1] = std::min(l_pretty, l_prettier);
+            } else {
+                // Or, simply, l_pretty if simplifications make little sense
+                retval[1] = l_pretty;
             }
-            // Here we define the formula complexity as the shortest between the two.
-            retval[1] = std::min(l_pretty, l_prettier);
         }
         return retval;
     }
