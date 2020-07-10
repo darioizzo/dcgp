@@ -49,7 +49,7 @@ When finished, to run the tests type:
 
    $ make test
 
-If succesfull, you may now install cgp:
+If successfull, you may now install cgp:
 
 .. code-block:: console
 
@@ -108,13 +108,13 @@ Building
 
 To build the python module you need to first install the dcgp C++ header library and its dependencies (see above) as well as the additional dependency:
 
-* `pybind11 <https://github.com/pybind/pybind11>`, Seamless operability between C++11 and Python. (>=2.5.0). 
+* `pybind11 <https://github.com/pybind/pybind11>`_, Seamless operability between C++11 and Python. (>=2.5.0). 
 
 In case you are familiar with the conda package manager an environent ready for the python module installation can be created via the single command
 
 .. code-block:: console
 
-   $ conda create -n build_dcgp cmake cxx-compiler boost-cpp pagmo-devel tbb-devel audi symengine obake-devel pybond11
+   $ conda create -n build_dcgp cmake cxx-compiler boost-cpp pagmo-devel tbb-devel audi symengine obake-devel pybind11
 
 Install the latest dCGP code via git:
 

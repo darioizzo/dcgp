@@ -68,7 +68,8 @@ public:
      * @param[in] n_eph number of ephemeral constants.
      * @param[in] multi_objective when true, it will consider the model complexity as a second objective.
      * @param[in] parallel_batches number of parallel batches.
-     * @param[in] loss_s loss type as string, either "MSE" or "CE"
+     * @param[in] loss_s loss type as string, either "MSE" or "CE".
+     * @param[in] seed seed used for the random engine.
      *
      * @throws std::invalid_argument if points and labels are not consistent.
      * @throws std::invalid_argument if the CGP related parameters (i.e. *r*, *c*, etc...) are malformed.
@@ -83,11 +84,11 @@ public:
                         unsigned n_eph = 0u,                                    // number of ephemeral constants
                         bool multi_objective = false,   // when true the fitness also returns the formula complexity
                         unsigned parallel_batches = 0u, // number of parallel batches
-                        std::string loss = "MSE",       // loss type
+                        std::string loss_s = "MSE",     // loss type
                         unsigned seed = random_device::next() // seed used to generate mutations by the cgp
                         )
         : m_points(points), m_labels(labels), m_r(r), m_c(c), m_l(l), m_arity(arity), m_f(f), m_n_eph(n_eph),
-          m_multi_objective(multi_objective), m_parallel_batches(parallel_batches), m_loss_s(loss)
+          m_multi_objective(multi_objective), m_parallel_batches(parallel_batches), m_loss_s(loss_s)
     {
         unsigned n;
         unsigned m;
