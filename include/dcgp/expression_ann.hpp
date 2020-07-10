@@ -58,7 +58,19 @@ public:
         /// ISRU
         ISRU,
         /// Simple sum of inputs
-        SUM
+        SUM,
+        /// non unary sine
+        SIN_NU,
+        /// non unary cosine
+        COS_NU,
+        /// non unary cosine
+        GAUSSIAN_NU,
+        /// negative of the input sum
+        INV_SUM,
+        /// absolute value of inputs
+        ABS,
+        /// step funxtion
+        STEP
     };
     /// Constructor
     /** Constructs a dCGPANN expression
@@ -87,9 +99,12 @@ public:
         // Sanity checks
         for (const auto &ker : f) {
             if (ker.get_name() != "tanh" && ker.get_name() != "sig" && ker.get_name() != "ReLu"
-                && ker.get_name() != "ELU" && ker.get_name() != "ISRU" && ker.get_name() != "sum") {
-                throw std::invalid_argument(
-                    "Only tanh, sig, ReLu, ELU, ISRU and sum Kernels are valid for dCGP-ANN expressions");
+                && ker.get_name() != "ELU" && ker.get_name() != "ISRU" && ker.get_name() != "sin_nu"
+                && ker.get_name() != "cos_nu" && ker.get_name() != "gaussian_nu" && ker.get_name() != "sum"
+                && ker.get_name() != "inv_sum" && ker.get_name() != "abs" && ker.get_name() != "step") {
+                throw std::invalid_argument("Only tanh, sig, ReLu, ELU, ISRU, sin_nu, cos_nu, gaussian_nu, abs, step "
+                                            "and sum, inv_sum Kernels are valid "
+                                            "for dCGP-ANN expressions");
             }
         }
         // Initialize the kernel map
@@ -106,6 +121,18 @@ public:
                 m_kernel_map[i] = kernel_type::ISRU;
             } else if (f[i].get_name() == "sum") {
                 m_kernel_map[i] = kernel_type::SUM;
+            } else if (f[i].get_name() == "sin_nu") {
+                m_kernel_map[i] = kernel_type::SIN_NU;
+            } else if (f[i].get_name() == "cos_nu") {
+                m_kernel_map[i] = kernel_type::COS_NU;
+            } else if (f[i].get_name() == "gaussian_nu") {
+                m_kernel_map[i] = kernel_type::GAUSSIAN_NU;
+            } else if (f[i].get_name() == "inv_sum") {
+                m_kernel_map[i] = kernel_type::INV_SUM;
+            } else if (f[i].get_name() == "abs") {
+                m_kernel_map[i] = kernel_type::ABS;
+            } else if (f[i].get_name() == "step") {
+                m_kernel_map[i] = kernel_type::STEP;
             }
         }
         // Default initialization of weights to 1.
@@ -154,9 +181,12 @@ public:
         // Sanity checks
         for (const auto &ker : f) {
             if (ker.get_name() != "tanh" && ker.get_name() != "sig" && ker.get_name() != "ReLu"
-                && ker.get_name() != "ELU" && ker.get_name() != "ISRU" && ker.get_name() != "sum") {
-                throw std::invalid_argument(
-                    "Only tanh, sig, ReLu, ELU, ISRU and sum Kernels are valid for dCGP-ANN expressions");
+                && ker.get_name() != "ELU" && ker.get_name() != "ISRU" && ker.get_name() != "sin_nu"
+                && ker.get_name() != "cos_nu" && ker.get_name() != "gaussian_nu" && ker.get_name() != "sum"
+                && ker.get_name() != "inv_sum" && ker.get_name() != "abs" && ker.get_name() != "step") {
+                throw std::invalid_argument("Only tanh, sig, ReLu, ELU, ISRU, sin_nu, cos_nu, gaussian_nu, abs, step "
+                                            "and sum, inv_sum Kernels are valid "
+                                            "for dCGP-ANN expressions");
             }
         }
         // Initialize the kernel map
@@ -173,6 +203,18 @@ public:
                 m_kernel_map[i] = kernel_type::ISRU;
             } else if (f[i].get_name() == "sum") {
                 m_kernel_map[i] = kernel_type::SUM;
+            } else if (f[i].get_name() == "sin_nu") {
+                m_kernel_map[i] = kernel_type::SIN_NU;
+            } else if (f[i].get_name() == "cos_nu") {
+                m_kernel_map[i] = kernel_type::COS_NU;
+            } else if (f[i].get_name() == "gaussian_nu") {
+                m_kernel_map[i] = kernel_type::GAUSSIAN_NU;
+            } else if (f[i].get_name() == "inv_sum") {
+                m_kernel_map[i] = kernel_type::INV_SUM;
+            } else if (f[i].get_name() == "abs") {
+                m_kernel_map[i] = kernel_type::ABS;
+            } else if (f[i].get_name() == "step") {
+                m_kernel_map[i] = kernel_type::STEP;
             }
         }
         // Default initialization of weights to 1.
@@ -501,6 +543,18 @@ public:
             it = std::find(m_kernel_map.begin(), m_kernel_map.end(), kernel_type::ISRU);
         } else if (name == "sum") {
             it = std::find(m_kernel_map.begin(), m_kernel_map.end(), kernel_type::SUM);
+        } else if (name == "sin_nu") {
+            it = std::find(m_kernel_map.begin(), m_kernel_map.end(), kernel_type::SIN_NU);
+        } else if (name == "cos_nu") {
+            it = std::find(m_kernel_map.begin(), m_kernel_map.end(), kernel_type::COS_NU);
+        } else if (name == "gaussian_nu") {
+            it = std::find(m_kernel_map.begin(), m_kernel_map.end(), kernel_type::GAUSSIAN_NU);
+        } else if (name == "inv_sum") {
+            it = std::find(m_kernel_map.begin(), m_kernel_map.end(), kernel_type::INV_SUM);
+        } else if (name == "abs") {
+            it = std::find(m_kernel_map.begin(), m_kernel_map.end(), kernel_type::ABS);
+        } else if (name == "step") {
+            it = std::find(m_kernel_map.begin(), m_kernel_map.end(), kernel_type::STEP);
         }
 
         if (it == m_kernel_map.end()) {
@@ -910,6 +964,34 @@ private:
                         d_node[node_id] = node[node_id] * node[node_id] * node[node_id] / cumin / cumin / cumin;
                         break;
                     }
+                    case kernel_type::SIN_NU: {
+                        auto cumin = std::accumulate(function_in.begin(), function_in.end(), 0.);
+                        d_node[node_id] = std::cos(cumin);
+                        break;
+                    }
+                    case kernel_type::COS_NU: {
+                        auto cumin = std::accumulate(function_in.begin(), function_in.end(), 0.);
+                        d_node[node_id] = -std::sin(cumin);
+                        break;
+                    }
+                    case kernel_type::GAUSSIAN_NU: {
+                        auto cumin = std::accumulate(function_in.begin(), function_in.end(), 0.);
+                        d_node[node_id] = -2 * cumin * node[node_id];
+                        break;
+                    }
+                    case kernel_type::INV_SUM: {
+                        d_node[node_id] = -1.;
+                        break;
+                    }
+                    case kernel_type::ABS: {
+                        auto cumin = std::accumulate(function_in.begin(), function_in.end(), 0.);
+                        d_node[node_id] = cumin < 0. ? -1 : 1;
+                        break;
+                    }
+                    case kernel_type::STEP: {
+                        d_node[node_id] = 0.;
+                        break;
+                    }
                 }
             }
         }
@@ -1037,8 +1119,8 @@ private:
 
     // In order to be able to perform backpropagation on the dCGPANN program, we need to add
     // to the usual CGP data structures one that contains for each node the list of nodes
-    // (and weights) it feeds into. We also need to add some virtual nodes (to keep track of output nodes dependencies)
-    // The assigned virtual ids starting from n + r * c
+    // (and weights) it feeds into. We also need to add some virtual nodes (to keep track of output nodes
+    // dependencies) The assigned virtual ids starting from n + r * c
     std::vector<std::vector<std::pair<unsigned, unsigned>>> m_connected;
     // Kernel map (this is here to avoid string comparisons)
     std::vector<kernel_type> m_kernel_map;
