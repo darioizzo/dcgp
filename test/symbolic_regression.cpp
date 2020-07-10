@@ -123,9 +123,6 @@ BOOST_AUTO_TEST_CASE(fitness_test_two_obj)
         } else {
             BOOST_CHECK_EQUAL(l2, pop.get_f()[i][1]);
         }
-std::cout << "\npretty: " << udp.pretty(pop.get_x()[i]) << "\n";
-std::cout << "prettier: " << string << "\n";
-std::cout << "l1: " << l1 << "\tl2: " << l2 << "\tfit: " << pop.get_f()[i][1] << "\n";
     }
 }
 
