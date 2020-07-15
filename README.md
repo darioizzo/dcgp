@@ -147,3 +147,19 @@ If all below statements are true:
  * You do not care about thread-safety
 
 then you should consider using, instead, Andrew Turner's CGP-Library (http://www.cgplibrary.co.uk/files2/About-txt.html) which is, roughly, twice as fast to compute a CGP expression as it makes use of function pointers rather than a type-erased function wrapper to define the kernel functions.
+
+## Feedback
+
+### Report bugs
+
+Please submit any bugs as an issue to https://github.com/darioizzo/dcgp/issues.
+
+It would be greatly appreciated if the issue templates we provide can be used.
+
+### Contributing
+
+If anyone wishes to contribute to this project, please submit early on a pull request marked as "(WIP) - pull request title". We will be then discussing 
+how to implement the desired functionality directly on the PR.
+
+A guide on how to submit pull requests can be found on
+https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request.
