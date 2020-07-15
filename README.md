@@ -148,7 +148,7 @@ If all below statements are true:
 
 then you should consider using, instead, Andrew Turner's CGP-Library (http://www.cgplibrary.co.uk/files2/About-txt.html) which is, roughly, twice as fast to compute a CGP expression as it makes use of function pointers rather than a type-erased function wrapper to define the kernel functions.
 
-## Feedback
+## Community guidelines
 
 ### Report bugs
 
