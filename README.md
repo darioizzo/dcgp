@@ -19,17 +19,17 @@ The dCGP is a development in the field of Genetic Programming that adds the info
  * Prime integrals of motion can be represented by a dCGP and learned
  * Symbolic regression tasks can learn ephemeral constants using backprop or even higher order methods.
  
-The first research paper describing dCGP use to solve symbolic regressions problems such is:
+Please quote the use of differentiable Cartesian Programming as:
 
 Izzo, Dario, Francesco Biscani, and Alessio Mereta. "Differentiable Genetic Programming." arXiv preprint arXiv:1611.04766 (2016).
 
-Please quote the use of this software as:
+Please quote the use of the software here provided as:
 
 Izzo, Dario, Francesco Biscani (2020). dcgp: Differentiable Cartesian Genetic Programming made easy. Journal of Open Source Software, 5(51), 2290, https://doi.org/10.21105/joss.02290
 
 Preliminary documentation can be found at http://darioizzo.github.io/dcgp/
 
-A web based version of dCGP can be found here: https://esa.github.io/dcgp-web/ thanks to Mike Heddes!
+A web based version of an early dCGP version can be found here: https://esa.github.io/dcgp-web/ thanks to Mike Heddes!
 
 Installation guide
 ==================
