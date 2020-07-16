@@ -7,6 +7,7 @@
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/y/darioizzo/dcgp?style=for-the-badge)
 
 [![DOI](https://zenodo.org/badge/38923383.svg)](https://zenodo.org/badge/latestdoi/38923383)
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.02290/status.svg)](https://doi.org/10.21105/joss.02290)
 
 # dCGP
 Implementation of differentiable Cartesian Genetic Programming (dCGP)
@@ -21,6 +22,10 @@ The dCGP is a development in the field of Genetic Programming that adds the info
 The first research paper describing dCGP use to solve symbolic regressions problems such is:
 
 Izzo, Dario, Francesco Biscani, and Alessio Mereta. "Differentiable Genetic Programming." arXiv preprint arXiv:1611.04766 (2016).
+
+Please quote the use of this software as:
+
+Izzo, Dario, Francesco Biscani (2020). dcgp: Differentiable Cartesian Genetic Programming made easy. Journal of Open Source Software, 5(51), 2290, https://doi.org/10.21105/joss.02290
 
 Preliminary documentation can be found at http://darioizzo.github.io/dcgp/
 
