@@ -1,8 +1,17 @@
-set(_DCGP_REQUIRED_BOOST_LIBS)
-list(APPEND _DCGP_REQUIRED_BOOST_LIBS timer chrono serialization system unit_test_framework)
+# Run a first pass for finding the headers only,
+# and establishing the Boost version.
+set(_DCGP_BOOST_MINIMUM_VERSION 1.60.0)
+find_package(Boost ${_DCGP_BOOST_MINIMUM_VERSION} QUIET REQUIRED)
+
+set(_DCGP_REQUIRED_BOOST_LIBS timer chrono serialization system unit_test_framework)
+
+# Add the unit test framework, if needed.
+if(_DCGP_FIND_BOOST_UNIT_TEST_FRAMEWORK)
+    list(APPEND _DCGP_REQUIRED_BOOST_LIBS unit_test_framework)
+endif()
 
 message(STATUS "Required Boost libraries: ${_DCGP_REQUIRED_BOOST_LIBS}")
-find_package(Boost 1.55.0 REQUIRED COMPONENTS "${_DCGP_REQUIRED_BOOST_LIBS}")
+find_package(Boost ${_DCGP_BOOST_MINIMUM_VERSION} REQUIRED COMPONENTS ${_DCGP_REQUIRED_BOOST_LIBS})
 if(NOT Boost_FOUND)
     message(FATAL_ERROR "Not all requested Boost components were found, exiting.")
 endif()
