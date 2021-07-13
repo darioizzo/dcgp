@@ -44,5 +44,6 @@ jobs:
           echo Building dcgp
           mkdir build
           cd build
+          conda init bash
           conda activate base
           cmake -DCMAKE_INSTALL_PREFIX=$CONDA ../ 
