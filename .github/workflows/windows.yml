@@ -33,6 +33,6 @@ jobs:
           mkdir build
           cd build
           cmake -G "Visual Studio 16 2019" -A x64 -DCMAKE_PREFIX_PATH=%CONDA_PREFIX_PATH% -DBoost_NO_BOOST_CMAKE=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=%CONDA_PREFIX_PATH% -DDCGP_BUILD_TESTS=yes -DDCGP_BUILD_EXAMPLES=no ..
-          cmake --build . -- -v
-          cmake --build . --target install
+          cmake --build . --config Release
+          ctest -j4 -V -C Release
 
