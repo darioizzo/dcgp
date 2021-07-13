@@ -35,7 +35,7 @@ jobs:
         run: |
           # $CONDA is an environment variable pointing to the root of the miniconda directory
           echo $CONDA/bin >> $GITHUB_PATH
-      - name: Install dependencies
+      - name: Install conda packages
         run: |
           conda env update --file environment.yml --name base
       # Builds the CGP
@@ -44,4 +44,5 @@ jobs:
           echo Building dcgp
           mkdir build
           cd build
+          conda activate base
           cmake -DCMAKE_INSTALL_PREFIX=$CONDA ../ 
