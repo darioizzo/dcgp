@@ -51,4 +51,5 @@ jobs:
           -DCMAKE_PREFIX_PATH=$CONDA \
           -DDCGP_BUILD_TESTS=yes \
           -DDCGP_BUILD_EXAMPLES=no \
+          ..
           
