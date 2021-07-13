@@ -30,14 +30,18 @@ jobs:
         with:
           python-version: 3.8
       # Installs conda dependencies
-      - name: Install dependencies
+      - name: Install conda dependencies
         run: |
           # $CONDA is an environment variable pointing to the root of the miniconda directory
+          # Normally we’d use something like conda env create -f environment.yml to install an environment from a file. 
+          # Unfortunately, environment variables don’t persist between steps in a workflow, which breaks some things in Conda. 
+          # Installing the environment’s packages into the base environment avoids this issue because it makes the packages available by default.
           $CONDA/bin/conda env update --file environment.yml --name base
 
       # Runs a set of commands using the runners shell
       - name: Builds dcgp
         run: |
           echo Building dcgp
-          pwd
-          ls
+          mkdir build
+          chdir build
+          cmake -DCMAKE_INSTALL_PREFIX=$CONDA ../ 
