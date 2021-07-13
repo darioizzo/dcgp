@@ -13,18 +13,18 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-ubuntu-latest:
+  build-ubuntu-latest-release:
     # The type of runner that the job will run on
-    runs-on: ubuntu-latest-release
+    runs-on: ubuntu-latest
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - uses: actions/checkout@v2
       - name: Build
         run: bash tools/gha_ubuntu_latest_release.sh
 
-  build-ubuntu-latest:
+  build-ubuntu-latest-debug:
     # The type of runner that the job will run on
-    runs-on: ubuntu-latest-debug
+    runs-on: ubuntu-latest
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - uses: actions/checkout@v2
@@ -33,7 +33,7 @@ jobs:
 
   build-ubuntu-latest-python:
     # The type of runner that the job will run on
-    runs-on: ubuntu-latest-python
+    runs-on: ubuntu-latest
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - uses: actions/checkout@v2
