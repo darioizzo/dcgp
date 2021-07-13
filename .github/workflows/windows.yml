@@ -1,6 +1,5 @@
 # This is a basic workflow to help you get started with Actions
-name: Main windows CI for dcgp and dcgpy
-
+name: windows 
 # Controls when the workflow will run
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
@@ -33,16 +32,7 @@ jobs:
           conda activate dcgpy
           mkdir build
           cd build
-          cmake ^
-            -G "Visual Studio 16 2019" ^
-            -A x64 ^
-            -DCMAKE_PREFIX_PATH=%CONDA_PREFIX_PATH%
-            -DBoost_NO_BOOST_CMAKE=ON ^
-            -DCMAKE_BUILD_TYPE=Release ^
-            -DCMAKE_INSTALL_PREFIX=%CONDA_PREFIX_PATH% ^
-            -DDCGP_BUILD_TESTS=yes ^
-            -DDCGP_BUILD_EXAMPLES=no ^
-            ..
-            cmake --build . -- -v
-            cmake --build . --target install
+          cmake -G "Visual Studio 16 2019" -A x64 -DCMAKE_PREFIX_PATH=%CONDA_PREFIX_PATH% -DBoost_NO_BOOST_CMAKE=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=%CONDA_PREFIX_PATH% -DDCGP_BUILD_TESTS=yes -DDCGP_BUILD_EXAMPLES=no ..
+          cmake --build . -- -v
+          cmake --build . --target install
 
