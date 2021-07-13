@@ -25,7 +25,7 @@ conda install $conda_pkgs -y
 mkdir build
 cd build
 
-# GCC build.
+# GCC build. The -lrt flag seems a necessary addition when using conda compilers installed via cxx-compiler
 LDFLAGS="-lrt ${LDFLAGS}"; cmake \
     -DBoost_NO_BOOST_CMAKE=ON \
     -DCMAKE_BUILD_TYPE=Release \

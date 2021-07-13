@@ -14,7 +14,6 @@ on:
   workflow_dispatch:
 
 jobs:
-  # The first thing we want to do is build on linux
   build-ubuntu-latest:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
@@ -22,4 +21,22 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Build
-        run: bash tools/gha_ubuntu_latest.sh
+        run: bash tools/gha_ubuntu_latest_release.sh
+
+  build-ubuntu-latest:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build
+        run: bash tools/gha_ubuntu_latest_debug.sh
+        
+  build-ubuntu-latest-python:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build
+        run: bash tools/gha_ubuntu_latest_python.sh
