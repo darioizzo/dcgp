@@ -1,0 +1,48 @@
+# This is a basic workflow to help you get started with Actions
+name: Main windows CI for dcgp and dcgpy
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  windows_2019:
+    runs-on: windows-2019
+    steps:
+      - uses: actions/checkout@v2
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v1.0.2
+      - uses: conda-incubator/setup-miniconda@v2
+        with:
+          auto-update-conda: true
+          python-version: 3.8
+          channels: conda-forge
+          channel-priority: strict
+      - name: Build
+        shell: pwsh
+        run: |
+          conda config --set always_yes yes
+          conda create --name dcgpy cmake boost-cpp eigen pagmo-devel tbb audi symengine obake-devel cxx-compiler pybind11 python=3.8 sympy matplotlib
+          conda activate dcgpy
+          mkdir build
+          cd build
+          cmake ^
+            -G "Visual Studio 16 2019" ^
+            -A x64 ^
+            -DCMAKE_PREFIX_PATH=%CONDA_PREFIX_PATH%
+            -DBoost_NO_BOOST_CMAKE=ON ^
+            -DCMAKE_BUILD_TYPE=Release ^
+            -DCMAKE_INSTALL_PREFIX=%CONDA_PREFIX_PATH% ^
+            -DDCGP_BUILD_TESTS=yes ^
+            -DDCGP_BUILD_EXAMPLES=no ^
+            ..
+            cmake --build . -- -v
+            cmake --build . --target install
+

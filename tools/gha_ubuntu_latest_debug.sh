@@ -16,7 +16,7 @@ export PATH="$HOME/miniconda/bin:$PATH"
 bash miniconda.sh -b -p $HOME/miniconda
 conda config --add channels conda-forge
 conda config --set channel_priority strict
-conda_pkgs="cmake boost-cpp eigen pagmo-devel tbb audi symengine obake-devel cxx-compiler pygmo"
+conda_pkgs="cmake boost-cpp eigen pagmo-devel tbb audi symengine obake-devel cxx-compiler"
 conda create -q -p $deps_dir -y
 source activate $deps_dir
 conda install $conda_pkgs -y
@@ -35,8 +35,6 @@ LDFLAGS="-lrt ${LDFLAGS}"; cmake \
     -DDCGP_BUILD_EXAMPLES=no \
     ..
 make -j1 VERBOSE=1
-
-python -c "from dcgpy import test; test.run_test_suite(); import pygmo; pygmo.mp_island.shutdown_pool(); pygmo.mp_bfe.shutdown_pool()"
 
 set +e
 set +x
