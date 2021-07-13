@@ -44,4 +44,11 @@ jobs:
           echo Building dcgp
           mkdir build
           cd build
-          cmake -DCMAKE_INSTALL_PREFIX=$CONDA ../ 
+          cmake \
+          -DBoost_NO_BOOST_CMAKE=ON \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DCMAKE_INSTALL_PREFIX=$CONDA \
+          -DCMAKE_PREFIX_PATH=$CONDA \
+          -DDCGP_BUILD_TESTS=yes \
+          -DDCGP_BUILD_EXAMPLES=no \
+          
