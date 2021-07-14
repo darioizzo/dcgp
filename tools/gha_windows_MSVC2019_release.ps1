@@ -4,8 +4,9 @@ conda config --set always_yes yes
 conda create --name dcgpy cmake boost-cpp eigen pagmo-devel tbb audi symengine obake-devel cxx-compiler pybind11 clang ninja
 conda activate dcgpy
 
-# Define shell variables for clang
-& "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat && set > %temp%\vcvars.txt"
+# Define environment variables for clang ...
+# ... and make them persistent 
+cmd.exe /c "call `"C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat`" && set > %temp%\vcvars.txt"
 
 Get-Content "$env:temp\vcvars.txt" | Foreach-Object {
   if ($_ -match "^(.*?)=(.*)$") {
