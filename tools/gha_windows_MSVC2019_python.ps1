@@ -11,11 +11,11 @@ cd build
 cmake `
     -G "Visual Studio 16 2019" `
     -A x64 `
-    -DCMAKE_PREFIX_PATH=%CONDA_PREFIX_PATH% `
+    -DCMAKE_PREFIX_PATH=C:\Miniconda\envs\dcgpy `
     -DBoost_NO_BOOST_CMAKE=ON `
     -DCMAKE_BUILD_TYPE=Release `
-    -DCMAKE_INSTALL_PREFIX=%CONDA_PREFIX_PATH% `
+    -DCMAKE_INSTALL_PREFIX=C:\Miniconda\envs\dcgpy `
     -DDCGP_BUILD_TESTS=no `
     -DDCGP_BUILD_EXAMPLES=no ..
 
-cmake --build . --target install
+cmake --build . --target install --config Release
