@@ -13,9 +13,23 @@ cmake `
     -A x64 `
     -DCMAKE_PREFIX_PATH=C:\Miniconda\envs\dcgpy `
     -DBoost_NO_BOOST_CMAKE=ON `
-    -DCMAKE_BUILD_TYPE=Release `
     -DCMAKE_INSTALL_PREFIX=C:\Miniconda\envs\dcgpy `
     -DDCGP_BUILD_TESTS=no `
     -DDCGP_BUILD_EXAMPLES=no ..
+
+cmake --build . --target install --config Release
+
+cd ..
+mkdir build_python
+cd build_python
+
+cmake `
+    -G "Visual Studio 16 2019" `
+    -A x64 `
+    -DCMAKE_PREFIX_PATH=C:\Miniconda\envs\dcgpy `
+    -DBoost_NO_BOOST_CMAKE=ON `
+    -DCMAKE_INSTALL_PREFIX=C:\Miniconda\envs\dcgpy `
+    -DDCGP_BUILD_DCGP=no `
+    -DDCGP_BUILD_DCGPY=yes ..
 
 cmake --build . --target install --config Release
