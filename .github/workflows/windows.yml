@@ -25,6 +25,7 @@ jobs:
           channels: conda-forge
           channel-priority: strict
       - name: Build
-        run: powershell .\tools\gha_windows_MSVC2019_release.ps1
+        run: .\tools\gha_windows_MSVC2019_release.ps1
+        shell: powershell
 
 
