@@ -24,7 +24,7 @@ cmake `
     -DCMAKE_PREFIX_PATH=C:\Miniconda\envs\dcgpy `
     -DBoost_NO_BOOST_CMAKE=ON `
     -DCMAKE_INSTALL_PREFIX=C:\Miniconda\envs\dcgpy `
-    -DDCGP_BUILD_TESTS=no `
+    -DDCGP_BUILD_TESTS=yes `
     -DDCGP_BUILD_EXAMPLES=no ..
 
 cmake --build . --config Release
