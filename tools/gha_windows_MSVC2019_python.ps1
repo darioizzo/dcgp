@@ -2,15 +2,16 @@
 
 # Install conda environment
 conda config --set always_yes yes
-conda create --name dcgpy cmake boost-cpp eigen pagmo-devel tbb audi symengine obake-devel cxx-compiler pybind11 python=3.8 sympy matplotlib
+conda create --name dcgpy cmake boost-cpp eigen pagmo-devel tbb audi symengine obake-devel cxx-compiler pybind11 python=3.8 sympy matplotlib clang ninja
 conda activate dcgpy
 
 #build and run the dcgp tests
 mkdir build
 cd build
 cmake `
-    -G "Visual Studio 16 2019" `
-    -A x64 `
+    -G "Ninja" `
+    -DCMAKE_C_COMPILER=clang-cl `
+    -DCMAKE_CXX_COMPILER=clang-cl `
     -DCMAKE_PREFIX_PATH=C:\Miniconda\envs\dcgpy `
     -DBoost_NO_BOOST_CMAKE=ON `
     -DCMAKE_INSTALL_PREFIX=C:\Miniconda\envs\dcgpy `
@@ -24,8 +25,9 @@ mkdir build_python
 cd build_python
 
 cmake `
-    -G "Visual Studio 16 2019" `
-    -A x64 `
+    -G "Ninja" `
+    -DCMAKE_C_COMPILER=clang-cl `
+    -DCMAKE_CXX_COMPILER=clang-cl `
     -DCMAKE_PREFIX_PATH=C:\Miniconda\envs\dcgpy `
     -DBoost_NO_BOOST_CMAKE=ON `
     -DCMAKE_INSTALL_PREFIX=C:\Miniconda\envs\dcgpy `
