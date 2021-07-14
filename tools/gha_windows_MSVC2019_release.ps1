@@ -1,9 +1,11 @@
 # Powershell script
-
 # Install conda environment
 conda config --set always_yes yes
 conda create --name dcgpy cmake boost-cpp eigen pagmo-devel tbb audi symengine obake-devel cxx-compiler pybind11 clang ninja
 conda activate dcgpy
+
+# Define shell variables for clang
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat
 
 #build and run the dcgp tests
 mkdir build
