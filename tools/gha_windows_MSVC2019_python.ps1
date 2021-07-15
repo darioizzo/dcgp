@@ -2,7 +2,7 @@
 
 # Install conda environment
 conda config --set always_yes yes
-conda create --name dcgpy cmake boost-cpp eigen pagmo-devel tbb audi symengine obake-devel cxx-compiler pybind11 python=3.8 sympy matplotlib clang ninja pygmo pyaudi
+conda create --name dcgpy cmake boost-cpp eigen pagmo-devel tbb audi symengine obake-devel cxx-compiler pybind11 pybind11-abi python=3.8 sympy matplotlib clang ninja pygmo pyaudi
 conda activate dcgpy
 
 # Define environment variables for clang ...
