@@ -21,8 +21,8 @@ source activate $deps_dir
 mkdir build
 cd build
 
-# GCC build. The -lrt flag seems a necessary addition when using conda compilers installed via cxx-compiler
-LDFLAGS="-lrt ${LDFLAGS}"; cmake \
+# Clang build
+CXX=clang++ CC=clang cmake \
     -DBoost_NO_BOOST_CMAKE=ON \
     -DCMAKE_BUILD_TYPE=Debug \
     -DCMAKE_INSTALL_PREFIX=$deps_dir \
