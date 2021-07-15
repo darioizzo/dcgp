@@ -120,7 +120,7 @@ public:
      *
      * @return The value of the output (an std::vector)
      */
-    std::vector<T> operator()(const std::vector<T> &in) const
+    std::vector<T> operator()(const std::vector<T> &in) const override
     {
         if (in.size() != this->get_n()) {
             throw std::invalid_argument("Input size is incompatible");
@@ -159,7 +159,7 @@ public:
      *
      * @return The symbolic value of the output (an std::vector)
      */
-    std::vector<std::string> operator()(const std::vector<std::string> &in) const
+    std::vector<std::string> operator()(const std::vector<std::string> &in) const override
     {
         if (in.size() != this->get_n()) {
             throw std::invalid_argument("Input size is incompatible");

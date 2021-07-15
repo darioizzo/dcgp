@@ -30,7 +30,7 @@ def _dcgpann_visualize(self, show_connections = True, fill_color = 'w', active_c
     except ImportError:
         print("Failed to import the required module matplotlib")
         raise
-        
+
     try:
         import numpy as np
     except ImportError:
@@ -39,7 +39,7 @@ def _dcgpann_visualize(self, show_connections = True, fill_color = 'w', active_c
 
     # We prepare the plot
     if axes is None:
-        fig, ax = plt.subplots() 
+        fig, ax = plt.subplots()
     else:
         ax = axes
     plt.axis('off')
@@ -61,9 +61,10 @@ def _dcgpann_visualize(self, show_connections = True, fill_color = 'w', active_c
     x = self.get()
 
     # Grid parameters: dr is the separation between rows and dc between columns. radius is the neuron radius
-    dr = 1./(r-1)
-    dc = 1./(c-1)
-    radius = 1./max(r,c)/4.
+    dr = 1./(max(r,n)-1)
+    dc = 1./(c-1) if c > 1 else 1.
+
+    radius = 1. / max(n,r,c) / 4.
 
     # pos will hold the nodes poistions
     pos = {}
@@ -76,16 +77,22 @@ def _dcgpann_visualize(self, show_connections = True, fill_color = 'w', active_c
             pos[nodeid] = [xpos + dc*col, ypos - dr*row]
             nodeid+=1
     # Input nodes positions
-    xpos = - dc 
+    xpos = - dc
     ypos = 0
-    offset = (1. - (n-1) * dr) / 2.
+    if r < n:
+        offset = (1. - (r-1) * dr) / 2.
+    else:
+        offset = (1. - (n-1) * dr) / 2.
     for inp in range(n):
-            pos[inp] = [xpos, ypos + dr*inp + offset]
+        pos[inp] = [xpos, ypos + dr*inp + offset]
     # Output nodes positions
-    xpos = 1 + dc 
-    offset = (1. - (m-1) * dr) / 2.
+    xpos = 1 + dc
+    if m < max(n, r):
+        offset = (1. - (1 - max(n,r) + r) * dr) / 2.
+    else:
+        offset = (1. - (m-1) * dr) / 2.
     for inp in range(m):
-            pos[n+r*c+inp] = [xpos, ypos + (dr*(m-1)) + offset - dr*inp]      
+        pos[n+r*c+inp] = [xpos, ypos + (dr*(m-1)) + offset - dr*inp]
 
     # ------------------------------_HERE WE PLOT -----------------------------------------------
     if show_connections:
@@ -101,7 +108,7 @@ def _dcgpann_visualize(self, show_connections = True, fill_color = 'w', active_c
                 elif show_inactive:
                     alpha = inactive_connection_alpha
                     ax.plot([pos[node_id][0], pos[target_node][0]],[pos[node_id][1], pos[target_node][1]],alpha=alpha, color='k', zorder=-10)
-                
+
         # And the connections to the output
         for i in range(m):
             start = n+r*c
@@ -175,7 +182,7 @@ def _graphviz_visualize(self, in_sym = [], draw_inactive = True, draw_weights = 
     except ImportError:
         print("Failed to import the required module graphviz")
         raise
-    
+
 
     n = self.get_n()
 
@@ -195,7 +202,7 @@ def _graphviz_visualize(self, in_sym = [], draw_inactive = True, draw_weights = 
         is_active[active_nodes[i]] = True
 
     G = Digraph(graph_attr={'rankdir': 'LR'})
-    
+
     # force the nodes to be placed in the right ranks
     inputs = Digraph(graph_attr={'rank': 'same'})
     for i in range(n):

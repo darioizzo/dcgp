@@ -118,7 +118,11 @@ BOOST_AUTO_TEST_CASE(fitness_test_two_obj)
                   - static_cast<decltype(string.length())>(std::count(string.begin(), string.end(), ' '))
                   - 2u; // no spaces and no [] parenthesis
         auto l2 = udp.pretty(pop.get_x()[i]).length() - 2u;
-        BOOST_CHECK_EQUAL(std::min(l1, l2), pop.get_f()[i][1]);
+        if (std::isfinite(pop.get_f()[i][0])) {
+            BOOST_CHECK_EQUAL(std::min(l1, l2), pop.get_f()[i][1]);
+        } else {
+            BOOST_CHECK_EQUAL(l2, pop.get_f()[i][1]);
+        }
     }
 }
 

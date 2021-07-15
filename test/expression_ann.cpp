@@ -21,7 +21,7 @@ void test_against_numerical_derivatives(unsigned n, unsigned m, unsigned r, unsi
     std::normal_distribution<> norm{0., 1.};
     std::uniform_int_distribution<unsigned> random_seed(2, 1654636360u);
     // Kernel functions
-    kernel_set<double> ann_set({"sig", "tanh", "ReLu", "ELU", "ISRU", "sum"});
+    kernel_set<double> ann_set({"sig", "tanh", "ReLu", "ELU", "ISRU", "sum", "sin_nu", "cos_nu", "gaussian_nu", "step", "inv_sum", "ISRU", "sum"});
     // a random dCGPANN
     expression_ann ex(n, m, r, c, lb, arity, ann_set(), random_seed(gen));
     // Since weights and biases are, by default, set to ones, we randomize them
@@ -288,7 +288,7 @@ BOOST_AUTO_TEST_CASE(d_loss)
     test_against_numerical_derivatives(3, 4, 6, 6, 1, {6, 6, 6, 6, 6, 6}, random_seed(gen), loss_t::MSE);
 
     // higher dimensions
-    test_against_numerical_derivatives(10, 13, 100, 1, 1, {45}, random_seed(gen), loss_t::MSE);
+    test_against_numerical_derivatives(100, 100, 100, 1, 1, {45}, random_seed(gen), loss_t::MSE);
     test_against_numerical_derivatives(3, 2, 100, 1, 1, {23}, random_seed(gen), loss_t::MSE);
 
     // Checks on Cross - entropy

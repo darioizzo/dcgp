@@ -7,6 +7,7 @@
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/y/darioizzo/dcgp?style=for-the-badge)
 
 [![DOI](https://zenodo.org/badge/38923383.svg)](https://zenodo.org/badge/latestdoi/38923383)
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.02290/status.svg)](https://doi.org/10.21105/joss.02290)
 
 # dCGP
 Implementation of differentiable Cartesian Genetic Programming (dCGP)
@@ -18,13 +19,17 @@ The dCGP is a development in the field of Genetic Programming that adds the info
  * Prime integrals of motion can be represented by a dCGP and learned
  * Symbolic regression tasks can learn ephemeral constants using backprop or even higher order methods.
  
-The first research paper describing dCGP use to solve symbolic regressions problems such is:
+Please quote the use of differentiable Cartesian Programming as:
 
 Izzo, Dario, Francesco Biscani, and Alessio Mereta. "Differentiable Genetic Programming." arXiv preprint arXiv:1611.04766 (2016).
 
+Please quote the use of the software here provided as:
+
+Izzo, Dario, Francesco Biscani (2020). dcgp: Differentiable Cartesian Genetic Programming made easy. Journal of Open Source Software, 5(51), 2290, https://doi.org/10.21105/joss.02290
+
 Preliminary documentation can be found at http://darioizzo.github.io/dcgp/
 
-A web based version of dCGP can be found here: https://esa.github.io/dcgp-web/ thanks to Mike Heddes!
+A web based version of an early dCGP version can be found here: https://esa.github.io/dcgp-web/ thanks to Mike Heddes!
 
 Installation guide
 ==================
@@ -40,6 +45,18 @@ dCGP is a header-only library which has the following third party dependencies:
 * [tbb](https://github.com/intel/tbb), lets you easily write parallel C++ programs that take full advantage of multicore performance (>=2020.1).
 * [AuDi](http://darioizzo.github.io/audi/), high order automated differentiation library (>=1.8).
 * [Symengine](https://github.com/symengine/symengine), symbolic manipulation of math expressions (>=0.6).
+
+In case you plan to use the package manager ``conda`` to install the necessary dependencies, the following packages will be required: 
+
+```
+boost-cpp, eigen, pagmo-devel, tbb, audi, symengine, obake-devel
+```
+while we also suggest to install:
+```
+cmake, cxx-compiler
+```
+
+------------------------------------------------------------
 
 After making sure the dependencies above are installed and found in your system, you may download
 the latest dCGP code via git:
@@ -135,3 +152,19 @@ If all below statements are true:
  * You do not care about thread-safety
 
 then you should consider using, instead, Andrew Turner's CGP-Library (http://www.cgplibrary.co.uk/files2/About-txt.html) which is, roughly, twice as fast to compute a CGP expression as it makes use of function pointers rather than a type-erased function wrapper to define the kernel functions.
+
+## Community guidelines
+
+### Report bugs
+
+Please submit any bugs as an issue to https://github.com/darioizzo/dcgp/issues.
+
+It would be greatly appreciated if the issue templates we provide can be used.
+
+### Contributing
+
+If anyone wishes to contribute to this project, please submit early on a pull request marked as "(WIP) - pull request title". We will be then discussing 
+how to implement the desired functionality directly on the PR.
+
+A guide on how to submit pull requests can be found on
+https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request.
