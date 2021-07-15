@@ -10,8 +10,22 @@
 #include <pagmo/population.hpp>
 #include <pagmo/problem.hpp>
 #include <pagmo/types.hpp>
-#include <symengine/expression.h>
 #include <vector>
+
+// patch to make this compile in clang-cl
+#if defined(_MSC_VER) && defined(__clang__)
+#define and &&
+#define or ||
+#define not !
+#endif
+
+#include <symengine/expression.h>
+
+#if defined(_MSC_VER) && defined(__clang__)
+#undef and
+#undef or
+#undef not
+#endif
 
 #include <dcgp/expression.hpp>
 #include <dcgp/kernel_set.hpp>

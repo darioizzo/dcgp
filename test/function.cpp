@@ -42,13 +42,16 @@ BOOST_AUTO_TEST_CASE(function_basic_tests)
     function<void()> f1;
     BOOST_CHECK(f1.is_valid());
     BOOST_CHECK(f1.is<void (*)()>());
+// Workaround for a possible bug in MSVC
+#if !defined(_MSC_VER) || defined(__clang__)
     BOOST_CHECK(!f1.is<void (*)(int)>());
-    BOOST_CHECK(static_cast<const function<void()> &>(f1).extract<void (*)()>() != nullptr);
     BOOST_CHECK(static_cast<const function<void()> &>(f1).extract<void (*)(int)>() == nullptr);
+#endif
+    BOOST_CHECK(static_cast<const function<void()> &>(f1).extract<void (*)()>() != nullptr);
     BOOST_CHECK_EXCEPTION(f1(), std::runtime_error, [](const std::runtime_error &re) {
         return boost::contains(
             re.what(),
-            "This dcp::function object cannot be invoked because it contains a null pointer to a C++ function");
+            "This dcgp::function object cannot be invoked because it contains a null pointer to a C++ function");
     });
     BOOST_CHECK(f1.get_thread_safety() == pagmo::thread_safety::basic);
 
@@ -56,13 +59,15 @@ BOOST_AUTO_TEST_CASE(function_basic_tests)
     auto f1_copy(f1);
     BOOST_CHECK(f1_copy.is_valid());
     BOOST_CHECK(f1_copy.is<void (*)()>());
+#if !defined(_MSC_VER) || defined(__clang__)
     BOOST_CHECK(!f1_copy.is<void (*)(int)>());
-    BOOST_CHECK(static_cast<const function<void()> &>(f1_copy).extract<void (*)()>() != nullptr);
     BOOST_CHECK(static_cast<const function<void()> &>(f1_copy).extract<void (*)(int)>() == nullptr);
+#endif
+    BOOST_CHECK(static_cast<const function<void()> &>(f1_copy).extract<void (*)()>() != nullptr);
     BOOST_CHECK_EXCEPTION(f1_copy(), std::runtime_error, [](const std::runtime_error &re) {
         return boost::contains(
             re.what(),
-            "This dcp::function object cannot be invoked because it contains a null pointer to a C++ function");
+            "This dcgp::function object cannot be invoked because it contains a null pointer to a C++ function");
     });
     BOOST_CHECK(f1_copy.get_thread_safety() == pagmo::thread_safety::basic);
 
@@ -70,13 +75,15 @@ BOOST_AUTO_TEST_CASE(function_basic_tests)
     auto f1_move(std::move(f1_copy));
     BOOST_CHECK(f1_move.is_valid());
     BOOST_CHECK(f1_move.is<void (*)()>());
+#if !defined(_MSC_VER) || defined(__clang__)
     BOOST_CHECK(!f1_move.is<void (*)(int)>());
-    BOOST_CHECK(static_cast<const function<void()> &>(f1_move).extract<void (*)()>() != nullptr);
     BOOST_CHECK(static_cast<const function<void()> &>(f1_move).extract<void (*)(int)>() == nullptr);
+#endif
+    BOOST_CHECK(static_cast<const function<void()> &>(f1_move).extract<void (*)()>() != nullptr);
     BOOST_CHECK_EXCEPTION(f1_move(), std::runtime_error, [](const std::runtime_error &re) {
         return boost::contains(
             re.what(),
-            "This dcp::function object cannot be invoked because it contains a null pointer to a C++ function");
+            "This dcgp::function object cannot be invoked because it contains a null pointer to a C++ function");
     });
     BOOST_CHECK(f1_move.get_thread_safety() == pagmo::thread_safety::basic);
     BOOST_CHECK(!f1_copy.is_valid());
@@ -85,13 +92,15 @@ BOOST_AUTO_TEST_CASE(function_basic_tests)
     f1_copy = f1_move;
     BOOST_CHECK(f1_copy.is_valid());
     BOOST_CHECK(f1_copy.is<void (*)()>());
+#if !defined(_MSC_VER) || defined(__clang__)
     BOOST_CHECK(!f1_copy.is<void (*)(int)>());
-    BOOST_CHECK(static_cast<const function<void()> &>(f1_copy).extract<void (*)()>() != nullptr);
     BOOST_CHECK(static_cast<const function<void()> &>(f1_copy).extract<void (*)(int)>() == nullptr);
+#endif
+    BOOST_CHECK(static_cast<const function<void()> &>(f1_copy).extract<void (*)()>() != nullptr);
     BOOST_CHECK_EXCEPTION(f1_copy(), std::runtime_error, [](const std::runtime_error &re) {
         return boost::contains(
             re.what(),
-            "This dcp::function object cannot be invoked because it contains a null pointer to a C++ function");
+            "This dcgp::function object cannot be invoked because it contains a null pointer to a C++ function");
     });
     BOOST_CHECK(f1_copy.get_thread_safety() == pagmo::thread_safety::basic);
 
@@ -99,13 +108,16 @@ BOOST_AUTO_TEST_CASE(function_basic_tests)
     f1_move = std::move(f1_copy);
     BOOST_CHECK(f1_move.is_valid());
     BOOST_CHECK(f1_move.is<void (*)()>());
+#if !defined(_MSC_VER) || defined(__clang__)
     BOOST_CHECK(!f1_move.is<void (*)(int)>());
-    BOOST_CHECK(static_cast<const function<void()> &>(f1_move).extract<void (*)()>() != nullptr);
     BOOST_CHECK(static_cast<const function<void()> &>(f1_move).extract<void (*)(int)>() == nullptr);
+#endif
+
+    BOOST_CHECK(static_cast<const function<void()> &>(f1_move).extract<void (*)()>() != nullptr);
     BOOST_CHECK_EXCEPTION(f1_move(), std::runtime_error, [](const std::runtime_error &re) {
         return boost::contains(
             re.what(),
-            "This dcp::function object cannot be invoked because it contains a null pointer to a C++ function");
+            "This dcgp::function object cannot be invoked because it contains a null pointer to a C++ function");
     });
     BOOST_CHECK(f1_move.get_thread_safety() == pagmo::thread_safety::basic);
     BOOST_CHECK(!f1_copy.is_valid());

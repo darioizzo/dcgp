@@ -201,7 +201,7 @@ public:
         auto ptr = extract<f_ptr>();
         if (ptr != nullptr && *ptr == nullptr) {
             throw std::runtime_error(
-                "This dcp::function object cannot be invoked because it contains a null pointer to a C++ function");
+                "This dcgp::function object cannot be invoked because it contains a null pointer to a C++ function");
         }
         return m_ptr->operator()(std::forward<Args>(args)...);
     }
