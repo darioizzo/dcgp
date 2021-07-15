@@ -14,7 +14,7 @@ bash miniconda.sh -b -p $HOME/miniconda
 conda config --add channels conda-forge
 conda config --set channel_priority strict
 conda_pkgs="cmake boost-cpp eigen pagmo-devel tbb audi symengine obake-devel cxx-compiler"
-conda create -y -q -p $deps_dir $conda_pkgs "<8" spdlog
+conda create -y -q -p $deps_dir $conda_pkgs
 source activate $deps_dir
 
 # Create the build dir and cd into it.
