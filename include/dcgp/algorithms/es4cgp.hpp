@@ -173,7 +173,7 @@ public:
             // 1 - We generate new NP individuals mutating the best and we write on the dvs for pagmo::bfe to evaluate
             // their fitnesses.
             for (decltype(NP) i = 0u; i < NP; ++i) {
-                cgp.set_from_range(best_x.begin() + n_eph, best_x.end());
+                cgp.set_from_range(best_x.begin() + static_cast<long>(n_eph), best_x.end());
                 cgp.mutate_random(dis(m_e));
                 std::vector<unsigned> mutated_x = cgp.get();
                 std::transform(mutated_x.begin(), mutated_x.end(), dvs.data() + i * dim + n_eph,
