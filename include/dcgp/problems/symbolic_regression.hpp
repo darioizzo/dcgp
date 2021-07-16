@@ -209,7 +209,7 @@ public:
             //}
             //// Here we define the formula complexity as the shortest between the two.
             //retval[1] = std::min(l_pretty, l_prettier);
-            retval[1] = m_cgp.get_active_genes().size();
+            retval[1] = static_cast<double>(m_cgp.get_active_genes().size());
         }
         return retval;
     }
