@@ -715,7 +715,7 @@ public:
             if (m_lb[idx] < m_ub[idx]) {
                 unsigned new_value;
                 do {
-                    new_value = std::uniform_int_distribution<>(m_lb[idx], m_ub[idx])(m_e);
+                    new_value = std::uniform_int_distribution<unsigned>(m_lb[idx], m_ub[idx])(m_e);
                 } while (new_value == m_x[idx]);
                 m_x[idx] = new_value;
                 flag = true;
