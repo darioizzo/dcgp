@@ -489,6 +489,23 @@ public:
         return m_cgp;
     }
 
+    /// Sets the inner CGP
+    /**
+     * The access to the inner CGP is offered in the public interface to allow evolve methods in UDAs
+     * to reuse the same object and perform mutations via it. 
+     */    
+    void set_cgp(const pagmo::vector_double &x) const
+    {
+        // We need to make a copy of the chromosome as to represents its genes as unsigned
+        std::vector<unsigned> xu(x.size() - m_n_eph);
+        std::transform(x.data() + m_n_eph, x.data() + x.size(), xu.data(),
+                       [](double a) { return boost::numeric_cast<unsigned>(a); });
+        m_cgp.set(xu);
+        // 2 - We set the floating point part as ephemeral constants.
+        std::vector<double> eph_val(x.data(), x.data() + m_n_eph);
+        m_cgp.set_eph_val(eph_val);
+    }
+
     /// Model predictions
     /**
      * Uses the model encoded in *x* to predict the label of *point*.
@@ -566,19 +583,6 @@ private:
             retval[i] = audi::gdual_v(pointsT[i]);
         }
         return retval;
-    }
-
-    // This setter can be marked const as m_cgp is mutable
-    void set_cgp(const pagmo::vector_double &x) const
-    {
-        // We need to make a copy of the chromosome as to represents its genes as unsigned
-        std::vector<unsigned> xu(x.size() - m_n_eph);
-        std::transform(x.data() + m_n_eph, x.data() + x.size(), xu.data(),
-                       [](double a) { return boost::numeric_cast<unsigned>(a); });
-        m_cgp.set(xu);
-        // 2 - We set the floating point part as ephemeral constants.
-        std::vector<double> eph_val(x.data(), x.data() + m_n_eph);
-        m_cgp.set_eph_val(eph_val);
     }
 
     void sanity_checks(unsigned &n, unsigned &m) const

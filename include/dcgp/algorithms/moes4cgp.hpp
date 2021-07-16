@@ -191,11 +191,7 @@ public:
                 }
             } else { // normal evaluation
                 for (decltype(NP) i = 0u; i < NP; ++i) {
-                    auto tmp_f = prob.fitness(dvs_v[i]);
-                    if (std::find(fs_v.begin(), fs_v.end(), tmp_f) == fs_v.end()
-                    && std::isfinite(tmp_f[0])) {
-                        fs_v[i] = tmp_f;
-                    }
+                    fs_v[i] = prob.fitness(dvs_v[i]);
                 }
             }
             for (decltype(NP) i = 0u; i < NP; ++i) {
