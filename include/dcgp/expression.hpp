@@ -711,7 +711,7 @@ public:
         for (auto i = 0u; i < N; ++i) {
             // If only one value is allowed for the gene, (lb==ub),
             // then we will not do anything as mutation does not apply
-            auto idx = std::uniform_int_distribution<decltype(m_x)::size_type>(0, m_lb.size() - 1)(m_e);
+            auto idx = std::uniform_int_distribution<std::vector<unsigned>::size_type>(0, m_lb.size() - 1)(m_e);
             if (m_lb[idx] < m_ub[idx]) {
                 unsigned new_value;
                 do {
