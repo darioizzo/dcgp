@@ -1,5 +1,7 @@
-[![Travis (.org)](https://img.shields.io/travis/darioizzo/dcgp?style=for-the-badge&logo=travis&branch=master)](https://travis-ci.org/darioizzo/dcgp)
-[![Azure DevOps builds](https://img.shields.io/azure-devops/build/darioizzo/c3218f2b-0cd5-476a-af68-5abe1e6a7c14/2?style=for-the-badge)](https://dev.azure.com/darioizzo/dcgp/_build)
+[![windows](https://github.com/darioizzo/dcgp/actions/workflows/windows.yml/badge.svg?branch=master)](https://github.com/darioizzo/dcgp/actions/workflows/windows.yml)
+[![linux](https://github.com/darioizzo/dcgp/actions/workflows/linux.yml/badge.svg?branch=master)](https://github.com/darioizzo/dcgp/actions/workflows/linux.yml)
+[![macos](https://github.com/darioizzo/dcgp/actions/workflows/macos.yml/badge.svg?branch=master)](https://github.com/darioizzo/dcgp/actions/workflows/macos.yml)
+
 [![PyPI](https://img.shields.io/pypi/v/dcgpy?style=for-the-badge)](https://pypi.python.org/pypi?:action=display&name=dcgpy&version=1.0.1)
 [![Conda (channel only)](https://img.shields.io/conda/vn/conda-forge/dcgp-python?style=for-the-badge)](https://anaconda.org/conda-forge/dcgp-python)
 
