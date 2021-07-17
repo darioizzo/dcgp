@@ -6,8 +6,22 @@
 #include <pagmo/io.hpp>
 #include <pagmo/population.hpp>
 #include <pagmo/problem.hpp>
-#include <symengine/expression.h>
 #include <vector>
+
+// patch to make this compile in clang-cl
+#if defined(_MSC_VER) && defined(__clang__)
+#define and &&
+#define or ||
+#define not !
+#endif
+
+#include <symengine/expression.h>
+
+#if defined(_MSC_VER) && defined(__clang__)
+#undef and
+#undef or
+#undef not
+#endif
 
 #include <dcgp/algorithms/es4cgp.hpp>
 #include <dcgp/gym.hpp>
@@ -74,5 +88,6 @@ int main(int ac, char *av[])
     pagmo::print("Prettier Formula: ", prettier, "\n");
     pagmo::print("Expanded Formula: ", SymEngine::expand(SymEngine::Expression(prettier)), "\n");
 
-    return false;
+    return 0;
 }
+
