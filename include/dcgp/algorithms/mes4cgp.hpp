@@ -140,6 +140,8 @@ public:
                        [](double a) { return boost::numeric_cast<unsigned>(a); });
         // The Hessian sparsity is defined here and it will not change.
         auto hs = prob.hessians_sparsity();
+        // Hessian 
+        Eigen::MatrixXd fullH;
         // (active) Hessian
         Eigen::MatrixXd H;
         // (active) Gradient
@@ -201,9 +203,9 @@ public:
                     std::vector<pagmo::vector_double::size_type> non_zero, zero;
                     for (decltype(grad.size()) j = 0u; j < grad.size(); ++j) {
                         if (grad[j] != 0.) {
-                            non_zero.emplace_back(j);
+                            non_zero.push_back(j);
                         } else {
-                            zero.emplace_back(j);
+                            zero.push_back(j);
                         }
                     }
                     auto n_non_zero = non_zero.size();
@@ -216,24 +218,32 @@ public:
                                 = mutated_x[i][non_zero[0]] - grad[non_zero[0]] / hess[0][non_zero[0]];
                         }
                     } else if (n_non_zero > 1u) {
-                        // The (active) Hessian stored in a square Eigen matrix. Rows and Cols
-                        // will be removed later so that size will be n_non_zero x n_non_zero
-                        H = Eigen::MatrixXd::Zero(_(n_eph), _(n_eph));
+                        // The full Hessian
+                        fullH = Eigen::MatrixXd::Zero(_(n_eph), _(n_eph));
+                        // (active) Hessian
+                        H = Eigen::MatrixXd::Zero(_(n_non_zero), _(n_non_zero));
                         // (active) Gradient stored in a column vector
                         G = Eigen::MatrixXd::Zero(_(n_non_zero), 1u);
                         // (active) Constants stored in a column vector
                         C = Eigen::MatrixXd::Zero(_(n_non_zero), 1u);
                         // We construct the hessian including all the zero elements
                         for (decltype(hess[0].size()) j = 0u; j < hess[0].size(); ++j) {
-                            H(_(hs[0][j].first), _(hs[0][j].second)) = hess[0][j];
-                            H(_(hs[0][j].second), _(hs[0][j].first)) = hess[0][j];
+                            fullH(_(hs[0][j].first), _(hs[0][j].second)) = hess[0][j];
+                            fullH(_(hs[0][j].second), _(hs[0][j].first)) = hess[0][j];
                         }
-                        // We remove the rows and columns corresponding to ephemeral constants not
-                        // in the expression
-                        for (decltype(zero.size()) j = 0u; j < zero.size(); ++j) {
-                            remove_row(H, non_zero[j] - j);
-                            remove_column(H, non_zero[j] - j);
+                        // The following nested fors loops copy into the active hessian all cols and rows tht are non zero, i.e.
+                        // corresponding to eph constants that actually are in the expression
+                        // Probably this can be coded more efficiently using operations on rows and columns instead.
+                        decltype(non_zero.size()) new_row_idx = 0u;
+                        for (decltype(non_zero.size()) row_idx = 0u; row_idx < non_zero.size(); ++row_idx) {
+                            decltype(non_zero.size()) new_col_idx = 0u;
+                            for (decltype(non_zero.size()) col_idx = 0u; col_idx < non_zero.size(); ++col_idx) {
+                                H(_(new_row_idx), _(new_col_idx)) = fullH(_(non_zero[row_idx]), _(non_zero[col_idx]));
+                                new_col_idx++;
+                            }
+                            new_row_idx++;
                         }
+
                         // We now construct the (active) gradient and the (active) constant column vectors.
                         for (decltype(n_non_zero) j = 0u; j < n_non_zero; ++j) {
                             G(_(j), 0) = grad[non_zero[j]];
@@ -399,29 +409,6 @@ public:
     }
 
 private:
-    static inline void remove_row(Eigen::MatrixXd &matrix, pagmo::vector_double::size_type row_to_remove)
-    {
-        Eigen::Index n_rows = matrix.rows() - 1u;
-        Eigen::Index n_cols = matrix.cols();
-
-        if (_(row_to_remove) < n_rows)
-            matrix.block(_(row_to_remove), 0, n_rows - _(row_to_remove), n_cols)
-                = matrix.block(_(row_to_remove) + 1, 0, n_rows - _(row_to_remove), n_cols);
-
-        matrix.conservativeResize(n_rows, n_cols);
-    }
-
-    static inline void remove_column(Eigen::MatrixXd &matrix, pagmo::vector_double::size_type col_to_remove)
-    {
-        Eigen::Index n_rows = matrix.rows();
-        Eigen::Index n_cols = matrix.cols() - 1u;
-
-        if (_(col_to_remove) < n_cols)
-            matrix.block(0, _(col_to_remove), n_rows, n_cols - _(col_to_remove))
-                = matrix.block(0, _(col_to_remove) + 1, n_rows, n_cols - _(col_to_remove));
-
-        matrix.conservativeResize(n_rows, n_cols);
-    }
     // Eigen stores indexes and sizes as signed types, while dCGP (and pagmo)
     // uses STL containers thus sizes and indexes are unsigned. To
     // make the conversion as painless as possible this template is provided
