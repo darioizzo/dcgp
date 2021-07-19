@@ -185,7 +185,7 @@ public:
                 // Use it to set the CGP
                 cgp.set(mutated_xu);
                 // Mutate the expression
-                cgp.mutate_active(n_active_mutations[i]);
+                cgp.mutate_random(n_active_mutations[i]);
                 mutated_xu = cgp.get();
                 // Put it back
                 std::transform(mutated_xu.begin(), mutated_xu.end(), mutated_x[i].data() + n_eph,
@@ -210,9 +210,10 @@ public:
                     std::vector<pagmo::vector_double::size_type> non_zero, zero;
                     for (decltype(grad.size()) j = 0u; j < grad.size(); ++j) {
                         if (grad[j] != 0.) {
-                            non_zero.emplace_back(j);
+                            non_zero.push_back(j);
                         } else {
-                            zero.emplace_back(j);
+                            // if the constant is inactive we reset it randomly in the mutant chromosome
+                            mutated_x[i][j] = std::uniform_real_distribution<double>(-10., 10.)(m_e);
                         }
                     }
                     auto n_non_zero = non_zero.size();

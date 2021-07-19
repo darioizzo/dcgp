@@ -23,7 +23,7 @@
 #undef not
 #endif
 
-#include <dcgp/algorithms/moes4cgp.hpp>
+#include <dcgp/algorithms/momes4cgp.hpp>
 #include <dcgp/gym.hpp>
 #include <dcgp/kernel_set.hpp>
 #include <dcgp/problems/symbolic_regression.hpp>
@@ -44,7 +44,6 @@ int main(int ac, char *av[])
         "max_mut, m", po::value<unsigned>(&max_mut)->default_value(15u), "maximum number of mutations allowed")(
         "n_eph, c", po::value<unsigned>(&n_eph)->default_value(3u), "number of constants in the expression")(
         "verbosity, v", po::value<unsigned>(&verbosity)->default_value(500u), "the screen frequency")(
-        "bfe, b", po::bool_switch(&bfe), "activates the parallel batch evaluator (for large populations)")(
         "pop_size, p", po::value<unsigned>(&pop_size)->default_value(4u), "population size");
 
     po::variables_map vm;
@@ -76,10 +75,7 @@ int main(int ac, char *av[])
     }
 
     // And we define an evolutionary startegy
-    dcgp::moes4cgp uda(gen, max_mut, 1e-8, true);
-    if (bfe) {
-        uda.set_bfe(pagmo::bfe{});
-    }
+    dcgp::momes4cgp uda(gen, max_mut, 1e-8);
     pagmo::algorithm algo{uda};
     algo.set_verbosity(verbosity);
 

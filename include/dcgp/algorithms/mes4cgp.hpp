@@ -175,7 +175,7 @@ public:
             std::vector<pagmo::vector_double> mutated_f(NP, best_f);
             for (decltype(NP) i = 0u; i < NP; ++i) {
                 cgp.set(best_xu);
-                cgp.mutate_active(dis(m_e));
+                cgp.mutate_random(dis(m_e));
                 std::vector<unsigned> mutated_xu = cgp.get();
                 std::transform(mutated_xu.begin(), mutated_xu.end(), mutated_x[i].data() + n_eph,
                                [](unsigned a) { return boost::numeric_cast<double>(a); });
@@ -205,7 +205,8 @@ public:
                         if (grad[j] != 0.) {
                             non_zero.push_back(j);
                         } else {
-                            zero.push_back(j);
+                            // if the constant is inactive we reset it randomly in the best chromosome
+                            best_x[j] = std::uniform_real_distribution<double>(-10., 10.)(m_e);
                         }
                     }
                     auto n_non_zero = non_zero.size();
