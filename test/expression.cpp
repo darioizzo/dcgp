@@ -372,7 +372,6 @@ BOOST_AUTO_TEST_CASE(ephemeral_constants_test)
     {
         kernel_set<double> basic_set({"sum", "diff", "mul", "div"});
         expression<double> ex(2, 2, 1, 10, 11, 2, basic_set(), 2u, 123u);
-        BOOST_CHECK((ex.get_eph_val() == std::vector<double>{1., 2.}));
         ex.set_eph_val({3.1, -1.2});
         BOOST_CHECK((ex.get_eph_val() == std::vector<double>{3.1, -1.2}));
         BOOST_CHECK((ex.get_eph_symb() == std::vector<std::string>{"c1", "c2"}));

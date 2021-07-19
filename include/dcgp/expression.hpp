@@ -138,11 +138,11 @@ public:
         for (auto i = 0u; i < m_x.size(); ++i) {
             m_x[i] = std::uniform_int_distribution<unsigned>(m_lb[i], m_ub[i])(m_e);
         }
-        // We init the ephemeral constants with 1, 2, 3, 4, 5 ...
-        for (auto i = 1u; i <= n_eph; ++i) {
-            m_eph_val.push_back(static_cast<T>(i));
+        // We init the ephemeral constants in [-10, 10]
+        for (auto i = 0u; i < n_eph; ++i) {
+            m_eph_val.push_back(static_cast<T>(std::uniform_real_distribution<double>(-10., 10.)(m_e)));
         }
-        // We init the ephemeral constants with c1, c2, c3, c4, c5 ...
+        // We init the ephemeral constants with c1,c2,c3,c4,c5 ...
         for (auto i = 1u; i <= n_eph; ++i) {
             m_eph_symb.emplace_back("c" + std::to_string(i));
         }

@@ -40,7 +40,7 @@ int main(int ac, char *av[])
     bool bfe;
     po::options_description desc("Allowed options");
     desc.add_options()("help, h", "produce help message")(
-        "generations, g", po::value<unsigned>(&gen)->default_value(10000u), "number of generations")(
+        "gen, g", po::value<unsigned>(&gen)->default_value(10000u), "number of generations")(
         "max_mut, m", po::value<unsigned>(&max_mut)->default_value(15u), "maximum number of mutations allowed")(
         "n_eph, c", po::value<unsigned>(&n_eph)->default_value(3u), "number of constants in the expression")(
         "verbosity, v", po::value<unsigned>(&verbosity)->default_value(500u), "the screen frequency")(

@@ -125,12 +125,19 @@ public:
         auto cgp = udp_ptr->get_cgp();
         // How many ephemeral constants?
         auto n_eph = prob.get_ncx();
-        // The hessian will be stored in a square Eigen for inversion
-        Eigen::MatrixXd H = Eigen::MatrixXd::Zero(_(n_eph), _(n_eph));
-        // Gradient and Constants will be stored in these column vectors
-        Eigen::MatrixXd G = Eigen::MatrixXd::Zero(_(n_eph), 1);
-        Eigen::MatrixXd C = Eigen::MatrixXd::Zero(_(n_eph), 1);
+        // The Hessian sparsity is defined here and it will not change.
         auto hs = prob.hessians_sparsity();
+        // Hessian 
+        Eigen::MatrixXd fullH;
+        // (active) Hessian
+        Eigen::MatrixXd H;
+        // (active) Gradient
+        Eigen::MatrixXd G;
+        // (active) Constants
+        Eigen::MatrixXd C;
+        // Full pivoting LU decomposition to check that H is invertible, find the inverse
+        // and see if H is positive definite
+        Eigen::FullPivLU<Eigen::MatrixXd> fullpivlu;
 
         // Main loop
         for (decltype(m_gen) gen = 1u; gen <= m_gen; ++gen) {
@@ -178,7 +185,7 @@ public:
                 // Use it to set the CGP
                 cgp.set(mutated_xu);
                 // Mutate the expression
-                cgp.mutate_active(n_active_mutations[i]);
+                cgp.mutate_random(n_active_mutations[i]);
                 mutated_xu = cgp.get();
                 // Put it back
                 std::transform(mutated_xu.begin(), mutated_xu.end(), mutated_x[i].data() + n_eph,
@@ -203,9 +210,10 @@ public:
                     std::vector<pagmo::vector_double::size_type> non_zero, zero;
                     for (decltype(grad.size()) j = 0u; j < grad.size(); ++j) {
                         if (grad[j] != 0.) {
-                            non_zero.emplace_back(j);
+                            non_zero.push_back(j);
                         } else {
-                            zero.emplace_back(j);
+                            // if the constant is inactive we reset it randomly in the mutant chromosome
+                            mutated_x[i][j] = std::uniform_real_distribution<double>(-10., 10.)(m_e);
                         }
                     }
                     auto n_non_zero = non_zero.size();
@@ -218,27 +226,32 @@ public:
                                 = mutated_x[i][non_zero[0]] - grad[non_zero[0]] / hess[0][non_zero[0]];
                         }
                     } else if (n_non_zero > 1u) {
-                        // The (active) Hessian stored in a square Eigen matrix. Rows and Cols
-                        // will be removed later so that size will be n_non_zero x n_non_zero
-                        H = Eigen::MatrixXd::Zero(_(n_eph), _(n_eph));
+                        // The full Hessian
+                        fullH = Eigen::MatrixXd::Zero(_(n_eph), _(n_eph));
+                        // (active) Hessian
+                        H = Eigen::MatrixXd::Zero(_(n_non_zero), _(n_non_zero));
                         // (active) Gradient stored in a column vector
                         G = Eigen::MatrixXd::Zero(_(n_non_zero), 1u);
                         // (active) Constants stored in a column vector
                         C = Eigen::MatrixXd::Zero(_(n_non_zero), 1u);
-                        // Full pivoting LU decomposition to check that H is invertible, find the inverse
-                        // and see if H is positive definite
-                        Eigen::FullPivLU<Eigen::MatrixXd> fullpivlu;
                         // We construct the hessian including all the zero elements
                         for (decltype(hess[0].size()) j = 0u; j < hess[0].size(); ++j) {
-                            H(_(hs[0][j].first), _(hs[0][j].second)) = hess[0][j];
-                            H(_(hs[0][j].second), _(hs[0][j].first)) = hess[0][j];
+                            fullH(_(hs[0][j].first), _(hs[0][j].second)) = hess[0][j];
+                            fullH(_(hs[0][j].second), _(hs[0][j].first)) = hess[0][j];
                         }
-                        // We remove the rows and columns corresponding to ephemeral constants not
-                        // in the expression
-                        for (decltype(zero.size()) j = 0u; j < zero.size(); ++j) {
-                            remove_row(H, non_zero[j] - j);
-                            remove_column(H, non_zero[j] - j);
+                        // The following nested fors loops copy into the active hessian all cols and rows tht are non zero, i.e.
+                        // corresponding to eph constants that actually are in the expression
+                        // Probably this can be coded more efficiently using operations on rows and columns instead.
+                        decltype(non_zero.size()) new_row_idx = 0u;
+                        for (decltype(non_zero.size()) row_idx = 0u; row_idx < non_zero.size(); ++row_idx) {
+                            decltype(non_zero.size()) new_col_idx = 0u;
+                            for (decltype(non_zero.size()) col_idx = 0u; col_idx < non_zero.size(); ++col_idx) {
+                                H(_(new_row_idx), _(new_col_idx)) = fullH(_(non_zero[row_idx]), _(non_zero[col_idx]));
+                                new_col_idx++;
+                            }
+                            new_row_idx++;
                         }
+
                         // We now construct the (active) gradient and the (active) constant column vectors.
                         for (decltype(n_non_zero) j = 0u; j < n_non_zero; ++j) {
                             G(_(j), 0) = grad[non_zero[j]];

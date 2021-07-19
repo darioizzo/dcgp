@@ -18,6 +18,8 @@ ADD_EXAMPLE(symbolic_regression_4)
 # UDAs
 ADD_EXAMPLE(es4cgp)
 ADD_EXAMPLE(moes4cgp)
+ADD_EXAMPLE(mes4cgp)
+ADD_EXAMPLE(momes4cgp)
 
 
 # Solving differential equations examples
