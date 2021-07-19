@@ -226,7 +226,6 @@ class test_expression(_ut.TestCase):
                         n_eph=2,
                         seed=33)
         # Ephemeral value attributes tests
-        self.assertEqual(ex.eph_val, [1, 2])
         self.assertEqual(ex.eph_symb, ["c1", "c2"])
         ex.eph_val = [-0.2, 0.3]
         self.assertEqual(ex.eph_val, [-0.2, 0.3])
