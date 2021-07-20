@@ -562,7 +562,7 @@ private:
     static inline double collapse(const audi::vectorized<double> &vec)
     {
         return std::accumulate(vec.begin(), vec.end(), 0.) / static_cast<double>(vec.size());
-    };
+    }
 
     // Transpose of a vector vector
     static inline std::vector<std::vector<double>> transpose(const std::vector<std::vector<double>> &points)

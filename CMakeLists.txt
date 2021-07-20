@@ -134,8 +134,10 @@ if(YACMA_COMPILER_IS_MSVC)
       "-Wno-unused-template"
       "-Wno-unused-macros"
       "-Wno-extra-semi-stmt"
-      "-Wno-c++98-compat")
-    list(APPEND DCGP_CXX_FLAGS_DEBUG ${_DCGP_CLANG_CL_DISABLED_WARNINGS})
+      "-Wno-c++98-compat"
+      "-Wno-microsoft-cpp-macro")
+    
+      list(APPEND DCGP_CXX_FLAGS_DEBUG ${_DCGP_CLANG_CL_DISABLED_WARNINGS})
     list(APPEND DCGP_CXX_FLAGS_RELEASE ${_DCGP_CLANG_CL_DISABLED_WARNINGS})
     unset(_DCGP_CLANG_CL_DISABLED_WARNINGS)
   endif()
