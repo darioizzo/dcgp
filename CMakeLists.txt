@@ -171,9 +171,6 @@ if(DCGP_BUILD_DCGPY)
 
     # NOTE: for the time being, require that dcgp/dcgpy versions are matching exactly.
     find_package(dcgp ${DCGP_PROJECT_VERSION} EXACT REQUIRED)
-
-    # Internal variable that will be used to tell DCGPFindBoost to locate Boost.Python.
-    set(_DCGP_FIND_BOOST_PYTHON TRUE)
 endif()
 
 # Boost setup (common to dcgp/dcgpy).

@@ -393,6 +393,56 @@ BOOST_AUTO_TEST_CASE(ephemeral_constants_test)
     }
 }
 
+std::vector<double> my_pc(const std::vector<double> &x, const std::vector<double> &g)
+{
+    std::vector<double> retval(4, 0);
+    retval[0] = g[0] * x[0];
+    retval[1] = g[1] * x[0] * x[1];
+    retval[2] = g[2] * x[1];
+    retval[3] = g[3] + x[0] * x[1];
+    return retval;
+}
+
+std::vector<double> my_pc2(const std::vector<double> &x, const std::vector<double> &g)
+{
+    std::vector<double> retval(1, 0);
+    retval[0] = g[0] * x[0] * x[1] * x[2] * x[3];
+    return retval;
+}
+
+BOOST_AUTO_TEST_CASE(phenotype_correction)
+{
+    // Random seed
+    std::random_device rd;
+
+    kernel_set<double> basic_set({"sum", "diff", "mul", "div"});
+
+    /// Testing over Miller's test case from the PPSN 2014 tutorial
+    expression<double> ex1(2, 4, 2, 3, 4, 2, basic_set(), 0u, rd());
+    // Test setter and values
+    ex1.set({0, 0, 1, 1, 0, 0, 1, 3, 1, 2, 0, 1, 0, 4, 4, 2, 5, 4, 2, 5, 7, 3});
+    ex1.set_phenotype_correction(my_pc);
+    CHECK_EQUAL_V(ex1({1., -1.}), std::vector<double>({0 * 1., -1 * 1. * -1., -1. * -1., 0 + -1.}));
+    CHECK_CLOSE_V(
+        ex1({-.123, 2.345}),
+        std::vector<double>({2.222 * -.123, -0.288435 * -.123 * 2.345, 0.676380075 * 2.345, 0 - 2.345 * 0.123}), 1e-8);
+    // Test the unsetter
+    ex1.unset_phenotype_correction();
+    CHECK_EQUAL_V(ex1({1., -1.}), std::vector<double>({0, -1, -1, 0}));
+    CHECK_CLOSE_V(ex1({-.123, 2.345}), std::vector<double>({2.222, -0.288435, 0.676380075, 0}), 1e-8);
+
+    /// Testing over a single row program
+    dcgp::expression<double> ex2(4, 1, 1, 10, 10, 2, basic_set(), 0u, rd());
+    ex2.set({2, 3, 0, 0, 2, 2, 3, 0, 1, 1, 5,  4, 2, 6, 1, 0,
+             7, 7, 3, 6, 7, 1, 7, 6, 2, 4, 10, 2, 3, 2, 10}); ///(x/y)/(2z-(t*x))
+    ex2.set_phenotype_correction(my_pc2);
+    CHECK_CLOSE_V(ex2({2., 3., 4., -2.}), std::vector<double>({0.055555555555555552 * 2. * 3. * 4. * -2.}), 1e-8);
+    CHECK_EQUAL_V(ex2({-1., 1., -1., 1.}), std::vector<double>({1. * -1. * 1. * -1. * 1.}));
+    ex2.unset_phenotype_correction();
+    CHECK_CLOSE_V(ex2({2., 3., 4., -2.}), std::vector<double>({0.055555555555555552}), 1e-8);
+    CHECK_EQUAL_V(ex2({-1., 1., -1., 1.}), std::vector<double>({1}));
+}
+
 BOOST_AUTO_TEST_CASE(s11n_test)
 {
     // Random seed

@@ -47,6 +47,9 @@ private:
     using functor_enabler = typename std::enable_if<
         std::is_same<U, double>::value || is_gdual<T>::value || std::is_same<U, std::string>::value, int>::type;
 
+    // Phenotype Correction function type
+    using pc_type = std::function<std::vector<T> (const std::vector<T>&, const std::vector<T>&)>;
+
 public:
     /// Loss types
     enum class loss_type {
@@ -201,6 +204,9 @@ public:
         for (auto i = 0u; i < m_m; ++i) {
             retval[i] = node[m_x[m_x.size() - m_m + i]];
         }
+        if (m_phenotype_correction) {
+            retval = (*m_phenotype_correction)(point, retval);
+        }
         return retval;
     }
 
@@ -298,9 +304,6 @@ public:
         T retval(0.);
 
         auto outputs = this->operator()(point);
-        if (m_phenotype_correction) {
-            outputs = (*m_phenotype_correction)(point, outputs);
-        }
         switch (loss_e) {
             // Mean Square Error
             case loss_type::MSE: {
@@ -877,6 +880,21 @@ public:
         return (std::find(m_active_genes.begin(), m_active_genes.end(), idx) != m_active_genes.end());
     }
 
+    /// Sets the phenotype correction
+    /**
+     * @param b batch function evaluation object
+     */
+    void set_phenotype_correction(std::function<std::vector<T> (const std::vector<T>&, const std::vector<T>&)> pc)
+    {
+        // TODO:checks
+        m_phenotype_correction = pc;
+    }
+
+    /// Unsets the phenotype correction
+    void unset_phenotype_correction() {
+        m_phenotype_correction = boost::none;
+    }
+
     /// Overloaded stream operator
     /**
      * Will return a formatted string containing a human readable representation
@@ -1036,18 +1054,7 @@ protected:
         return retval;
     }
 
-    /// Sets the phenotype correction
-    /**
-     * @param b batch function evaluation object
-     */
-    void set_phenotype_correction(std::function<std::vector<T> (const std::vector<T>&, const std::vector<T>&)> pc)
-    {
-        m_phenotype_correction = pc;
-    }
 
-    void unset_phenotype_correction() {
-        m_phenotype_correction = boost::none;
-    }
 
 private:
     /// Validity of the CGP encoding
@@ -1216,7 +1223,7 @@ private:
     // The starting index in the chromosome of the genes expressing a node
     std::vector<unsigned> m_gene_idx;
     // The optional phenotype correction
-    boost::optional<std::function<std::vector<T> (const std::vector<T>&, const std::vector<T>&)>> m_phenotype_correction;
+    boost::optional<pc_type> m_phenotype_correction;
     // the random engine for the class
     detail::random_engine_type m_e;
     // The expression type
