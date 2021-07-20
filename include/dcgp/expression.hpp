@@ -15,6 +15,8 @@
 #include <tbb/parallel_for.h>
 #include <tbb/spin_mutex.h>
 
+#include <boost/optional.hpp>
+
 #include <dcgp/config.hpp>
 #include <dcgp/kernel.hpp>
 #include <dcgp/kernel_set.hpp>
@@ -296,6 +298,9 @@ public:
         T retval(0.);
 
         auto outputs = this->operator()(point);
+        if (m_phenotype_correction) {
+            outputs = (*m_phenotype_correction)(point, outputs);
+        }
         switch (loss_e) {
             // Mean Square Error
             case loss_type::MSE: {
@@ -1031,6 +1036,19 @@ protected:
         return retval;
     }
 
+    /// Sets the phenotype correction
+    /**
+     * @param b batch function evaluation object
+     */
+    void set_phenotype_correction(std::function<std::vector<T> (const std::vector<T>&, const std::vector<T>&)> pc)
+    {
+        m_phenotype_correction = pc;
+    }
+
+    void unset_phenotype_correction() {
+        m_phenotype_correction = boost::none;
+    }
+
 private:
     /// Validity of the CGP encoding
     /**
@@ -1197,6 +1215,8 @@ private:
     std::vector<unsigned> m_x;
     // The starting index in the chromosome of the genes expressing a node
     std::vector<unsigned> m_gene_idx;
+    // The optional phenotype correction
+    boost::optional<std::function<std::vector<T> (const std::vector<T>&, const std::vector<T>&)>> m_phenotype_correction;
     // the random engine for the class
     detail::random_engine_type m_e;
     // The expression type
