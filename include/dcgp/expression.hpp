@@ -150,7 +150,7 @@ public:
     }
 
     /// Virtual destructor
-    virtual ~expression(){};
+    virtual ~expression(){}
     // Defaults default copy ctor, copy assignment operator, move ctor and move assignment operator
     // are ok since all our members are trivial. They are needed to silence a warning since the destructor is present.
     /// Copy constructor
