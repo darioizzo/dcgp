@@ -200,12 +200,14 @@ public:
                 } else { // We have at least two ephemeral constants defined and thus need to deal with matrices.
                     // We find out how many epheremal constants are actually in expression
                     // collecting the indices of non-zero gradients
-                    std::vector<pagmo::vector_double::size_type> non_zero, zero;
+                    std::vector<pagmo::vector_double::size_type> non_zero;
                     for (decltype(grad.size()) j = 0u; j < grad.size(); ++j) {
                         if (grad[j] != 0.) {
                             non_zero.push_back(j);
                         } else {
-                            // if the constant is inactive we reset it randomly in the best chromosome
+                            // if the constant is inactive we reset it randomly in the mutant chromosome
+                            // this has effect on the evolution only if this mutatnt will become the best
+                            // (can thus be moved in the reinsertion for efficiency)
                             best_x[j] = std::uniform_real_distribution<double>(-10., 10.)(m_e);
                         }
                     }
