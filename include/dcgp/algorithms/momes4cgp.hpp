@@ -13,6 +13,8 @@
 #include <tuple>
 #include <vector>
 
+#include <tbb/global_control.h>
+
 #include <dcgp/problems/symbolic_regression.hpp>
 #include <dcgp/rng.hpp>
 #include <dcgp/s11n.hpp>
@@ -88,7 +90,10 @@ public:
      */
     pagmo::population evolve(pagmo::population pop) const
     {
-        const auto &prob = pop.get_problem();
+        // workaround to avoid unwanted threading
+        tbb::global_control c(tbb::global_control::max_allowed_parallelism, 1);
+	
+	const auto &prob = pop.get_problem();
         auto n_obj = prob.get_nobj();
         const auto bounds = prob.get_bounds();
         auto NP = pop.size();
