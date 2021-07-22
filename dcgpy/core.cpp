@@ -4,12 +4,22 @@
 
 #include <dcgp/problems/symbolic_regression.hpp>
 
+#include <boost/optional.hpp>
+
+#include <tbb/global_control.h>
+
+#include "docstrings.hpp"
 #include "expose_expressions.hpp"
 #include "expose_kernels.hpp"
 #include "expose_symbolic_regression.hpp"
 
+
 using namespace dcgpy;
 namespace py = pybind11;
+
+namespace {
+    boost::optional<tbb::global_control> thread_control; 
+}
 
 PYBIND11_MODULE(core, m)
 {
@@ -34,4 +44,8 @@ PYBIND11_MODULE(core, m)
         }
         return retval;
     };
+
+    m.def("disable_threading", [](){ thread_control.emplace(tbb::global_control::max_allowed_parallelism, 1); }, disable_threading_doc().c_str());
+    m.def("enable_threading", [](){ thread_control.reset(); }, enable_threading_doc().c_str());
+
 } // namespace details

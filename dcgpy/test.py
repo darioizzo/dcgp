@@ -548,7 +548,13 @@ class test_gd4cgp(_ut.TestCase):
         # Pickling.
         self.assertTrue(repr(algo) == repr(pickle.loads(pickle.dumps(algo))))
 
+class test_global_threading(_ut.TestCase):
+    def runTest(self):
+        from dcgpy import disable_threading, enable_threading
+        disable_threading()
+        enable_threading()
 
+ 
 def run_test_suite():
     """Run the full test suite.
     This function will raise an exception if at least one test fails.
@@ -563,6 +569,7 @@ def run_test_suite():
     suite.addTest(test_mes4cgp())
     suite.addTest(test_momes4cgp())
     suite.addTest(test_gd4cgp())
+    suite.addTest(test_global_threading())
 
     test_result = _ut.TextTestRunner(verbosity=2).run(suite)
     if len(test_result.failures) > 0 or len(test_result.errors) > 0:
