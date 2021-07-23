@@ -6,6 +6,13 @@ Changelog
 1.5.1 (Unreleased)
 ------------------
 
+* All UDAs, :class:`dcgpy.es4cgp`, :class:`dcgpy.mes4cgp`, 
+  :class:`dcgpy.moes4cgp`, :class:`dcgpy.momes4cgp` use random mutations rather than active mutations
+  to evolve expressions. This improves significantly the algorithm behaviour.
+* Bug fix when using a large number of ephemeral constants ... now udas crash is avoided
+* New :func:`dcgpy.enable_threading` and :func:`dcgpy.disable_threading` utilities 
+  allowing to switch off multithreding entirely. 
+
 1.5 (6/7/2020)
 -------------------
 
