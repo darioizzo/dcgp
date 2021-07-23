@@ -365,6 +365,10 @@ class test_es4cgp(_ut.TestCase):
         from dcgpy import symbolic_regression, generate_koza_quintic, kernel_set_double, es4cgp
         import pygmo as pg
         import pickle
+        # bypass issues appearing on large servers (OSError: Too many files open)
+        pg.mp_island.resize_pool(4)
+        pg.mp_bfe.resize_pool(4)
+
         X, Y = generate_koza_quintic()
         # Interface for the UDPs
         udp = symbolic_regression(
@@ -391,7 +395,8 @@ class test_es4cgp(_ut.TestCase):
         archi.evolve()
         archi.wait_check()
         # In parallel via bfe
-        uda.set_bfe(pg.bfe(pg.mp_bfe()))
+        bfe = pg.mp_bfe()
+        uda.set_bfe(pg.bfe(bfe))
         pop = uda.evolve(pop)
         self.assertTrue(repr(algo) == repr(pickle.loads(pickle.dumps(algo))))
 
@@ -400,6 +405,10 @@ class test_moes4cgp(_ut.TestCase):
         from dcgpy import symbolic_regression, generate_koza_quintic, kernel_set_double, moes4cgp
         import pygmo as pg
         import pickle
+        # bypass issues appearing on large servers (OSError: Too many files open)
+        pg.mp_island.resize_pool(4)
+        pg.mp_bfe.resize_pool(4)
+
         X, Y = generate_koza_quintic()
         # Interface for the UDPs
         udp = symbolic_regression(
@@ -436,6 +445,10 @@ class test_mes4cgp(_ut.TestCase):
         from dcgpy import symbolic_regression, generate_koza_quintic, kernel_set_double, mes4cgp
         import pygmo as pg
         import pickle
+        # bypass issues appearing on large servers (OSError: Too many files open)
+        pg.mp_island.resize_pool(4)
+        pg.mp_bfe.resize_pool(4)
+     
         X, Y = generate_koza_quintic()
         # Interface for the UDPs
         udp = symbolic_regression(
@@ -469,6 +482,10 @@ class test_momes4cgp(_ut.TestCase):
         from dcgpy import symbolic_regression, generate_koza_quintic, kernel_set_double, momes4cgp
         import pygmo as pg
         import pickle
+        # bypass issues appearing on large servers (OSError: Too many files open)
+        pg.mp_island.resize_pool(4)
+        pg.mp_bfe.resize_pool(4)
+  
         X, Y = generate_koza_quintic()
         # Interface for the UDPs
         udp = symbolic_regression(
@@ -531,7 +548,13 @@ class test_gd4cgp(_ut.TestCase):
         # Pickling.
         self.assertTrue(repr(algo) == repr(pickle.loads(pickle.dumps(algo))))
 
+class test_global_threading(_ut.TestCase):
+    def runTest(self):
+        from dcgpy import disable_threading, enable_threading
+        disable_threading()
+        enable_threading()
 
+ 
 def run_test_suite():
     """Run the full test suite.
     This function will raise an exception if at least one test fails.
@@ -546,6 +569,7 @@ def run_test_suite():
     suite.addTest(test_mes4cgp())
     suite.addTest(test_momes4cgp())
     suite.addTest(test_gd4cgp())
+    suite.addTest(test_global_threading())
 
     test_result = _ut.TextTestRunner(verbosity=2).run(suite)
     if len(test_result.failures) > 0 or len(test_result.errors) > 0:
