@@ -1,42 +1,46 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>expression (dCGP) &mdash; dCGP 1.5.1 documentation</title>
   
 
   
-  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+
   
   
 
   
-  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/language_data.js"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="expression_weighted (dCGP-W)" href="expression_weighted.html" />
@@ -84,6 +88,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -118,6 +123,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -152,11 +158,13 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../index.html">API documentation</a> &raquo;</li>
         
@@ -167,7 +175,7 @@
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="../../_sources/docs/cpp/expression.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -216,644 +224,654 @@ the class would operate in the differential algebra of truncated Taylor polynomi
 <p class="caption"><span class="caption-text">A dCGP expression</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
 </div>
 <dl class="cpp class">
-<dt id="_CPPv4I0EN4dcgp10expressionE">
-template&lt;typename <code class="sig-name descname">T</code>&gt;<br /><span class="target" id="classdcgp_1_1expression"></span><em class="property">class </em><code class="sig-prename descclassname">dcgp<code class="sig-prename descclassname">::</code></code><code class="sig-name descname">expression</code><a class="headerlink" href="#_CPPv4I0EN4dcgp10expressionE" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4I0EN4dcgp10expressionE">
+<span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="classdcgp_1_1expression"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">dcgp</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">expression</span></span></span><a class="headerlink" href="#_CPPv4I0EN4dcgp10expressionE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>A dCGP expression. </p>
 <p>This class represents a mathematical expression as encoded using CGP and contains algorithms to compute its value (numerical and symbolical) and its derivatives as well as to mutate the expression.</p>
-<p><dl class="simple">
-<dt><strong>Template Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">T</span></code>: expression type. Can be double, or a gdual type. </p></li>
-</ul>
+<p><dl class="field-list simple">
+<dt class="field-odd">tparam T</dt>
+<dd class="field-odd"><p>expression type. Can be double, or a gdual type. </p>
 </dd>
 </dl>
 </p>
 <p>Subclassed by <a class="reference internal" href="expression_weighted.html#classdcgp_1_1expression__weighted"><span class="std std-ref">dcgp::expression_weighted&lt; T &gt;</span></a></p>
 <div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric">Public Types</p>
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-types">Public Types</p>
 <dl class="cpp enum">
-<dt id="_CPPv4N4dcgp10expression9loss_typeE">
-<span class="target" id="classdcgp_1_1expression_1a217a58822d8dc23e141be010550c3e1b"></span><em class="property">enum </em><code class="sig-name descname">loss_type</code><a class="headerlink" href="#_CPPv4N4dcgp10expression9loss_typeE" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4dcgp10expression9loss_typeE">
+<span class="target" id="classdcgp_1_1expression_1a217a58822d8dc23e141be010550c3e1b"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">loss_type</span></span></span><a class="headerlink" href="#_CPPv4N4dcgp10expression9loss_typeE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Loss types. </p>
 <p><em>Values:</em></p>
 <dl class="cpp enumerator">
-<dt id="_CPPv4N4dcgp10expression9loss_type3MSEE">
-<span class="target" id="classdcgp_1_1expression_1a217a58822d8dc23e141be010550c3e1baa9fc1a03386ae38b64e06c8172994963"></span><em class="property">enumerator </em><code class="sig-name descname">MSE</code><a class="headerlink" href="#_CPPv4N4dcgp10expression9loss_type3MSEE" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4dcgp10expression9loss_type3MSEE">
+<span class="target" id="classdcgp_1_1expression_1a217a58822d8dc23e141be010550c3e1baa9fc1a03386ae38b64e06c8172994963"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">MSE</span></span></span><a class="headerlink" href="#_CPPv4N4dcgp10expression9loss_type3MSEE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Mean Squared Error. </p>
 </dd></dl>
 
 <dl class="cpp enumerator">
-<dt id="_CPPv4N4dcgp10expression9loss_type2CEE">
-<span class="target" id="classdcgp_1_1expression_1a217a58822d8dc23e141be010550c3e1ba7a86131338bf955e0a56311f264aa6aa"></span><em class="property">enumerator </em><code class="sig-name descname">CE</code><a class="headerlink" href="#_CPPv4N4dcgp10expression9loss_type2CEE" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4dcgp10expression9loss_type2CEE">
+<span class="target" id="classdcgp_1_1expression_1a217a58822d8dc23e141be010550c3e1ba7a86131338bf955e0a56311f264aa6aa"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">CE</span></span></span><a class="headerlink" href="#_CPPv4N4dcgp10expression9loss_type2CEE" title="Permalink to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 </div>
 <div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric">Public Functions</p>
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
 <dl class="cpp function">
-<dt id="_CPPv4N4dcgp10expression10expressionEjjjjjNSt6vectorIjEENSt6vectorI6kernelI1TEEEjj">
-<span class="target" id="classdcgp_1_1expression_1ad281f39bc2043d7f61fb306a036570ed"></span><code class="sig-name descname">expression</code><span class="sig-paren">(</span>unsigned <em>n</em>, unsigned <em>m</em>, unsigned <em>r</em>, unsigned <em>c</em>, unsigned <em>l</em>, std::vector&lt;unsigned&gt; <em>arity</em>, std::vector&lt;<a class="reference internal" href="kernel.html#_CPPv4I0EN4dcgp6kernelE" title="dcgp::kernel">kernel</a>&lt;<a class="reference internal" href="#_CPPv4I0EN4dcgp10expressionE" title="dcgp::expression::T">T</a>&gt;&gt; <em>f</em>, unsigned <em>n_eph</em>, unsigned <em>seed</em> = dcgp::random_device::next()<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10expression10expressionEjjjjjNSt6vectorIjEENSt6vectorI6kernelI1TEEEjj" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4dcgp10expression10expressionEjjjjjNSt6vectorIjEENSt6vectorI6kernelI1TEEEjj">
+<span class="target" id="classdcgp_1_1expression_1ad281f39bc2043d7f61fb306a036570ed"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">expression</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">n</span></span>, <span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">m</span></span>, <span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">r</span></span>, <span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">c</span></span>, <span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">l</span></span>, <span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">unsigned</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">arity</span></span>, <span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="kernel.html#_CPPv4I0EN4dcgp6kernelE" title="dcgp::kernel"><span class="n"><span class="pre">kernel</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0EN4dcgp10expressionE" title="dcgp::expression::T"><span class="n"><span class="pre">T</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">f</span></span>, <span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">n_eph</span></span>, <span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">seed</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">dcgp</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">random_device</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">next</span></span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">)</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10expression10expressionEjjjjjNSt6vectorIjEENSt6vectorI6kernelI1TEEEjj" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Constructor. </p>
 <p>Constructs a dCGP expression with variable arity</p>
-<p><dl class="simple">
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">n</span></code>: number of inputs (independent variables). </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">m</span></code>: number of outputs (dependent variables). </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">r</span></code>: number of rows of the cartesian representation of the expression as an acyclic graph. </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">c</span></code>: number of columns of the cartesian representation of the expression as an acyclic graph. </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">l</span></code>: number of levels-back allowed. This, essentially, controls the minimum number of allowed operations in the formula. If uncertain set it to c + 1 </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">arity</span></code>: arities of the basis functions for each column. </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">f</span></code>: function set. An std::vector of dcgp::kernel&lt;expression::type&gt;. </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">n_eph</span></code>: Number of ephemeral constants. Their values and their symbols can be set via the dedicate methods. </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">seed</span></code>: seed for the random number generator (initial expression and mutations depend on this). </p></li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n</strong> – <strong>[in]</strong> number of inputs (independent variables). </p></li>
+<li><p><strong>m</strong> – <strong>[in]</strong> number of outputs (dependent variables). </p></li>
+<li><p><strong>r</strong> – <strong>[in]</strong> number of rows of the cartesian representation of the expression as an acyclic graph. </p></li>
+<li><p><strong>c</strong> – <strong>[in]</strong> number of columns of the cartesian representation of the expression as an acyclic graph. </p></li>
+<li><p><strong>l</strong> – <strong>[in]</strong> number of levels-back allowed. This, essentially, controls the minimum number of allowed operations in the formula. If uncertain set it to c + 1 </p></li>
+<li><p><strong>arity</strong> – <strong>[in]</strong> arities of the basis functions for each column. </p></li>
+<li><p><strong>f</strong> – <strong>[in]</strong> function set. An std::vector of dcgp::kernel&lt;expression::type&gt;. </p></li>
+<li><p><strong>n_eph</strong> – <strong>[in]</strong> Number of ephemeral constants. Their values and their symbols can be set via the dedicate methods. </p></li>
+<li><p><strong>seed</strong> – <strong>[in]</strong> seed for the random number generator (initial expression and mutations depend on this). </p></li>
 </ul>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N4dcgp10expression10expressionEjjjjjjNSt6vectorI6kernelI1TEEEjj">
-<span class="target" id="classdcgp_1_1expression_1abb68fef9a92fba11bdcaa4143c9dcd15"></span><code class="sig-name descname">expression</code><span class="sig-paren">(</span>unsigned <em>n</em> = 1u, unsigned <em>m</em> = 1u, unsigned <em>r</em> = 1u, unsigned <em>c</em> = 1u, unsigned <em>l</em> = 1u, unsigned <em>arity</em> = 1u, std::vector&lt;<a class="reference internal" href="kernel.html#_CPPv4I0EN4dcgp6kernelE" title="dcgp::kernel">kernel</a>&lt;<a class="reference internal" href="#_CPPv4I0EN4dcgp10expressionE" title="dcgp::expression::T">T</a>&gt;&gt; <em>f</em> = <a class="reference internal" href="kernel_set.html#_CPPv4I0EN4dcgp10kernel_setE" title="dcgp::kernel_set">kernel_set</a>&lt;<a class="reference internal" href="#_CPPv4I0EN4dcgp10expressionE" title="dcgp::expression::T">T</a>&gt;({&quot;sum&quot;})(), unsigned <em>n_eph</em> = 0u, unsigned <em>seed</em> = dcgp::random_device::next()<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10expression10expressionEjjjjjjNSt6vectorI6kernelI1TEEEjj" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4dcgp10expression10expressionEjjjjjjNSt6vectorI6kernelI1TEEEjj">
+<span class="target" id="classdcgp_1_1expression_1abb68fef9a92fba11bdcaa4143c9dcd15"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">expression</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">n</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">1u</span></span>, <span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">m</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">1u</span></span>, <span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">r</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">1u</span></span>, <span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">c</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">1u</span></span>, <span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">l</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">1u</span></span>, <span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">arity</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">1u</span></span>, <span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="kernel.html#_CPPv4I0EN4dcgp6kernelE" title="dcgp::kernel"><span class="n"><span class="pre">kernel</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0EN4dcgp10expressionE" title="dcgp::expression::T"><span class="n"><span class="pre">T</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">f</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="kernel_set.html#_CPPv4I0EN4dcgp10kernel_setE" title="dcgp::kernel_set"><span class="n"><span class="pre">kernel_set</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0EN4dcgp10expressionE" title="dcgp::expression::T"><span class="n"><span class="pre">T</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">{</span></span><span class="s"><span class="pre">&quot;sum&quot;</span></span><span class="p"><span class="pre">}</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">)</span></span>, <span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">n_eph</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0u</span></span>, <span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">seed</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">dcgp</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">random_device</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">next</span></span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">)</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10expression10expressionEjjjjjjNSt6vectorI6kernelI1TEEEjj" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Constructor. </p>
 <p>Constructs a dCGP expression with uniform arity</p>
-<p><dl class="simple">
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">n</span></code>: number of inputs (independent variables). </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">m</span></code>: number of outputs (dependent variables). </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">r</span></code>: number of rows of the cartesian representation of the expression as an acyclic graph. </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">c</span></code>: number of columns of the cartesian representation of the expression as an acyclic graph. </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">l</span></code>: number of levels-back allowed. This, essentially, controls the minimum number of allowed operations in the formula. If uncertain set it to c + 1 </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">arity</span></code>: arity of the basis functions. </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">f</span></code>: function set. An std::vector of dcgp::kernel&lt;expression::type&gt;. </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">n_eph</span></code>: Number of ephemeral constants. Their values and their symbols can be set via the dedicate methods. </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">seed</span></code>: seed for the random number generator (initial expression and mutations depend on this). </p></li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n</strong> – <strong>[in]</strong> number of inputs (independent variables). </p></li>
+<li><p><strong>m</strong> – <strong>[in]</strong> number of outputs (dependent variables). </p></li>
+<li><p><strong>r</strong> – <strong>[in]</strong> number of rows of the cartesian representation of the expression as an acyclic graph. </p></li>
+<li><p><strong>c</strong> – <strong>[in]</strong> number of columns of the cartesian representation of the expression as an acyclic graph. </p></li>
+<li><p><strong>l</strong> – <strong>[in]</strong> number of levels-back allowed. This, essentially, controls the minimum number of allowed operations in the formula. If uncertain set it to c + 1 </p></li>
+<li><p><strong>arity</strong> – <strong>[in]</strong> arity of the basis functions. </p></li>
+<li><p><strong>f</strong> – <strong>[in]</strong> function set. An std::vector of dcgp::kernel&lt;expression::type&gt;. </p></li>
+<li><p><strong>n_eph</strong> – <strong>[in]</strong> Number of ephemeral constants. Their values and their symbols can be set via the dedicate methods. </p></li>
+<li><p><strong>seed</strong> – <strong>[in]</strong> seed for the random number generator (initial expression and mutations depend on this). </p></li>
 </ul>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N4dcgp10expressionD0Ev">
-<span class="target" id="classdcgp_1_1expression_1afb1805d8cab484266efe17c65c8d0856"></span><code class="sig-name descname">~expression</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10expressionD0Ev" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4dcgp10expressionD0Ev">
+<span class="target" id="classdcgp_1_1expression_1afb1805d8cab484266efe17c65c8d0856"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">~expression</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10expressionD0Ev" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Virtual destructor. </p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N4dcgp10expression10expressionERK10expression">
-<span class="target" id="classdcgp_1_1expression_1a7b3518015d704a205b3381da4e69db9d"></span><code class="sig-name descname">expression</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N4dcgp10expression10expressionERK10expression" title="dcgp::expression::expression">expression</a>&amp;<span class="sig-paren">)</span> = default<a class="headerlink" href="#_CPPv4N4dcgp10expression10expressionERK10expression" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4dcgp10expression10expressionERK10expression">
+<span class="target" id="classdcgp_1_1expression_1a7b3518015d704a205b3381da4e69db9d"></span><span class="sig-name descname"><span class="n"><span class="pre">expression</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4dcgp10expression10expressionERK10expression" title="dcgp::expression::expression"><span class="n"><span class="pre">expression</span></span></a><span class="p"><span class="pre">&amp;</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">default</span></span><a class="headerlink" href="#_CPPv4N4dcgp10expression10expressionERK10expression" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Copy constructor. </p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N4dcgp10expression10expressionERR10expression">
-<span class="target" id="classdcgp_1_1expression_1a6e5e16b8a0078912171fbc7c53569dd0"></span><code class="sig-name descname">expression</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N4dcgp10expression10expressionERR10expression" title="dcgp::expression::expression">expression</a>&amp;&amp;<span class="sig-paren">)</span> = default<a class="headerlink" href="#_CPPv4N4dcgp10expression10expressionERR10expression" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4dcgp10expression10expressionERR10expression">
+<span class="target" id="classdcgp_1_1expression_1a6e5e16b8a0078912171fbc7c53569dd0"></span><span class="sig-name descname"><span class="n"><span class="pre">expression</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N4dcgp10expression10expressionERR10expression" title="dcgp::expression::expression"><span class="n"><span class="pre">expression</span></span></a><span class="p"><span class="pre">&amp;</span></span><span class="p"><span class="pre">&amp;</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">default</span></span><a class="headerlink" href="#_CPPv4N4dcgp10expression10expressionERR10expression" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Copy assignment operator. </p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N4dcgp10expressionaSERK10expression">
-<span class="target" id="classdcgp_1_1expression_1a3d177d01beea21088be985b4641d237e"></span><a class="reference internal" href="#_CPPv4I0EN4dcgp10expressionE" title="dcgp::expression">expression</a> &amp;<code class="sig-name descname">operator=</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN4dcgp10expressionE" title="dcgp::expression">expression</a>&amp;<span class="sig-paren">)</span> = default<a class="headerlink" href="#_CPPv4N4dcgp10expressionaSERK10expression" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4dcgp10expressionaSERK10expression">
+<span class="target" id="classdcgp_1_1expression_1a3d177d01beea21088be985b4641d237e"></span><a class="reference internal" href="#_CPPv4I0EN4dcgp10expressionE" title="dcgp::expression"><span class="n"><span class="pre">expression</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">=</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN4dcgp10expressionE" title="dcgp::expression"><span class="n"><span class="pre">expression</span></span></a><span class="p"><span class="pre">&amp;</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">default</span></span><a class="headerlink" href="#_CPPv4N4dcgp10expressionaSERK10expression" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Move constructor. </p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N4dcgp10expressionaSERR10expression">
-<span class="target" id="classdcgp_1_1expression_1a7e510dd15be1b83dabf6c9e0d4272e3e"></span><a class="reference internal" href="#_CPPv4I0EN4dcgp10expressionE" title="dcgp::expression">expression</a> &amp;<code class="sig-name descname">operator=</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0EN4dcgp10expressionE" title="dcgp::expression">expression</a>&amp;&amp;<span class="sig-paren">)</span> = default<a class="headerlink" href="#_CPPv4N4dcgp10expressionaSERR10expression" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4dcgp10expressionaSERR10expression">
+<span class="target" id="classdcgp_1_1expression_1a7e510dd15be1b83dabf6c9e0d4272e3e"></span><a class="reference internal" href="#_CPPv4I0EN4dcgp10expressionE" title="dcgp::expression"><span class="n"><span class="pre">expression</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">=</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0EN4dcgp10expressionE" title="dcgp::expression"><span class="n"><span class="pre">expression</span></span></a><span class="p"><span class="pre">&amp;</span></span><span class="p"><span class="pre">&amp;</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">default</span></span><a class="headerlink" href="#_CPPv4N4dcgp10expressionaSERR10expression" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Move assignment operator. </p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4NK4dcgp10expressionclERKNSt6vectorI1TEE">
-<span class="target" id="classdcgp_1_1expression_1a4a0d0118b4733b4aa18e9d25c60f885b"></span>std::vector&lt;<a class="reference internal" href="#_CPPv4I0EN4dcgp10expressionE" title="dcgp::expression::T">T</a>&gt; <code class="sig-name descname">operator()</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;<a class="reference internal" href="#_CPPv4I0EN4dcgp10expressionE" title="dcgp::expression::T">T</a>&gt; &amp;<em>point</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp10expressionclERKNSt6vectorI1TEE" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4NK4dcgp10expressionclERKNSt6vectorI1TEE">
+<span class="target" id="classdcgp_1_1expression_1a4a0d0118b4733b4aa18e9d25c60f885b"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0EN4dcgp10expressionE" title="dcgp::expression::T"><span class="n"><span class="pre">T</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">()</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0EN4dcgp10expressionE" title="dcgp::expression::T"><span class="n"><span class="pre">T</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">point</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4dcgp10expressionclERKNSt6vectorI1TEE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Evaluates the dCGP expression. </p>
 <p>This evaluates the dCGP expression.</p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>The value of the function (an std::vector) </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>[point]</strong> – an std::vector containing the values where the dCGP expression has to be computed (doubles, gduals or strings)</p>
 </dd>
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">[point]</span></code>: an std::vector containing the values where the dCGP expression has to be computed (doubles, gduals or strings)</p></li>
-</ul>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The value of the function (an std::vector) </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4NK4dcgp10expressionclERKNSt16initializer_listIdEE">
-<span class="target" id="classdcgp_1_1expression_1adff544922d3fd6d2c3ae73e681b0eb55"></span>std::vector&lt;double&gt; <code class="sig-name descname">operator()</code><span class="sig-paren">(</span><em class="property">const</em> std::initializer_list&lt;double&gt; &amp;<em>in</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp10expressionclERKNSt16initializer_listIdEE" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4NK4dcgp10expressionclERKNSt16initializer_listIdEE">
+<span class="target" id="classdcgp_1_1expression_1adff544922d3fd6d2c3ae73e681b0eb55"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">()</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">initializer_list</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">in</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4dcgp10expressionclERKNSt16initializer_listIdEE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Evaluates the dCGP expression (from initializer list) </p>
 <p>This evaluates the dCGP expression from an initializer list.</p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>The value of the function (an std::vector) </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>in</strong> – <strong>[in]</strong> an initializer list containing the values where the dCGP expression has to be computed (doubles, gduals or strings)</p>
 </dd>
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">in</span></code>: an initializer list containing the values where the dCGP expression has to be computed (doubles, gduals or strings)</p></li>
-</ul>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The value of the function (an std::vector) </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4NK4dcgp10expressionclERKNSt6vectorINSt6stringEEE">
-<span class="target" id="classdcgp_1_1expression_1aff663ec9ff3163084e10e578100332ca"></span>std::vector&lt;std::string&gt; <code class="sig-name descname">operator()</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;std::string&gt; &amp;<em>in</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp10expressionclERKNSt6vectorINSt6stringEEE" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4NK4dcgp10expressionclERKNSt6vectorINSt6stringEEE">
+<span class="target" id="classdcgp_1_1expression_1aff663ec9ff3163084e10e578100332ca"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">()</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">in</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4dcgp10expressionclERKNSt6vectorINSt6stringEEE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Evaluates the dCGP expression (symbolic) </p>
 <p>This evaluates the symbolic form of a dCGP expression from symbols.</p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>The value of the function (an std::vector) </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>in</strong> – <strong>[in]</strong> an initializer list containing the symbols to use to construct the dCGP expression.</p>
 </dd>
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">in</span></code>: an initializer list containing the symbols to use to construct the dCGP expression.</p></li>
-</ul>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The value of the function (an std::vector) </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4NK4dcgp10expressionclERKNSt16initializer_listINSt6stringEEE">
-<span class="target" id="classdcgp_1_1expression_1ac7034420e3287155baaaa3626ea5dfb0"></span>std::vector&lt;std::string&gt; <code class="sig-name descname">operator()</code><span class="sig-paren">(</span><em class="property">const</em> std::initializer_list&lt;std::string&gt; &amp;<em>in</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp10expressionclERKNSt16initializer_listINSt6stringEEE" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4NK4dcgp10expressionclERKNSt16initializer_listINSt6stringEEE">
+<span class="target" id="classdcgp_1_1expression_1ac7034420e3287155baaaa3626ea5dfb0"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">()</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">initializer_list</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">in</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4dcgp10expressionclERKNSt16initializer_listINSt6stringEEE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Evaluates the dCGP expression (symbolic from initializer list) </p>
 <p>This evaluates the symbolic form of a dCGP expression from an initializer list of symbols.</p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>The value of the function (an std::vector) </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>in</strong> – <strong>[in]</strong> an initializer list containing the symbols to use to construct the dCGP expression.</p>
 </dd>
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">in</span></code>: an initializer list containing the symbols to use to construct the dCGP expression.</p></li>
-</ul>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The value of the function (an std::vector) </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4NK4dcgp10expression4lossERKNSt6vectorI1TEERKNSt6vectorI1TEE9loss_type">
-<span class="target" id="classdcgp_1_1expression_1a7c192820a7d123d449c492aee6071b2b"></span><a class="reference internal" href="#_CPPv4I0EN4dcgp10expressionE" title="dcgp::expression::T">T</a> <code class="sig-name descname">loss</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;<a class="reference internal" href="#_CPPv4I0EN4dcgp10expressionE" title="dcgp::expression::T">T</a>&gt; &amp;<em>point</em>, <em class="property">const</em> std::vector&lt;<a class="reference internal" href="#_CPPv4I0EN4dcgp10expressionE" title="dcgp::expression::T">T</a>&gt; &amp;<em>prediction</em>, <a class="reference internal" href="#_CPPv4N4dcgp10expression9loss_typeE" title="dcgp::expression::loss_type">loss_type</a> <em>loss_e</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp10expression4lossERKNSt6vectorI1TEERKNSt6vectorI1TEE9loss_type" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4NK4dcgp10expression4lossERKNSt6vectorI1TEERKNSt6vectorI1TEE9loss_type">
+<span class="target" id="classdcgp_1_1expression_1a7c192820a7d123d449c492aee6071b2b"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN4dcgp10expressionE" title="dcgp::expression::T"><span class="n"><span class="pre">T</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">loss</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0EN4dcgp10expressionE" title="dcgp::expression::T"><span class="n"><span class="pre">T</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">point</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0EN4dcgp10expressionE" title="dcgp::expression::T"><span class="n"><span class="pre">T</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">prediction</span></span>, <a class="reference internal" href="#_CPPv4N4dcgp10expression9loss_typeE" title="dcgp::expression::loss_type"><span class="n"><span class="pre">loss_type</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">loss_e</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4dcgp10expression4lossERKNSt6vectorI1TEERKNSt6vectorI1TEE9loss_type" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Evaluates the model loss (single data point) </p>
 <p>Returns the model loss over a single point of data of the dCGP output.</p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>the computed loss </p>
-</dd>
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">[point]</span></code>: The input data (single point) </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">[prediction]</span></code>: The predicted output (single point) </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">[loss_e]</span></code>: The loss type. Can be “MSE” for Mean Square Error (regression) or “CE” for Cross Entropy (classification) </p></li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>[point]</strong> – The input data (single point) </p></li>
+<li><p><strong>[prediction]</strong> – The predicted output (single point) </p></li>
+<li><p><strong>[loss_e]</strong> – The loss type. Can be “MSE” for Mean Square Error (regression) or “CE” for Cross Entropy (classification) </p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the computed loss </p>
+</dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4NK4dcgp10expression4lossERKNSt6vectorINSt6vectorI1TEEEERKNSt6vectorINSt6vectorI1TEEEERKNSt6stringEj">
-<span class="target" id="classdcgp_1_1expression_1a12043fadc81ec487c5508f6716087cf5"></span><a class="reference internal" href="#_CPPv4I0EN4dcgp10expressionE" title="dcgp::expression::T">T</a> <code class="sig-name descname">loss</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;std::vector&lt;<a class="reference internal" href="#_CPPv4I0EN4dcgp10expressionE" title="dcgp::expression::T">T</a>&gt;&gt; &amp;<em>points</em>, <em class="property">const</em> std::vector&lt;std::vector&lt;<a class="reference internal" href="#_CPPv4I0EN4dcgp10expressionE" title="dcgp::expression::T">T</a>&gt;&gt; &amp;<em>labels</em>, <em class="property">const</em> std::string &amp;<em>loss_s</em>, unsigned <em>parallel</em> = 0u<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp10expression4lossERKNSt6vectorINSt6vectorI1TEEEERKNSt6vectorINSt6vectorI1TEEEERKNSt6stringEj" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4NK4dcgp10expression4lossERKNSt6vectorINSt6vectorI1TEEEERKNSt6vectorINSt6vectorI1TEEEERKNSt6stringEj">
+<span class="target" id="classdcgp_1_1expression_1a12043fadc81ec487c5508f6716087cf5"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN4dcgp10expressionE" title="dcgp::expression::T"><span class="n"><span class="pre">T</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">loss</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0EN4dcgp10expressionE" title="dcgp::expression::T"><span class="n"><span class="pre">T</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">points</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0EN4dcgp10expressionE" title="dcgp::expression::T"><span class="n"><span class="pre">T</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">labels</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">loss_s</span></span>, <span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">parallel</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0u</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4dcgp10expression4lossERKNSt6vectorINSt6vectorI1TEEEERKNSt6vectorINSt6vectorI1TEEEERKNSt6stringEj" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Evaluates the model loss (on a batch) </p>
 <p>Evaluates the model loss over a batch.</p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>the loss </p>
-</dd>
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">[points]</span></code>: The input data (a batch). </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">[labels]</span></code>: The predicted outputs (a batch). </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">[loss_s]</span></code>: The loss type. Can be “MSE” for Mean Square Error (regression) or “CE” for Cross Entropy (classification) </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">[parallel]</span></code>: sets the grain for parallelism. 0 -&gt; no parallelism n -&gt; divides the data into n parts and evaluates them in parallel threads. </p></li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>[points]</strong> – The input data (a batch). </p></li>
+<li><p><strong>[labels]</strong> – The predicted outputs (a batch). </p></li>
+<li><p><strong>[loss_s]</strong> – The loss type. Can be “MSE” for Mean Square Error (regression) or “CE” for Cross Entropy (classification) </p></li>
+<li><p><strong>[parallel]</strong> – sets the grain for parallelism. 0 -&gt; no parallelism n -&gt; divides the data into n parts and evaluates them in parallel threads. </p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the loss </p>
+</dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N4dcgp10expression3setERKNSt6vectorIjEE">
-<span class="target" id="classdcgp_1_1expression_1a4f9b3af2add7da4b16d3cde0116aae64"></span>void <code class="sig-name descname">set</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;unsigned&gt; &amp;<em>xu</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10expression3setERKNSt6vectorIjEE" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4dcgp10expression3setERKNSt6vectorIjEE">
+<span class="target" id="classdcgp_1_1expression_1a4f9b3af2add7da4b16d3cde0116aae64"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">set</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">unsigned</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">xu</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10expression3setERKNSt6vectorIjEE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Sets the chromosome. </p>
 <p>Sets a given chromosome as genotype for the expression and updates the active nodes and active genes information accordingly</p>
-<p><dl class="simple">
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">xu</span></code>: the new cromosome</p></li>
-</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>xu</strong> – <strong>[in]</strong> the new cromosome</p>
 </dd>
-<dt><strong>Exceptions</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">std::invalid_argument</span></code>: if the chromosome is out of bounds or has the wrong size. </p></li>
-</ul>
+<dt class="field-even">Throws</dt>
+<dd class="field-even"><p><span><span class="cpp-expr sig sig-inline cpp"><span class="n">std</span><span class="p">::</span><span class="n">invalid_argument</span></span></span> – if the chromosome is out of bounds or has the wrong size. </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N4dcgp10expression10set_f_geneEjj">
-<span class="target" id="classdcgp_1_1expression_1a51f752bcd1bcba27c40c435301bba18f"></span>void <code class="sig-name descname">set_f_gene</code><span class="sig-paren">(</span>unsigned <em>node_id</em>, unsigned <em>f_id</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10expression10set_f_geneEjj" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4I0EN4dcgp10expression14set_from_rangeEv7InputIt7InputIt">
+<span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">InputIt</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="classdcgp_1_1expression_1adefe36c5dd63dca6e6096469965f889c"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">set_from_range</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0EN4dcgp10expression14set_from_rangeEv7InputIt7InputIt" title="dcgp::expression::set_from_range::InputIt"><span class="n"><span class="pre">InputIt</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">begin</span></span>, <a class="reference internal" href="#_CPPv4I0EN4dcgp10expression14set_from_rangeEv7InputIt7InputIt" title="dcgp::expression::set_from_range::InputIt"><span class="n"><span class="pre">InputIt</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">end</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN4dcgp10expression14set_from_rangeEv7InputIt7InputIt" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sets the chromosome from range. </p>
+<p>Sets a given chromosome as genotype for the expression and updates the active nodes and active genes information accordingly</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>begin</strong> – <strong>[in]</strong> iterator to the first element of the range </p></li>
+<li><p><strong>end</strong> – <strong>[in]</strong> iterator to the end element of the range</p></li>
+</ul>
+</dd>
+<dt class="field-even">Throws</dt>
+<dd class="field-even"><p><span><span class="cpp-expr sig sig-inline cpp"><span class="n">std</span><span class="p">::</span><span class="n">invalid_argument</span></span></span> – if the chromosome is out of bounds or has the wrong size. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4dcgp10expression10set_f_geneEjj">
+<span class="target" id="classdcgp_1_1expression_1a51f752bcd1bcba27c40c435301bba18f"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">set_f_gene</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">node_id</span></span>, <span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">f_id</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10expression10set_f_geneEjj" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Sets the function gene of a node. </p>
 <p>Sets for a valid node (i.e. not an input node) a new kernel</p>
-<p><dl class="simple">
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">node_id</span></code>: the id of the node </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">f_id</span></code>: the id of the kernel</p></li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>node_id</strong> – <strong>[in]</strong> the id of the node </p></li>
+<li><p><strong>f_id</strong> – <strong>[in]</strong> the id of the kernel</p></li>
 </ul>
 </dd>
-<dt><strong>Exceptions</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">std::invalid_argument</span></code>: if the <em>node_id</em> or <em>f_id</em> are invalid. </p></li>
-</ul>
+<dt class="field-even">Throws</dt>
+<dd class="field-even"><p><span><span class="cpp-expr sig sig-inline cpp"><span class="n">std</span><span class="p">::</span><span class="n">invalid_argument</span></span></span> – if the <em>node_id</em> or <em>f_id</em> are invalid. </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N4dcgp10expression11set_eph_valERKNSt6vectorI1TEE">
-<span class="target" id="classdcgp_1_1expression_1a0691b32746937718a3a06b025d337f22"></span>void <code class="sig-name descname">set_eph_val</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;<a class="reference internal" href="#_CPPv4I0EN4dcgp10expressionE" title="dcgp::expression::T">T</a>&gt; &amp;<em>eph_val</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10expression11set_eph_valERKNSt6vectorI1TEE" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4dcgp10expression11set_eph_valERKNSt6vectorI1TEE">
+<span class="target" id="classdcgp_1_1expression_1a0691b32746937718a3a06b025d337f22"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">set_eph_val</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0EN4dcgp10expressionE" title="dcgp::expression::T"><span class="n"><span class="pre">T</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">eph_val</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10expression11set_eph_valERKNSt6vectorI1TEE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Sets the values of ephemeral constants. </p>
 <p>Sets the values of ephemeral constants</p>
-<p><dl class="simple">
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">eph_val</span></code>: the values of the ephemeral constants.</p></li>
-</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>eph_val</strong> – <strong>[in]</strong> the values of the ephemeral constants.</p>
 </dd>
-<dt><strong>Exceptions</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">std::invalid_argument</span></code>: if the size of <em>eph_val</em> is not equal to the number of ephemeral constants. </p></li>
-</ul>
+<dt class="field-even">Throws</dt>
+<dd class="field-even"><p><span><span class="cpp-expr sig sig-inline cpp"><span class="n">std</span><span class="p">::</span><span class="n">invalid_argument</span></span></span> – if the size of <em>eph_val</em> is not equal to the number of ephemeral constants. </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N4dcgp10expression12set_eph_symbERKNSt6vectorINSt6stringEEE">
-<span class="target" id="classdcgp_1_1expression_1a8027b6c3ea2bf29d33cf2a76926e1282"></span>void <code class="sig-name descname">set_eph_symb</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;std::string&gt; &amp;<em>eph_symb</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10expression12set_eph_symbERKNSt6vectorINSt6stringEEE" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4dcgp10expression12set_eph_symbERKNSt6vectorINSt6stringEEE">
+<span class="target" id="classdcgp_1_1expression_1a8027b6c3ea2bf29d33cf2a76926e1282"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">set_eph_symb</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">eph_symb</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10expression12set_eph_symbERKNSt6vectorINSt6stringEEE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Sets the values of ephemeral constants. </p>
 <p>Sets the values of ephemeral constants</p>
-<p><dl class="simple">
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">eph_symb</span></code>: the symbols to use for the ephemeral constants.</p></li>
-</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>eph_symb</strong> – <strong>[in]</strong> the symbols to use for the ephemeral constants.</p>
 </dd>
-<dt><strong>Exceptions</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">std::invalid_argument</span></code>: if the size of <em>eph_symb</em> is not equal to the number of ephemeral constants. </p></li>
-</ul>
+<dt class="field-even">Throws</dt>
+<dd class="field-even"><p><span><span class="cpp-expr sig sig-inline cpp"><span class="n">std</span><span class="p">::</span><span class="n">invalid_argument</span></span></span> – if the size of <em>eph_symb</em> is not equal to the number of ephemeral constants. </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4NK4dcgp10expression11get_eph_valEv">
-<span class="target" id="classdcgp_1_1expression_1aaadc161b1138fa6a5cefb07fd8efa7aa"></span><em class="property">const</em> std::vector&lt;<a class="reference internal" href="#_CPPv4I0EN4dcgp10expressionE" title="dcgp::expression::T">T</a>&gt; &amp;<code class="sig-name descname">get_eph_val</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp10expression11get_eph_valEv" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4NK4dcgp10expression11get_eph_valEv">
+<span class="target" id="classdcgp_1_1expression_1aaadc161b1138fa6a5cefb07fd8efa7aa"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0EN4dcgp10expressionE" title="dcgp::expression::T"><span class="n"><span class="pre">T</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_eph_val</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4dcgp10expression11get_eph_valEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Gets the values of ephemeral constants. </p>
 <p>Gets the values of ephemeral constants</p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>the values of ephemeral constants. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the values of ephemeral constants. </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4NK4dcgp10expression12get_eph_symbEv">
-<span class="target" id="classdcgp_1_1expression_1a08201cd6ce1635a3d523381280909d36"></span><em class="property">const</em> std::vector&lt;std::string&gt; &amp;<code class="sig-name descname">get_eph_symb</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp10expression12get_eph_symbEv" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4NK4dcgp10expression12get_eph_symbEv">
+<span class="target" id="classdcgp_1_1expression_1a08201cd6ce1635a3d523381280909d36"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_eph_symb</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4dcgp10expression12get_eph_symbEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Gets the symbols of ephemeral constants. </p>
 <p>Gets the symbols of ephemeral constants</p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>the symbols of ephemeral constants. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the symbols of ephemeral constants. </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4NK4dcgp10expression3getEv">
-<span class="target" id="classdcgp_1_1expression_1aa4af8cc0b43c3b1b16dd7a1a0c0dbbb7"></span><em class="property">const</em> std::vector&lt;unsigned&gt; &amp;<code class="sig-name descname">get</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp10expression3getEv" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4NK4dcgp10expression3getEv">
+<span class="target" id="classdcgp_1_1expression_1aa4af8cc0b43c3b1b16dd7a1a0c0dbbb7"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">unsigned</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="n"><span class="pre">get</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4dcgp10expression3getEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Gets the chromosome. </p>
 <p>Gets the chromosome encoding the current expression</p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>The chromosome </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The chromosome </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4NK4dcgp10expression6get_lbEv">
-<span class="target" id="classdcgp_1_1expression_1ab176b81bcdb862cce59ebb8e96e81c2b"></span><em class="property">const</em> std::vector&lt;unsigned&gt; &amp;<code class="sig-name descname">get_lb</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp10expression6get_lbEv" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4NK4dcgp10expression6get_lbEv">
+<span class="target" id="classdcgp_1_1expression_1ab176b81bcdb862cce59ebb8e96e81c2b"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">unsigned</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_lb</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4dcgp10expression6get_lbEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Gets the lower bounds. </p>
 <p>Gets the lower bounds for the genes</p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>An std::vector containing the lower bound for each gene </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>An std::vector containing the lower bound for each gene </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4NK4dcgp10expression6get_ubEv">
-<span class="target" id="classdcgp_1_1expression_1a80e4e6fddc592aa2113b4b25d73010f6"></span><em class="property">const</em> std::vector&lt;unsigned&gt; &amp;<code class="sig-name descname">get_ub</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp10expression6get_ubEv" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4NK4dcgp10expression6get_ubEv">
+<span class="target" id="classdcgp_1_1expression_1a80e4e6fddc592aa2113b4b25d73010f6"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">unsigned</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_ub</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4dcgp10expression6get_ubEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Gets the upper bounds. </p>
 <p>Gets the upper bounds for the genes</p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>An std::vector containing the upper bound for each gene </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>An std::vector containing the upper bound for each gene </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4NK4dcgp10expression16get_active_genesEv">
-<span class="target" id="classdcgp_1_1expression_1a8882e8cccd110967528e8ec8614c612c"></span><em class="property">const</em> std::vector&lt;unsigned&gt; &amp;<code class="sig-name descname">get_active_genes</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp10expression16get_active_genesEv" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4NK4dcgp10expression16get_active_genesEv">
+<span class="target" id="classdcgp_1_1expression_1a8882e8cccd110967528e8ec8614c612c"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">unsigned</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_active_genes</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4dcgp10expression16get_active_genesEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Gets the active genes. </p>
 <p>Gets the idx of the active genes in the current chromosome (numbering is from 0)</p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>An std::vector containing the idx of the active genes in the current chromosome </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>An std::vector containing the idx of the active genes in the current chromosome </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4NK4dcgp10expression16get_active_nodesEv">
-<span class="target" id="classdcgp_1_1expression_1a8c3f715244093ebab3d528b16860d86f"></span><em class="property">const</em> std::vector&lt;unsigned&gt; &amp;<code class="sig-name descname">get_active_nodes</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp10expression16get_active_nodesEv" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4NK4dcgp10expression16get_active_nodesEv">
+<span class="target" id="classdcgp_1_1expression_1a8c3f715244093ebab3d528b16860d86f"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">unsigned</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_active_nodes</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4dcgp10expression16get_active_nodesEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Gets the active nodes. </p>
 <p>Gets the idx of the active nodes in the current chromosome. The numbering starts from 0 at the first input node to then follow PPSN tutorial from Miller</p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>An std::vector containing the idx of the active nodes </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>An std::vector containing the idx of the active nodes </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4NK4dcgp10expression5get_nEv">
-<span class="target" id="classdcgp_1_1expression_1a576744c9d080d5c1b024048b4cff211b"></span>unsigned <code class="sig-name descname">get_n</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp10expression5get_nEv" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4NK4dcgp10expression5get_nEv">
+<span class="target" id="classdcgp_1_1expression_1a576744c9d080d5c1b024048b4cff211b"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get_n</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4dcgp10expression5get_nEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Gets the number of inputs. </p>
 <p>Gets the number of inputs of the dCGP expression</p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>the number of inputs </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the number of inputs </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4NK4dcgp10expression5get_mEv">
-<span class="target" id="classdcgp_1_1expression_1a038bcdf2a2f227af8f298f7679a59d6c"></span>unsigned <code class="sig-name descname">get_m</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp10expression5get_mEv" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4NK4dcgp10expression5get_mEv">
+<span class="target" id="classdcgp_1_1expression_1a038bcdf2a2f227af8f298f7679a59d6c"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get_m</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4dcgp10expression5get_mEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Gets the number of outputs. </p>
 <p>Gets the number of outputs of the dCGP expression</p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>the number of outputs </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the number of outputs </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4NK4dcgp10expression5get_rEv">
-<span class="target" id="classdcgp_1_1expression_1a6261b745207f9b6a48f13a8879b2351f"></span>unsigned <code class="sig-name descname">get_r</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp10expression5get_rEv" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4NK4dcgp10expression5get_rEv">
+<span class="target" id="classdcgp_1_1expression_1a6261b745207f9b6a48f13a8879b2351f"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get_r</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4dcgp10expression5get_rEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Gets the number of rows. </p>
 <p>Gets the number of rows of the dCGP expression</p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>the number of rows </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the number of rows </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4NK4dcgp10expression5get_cEv">
-<span class="target" id="classdcgp_1_1expression_1a9737903503247e69b6c2e18501103c50"></span>unsigned <code class="sig-name descname">get_c</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp10expression5get_cEv" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4NK4dcgp10expression5get_cEv">
+<span class="target" id="classdcgp_1_1expression_1a9737903503247e69b6c2e18501103c50"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get_c</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4dcgp10expression5get_cEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Gets the number of columns. </p>
 <p>Gets the number of columns of the dCGP expression</p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>the number of columns </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the number of columns </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4NK4dcgp10expression5get_lEv">
-<span class="target" id="classdcgp_1_1expression_1aa53f63dd9a9970942e3604a1ad1016cf"></span>unsigned <code class="sig-name descname">get_l</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp10expression5get_lEv" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4NK4dcgp10expression5get_lEv">
+<span class="target" id="classdcgp_1_1expression_1aa53f63dd9a9970942e3604a1ad1016cf"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get_l</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4dcgp10expression5get_lEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Gets the number of levels-back. </p>
 <p>Gets the number of levels-back allowed for the dCGP expression</p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>the number of levels-back </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the number of levels-back </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4NK4dcgp10expression9get_arityEv">
-<span class="target" id="classdcgp_1_1expression_1accb51f609f4ae9e64f964a17ea8fa484"></span><em class="property">const</em> std::vector&lt;unsigned&gt; &amp;<code class="sig-name descname">get_arity</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp10expression9get_arityEv" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4NK4dcgp10expression9get_arityEv">
+<span class="target" id="classdcgp_1_1expression_1accb51f609f4ae9e64f964a17ea8fa484"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">unsigned</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_arity</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4dcgp10expression9get_arityEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Gets the arity. </p>
 <p>Gets the arity of the basis functions of the dCGP expression</p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>the arity </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the arity </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4NK4dcgp10expression9get_arityEj">
-<span class="target" id="classdcgp_1_1expression_1a7902f559b837a8e5fd3ce5d5f7e98644"></span>unsigned <code class="sig-name descname">get_arity</code><span class="sig-paren">(</span>unsigned <em>node_id</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp10expression9get_arityEj" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4NK4dcgp10expression9get_arityEj">
+<span class="target" id="classdcgp_1_1expression_1a7902f559b837a8e5fd3ce5d5f7e98644"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get_arity</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">node_id</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4dcgp10expression9get_arityEj" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Gets the arity of a particular node. </p>
 <p>Gets the arity of a particular node</p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>the arity of that node </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>node_id</strong> – <strong>[in]</strong> id of the node </p>
 </dd>
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">node_id</span></code>: id of the node </p></li>
-</ul>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the arity of that node </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4NK4dcgp10expression5get_fEv">
-<span class="target" id="classdcgp_1_1expression_1afd314c2e2e9f177bc27829bf25c0bc63"></span><em class="property">const</em> std::vector&lt;<a class="reference internal" href="kernel.html#_CPPv4I0EN4dcgp6kernelE" title="dcgp::kernel">kernel</a>&lt;<a class="reference internal" href="#_CPPv4I0EN4dcgp10expressionE" title="dcgp::expression::T">T</a>&gt;&gt; &amp;<code class="sig-name descname">get_f</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp10expression5get_fEv" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4NK4dcgp10expression5get_fEv">
+<span class="target" id="classdcgp_1_1expression_1afd314c2e2e9f177bc27829bf25c0bc63"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="kernel.html#_CPPv4I0EN4dcgp6kernelE" title="dcgp::kernel"><span class="n"><span class="pre">kernel</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0EN4dcgp10expressionE" title="dcgp::expression::T"><span class="n"><span class="pre">T</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_f</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4dcgp10expression5get_fEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Gets the function set. </p>
 <p>Gets the set of functions used in the dCGP expression</p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>an std::vector of kernels </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>an std::vector of kernels </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4NK4dcgp10expression12get_gene_idxEv">
-<span class="target" id="classdcgp_1_1expression_1a33d6e5acb80dae4cd936fd0209783f6d"></span><em class="property">const</em> std::vector&lt;unsigned&gt; &amp;<code class="sig-name descname">get_gene_idx</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp10expression12get_gene_idxEv" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4NK4dcgp10expression12get_gene_idxEv">
+<span class="target" id="classdcgp_1_1expression_1a33d6e5acb80dae4cd936fd0209783f6d"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">unsigned</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_gene_idx</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4dcgp10expression12get_gene_idxEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Gets gene_idx. </p>
 <p>Gets gene_idx, a vector containing the indexes in the chromosome where nodes start expressing.</p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>an std::vector containing the indexes of the chromosome expressing each node </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>an std::vector containing the indexes of the chromosome expressing each node </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N4dcgp10expression6mutateEj">
-<span class="target" id="classdcgp_1_1expression_1ad24f59475b88e7aefb434ef770e690d0"></span>void <code class="sig-name descname">mutate</code><span class="sig-paren">(</span>unsigned <em>idx</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10expression6mutateEj" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4dcgp10expression6mutateEj">
+<span class="target" id="classdcgp_1_1expression_1ad24f59475b88e7aefb434ef770e690d0"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">mutate</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">idx</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10expression6mutateEj" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Mutates randomly one gene. </p>
 <p>Mutates exactly one gene within its allowed bounds.</p>
-<p><dl class="simple">
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">idx</span></code>: index of the gene to me mutated</p></li>
-</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>idx</strong> – <strong>[in]</strong> index of the gene to me mutated</p>
 </dd>
-<dt><strong>Exceptions</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">std::invalid_argument</span></code>: if <code class="docutils literal notranslate"><span class="pre">idx</span></code> is too large </p></li>
-</ul>
+<dt class="field-even">Throws</dt>
+<dd class="field-even"><p><span><span class="cpp-expr sig sig-inline cpp"><span class="n">std</span><span class="p">::</span><span class="n">invalid_argument</span></span></span> – if <code class="docutils literal notranslate"><span class="pre">idx</span></code> is too large </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N4dcgp10expression6mutateENSt6vectorIjEE">
-<span class="target" id="classdcgp_1_1expression_1aa4c5f60edcb70d4796e532f2842ef122"></span>void <code class="sig-name descname">mutate</code><span class="sig-paren">(</span>std::vector&lt;unsigned&gt; <em>idxs</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10expression6mutateENSt6vectorIjEE" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4dcgp10expression6mutateENSt6vectorIjEE">
+<span class="target" id="classdcgp_1_1expression_1aa4c5f60edcb70d4796e532f2842ef122"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">mutate</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">unsigned</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">idxs</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10expression6mutateENSt6vectorIjEE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Mutates multiple genes at once. </p>
 <p>Mutates multiple genes within their allowed bounds.</p>
-<p><dl class="simple">
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">idxs</span></code>: vector of indexes of the genes to me mutated</p></li>
-</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>idxs</strong> – <strong>[in]</strong> vector of indexes of the genes to me mutated</p>
 </dd>
-<dt><strong>Exceptions</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">std::invalid_argument</span></code>: if <code class="docutils literal notranslate"><span class="pre">idx</span></code> is too large </p></li>
-</ul>
+<dt class="field-even">Throws</dt>
+<dd class="field-even"><p><span><span class="cpp-expr sig sig-inline cpp"><span class="n">std</span><span class="p">::</span><span class="n">invalid_argument</span></span></span> – if <code class="docutils literal notranslate"><span class="pre">idx</span></code> is too large </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N4dcgp10expression13mutate_randomEj">
-<span class="target" id="classdcgp_1_1expression_1a17b6b6ac27a2d745c9f99965303ca757"></span>void <code class="sig-name descname">mutate_random</code><span class="sig-paren">(</span>unsigned <em>N</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10expression13mutate_randomEj" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4dcgp10expression13mutate_randomEj">
+<span class="target" id="classdcgp_1_1expression_1a17b6b6ac27a2d745c9f99965303ca757"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">mutate_random</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">N</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10expression13mutate_randomEj" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Mutates N random genes. </p>
 <p>Mutates a specified number of random genes within their bounds</p>
-<p><dl class="simple">
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">N</span></code>: number of genes to be mutated </p></li>
-</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>N</strong> – <strong>[in]</strong> number of genes to be mutated </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N4dcgp10expression13mutate_activeEj">
-<span class="target" id="classdcgp_1_1expression_1a5db413e253396fb830ba9911f10e8290"></span>void <code class="sig-name descname">mutate_active</code><span class="sig-paren">(</span>unsigned <em>N</em> = 1<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10expression13mutate_activeEj" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4dcgp10expression15mutate_inactiveEj">
+<span class="target" id="classdcgp_1_1expression_1acf18203c0dc76a9ecb38be868808b194"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">mutate_inactive</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">N</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">1u</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10expression15mutate_inactiveEj" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Mutates inactive genes randomly up to <code class="docutils literal notranslate"><span class="pre">N</span></code>. </p>
+<p>Mutates inactive random genes within their bounds up to <code class="docutils literal notranslate"><span class="pre">N</span></code>. The guarantee to actually mutate N would cost and is deemed unnecessary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>N</strong> – <strong>[in]</strong> maximum number of inactive genes to be mutated </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4dcgp10expression13mutate_activeEj">
+<span class="target" id="classdcgp_1_1expression_1a90ae7531fca5b9e8e3dc7e17fd393620"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">mutate_active</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">N</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">1u</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10expression13mutate_activeEj" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Mutates active genes. </p>
 <p>Mutates <code class="docutils literal notranslate"><span class="pre">N</span></code> active genes within their allowed bounds. The mutation can affect function genes, input genes and output genes.</p>
-<p><dl class="simple">
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">N</span></code>: Number of active genes to be mutated </p></li>
-</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>N</strong> – <strong>[in]</strong> Number of active genes to be mutated </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N4dcgp10expression19mutate_active_fgeneEj">
-<span class="target" id="classdcgp_1_1expression_1a3d01cdc8af88d94260501a3a896b1449"></span>void <code class="sig-name descname">mutate_active_fgene</code><span class="sig-paren">(</span>unsigned <em>N</em> = 1u<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10expression19mutate_active_fgeneEj" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4dcgp10expression19mutate_active_fgeneEj">
+<span class="target" id="classdcgp_1_1expression_1a3d01cdc8af88d94260501a3a896b1449"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">mutate_active_fgene</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">N</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">1u</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10expression19mutate_active_fgeneEj" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Mutates active function genes. </p>
 <p>Mutates <code class="docutils literal notranslate"><span class="pre">N</span></code> active function genes within their allowed bounds.</p>
-<p><dl class="simple">
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">N</span></code>: Number of active function genes to be mutated </p></li>
-</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>N</strong> – <strong>[in]</strong> Number of active function genes to be mutated </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N4dcgp10expression19mutate_active_cgeneEj">
-<span class="target" id="classdcgp_1_1expression_1a0118c09744680cfa3c22700eb1d9ad39"></span>void <code class="sig-name descname">mutate_active_cgene</code><span class="sig-paren">(</span>unsigned <em>N</em> = 1u<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10expression19mutate_active_cgeneEj" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4dcgp10expression19mutate_active_cgeneEj">
+<span class="target" id="classdcgp_1_1expression_1a0118c09744680cfa3c22700eb1d9ad39"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">mutate_active_cgene</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">N</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">1u</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10expression19mutate_active_cgeneEj" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Mutates active connection genes. </p>
 <p>Mutates <code class="docutils literal notranslate"><span class="pre">N</span></code> active connection genes within their allowed bounds.</p>
-<p><dl class="simple">
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">N</span></code>: Number of active connection genes to be mutated </p></li>
-</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>N</strong> – <strong>[in]</strong> Number of active connection genes to be mutated </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N4dcgp10expression12mutate_ogeneEj">
-<span class="target" id="classdcgp_1_1expression_1ac047ab012501d31c9f69e2fb3d4f0e2e"></span>void <code class="sig-name descname">mutate_ogene</code><span class="sig-paren">(</span>unsigned <em>N</em> = 1u<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10expression12mutate_ogeneEj" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4dcgp10expression12mutate_ogeneEj">
+<span class="target" id="classdcgp_1_1expression_1ac047ab012501d31c9f69e2fb3d4f0e2e"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">mutate_ogene</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">N</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">1u</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10expression12mutate_ogeneEj" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Mutates active output genes. </p>
 <p>Mutates <code class="docutils literal notranslate"><span class="pre">N</span></code> times random active output genes within their allowed bounds.</p>
-<p><dl class="simple">
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">N</span></code>: Number of output genes to be mutated </p></li>
-</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>N</strong> – <strong>[in]</strong> Number of output genes to be mutated </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N4dcgp10expression4seedEl">
-<span class="target" id="classdcgp_1_1expression_1a088aa8d532b4d83a088fa4cc3ec7bb10"></span>void <code class="sig-name descname">seed</code><span class="sig-paren">(</span>long <em>seed</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10expression4seedEl" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4dcgp10expression4seedEl">
+<span class="target" id="classdcgp_1_1expression_1a088aa8d532b4d83a088fa4cc3ec7bb10"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">seed</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">seed</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10expression4seedEl" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Sets the internal seed. </p>
 <p>Sets the internal seed used to perform mutations and other things. </p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4NK4dcgp10expression9is_activeEKj">
-<span class="target" id="classdcgp_1_1expression_1a324576beabb571d3d882a09958c8337c"></span>bool <code class="sig-name descname">is_active</code><span class="sig-paren">(</span><em class="property">const</em> unsigned <em>node_id</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp10expression9is_activeEKj" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4NK4dcgp10expression14is_active_nodeEKj">
+<span class="target" id="classdcgp_1_1expression_1ab00fe5f189494567a6c3d1c706e2d113"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">is_active_node</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">node_id</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4dcgp10expression14is_active_nodeEKj" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Checks if a given node is active. </p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>True if the node <em>node_id</em> is active in the CGP expression. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>node_id</strong> – <strong>[in]</strong> the node to be checked</p>
 </dd>
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">node_id</span></code>: the node to be checked</p></li>
-</ul>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if the node <em>node_id</em> is active in the CGP expression. </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4I0EN4dcgp10expression9serializeEvR7Archivej">
-template&lt;typename <code class="sig-name descname">Archive</code>&gt;<br /><span class="target" id="classdcgp_1_1expression_1a16dca0ffb853179af8f2907cc70f6402"></span>void <code class="sig-name descname">serialize</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0EN4dcgp10expression9serializeEvR7Archivej" title="dcgp::expression::serialize::Archive">Archive</a> &amp;<em>ar</em>, unsigned<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN4dcgp10expression9serializeEvR7Archivej" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Object serialization. </p>
-<p>This method will save/load <code class="docutils literal notranslate"><span class="pre">this</span></code> into the archive <code class="docutils literal notranslate"><span class="pre">ar</span></code>.</p>
-<p><dl class="simple">
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">ar</span></code>: target archive.</p></li>
-</ul>
+<dt class="sig sig-object cpp" id="_CPPv4NK4dcgp10expression14is_active_geneEKj">
+<span class="target" id="classdcgp_1_1expression_1af05ba0a8386e4941e4bdbf0dc849dedd"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">is_active_gene</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">idx</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4dcgp10expression14is_active_geneEKj" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Checks if a given gene is active. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>idx</strong> – <strong>[in]</strong> the idx of the gene to be checked</p>
 </dd>
-<dt><strong>Exceptions</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">unspecified</span></code>: any exception thrown by the serialization of the expression and of primitive types. </p></li>
-</ul>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if the gene <em>idx</em> is active in the CGP expression. </p>
 </dd>
 </dl>
-</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I0EN4dcgp10expression9serializeEvR7Archivej">
+<span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Archive</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="classdcgp_1_1expression_1a16dca0ffb853179af8f2907cc70f6402"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">serialize</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0EN4dcgp10expression9serializeEvR7Archivej" title="dcgp::expression::serialize::Archive"><span class="n"><span class="pre">Archive</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">ar</span></span>, <span class="kt"><span class="pre">unsigned</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN4dcgp10expression9serializeEvR7Archivej" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Object serialization. </p>
+<p>This method will save/load <code class="docutils literal notranslate"><span class="pre">this</span></code> into the archive <code class="docutils literal notranslate"><span class="pre">ar</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ar</strong> – target archive.</p>
+</dd>
+<dt class="field-even">Throws</dt>
+<dd class="field-even"><p><span><span class="cpp-expr sig sig-inline cpp"><span class="n">unspecified</span></span></span> – any exception thrown by the serialization of the expression and of primitive types. </p>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
 <div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric">Friends</p>
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-friends">Friends</p>
 <dl class="cpp function">
-<dt id="_CPPv4N4dcgp10expressionlsERNSt7ostreamERK10expression">
-<span class="target" id="classdcgp_1_1expression_1a214aa46f452981db5c7e37e80475e9fe"></span><em class="property">friend</em> std::ostream &amp;<code class="sig-name descname">operator&lt;&lt;</code><span class="sig-paren">(</span>std::ostream &amp;<em>os</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN4dcgp10expressionE" title="dcgp::expression">expression</a> &amp;<em>d</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10expressionlsERNSt7ostreamERK10expression" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4dcgp10expressionlsERNSt7ostreamERK10expression">
+<span class="target" id="classdcgp_1_1expression_1a214aa46f452981db5c7e37e80475e9fe"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">friend</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ostream</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">&lt;&lt;</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ostream</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">os</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN4dcgp10expressionE" title="dcgp::expression"><span class="n"><span class="pre">expression</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">d</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10expressionlsERNSt7ostreamERK10expression" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Overloaded stream operator. </p>
 <p>Will return a formatted string containing a human readable representation of the class</p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>std::string containing a human-readable representation of the problem. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>std::string containing a human-readable representation of the problem. </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 </div>
@@ -866,29 +884,29 @@ template&lt;typename <code class="sig-name descname">Archive</code>&gt;<br /><sp
            
           </div>
           <footer>
-  
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="expression_weighted.html" class="btn btn-neutral float-right" title="expression_weighted (dCGP-W)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="kernel_list.html" class="btn btn-neutral float-left" title="Available kernels" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+        <a href="expression_weighted.html" class="btn btn-neutral float-right" title="expression_weighted (dCGP-W)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="kernel_list.html" class="btn btn-neutral float-left" title="Available kernels" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Dario Izzo, Francesco Biscani
+        &#169; Copyright 2020, Dario Izzo, Francesco Biscani.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 
@@ -896,7 +914,6 @@ template&lt;typename <code class="sig-name descname">Archive</code>&gt;<br /><sp
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

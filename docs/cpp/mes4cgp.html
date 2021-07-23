@@ -1,42 +1,46 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>Memetic Evolutionary Strategy (UDA) &mdash; dCGP 1.5.1 documentation</title>
   
 
   
-  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+
   
   
 
   
-  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/language_data.js"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Multi-Objective Memetic Evolutionary Strategy (UDA)" href="momes4cgp.html" />
@@ -84,6 +88,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -120,6 +125,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -154,11 +160,13 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../index.html">API documentation</a> &raquo;</li>
         
@@ -169,7 +177,7 @@
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="../../_sources/docs/cpp/mes4cgp.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -210,13 +218,13 @@
 <div class="section" id="memetic-evolutionary-strategy-uda">
 <h1>Memetic Evolutionary Strategy (UDA)<a class="headerlink" href="#memetic-evolutionary-strategy-uda" title="Permalink to this headline">¶</a></h1>
 <dl class="cpp class">
-<dt id="_CPPv4N4dcgp7mes4cgpE">
-<span class="target" id="classdcgp_1_1mes4cgp"></span><em class="property">class </em><code class="sig-prename descclassname">dcgp<code class="sig-prename descclassname">::</code></code><code class="sig-name descname">mes4cgp</code><a class="headerlink" href="#_CPPv4N4dcgp7mes4cgpE" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4dcgp7mes4cgpE">
+<span class="target" id="classdcgp_1_1mes4cgp"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">dcgp</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">mes4cgp</span></span></span><a class="headerlink" href="#_CPPv4N4dcgp7mes4cgpE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Memetic Evolutionary Strategy for a Cartesian Genetic Program. </p>
 <p><img alt="../../_images/neo-darwinism.jpg" src="../../_images/neo-darwinism.jpg" /></p>
 <p>The term Memetic is widely used, in the context of meta-heuristic search, to indicate a synergy between any population-based approach with local improvement procedures. The resulting algorithms are also referred to, in the literature, as Baldwinian evolutionary algorithms (EAs), Lamarckian EAs, cultural algorithms, or genetic local searches. The very same approach, is seen by many just as an hybridization of a global search technique with a local search technique. Regardless of the terminology and point of view, a memetic approach is applicable to symbolic regression tasks and able to improve considerably on the long standing issue of finding constants in Genetic Programming.</p>
-<p><p>In this C++ class we offer an UDA (User Defined Algorithm for the pagmo optimization suite) hybridizing the classic Evolutionary Strategy that is traditionally used in Cartesian Genetic Programming research with a second order Newton search step able to help finding the best values for the ephemeral constants. The resulting algorithm is outlined by the following pseudo-algorithm:</p>
-<dl class="simple">
+<p>
+In this C++ class we offer an UDA (User Defined Algorithm for the pagmo optimization suite) hybridizing the classic Evolutionary Strategy that is traditionally used in Cartesian Genetic Programming research with a second order Newton search step able to help finding the best values for the ephemeral constants. The resulting algorithm is outlined by the following pseudo-algorithm:<dl class="simple">
 <dt><strong>See</strong></dt><dd><p>Izzo, Dario, Francesco Biscani, and Alessio Mereta. “Differentiable genetic programming.” In European Conference on Genetic Programming, pp. 35-51. Springer, 2017.</p>
 </dd>
 </dl>
@@ -231,92 +239,89 @@
 </div>
  </p>
 <div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric">Public Types</p>
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-types">Public Types</p>
 <dl class="cpp type">
-<dt id="_CPPv4N4dcgp7mes4cgp13log_line_typeE">
-<span class="target" id="classdcgp_1_1mes4cgp_1a2aaa8cc7e93e6434f78aa49d2adb5929"></span><em class="property">typedef </em>std::tuple&lt;unsigned, unsigned long long, double, pagmo::<a class="reference external" href="https://esa.github.io/pagmo2/docs/cpp/types.html#_CPPv4N5pagmo13vector_doubleE" title="(in pagmo v2.16.0)">vector_double</a>, std::string&gt; <code class="sig-name descname">log_line_type</code><a class="headerlink" href="#_CPPv4N4dcgp7mes4cgp13log_line_typeE" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4dcgp7mes4cgp13log_line_typeE">
+<span class="target" id="classdcgp_1_1mes4cgp_1a2aaa8cc7e93e6434f78aa49d2adb5929"></span><span class="k"><span class="pre">typedef</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">tuple</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">unsigned</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">long</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">pagmo</span></span><span class="p"><span class="pre">::</span></span><a class="reference external" href="https://esa.github.io/pagmo2/docs/cpp/types.html#_CPPv4N5pagmo13vector_doubleE" title="(in pagmo v2.17.0)"><span class="n"><span class="pre">vector_double</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">log_line_type</span></span></span><a class="headerlink" href="#_CPPv4N4dcgp7mes4cgp13log_line_typeE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Single entry of the log (gen, fevals, best, constants, formula) </p>
 </dd></dl>
 
 <dl class="cpp type">
-<dt id="_CPPv4N4dcgp7mes4cgp8log_typeE">
-<span class="target" id="classdcgp_1_1mes4cgp_1aa4be082d28e37157defee4b9e203ce89"></span><em class="property">typedef </em>std::vector&lt;<a class="reference internal" href="#_CPPv4N4dcgp7mes4cgp13log_line_typeE" title="dcgp::mes4cgp::log_line_type">log_line_type</a>&gt; <code class="sig-name descname">log_type</code><a class="headerlink" href="#_CPPv4N4dcgp7mes4cgp8log_typeE" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4dcgp7mes4cgp8log_typeE">
+<span class="target" id="classdcgp_1_1mes4cgp_1aa4be082d28e37157defee4b9e203ce89"></span><span class="k"><span class="pre">typedef</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4N4dcgp7mes4cgp13log_line_typeE" title="dcgp::mes4cgp::log_line_type"><span class="n"><span class="pre">log_line_type</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">log_type</span></span></span><a class="headerlink" href="#_CPPv4N4dcgp7mes4cgp8log_typeE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>The log. </p>
 </dd></dl>
 
 </div>
 <div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric">Public Functions</p>
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
 <dl class="cpp function">
-<dt id="_CPPv4N4dcgp7mes4cgp7mes4cgpEjjdj">
-<span class="target" id="classdcgp_1_1mes4cgp_1a1a204fc0842c1cac9301764815b08be1"></span><code class="sig-name descname">mes4cgp</code><span class="sig-paren">(</span>unsigned <em>gen</em> = 1u, unsigned <em>max_mut</em> = 4u, double <em>ftol</em> = 0., unsigned <em>seed</em> = random_device::next()<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp7mes4cgp7mes4cgpEjjdj" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4dcgp7mes4cgp7mes4cgpEjjdj">
+<span class="target" id="classdcgp_1_1mes4cgp_1a1a204fc0842c1cac9301764815b08be1"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">mes4cgp</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">gen</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">1u</span></span>, <span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">max_mut</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">4u</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">ftol</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0.</span></span>, <span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">seed</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">random_device</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">next</span></span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">)</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp7mes4cgp7mes4cgpEjjdj" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Constructor. </p>
 <p>Constructs an evolutionary strategy algorithm for use with a :class:<code class="docutils literal notranslate"><a class="reference internal" href="symbolic_regression.html#classdcgp_1_1symbolic__regression"><span class="std std-ref"><span class="pre">dcgp::symbolic_regression</span></span></a></code> UDP.</p>
-<p><dl class="simple">
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">gen</span></code>: number of generations. </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">max_mut</span></code>: number of active genes to be mutated. </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">ftol</span></code>: the algorithm will exit when the loss is below this tolerance. </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">seed</span></code>: seed used by the internal random number generator (default is random).</p></li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gen</strong> – number of generations. </p></li>
+<li><p><strong>max_mut</strong> – number of active genes to be mutated. </p></li>
+<li><p><strong>ftol</strong> – the algorithm will exit when the loss is below this tolerance. </p></li>
+<li><p><strong>seed</strong> – seed used by the internal random number generator (default is random).</p></li>
 </ul>
 </dd>
-<dt><strong>Exceptions</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">std::invalid_argument</span></code>: if <em>max_mut</em> is 0 or <em>ftol</em> is negative </p></li>
-</ul>
+<dt class="field-even">Throws</dt>
+<dd class="field-even"><p><span><span class="cpp-expr sig sig-inline cpp"><span class="n">std</span><span class="p">::</span><span class="n">invalid_argument</span></span></span> – if <em>max_mut</em> is 0 or <em>ftol</em> is negative </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4NK4dcgp7mes4cgp6evolveEN5pagmo10populationE">
-<span class="target" id="classdcgp_1_1mes4cgp_1a4f0b5bf6ce142c96ea3dff596c02f897"></span>pagmo::<a class="reference external" href="https://esa.github.io/pagmo2/docs/cpp/population.html#_CPPv4N5pagmo10populationE" title="(in pagmo v2.16.0)">population</a> <code class="sig-name descname">evolve</code><span class="sig-paren">(</span>pagmo::<a class="reference external" href="https://esa.github.io/pagmo2/docs/cpp/population.html#_CPPv4N5pagmo10populationE" title="(in pagmo v2.16.0)">population</a> <em>pop</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp7mes4cgp6evolveEN5pagmo10populationE" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4NK4dcgp7mes4cgp6evolveEN5pagmo10populationE">
+<span class="target" id="classdcgp_1_1mes4cgp_1a4f0b5bf6ce142c96ea3dff596c02f897"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">pagmo</span></span><span class="p"><span class="pre">::</span></span><a class="reference external" href="https://esa.github.io/pagmo2/docs/cpp/population.html#_CPPv4N5pagmo10populationE" title="(in pagmo v2.17.0)"><span class="n"><span class="pre">population</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">evolve</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">pagmo</span></span><span class="p"><span class="pre">::</span></span><a class="reference external" href="https://esa.github.io/pagmo2/docs/cpp/population.html#_CPPv4N5pagmo10populationE" title="(in pagmo v2.17.0)"><span class="n"><span class="pre">population</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">pop</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4dcgp7mes4cgp6evolveEN5pagmo10populationE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Algorithm evolve method. </p>
 <p>Evolves the population for a maximum number of generations</p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>evolved population </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>pop</strong> – population to be evolved </p>
 </dd>
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">pop</span></code>: population to be evolved </p></li>
+<dt class="field-even">Throws</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><span><span class="cpp-expr sig sig-inline cpp"><span class="n">std</span><span class="p">::</span><span class="n">invalid_argument</span></span></span> – if a <a class="reference internal" href="symbolic_regression.html#classdcgp_1_1symbolic__regression"><span class="std std-ref">dcgp::symbolic_regression</span></a> cannot be extracted from the problem </p></li>
+<li><p><span><span class="cpp-expr sig sig-inline cpp"><span class="n">std</span><span class="p">::</span><span class="n">invalid_argument</span></span></span> – if the population size is smaller than 2. </p></li>
+<li><p><span><span class="cpp-expr sig sig-inline cpp"><span class="n">std</span><span class="p">::</span><span class="n">invalid_argument</span></span></span> – if the number of objectives is not 1. </p></li>
 </ul>
 </dd>
-<dt><strong>Exceptions</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">std::invalid_argument</span></code>: if a <a class="reference internal" href="symbolic_regression.html#classdcgp_1_1symbolic__regression"><span class="std std-ref">dcgp::symbolic_regression</span></a> cannot be extracted from the problem </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">std::invalid_argument</span></code>: if the population size is smaller than 2. </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">std::invalid_argument</span></code>: if the number of objectives is not 1. </p></li>
-</ul>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>evolved population </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N4dcgp7mes4cgp8set_seedEj">
-<span class="target" id="classdcgp_1_1mes4cgp_1a72599d4d2249093ccdf1de02d4342f5a"></span>void <code class="sig-name descname">set_seed</code><span class="sig-paren">(</span>unsigned <em>seed</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp7mes4cgp8set_seedEj" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4dcgp7mes4cgp8set_seedEj">
+<span class="target" id="classdcgp_1_1mes4cgp_1a72599d4d2249093ccdf1de02d4342f5a"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">set_seed</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">seed</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp7mes4cgp8set_seedEj" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Sets the seed. </p>
-<p><dl class="simple">
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">seed</span></code>: the seed controlling the algorithm stochastic behaviour </p></li>
-</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>seed</strong> – the seed controlling the algorithm stochastic behaviour </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4NK4dcgp7mes4cgp8get_seedEv">
-<span class="target" id="classdcgp_1_1mes4cgp_1ac023dd907f8b178705668530573b13fd"></span>unsigned <code class="sig-name descname">get_seed</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp7mes4cgp8get_seedEv" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4NK4dcgp7mes4cgp8get_seedEv">
+<span class="target" id="classdcgp_1_1mes4cgp_1ac023dd907f8b178705668530573b13fd"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get_seed</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4dcgp7mes4cgp8get_seedEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Gets the seed. </p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>the seed controlling the algorithm stochastic behaviour </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the seed controlling the algorithm stochastic behaviour </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N4dcgp7mes4cgp13set_verbosityEj">
-<span class="target" id="classdcgp_1_1mes4cgp_1ab172dc34b057e48f03dd5243983c77dc"></span>void <code class="sig-name descname">set_verbosity</code><span class="sig-paren">(</span>unsigned <em>level</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp7mes4cgp13set_verbosityEj" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4dcgp7mes4cgp13set_verbosityEj">
+<span class="target" id="classdcgp_1_1mes4cgp_1ab172dc34b057e48f03dd5243983c77dc"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">set_verbosity</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">level</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp7mes4cgp13set_verbosityEj" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Sets the algorithm verbosity. </p>
 <p>Sets the verbosity level of the screen output and of the log returned by <a class="reference internal" href="#classdcgp_1_1mes4cgp_1a6a88677161bbca0093a37cf08facbd60"><span class="std std-ref">get_log()</span></a>. <code class="docutils literal notranslate"><span class="pre">level</span></code> can be:<ul class="simple">
 <li><p>0: no verbosity</p></li>
@@ -337,58 +342,71 @@
 </pre></div>
 </div>
  Gen is the generation number, Fevals the number of function evaluation used, Best is the best fitness found, Constants contains the value of the ephemeral constants and Formula peeks into the prettier expression of the underlying CGP.</p>
-<p><dl class="simple">
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">level</span></code>: verbosity level </p></li>
-</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>level</strong> – verbosity level </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4NK4dcgp7mes4cgp13get_verbosityEv">
-<span class="target" id="classdcgp_1_1mes4cgp_1aeea8f4231d309d0ff0790d15821e6005"></span>unsigned <code class="sig-name descname">get_verbosity</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp7mes4cgp13get_verbosityEv" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4NK4dcgp7mes4cgp13get_verbosityEv">
+<span class="target" id="classdcgp_1_1mes4cgp_1aeea8f4231d309d0ff0790d15821e6005"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get_verbosity</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4dcgp7mes4cgp13get_verbosityEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Gets the verbosity level. </p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>the verbosity level </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the verbosity level </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4NK4dcgp7mes4cgp8get_nameEv">
-<span class="target" id="classdcgp_1_1mes4cgp_1abeaa5a61d9689b58f0628a6aa91aa40f"></span>std::string <code class="sig-name descname">get_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp7mes4cgp8get_nameEv" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4NK4dcgp7mes4cgp8get_nameEv">
+<span class="target" id="classdcgp_1_1mes4cgp_1abeaa5a61d9689b58f0628a6aa91aa40f"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get_name</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4dcgp7mes4cgp8get_nameEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Algorithm name. </p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>a string containing the algorithm name </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a string containing the algorithm name </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4NK4dcgp7mes4cgp14get_extra_infoEv">
-<span class="target" id="classdcgp_1_1mes4cgp_1adb5fd36fd2838fa50522673e19c2dfb8"></span>std::string <code class="sig-name descname">get_extra_info</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp7mes4cgp14get_extra_infoEv" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4NK4dcgp7mes4cgp14get_extra_infoEv">
+<span class="target" id="classdcgp_1_1mes4cgp_1adb5fd36fd2838fa50522673e19c2dfb8"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get_extra_info</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4dcgp7mes4cgp14get_extra_infoEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Extra info. </p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>a string containing extra info on the algorithm </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a string containing extra info on the algorithm </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4NK4dcgp7mes4cgp7get_logEv">
-<span class="target" id="classdcgp_1_1mes4cgp_1a6a88677161bbca0093a37cf08facbd60"></span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N4dcgp7mes4cgp8log_typeE" title="dcgp::mes4cgp::log_type">log_type</a> &amp;<code class="sig-name descname">get_log</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp7mes4cgp7get_logEv" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4NK4dcgp7mes4cgp7get_logEv">
+<span class="target" id="classdcgp_1_1mes4cgp_1a6a88677161bbca0093a37cf08facbd60"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4dcgp7mes4cgp8log_typeE" title="dcgp::mes4cgp::log_type"><span class="n"><span class="pre">log_type</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_log</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4dcgp7mes4cgp7get_logEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Get log. </p>
 <p>A log containing relevant quantities monitoring the last call to evolve. Each element of the returned <code class="docutils literal notranslate"><span class="pre">std::vector</span></code> is a <a class="reference internal" href="#classdcgp_1_1mes4cgp_1a2aaa8cc7e93e6434f78aa49d2adb5929"><span class="std std-ref">mes4cgp::log_line_type</span></a> containing: Gen, Fevals, Current best, Best as described in <a class="reference internal" href="#classdcgp_1_1mes4cgp_1ab172dc34b057e48f03dd5243983c77dc"><span class="std std-ref">mes4cgp::set_verbosity()</span></a>.</p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>an <code class="docutils literal notranslate"> <span class="pre">std::vector</span></code> of <a class="reference internal" href="#classdcgp_1_1mes4cgp_1a2aaa8cc7e93e6434f78aa49d2adb5929"><span class="std std-ref">mes4cgp::log_line_type</span></a> containing the logged values Gen, Fevals, Current best, Best </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>an <code class="docutils literal notranslate"> <span class="pre">std::vector</span></code> of <a class="reference internal" href="#classdcgp_1_1mes4cgp_1a2aaa8cc7e93e6434f78aa49d2adb5929"><span class="std std-ref">mes4cgp::log_line_type</span></a> containing the logged values Gen, Fevals, Current best, Best </p>
 </dd>
 </dl>
-</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I0EN4dcgp7mes4cgp9serializeEvR7Archivej">
+<span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Archive</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="classdcgp_1_1mes4cgp_1ae78fd53e074dbe43f64509d97b7a64d1"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">serialize</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0EN4dcgp7mes4cgp9serializeEvR7Archivej" title="dcgp::mes4cgp::serialize::Archive"><span class="n"><span class="pre">Archive</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">ar</span></span>, <span class="kt"><span class="pre">unsigned</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN4dcgp7mes4cgp9serializeEvR7Archivej" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Object serialization. </p>
+<p>This method will save/load <code class="docutils literal notranslate"><span class="pre">this</span></code> into the archive <code class="docutils literal notranslate"><span class="pre">ar</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ar</strong> – target archive.</p>
+</dd>
+<dt class="field-even">Throws</dt>
+<dd class="field-even"><p><span><span class="cpp-expr sig sig-inline cpp"><span class="n">unspecified</span></span></span> – any exception thrown by the serialization of the expression and of primitive types. </p>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
@@ -401,29 +419,29 @@
            
           </div>
           <footer>
-  
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="momes4cgp.html" class="btn btn-neutral float-right" title="Multi-Objective Memetic Evolutionary Strategy (UDA)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="gd4cgp.html" class="btn btn-neutral float-left" title="Gradient Descent (UDA)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+        <a href="momes4cgp.html" class="btn btn-neutral float-right" title="Multi-Objective Memetic Evolutionary Strategy (UDA)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="gd4cgp.html" class="btn btn-neutral float-left" title="Gradient Descent (UDA)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Dario Izzo, Francesco Biscani
+        &#169; Copyright 2020, Dario Izzo, Francesco Biscani.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 
@@ -431,7 +449,6 @@
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

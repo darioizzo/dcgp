@@ -1,42 +1,48 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>NIST problems (StRD) &mdash; dCGP 1.5.1 documentation</title>
   
 
   
-  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+
   
   
 
   
-  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/language_data.js"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+        <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "document", "processHtmlClass": "math|output_area"}}</script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Tutorials" href="../../tutorials/index.html" />
@@ -84,6 +90,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -124,6 +131,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -158,11 +166,13 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../index.html">API documentation</a> &raquo;</li>
         
@@ -173,7 +183,7 @@
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="../../_sources/docs/python/nist_problems.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -216,8 +226,8 @@
 <p>These problems contain real observation of physical processes
 collected in the NIST web pages (<a class="reference external" href="https://www.nist.gov/itl">https://www.nist.gov/itl</a>)</p>
 <dl class="py function">
-<dt id="dcgpy.generate_chwirut1">
-<code class="sig-prename descclassname">dcgpy.</code><code class="sig-name descname">generate_chwirut1</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.generate_chwirut1" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dcgpy.generate_chwirut1">
+<span class="sig-prename descclassname"><span class="pre">dcgpy.</span></span><span class="sig-name descname"><span class="pre">generate_chwirut1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.generate_chwirut1" title="Permalink to this definition">¶</a></dt>
 <dd><p>These data are the result of a NIST study involving ultrasonic calibration. The response variable is ultrasonic response,
 and the predictor variable is metal distance. (see <a class="reference external" href="https://www.itl.nist.gov/div898/strd/nls/data/chwirut1.shtml">https://www.itl.nist.gov/div898/strd/nls/data/chwirut1.shtml</a>)</p>
 <p>A proposed good model for such a problem is:</p>
@@ -238,8 +248,8 @@ and the predictor variable is metal distance. (see <a class="reference external"
 </dd></dl>
 
 <dl class="py function">
-<dt id="dcgpy.generate_chwirut2">
-<code class="sig-prename descclassname">dcgpy.</code><code class="sig-name descname">generate_chwirut2</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.generate_chwirut2" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dcgpy.generate_chwirut2">
+<span class="sig-prename descclassname"><span class="pre">dcgpy.</span></span><span class="sig-name descname"><span class="pre">generate_chwirut2</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.generate_chwirut2" title="Permalink to this definition">¶</a></dt>
 <dd><p>These data are the result of a NIST study involving ultrasonic calibration. The response variable is ultrasonic response,
 and the predictor variable is metal distance. (see <a class="reference external" href="https://www.itl.nist.gov/div898/strd/nls/data/chwirut2.shtml">https://www.itl.nist.gov/div898/strd/nls/data/chwirut2.shtml</a>)</p>
 <p>A proposed good model for such a problem is:</p>
@@ -261,8 +271,8 @@ and the predictor variable is metal distance. (see <a class="reference external"
 </dd></dl>
 
 <dl class="py function">
-<dt id="dcgpy.generate_daniel_wood">
-<code class="sig-prename descclassname">dcgpy.</code><code class="sig-name descname">generate_daniel_wood</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.generate_daniel_wood" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dcgpy.generate_daniel_wood">
+<span class="sig-prename descclassname"><span class="pre">dcgpy.</span></span><span class="sig-name descname"><span class="pre">generate_daniel_wood</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.generate_daniel_wood" title="Permalink to this definition">¶</a></dt>
 <dd><p>These data and model are described in Daniel and Wood (1980), and originally published in E.S.Keeping,
 “Introduction to Statistical Inference,” Van Nostrand Company, Princeton, NJ, 1962, p. 354. The response variable is energy
 radieted from a carbon filament lamp per cm**2 per second, and the predictor variable is the absolute temperature
@@ -285,8 +295,8 @@ of the filament in 1000 degrees Kelvin. (see <a class="reference external" href=
 </dd></dl>
 
 <dl class="py function">
-<dt id="dcgpy.generate_gauss1">
-<code class="sig-prename descclassname">dcgpy.</code><code class="sig-name descname">generate_gauss1</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.generate_gauss1" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dcgpy.generate_gauss1">
+<span class="sig-prename descclassname"><span class="pre">dcgpy.</span></span><span class="sig-name descname"><span class="pre">generate_gauss1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.generate_gauss1" title="Permalink to this definition">¶</a></dt>
 <dd><p>The data are two well-separated Gaussians on a decaying exponential baseline plus normally
 distributed zero-mean noise with variance = 6.25. (see <a class="reference external" href="https://www.itl.nist.gov/div898/strd/nls/data/gauss1.shtml">https://www.itl.nist.gov/div898/strd/nls/data/gauss1.shtml</a>)</p>
 <p>A proposed good model for such a problem is:</p>
@@ -307,8 +317,8 @@ distributed zero-mean noise with variance = 6.25. (see <a class="reference exter
 </dd></dl>
 
 <dl class="py function">
-<dt id="dcgpy.generate_kirby2">
-<code class="sig-prename descclassname">dcgpy.</code><code class="sig-name descname">generate_kirby2</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.generate_kirby2" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dcgpy.generate_kirby2">
+<span class="sig-prename descclassname"><span class="pre">dcgpy.</span></span><span class="sig-name descname"><span class="pre">generate_kirby2</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.generate_kirby2" title="Permalink to this definition">¶</a></dt>
 <dd><p>These data are the result of a NIST study involving scanning electron microscope line with standards. 151
 observations are included. (see <a class="reference external" href="https://www.itl.nist.gov/div898/strd/nls/data/kirby2.shtml">https://www.itl.nist.gov/div898/strd/nls/data/kirby2.shtml</a>)</p>
 <p>A proposed good model for such a problem is:</p>
@@ -329,8 +339,8 @@ observations are included. (see <a class="reference external" href="https://www.
 </dd></dl>
 
 <dl class="py function">
-<dt id="dcgpy.generate_lanczos2">
-<code class="sig-prename descclassname">dcgpy.</code><code class="sig-name descname">generate_lanczos2</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.generate_lanczos2" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dcgpy.generate_lanczos2">
+<span class="sig-prename descclassname"><span class="pre">dcgpy.</span></span><span class="sig-name descname"><span class="pre">generate_lanczos2</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.generate_lanczos2" title="Permalink to this definition">¶</a></dt>
 <dd><p>These data are taken from an example discussed in Lanczos (1956). The data were generated to 6-digits
 of accuracy using the formula below. (see <a class="reference external" href="https://www.itl.nist.gov/div898/strd/nls/data/lanczos2.shtml">https://www.itl.nist.gov/div898/strd/nls/data/lanczos2.shtml</a>)</p>
 <p>A good model for such a problem is, trivially:</p>
@@ -351,8 +361,8 @@ of accuracy using the formula below. (see <a class="reference external" href="ht
 </dd></dl>
 
 <dl class="py function">
-<dt id="dcgpy.generate_misra1b">
-<code class="sig-prename descclassname">dcgpy.</code><code class="sig-name descname">generate_misra1b</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.generate_misra1b" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dcgpy.generate_misra1b">
+<span class="sig-prename descclassname"><span class="pre">dcgpy.</span></span><span class="sig-name descname"><span class="pre">generate_misra1b</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.generate_misra1b" title="Permalink to this definition">¶</a></dt>
 <dd><p>These data are the result of a NIST study involving dental research in monomolecular adsorption.
 The response variable is volume, and the predictor variable is pressure. 14 observations are
 available. (see <a class="reference external" href="https://www.itl.nist.gov/div898/strd/nls/data/misra1b.shtml">https://www.itl.nist.gov/div898/strd/nls/data/misra1b.shtml</a>)</p>
@@ -380,29 +390,29 @@ available. (see <a class="reference external" href="https://www.itl.nist.gov/div
            
           </div>
           <footer>
-  
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="../../tutorials/index.html" class="btn btn-neutral float-right" title="Tutorials" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="vladislavleva_problems.html" class="btn btn-neutral float-left" title="Problems from Vladislavleva" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+        <a href="../../tutorials/index.html" class="btn btn-neutral float-right" title="Tutorials" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="vladislavleva_problems.html" class="btn btn-neutral float-left" title="Problems from Vladislavleva" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Dario Izzo, Francesco Biscani
+        &#169; Copyright 2020, Dario Izzo, Francesco Biscani.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 
@@ -410,7 +420,6 @@ available. (see <a class="reference external" href="https://www.itl.nist.gov/div
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

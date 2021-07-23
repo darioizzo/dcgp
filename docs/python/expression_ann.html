@@ -1,42 +1,46 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>expression_ann (dCGP-ANN) &mdash; dCGP 1.5.1 documentation</title>
   
 
   
-  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+
   
   
 
   
-  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/language_data.js"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Symbolic Regression (UDP)" href="symbolic_regression.html" />
@@ -84,6 +88,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -118,6 +123,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -152,11 +158,13 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../index.html">API documentation</a> &raquo;</li>
         
@@ -167,7 +175,7 @@
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="../../_sources/docs/python/expression_ann.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -213,8 +221,8 @@
 as well as extra methods to allow to perform backpropagation (in parallel), to visualize the network and more …</p>
 </div>
 <dl class="py class">
-<dt id="dcgpy.expression_ann">
-<em class="property">class </em><code class="sig-prename descclassname">dcgpy.</code><code class="sig-name descname">expression_ann</code><span class="sig-paren">(</span><em class="sig-param">inputs</em>, <em class="sig-param">outputs</em>, <em class="sig-param">rows</em>, <em class="sig-param">cols</em>, <em class="sig-param">levels_back</em>, <em class="sig-param">arity = 2</em>, <em class="sig-param">kernels</em>, <em class="sig-param">n_eph = 0</em>, <em class="sig-param">seed = randint</em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_ann" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dcgpy.expression_ann">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">dcgpy.</span></span><span class="sig-name descname"><span class="pre">expression_ann</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">inputs</span></em>, <em class="sig-param"><span class="pre">outputs</span></em>, <em class="sig-param"><span class="pre">rows</span></em>, <em class="sig-param"><span class="pre">cols</span></em>, <em class="sig-param"><span class="pre">levels_back</span></em>, <em class="sig-param"><span class="pre">arity</span> <span class="pre">=</span> <span class="pre">2</span></em>, <em class="sig-param"><span class="pre">kernels</span></em>, <em class="sig-param"><span class="pre">n_eph</span> <span class="pre">=</span> <span class="pre">0</span></em>, <em class="sig-param"><span class="pre">seed</span> <span class="pre">=</span> <span class="pre">randint</span></em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_ann" title="Permalink to this definition">¶</a></dt>
 <dd><p>A dCGPANN expression</p>
 <p>Constructs a CGP expression operating on double</p>
 <dl class="field-list simple">
@@ -234,8 +242,8 @@ operations in the formula. If uncertain set it to cols + 1</p></li>
 </dd>
 </dl>
 <dl class="py attribute">
-<dt id="dcgpy.expression_ann.eph_val">
-<code class="sig-name descname">eph_val</code><a class="headerlink" href="#dcgpy.expression_ann.eph_val" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dcgpy.expression_ann.eph_val">
+<span class="sig-name descname"><span class="pre">eph_val</span></span><a class="headerlink" href="#dcgpy.expression_ann.eph_val" title="Permalink to this definition">¶</a></dt>
 <dd><p>Values of the ephemeral constants.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -245,8 +253,8 @@ operations in the formula. If uncertain set it to cols + 1</p></li>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="dcgpy.expression_ann.eph_symb">
-<code class="sig-name descname">eph_symb</code><a class="headerlink" href="#dcgpy.expression_ann.eph_symb" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dcgpy.expression_ann.eph_symb">
+<span class="sig-name descname"><span class="pre">eph_symb</span></span><a class="headerlink" href="#dcgpy.expression_ann.eph_symb" title="Permalink to this definition">¶</a></dt>
 <dd><p>Symbols used for the ephemeral constants.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -265,8 +273,8 @@ operations in the formula. If uncertain set it to cols + 1</p></li>
 </pre></div>
 </div>
 <dl class="py method">
-<dt id="dcgpy.expression_ann.get_bias">
-<code class="sig-name descname">get_bias</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_ann.get_bias" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dcgpy.expression_ann.get_bias">
+<span class="sig-name descname"><span class="pre">get_bias</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_ann.get_bias" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets a bias.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -286,16 +294,17 @@ operations in the formula. If uncertain set it to cols + 1</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt id="dcgpy.expression_ann.get_biases">
-<code class="sig-name descname">get_biases</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_ann.get_biases" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dcgpy.expression_ann.get_biases">
+<span class="sig-name descname"><span class="pre">get_biases</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_ann.get_biases" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all biases</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="dcgpy.expression_ann.get_weight">
-<code class="sig-name descname">get_weight</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node_id</span></em>, <em class="sig-param"><span class="n">input_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_ann.get_weight" title="Permalink to this definition">¶</a></dt>
-<dd><p>get_weight(idx)</p>
-<p>Gets a weight. Two overloads are available. You can get the weight specifying the node and the input id (that needs
+<dt class="sig sig-object py" id="dcgpy.expression_ann.get_weight">
+<span class="sig-name descname"><span class="pre">get_weight</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_ann.get_weight" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">get_weight</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span></dt>
+<dd><p>Gets a weight. Two overloads are available. You can get the weight specifying the node and the input id (that needs
 to be less than the arity), or directly specifying its position in the weight vector.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -318,14 +327,14 @@ to be less than the arity), or directly specifying its position in the weight ve
 </dd></dl>
 
 <dl class="py method">
-<dt id="dcgpy.expression_ann.get_weights">
-<code class="sig-name descname">get_weights</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_ann.get_weights" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dcgpy.expression_ann.get_weights">
+<span class="sig-name descname"><span class="pre">get_weights</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_ann.get_weights" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all  weights</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="dcgpy.expression_ann.n_active_weights">
-<code class="sig-name descname">n_active_weights</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">unique</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_ann.n_active_weights" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dcgpy.expression_ann.n_active_weights">
+<span class="sig-name descname"><span class="pre">n_active_weights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">unique</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_ann.n_active_weights" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the number of weights influencing the result. This will also be the number
 of weights that are updated when calling sgd. The number of active weights, as well as
 the number of active nodes, define the complexity of the expression expressed by the chromosome.</p>
@@ -337,8 +346,8 @@ the number of active nodes, define the complexity of the expression expressed by
 </dd></dl>
 
 <dl class="py method">
-<dt id="dcgpy.expression_ann.randomise_biases">
-<code class="sig-name descname">randomise_biases</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mean</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">std</span><span class="o">=</span><span class="default_value">0.1</span></em>, <em class="sig-param"><span class="n">seed</span><span class="o">=</span><span class="default_value">randomint</span></em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_ann.randomise_biases" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dcgpy.expression_ann.randomise_biases">
+<span class="sig-name descname"><span class="pre">randomise_biases</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mean</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">std</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">randomint</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_ann.randomise_biases" title="Permalink to this definition">¶</a></dt>
 <dd><p>Randomises all the values for the biases using a normal distribution.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -352,8 +361,8 @@ the number of active nodes, define the complexity of the expression expressed by
 </dd></dl>
 
 <dl class="py method">
-<dt id="dcgpy.expression_ann.randomise_weights">
-<code class="sig-name descname">randomise_weights</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mean</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">std</span><span class="o">=</span><span class="default_value">0.1</span></em>, <em class="sig-param"><span class="n">seed</span><span class="o">=</span><span class="default_value">randomint</span></em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_ann.randomise_weights" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dcgpy.expression_ann.randomise_weights">
+<span class="sig-name descname"><span class="pre">randomise_weights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mean</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">std</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">randomint</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_ann.randomise_weights" title="Permalink to this definition">¶</a></dt>
 <dd><p>Randomises all the values for the weights using a normal distribution.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -367,8 +376,8 @@ the number of active nodes, define the complexity of the expression expressed by
 </dd></dl>
 
 <dl class="py method">
-<dt id="dcgpy.expression_ann.set_bias">
-<code class="sig-name descname">set_bias</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node_id</span></em>, <em class="sig-param"><span class="n">bias</span></em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_ann.set_bias" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dcgpy.expression_ann.set_bias">
+<span class="sig-name descname"><span class="pre">set_bias</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_ann.set_bias" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets a bias.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -388,8 +397,8 @@ the number of active nodes, define the complexity of the expression expressed by
 </dd></dl>
 
 <dl class="py method">
-<dt id="dcgpy.expression_ann.set_biases">
-<code class="sig-name descname">set_biases</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">biases</span></em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_ann.set_biases" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dcgpy.expression_ann.set_biases">
+<span class="sig-name descname"><span class="pre">set_biases</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">biases</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_ann.set_biases" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets all biases.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -402,8 +411,8 @@ the number of active nodes, define the complexity of the expression expressed by
 </dd></dl>
 
 <dl class="py method">
-<dt id="dcgpy.expression_ann.set_output_f">
-<code class="sig-name descname">set_output_f</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_ann.set_output_f" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dcgpy.expression_ann.set_output_f">
+<span class="sig-name descname"><span class="pre">set_output_f</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_ann.set_output_f" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets the nonlinearities of all nodes connected to the output nodes.
 This is useful when, for example, the dCGPANN is used for a regression task where output values are expected in [-1 1]
 and hence the output layer should have some sigmoid or tanh nonlinearity, or in a classification task when one wants to have a softmax
@@ -419,10 +428,11 @@ layer by having a sum in all output neurons.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="dcgpy.expression_ann.set_weight">
-<code class="sig-name descname">set_weight</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node_id</span></em>, <em class="sig-param"><span class="n">input_id</span></em>, <em class="sig-param"><span class="n">weight</span></em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_ann.set_weight" title="Permalink to this definition">¶</a></dt>
-<dd><p>set_weight(idx, weight)</p>
-<p>Sets a weight. Two overloads are available. You can set the weight specifying the node and the input id (that needs
+<dt class="sig sig-object py" id="dcgpy.expression_ann.set_weight">
+<span class="sig-name descname"><span class="pre">set_weight</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_ann.set_weight" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">set_weight</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span></dt>
+<dd><p>Sets a weight. Two overloads are available. You can set the weight specifying the node and the input id (that needs
 to be less than the arity), or directly specifying its position in the weight vector.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -444,8 +454,8 @@ to be less than the arity), or directly specifying its position in the weight ve
 </dd></dl>
 
 <dl class="py method">
-<dt id="dcgpy.expression_ann.set_weights">
-<code class="sig-name descname">set_weights</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">weights</span></em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_ann.set_weights" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dcgpy.expression_ann.set_weights">
+<span class="sig-name descname"><span class="pre">set_weights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">weights</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_ann.set_weights" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets all weights.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -458,8 +468,8 @@ to be less than the arity), or directly specifying its position in the weight ve
 </dd></dl>
 
 <dl class="py method">
-<dt id="dcgpy.expression_ann.sgd">
-<code class="sig-name descname">sgd</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">points</span></em>, <em class="sig-param"><span class="n">labels</span></em>, <em class="sig-param"><span class="n">lr</span></em>, <em class="sig-param"><span class="n">batch_size</span></em>, <em class="sig-param"><span class="n">loss_type</span></em>, <em class="sig-param"><span class="n">parallel</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">shuffle</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_ann.sgd" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dcgpy.expression_ann.sgd">
+<span class="sig-name descname"><span class="pre">sgd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parallel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shuffle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_ann.sgd" title="Permalink to this definition">¶</a></dt>
 <dd><p>Performs one epoch of mini-batch (stochastic) gradient descent updating the weights and biases using the
 <em>points</em> and <em>labels</em> to decrease the loss.</p>
 <dl class="field-list simple">
@@ -487,8 +497,8 @@ to be less than the arity), or directly specifying its position in the weight ve
 </dd></dl>
 
 <dl class="py method">
-<dt id="dcgpy.expression_ann.visualize">
-<code class="sig-name descname">visualize</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">show_connections</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">fill_color</span><span class="o">=</span><span class="default_value">'w'</span></em>, <em class="sig-param"><span class="n">show_nonlinearities</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">active_connection_alpha</span><span class="o">=</span><span class="default_value">0.1</span></em>, <em class="sig-param"><span class="n">inactive_connection_alpha</span><span class="o">=</span><span class="default_value">0.01</span></em>, <em class="sig-param"><span class="n">legend</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_ann.visualize" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="dcgpy.expression_ann.visualize">
+<span class="sig-name descname"><span class="pre">visualize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">show_connections</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'w'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_nonlinearities</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">active_connection_alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inactive_connection_alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">legend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_ann.visualize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Visualizes the dCGPANN expression</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -522,29 +532,29 @@ to be less than the arity), or directly specifying its position in the weight ve
            
           </div>
           <footer>
-  
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="symbolic_regression.html" class="btn btn-neutral float-right" title="Symbolic Regression (UDP)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="expression_weighted.html" class="btn btn-neutral float-left" title="expression_weighted (dCGP-W)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+        <a href="symbolic_regression.html" class="btn btn-neutral float-right" title="Symbolic Regression (UDP)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="expression_weighted.html" class="btn btn-neutral float-left" title="expression_weighted (dCGP-W)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Dario Izzo, Francesco Biscani
+        &#169; Copyright 2020, Dario Izzo, Francesco Biscani.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 
@@ -552,7 +562,6 @@ to be less than the arity), or directly specifying its position in the weight ve
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

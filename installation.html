@@ -1,42 +1,46 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>Installation guide &mdash; dCGP 1.5.1 documentation</title>
   
 
   
-  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+
   
   
 
   
-  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
-        <script src="_static/language_data.js"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Quick start examples" href="quickstart.html" />
@@ -84,6 +88,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -112,6 +117,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -146,18 +152,20 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="index.html">Docs</a> &raquo;</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
       <li>Installation guide</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="_sources/installation.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -210,29 +218,29 @@
 <li><p><a class="reference external" href="https://github.com/symengine/symengine">Symengine</a>, symbolic manipulation of math expressions. (&gt;=0.6).</p></li>
 </ul>
 <p>In case you are familiar with the conda package manager an environent ready for the dcgp installation can be created via the single command</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> conda create -n build_dcgp cmake cxx-compiler boost-cpp pagmo-devel tbb-devel audi symengine obake-devel
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>conda create -n build_dcgp cmake cxx-compiler boost-cpp pagmo-devel tbb-devel audi symengine obake-devel
 </pre></div>
 </div>
 <p>After making sure the dependencies above are installed and found in your system, you may download
 the latest dCGP code via git:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> git clone https://github.com/darioizzo/dcgp.git
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>git clone https://github.com/darioizzo/dcgp.git
 </pre></div>
 </div>
 <p>and configure your build using CMake. For example, if you are using conda, make a build directory and type:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> cmake -DBoost_NO_BOOST_CMAKE<span class="o">=</span>ON -DCMAKE_INSTALL_PREFIX<span class="o">=</span>~/miniconda3/envs/build_dcgp/ -DCMAKE_PREFIX_PATH<span class="o">=</span>~/miniconda3/envs/build_dcgp/ ../
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>cmake -DBoost_NO_BOOST_CMAKE<span class="o">=</span>ON -DCMAKE_INSTALL_PREFIX<span class="o">=</span>~/miniconda3/envs/build_dcgp/ -DCMAKE_PREFIX_PATH<span class="o">=</span>~/miniconda3/envs/build_dcgp/ ../
 </pre></div>
 </div>
 <p>where the conda environment has been assumed in <code class="docutils literal notranslate"><span class="pre">`~/miniconda3/envs/build_dcgp/`</span></code>.</p>
 <p>When done, type (in your build directory):</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> make
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>make
 </pre></div>
 </div>
 <p>When finished, to run the tests type:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> make <span class="nb">test</span>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>make <span class="nb">test</span>
 </pre></div>
 </div>
 <p>If successfull, you may now install cgp:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> make install
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>make install
 </pre></div>
 </div>
 <p>The headers will be installed in the CMAKE_INSTALL_PREFIX/include directory.
@@ -260,15 +268,15 @@ from the <a class="reference external" href="https://conda-forge.org/">conda-for
 </ul>
 <p>In order to install <code class="docutils literal notranslate"><span class="pre">dcgpy</span></code> via conda, you just need
 to add <code class="docutils literal notranslate"><span class="pre">conda-forge</span></code> to the channels:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> conda config --add channels conda-forge
-<span class="gp">$</span> conda install dcgp-python
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>conda config --add channels conda-forge
+<span class="gp">$ </span>conda install dcgp-python
 </pre></div>
 </div>
 <p>note that all the required dependencies will be installed automatically, as well as the C++ <code class="docutils literal notranslate"><span class="pre">`dcgp`</span></code> headers.</p>
 <p>Please refer to the <a class="reference external" href="https://conda.io/en/latest/">conda documentation</a> for instructions
 on how to setup and manage your conda installation.</p>
 <p>You may test the successfull installation by running the python tests typing:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> python -c <span class="s2">&quot;from dcgpy import test; test.run_test_suite(); import pygmo; pygmo.mp_island.shutdown_pool(); pygmo.mp_bfe.shutdown_pool()&quot;</span>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>python -c <span class="s2">&quot;from dcgpy import test; test.run_test_suite(); import pygmo; pygmo.mp_island.shutdown_pool(); pygmo.mp_bfe.shutdown_pool()&quot;</span>
 </pre></div>
 </div>
 </div>
@@ -279,21 +287,21 @@ on how to setup and manage your conda installation.</p>
 <li><p><a class="reference external" href="https://github.com/pybind/pybind11">pybind11</a>, Seamless operability between C++11 and Python. (&gt;=2.5.0).</p></li>
 </ul>
 <p>In case you are familiar with the conda package manager an environent ready for the python module installation can be created via the single command</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> conda create -n build_dcgp cmake cxx-compiler boost-cpp pagmo-devel tbb-devel audi symengine obake-devel pybind11
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>conda create -n build_dcgp cmake cxx-compiler boost-cpp pagmo-devel tbb-devel audi symengine obake-devel pybind11
 </pre></div>
 </div>
 <p>Install the latest dCGP code via git:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> git clone https://github.com/darioizzo/dcgp.git
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>git clone https://github.com/darioizzo/dcgp.git
 </pre></div>
 </div>
 <p>After installing the C++ dcgp library (see above) and making sure your environment is correctly set up to find all dependencies, you can
 configure your python module build using CMake. For example, if you are using conda, in the build directory type:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> cmake -DBoost_NO_BOOST_CMAKE<span class="o">=</span>ON -DCMAKE_INSTALL_PREFIX<span class="o">=</span>~/miniconda3/envs/build_dcgp/ -DCMAKE_PREFIX_PATH<span class="o">=</span>~/miniconda3/envs/build_dcgp/ -DDCGP_BUILD_DCGP<span class="o">=</span>OFF -DDCGP_BUILD_DCGPY<span class="o">=</span>ON ../
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>cmake -DBoost_NO_BOOST_CMAKE<span class="o">=</span>ON -DCMAKE_INSTALL_PREFIX<span class="o">=</span>~/miniconda3/envs/build_dcgp/ -DCMAKE_PREFIX_PATH<span class="o">=</span>~/miniconda3/envs/build_dcgp/ -DDCGP_BUILD_DCGP<span class="o">=</span>OFF -DDCGP_BUILD_DCGPY<span class="o">=</span>ON ../
 </pre></div>
 </div>
 <p>where the conda environment has been assumed in <code class="docutils literal notranslate"><span class="pre">`~/miniconda3/envs/build_dcgp/`</span></code>.</p>
 <p>When done, type (in your build directory):</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> make install
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>make install
 </pre></div>
 </div>
 <p>To check that all went well fire-up your Python console and try the example in <a class="reference internal" href="quickstart.html#getting-started-py"><span class="std std-ref">quick-start example</span></a>.</p>
@@ -306,29 +314,29 @@ configure your python module build using CMake. For example, if you are using co
            
           </div>
           <footer>
-  
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="quickstart.html" class="btn btn-neutral float-right" title="Quick start examples" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="index.html" class="btn btn-neutral float-left" title="Differentiable Cartesian Genetic Programming" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+        <a href="quickstart.html" class="btn btn-neutral float-right" title="Quick start examples" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="index.html" class="btn btn-neutral float-left" title="Differentiable Cartesian Genetic Programming" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Dario Izzo, Francesco Biscani
+        &#169; Copyright 2020, Dario Izzo, Francesco Biscani.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 
@@ -336,7 +344,6 @@ configure your python module build using CMake. For example, if you are using co
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

@@ -1,42 +1,46 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>kernel_set &mdash; dCGP 1.5.1 documentation</title>
   
 
   
-  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+
   
   
 
   
-  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/language_data.js"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Available kernels" href="kernel_list.html" />
@@ -84,6 +88,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -118,6 +123,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -152,11 +158,13 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../index.html">API documentation</a> &raquo;</li>
         
@@ -167,7 +175,7 @@
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="../../_sources/docs/cpp/kernel_set.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -225,119 +233,126 @@ facilitated by the class <a class="reference internal" href="#_CPPv4I0EN4dcgp10k
 </div>
 <hr class="docutils" />
 <dl class="cpp class">
-<dt id="_CPPv4I0EN4dcgp10kernel_setE">
-template&lt;typename <code class="sig-name descname">T</code>&gt;<br /><span class="target" id="classdcgp_1_1kernel__set"></span><em class="property">class </em><code class="sig-prename descclassname">dcgp<code class="sig-prename descclassname">::</code></code><code class="sig-name descname">kernel_set</code><a class="headerlink" href="#_CPPv4I0EN4dcgp10kernel_setE" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4I0EN4dcgp10kernel_setE">
+<span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="classdcgp_1_1kernel__set"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">dcgp</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">kernel_set</span></span></span><a class="headerlink" href="#_CPPv4I0EN4dcgp10kernel_setE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Function set. </p>
 <p>This class is provided as an helper to construct the std::vector&lt;kernel&lt;T&gt;&gt; that is requested to form a dcgp::expression&lt;T&gt;. Once constructed, a call to its parenthesis operator will return the std::vector containing the requested kernels</p>
-<p><dl class="simple">
-<dt><strong>Template Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">T</span></code>: The type of the functions output (and inputs) </p></li>
-</ul>
+<p><dl class="field-list simple">
+<dt class="field-odd">tparam T</dt>
+<dd class="field-odd"><p>The type of the functions output (and inputs) </p>
 </dd>
 </dl>
 </p>
 <div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric">Public Functions</p>
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
 <dl class="cpp function">
-<dt id="_CPPv4N4dcgp10kernel_set10kernel_setEv">
-<span class="target" id="classdcgp_1_1kernel__set_1a816e6b39a37cf37ff0f997eba28adf3c"></span><code class="sig-name descname">kernel_set</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10kernel_set10kernel_setEv" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4dcgp10kernel_set10kernel_setEv">
+<span class="target" id="classdcgp_1_1kernel__set_1a816e6b39a37cf37ff0f997eba28adf3c"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">kernel_set</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10kernel_set10kernel_setEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Constructor. </p>
 <p>Default constructor </p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N4dcgp10kernel_set10kernel_setERKNSt6vectorINSt6stringEEE">
-<span class="target" id="classdcgp_1_1kernel__set_1a9e77585d4db14d2863d2ca66903b7123"></span><code class="sig-name descname">kernel_set</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;std::string&gt; &amp;<em>list</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10kernel_set10kernel_setERKNSt6vectorINSt6stringEEE" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4dcgp10kernel_set10kernel_setERKNSt6vectorINSt6stringEEE">
+<span class="target" id="classdcgp_1_1kernel__set_1a9e77585d4db14d2863d2ca66903b7123"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">kernel_set</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">list</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10kernel_set10kernel_setERKNSt6vectorINSt6stringEEE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Constructor. </p>
 <p>Constructs a kernel set that can be used in a dCGP expression</p>
-<p><dl class="simple">
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">list</span></code>: an std::vector of strings containing the function names (e.g., “sum”) </p></li>
-</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>list</strong> – <strong>[in]</strong> an std::vector of strings containing the function names (e.g., “sum”) </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N4dcgp10kernel_set9push_backENSt6stringE">
-<span class="target" id="classdcgp_1_1kernel__set_1ab50af3275d6540e3e15009ee725d527c"></span>void <code class="sig-name descname">push_back</code><span class="sig-paren">(</span>std::string <em>kernel_name</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10kernel_set9push_backENSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4dcgp10kernel_set9push_backENSt6stringE">
+<span class="target" id="classdcgp_1_1kernel__set_1ab50af3275d6540e3e15009ee725d527c"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">push_back</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">kernel_name</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10kernel_set9push_backENSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Adds a kernel to the set. </p>
 <p>Constructs a kernel&lt;T&gt; given a string containing the function name, and inserts it into the std::vector</p>
-<p><dl class="simple">
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">kernel_name</span></code>: a string containing the function name</p></li>
-</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>kernel_name</strong> – <strong>[in]</strong> a string containing the function name</p>
 </dd>
-<dt><strong>Exceptions</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">std::invalid_argument</span></code>: if the function is not implemented </p></li>
-</ul>
+<dt class="field-even">Throws</dt>
+<dd class="field-even"><p><span><span class="cpp-expr sig sig-inline cpp"><span class="n">std</span><span class="p">::</span><span class="n">invalid_argument</span></span></span> – if the function is not implemented </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N4dcgp10kernel_set9push_backERKN4dcgp6kernelI1TEE">
-<span class="target" id="classdcgp_1_1kernel__set_1aa9e742d425be06e5791e84169dbe80c3"></span>void <code class="sig-name descname">push_back</code><span class="sig-paren">(</span><em class="property">const</em> dcgp::<a class="reference internal" href="kernel.html#_CPPv4I0EN4dcgp6kernelE" title="dcgp::kernel">kernel</a>&lt;<a class="reference internal" href="#_CPPv4I0EN4dcgp10kernel_setE" title="dcgp::kernel_set::T">T</a>&gt; &amp;<em>kernel</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10kernel_set9push_backERKN4dcgp6kernelI1TEE" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4dcgp10kernel_set9push_backERKN4dcgp6kernelI1TEE">
+<span class="target" id="classdcgp_1_1kernel__set_1aa9e742d425be06e5791e84169dbe80c3"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">push_back</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">dcgp</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="kernel.html#_CPPv4I0EN4dcgp6kernelE" title="dcgp::kernel"><span class="n"><span class="pre">kernel</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0EN4dcgp10kernel_setE" title="dcgp::kernel_set::T"><span class="n"><span class="pre">T</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">kernel</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10kernel_set9push_backERKN4dcgp6kernelI1TEE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Adds a kernel to the set. </p>
 <p>Inserts the given kernel&lt;T&gt; into the std::vector</p>
-<p><dl class="simple">
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">kernel</span></code>: the dcgp::kernel&lt;T&gt; to add </p></li>
-</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>kernel</strong> – <strong>[in]</strong> the dcgp::kernel&lt;T&gt; to add </p>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4N4dcgp10kernel_set5clearEv">
-<span class="target" id="classdcgp_1_1kernel__set_1a03ec6a5a1ffa91b78b4c334d7aa7978b"></span>void <code class="sig-name descname">clear</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10kernel_set5clearEv" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4dcgp10kernel_set5clearEv">
+<span class="target" id="classdcgp_1_1kernel__set_1a03ec6a5a1ffa91b78b4c334d7aa7978b"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">clear</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10kernel_set5clearEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Clears the kernel set. </p>
 <p>Removes all the elements from the std::vector containing the kernels </p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4NK4dcgp10kernel_setclEv">
-<span class="target" id="classdcgp_1_1kernel__set_1a052341c728d41cf6e4a09c73d05fe260"></span>std::vector&lt;dcgp::<a class="reference internal" href="kernel.html#_CPPv4I0EN4dcgp6kernelE" title="dcgp::kernel">kernel</a>&lt;<a class="reference internal" href="#_CPPv4I0EN4dcgp10kernel_setE" title="dcgp::kernel_set::T">T</a>&gt;&gt; <code class="sig-name descname">operator()</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp10kernel_setclEv" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4NK4dcgp10kernel_setclEv">
+<span class="target" id="classdcgp_1_1kernel__set_1a052341c728d41cf6e4a09c73d05fe260"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">dcgp</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="kernel.html#_CPPv4I0EN4dcgp6kernelE" title="dcgp::kernel"><span class="n"><span class="pre">kernel</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0EN4dcgp10kernel_setE" title="dcgp::kernel_set::T"><span class="n"><span class="pre">T</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">()</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4dcgp10kernel_setclEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Overloaded function call operator. </p>
 <p>Returns the std::vector containing the kernels </p>
 </dd></dl>
 
 <dl class="cpp function">
-<dt id="_CPPv4NK4dcgp10kernel_setixEKNSt6vectorIN4dcgp6kernelI1TEEE9size_typeE">
-<span class="target" id="classdcgp_1_1kernel__set_1a23a266ae572f831f2b8959cdf471e477"></span>dcgp::<a class="reference internal" href="kernel.html#_CPPv4I0EN4dcgp6kernelE" title="dcgp::kernel">kernel</a>&lt;<a class="reference internal" href="#_CPPv4I0EN4dcgp10kernel_setE" title="dcgp::kernel_set::T">T</a>&gt; <code class="sig-name descname">operator[]</code><span class="sig-paren">(</span><em class="property">const</em> <em class="property">typename</em> std::vector&lt;dcgp::<a class="reference internal" href="kernel.html#_CPPv4I0EN4dcgp6kernelE" title="dcgp::kernel">kernel</a>&lt;<a class="reference internal" href="#_CPPv4I0EN4dcgp10kernel_setE" title="dcgp::kernel_set::T">T</a>&gt;&gt;::size_type <em>idx</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4dcgp10kernel_setixEKNSt6vectorIN4dcgp6kernelI1TEEE9size_typeE" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4NK4dcgp10kernel_setixEKNSt6vectorIN4dcgp6kernelI1TEEE9size_typeE">
+<span class="target" id="classdcgp_1_1kernel__set_1a23a266ae572f831f2b8959cdf471e477"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">dcgp</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="kernel.html#_CPPv4I0EN4dcgp6kernelE" title="dcgp::kernel"><span class="n"><span class="pre">kernel</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0EN4dcgp10kernel_setE" title="dcgp::kernel_set::T"><span class="n"><span class="pre">T</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">[]</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">dcgp</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="kernel.html#_CPPv4I0EN4dcgp6kernelE" title="dcgp::kernel"><span class="n"><span class="pre">kernel</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0EN4dcgp10kernel_setE" title="dcgp::kernel_set::T"><span class="n"><span class="pre">T</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">size_type</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">idx</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4dcgp10kernel_setixEKNSt6vectorIN4dcgp6kernelI1TEEE9size_typeE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Returns the kernel at a specified index in the std::vector</p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>the kernel at the specified index </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>idx</strong> – <strong>[in]</strong> index of the required kernel</p>
 </dd>
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">idx</span></code>: index of the required kernel</p></li>
-</ul>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the kernel at the specified index </p>
 </dd>
 </dl>
-</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I0EN4dcgp10kernel_set9serializeEvR7Archivej">
+<span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Archive</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="classdcgp_1_1kernel__set_1abd7f74939ddd20d14d056394afaf3f3f"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">serialize</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0EN4dcgp10kernel_set9serializeEvR7Archivej" title="dcgp::kernel_set::serialize::Archive"><span class="n"><span class="pre">Archive</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">ar</span></span>, <span class="kt"><span class="pre">unsigned</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN4dcgp10kernel_set9serializeEvR7Archivej" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Object serialization. </p>
+<p>This method will save/load <code class="docutils literal notranslate"><span class="pre">this</span></code> into the archive <code class="docutils literal notranslate"><span class="pre">ar</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ar</strong> – target archive.</p>
+</dd>
+<dt class="field-even">Throws</dt>
+<dd class="field-even"><p><span><span class="cpp-expr sig sig-inline cpp"><span class="n">unspecified</span></span></span> – any exception thrown by the serialization of the expression and of primitive types. </p>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
 <div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric">Friends</p>
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-friends">Friends</p>
 <dl class="cpp function">
-<dt id="_CPPv4N4dcgp10kernel_setlsERNSt7ostreamERK10kernel_setI1TE">
-<span class="target" id="classdcgp_1_1kernel__set_1ae1010fbacdb829ac82538a01ea8d790d"></span><em class="property">friend</em> std::ostream &amp;<code class="sig-name descname">operator&lt;&lt;</code><span class="sig-paren">(</span>std::ostream &amp;<em>os</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN4dcgp10kernel_setE" title="dcgp::kernel_set">kernel_set</a>&lt;<a class="reference internal" href="#_CPPv4I0EN4dcgp10kernel_setE" title="dcgp::kernel_set::T">T</a>&gt; &amp;<em>d</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10kernel_setlsERNSt7ostreamERK10kernel_setI1TE" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4dcgp10kernel_setlsERNSt7ostreamERK10kernel_setI1TE">
+<span class="target" id="classdcgp_1_1kernel__set_1ae1010fbacdb829ac82538a01ea8d790d"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">friend</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ostream</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">&lt;&lt;</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ostream</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">os</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN4dcgp10kernel_setE" title="dcgp::kernel_set"><span class="n"><span class="pre">kernel_set</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0EN4dcgp10kernel_setE" title="dcgp::kernel_set::T"><span class="n"><span class="pre">T</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">d</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp10kernel_setlsERNSt7ostreamERK10kernel_setI1TE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Overloaded stream operator. </p>
 <p>Will stream the function names</p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>reference to <code class="docutils literal notranslate"><span class="pre">os</span></code> </p>
-</dd>
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">[inout]</span> <span class="pre">os</span></code>: target stream </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">[in]</span> <span class="pre">d</span></code>: <a class="reference internal" href="#classdcgp_1_1kernel__set"><span class="std std-ref">kernel_set</span></a> argument</p></li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>os</strong> – <strong>[inout]</strong> target stream </p></li>
+<li><p><strong>d</strong> – <strong>[in]</strong> <a class="reference internal" href="#classdcgp_1_1kernel__set"><span class="std std-ref">kernel_set</span></a> argument</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>reference to <code class="docutils literal notranslate"><span class="pre">os</span></code> </p>
+</dd>
 </dl>
-</p>
 </dd></dl>
 
 </div>
@@ -350,29 +365,29 @@ template&lt;typename <code class="sig-name descname">T</code>&gt;<br /><span cla
            
           </div>
           <footer>
-  
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="kernel_list.html" class="btn btn-neutral float-right" title="Available kernels" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="kernel.html" class="btn btn-neutral float-left" title="kernel" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+        <a href="kernel_list.html" class="btn btn-neutral float-right" title="Available kernels" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="kernel.html" class="btn btn-neutral float-left" title="kernel" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Dario Izzo, Francesco Biscani
+        &#169; Copyright 2020, Dario Izzo, Francesco Biscani.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 
@@ -380,7 +395,6 @@ template&lt;typename <code class="sig-name descname">T</code>&gt;<br /><span cla
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {
