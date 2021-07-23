@@ -2,7 +2,8 @@
 name: deploy 
 # Controls when the workflow will run
 on:
-  # Trigger the workflow on push for the master branch
+  # Trigger the workflow on push or pull request,
+  # but only for the master branch
   push:
     branches:
       - master
