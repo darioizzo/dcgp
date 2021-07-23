@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Available kernels &mdash; dCGP 1.5.1 documentation</title>
+  <title>Threading &mdash; dCGP 1.5.1 documentation</title>
   
 
   
@@ -37,16 +37,14 @@
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-        <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "document", "processHtmlClass": "math|output_area"}}</script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
     
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="expression (dCGP)" href="expression.html" />
-    <link rel="prev" title="Kernel set" href="kernel_set.html" /> 
+    <link rel="next" title="Kernel" href="kernel.html" />
+    <link rel="prev" title="Python Documentation" href="index.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -104,13 +102,11 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../index.html">API documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../cpp/index.html">C++ Documentation</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="index.html">Python Documentation</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="index.html#utilities">Utilities</a></li>
-<li class="toctree-l3 current"><a class="reference internal" href="index.html#kernels">Kernels</a><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="kernel.html">Kernel</a></li>
-<li class="toctree-l4"><a class="reference internal" href="kernel_set.html">Kernel set</a></li>
-<li class="toctree-l4 current"><a class="current reference internal" href="#">Available kernels</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="index.html#utilities">Utilities</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Threading</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#kernels">Kernels</a></li>
 <li class="toctree-l3"><a class="reference internal" href="index.html#types-of-dcgps">Types of dCGPs</a></li>
 <li class="toctree-l3"><a class="reference internal" href="index.html#symbolic-regression">Symbolic Regression</a></li>
 </ul>
@@ -173,13 +169,13 @@
         
           <li><a href="index.html">Python Documentation</a> &raquo;</li>
         
-      <li>Available kernels</li>
+      <li>Threading</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="../../_sources/docs/python/kernel_list.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../_sources/docs/python/threading.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -216,105 +212,37 @@
     text-align: unset;
 }
 </style>
-<div class="section" id="available-kernels">
-<h1>Available kernels<a class="headerlink" href="#available-kernels" title="Permalink to this headline">¶</a></h1>
-<p>When constructing a :class:<code class="docutils literal notranslate"><span class="pre">dcgpy.kernel_set_double</span></code>, :class:<code class="docutils literal notranslate"><span class="pre">dcgpy.kernel_set_gdual_double</span> <span class="pre">``</span>
-<span class="pre">or</span> <span class="pre">:class:``dcgpy.kernel_set_gdual_vdouble</span></code> we can use the following names to add the corresponding
-kernels to the set.</p>
-<hr class="docutils" />
-<table class="table-bordered table-striped docutils align-default">
-<colgroup>
-<col style="width: 13%" />
-<col style="width: 19%" />
-<col style="width: 69%" />
-</colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p>Kernel name</p></th>
-<th class="head"><p>Function</p></th>
-<th class="head"><p>Definition</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td colspan="3"><p><strong>Basic operations</strong></p></td>
-</tr>
-<tr class="row-odd"><td><p>“sum”</p></td>
-<td><p>addition</p></td>
-<td><p><span class="math notranslate nohighlight">\(\sum_i x_i\)</span></p></td>
-</tr>
-<tr class="row-even"><td><p>“diff”</p></td>
-<td><p>subtraction</p></td>
-<td><p><span class="math notranslate nohighlight">\(x_1 - \sum_{i=2} x_i\)</span></p></td>
-</tr>
-<tr class="row-odd"><td><p>“mul”</p></td>
-<td><p>multiplication</p></td>
-<td><p><span class="math notranslate nohighlight">\(\prod_i x_i\)</span></p></td>
-</tr>
-<tr class="row-even"><td><p>“div”</p></td>
-<td><p>division</p></td>
-<td><p><span class="math notranslate nohighlight">\(x_1 / \prod_{i=2} x_i\)</span></p></td>
-</tr>
-<tr class="row-odd"><td><p>“pdiv”</p></td>
-<td><p>protected division</p></td>
-<td><p><span class="math notranslate nohighlight">\(x_1 / \prod_{i=2} x_i\)</span> or 1 if NaN</p></td>
-</tr>
-<tr class="row-even"><td colspan="3"><p><strong>Unary non linearities (ignoring all inputs after the first one)</strong></p></td>
-</tr>
-<tr class="row-odd"><td><p>“sin”</p></td>
-<td><p>sine</p></td>
-<td><p><span class="math notranslate nohighlight">\(\sin x_1\)</span></p></td>
-</tr>
-<tr class="row-even"><td><p>“cos”</p></td>
-<td><p>cosine</p></td>
-<td><p><span class="math notranslate nohighlight">\(\cos x_1\)</span></p></td>
-</tr>
-<tr class="row-odd"><td><p>“log”</p></td>
-<td><p>natural logarithm</p></td>
-<td><p><span class="math notranslate nohighlight">\(\log x_1\)</span></p></td>
-</tr>
-<tr class="row-even"><td><p>“exp”</p></td>
-<td><p>exponential</p></td>
-<td><p><span class="math notranslate nohighlight">\(e^{x_1}\)</span></p></td>
-</tr>
-<tr class="row-odd"><td><p>“gaussian”</p></td>
-<td><p>gaussian</p></td>
-<td><p><span class="math notranslate nohighlight">\(e^{-x_1^2}\)</span></p></td>
-</tr>
-<tr class="row-even"><td><p>“sqrt”</p></td>
-<td><p>square root</p></td>
-<td><p><span class="math notranslate nohighlight">\(\sqrt{x_1}\)</span></p></td>
-</tr>
-<tr class="row-odd"><td><p>“psqrt”</p></td>
-<td><p>protected square root</p></td>
-<td><p><span class="math notranslate nohighlight">\(\sqrt{|x_1|}\)</span></p></td>
-</tr>
-<tr class="row-even"><td colspan="3"><p><strong>Non linearities suitable also for dCGPANN</strong></p></td>
-</tr>
-<tr class="row-odd"><td><p>“sig”</p></td>
-<td><p>sigmoid</p></td>
-<td><p><span class="math notranslate nohighlight">\(\frac{1}{1 + e^{-\sum_i x_i}}\)</span></p></td>
-</tr>
-<tr class="row-even"><td><p>“tanh”</p></td>
-<td><p>hyperbolic tangent</p></td>
-<td><p><span class="math notranslate nohighlight">\(\tanh \left(\sum_i x_i\right)\)</span></p></td>
-</tr>
-<tr class="row-odd"><td><p>“ReLu”</p></td>
-<td><p>rectified linear unit</p></td>
-<td><p><span class="math notranslate nohighlight">\(\sum_i x_i\)</span> if positive, 0 otherwise</p></td>
-</tr>
-<tr class="row-even"><td><p>“ELU”</p></td>
-<td><p>exp linear unit</p></td>
-<td><p><span class="math notranslate nohighlight">\(\sum_i x_i\)</span> if positive, <span class="math notranslate nohighlight">\(e^{\sum_i x_i} - 1\)</span> otherwise</p></td>
-</tr>
-<tr class="row-odd"><td><p>“ISRU”</p></td>
-<td><p>Inverse square root unit</p></td>
-<td><p><span class="math notranslate nohighlight">\(\frac{\sum_i x_i}{\sqrt{1 + \left(\sum_i x_i\right)^2}}\)</span></p></td>
-</tr>
-<tr class="row-even"><td><p>“sum”</p></td>
-<td><p>addition</p></td>
-<td><p><span class="math notranslate nohighlight">\(\sum_i x_i\)</span></p></td>
-</tr>
-</tbody>
-</table>
+<div class="section" id="threading">
+<h1>Threading<a class="headerlink" href="#threading" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="disable-threading">
+<h2>disable_threading<a class="headerlink" href="#disable-threading" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="dcgpy.disable_threading">
+<span class="sig-prename descclassname"><span class="pre">dcgpy.</span></span><span class="sig-name descname"><span class="pre">disable_threading</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.disable_threading" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disables threading on a global level.</p>
+<p>Example:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dcgpy</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">disable_threading</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="enable-threading">
+<h2>enable_threading<a class="headerlink" href="#enable-threading" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="dcgpy.enable_threading">
+<span class="sig-prename descclassname"><span class="pre">dcgpy.</span></span><span class="sig-name descname"><span class="pre">enable_threading</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.enable_threading" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enables threading on a global level (if disabled by calling <a class="reference internal" href="#dcgpy.disable_threading" title="dcgpy.disable_threading"><code class="xref py py-func docutils literal notranslate"><span class="pre">dcgpy.disable_threading()</span></code></a>).</p>
+<p>Example:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dcgpy</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">disable_threading</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">enable_threading</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
 </div>
 
 
@@ -323,8 +251,8 @@ kernels to the set.</p>
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="expression.html" class="btn btn-neutral float-right" title="expression (dCGP)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="kernel_set.html" class="btn btn-neutral float-left" title="Kernel set" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="kernel.html" class="btn btn-neutral float-right" title="Kernel" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="index.html" class="btn btn-neutral float-left" title="Python Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>
