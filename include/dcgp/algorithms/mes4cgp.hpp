@@ -78,6 +78,7 @@ public:
         if (ftol < 0.) {
             throw std::invalid_argument("The ftol is negative, it must be positive or zero.");
         }
+
     }
 
     /// Algorithm evolve method
@@ -92,7 +93,7 @@ public:
      */
     pagmo::population evolve(pagmo::population pop) const
     {
-        const auto &prob = pop.get_problem();
+	const auto &prob = pop.get_problem();
         auto n_obj = prob.get_nobj();
         const auto bounds = prob.get_bounds();
         auto NP = pop.size();

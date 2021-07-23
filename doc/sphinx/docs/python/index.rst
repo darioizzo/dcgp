@@ -3,7 +3,16 @@
 Python Documentation
 ====================
 
-.. contents::
+Utilities
+---------
+
+Assorted functionalities.
+
+.. toctree::
+   :maxdepth: 1
+
+   threading
+
 
 Kernels
 ---------

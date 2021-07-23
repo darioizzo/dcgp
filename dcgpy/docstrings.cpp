@@ -5,6 +5,36 @@
 namespace dcgpy
 {
 
+std::string disable_threading_doc()
+{
+    return R"(disable_threading()
+
+Disables threading on a global level.
+
+Example:
+
+>>> from dcgpy import *
+>>> disable_threading()
+)";
+}
+
+
+std::string enable_threading_doc()
+{
+    return R"(enable_threading()
+
+Enables threading on a global level (if disabled by calling :func:`dcgpy.disable_threading`).
+
+Example:
+
+>>> from dcgpy import *
+>>> disable_threading()
+>>> enable_threading()
+)";
+}
+
+
+
 std::string kernel_init_doc(const std::string &type)
 {
     return R"(kernel_)"

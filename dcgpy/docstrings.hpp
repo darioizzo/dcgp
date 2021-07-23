@@ -5,6 +5,10 @@
 
 namespace dcgpy
 {
+// utilities
+std::string disable_threading_doc();
+std::string enable_threading_doc();
+	
 // kernel set
 std::string kernel_init_doc(const std::string &);
 std::string kernel_set_init_doc(const std::string &);

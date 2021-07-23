@@ -29,7 +29,7 @@ public:
     /**
      * Default constructor
      */
-    kernel_set() : m_kernels(){};
+    kernel_set() : m_kernels(){}
 
     /// Constructor
     /**
