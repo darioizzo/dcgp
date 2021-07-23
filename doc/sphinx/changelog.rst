@@ -3,7 +3,7 @@
 Changelog
 =========
 
-1.5.1 (Unreleased)
+1.6 (Unreleased)
 ------------------
 
 * All UDAs, :class:`dcgpy.es4cgp`, :class:`dcgpy.mes4cgp`, 
