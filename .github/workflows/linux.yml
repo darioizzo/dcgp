@@ -39,5 +39,4 @@ jobs:
       - name: Build
         run: bash tools/gha_ubuntu_latest_python.sh
       - name: Build Documentation
-        run: conda activate $HOME/local
         run: bash tools/gha_build_docs.sh
