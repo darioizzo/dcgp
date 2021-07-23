@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Changelog &mdash; dCGP 1.5.1 documentation</title>
+  <title>Changelog &mdash; dCGP 1.6 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                1.5.1
+                1.6
               </div>
             
           
@@ -206,6 +206,14 @@
 <span id="id1"></span><h1>Changelog<a class="headerlink" href="#changelog" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="unreleased">
 <h2>1.5.1 (Unreleased)<a class="headerlink" href="#unreleased" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>All UDAs, <a class="reference internal" href="docs/python/es4cgp.html#dcgpy.es4cgp" title="dcgpy.es4cgp"><code class="xref py py-class docutils literal notranslate"><span class="pre">dcgpy.es4cgp</span></code></a>, <a class="reference internal" href="docs/python/mes4cgp.html#dcgpy.mes4cgp" title="dcgpy.mes4cgp"><code class="xref py py-class docutils literal notranslate"><span class="pre">dcgpy.mes4cgp</span></code></a>,
+<code class="xref py py-class docutils literal notranslate"><span class="pre">dcgpy.moes4cgp</span></code>, <a class="reference internal" href="docs/python/momes4cgp.html#dcgpy.momes4cgp" title="dcgpy.momes4cgp"><code class="xref py py-class docutils literal notranslate"><span class="pre">dcgpy.momes4cgp</span></code></a> use random mutations rather than active mutations
+to evolve expressions. This improves significantly the algorithm behaviour.</p></li>
+<li><p>Bug fix when using a large number of ephemeral constants … now udas crash is avoided</p></li>
+<li><p>New <a class="reference internal" href="docs/python/threading.html#dcgpy.enable_threading" title="dcgpy.enable_threading"><code class="xref py py-func docutils literal notranslate"><span class="pre">dcgpy.enable_threading()</span></code></a> and <a class="reference internal" href="docs/python/threading.html#dcgpy.disable_threading" title="dcgpy.disable_threading"><code class="xref py py-func docutils literal notranslate"><span class="pre">dcgpy.disable_threading()</span></code></a> utilities
+allowing to switch off multithreding entirely.</p></li>
+</ul>
 </div>
 <div class="section" id="id2">
 <h2>1.5 (6/7/2020)<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
