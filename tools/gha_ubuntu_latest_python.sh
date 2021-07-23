@@ -55,6 +55,10 @@ make install
 
 python -c "from dcgpy import test; test.run_test_suite(); import pygmo; pygmo.mp_island.shutdown_pool(); pygmo.mp_bfe.shutdown_pool()"
 
+# We return to the root folder as
+# for following scripts to start there (if needed)
+
+cd ..
 
 set +e
 set +x

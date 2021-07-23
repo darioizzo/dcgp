@@ -38,3 +38,5 @@ jobs:
       - uses: actions/checkout@v2
       - name: Build
         run: bash tools/gha_ubuntu_latest_python.sh
+      - name: Build Documentation
+        run: bash tools/gha_build_docs.sh
