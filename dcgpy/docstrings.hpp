@@ -21,6 +21,9 @@ std::string expression_set_doc();
 std::string expression_set_f_gene_doc();
 std::string expression_mutate_doc();
 std::string expression_loss_doc();
+std::string expression_set_phenotype_correction_doc();
+std::string expression_unset_phenotype_correction_doc();
+
 
 // expression_weighted
 std::string expression_weighted_set_weight_doc();

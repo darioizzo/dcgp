@@ -112,7 +112,8 @@ Examples:
 
 >>> from dcgpy import *
 >>> dcgp = expression_)"
-           + type + R"((1,1,1,10,11,2,kernel_set(["sum","diff","mul","div"])(), 0u, 32u)
+           + type + R"((1,1,1,10,11,2,kernel_set_)"
+           + type + R"((["sum","diff","mul","div"])(), 0, 32)
 >>> print(dcgp)
 ...
 >>> num_out = dcgp([in])
@@ -141,6 +142,40 @@ Args:
     kernel (``dcgpy.kernel_)"
            + type + R"(``): the kernel to add
     )";
+}
+
+std::string expression_set_phenotype_correction_doc()
+{
+    return R"(set_phenotype_correction(pc)
+
+After a CGP expression is computed one may want to apply a further correction to complete
+manually the computational graph encoded in a CGP. For example, instead of using the CGP to encode a generic
+g(x), one may want it to encode functions in the form f(x, g(x)). This allows, for example
+to implement constraint in the expression, thus searching in smaller functional spaces.
+
+Args:
+    pc (``callable``): callable to be applied to the CGP expression input x and outputs g(x). This callable
+                       will take the expression inputs x and the CGP output g and return new outputs f(x,g).
+                       x,g and f are all assumed to be lists. No checks are done on the actual dimensions
+                       of the input and or outputs.
+
+Examples:
+
+>>> import dcgpy
+>>> ex = expression_double(1,1,1,10,11,2,kernel_set_double(["sum","diff","mul","div"])(), 0, 33)
+>>> def pc(x,g):
+...     return [g[0]*x[0]]
+>>> ex.set_phenotype_correction(pc)
+)";
+
+}
+
+std::string expression_unset_phenotype_correction_doc()
+{
+    return R"(unset_phenotype_correction()
+
+Unsets the phenotype correction.
+)";
 }
 
 std::string expression_loss_doc()

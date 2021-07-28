@@ -1,6 +1,7 @@
 #include <boost/numeric/conversion/cast.hpp>
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
+#include <pybind11/functional.h>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -103,6 +104,8 @@ void expose_expression(const py::module &m, std::string type)
             "mutate_active_fgene", &expression<T>::mutate_active_fgene,
             "mutate_active_fgene(N = 1)\nMutates N randomly selected active function genes within their allowed bounds",
             py::arg("N") = 1)
+        .def("set_phenotype_correction", &expression<T>::set_phenotype_correction, expression_set_phenotype_correction_doc().c_str(), py::arg("pc"))
+        .def("unset_phenotype_correction", &expression<T>::unset_phenotype_correction, expression_unset_phenotype_correction_doc().c_str())
         // The parallelism for the loss computation is switched off in python as pythonic kernels would
         // produce a crash if evaluated in multiple threads.
         .def(

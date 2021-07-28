@@ -178,37 +178,6 @@ public:
         }
         // In the multiobjective case we compute the formula complexity
         if (m_multi_objective) {
-            //std::ostringstream ss;
-            //// A first "naive" implementation of the formula complexity measure is the length of
-            //// the shortest string among pretty and prettier. That is among the raw cgp expression
-            //// and the result of constructing a symengine expression out of it (which carries out some
-            //// basic simplifications but that may results in rare occasions in a longer string).
-            //std::vector<std::string> pretty = m_cgp(m_symbols);
-            //double l_pretty = std::accumulate(pretty.begin(), pretty.end(), 0., [](double a, std::string b) {
-            //    return a + static_cast<double>(b.length());
-            //});
-            //// A second definition for the complexity is the length of the expression
-            //// after it has been simplified. We use symengine to perform such a simplification
-            //// which will make sense only if nans and infs are not in the expression.
-            //double l_prettier = 0;
-            //if (std::isfinite(retval[0])) {
-            //    for (decltype(pretty.size()) i = 0u; i < pretty.size(); ++i) {
-            //        try {
-            //            SymEngine::Expression prettier(pretty[i]);
-            //            pagmo::stream(ss, prettier);
-            //            auto string = ss.str();
-            //            // We remove whitespaces too
-            //            l_prettier += static_cast<double>(
-            //                string.length()
-            //                - static_cast<decltype(string.length())>(std::count(string.begin(), string.end(), ' ')));
-            //        } catch (...) { // TODO: this should be understood. Why is symengine sometime not able to
-            //            // construct an expression from a cgp expression that is finite?
-            //            l_prettier += static_cast<double>(pretty[i].length());
-            //        }
-            //    }
-            //}
-            //// Here we define the formula complexity as the shortest between the two.
-            //retval[1] = std::min(l_pretty, l_prettier);
             retval[1] = static_cast<double>(m_cgp.get_active_genes().size());
         }
         return retval;

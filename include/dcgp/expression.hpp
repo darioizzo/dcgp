@@ -882,7 +882,12 @@ public:
 
     /// Sets the phenotype correction
     /**
-     * @param b batch function evaluation object
+     * After a CGP expression is computed one may want to apply a further correction to complete
+     * manually the represented computational graph. For example instead of using the CGP to encode a generic
+     * g(x), one may want it to encode functions in the form f(x, g(x)). This technique allows, for example
+     * to implement constraint in the expression, searching in smaller functional spaces.
+     *  
+     * @param pc callable to be applied to the CGP expression input x and outputs g(x)
      */
     void set_phenotype_correction(std::function<std::vector<T> (const std::vector<T>&, const std::vector<T>&)> pc)
     {

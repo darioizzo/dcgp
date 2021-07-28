@@ -321,6 +321,30 @@ class test_expression(_ut.TestCase):
         loss_array = ex.loss(np.array([[x]]), np.array([ex([x])]), "MSE")
         self.assertEqual(loss_list, loss_array)
 
+    def test_phenotype_correction_double(self):
+        from dcgpy import expression_double as expression
+        from dcgpy import kernel_set_double as kernel_set
+        from dcgpy import set_phenotype_correction, unset_phenotype_correction
+        ex = expression(inputs=1,
+                outputs=1,
+                rows=1,
+                cols=6,
+                levels_back=6,
+                arity=2,
+                kernels=kernel_set(["sum", "mul", "div", "diff"])(),
+                n_eph=0,
+                seed=33)
+        retval1 = ex([1.])
+        retval2 = ex([2.])
+        def pc1(x,g):
+            return [g[0]*x[0]]
+        ex.set_phenotype_correction(pc1)
+        self.assertEqual(retval1, ex([1.]))
+        retval2 = ex([2.])
+        self.assertEqual(retval2, 2 * ex([2.]))
+        ex.unset_phenotype_correction(pc1)
+        self.assertEqual(retval2, ex([2.]))
+
 
 class test_symbolic_regression(_ut.TestCase):
     def runTest(self):
