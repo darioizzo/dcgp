@@ -394,9 +394,10 @@ BOOST_AUTO_TEST_CASE(ephemeral_constants_test)
 }
 
 template <typename T>
-std::vector<T> my_pc(const std::vector<T> &x, const std::vector<T> &g)
+std::vector<T> my_pc(const std::vector<T> &x, std::function<std::vector<T>(const std::vector<T>&)>g_f)
 {
     std::vector<T> retval(4, T(0));
+    auto g = g_f(x);
     retval[0] = g[0] * x[0];
     retval[1] = g[1] * x[0] * x[1];
     retval[2] = g[2] * x[1];
@@ -405,9 +406,10 @@ std::vector<T> my_pc(const std::vector<T> &x, const std::vector<T> &g)
 }
 
 template <typename T>
-std::vector<T> my_pc2(const std::vector<T> &x, const std::vector<T> &g)
+std::vector<T> my_pc2(const std::vector<T> &x, std::function<std::vector<T>(const std::vector<T>&)>g_f)
 {
     std::vector<T> retval(1, T(0));
+    auto g = g_f(x);
     retval[0] = g[0] * x[0] * x[1] * x[2] * x[3];
     return retval;
 }

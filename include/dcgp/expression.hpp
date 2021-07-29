@@ -48,7 +48,8 @@ private:
         std::is_same<U, double>::value || is_gdual<T>::value || std::is_same<U, std::string>::value, int>::type;
 
     // Phenotype Correction function type
-    using pc_type = std::function<std::vector<T> (const std::vector<T>&, const std::vector<T>&)>;
+    using pc_type
+        = std::function<std::vector<T>(const std::vector<T> &, std::function<std::vector<T>(const std::vector<T> &)>)>;
 
 public:
     /// Loss types
@@ -155,7 +156,7 @@ public:
     }
 
     /// Virtual destructor
-    virtual ~expression(){}
+    virtual ~expression() {}
     // Defaults default copy ctor, copy assignment operator, move ctor and move assignment operator
     // are ok since all our members are trivial. They are needed to silence a warning since the destructor is present.
     /// Copy constructor
@@ -178,34 +179,11 @@ public:
      */
     virtual std::vector<T> operator()(const std::vector<T> &point) const
     {
-        std::vector<T> point_expanded(point);
-        point_expanded.insert(point_expanded.end(), m_eph_val.begin(), m_eph_val.end());
-
-        if (point_expanded.size() != m_n) {
-            throw std::invalid_argument("Input size is incompatible");
-        }
         std::vector<T> retval(m_m);
-        std::vector<T> node(m_n + m_r * m_c);
-        std::vector<T> function_in;
-
-        for (auto node_id : m_active_nodes) {
-            if (node_id < m_n) {
-                node[node_id] = point_expanded[node_id];
-            } else {
-                unsigned arity = _get_arity(node_id);
-                function_in.resize(arity);
-                unsigned idx = m_gene_idx[node_id]; // position in the chromosome of the current node
-                for (auto j = 0u; j < arity; ++j) {
-                    function_in[j] = node[m_x[idx + j + 1u]];
-                }
-                node[node_id] = m_f[m_x[idx]](function_in);
-            }
-        }
-        for (auto i = 0u; i < m_m; ++i) {
-            retval[i] = node[m_x[m_x.size() - m_m + i]];
-        }
+        retval = call_operator_impl(*this, point);
         if (m_phenotype_correction) {
-            retval = (*m_phenotype_correction)(point, retval);
+            retval = (*m_phenotype_correction)(
+                point, [this](const std::vector<T> &arg) { return call_operator_impl(*this, arg); });
         }
         return retval;
     }
@@ -398,7 +376,7 @@ public:
     void set_from_range(InputIt begin, InputIt end)
     {
         check_cgp_encoding(begin, end);
-        std::transform(begin, end, m_x.begin(), [](auto x){return static_cast<unsigned>(x);});
+        std::transform(begin, end, m_x.begin(), [](auto x) { return static_cast<unsigned>(x); });
         update_data_structures();
     }
 
@@ -884,19 +862,19 @@ public:
     /**
      * After a CGP expression is computed one may want to apply a further correction to complete
      * manually the represented computational graph. For example instead of using the CGP to encode a generic
-     * g(x), one may want it to encode functions in the form f(x, g(x)). This technique allows, for example
-     * to implement constraint in the expression, searching in smaller functional spaces.
-     *  
-     * @param pc callable to be applied to the CGP expression input x and outputs g(x)
+     * g(x), one may want it to encode functions in the form f(x, g(x)). 
+     *
+     * @param pc callable to be applied to the CGP expression. 
      */
-    void set_phenotype_correction(std::function<std::vector<T> (const std::vector<T>&, const std::vector<T>&)> pc)
+    void set_phenotype_correction(pc_type pc)
     {
         // TODO:checks
         m_phenotype_correction = pc;
     }
 
     /// Unsets the phenotype correction
-    void unset_phenotype_correction() {
+    void unset_phenotype_correction()
+    {
         m_phenotype_correction = boost::none;
     }
 
@@ -1059,9 +1037,39 @@ protected:
         return retval;
     }
 
-
-
 private:
+    // implemented as a fake static member as to allow its use as a phenotype correction.
+    static std::vector<T> call_operator_impl(const expression<T> &ex, const std::vector<T> &point)
+    {
+        std::vector<T> point_expanded(point);
+        point_expanded.insert(point_expanded.end(), ex.m_eph_val.begin(), ex.m_eph_val.end());
+
+        if (point_expanded.size() != ex.m_n) {
+            throw std::invalid_argument("Input size is incompatible");
+        }
+        std::vector<T> retval(ex.m_m);
+        std::vector<T> node(ex.m_n + ex.m_r * ex.m_c);
+        std::vector<T> function_in;
+
+        for (auto node_id : ex.m_active_nodes) {
+            if (node_id < ex.m_n) {
+                node[node_id] = point_expanded[node_id];
+            } else {
+                unsigned arity = ex._get_arity(node_id);
+                function_in.resize(arity);
+                unsigned idx = ex.m_gene_idx[node_id]; // position in the chromosome of the current node
+                for (auto j = 0u; j < arity; ++j) {
+                    function_in[j] = node[ex.m_x[idx + j + 1u]];
+                }
+                node[node_id] = ex.m_f[ex.m_x[idx]](function_in);
+            }
+        }
+        for (auto i = 0u; i < ex.m_m; ++i) {
+            retval[i] = node[ex.m_x[ex.m_x.size() - ex.m_m + i]];
+        }
+        return retval;
+    }
+
     /// Validity of the CGP encoding
     /**
      * Checks if a CGP encoding (i.e. a sequence of integers) is a valid expression
@@ -1098,7 +1106,7 @@ private:
         }
         return true;
     }
-    
+
     void sanity_checks()
     {
         if (m_n == 0) throw std::invalid_argument("Number of inputs is 0");

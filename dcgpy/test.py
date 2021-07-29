@@ -337,7 +337,7 @@ class test_expression(_ut.TestCase):
         retval1 = ex([1.])
         retval2 = ex([2.])
         def pc1(x,g):
-            return [g[0]*x[0]]
+            return [g(x)[0]*x[0]]
         ex.set_phenotype_correction(pc1)
         self.assertEqual(retval1, ex([1.]))
         retval2 = ex([2.])
