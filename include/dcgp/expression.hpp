@@ -860,9 +860,9 @@ public:
 
     /// Sets the phenotype correction
     /**
-     * After a CGP expression is computed one may want to apply a further correction to complete
-     * manually the represented computational graph. For example instead of using the CGP to encode a generic
-     * g(x), one may want it to encode functions in the form f(x, g(x)). 
+     * A phenotype correction is a correction applied to the expression output that depends
+     * on the expression itself and on its inputs. Indicating with g the expression, the overall output,
+     * after a phenotype expression is applied, will be of the generic form y = pc(x, g)
      *
      * @param pc callable to be applied to the CGP expression. 
      */

@@ -148,23 +148,22 @@ std::string expression_set_phenotype_correction_doc()
 {
     return R"(set_phenotype_correction(pc)
 
-After a CGP expression is computed one may want to apply a further correction to complete
-manually the computational graph encoded in a CGP. For example, instead of using the CGP to encode a generic
-g(x), one may want it to encode functions in the form f(x, g(x)). This allows, for example
-to implement constraint in the expression, thus searching in smaller functional spaces.
+A phenotype correction is a correction applied to the expression output that depends
+on the expression itself and on its inputs.
+
+Indicating with g the expression, the overall output, after a phenotype
+expression is applied, will be of the generic for y = pc(x, g)
 
 Args:
-    pc (``callable``): callable to be applied to the CGP expression input x and outputs g(x). This callable
-                       will take the expression inputs x and the CGP output g and return new outputs f(x,g).
-                       x,g and f are all assumed to be lists. No checks are done on the actual dimensions
-                       of the input and or outputs.
+    pc (``callable``): callable to be applied to the CGP expression input x and the encoded expression g.
+                       No checks are done on the actual dimensions of the input and or outputs.
 
 Examples:
 
 >>> import dcgpy
 >>> ex = expression_double(1,1,1,10,11,2,kernel_set_double(["sum","diff","mul","div"])(), 0, 33)
 >>> def pc(x,g):
-...     return [g[0]*x[0]]
+...     return [g(x)[0]*x[0]]
 >>> ex.set_phenotype_correction(pc)
 )";
 
