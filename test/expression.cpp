@@ -458,7 +458,7 @@ BOOST_AUTO_TEST_CASE(phenotype_correction)
         gdual_d x0(1.234, "x0", 1);
         gdual_d x1(-1.234, "x1", 1);
         // f(x, g(x))
-        auto f_g_ = ex1({x0, x1});
+        auto f_g = ex1({x0, x1});
         ex1.unset_phenotype_correction();
         // g(x)
         auto g_g = ex1({x0, x1});
