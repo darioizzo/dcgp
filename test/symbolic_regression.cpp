@@ -119,7 +119,7 @@ BOOST_AUTO_TEST_CASE(fitness_test_two_obj)
 }
 
 template <typename T>
-std::vector<T> pc(const std::vector<T>& x, std::function<std::vector<T>(const std::vector<T>& x)> g) {
+std::vector<T> pc(const std::vector<T>& x, dcgp::function<std::vector<T>(const std::vector<T>& x)> g) {
     std::vector<T> retval = g(x);
     retval[0] = retval[0]*2.;
     retval[1] = retval[1]*10.;

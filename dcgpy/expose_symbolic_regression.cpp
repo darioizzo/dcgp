@@ -125,9 +125,9 @@ void expose_symbolic_regression(py::module &m)
             py::arg("points"), py::arg("chromosome"), symbolic_regression_predict_doc().c_str())
         .def("set_phenotype_correction",
              [](dcgp::symbolic_regression &instance, const py::object &ppc) {
-                 typename dcgp::expression<double>::pc_type pc = ppc.cast<typename dcgp::expression<double>::pc_type>();
-                 typename dcgp::expression<audi::gdual_v>::pc_type dpc
-                     = ppc.cast<typename dcgp::expression<audi::gdual_v>::pc_type>();
+                 typename dcgp::expression<double>::pc_fun_type pc = ppc.cast<typename dcgp::expression<double>::pc_fun_type>();
+                 typename dcgp::expression<audi::gdual_v>::pc_fun_type dpc
+                     = ppc.cast<typename dcgp::expression<audi::gdual_v>::pc_fun_type>();
                  instance.set_phenotype_correction(pc, dpc);
              })
         .def("unset_phenotype_correction", &dcgp::symbolic_regression::unset_phenotype_correction)

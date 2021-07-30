@@ -1,5 +1,6 @@
 #define BOOST_TEST_MODULE dcgp_compute_test
 #include <boost/test/included/unit_test.hpp>
+#include <boost/lexical_cast.hpp>
 
 #include <algorithm>
 #include <random>
@@ -9,11 +10,10 @@
 
 #include <audi/gdual.hpp>
 
-#include <boost/lexical_cast.hpp>
-
 #include <pagmo/io.hpp>
 
 #include <dcgp/expression.hpp>
+#include <dcgp/function.hpp>
 #include <dcgp/kernel_set.hpp>
 #include <dcgp/s11n.hpp>
 #include <dcgp/wrapped_functions_s11n_implement.hpp>
@@ -394,7 +394,7 @@ BOOST_AUTO_TEST_CASE(ephemeral_constants_test)
 }
 
 template <typename T>
-std::vector<T> my_pc(const std::vector<T> &x, std::function<std::vector<T>(const std::vector<T>&)>g_f)
+std::vector<T> my_pc(const std::vector<T> &x, dcgp::function<std::vector<T>(const std::vector<T>&)>g_f)
 {
     std::vector<T> retval(4, T(0));
     auto g = g_f(x);
@@ -406,7 +406,7 @@ std::vector<T> my_pc(const std::vector<T> &x, std::function<std::vector<T>(const
 }
 
 template <typename T>
-std::vector<T> my_pc2(const std::vector<T> &x, std::function<std::vector<T>(const std::vector<T>&)>g_f)
+std::vector<T> my_pc2(const std::vector<T> &x, dcgp::function<std::vector<T>(const std::vector<T>&)>g_f)
 {
     std::vector<T> retval(1, T(0));
     auto g = g_f(x);
@@ -472,6 +472,15 @@ BOOST_AUTO_TEST_CASE(phenotype_correction)
         BOOST_CHECK_EQUAL(df, dg * 1.234 + g);
     }
 }
+template <typename T>
+std::vector<T> my_pc3(const std::vector<T> &x, dcgp::function<std::vector<T>(const std::vector<T>&)>g_f)
+{
+    auto retval = g_f(x);
+    retval[0] = retval[0]*2;
+    retval[1] = retval[1]*10;
+    return retval;
+}
+
 
 BOOST_AUTO_TEST_CASE(s11n_test)
 {
@@ -479,8 +488,9 @@ BOOST_AUTO_TEST_CASE(s11n_test)
     std::random_device rd;
     kernel_set<double> basic_set({"sum", "diff", "mul", "div"});
     expression<double> ex(2, 2, 2, 2, 3, 2, basic_set(), 0u, rd());
-
-    const auto orig = boost::lexical_cast<std::string>(ex);
+    ex.set_phenotype_correction(my_pc3<double>);
+    auto before_num = ex({1.2, 3.3});
+    auto before_string = boost::lexical_cast<std::string>(ex);
 
     std::stringstream ss;
     {
@@ -492,6 +502,9 @@ BOOST_AUTO_TEST_CASE(s11n_test)
         boost::archive::binary_iarchive iarchive(ss);
         iarchive >> ex;
     }
+    auto after_num = ex({1.2, 3.3});
 
-    BOOST_CHECK(orig == boost::lexical_cast<std::string>(ex));
+    //BOOST_CHECK(before_num == after_num);
+    BOOST_CHECK(before_string == boost::lexical_cast<std::string>(ex));
+
 }

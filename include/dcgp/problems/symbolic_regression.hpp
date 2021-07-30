@@ -535,7 +535,7 @@ public:
      * @param pc callable to be applied to correct a double expression.
      * @param dpc callable to be applied to correct a gdual_v expression.
      */
-    void set_phenotype_correction(typename expression<double>::pc_type pc, typename expression<audi::gdual_v>::pc_type dpc)
+    void set_phenotype_correction(typename expression<double>::pc_fun_type pc, typename expression<audi::gdual_v>::pc_fun_type dpc)
     {
         m_cgp.set_phenotype_correction(pc);
         m_dcgp.set_phenotype_correction(dpc);
@@ -678,7 +678,7 @@ namespace details
 // to be overridden in the python bindings so that it can extract from a py::object a
 // c++ dcgp::symbolic_regression. Its use is in the UDAs evolve to access (both in C++ and python)
 // the correct UDP.
-inline std::function<const dcgp::symbolic_regression *(const pagmo::problem &)> extract_sr_cpp_py
+inline dcgp::function<const dcgp::symbolic_regression *(const pagmo::problem &)> extract_sr_cpp_py
     = [](const pagmo::problem &p) { return p.extract<dcgp::symbolic_regression>(); };
 } // namespace details
 } // namespace dcgp

@@ -171,7 +171,7 @@ public:
     }
 
     template <typename T, std::enable_if_t<!std::is_same_v<function, uncvref_t<T>>, int> = 0>
-    explicit function(T &&x) : function(std::forward<T>(x), std::is_function<uncvref_t<T>>{})
+    function(T &&x) : function(std::forward<T>(x), std::is_function<uncvref_t<T>>{})
     {
         // Assign the thread safety level.
         m_thread_safety = ptr()->get_thread_safety();

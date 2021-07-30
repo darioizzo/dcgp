@@ -16,6 +16,15 @@
 #include <tbb/spin_mutex.h>
 
 #include <boost/optional.hpp>
+/* This <boost/serialization/version.hpp> include guards against an issue
+ * in boost::serialization from boost 1.74.0 that leads to compiler error
+ * "explicit specialization of undeclared template struct 'version'" when
+ * including <boost/serialization/optional.hpp>. More details in tickets:
+ * https://github.com/boostorg/serialization/issues/210
+ * https://github.com/boostorg/serialization/issues/217
+ */
+#include <boost/serialization/optional.hpp>
+#include <boost/serialization/version.hpp>
 
 #include <dcgp/config.hpp>
 #include <dcgp/kernel.hpp>
@@ -23,6 +32,8 @@
 #include <dcgp/rng.hpp>
 #include <dcgp/s11n.hpp>
 #include <dcgp/type_traits.hpp>
+#include <dcgp/wrapped_functions.hpp>
+
 
 namespace dcgp
 {
@@ -49,8 +60,8 @@ private:
 
 public:
     // Phenotype Correction function type
-    using pc_type
-        = std::function<std::vector<T>(const std::vector<T> &, std::function<std::vector<T>(const std::vector<T> &)>)>;
+    using pc_fun_type
+        = function<std::vector<T>(const std::vector<T> &, function<std::vector<T>(const std::vector<T> &)>)>;
     /// Loss types
     enum class loss_type {
         /// Mean Squared Error
@@ -865,7 +876,7 @@ public:
      *
      * @param pc callable to be applied to the CGP expression.
      */
-    void set_phenotype_correction(pc_type pc)
+    void set_phenotype_correction(pc_fun_type pc)
     {
         // TODO:checks
         m_phenotype_correction = pc;
@@ -1235,7 +1246,7 @@ private:
     // The starting index in the chromosome of the genes expressing a node
     std::vector<unsigned> m_gene_idx;
     // The optional phenotype correction
-    boost::optional<pc_type> m_phenotype_correction;
+    boost::optional<pc_fun_type> m_phenotype_correction;
     // the random engine for the class
     detail::random_engine_type m_e;
     // The expression type
