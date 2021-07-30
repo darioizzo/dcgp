@@ -1,5 +1,6 @@
 #include <pybind11/iostream.h>
 #include <pybind11/stl.h>
+#include <pybind11/functional.h>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -122,6 +123,15 @@ void expose_symbolic_regression(py::module &m)
                 }
             },
             py::arg("points"), py::arg("chromosome"), symbolic_regression_predict_doc().c_str())
+        .def("set_phenotype_correction",
+             [](dcgp::symbolic_regression &instance, const py::object &ppc) {
+                 typename dcgp::expression<double>::pc_type pc = ppc.cast<typename dcgp::expression<double>::pc_type>();
+                 typename dcgp::expression<audi::gdual_v>::pc_type dpc
+                     = ppc.cast<typename dcgp::expression<audi::gdual_v>::pc_type>();
+                 instance.set_phenotype_correction(pc, dpc);
+             })
+        .def("unset_phenotype_correction", &dcgp::symbolic_regression::unset_phenotype_correction)
+
         .def(py::pickle(&udx_pickle_getstate<dcgp::symbolic_regression>,
                         &udx_pickle_setstate<dcgp::symbolic_regression>))
         .def("__repr__", &dcgp::symbolic_regression::get_extra_info);
@@ -188,8 +198,7 @@ void expose_symbolic_regression(py::module &m)
     py::class_<dcgp::momes4cgp> momes4cgp_(m, "momes4cgp", momes4cgp_doc().c_str());
 
     momes4cgp_
-        .def(py::init<unsigned, unsigned, double>(), py::arg("gen") = 1u, py::arg("max_mut") = 4u,
-             py::arg("ftol") = 0.)
+        .def(py::init<unsigned, unsigned, double>(), py::arg("gen") = 1u, py::arg("max_mut") = 4u, py::arg("ftol") = 0.)
         .def(py::init<unsigned, unsigned, double, unsigned>(), py::arg("gen") = 1u, py::arg("max_mut") = 4u,
              py::arg("ftol") = 0., py::arg("seed"))
         .def("evolve", &dcgp::momes4cgp::evolve)
@@ -230,6 +239,5 @@ void expose_symbolic_regression(py::module &m)
     expose_data_from_the_gym<&gym::generate_misra1b>(m, "generate_misra1b", generate_misra1b_doc());
     // MISC data
     expose_data_from_the_gym<&gym::generate_luca1>(m, "generate_luca1", generate_luca1_doc());
-
 }
 } // namespace dcgpy
