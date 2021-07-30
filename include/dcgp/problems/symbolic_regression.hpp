@@ -526,6 +526,28 @@ public:
             .get_thread_safety();
     }
 
+    /// Sets the phenotype correction
+    /**
+     * Sets the phenotype correction for both the internal cgp and dcgp. 
+     * No checks are made and the user must take care that the two functions passed
+     * are actually computing the same quantity using different types (double and gdual_v).
+     * 
+     * @param pc callable to be applied to correct a double expression.
+     * @param dpc callable to be applied to correct a gdual_v expression.
+     */
+    void set_phenotype_correction(typename expression<double>::pc_type pc, typename expression<audi::gdual_v>::pc_type dpc)
+    {
+        m_cgp.set_phenotype_correction(pc);
+        m_dcgp.set_phenotype_correction(dpc);
+    }
+
+    /// Unsets the phenotype correction
+    void unset_phenotype_correction()
+    {
+        m_cgp.unset_phenotype_correction();
+        m_dcgp.unset_phenotype_correction();
+    }
+
 private:
     // Collapses a vectorized cf into one (taking the mean)
     static inline double collapse(const audi::vectorized<double> &vec)
@@ -638,13 +660,16 @@ private:
     unsigned m_parallel_batches;
     std::string m_loss_s;
     dcgp::expression<audi::gdual_v>::loss_type m_loss_e;
+
+
     // The fact that this is mutable may hamper the performances of the bfe as the thread safetly level
     // of the UDP in pagmo will force copies of the UDP to be made in all threads. This can in principle be
-    // avoided, but likely resulting in prepature optimization. (see https://github.com/darioizzo/dcgp/pull/42)
+    // avoided, but likely resulting in premature optimization. (see https://github.com/darioizzo/dcgp/pull/42)
     mutable expression<double> m_cgp;
     mutable expression<audi::gdual_v> m_dcgp;
     mutable std::pair<pagmo::vector_double, pagmo::vector_double> m_cache_fitness;
     mutable std::pair<pagmo::vector_double, pagmo::vector_double> m_cache_gradient;
+
 };
 
 namespace details

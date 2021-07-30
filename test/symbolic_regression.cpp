@@ -118,6 +118,40 @@ BOOST_AUTO_TEST_CASE(fitness_test_two_obj)
     }
 }
 
+template <typename T>
+std::vector<T> pc(const std::vector<T>& x, std::function<std::vector<T>(const std::vector<T>& x)> g) {
+    std::vector<T> retval = g(x);
+    retval[0] = retval[0]*2.;
+    retval[1] = retval[1]*10.;
+    return retval;
+}
+
+BOOST_AUTO_TEST_CASE(phenotype_correction_test)
+{
+    kernel_set<double> basic_set({"sum", "diff", "mul", "div"});
+    // 2xy, 2x
+    pagmo::vector_double test_x = {0, 1, 1, 0, 0, 0, 2, 0, 2, 2, 0, 2, 4, 3};
+    // On a single point/label.
+    {
+        symbolic_regression udp({{1., 1.}}, {{2., 2.}}, 2, 2, 3, 2, basic_set(), 0u, false, 0u);
+        BOOST_CHECK_EQUAL(udp.fitness(test_x)[0], 0.);
+        udp.set_phenotype_correction(pc<double>, pc<audi::gdual_v>);
+        BOOST_CHECK_EQUAL(udp.fitness(test_x)[0], 164.);
+    }
+    {
+        symbolic_regression udp({{1., 1.}}, {{0., 0.}}, 2, 2, 3, 2, basic_set(), 0u, false, 0u);
+        BOOST_CHECK_EQUAL(udp.fitness(test_x)[0], 4.);
+        udp.set_phenotype_correction(pc<double>, pc<audi::gdual_v>);
+        BOOST_CHECK_EQUAL(udp.fitness(test_x)[0], 208.);
+    }
+    {
+        symbolic_regression udp({{1., 0.}}, {{0., 0.}}, 2, 2, 3, 2, basic_set(), 0u, false, 0u);
+        BOOST_CHECK_EQUAL(udp.fitness(test_x)[0], 2.);
+        udp.set_phenotype_correction(pc<double>, pc<audi::gdual_v>);
+        BOOST_CHECK_EQUAL(udp.fitness(test_x)[0], 200.);
+    }
+}
+
 
 BOOST_AUTO_TEST_CASE(get_bounds_test)
 {
@@ -198,6 +232,9 @@ BOOST_AUTO_TEST_CASE(hessians_test)
         = {1.23, 2.34, 0, 0, 2, 1, 0, 1, 1, 2, 3, 0, 3, 1, 1, 6, 0, 0, 4, 1, 2, 1, 1, 1, 9, 5, 2, 3, 3, 0, 5, 0, 8, 11};
     symbolic_regression udp({{1., 0.}}, {{0., 3.}}, 1, 10, 11, 2, basic_set(), 2u, false);
     BOOST_CHECK(udp.hessians(test_xeph) == std::vector<pagmo::vector_double>(1, pagmo::vector_double{2, -1, 1}));
+    // 3 - And with the phenotype correction
+    udp.set_phenotype_correction(pc<double>, pc<audi::gdual_v>);
+    BOOST_CHECK(udp.hessians(test_xeph) == std::vector<pagmo::vector_double>(1, pagmo::vector_double{104, -4, 4}));
 }
 
 BOOST_AUTO_TEST_CASE(cache_test)

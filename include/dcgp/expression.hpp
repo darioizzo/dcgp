@@ -47,11 +47,10 @@ private:
     using functor_enabler = typename std::enable_if<
         std::is_same<U, double>::value || is_gdual<T>::value || std::is_same<U, std::string>::value, int>::type;
 
+public:
     // Phenotype Correction function type
     using pc_type
         = std::function<std::vector<T>(const std::vector<T> &, std::function<std::vector<T>(const std::vector<T> &)>)>;
-
-public:
     /// Loss types
     enum class loss_type {
         /// Mean Squared Error
@@ -864,7 +863,7 @@ public:
      * on the expression itself and on its inputs. Indicating with g the expression, the overall output,
      * after a phenotype expression is applied, will be of the generic form y = pc(x, g)
      *
-     * @param pc callable to be applied to the CGP expression. 
+     * @param pc callable to be applied to the CGP expression.
      */
     void set_phenotype_correction(pc_type pc)
     {
