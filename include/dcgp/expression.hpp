@@ -1211,6 +1211,7 @@ public:
         ar &m_active_genes;
         ar &m_x;
         ar &m_gene_idx;
+        ar &m_phenotype_correction;
         ar &m_e;
     }
 

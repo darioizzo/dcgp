@@ -1,6 +1,5 @@
 #include <audi/audi.hpp>
 #include <boost/numeric/conversion/cast.hpp>
-#include <dcgp/wrapped_functions_s11n_implement.hpp>
 #include <memory>
 #include <pagmo/threading.hpp>
 #include <pybind11/pybind11.h>
@@ -10,6 +9,7 @@
 #include <vector>
 
 #include <dcgp/function.hpp>
+#include <dcgp/wrapped_functions_s11n_implement.hpp>
 #include <dcgp/kernel.hpp>
 #include <dcgp/kernel_set.hpp>
 #include <dcgp/s11n.hpp>

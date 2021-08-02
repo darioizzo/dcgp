@@ -472,14 +472,21 @@ BOOST_AUTO_TEST_CASE(phenotype_correction)
         BOOST_CHECK_EQUAL(df, dg * 1.234 + g);
     }
 }
-template <typename T>
-std::vector<T> my_pc3(const std::vector<T> &x, dcgp::function<std::vector<T>(const std::vector<T>&)>g_f)
-{
-    auto retval = g_f(x);
-    retval[0] = retval[0]*2;
-    retval[1] = retval[1]*10;
-    return retval;
-}
+
+struct my_pc3 {
+    /// Call operator
+    std::vector<double> operator()(const std::vector<double> &x, dcgp::function<std::vector<double>(const std::vector<double>&)>g_f) const
+    {
+        std::vector<double> retval = g_f(x);
+        retval[0] = retval[0]*2;
+        retval[1] = retval[1]*10;
+        return retval;
+    }
+    DCGP_S11N_EMPTY_SERIALIZE_MEMFN()
+};
+DCGP_S11N_FUNCTION_EXPORT_KEY(my_pc3_double, my_pc3, std::vector<double>, const std::vector<double> &, dcgp::function<std::vector<double>(const std::vector<double>&)>)
+DCGP_S11N_FUNCTION_IMPLEMENT(my_pc3_double, my_pc3, std::vector<double>, const std::vector<double> &, dcgp::function<std::vector<double>(const std::vector<double>&)>)
+
 
 
 BOOST_AUTO_TEST_CASE(s11n_test)
@@ -488,7 +495,7 @@ BOOST_AUTO_TEST_CASE(s11n_test)
     std::random_device rd;
     kernel_set<double> basic_set({"sum", "diff", "mul", "div"});
     expression<double> ex(2, 2, 2, 2, 3, 2, basic_set(), 0u, rd());
-    ex.set_phenotype_correction(my_pc3<double>);
+    ex.set_phenotype_correction(my_pc3());
     auto before_num = ex({1.2, 3.3});
     auto before_string = boost::lexical_cast<std::string>(ex);
 
@@ -504,7 +511,7 @@ BOOST_AUTO_TEST_CASE(s11n_test)
     }
     auto after_num = ex({1.2, 3.3});
 
-    //BOOST_CHECK(before_num == after_num);
+    BOOST_CHECK(before_num == after_num);
     BOOST_CHECK(before_string == boost::lexical_cast<std::string>(ex));
 
 }
