@@ -106,15 +106,14 @@ BOOST_AUTO_TEST_CASE(correct_fitness)
     kernel_set<double> basic_set({"sum", "diff", "mul", "pdiv"});
     std::vector<std::vector<double>> points, labels;
     gym::generate_koza_quintic(points, labels);
-    symbolic_regression udp(points, labels, 1u, 10u, 11u, 2u, basic_set(), 3u, false, 0u, "MSE", 42u);
+    symbolic_regression udp(points, labels, 1u, 10u, 11u, 2u, basic_set(), 2u, false, 0u, "MSE", 42u);
     
     pagmo::population pop1(udp, 4u, 16u);
     
     pop1 = uda.evolve(pop1);
-    // evolve population once 
-
     pagmo::population pop2(udp, 0u);
 
     pop2.push_back(pop1.champion_x());
+    
     BOOST_CHECK(pop2.champion_f() == pop1.champion_f());
 }
