@@ -9,6 +9,7 @@
 #include <pagmo/problem.hpp>
 #include <pagmo/problems/rosenbrock.hpp>
 
+#include <dcgp/gym.hpp>
 #include <dcgp/algorithms/mes4cgp.hpp>
 #include <dcgp/problems/symbolic_regression.hpp>
 #include <dcgp/s11n.hpp>
@@ -96,4 +97,23 @@ BOOST_AUTO_TEST_CASE(s11n_test)
     }
 
     BOOST_CHECK(orig == uda.get_extra_info());
+}
+
+BOOST_AUTO_TEST_CASE(correct_fitness)
+{
+    mes4cgp uda{10u, 4u, 1e-4, 42u};
+
+    kernel_set<double> basic_set({"sum", "diff", "mul", "pdiv"});
+    std::vector<std::vector<double>> points, labels;
+    gym::generate_koza_quintic(points, labels);
+    symbolic_regression udp(points, labels, 1u, 10u, 11u, 2u, basic_set(), 2u, false, 0u, "MSE", 42u);
+    
+    pagmo::population pop1(udp, 4u, 16u);
+    
+    pop1 = uda.evolve(pop1);
+    pagmo::population pop2(udp, 0u);
+
+    pop2.push_back(pop1.champion_x());
+    
+    BOOST_CHECK(pop2.champion_f() == pop1.champion_f());
 }
