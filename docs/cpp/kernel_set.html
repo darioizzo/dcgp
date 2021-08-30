@@ -220,15 +220,15 @@ from an <code class="docutils literal notranslate"><span class="pre">std::vector
 facilitated by the class <a class="reference internal" href="#_CPPv4I0EN4dcgp10kernel_setE" title="dcgp::kernel_set"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">dcgp::kernel_set</span></code></a>.</p>
 <p>Intended use of the class is:</p>
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// (optional) - Say we have a custom kernel named f</span>
-<span class="n">kernel</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">f</span><span class="p">(</span><span class="n">my_sum</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">print_my_sum</span><span class="p">,</span> <span class="s">&quot;my_sum&quot;</span><span class="p">);</span>
+<span class="n">kernel</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">f</span><span class="p">(</span><span class="n">my_sum</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="n">print_my_sum</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;my_sum&quot;</span><span class="p">);</span><span class="w"></span>
 <span class="c1">// We can construct a kernel set (and fill it in with provided kernels)</span>
-<span class="n">kernel_set</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">kernels</span><span class="p">({</span><span class="s">&quot;sum&quot;</span><span class="p">,</span> <span class="s">&quot;div&quot;</span><span class="p">,</span> <span class="s">&quot;mul&quot;</span><span class="p">,</span><span class="s">&quot;diff&quot;</span><span class="p">});</span>
+<span class="n">kernel_set</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">kernels</span><span class="p">({</span><span class="s">&quot;sum&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;div&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;mul&quot;</span><span class="p">,</span><span class="s">&quot;diff&quot;</span><span class="p">});</span><span class="w"></span>
 <span class="c1">// We can get a vector with these four basic kernels ...</span>
-<span class="k">auto</span> <span class="n">kernel_vector</span> <span class="o">=</span> <span class="n">kernels</span><span class="p">();</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">kernel_vector</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kernels</span><span class="p">();</span><span class="w"></span>
 <span class="c1">// (optional) - ... or add our own custom kernel to the set ...</span>
-<span class="n">basic_set</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+<span class="n">basic_set</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">f</span><span class="p">);</span><span class="w"></span>
 <span class="c1">// (optional) - ... and get a vector with all five kernels</span>
-<span class="k">auto</span> <span class="n">kernel_vector2</span> <span class="o">=</span> <span class="n">kernels</span><span class="p">();</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">kernel_vector2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kernels</span><span class="p">();</span><span class="w"></span>
 </pre></div>
 </div>
 <hr class="docutils" />
