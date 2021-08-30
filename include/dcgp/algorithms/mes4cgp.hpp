@@ -206,10 +206,8 @@ public:
                         if (grad[j] != 0.) {
                             non_zero.push_back(j);
                         } else {
-                            // if the constant is inactive we reset it randomly in the mutant chromosome
-                            // this has effect on the evolution only if this mutatnt will become the best
-                            // (can thus be moved in the reinsertion for efficiency)
-                            best_x[j] = std::uniform_real_distribution<double>(-10., 10.)(m_e);
+                            // if the constant is inactive we reset it randomly for the mutant
+                            mutated_x[i][j] = std::uniform_real_distribution<double>(-10., 10.)(m_e);
                         }
                     }
                     auto n_non_zero = non_zero.size();
