@@ -2,6 +2,7 @@
 #define DCGP_EXPRESSION_H
 
 #include <algorithm>
+#include <functional>
 #include <initializer_list>
 #include <iostream>
 #include <random>
@@ -34,7 +35,6 @@
 #include <dcgp/type_traits.hpp>
 #include <dcgp/wrapped_functions.hpp>
 
-
 namespace dcgp
 {
 
@@ -61,7 +61,7 @@ private:
 public:
     // Phenotype Correction function type
     using pc_fun_type
-        = function<std::vector<T>(const std::vector<T> &, function<std::vector<T>(const std::vector<T> &)>)>;
+        = function<std::vector<T>(const std::vector<T> &, std::function<std::vector<T>(const std::vector<T> &)>)>;
     /// Loss types
     enum class loss_type {
         /// Mean Squared Error
@@ -190,10 +190,11 @@ public:
     virtual std::vector<T> operator()(const std::vector<T> &point) const
     {
         std::vector<T> retval(m_m);
-        retval = call_operator_impl(*this, point);
         if (m_phenotype_correction) {
             retval = (*m_phenotype_correction)(
                 point, [this](const std::vector<T> &arg) { return call_operator_impl(*this, arg); });
+        } else {
+            retval = call_operator_impl(*this, point);
         }
         return retval;
     }
