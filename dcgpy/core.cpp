@@ -39,7 +39,7 @@ PYBIND11_MODULE(core, m)
         const dcgp::symbolic_regression *retval;
         try {
             retval = py_ptr->cast<const dcgp::symbolic_regression *>();
-        } catch (py::cast_error) {
+        } catch (py::cast_error const&) {
             retval = nullptr;
         }
         return retval;

@@ -1,7 +1,7 @@
 #include <boost/numeric/conversion/cast.hpp>
+#include <pybind11/functional.h>
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
-#include <pybind11/functional.h>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -13,6 +13,7 @@
 
 #include "common_utils.hpp"
 #include "docstrings.hpp"
+#include "pybind11_function.hpp"
 
 using namespace dcgp;
 using namespace audi;
@@ -31,7 +32,8 @@ void expose_expression(const py::module &m, std::string type)
         .def(py::init<unsigned, unsigned, unsigned, unsigned, unsigned, unsigned, std::vector<kernel<T>>, unsigned,
                       unsigned>(),
              py::arg("inputs"), py::arg("outputs"), py::arg("rows"), py::arg("cols"), py::arg("levels_back"),
-             py::arg("arity") = 2u, py::arg("kernels"), py::arg("n_eph") = 0u, py::arg("seed"), expression_init_doc(type).c_str())
+             py::arg("arity") = 2u, py::arg("kernels"), py::arg("n_eph") = 0u, py::arg("seed"),
+             expression_init_doc(type).c_str())
         // From vector arity
         .def(py::init<unsigned, unsigned, unsigned, unsigned, unsigned, std::vector<unsigned>, std::vector<kernel<T>>,
                       unsigned, unsigned>(),
@@ -104,8 +106,12 @@ void expose_expression(const py::module &m, std::string type)
             "mutate_active_fgene", &expression<T>::mutate_active_fgene,
             "mutate_active_fgene(N = 1)\nMutates N randomly selected active function genes within their allowed bounds",
             py::arg("N") = 1)
-        .def("set_phenotype_correction", &expression<T>::set_phenotype_correction, expression_set_phenotype_correction_doc().c_str(), py::arg("pc"))
-        .def("unset_phenotype_correction", &expression<T>::unset_phenotype_correction, expression_unset_phenotype_correction_doc().c_str())
+        .def(
+            "set_phenotype_correction",
+            [](expression<T> &in, const py::object &pc) { in.set_phenotype_correction(typename expression<T>::pc_fun_type(pc)); },
+            expression_set_phenotype_correction_doc().c_str(), py::arg("pc"))
+        .def("unset_phenotype_correction", &expression<T>::unset_phenotype_correction,
+             expression_unset_phenotype_correction_doc().c_str())
         // The parallelism for the loss computation is switched off in python as pythonic kernels would
         // produce a crash if evaluated in multiple threads.
         .def(

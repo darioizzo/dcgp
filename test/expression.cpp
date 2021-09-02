@@ -418,6 +418,7 @@ BOOST_AUTO_TEST_CASE(phenotype_correction)
 {
     // Random seed
     std::random_device rd;
+    using pc_fun_type = expression<double>::pc_fun_type;
     // testing on double
     {
         kernel_set<double> basic_set({"sum", "diff", "mul", "div"});
@@ -426,7 +427,7 @@ BOOST_AUTO_TEST_CASE(phenotype_correction)
         expression<double> ex1(2, 4, 2, 3, 4, 2, basic_set(), 0u, rd());
         // Test setter and values
         ex1.set({0, 0, 1, 1, 0, 0, 1, 3, 1, 2, 0, 1, 0, 4, 4, 2, 5, 4, 2, 5, 7, 3});
-        ex1.set_phenotype_correction(my_pc<double>);
+        ex1.set_phenotype_correction(pc_fun_type(my_pc<double>));
         CHECK_EQUAL_V(ex1({1., -1.}), std::vector<double>({0 * 1., -1 * 1. * -1., -1. * -1., 0 + -1.}));
         CHECK_CLOSE_V(
             ex1({-.123, 2.345}),
@@ -441,7 +442,7 @@ BOOST_AUTO_TEST_CASE(phenotype_correction)
         dcgp::expression<double> ex2(4, 1, 1, 10, 10, 2, basic_set(), 0u, rd());
         ex2.set({2, 3, 0, 0, 2, 2, 3, 0, 1, 1, 5,  4, 2, 6, 1, 0,
                  7, 7, 3, 6, 7, 1, 7, 6, 2, 4, 10, 2, 3, 2, 10}); ///(x/y)/(2z-(t*x))
-        ex2.set_phenotype_correction(my_pc2<double>);
+        ex2.set_phenotype_correction(pc_fun_type(my_pc2<double>));
         CHECK_CLOSE_V(ex2({2., 3., 4., -2.}), std::vector<double>({0.055555555555555552 * 2. * 3. * 4. * -2.}), 1e-8);
         CHECK_EQUAL_V(ex2({-1., 1., -1., 1.}), std::vector<double>({1. * -1. * 1. * -1. * 1.}));
         ex2.unset_phenotype_correction();
@@ -456,7 +457,7 @@ BOOST_AUTO_TEST_CASE(phenotype_correction)
         expression<gdual_d> ex1(2, 4, 2, 3, 4, 2, basic_set(), 0u, rd());
         // Test setter and values
         ex1.set({0, 0, 1, 1, 0, 0, 1, 3, 1, 2, 0, 1, 0, 4, 4, 2, 5, 4, 2, 5, 7, 3});
-        ex1.set_phenotype_correction(my_pc<gdual_d>);
+        ex1.set_phenotype_correction(pc_fun_type(my_pc<gdual_d>));
         gdual_d x0(1.234, "x0", 1);
         gdual_d x1(-1.234, "x1", 1);
         // f(x, g(x))

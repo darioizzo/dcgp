@@ -197,6 +197,7 @@ class test_expression(_ut.TestCase):
         self.test_loss_double()
         self.test_loss_gdual_double()
         self.test_loss_gdual_vdouble()
+        self.test_phenotype_correction_double()
 
     def test_double(self):
         from dcgpy import expression_double as expression
@@ -324,7 +325,6 @@ class test_expression(_ut.TestCase):
     def test_phenotype_correction_double(self):
         from dcgpy import expression_double as expression
         from dcgpy import kernel_set_double as kernel_set
-        from dcgpy import set_phenotype_correction, unset_phenotype_correction
         ex = expression(inputs=1,
                 outputs=1,
                 rows=1,

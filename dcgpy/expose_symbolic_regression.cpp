@@ -1,3 +1,4 @@
+#include <pybind11/pybind11.h>
 #include <pybind11/iostream.h>
 #include <pybind11/stl.h>
 #include <pybind11/functional.h>
@@ -20,6 +21,8 @@
 
 #include "common_utils.hpp"
 #include "docstrings.hpp"
+#include "pybind11_function.hpp"
+
 
 PAGMO_S11N_ALGORITHM_IMPLEMENT(dcgp::es4cgp)
 PAGMO_S11N_ALGORITHM_IMPLEMENT(dcgp::mes4cgp)
@@ -105,8 +108,8 @@ void expose_symbolic_regression(py::module &m)
                  }
                  return retval;
              })
-        .def("get_bounds", &dcgp::symbolic_regression::get_bounds)
-        .def("get_nix", &dcgp::symbolic_regression::get_nix)
+        .def("get_bounds", &symbolic_regression::get_bounds)
+        .def("get_nix", &symbolic_regression::get_nix)
         .def("get_name", &dcgp::symbolic_regression::get_name)
         .def("get_extra_info", &dcgp::symbolic_regression::get_extra_info)
         .def("pretty", &dcgp::symbolic_regression::pretty)
@@ -123,18 +126,16 @@ void expose_symbolic_regression(py::module &m)
                 }
             },
             py::arg("points"), py::arg("chromosome"), symbolic_regression_predict_doc().c_str())
-        .def("set_phenotype_correction",
-             [](dcgp::symbolic_regression &instance, const py::object &ppc) {
-                 typename dcgp::expression<double>::pc_fun_type pc = ppc.cast<typename dcgp::expression<double>::pc_fun_type>();
-                 typename dcgp::expression<audi::gdual_v>::pc_fun_type dpc
-                     = ppc.cast<typename dcgp::expression<audi::gdual_v>::pc_fun_type>();
-                 instance.set_phenotype_correction(pc, dpc);
-             })
-        .def("unset_phenotype_correction", &dcgp::symbolic_regression::unset_phenotype_correction)
+        //.def("set_phenotype_correction",
+        //     [](dcgp::symbolic_regression &instance, const py::object &ppc) {
+        //         instance.set_phenotype_correction(ppc);
+        //     })
+        .def("set_phenotype_correction", &symbolic_regression::set_phenotype_correction)
+        .def("unset_phenotype_correction", &symbolic_regression::unset_phenotype_correction)
 
         .def(py::pickle(&udx_pickle_getstate<dcgp::symbolic_regression>,
                         &udx_pickle_setstate<dcgp::symbolic_regression>))
-        .def("__repr__", &dcgp::symbolic_regression::get_extra_info);
+        .def("__repr__", &symbolic_regression::get_extra_info);
 
     // We expose the UDAs
     // ES-4CGP (Evolutionary Strategy for Cartesian Genetic Programming)

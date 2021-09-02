@@ -461,8 +461,8 @@ public:
     /// Sets the inner CGP
     /**
      * The access to the inner CGP is offered in the public interface to allow evolve methods in UDAs
-     * to reuse the same object and perform mutations via it. 
-     */    
+     * to reuse the same object and perform mutations via it.
+     */
     void set_cgp(const pagmo::vector_double &x) const
     {
         // We need to make a copy of the chromosome as to represents its genes as unsigned
@@ -528,17 +528,19 @@ public:
 
     /// Sets the phenotype correction
     /**
-     * Sets the phenotype correction for both the internal cgp and dcgp. 
+     * Sets the phenotype correction for both the internal cgp and dcgp.
      * No checks are made and the user must take care that the two functions passed
      * are actually computing the same quantity using different types (double and gdual_v).
-     * 
+     *
      * @param pc callable to be applied to correct a double expression.
      * @param dpc callable to be applied to correct a gdual_v expression.
      */
-    void set_phenotype_correction(typename expression<double>::pc_fun_type pc, typename expression<audi::gdual_v>::pc_fun_type dpc)
+    using pc_fun_type = function<std::vector<double>(const std::vector<double> &,
+                                                     function<std::vector<double>(const std::vector<double> &)>)>;
+    void set_phenotype_correction(pc_fun_type pc)
     {
         m_cgp.set_phenotype_correction(pc);
-        m_dcgp.set_phenotype_correction(dpc);
+        // m_dcgp.set_phenotype_correction(dpc);
     }
 
     /// Unsets the phenotype correction
@@ -661,7 +663,6 @@ private:
     std::string m_loss_s;
     dcgp::expression<audi::gdual_v>::loss_type m_loss_e;
 
-
     // The fact that this is mutable may hamper the performances of the bfe as the thread safetly level
     // of the UDP in pagmo will force copies of the UDP to be made in all threads. This can in principle be
     // avoided, but likely resulting in premature optimization. (see https://github.com/darioizzo/dcgp/pull/42)
@@ -669,7 +670,6 @@ private:
     mutable expression<audi::gdual_v> m_dcgp;
     mutable std::pair<pagmo::vector_double, pagmo::vector_double> m_cache_fitness;
     mutable std::pair<pagmo::vector_double, pagmo::vector_double> m_cache_gradient;
-
 };
 
 namespace details
