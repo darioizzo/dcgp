@@ -476,7 +476,7 @@ BOOST_AUTO_TEST_CASE(phenotype_correction)
 
 struct my_pc3 {
     /// Call operator
-    std::vector<double> operator()(const std::vector<double> &x, dcgp::function<std::vector<double>(const std::vector<double>&)>g_f) const
+    std::vector<double> operator()(const std::vector<double> &x, std::function<std::vector<double>(const std::vector<double>&)>g_f) const
     {
         std::vector<double> retval = g_f(x);
         retval[0] = retval[0]*2;
@@ -485,8 +485,8 @@ struct my_pc3 {
     }
     DCGP_S11N_EMPTY_SERIALIZE_MEMFN()
 };
-DCGP_S11N_FUNCTION_EXPORT_KEY(my_pc3_double, my_pc3, std::vector<double>, const std::vector<double> &, dcgp::function<std::vector<double>(const std::vector<double>&)>)
-DCGP_S11N_FUNCTION_IMPLEMENT(my_pc3_double, my_pc3, std::vector<double>, const std::vector<double> &, dcgp::function<std::vector<double>(const std::vector<double>&)>)
+DCGP_S11N_FUNCTION_EXPORT_KEY(my_pc3_double, my_pc3, std::vector<double>, const std::vector<double> &, std::function<std::vector<double>(const std::vector<double>&)>)
+DCGP_S11N_FUNCTION_IMPLEMENT(my_pc3_double, my_pc3, std::vector<double>, const std::vector<double> &, std::function<std::vector<double>(const std::vector<double>&)>)
 
 
 
