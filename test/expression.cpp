@@ -394,7 +394,7 @@ BOOST_AUTO_TEST_CASE(ephemeral_constants_test)
 }
 
 template <typename T>
-std::vector<T> my_pc(const std::vector<T> &x, dcgp::function<std::vector<T>(const std::vector<T>&)>g_f)
+std::vector<T> my_pc(const std::vector<T> &x, std::function<std::vector<T>(const std::vector<T>&)>g_f)
 {
     std::vector<T> retval(4, T(0));
     auto g = g_f(x);
@@ -406,7 +406,7 @@ std::vector<T> my_pc(const std::vector<T> &x, dcgp::function<std::vector<T>(cons
 }
 
 template <typename T>
-std::vector<T> my_pc2(const std::vector<T> &x, dcgp::function<std::vector<T>(const std::vector<T>&)>g_f)
+std::vector<T> my_pc2(const std::vector<T> &x, std::function<std::vector<T>(const std::vector<T>&)>g_f)
 {
     std::vector<T> retval(1, T(0));
     auto g = g_f(x);
@@ -427,7 +427,7 @@ BOOST_AUTO_TEST_CASE(phenotype_correction)
         expression<double> ex1(2, 4, 2, 3, 4, 2, basic_set(), 0u, rd());
         // Test setter and values
         ex1.set({0, 0, 1, 1, 0, 0, 1, 3, 1, 2, 0, 1, 0, 4, 4, 2, 5, 4, 2, 5, 7, 3});
-        ex1.set_phenotype_correction(pc_fun_type(my_pc<double>));
+        ex1.set_phenotype_correction(my_pc<double>);
         CHECK_EQUAL_V(ex1({1., -1.}), std::vector<double>({0 * 1., -1 * 1. * -1., -1. * -1., 0 + -1.}));
         CHECK_CLOSE_V(
             ex1({-.123, 2.345}),
@@ -457,7 +457,7 @@ BOOST_AUTO_TEST_CASE(phenotype_correction)
         expression<gdual_d> ex1(2, 4, 2, 3, 4, 2, basic_set(), 0u, rd());
         // Test setter and values
         ex1.set({0, 0, 1, 1, 0, 0, 1, 3, 1, 2, 0, 1, 0, 4, 4, 2, 5, 4, 2, 5, 7, 3});
-        ex1.set_phenotype_correction(pc_fun_type(my_pc<gdual_d>));
+        ex1.set_phenotype_correction(my_pc<gdual_d>);
         gdual_d x0(1.234, "x0", 1);
         gdual_d x1(-1.234, "x1", 1);
         // f(x, g(x))

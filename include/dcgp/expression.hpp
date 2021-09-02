@@ -59,7 +59,8 @@ private:
         std::is_same<U, double>::value || is_gdual<T>::value || std::is_same<U, std::string>::value, int>::type;
 
 public:
-    // Phenotype Correction function type
+    // Phenotype Correction function type. This is a dcgp function, but in the arguments it makes use of a std function as to avoid
+    // later to have issues in pybind11 to/from conversions.
     using pc_fun_type
         = function<std::vector<T>(const std::vector<T> &, std::function<std::vector<T>(const std::vector<T> &)>)>;
     /// Loss types
