@@ -108,7 +108,7 @@ void expose_expression(const py::module &m, std::string type)
             py::arg("N") = 1)
         .def(
             "set_phenotype_correction",
-            [](expression<T> &in, const py::object &pc) { in.set_phenotype_correction(typename expression<T>::pc_fun_type(pc)); },
+            [](expression<T> &in, const py::object &pc) { in.set_phenotype_correction(pc); },
             expression_set_phenotype_correction_doc().c_str(), py::arg("pc"))
         .def("unset_phenotype_correction", &expression<T>::unset_phenotype_correction,
              expression_unset_phenotype_correction_doc().c_str())

@@ -126,11 +126,10 @@ void expose_symbolic_regression(py::module &m)
                 }
             },
             py::arg("points"), py::arg("chromosome"), symbolic_regression_predict_doc().c_str())
-        //.def("set_phenotype_correction",
-        //     [](dcgp::symbolic_regression &instance, const py::object &ppc) {
-        //         instance.set_phenotype_correction(ppc);
-        //     })
-        .def("set_phenotype_correction", &symbolic_regression::set_phenotype_correction)
+        .def("set_phenotype_correction",
+             [](dcgp::symbolic_regression &instance, const py::object &pc) {
+                 instance.set_phenotype_correction(pc,pc);
+             })
         .def("unset_phenotype_correction", &symbolic_regression::unset_phenotype_correction)
 
         .def(py::pickle(&udx_pickle_getstate<dcgp::symbolic_regression>,

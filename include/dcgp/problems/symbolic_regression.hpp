@@ -535,12 +535,10 @@ public:
      * @param pc callable to be applied to correct a double expression.
      * @param dpc callable to be applied to correct a gdual_v expression.
      */
-    using pc_fun_type = function<std::vector<double>(const std::vector<double> &,
-                                                     function<std::vector<double>(const std::vector<double> &)>)>;
-    void set_phenotype_correction(pc_fun_type pc)
+    void set_phenotype_correction(typename expression<double>::pc_fun_type pc, typename expression<audi::gdual_v>::pc_fun_type dpc)
     {
         m_cgp.set_phenotype_correction(pc);
-        // m_dcgp.set_phenotype_correction(dpc);
+        m_dcgp.set_phenotype_correction(dpc);
     }
 
     /// Unsets the phenotype correction
