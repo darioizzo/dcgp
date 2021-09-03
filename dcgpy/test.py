@@ -215,6 +215,7 @@ class test_expression(_ut.TestCase):
                         n_eph=0,
                         seed=33)
 
+        # Pickling
         self.assertTrue(repr(ex) == repr(pickle.loads(pickle.dumps(ex))))
 
         ex = expression(inputs=1,
@@ -325,6 +326,8 @@ class test_expression(_ut.TestCase):
     def test_phenotype_correction_double(self):
         from dcgpy import expression_double as expression
         from dcgpy import kernel_set_double as kernel_set
+        import pickle
+
         ex = expression(inputs=1,
                 outputs=1,
                 rows=1,
@@ -338,9 +341,14 @@ class test_expression(_ut.TestCase):
         retval2 = ex([2.])
         def pc1(x,g):
             return [g(x)[0]*x[0]]
+        # Setting
         ex.set_phenotype_correction(pc1)
         self.assertEqual([retval1[0] * 1.], ex([1]))
         self.assertEqual([retval2[0] * 2.], ex([2]))
+        # Pickling.
+        ex_pickled = pickle.loads(pickle.dumps(ex)) 
+        self.assertEqual(ex_pickled([1.23]), ex([1.23]))
+        #Unsetting
         ex.unset_phenotype_correction()
         self.assertEqual(retval2, ex([2.]))
 

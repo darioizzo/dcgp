@@ -33,6 +33,18 @@ using udf_py_object_gdual_d
 using udf_py_object_gdual_v
     = dcgp::detail::function_inner<py::object, audi::gdual_v, const std::vector<audi::gdual_v> &>;
 
+using udf_py_object_pc_double
+    = dcgp::detail::function_inner<py::object, std::vector<double>, const std::vector<double> &,
+                                   std::function<std::vector<double>(const std::vector<double> &)>>;
+
+using udf_py_object_pc_gdual_d
+    = dcgp::detail::function_inner<py::object, std::vector<gdual_d>, const std::vector<gdual_d> &,
+                                   std::function<std::vector<gdual_d>(const std::vector<gdual_d> &)>>;
+
+using udf_py_object_pc_gdual_v
+    = dcgp::detail::function_inner<py::object, std::vector<gdual_v>, const std::vector<gdual_v> &,
+                                   std::function<std::vector<gdual_v>(const std::vector<gdual_v> &)>>;
+
 } // namespace dcgp::s11n_names
 
 BOOST_CLASS_EXPORT_KEY2(dcgp::s11n_names::udf_py_object_double, "udf py::object double")
@@ -50,6 +62,18 @@ BOOST_CLASS_EXPORT_IMPLEMENT(dcgp::s11n_names::udf_py_object_gdual_v)
 BOOST_CLASS_EXPORT_KEY2(dcgp::s11n_names::udf_py_object_string, "udf py::object string")
 BOOST_CLASS_TRACKING(dcgp::s11n_names::udf_py_object_string, boost::serialization::track_never)
 BOOST_CLASS_EXPORT_IMPLEMENT(dcgp::s11n_names::udf_py_object_string)
+
+BOOST_CLASS_EXPORT_KEY2(dcgp::s11n_names::udf_py_object_pc_double, "udf py::object pc double")
+BOOST_CLASS_TRACKING(dcgp::s11n_names::udf_py_object_pc_double, boost::serialization::track_never)
+BOOST_CLASS_EXPORT_IMPLEMENT(dcgp::s11n_names::udf_py_object_pc_double)
+
+BOOST_CLASS_EXPORT_KEY2(dcgp::s11n_names::udf_py_object_pc_gdual_d, "udf py::object pc gdual_d")
+BOOST_CLASS_TRACKING(dcgp::s11n_names::udf_py_object_pc_gdual_d, boost::serialization::track_never)
+BOOST_CLASS_EXPORT_IMPLEMENT(dcgp::s11n_names::udf_py_object_pc_gdual_d)
+
+BOOST_CLASS_EXPORT_KEY2(dcgp::s11n_names::udf_py_object_pc_gdual_v, "udf py::object pc gdual_v")
+BOOST_CLASS_TRACKING(dcgp::s11n_names::udf_py_object_pc_gdual_v, boost::serialization::track_never)
+BOOST_CLASS_EXPORT_IMPLEMENT(dcgp::s11n_names::udf_py_object_pc_gdual_v)
 
 namespace dcgpy
 {
