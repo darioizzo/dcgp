@@ -9,6 +9,7 @@ Core
 
   ../../notebooks/custom_kernels.ipynb
 
+
 Symbolic Regression 
 ^^^^^^^^^^^^^^^^^^^
 .. toctree::
@@ -21,6 +22,15 @@ Symbolic Regression
   ../../notebooks/real_world2.ipynb
   ../../notebooks/real_world3.ipynb
   ../../notebooks/evo_in_parallel.ipynb
+
+Phenotype correction
+^^^^^^^^^^^^^^^^^^^^
+
+.. toctree::
+  :maxdepth: 1
+
+  ../../notebooks/phenotype_correction_ex.ipynb
+
 
 Neural Networks
 ^^^^^^^^^^^^^^^
