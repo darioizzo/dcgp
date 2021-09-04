@@ -1,6 +1,5 @@
 #include <audi/audi.hpp>
 #include <boost/numeric/conversion/cast.hpp>
-#include <dcgp/wrapped_functions_s11n_implement.hpp>
 #include <memory>
 #include <pagmo/threading.hpp>
 #include <pybind11/pybind11.h>
@@ -13,71 +12,16 @@
 #include <dcgp/kernel.hpp>
 #include <dcgp/kernel_set.hpp>
 #include <dcgp/s11n.hpp>
+#include <dcgp/wrapped_functions_s11n_implement.hpp>
 
 #include "common_utils.hpp"
 #include "docstrings.hpp"
+#include "pybind11_function.hpp"
 
 using namespace dcgp;
 using namespace dcgpy;
 using namespace audi;
 namespace py = pybind11;
-
-namespace dcgp::detail
-{
-
-template <typename T>
-struct function_inner<py::object, T, const std::vector<T> &> final : function_inner_base<T, const std::vector<T> &> {
-    // We just need the def ctor, delete everything else.
-    function_inner() = default;
-    function_inner(const function_inner &) = delete;
-    function_inner(function_inner &&) = delete;
-    function_inner &operator=(const function_inner &) = delete;
-    function_inner &operator=(function_inner &&) = delete;
-
-    // Constructor from generic python object.
-    explicit function_inner(const py::object &o)
-    {
-        m_value = dcgpy::deepcopy(o);
-    }
-
-    // Clone method.
-    virtual std::unique_ptr<function_inner_base<T, const std::vector<T> &>> clone() const override final
-    {
-        // This will make a deep copy using the ctor above.
-        return std::make_unique<function_inner>(m_value);
-    }
-
-    // Mandatory methods.
-    virtual T operator()(const std::vector<T> &v) const override final
-    {
-        return py::cast<T>(m_value(v));
-    }
-
-    virtual pagmo::thread_safety get_thread_safety() const override final
-    {
-        return pagmo::thread_safety::none;
-    }
-
-    template <typename Archive>
-    void save(Archive &ar, unsigned) const
-    {
-        ar << boost::serialization::base_object<function_inner_base<T, const std::vector<T> &>>(*this);
-        ar << dcgpy::object_to_vchar(m_value);
-    }
-    template <typename Archive>
-    void load(Archive &ar, unsigned)
-    {
-        ar >> boost::serialization::base_object<function_inner_base<T, const std::vector<T> &>>(*this);
-        std::vector<char> v;
-        ar >> v;
-        m_value = dcgpy::vchar_to_object(v);
-    }
-    BOOST_SERIALIZATION_SPLIT_MEMBER()
-
-    py::object m_value;
-};
-
-} // namespace dcgp::detail
 
 namespace dcgp::s11n_names
 {
@@ -88,6 +32,18 @@ using udf_py_object_gdual_d
     = dcgp::detail::function_inner<py::object, audi::gdual_d, const std::vector<audi::gdual_d> &>;
 using udf_py_object_gdual_v
     = dcgp::detail::function_inner<py::object, audi::gdual_v, const std::vector<audi::gdual_v> &>;
+
+using udf_py_object_pc_double
+    = dcgp::detail::function_inner<py::object, std::vector<double>, const std::vector<double> &,
+                                   std::function<std::vector<double>(const std::vector<double> &)>>;
+
+using udf_py_object_pc_gdual_d
+    = dcgp::detail::function_inner<py::object, std::vector<gdual_d>, const std::vector<gdual_d> &,
+                                   std::function<std::vector<gdual_d>(const std::vector<gdual_d> &)>>;
+
+using udf_py_object_pc_gdual_v
+    = dcgp::detail::function_inner<py::object, std::vector<gdual_v>, const std::vector<gdual_v> &,
+                                   std::function<std::vector<gdual_v>(const std::vector<gdual_v> &)>>;
 
 } // namespace dcgp::s11n_names
 
@@ -106,6 +62,18 @@ BOOST_CLASS_EXPORT_IMPLEMENT(dcgp::s11n_names::udf_py_object_gdual_v)
 BOOST_CLASS_EXPORT_KEY2(dcgp::s11n_names::udf_py_object_string, "udf py::object string")
 BOOST_CLASS_TRACKING(dcgp::s11n_names::udf_py_object_string, boost::serialization::track_never)
 BOOST_CLASS_EXPORT_IMPLEMENT(dcgp::s11n_names::udf_py_object_string)
+
+BOOST_CLASS_EXPORT_KEY2(dcgp::s11n_names::udf_py_object_pc_double, "udf py::object pc double")
+BOOST_CLASS_TRACKING(dcgp::s11n_names::udf_py_object_pc_double, boost::serialization::track_never)
+BOOST_CLASS_EXPORT_IMPLEMENT(dcgp::s11n_names::udf_py_object_pc_double)
+
+BOOST_CLASS_EXPORT_KEY2(dcgp::s11n_names::udf_py_object_pc_gdual_d, "udf py::object pc gdual_d")
+BOOST_CLASS_TRACKING(dcgp::s11n_names::udf_py_object_pc_gdual_d, boost::serialization::track_never)
+BOOST_CLASS_EXPORT_IMPLEMENT(dcgp::s11n_names::udf_py_object_pc_gdual_d)
+
+BOOST_CLASS_EXPORT_KEY2(dcgp::s11n_names::udf_py_object_pc_gdual_v, "udf py::object pc gdual_v")
+BOOST_CLASS_TRACKING(dcgp::s11n_names::udf_py_object_pc_gdual_v, boost::serialization::track_never)
+BOOST_CLASS_EXPORT_IMPLEMENT(dcgp::s11n_names::udf_py_object_pc_gdual_v)
 
 namespace dcgpy
 {
@@ -228,13 +196,12 @@ void expose_kernel_set(const py::module &m, std::string type)
     ker_set.def(py::init<>())
         .def(py::init<std::vector<std::string>>(), py::arg("kernels"), kernel_set_init_doc(type).c_str())
         .def("__call__", &kernel_set<T>::operator())
-        .def(
-            "__repr__",
-            [](const kernel_set<T> &ks) -> std::string {
-                std::ostringstream oss;
-                oss << ks;
-                return oss.str();
-            })
+        .def("__repr__",
+             [](const kernel_set<T> &ks) -> std::string {
+                 std::ostringstream oss;
+                 oss << ks;
+                 return oss.str();
+             })
         .def(
             "push_back", [](kernel_set<T> &ks, std::string v) { ks.push_back(v); },
             kernel_set_push_back_str_doc().c_str(), py::arg("kernel_name"))

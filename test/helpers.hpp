@@ -8,23 +8,22 @@
 namespace dcgp
 {
 
-template <typename T>
-void CHECK_EQUAL_V(const T &in1, const T &in2)
-{
-    BOOST_CHECK_EQUAL(in1.size(), in2.size());
-    for (decltype(in1.size()) i = 0u; i < in1.size(); ++i) {
-        BOOST_CHECK_EQUAL(in1[i], in2[i]);
-    }
+// Have to make it a macro so that it reports exact line numbers when checks fail.
+#define CHECK_EQUAL_V(in1, in2) { \
+    BOOST_CHECK_EQUAL(in1.size(), in2.size()); \
+    for (decltype(in1.size()) i = 0u; i < in1.size(); ++i) { \
+        BOOST_CHECK_EQUAL(in1[i], in2[i]); \
+    } \
 }
 
-template <typename T>
-void CHECK_CLOSE_V(const T &in1, const T &in2, double tol)
-{
-    BOOST_CHECK_EQUAL(in1.size(), in2.size());
-    for (decltype(in1.size()) i = 0u; i < in1.size(); ++i) {
-        BOOST_CHECK_CLOSE(in1[i], in2[i], tol);
-    }
+#define CHECK_CLOSE_V(in1, in2, tol) { \
+    BOOST_CHECK_EQUAL(in1.size(), in2.size()); \
+    for (decltype(in1.size()) i = 0u; i < in1.size(); ++i) { \
+        BOOST_CHECK_CLOSE(in1[i], in2[i], tol); \
+    } \
 }
+
+
 
 } // end of namespace dcgp
 

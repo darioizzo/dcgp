@@ -1,5 +1,7 @@
+#include <pybind11/pybind11.h>
 #include <pybind11/iostream.h>
 #include <pybind11/stl.h>
+#include <pybind11/functional.h>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -19,6 +21,8 @@
 
 #include "common_utils.hpp"
 #include "docstrings.hpp"
+#include "pybind11_function.hpp"
+
 
 PAGMO_S11N_ALGORITHM_IMPLEMENT(dcgp::es4cgp)
 PAGMO_S11N_ALGORITHM_IMPLEMENT(dcgp::mes4cgp)
@@ -104,8 +108,8 @@ void expose_symbolic_regression(py::module &m)
                  }
                  return retval;
              })
-        .def("get_bounds", &dcgp::symbolic_regression::get_bounds)
-        .def("get_nix", &dcgp::symbolic_regression::get_nix)
+        .def("get_bounds", &symbolic_regression::get_bounds)
+        .def("get_nix", &symbolic_regression::get_nix)
         .def("get_name", &dcgp::symbolic_regression::get_name)
         .def("get_extra_info", &dcgp::symbolic_regression::get_extra_info)
         .def("pretty", &dcgp::symbolic_regression::pretty)
@@ -122,9 +126,15 @@ void expose_symbolic_regression(py::module &m)
                 }
             },
             py::arg("points"), py::arg("chromosome"), symbolic_regression_predict_doc().c_str())
+        .def("set_phenotype_correction",
+             [](dcgp::symbolic_regression &instance, const py::object &pc) {
+                 instance.set_phenotype_correction(pc,pc);
+             })
+        .def("unset_phenotype_correction", &symbolic_regression::unset_phenotype_correction)
+
         .def(py::pickle(&udx_pickle_getstate<dcgp::symbolic_regression>,
                         &udx_pickle_setstate<dcgp::symbolic_regression>))
-        .def("__repr__", &dcgp::symbolic_regression::get_extra_info);
+        .def("__repr__", &symbolic_regression::get_extra_info);
 
     // We expose the UDAs
     // ES-4CGP (Evolutionary Strategy for Cartesian Genetic Programming)
@@ -188,8 +198,7 @@ void expose_symbolic_regression(py::module &m)
     py::class_<dcgp::momes4cgp> momes4cgp_(m, "momes4cgp", momes4cgp_doc().c_str());
 
     momes4cgp_
-        .def(py::init<unsigned, unsigned, double>(), py::arg("gen") = 1u, py::arg("max_mut") = 4u,
-             py::arg("ftol") = 0.)
+        .def(py::init<unsigned, unsigned, double>(), py::arg("gen") = 1u, py::arg("max_mut") = 4u, py::arg("ftol") = 0.)
         .def(py::init<unsigned, unsigned, double, unsigned>(), py::arg("gen") = 1u, py::arg("max_mut") = 4u,
              py::arg("ftol") = 0., py::arg("seed"))
         .def("evolve", &dcgp::momes4cgp::evolve)
@@ -230,6 +239,5 @@ void expose_symbolic_regression(py::module &m)
     expose_data_from_the_gym<&gym::generate_misra1b>(m, "generate_misra1b", generate_misra1b_doc());
     // MISC data
     expose_data_from_the_gym<&gym::generate_luca1>(m, "generate_luca1", generate_luca1_doc());
-
 }
 } // namespace dcgpy

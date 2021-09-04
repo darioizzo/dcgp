@@ -201,7 +201,7 @@ public:
                 } else { // We have at least two ephemeral constants defined and thus need to deal with matrices.
                     // We find out how many epheremal constants are actually in expression
                     // collecting the indices of non-zero gradients
-                    std::vector<pagmo::vector_double::size_type> non_zero, zero;
+                    std::vector<pagmo::vector_double::size_type> non_zero;
                     for (decltype(grad.size()) j = 0u; j < grad.size(); ++j) {
                         if (grad[j] != 0.) {
                             non_zero.push_back(j);

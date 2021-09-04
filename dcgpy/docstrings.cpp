@@ -112,7 +112,8 @@ Examples:
 
 >>> from dcgpy import *
 >>> dcgp = expression_)"
-           + type + R"((1,1,1,10,11,2,kernel_set(["sum","diff","mul","div"])(), 0u, 32u)
+           + type + R"((1,1,1,10,11,2,kernel_set_)"
+           + type + R"((["sum","diff","mul","div"])(), 0, 32)
 >>> print(dcgp)
 ...
 >>> num_out = dcgp([in])
@@ -141,6 +142,39 @@ Args:
     kernel (``dcgpy.kernel_)"
            + type + R"(``): the kernel to add
     )";
+}
+
+std::string expression_set_phenotype_correction_doc()
+{
+    return R"(set_phenotype_correction(pc)
+
+A phenotype correction is a correction applied to the expression output that depends
+on the expression itself and on its inputs.
+
+Indicating with g the expression, the overall output, after a phenotype
+expression is applied, will be of the generic for y = pc(x, g)
+
+Args:
+    pc (``callable``): callable to be applied to the CGP expression input x and the encoded expression g.
+                       No checks are done on the actual dimensions of the input and or outputs.
+
+Examples:
+
+>>> import dcgpy
+>>> ex = expression_double(1,1,1,10,11,2,kernel_set_double(["sum","diff","mul","div"])(), 0, 33)
+>>> def pc(x,g):
+...     return [g(x)[0]*x[0]]
+>>> ex.set_phenotype_correction(pc)
+)";
+
+}
+
+std::string expression_unset_phenotype_correction_doc()
+{
+    return R"(unset_phenotype_correction()
+
+Unsets the phenotype correction.
+)";
 }
 
 std::string expression_loss_doc()
