@@ -483,6 +483,27 @@
 </dd></dl>
 
 <dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4dcgp19symbolic_regression24set_phenotype_correctionEN10expressionIdE11pc_fun_typeEN10expressionIN4audi7gdual_vEE11pc_fun_typeE">
+<span class="target" id="classdcgp_1_1symbolic__regression_1aee61c36653062f077ce8aa8d1011f015"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">set_phenotype_correction</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><a class="reference internal" href="expression.html#_CPPv4I0EN4dcgp10expressionE" title="dcgp::expression"><span class="n"><span class="pre">expression</span></span></a><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">pc_fun_type</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">pc</span></span>, <span class="k"><span class="pre">typename</span></span><span class="w"> </span><a class="reference internal" href="expression.html#_CPPv4I0EN4dcgp10expressionE" title="dcgp::expression"><span class="n"><span class="pre">expression</span></span></a><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">audi</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">gdual_v</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">pc_fun_type</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">dpc</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp19symbolic_regression24set_phenotype_correctionEN10expressionIdE11pc_fun_typeEN10expressionIN4audi7gdual_vEE11pc_fun_typeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sets the phenotype correction. </p>
+<p>Sets the phenotype correction for both the internal cgp and dcgp. No checks are made and the user must take care that the two functions passed are actually computing the same quantity using different types (double and gdual_v).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pc</strong> – callable to be applied to correct a double expression. </p></li>
+<li><p><strong>dpc</strong> – callable to be applied to correct a gdual_v expression. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4dcgp19symbolic_regression26unset_phenotype_correctionEv">
+<span class="target" id="classdcgp_1_1symbolic__regression_1aa755253d65232b6665d21714ec159e75"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">unset_phenotype_correction</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp19symbolic_regression26unset_phenotype_correctionEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Unsets the phenotype correction. </p>
+</dd></dl>
+
+<dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4I0EN4dcgp19symbolic_regression9serializeEvR7Archivej">
 <span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Archive</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="classdcgp_1_1symbolic__regression_1a4940788d6e61d0b662e49dbd56e22b36"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">serialize</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0EN4dcgp19symbolic_regression9serializeEvR7Archivej" title="dcgp::symbolic_regression::serialize::Archive"><span class="n"><span class="pre">Archive</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">ar</span></span>, <span class="kt"><span class="pre">unsigned</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN4dcgp19symbolic_regression9serializeEvR7Archivej" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Object serialization. </p>

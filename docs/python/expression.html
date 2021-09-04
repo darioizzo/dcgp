@@ -281,7 +281,7 @@ operations in the formula. If uncertain set it to cols + 1</p></li>
 
 <p>Examples:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dcgpy</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">dcgp</span> <span class="o">=</span> <span class="n">expression_double</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">kernel_set</span><span class="p">([</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span><span class="s2">&quot;diff&quot;</span><span class="p">,</span><span class="s2">&quot;mul&quot;</span><span class="p">,</span><span class="s2">&quot;div&quot;</span><span class="p">])(),</span> <span class="mi">0</span><span class="n">u</span><span class="p">,</span> <span class="mi">32</span><span class="n">u</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dcgp</span> <span class="o">=</span> <span class="n">expression_double</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">kernel_set_double</span><span class="p">([</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span><span class="s2">&quot;diff&quot;</span><span class="p">,</span><span class="s2">&quot;mul&quot;</span><span class="p">,</span><span class="s2">&quot;div&quot;</span><span class="p">])(),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">dcgp</span><span class="p">)</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">num_out</span> <span class="o">=</span> <span class="n">dcgp</span><span class="p">([</span><span class="ow">in</span><span class="p">])</span>
@@ -478,6 +478,29 @@ operations in the formula. If uncertain set it to cols + 1</p></li>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="dcgpy.expression_double.set_phenotype_correction">
+<span class="sig-name descname"><span class="pre">set_phenotype_correction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_double.set_phenotype_correction" title="Permalink to this definition">¶</a></dt>
+<dd><p>A phenotype correction is a correction applied to the expression output that depends
+on the expression itself and on its inputs.</p>
+<p>Indicating with g the expression, the overall output, after a phenotype
+expression is applied, will be of the generic for y = pc(x, g)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>pc</strong> (<code class="docutils literal notranslate"><span class="pre">callable</span></code>) – callable to be applied to the CGP expression input x and the encoded expression g.
+No checks are done on the actual dimensions of the input and or outputs.</p>
+</dd>
+</dl>
+<p>Examples:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">dcgpy</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ex</span> <span class="o">=</span> <span class="n">expression_double</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">kernel_set_double</span><span class="p">([</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span><span class="s2">&quot;diff&quot;</span><span class="p">,</span><span class="s2">&quot;mul&quot;</span><span class="p">,</span><span class="s2">&quot;div&quot;</span><span class="p">])(),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">33</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">pc</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">g</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="p">[</span><span class="n">g</span><span class="p">(</span><span class="n">x</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ex</span><span class="o">.</span><span class="n">set_phenotype_correction</span><span class="p">(</span><span class="n">pc</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="dcgpy.expression_double.simplify">
 <span class="sig-name descname"><span class="pre">simplify</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_sym</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subs_weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">erc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_double.simplify" title="Permalink to this definition">¶</a></dt>
 <dd><p>Simplifies the symbolic output of dCGP expressions</p>
@@ -511,6 +534,12 @@ operations in the formula. If uncertain set it to cols + 1</p></li>
 <span class="go">x + 6</span>
 </pre></div>
 </div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dcgpy.expression_double.unset_phenotype_correction">
+<span class="sig-name descname"><span class="pre">unset_phenotype_correction</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_double.unset_phenotype_correction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unsets the phenotype correction.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -595,7 +624,7 @@ operations in the formula. If uncertain set it to cols + 1</p></li>
 
 <p>Examples:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dcgpy</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">dcgp</span> <span class="o">=</span> <span class="n">expression_gdual_double</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">kernel_set</span><span class="p">([</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span><span class="s2">&quot;diff&quot;</span><span class="p">,</span><span class="s2">&quot;mul&quot;</span><span class="p">,</span><span class="s2">&quot;div&quot;</span><span class="p">])(),</span> <span class="mi">0</span><span class="n">u</span><span class="p">,</span> <span class="mi">32</span><span class="n">u</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dcgp</span> <span class="o">=</span> <span class="n">expression_gdual_double</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">kernel_set_gdual_double</span><span class="p">([</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span><span class="s2">&quot;diff&quot;</span><span class="p">,</span><span class="s2">&quot;mul&quot;</span><span class="p">,</span><span class="s2">&quot;div&quot;</span><span class="p">])(),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">dcgp</span><span class="p">)</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">num_out</span> <span class="o">=</span> <span class="n">dcgp</span><span class="p">([</span><span class="ow">in</span><span class="p">])</span>
@@ -792,6 +821,29 @@ operations in the formula. If uncertain set it to cols + 1</p></li>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="dcgpy.expression_gdual_double.set_phenotype_correction">
+<span class="sig-name descname"><span class="pre">set_phenotype_correction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_double.set_phenotype_correction" title="Permalink to this definition">¶</a></dt>
+<dd><p>A phenotype correction is a correction applied to the expression output that depends
+on the expression itself and on its inputs.</p>
+<p>Indicating with g the expression, the overall output, after a phenotype
+expression is applied, will be of the generic for y = pc(x, g)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>pc</strong> (<code class="docutils literal notranslate"><span class="pre">callable</span></code>) – callable to be applied to the CGP expression input x and the encoded expression g.
+No checks are done on the actual dimensions of the input and or outputs.</p>
+</dd>
+</dl>
+<p>Examples:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">dcgpy</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ex</span> <span class="o">=</span> <span class="n">expression_double</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">kernel_set_double</span><span class="p">([</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span><span class="s2">&quot;diff&quot;</span><span class="p">,</span><span class="s2">&quot;mul&quot;</span><span class="p">,</span><span class="s2">&quot;div&quot;</span><span class="p">])(),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">33</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">pc</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">g</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="p">[</span><span class="n">g</span><span class="p">(</span><span class="n">x</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ex</span><span class="o">.</span><span class="n">set_phenotype_correction</span><span class="p">(</span><span class="n">pc</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="dcgpy.expression_gdual_double.simplify">
 <span class="sig-name descname"><span class="pre">simplify</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_sym</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subs_weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">erc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_double.simplify" title="Permalink to this definition">¶</a></dt>
 <dd><p>Simplifies the symbolic output of dCGP expressions</p>
@@ -825,6 +877,12 @@ operations in the formula. If uncertain set it to cols + 1</p></li>
 <span class="go">x + 6</span>
 </pre></div>
 </div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dcgpy.expression_gdual_double.unset_phenotype_correction">
+<span class="sig-name descname"><span class="pre">unset_phenotype_correction</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_double.unset_phenotype_correction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unsets the phenotype correction.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -909,7 +967,7 @@ operations in the formula. If uncertain set it to cols + 1</p></li>
 
 <p>Examples:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dcgpy</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">dcgp</span> <span class="o">=</span> <span class="n">expression_gdual_vdouble</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">kernel_set</span><span class="p">([</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span><span class="s2">&quot;diff&quot;</span><span class="p">,</span><span class="s2">&quot;mul&quot;</span><span class="p">,</span><span class="s2">&quot;div&quot;</span><span class="p">])(),</span> <span class="mi">0</span><span class="n">u</span><span class="p">,</span> <span class="mi">32</span><span class="n">u</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dcgp</span> <span class="o">=</span> <span class="n">expression_gdual_vdouble</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">kernel_set_gdual_vdouble</span><span class="p">([</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span><span class="s2">&quot;diff&quot;</span><span class="p">,</span><span class="s2">&quot;mul&quot;</span><span class="p">,</span><span class="s2">&quot;div&quot;</span><span class="p">])(),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">dcgp</span><span class="p">)</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">num_out</span> <span class="o">=</span> <span class="n">dcgp</span><span class="p">([</span><span class="ow">in</span><span class="p">])</span>
@@ -1106,6 +1164,29 @@ operations in the formula. If uncertain set it to cols + 1</p></li>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="dcgpy.expression_gdual_vdouble.set_phenotype_correction">
+<span class="sig-name descname"><span class="pre">set_phenotype_correction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_vdouble.set_phenotype_correction" title="Permalink to this definition">¶</a></dt>
+<dd><p>A phenotype correction is a correction applied to the expression output that depends
+on the expression itself and on its inputs.</p>
+<p>Indicating with g the expression, the overall output, after a phenotype
+expression is applied, will be of the generic for y = pc(x, g)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>pc</strong> (<code class="docutils literal notranslate"><span class="pre">callable</span></code>) – callable to be applied to the CGP expression input x and the encoded expression g.
+No checks are done on the actual dimensions of the input and or outputs.</p>
+</dd>
+</dl>
+<p>Examples:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">dcgpy</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ex</span> <span class="o">=</span> <span class="n">expression_double</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">kernel_set_double</span><span class="p">([</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span><span class="s2">&quot;diff&quot;</span><span class="p">,</span><span class="s2">&quot;mul&quot;</span><span class="p">,</span><span class="s2">&quot;div&quot;</span><span class="p">])(),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">33</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">pc</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">g</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="p">[</span><span class="n">g</span><span class="p">(</span><span class="n">x</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ex</span><span class="o">.</span><span class="n">set_phenotype_correction</span><span class="p">(</span><span class="n">pc</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="dcgpy.expression_gdual_vdouble.simplify">
 <span class="sig-name descname"><span class="pre">simplify</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_sym</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subs_weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">erc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_vdouble.simplify" title="Permalink to this definition">¶</a></dt>
 <dd><p>Simplifies the symbolic output of dCGP expressions</p>
@@ -1139,6 +1220,12 @@ operations in the formula. If uncertain set it to cols + 1</p></li>
 <span class="go">x + 6</span>
 </pre></div>
 </div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dcgpy.expression_gdual_vdouble.unset_phenotype_correction">
+<span class="sig-name descname"><span class="pre">unset_phenotype_correction</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dcgpy.expression_gdual_vdouble.unset_phenotype_correction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unsets the phenotype correction.</p>
 </dd></dl>
 
 <dl class="py method">
