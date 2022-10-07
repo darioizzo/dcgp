@@ -1,5 +1,5 @@
 # Main dcgp/dcgpy project version.
-set(DCGP_PROJECT_VERSION 1.6)
+set(DCGP_PROJECT_VERSION 1.6.1)
 
 # CMake version check.
 # NOTE: C++17 supported since CMake 3.8.
