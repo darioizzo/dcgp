@@ -1,82 +1,41 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
   <title>Evolutionary Strategy (UDA) &mdash; dCGP 1.6 documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-
-    
+    <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Gradient Descent (UDA)" href="gd4cgp.html" />
     <link rel="prev" title="Symbolic Regression (UDP)" href="symbolic_regression.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../../index.html" class="icon icon-home"> dCGP
-          
-
-          
-            
             <img src="../../_static/logo2.png" class="logo" alt="Logo"/>
-          
           </a>
-
-          
-            
-            
               <div class="version">
                 1.6
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -84,18 +43,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Quick start examples</a></li>
@@ -122,75 +70,32 @@
 <li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../index.html">dCGP</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content style-external-links">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-        
           <li><a href="../index.html">API documentation</a> &raquo;</li>
-        
           <li><a href="index.html">C++ Documentation</a> &raquo;</li>
-        
       <li>Evolutionary Strategy (UDA)</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../../_sources/docs/cpp/es4cgp.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
+             
   
 <style>
 /* CSS overrides for sphinx_rtd_theme */
@@ -216,18 +121,18 @@
 }
 </style>
 <div class="section" id="evolutionary-strategy-uda">
-<h1>Evolutionary Strategy (UDA)<a class="headerlink" href="#evolutionary-strategy-uda" title="Permalink to this headline">¶</a></h1>
+<h1>Evolutionary Strategy (UDA)<a class="headerlink" href="#evolutionary-strategy-uda" title="Permalink to this heading"></a></h1>
 <dl class="cpp class">
 <dt class="sig sig-object cpp" id="_CPPv4N4dcgp6es4cgpE">
-<span class="target" id="classdcgp_1_1es4cgp"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">dcgp</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">es4cgp</span></span></span><a class="headerlink" href="#_CPPv4N4dcgp6es4cgpE" title="Permalink to this definition">¶</a><br /></dt>
+<span class="target" id="classdcgp_1_1es4cgp"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">es4cgp</span></span></span><a class="headerlink" href="#_CPPv4N4dcgp6es4cgpE" title="Permalink to this definition"></a><br /></dt>
 <dd><p>Evolutionary Strategy for a Cartesian Genetic Program. </p>
 <p><img alt="../../_images/EvolutionaryStrategy.jpg" src="../../_images/EvolutionaryStrategy.jpg" /></p>
 <p>Evolutionary strategies are popular global optimization meta-heuristics essentially based on the following simple pseudo-algorithm:</p>
-<p><div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span><span class="w"> </span><span class="n">Start</span><span class="w"> </span><span class="n">from</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">population</span><span class="w"> </span><span class="p">(</span><span class="n">pop</span><span class="p">)</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">dimension</span><span class="w"> </span><span class="n">N</span><span class="w"></span>
-<span class="o">&gt;</span><span class="w"> </span><span class="k">while</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">gen</span><span class="w"></span>
-<span class="o">&gt;</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="nl">Mutation</span><span class="p">:</span><span class="w"> </span><span class="n">create</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">population</span><span class="w"> </span><span class="n">pop2</span><span class="w"> </span><span class="n">containing</span><span class="w"> </span><span class="n">N</span><span class="w"> </span><span class="n">different</span><span class="w"> </span><span class="n">mutations</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">pop</span><span class="w"> </span><span class="n">best</span><span class="p">.</span><span class="w"></span>
-<span class="o">&gt;</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">Evaluate</span><span class="w"> </span><span class="n">all</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">chromosomes</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="n">pop2</span><span class="w"></span>
-<span class="o">&gt;</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="nl">Reinsertion</span><span class="p">:</span><span class="w"> </span><span class="n">set</span><span class="w"> </span><span class="n">pop</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">contain</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">best</span><span class="w"> </span><span class="n">N</span><span class="w"> </span><span class="n">individuals</span><span class="w"> </span><span class="n">taken</span><span class="w"> </span><span class="n">from</span><span class="w"> </span><span class="n">pop</span><span class="w"> </span><span class="n">and</span><span class="w"> </span><span class="n">pop2</span><span class="w"></span>
+<p><div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&gt; Start from a population (pop) of dimension N
+&gt; while i &lt; gen
+&gt; &gt; Mutation: create a new population pop2 containing N different mutations of pop best.
+&gt; &gt; Evaluate all new chromosomes in pop2
+&gt; &gt; Reinsertion: set pop to contain the best N individuals taken from pop and pop2
 </pre></div>
 </div>
 </p>
@@ -237,13 +142,13 @@
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-types">Public Types</p>
 <dl class="cpp type">
 <dt class="sig sig-object cpp" id="_CPPv4N4dcgp6es4cgp13log_line_typeE">
-<span class="target" id="classdcgp_1_1es4cgp_1a7e4a36800bc359663e7a5b7817f8aafd"></span><span class="k"><span class="pre">typedef</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">tuple</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">unsigned</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">long</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">pagmo</span></span><span class="p"><span class="pre">::</span></span><a class="reference external" href="https://esa.github.io/pagmo2/docs/cpp/types.html#_CPPv4N5pagmo13vector_doubleE" title="(in pagmo v2.18.0)"><span class="n"><span class="pre">vector_double</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">log_line_type</span></span></span><a class="headerlink" href="#_CPPv4N4dcgp6es4cgp13log_line_typeE" title="Permalink to this definition">¶</a><br /></dt>
+<span class="target" id="classdcgp_1_1es4cgp_1a7e4a36800bc359663e7a5b7817f8aafd"></span><span class="k"><span class="pre">typedef</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">tuple</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">unsigned</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="kt"><span class="pre">long</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">pagmo</span></span><span class="p"><span class="pre">::</span></span><a class="reference external" href="https://esa.github.io/pagmo2/docs/cpp/types.html#_CPPv4N5pagmo13vector_doubleE" title="(in pagmo v2.18.0)"><span class="n"><span class="pre">vector_double</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">log_line_type</span></span></span><a class="headerlink" href="#_CPPv4N4dcgp6es4cgp13log_line_typeE" title="Permalink to this definition"></a><br /></dt>
 <dd><p>Single entry of the log (gen, fevals, best, constants, formula) </p>
 </dd></dl>
 
 <dl class="cpp type">
 <dt class="sig sig-object cpp" id="_CPPv4N4dcgp6es4cgp8log_typeE">
-<span class="target" id="classdcgp_1_1es4cgp_1ac884ab6a891282753f65279e8e3c419e"></span><span class="k"><span class="pre">typedef</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4N4dcgp6es4cgp13log_line_typeE" title="dcgp::es4cgp::log_line_type"><span class="n"><span class="pre">log_line_type</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">log_type</span></span></span><a class="headerlink" href="#_CPPv4N4dcgp6es4cgp8log_typeE" title="Permalink to this definition">¶</a><br /></dt>
+<span class="target" id="classdcgp_1_1es4cgp_1ac884ab6a891282753f65279e8e3c419e"></span><span class="k"><span class="pre">typedef</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4N4dcgp6es4cgp13log_line_typeE" title="dcgp::es4cgp::log_line_type"><span class="n"><span class="pre">log_line_type</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">log_type</span></span></span><a class="headerlink" href="#_CPPv4N4dcgp6es4cgp8log_typeE" title="Permalink to this definition"></a><br /></dt>
 <dd><p>The log. </p>
 </dd></dl>
 
@@ -252,7 +157,7 @@
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N4dcgp6es4cgp6es4cgpEjjdbj">
-<span class="target" id="classdcgp_1_1es4cgp_1afc8cc89b0b68293144c28c14e04e0cfb"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">es4cgp</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">gen</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">1u</span></span>, <span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">max_mut</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">4u</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">ftol</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0.</span></span>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">learn_constants</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">true</span></span>, <span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">seed</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">random_device</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">next</span></span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">)</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp6es4cgp6es4cgpEjjdbj" title="Permalink to this definition">¶</a><br /></dt>
+<span class="target" id="classdcgp_1_1es4cgp_1afc8cc89b0b68293144c28c14e04e0cfb"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">es4cgp</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">gen</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">1u</span></span>, <span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">max_mut</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">4u</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">ftol</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0.</span></span>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">learn_constants</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">true</span></span>, <span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">seed</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">random_device</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">next</span></span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">)</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp6es4cgp6es4cgpEjjdbj" title="Permalink to this definition"></a><br /></dt>
 <dd><p>Constructor. </p>
 <p>Constructs an evolutionary strategy algorithm for use with a cgp::symbolic_regression UDP.</p>
 <dl class="field-list simple">
@@ -273,7 +178,7 @@
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4NK4dcgp6es4cgp6evolveEN5pagmo10populationE">
-<span class="target" id="classdcgp_1_1es4cgp_1a47104ca4049d36583f2121667ed54308"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">pagmo</span></span><span class="p"><span class="pre">::</span></span><a class="reference external" href="https://esa.github.io/pagmo2/docs/cpp/population.html#_CPPv4N5pagmo10populationE" title="(in pagmo v2.18.0)"><span class="n"><span class="pre">population</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">evolve</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">pagmo</span></span><span class="p"><span class="pre">::</span></span><a class="reference external" href="https://esa.github.io/pagmo2/docs/cpp/population.html#_CPPv4N5pagmo10populationE" title="(in pagmo v2.18.0)"><span class="n"><span class="pre">population</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">pop</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4dcgp6es4cgp6evolveEN5pagmo10populationE" title="Permalink to this definition">¶</a><br /></dt>
+<span class="target" id="classdcgp_1_1es4cgp_1a47104ca4049d36583f2121667ed54308"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">pagmo</span></span><span class="p"><span class="pre">::</span></span><a class="reference external" href="https://esa.github.io/pagmo2/docs/cpp/population.html#_CPPv4N5pagmo10populationE" title="(in pagmo v2.18.0)"><span class="n"><span class="pre">population</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">evolve</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">pagmo</span></span><span class="p"><span class="pre">::</span></span><a class="reference external" href="https://esa.github.io/pagmo2/docs/cpp/population.html#_CPPv4N5pagmo10populationE" title="(in pagmo v2.18.0)"><span class="n"><span class="pre">population</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">pop</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4dcgp6es4cgp6evolveEN5pagmo10populationE" title="Permalink to this definition"></a><br /></dt>
 <dd><p>Algorithm evolve method. </p>
 <p>Evolves the population for a maximum number of generations</p>
 <dl class="field-list simple">
@@ -295,7 +200,7 @@
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N4dcgp6es4cgp8set_seedEj">
-<span class="target" id="classdcgp_1_1es4cgp_1a1a2ada2f1009c38668af912c1b617676"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">set_seed</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">seed</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp6es4cgp8set_seedEj" title="Permalink to this definition">¶</a><br /></dt>
+<span class="target" id="classdcgp_1_1es4cgp_1a1a2ada2f1009c38668af912c1b617676"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">set_seed</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">seed</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp6es4cgp8set_seedEj" title="Permalink to this definition"></a><br /></dt>
 <dd><p>Sets the seed. </p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -306,7 +211,7 @@
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4NK4dcgp6es4cgp8get_seedEv">
-<span class="target" id="classdcgp_1_1es4cgp_1aa46e7c5287c1a897f07fecb97f49bba1"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get_seed</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4dcgp6es4cgp8get_seedEv" title="Permalink to this definition">¶</a><br /></dt>
+<span class="target" id="classdcgp_1_1es4cgp_1aa46e7c5287c1a897f07fecb97f49bba1"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get_seed</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4dcgp6es4cgp8get_seedEv" title="Permalink to this definition"></a><br /></dt>
 <dd><p>Gets the seed. </p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -317,7 +222,7 @@
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N4dcgp6es4cgp7set_bfeERKN5pagmo3bfeE">
-<span class="target" id="classdcgp_1_1es4cgp_1a0a112f5d811f669b4781e44ff3ccfae6"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">set_bfe</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">pagmo</span></span><span class="p"><span class="pre">::</span></span><a class="reference external" href="https://esa.github.io/pagmo2/docs/cpp/bfe.html#_CPPv4N5pagmo3bfeE" title="(in pagmo v2.18.0)"><span class="n"><span class="pre">bfe</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">b</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp6es4cgp7set_bfeERKN5pagmo3bfeE" title="Permalink to this definition">¶</a><br /></dt>
+<span class="target" id="classdcgp_1_1es4cgp_1a0a112f5d811f669b4781e44ff3ccfae6"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">set_bfe</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">pagmo</span></span><span class="p"><span class="pre">::</span></span><a class="reference external" href="https://esa.github.io/pagmo2/docs/cpp/bfe.html#_CPPv4N5pagmo3bfeE" title="(in pagmo v2.18.0)"><span class="n"><span class="pre">bfe</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">b</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp6es4cgp7set_bfeERKN5pagmo3bfeE" title="Permalink to this definition"></a><br /></dt>
 <dd><p>Sets the batch function evaluation scheme. </p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -328,28 +233,28 @@
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N4dcgp6es4cgp13set_verbosityEj">
-<span class="target" id="classdcgp_1_1es4cgp_1abd9dc248c00c3b2c20021b0b25e64fc0"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">set_verbosity</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">level</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp6es4cgp13set_verbosityEj" title="Permalink to this definition">¶</a><br /></dt>
+<span class="target" id="classdcgp_1_1es4cgp_1abd9dc248c00c3b2c20021b0b25e64fc0"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">set_verbosity</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">level</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4dcgp6es4cgp13set_verbosityEj" title="Permalink to this definition"></a><br /></dt>
 <dd><p>Sets the algorithm verbosity. </p>
-<p>Sets the verbosity level of the screen output and of the log returned by <a class="reference internal" href="#classdcgp_1_1es4cgp_1ae7d4b46c3f83797e2a076ea5cfd230bb"><span class="std std-ref">get_log()</span></a>. <code class="docutils literal notranslate"><span class="pre">level</span></code> can be:<ul class="simple">
+<p>Sets the verbosity level of the screen output and of the log returned by <a class="reference internal" href="#classdcgp_1_1es4cgp_1a5b8637f26eea8163d134f073d94a4584"><span class="std std-ref">get_log()</span></a>. <code class="docutils literal notranslate"><span class="pre">level</span></code> can be:<ul class="simple">
 <li><p>0: no verbosity</p></li>
 <li><p>&gt;0: will print and log one line each <code class="docutils literal notranslate"><span class="pre">level</span></code> generations.</p></li>
 </ul>
 </p>
-<p>Example (verbosity 100): <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="nl">Gen</span><span class="p">:</span><span class="w">        </span><span class="nl">Fevals</span><span class="p">:</span><span class="w">          </span><span class="nl">Best</span><span class="p">:</span><span class="w">    </span><span class="nl">Constants</span><span class="p">:</span><span class="w">    </span><span class="nl">Model</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="mi">0</span><span class="w">              </span><span class="mi">0</span><span class="w">        </span><span class="mf">4087.68</span><span class="w">    </span><span class="p">[</span><span class="mf">3.52114</span><span class="p">]</span><span class="w">    </span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="p">...</span><span class="w"></span>
-<span class="w">  </span><span class="mi">100</span><span class="w">            </span><span class="mi">400</span><span class="w">        </span><span class="mf">324.845</span><span class="w">    </span><span class="p">[</span><span class="mf">3.61414</span><span class="p">]</span><span class="w">    </span><span class="p">[</span><span class="mi">2</span><span class="o">*</span><span class="n">x0</span><span class="o">**</span><span class="mi">4</span><span class="p">]</span><span class="w"> </span><span class="p">...</span><span class="w"></span>
-<span class="w">  </span><span class="mi">200</span><span class="w">            </span><span class="mi">800</span><span class="w">        </span><span class="mf">324.845</span><span class="w">    </span><span class="p">[</span><span class="mf">3.61414</span><span class="p">]</span><span class="w">    </span><span class="p">[</span><span class="mi">2</span><span class="o">*</span><span class="n">x0</span><span class="o">**</span><span class="mi">4</span><span class="p">]</span><span class="w"> </span><span class="p">...</span><span class="w"></span>
-<span class="w">  </span><span class="mi">300</span><span class="w">           </span><span class="mi">1200</span><span class="w">        </span><span class="mf">165.212</span><span class="w">    </span><span class="p">[</span><span class="mf">3.56702</span><span class="p">]</span><span class="w">    </span><span class="p">[</span><span class="n">x0</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="n">x0</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">2</span><span class="o">*</span><span class="n">x0</span><span class="o">**</span><span class="mi">2</span><span class="p">)]</span><span class="w"> </span><span class="p">...</span><span class="w"></span>
-<span class="w">  </span><span class="mi">400</span><span class="w">           </span><span class="mi">1600</span><span class="w">         </span><span class="mf">28.814</span><span class="w">    </span><span class="p">[</span><span class="mf">3.45813</span><span class="p">]</span><span class="w">    </span><span class="p">[</span><span class="n">x0</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="n">x0</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">x0</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="n">x0</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">x0</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="p">(</span><span class="o">-</span><span class="n">x0</span><span class="w"> </span><span class="o">+</span><span class="w">  </span><span class="p">...</span><span class="w"></span>
-<span class="w">  </span><span class="mi">500</span><span class="w">           </span><span class="mi">2000</span><span class="w">        </span><span class="mf">10.5589</span><span class="w">    </span><span class="p">[</span><span class="mf">3.59501</span><span class="p">]</span><span class="w">    </span><span class="p">[</span><span class="n">x0</span><span class="o">*</span><span class="p">(</span><span class="mi">-4</span><span class="o">*</span><span class="n">x0</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">x0</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="n">x0</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">x0</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">x0</span><span class="o">**</span><span class="mi">2</span><span class="w"> </span><span class="p">...</span><span class="w"></span>
-<span class="w">  </span><span class="mi">600</span><span class="w">           </span><span class="mi">2400</span><span class="w">         </span><span class="mf">2.2459</span><span class="w">    </span><span class="p">[</span><span class="mf">3.44443</span><span class="p">]</span><span class="w">    </span><span class="p">[</span><span class="n">x0</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="n">x0</span><span class="o">*</span><span class="n">c1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">x0</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="n">x0</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">x0</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">x0</span><span class="o">**</span><span class="w"> </span><span class="p">...</span><span class="w"></span>
-<span class="w">  </span><span class="mi">700</span><span class="w">           </span><span class="mi">2800</span><span class="w">        </span><span class="mf">2.24378</span><span class="w">    </span><span class="p">[</span><span class="mf">3.43364</span><span class="p">]</span><span class="w">    </span><span class="p">[</span><span class="n">x0</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="n">x0</span><span class="o">*</span><span class="n">c1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">x0</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="n">x0</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">x0</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">x0</span><span class="o">**</span><span class="w"> </span><span class="p">...</span><span class="w"></span>
-<span class="w">  </span><span class="mi">800</span><span class="w">           </span><span class="mi">3200</span><span class="w">        </span><span class="mf">2.24378</span><span class="w">    </span><span class="p">[</span><span class="mf">3.43364</span><span class="p">]</span><span class="w">    </span><span class="p">[</span><span class="n">x0</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="n">x0</span><span class="o">*</span><span class="n">c1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">x0</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="n">x0</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">x0</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">x0</span><span class="o">**</span><span class="w"> </span><span class="p">...</span><span class="w"></span>
-<span class="w">  </span><span class="mi">900</span><span class="w">           </span><span class="mi">3600</span><span class="w">        </span><span class="mf">2.24378</span><span class="w">    </span><span class="p">[</span><span class="mf">3.43364</span><span class="p">]</span><span class="w">    </span><span class="p">[</span><span class="n">x0</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="n">x0</span><span class="o">*</span><span class="n">c1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">x0</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="n">x0</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">x0</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">x0</span><span class="o">**</span><span class="w"> </span><span class="p">...</span><span class="w"></span>
-<span class="w"> </span><span class="mi">1000</span><span class="w">           </span><span class="mi">4000</span><span class="w">        </span><span class="mf">2.24374</span><span class="w">    </span><span class="p">[</span><span class="mf">3.43618</span><span class="p">]</span><span class="w">    </span><span class="p">[</span><span class="n">x0</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="n">x0</span><span class="o">*</span><span class="n">c1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">x0</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="n">x0</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">x0</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">x0</span><span class="o">**</span><span class="w"> </span><span class="p">...</span><span class="w"></span>
-<span class="w"> </span><span class="mi">1100</span><span class="w">           </span><span class="mi">4400</span><span class="w">        </span><span class="mf">2.24372</span><span class="w">    </span><span class="p">[</span><span class="mf">3.43479</span><span class="p">]</span><span class="w">    </span><span class="p">[</span><span class="n">x0</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="n">x0</span><span class="o">*</span><span class="n">c1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">x0</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="n">x0</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">x0</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">x0</span><span class="o">**</span><span class="w"> </span><span class="p">...</span><span class="w"></span>
-<span class="w"> </span><span class="mi">1200</span><span class="w">           </span><span class="mi">4800</span><span class="w">      </span><span class="mf">0.0697188</span><span class="w">    </span><span class="p">[</span><span class="mf">3.35616</span><span class="p">]</span><span class="w">    </span><span class="p">[</span><span class="n">x0</span><span class="o">*</span><span class="p">(</span><span class="n">x0</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">x0</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="n">c1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">x0</span><span class="o">**</span><span class="mi">2</span><span class="p">))]</span><span class="w"> </span><span class="p">...</span><span class="w"></span>
-<span class="w"> </span><span class="mi">1300</span><span class="w">           </span><span class="mi">5200</span><span class="w">      </span><span class="mf">0.0254527</span><span class="w">    </span><span class="p">[</span><span class="mf">3.37625</span><span class="p">]</span><span class="w">    </span><span class="p">[</span><span class="n">x0</span><span class="o">*</span><span class="p">(</span><span class="n">x0</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">x0</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="n">c1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">x0</span><span class="o">**</span><span class="mi">2</span><span class="p">))]</span><span class="w"> </span><span class="p">...</span><span class="w"></span>
+<p>Example (verbosity 100): <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Gen:        Fevals:          Best:    Constants:    Model:
+    0              0        4087.68    [3.52114]    [0] ...
+  100            400        324.845    [3.61414]    [2*x0**4] ...
+  200            800        324.845    [3.61414]    [2*x0**4] ...
+  300           1200        165.212    [3.56702]    [x0**2*(-x0 + 2*x0**2)] ...
+  400           1600         28.814    [3.45813]    [x0*(-x0 + x0**2*(-x0 + x0**2) - (-x0 +  ...
+  500           2000        10.5589    [3.59501]    [x0*(-4*x0 + x0**2*(-x0 + x0**2) + x0**2 ...
+  600           2400         2.2459    [3.44443]    [x0*(-x0*c1 + x0**2*(-x0 + x0**2) + x0** ...
+  700           2800        2.24378    [3.43364]    [x0*(-x0*c1 + x0**2*(-x0 + x0**2) + x0** ...
+  800           3200        2.24378    [3.43364]    [x0*(-x0*c1 + x0**2*(-x0 + x0**2) + x0** ...
+  900           3600        2.24378    [3.43364]    [x0*(-x0*c1 + x0**2*(-x0 + x0**2) + x0** ...
+ 1000           4000        2.24374    [3.43618]    [x0*(-x0*c1 + x0**2*(-x0 + x0**2) + x0** ...
+ 1100           4400        2.24372    [3.43479]    [x0*(-x0*c1 + x0**2*(-x0 + x0**2) + x0** ...
+ 1200           4800      0.0697188    [3.35616]    [x0*(x0 + x0**2*(-c1 + x0**2))] ...
+ 1300           5200      0.0254527    [3.37625]    [x0*(x0 + x0**2*(-c1 + x0**2))] ...
 </pre></div>
 </div>
  Gen is the generation number, Fevals the number of function evaluation used, Best is the best fitness found, Constants contains the value of the ephemeral constants and Formula peeks into the prettier expression of the underlying CGP. </p>
@@ -362,7 +267,7 @@
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4NK4dcgp6es4cgp13get_verbosityEv">
-<span class="target" id="classdcgp_1_1es4cgp_1a910579ea7b61f87e63cdc9eddef674f3"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get_verbosity</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4dcgp6es4cgp13get_verbosityEv" title="Permalink to this definition">¶</a><br /></dt>
+<span class="target" id="classdcgp_1_1es4cgp_1a910579ea7b61f87e63cdc9eddef674f3"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get_verbosity</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4dcgp6es4cgp13get_verbosityEv" title="Permalink to this definition"></a><br /></dt>
 <dd><p>Gets the verbosity level. </p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -373,7 +278,7 @@
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4NK4dcgp6es4cgp8get_nameEv">
-<span class="target" id="classdcgp_1_1es4cgp_1ac1e4945d89b30c84bd557814c52be74c"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get_name</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4dcgp6es4cgp8get_nameEv" title="Permalink to this definition">¶</a><br /></dt>
+<span class="target" id="classdcgp_1_1es4cgp_1ac1e4945d89b30c84bd557814c52be74c"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get_name</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4dcgp6es4cgp8get_nameEv" title="Permalink to this definition"></a><br /></dt>
 <dd><p>Algorithm name. </p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -384,7 +289,7 @@
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4NK4dcgp6es4cgp14get_extra_infoEv">
-<span class="target" id="classdcgp_1_1es4cgp_1ab10bd05404b40aefdd248e8be6da0eb8"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get_extra_info</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4dcgp6es4cgp14get_extra_infoEv" title="Permalink to this definition">¶</a><br /></dt>
+<span class="target" id="classdcgp_1_1es4cgp_1ab10bd05404b40aefdd248e8be6da0eb8"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get_extra_info</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4dcgp6es4cgp14get_extra_infoEv" title="Permalink to this definition"></a><br /></dt>
 <dd><p>Extra info. </p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -395,7 +300,7 @@
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4NK4dcgp6es4cgp7get_logEv">
-<span class="target" id="classdcgp_1_1es4cgp_1ae7d4b46c3f83797e2a076ea5cfd230bb"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4dcgp6es4cgp8log_typeE" title="dcgp::es4cgp::log_type"><span class="n"><span class="pre">log_type</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_log</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4dcgp6es4cgp7get_logEv" title="Permalink to this definition">¶</a><br /></dt>
+<span class="target" id="classdcgp_1_1es4cgp_1a5b8637f26eea8163d134f073d94a4584"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4dcgp6es4cgp8log_typeE" title="dcgp::es4cgp::log_type"><span class="n"><span class="pre">log_type</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_log</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4dcgp6es4cgp7get_logEv" title="Permalink to this definition"></a><br /></dt>
 <dd><p>Get log. </p>
 <p>A log containing relevant quantities monitoring the last call to evolve. Each element of the returned <code class="docutils literal notranslate"><span class="pre">std::vector</span></code> is a <a class="reference internal" href="#classdcgp_1_1es4cgp_1a7e4a36800bc359663e7a5b7817f8aafd"><span class="std std-ref">es4cgp::log_line_type</span></a> as described in <a class="reference internal" href="#classdcgp_1_1es4cgp_1abd9dc248c00c3b2c20021b0b25e64fc0"><span class="std std-ref">es4cgp::set_verbosity()</span></a>.</p>
 <dl class="field-list simple">
@@ -407,7 +312,7 @@
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4I0EN4dcgp6es4cgp9serializeEvR7Archivej">
-<span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Archive</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="classdcgp_1_1es4cgp_1a09e214e6e3c00fc42134f730fef9b6bf"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">serialize</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0EN4dcgp6es4cgp9serializeEvR7Archivej" title="dcgp::es4cgp::serialize::Archive"><span class="n"><span class="pre">Archive</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">ar</span></span>, <span class="kt"><span class="pre">unsigned</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN4dcgp6es4cgp9serializeEvR7Archivej" title="Permalink to this definition">¶</a><br /></dt>
+<span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Archive</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="classdcgp_1_1es4cgp_1a09e214e6e3c00fc42134f730fef9b6bf"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">serialize</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0EN4dcgp6es4cgp9serializeEvR7Archivej" title="dcgp::es4cgp::serialize::Archive"><span class="n"><span class="pre">Archive</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">ar</span></span>, <span class="kt"><span class="pre">unsigned</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN4dcgp6es4cgp9serializeEvR7Archivej" title="Permalink to this definition"></a><br /></dt>
 <dd><p>Object serialization. </p>
 <p>This method will save/load <code class="docutils literal notranslate"><span class="pre">this</span></code> into the archive <code class="docutils literal notranslate"><span class="pre">ar</span></code>.</p>
 <dl class="field-list simple">
@@ -427,50 +332,33 @@
 
 
            </div>
-           
           </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="gd4cgp.html" class="btn btn-neutral float-right" title="Gradient Descent (UDA)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="symbolic_regression.html" class="btn btn-neutral float-left" title="Symbolic Regression (UDP)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="gd4cgp.html" class="btn btn-neutral float-right" title="Gradient Descent (UDA)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2020, Dario Izzo, Francesco Biscani.
-
-    </p>
+    <p>&#169; Copyright 2020, Dario Izzo, Francesco Biscani.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

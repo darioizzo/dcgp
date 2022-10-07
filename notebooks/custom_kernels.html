@@ -1,84 +1,43 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
   <title>Custom Kernels &mdash; dCGP 1.6 documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
         <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="A basic tutorial on symbolic regression" href="symbolic_regression_1.html" />
     <link rel="prev" title="Python" href="../tutorials/py/index.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../index.html" class="icon icon-home"> dCGP
-          
-
-          
-            
             <img src="../_static/logo2.png" class="logo" alt="Logo"/>
-          
           </a>
-
-          
-            
-            
               <div class="version">
                 1.6
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -86,18 +45,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick start examples</a></li>
@@ -123,75 +71,32 @@
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">dCGP</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content style-external-links">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-        
           <li><a href="../tutorials/index.html">Tutorials</a> &raquo;</li>
-        
           <li><a href="../tutorials/py/index.html">Python</a> &raquo;</li>
-        
       <li>Custom Kernels</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../_sources/notebooks/custom_kernels.ipynb.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
+             
   
 <style>
 /* CSS for nbsphinx extension */
@@ -402,11 +307,12 @@ div.nboutput.container div.output_area > div[class^='highlight']{
 }
 
 /* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
-.prompt a.copybtn {
+.prompt .copybtn {
     display: none;
 }
 
 /* Some additional styling taken form the Jupyter notebook CSS */
+.jp-RenderedHTMLCommon table,
 div.rendered_html table {
   border: none;
   border-collapse: collapse;
@@ -415,10 +321,14 @@ div.rendered_html table {
   font-size: 12px;
   table-layout: fixed;
 }
+.jp-RenderedHTMLCommon thead,
 div.rendered_html thead {
   border-bottom: 1px solid black;
   vertical-align: bottom;
 }
+.jp-RenderedHTMLCommon tr,
+.jp-RenderedHTMLCommon th,
+.jp-RenderedHTMLCommon td,
 div.rendered_html tr,
 div.rendered_html th,
 div.rendered_html td {
@@ -430,12 +340,15 @@ div.rendered_html td {
   max-width: none;
   border: none;
 }
+.jp-RenderedHTMLCommon th,
 div.rendered_html th {
   font-weight: bold;
 }
+.jp-RenderedHTMLCommon tbody tr:nth-child(odd),
 div.rendered_html tbody tr:nth-child(odd) {
   background: #f5f5f5;
 }
+.jp-RenderedHTMLCommon tbody tr:hover,
 div.rendered_html tbody tr:hover {
   background: rgba(66, 165, 245, 0.2);
 }
@@ -463,7 +376,7 @@ div.rendered_html tbody tr:hover {
 }
 </style>
 <div class="section" id="Custom-Kernels">
-<h1>Custom Kernels<a class="headerlink" href="#Custom-Kernels" title="Permalink to this headline">¶</a></h1>
+<h1>Custom Kernels<a class="headerlink" href="#Custom-Kernels" title="Permalink to this heading"></a></h1>
 <p>In this tutorial we will learn:</p>
 <ul class="simple">
 <li><p>How to define a custom Kernel.</p></li>
@@ -478,8 +391,7 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># Some necessary imports.</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Some necessary imports.</span>
 <span class="kn">import</span> <span class="nn">dcgpy</span>
 <span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
 <span class="kn">import</span> <span class="nn">pyaudi</span>
@@ -494,13 +406,12 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="section" id="1---Write-the-nonlinearity-and-its-symbolic-form">
-<h2>1 - Write the nonlinearity and its symbolic form<a class="headerlink" href="#1---Write-the-nonlinearity-and-its-symbolic-form" title="Permalink to this headline">¶</a></h2>
+<h2>1 - Write the nonlinearity and its symbolic form<a class="headerlink" href="#1---Write-the-nonlinearity-and-its-symbolic-form" title="Permalink to this heading"></a></h2>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># Lets define some non-linear function we would like to use as a computational unit in a dCGP:</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Lets define some non-linear function we would like to use as a computational unit in a dCGP:</span>
 <span class="k">def</span> <span class="nf">my_fun</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">exp</span><span class="p">(</span><span class="nb">sum</span><span class="p">([</span><span class="n">it</span><span class="o">*</span><span class="n">it</span> <span class="k">for</span> <span class="n">it</span> <span class="ow">in</span> <span class="n">x</span><span class="p">]))</span>
 
@@ -518,8 +429,7 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># ... and see by example how these functions work:</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ... and see by example how these functions work:</span>
 <span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">exp</span>
 <span class="n">a</span> <span class="o">=</span> <span class="n">my_fun</span><span class="p">([</span><span class="mf">0.2</span><span class="p">,</span><span class="o">-</span><span class="mf">0.12</span><span class="p">,</span><span class="o">-</span><span class="mf">0.0011</span><span class="p">])</span>
 <span class="n">b</span> <span class="o">=</span> <span class="n">my_fun_print</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;z&quot;</span><span class="p">])</span>
@@ -537,13 +447,12 @@ exp(-x**2+y**2+z**2) is: 1.0559081580940681
 </div>
 </div>
 <div class="section" id="2---Define-a-dcgp.kernel-with-our-new-callables">
-<h2>2 - Define a dcgp.kernel with our new callables<a class="headerlink" href="#2---Define-a-dcgp.kernel-with-our-new-callables" title="Permalink to this headline">¶</a></h2>
+<h2>2 - Define a dcgp.kernel with our new callables<a class="headerlink" href="#2---Define-a-dcgp.kernel-with-our-new-callables" title="Permalink to this heading"></a></h2>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># Since the nonlinearities we wrote can operate on gduals as well as on double we can define</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Since the nonlinearities we wrote can operate on gduals as well as on double we can define</span>
 <span class="c1"># both a kernel_double and a kernel_gdual_double (here we will only use the first one)</span>
 <span class="n">my_kernel_double</span> <span class="o">=</span> <span class="n">dcgpy</span><span class="o">.</span><span class="n">kernel_double</span><span class="p">(</span><span class="n">my_fun</span><span class="p">,</span> <span class="n">my_fun_print</span><span class="p">,</span> <span class="s2">&quot;my_gaussian&quot;</span><span class="p">)</span>
 <span class="n">my_kernel_gdual_double</span> <span class="o">=</span> <span class="n">dcgpy</span><span class="o">.</span><span class="n">kernel_gdual_double</span><span class="p">(</span><span class="n">my_fun</span><span class="p">,</span> <span class="n">my_fun_print</span><span class="p">,</span> <span class="s2">&quot;my_gaussian&quot;</span><span class="p">)</span>
@@ -554,8 +463,7 @@ exp(-x**2+y**2+z**2) is: 1.0559081580940681
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># For the case of doubles</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># For the case of doubles</span>
 <span class="n">a</span> <span class="o">=</span> <span class="n">my_kernel_double</span><span class="p">([</span><span class="mf">0.2</span><span class="p">,</span><span class="o">-</span><span class="mf">0.12</span><span class="p">,</span><span class="o">-</span><span class="mf">0.0011</span><span class="p">])</span>
 <span class="n">b</span> <span class="o">=</span> <span class="n">my_kernel_double</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;z&quot;</span><span class="p">])</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">b</span> <span class="o">+</span> <span class="s2">&quot; evaluates to: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
@@ -577,7 +485,7 @@ exp(-x**2+y**2+z**2) evaluates to: 3.18087*dx**2+1.05591+0.166622*dx
 </div>
 </div>
 <div class="section" id="3---Profiling-the-speed">
-<h2>3 - Profiling the speed<a class="headerlink" href="#3---Profiling-the-speed" title="Permalink to this headline">¶</a></h2>
+<h2>3 - Profiling the speed<a class="headerlink" href="#3---Profiling-the-speed" title="Permalink to this heading"></a></h2>
 <p>Kernels defined in python introduce some slow down. Here we time 1000 calls to our exp(-x^2) function, when:</p>
 <ul class="simple">
 <li><p>wrapped by the user in a python dcgpy.kernel</p></li>
@@ -588,8 +496,7 @@ exp(-x**2+y**2+z**2) evaluates to: 3.18087*dx**2+1.05591+0.166622*dx
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># wrapped by the user in a python dcgpy.kernel</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># wrapped by the user in a python dcgpy.kernel</span>
 <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
 <span class="n">_</span> <span class="o">=</span> <span class="p">[</span><span class="n">my_kernel_double</span><span class="p">([</span><span class="n">i</span><span class="o">/</span><span class="mi">1000</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">)]</span>
 <span class="n">end</span> <span class="o">=</span>  <span class="n">time</span><span class="p">()</span>
@@ -609,8 +516,7 @@ Elapsed (ms) 7.709980010986328
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># coming from the shipped dcgpy kernels (cpp implementation)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># coming from the shipped dcgpy kernels (cpp implementation)</span>
 <span class="n">cpp_kernel</span> <span class="o">=</span> <span class="n">dcgpy</span><span class="o">.</span><span class="n">kernel_set_double</span><span class="p">([</span><span class="s2">&quot;gaussian&quot;</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
 <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
 <span class="n">_</span> <span class="o">=</span> <span class="p">[</span><span class="n">cpp_kernel</span><span class="p">([</span><span class="n">i</span><span class="o">/</span><span class="mi">1000</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">)]</span>
@@ -631,8 +537,7 @@ Elapsed (ms) 2.939939498901367
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># a normal python callable</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># a normal python callable</span>
 <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
 <span class="n">_</span> <span class="o">=</span> <span class="p">[</span><span class="n">my_fun</span><span class="p">([</span><span class="n">i</span><span class="o">/</span><span class="mi">1000</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">)]</span>
 <span class="n">end</span> <span class="o">=</span>  <span class="n">time</span><span class="p">()</span>
@@ -650,13 +555,12 @@ Elapsed (ms) 3.7784576416015625
 </div>
 </div>
 <div class="section" id="4---Using-the-new-kernel-in-a-dcpy.expression">
-<h2>4 - Using the new kernel in a dcpy.expression<a class="headerlink" href="#4---Using-the-new-kernel-in-a-dcpy.expression" title="Permalink to this headline">¶</a></h2>
+<h2>4 - Using the new kernel in a dcpy.expression<a class="headerlink" href="#4---Using-the-new-kernel-in-a-dcpy.expression" title="Permalink to this heading"></a></h2>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">ks</span> <span class="o">=</span> <span class="n">dcgpy</span><span class="o">.</span><span class="n">kernel_set_double</span><span class="p">([</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span> <span class="s2">&quot;mul&quot;</span><span class="p">,</span> <span class="s2">&quot;diff&quot;</span><span class="p">])</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ks</span> <span class="o">=</span> <span class="n">dcgpy</span><span class="o">.</span><span class="n">kernel_set_double</span><span class="p">([</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span> <span class="s2">&quot;mul&quot;</span><span class="p">,</span> <span class="s2">&quot;diff&quot;</span><span class="p">])</span>
 <span class="n">ks</span><span class="o">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">my_kernel_double</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">ks</span><span class="p">)</span>
 </pre></div>
@@ -674,8 +578,7 @@ Elapsed (ms) 3.7784576416015625
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">ex</span> <span class="o">=</span> <span class="n">dcgpy</span><span class="o">.</span><span class="n">expression_double</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ex</span> <span class="o">=</span> <span class="n">dcgpy</span><span class="o">.</span><span class="n">expression_double</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
                              <span class="n">outputs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                              <span class="n">rows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                              <span class="n">cols</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
@@ -700,8 +603,7 @@ Elapsed (ms) 3.7784576416015625
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># We use the expression method simplify which is calling sympy. Since our symbolic representation</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># We use the expression method simplify which is calling sympy. Since our symbolic representation</span>
 <span class="c1"># of the Kernel is parsable by sympy, a simplified result is possible.</span>
 <span class="n">ex</span><span class="o">.</span><span class="n">simplify</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">])</span>
 </pre></div>
@@ -720,50 +622,33 @@ $\displaystyle \left[ x - 2 y + e^{x \left(- x + 2 y\right)}\right]$</div></div>
 
 
            </div>
-           
           </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="symbolic_regression_1.html" class="btn btn-neutral float-right" title="A basic tutorial on symbolic regression" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="../tutorials/py/index.html" class="btn btn-neutral float-left" title="Python" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="symbolic_regression_1.html" class="btn btn-neutral float-right" title="A basic tutorial on symbolic regression" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2020, Dario Izzo, Francesco Biscani.
-
-    </p>
+    <p>&#169; Copyright 2020, Dario Izzo, Francesco Biscani.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>
