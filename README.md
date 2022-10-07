@@ -6,7 +6,7 @@
 [![Conda (channel only)](https://img.shields.io/conda/vn/conda-forge/dcgp-python?style=for-the-badge)](https://anaconda.org/conda-forge/dcgp-python)
 
 [![Gitter](https://img.shields.io/gitter/room/esa/dcgp?logo=gitter-white&style=for-the-badge)](https://gitter.im/esa/dcgp)
-![GitHub commit activity](https://img.shields.io/github/commit-activity/y/darioizzo/dcgp?style=for-the-badge)
+![Gitter](https://img.shields.io/github/license/darioizzo/dcgp?style=for-the-badge)
 
 [![DOI](https://zenodo.org/badge/38923383.svg)](https://zenodo.org/badge/latestdoi/38923383)
 [![DOI](https://joss.theoj.org/papers/10.21105/joss.02290/status.svg)](https://doi.org/10.21105/joss.02290)
