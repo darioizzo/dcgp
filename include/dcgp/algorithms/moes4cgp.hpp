@@ -2,7 +2,15 @@
 #define DCGP_MOES4CGP_H
 
 #include <boost/optional.hpp>
+/* This <boost/serialization/version.hpp> include guards against an issue
+ * in boost::serialization from boost 1.74.0 that leads to compiler error
+ * "explicit specialization of undeclared template struct 'version'" when
+ * including <boost/serialization/optional.hpp>. More details in tickets:
+ * https://github.com/boostorg/serialization/issues/210
+ * https://github.com/boostorg/serialization/issues/217
+ */
 #include <boost/serialization/optional.hpp>
+#include <boost/serialization/version.hpp>
 #include <pagmo/algorithm.hpp>
 #include <pagmo/bfe.hpp>
 #include <pagmo/detail/custom_comparisons.hpp>
@@ -137,7 +145,8 @@ public:
         pagmo::vector_double fs(NP * n_obj);
         // Containers for fitness and decision vectors in a non contiguous structure
         std::vector<pagmo::vector_double> dvs_v(2 * NP, pagmo::vector_double(dim, 0.));
-        std::vector<pagmo::vector_double> fs_v(2 * NP, pagmo::vector_double(n_obj, std::numeric_limits<double>::infinity()));
+        std::vector<pagmo::vector_double> fs_v(2 * NP,
+                                               pagmo::vector_double(n_obj, std::numeric_limits<double>::infinity()));
         // This will store the idx of the best individuals to select for the next generation.
         std::vector<pagmo::vector_double::size_type> best_idx(NP);
 
@@ -203,7 +212,7 @@ public:
             best_idx = pagmo::select_best_N_mo(fs_v, NP);
             // 5 - We insert into the population
             for (decltype(best_idx.size()) i = 0; i < best_idx.size(); ++i) {
-                    pop.set_xf(i, dvs_v[best_idx[i]], fs_v[best_idx[i]]);
+                pop.set_xf(i, dvs_v[best_idx[i]], fs_v[best_idx[i]]);
             }
         }
         if (m_verbosity > 0u) {
