@@ -78,7 +78,6 @@ public:
         if (ftol < 0.) {
             throw std::invalid_argument("The ftol is negative, it must be positive or zero.");
         }
-
     }
 
     /// Algorithm evolve method
@@ -93,7 +92,7 @@ public:
      */
     pagmo::population evolve(pagmo::population pop) const
     {
-	const auto &prob = pop.get_problem();
+        const auto &prob = pop.get_problem();
         auto n_obj = prob.get_nobj();
         const auto bounds = prob.get_bounds();
         auto NP = pop.size();
@@ -141,7 +140,7 @@ public:
                        [](double a) { return boost::numeric_cast<unsigned>(a); });
         // The Hessian sparsity is defined here and it will not change.
         auto hs = prob.hessians_sparsity();
-        // Hessian 
+        // Hessian
         Eigen::MatrixXd fullH;
         // (active) Hessian
         Eigen::MatrixXd H;
@@ -194,7 +193,7 @@ public:
                 // For a single ephemeral constant we avoid to call the Eigen machinery. This
                 // makes the code more readable and results in a few lines rather than tens of.
                 if (n_eph == 1u) {
-                    if (hess[0][0] != 0. && std::isfinite(grad[0]) & std::isfinite(hess[0][0])) {
+                    if (hess[0][0] != 0. && std::isfinite(grad[0]) && std::isfinite(hess[0][0])) {
                         mutated_x[i][0] = mutated_x[i][0] - grad[0] / hess[0][0];
                     }
                     mutated_f[i] = prob.fitness(mutated_x[i]);
@@ -233,9 +232,9 @@ public:
                             fullH(_(hs[0][j].first), _(hs[0][j].second)) = hess[0][j];
                             fullH(_(hs[0][j].second), _(hs[0][j].first)) = hess[0][j];
                         }
-                        // The following nested fors loops copy into the active hessian all cols and rows tht are non zero, i.e.
-                        // corresponding to eph constants that actually are in the expression
-                        // Probably this can be coded more efficiently using operations on rows and columns instead.
+                        // The following nested fors loops copy into the active hessian all cols and rows tht are non
+                        // zero, i.e. corresponding to eph constants that actually are in the expression Probably this
+                        // can be coded more efficiently using operations on rows and columns instead.
                         decltype(non_zero.size()) new_row_idx = 0u;
                         for (decltype(non_zero.size()) row_idx = 0u; row_idx < non_zero.size(); ++row_idx) {
                             decltype(non_zero.size()) new_col_idx = 0u;
