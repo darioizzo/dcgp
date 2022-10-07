@@ -4,6 +4,10 @@
 #include <pagmo/population.hpp>
 #include <pagmo/problem.hpp>
 #include <symengine/expression.h>
+// patch to avoid flint defining access come _access and messing with boost
+#if defined(access)
+#undef access
+#endif
 #include <vector>
 
 #include <dcgp/algorithms/mes4cgp.hpp>

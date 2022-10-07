@@ -20,6 +20,15 @@
 #endif
 
 #include <symengine/expression.h>
+// patch to avoid flint defining access come _access and messing with boost
+#if defined(access)
+#undef access
+#endif
+
+// patch to avoid flint defining access come _access and messing with boost
+#if defined(access)
+#undef access
+#endif
 
 #if defined(_MSC_VER) && defined(__clang__)
 #undef and
@@ -535,7 +544,8 @@ public:
      * @param pc callable to be applied to correct a double expression.
      * @param dpc callable to be applied to correct a gdual_v expression.
      */
-    void set_phenotype_correction(typename expression<double>::pc_fun_type pc, typename expression<audi::gdual_v>::pc_fun_type dpc)
+    void set_phenotype_correction(typename expression<double>::pc_fun_type pc,
+                                  typename expression<audi::gdual_v>::pc_fun_type dpc)
     {
         m_cgp.set_phenotype_correction(pc);
         m_dcgp.set_phenotype_correction(dpc);

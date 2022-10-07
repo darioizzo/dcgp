@@ -23,6 +23,11 @@
 #undef not
 #endif
 
+// patch to avoid flint defining access come _access and messing with boost
+#if defined(access)
+#undef access
+#endif
+
 #include <dcgp/algorithms/es4cgp.hpp>
 #include <dcgp/gym.hpp>
 #include <dcgp/kernel_set.hpp>
@@ -39,8 +44,8 @@ int main(int ac, char *av[])
     unsigned gen, max_mut, n_eph, pop_size, verbosity;
     bool bfe;
     po::options_description desc("Allowed options");
-    desc.add_options()("help, h", "produce help message")(
-        "gen, g", po::value<unsigned>(&gen)->default_value(10000u), "number of generations")(
+    desc.add_options()("help, h", "produce help message")("gen, g", po::value<unsigned>(&gen)->default_value(10000u),
+                                                          "number of generations")(
         "max_mut, m", po::value<unsigned>(&max_mut)->default_value(15u), "maximum number of mutations allowed")(
         "n_eph, c", po::value<unsigned>(&n_eph)->default_value(3u), "number of constants in the expression")(
         "verbosity, v", po::value<unsigned>(&verbosity)->default_value(500u), "the screen frequency")(
@@ -90,4 +95,3 @@ int main(int ac, char *av[])
 
     return 0;
 }
-
