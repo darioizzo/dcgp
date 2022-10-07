@@ -1,45 +1,23 @@
 #ifndef DCGP_SYMBOLIC_REGRESSION_H
 #define DCGP_SYMBOLIC_REGRESSION_H
 #include <algorithm>
+#include <functional>
+#include <numeric> // std::accumulate
+#include <vector>
+
 #include <audi/gdual.hpp>
 #include <boost/numeric/conversion/cast.hpp>
 #include <boost/range/algorithm/transform.hpp>
-#include <functional>
-#include <numeric> // std::accumulate
 #include <pagmo/io.hpp>
 #include <pagmo/population.hpp>
 #include <pagmo/problem.hpp>
 #include <pagmo/types.hpp>
-#include <vector>
-
-// patch to make this compile in clang-cl
-#if defined(_MSC_VER) && defined(__clang__)
-#define and &&
-#define or ||
-#define not !
-#endif
-
-#include <symengine/expression.h>
-// patch to avoid flint defining access come _access and messing with boost
-#if defined(access)
-#undef access
-#endif
-
-// patch to avoid flint defining access come _access and messing with boost
-#if defined(access)
-#undef access
-#endif
-
-#if defined(_MSC_VER) && defined(__clang__)
-#undef and
-#undef or
-#undef not
-#endif
 
 #include <dcgp/expression.hpp>
 #include <dcgp/kernel_set.hpp>
 #include <dcgp/rng.hpp>
 #include <dcgp/s11n.hpp>
+#include <dcgp/symengine.hpp>
 
 namespace dcgp
 {

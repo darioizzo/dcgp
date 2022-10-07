@@ -1,17 +1,18 @@
 #ifndef DCGP_MES4CGP_H
 #define DCGP_MES4CGP_H
 
-#include <Eigen/Dense>
 #include <cmath>
-#include <pagmo/algorithm.hpp>
-#include <pagmo/detail/custom_comparisons.hpp>
-#include <pagmo/io.hpp>
-#include <pagmo/population.hpp>
 #include <random>
 #include <sstream>
 #include <string>
 #include <tuple>
 #include <vector>
+
+#include <Eigen/Dense>
+#include <pagmo/algorithm.hpp>
+#include <pagmo/detail/custom_comparisons.hpp>
+#include <pagmo/io.hpp>
+#include <pagmo/population.hpp>
 
 #include <dcgp/problems/symbolic_regression.hpp>
 #include <dcgp/rng.hpp>

@@ -8,30 +8,11 @@
 #include <pagmo/problem.hpp>
 #include <vector>
 
-// patch to make this compile in clang-cl
-#if defined(_MSC_VER) && defined(__clang__)
-#define and &&
-#define or ||
-#define not !
-#endif
-
-#include <symengine/expression.h>
-
-#if defined(_MSC_VER) && defined(__clang__)
-#undef and
-#undef or
-#undef not
-#endif
-
-// patch to avoid flint defining access come _access and messing with boost
-#if defined(access)
-#undef access
-#endif
-
 #include <dcgp/algorithms/momes4cgp.hpp>
 #include <dcgp/gym.hpp>
 #include <dcgp/kernel_set.hpp>
 #include <dcgp/problems/symbolic_regression.hpp>
+#include <dcgp/symengine.hpp>
 
 namespace po = boost::program_options;
 using namespace dcgp;

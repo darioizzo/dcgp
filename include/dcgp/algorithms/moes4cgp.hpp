@@ -1,6 +1,12 @@
 #ifndef DCGP_MOES4CGP_H
 #define DCGP_MOES4CGP_H
 
+#include <random>
+#include <sstream>
+#include <string>
+#include <tuple>
+#include <vector>
+
 #include <boost/optional.hpp>
 /* This <boost/serialization/version.hpp> include guards against an issue
  * in boost::serialization from boost 1.74.0 that leads to compiler error
@@ -17,11 +23,6 @@
 #include <pagmo/io.hpp>
 #include <pagmo/population.hpp>
 #include <pagmo/utils/multi_objective.hpp>
-#include <random>
-#include <sstream>
-#include <string>
-#include <tuple>
-#include <vector>
 
 #include <dcgp/problems/symbolic_regression.hpp>
 #include <dcgp/rng.hpp>

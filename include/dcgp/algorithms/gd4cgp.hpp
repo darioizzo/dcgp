@@ -1,17 +1,16 @@
 #ifndef DCGP_GD4CGP_H
 #define DCGP_GD4CGP_H
 
-#include <audi/gdual.hpp>
 #include <numeric>
+#include <stdexcept>
+#include <vector>
+
+#include <audi/gdual.hpp>
 #include <pagmo/algorithm.hpp>
 #include <pagmo/algorithms/not_population_based.hpp>
 #include <pagmo/detail/custom_comparisons.hpp>
-
 #include <pagmo/io.hpp>
 #include <pagmo/population.hpp>
-#include <stdexcept>
-
-#include <vector>
 
 #include <dcgp/kernel.hpp>
 #include <dcgp/kernel_set.hpp>

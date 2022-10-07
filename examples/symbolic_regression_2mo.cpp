@@ -1,17 +1,15 @@
-#include <boost/algorithm/string.hpp>
+
 #include <chrono>
+#include <vector>
+
+#include <boost/algorithm/string.hpp>
 #include <pagmo/algorithm.hpp>
 #include <pagmo/io.hpp>
 #include <pagmo/population.hpp>
 #include <pagmo/problem.hpp>
-#include <symengine/expression.h>
-// patch to avoid flint defining access come _access and messing with boost
-#if defined(access)
-#undef access
-#endif
-#include <vector>
 
 #include <dcgp/algorithms/moes4cgp.hpp>
+#include <dcgp/expression.h>
 #include <dcgp/gym.hpp>
 #include <dcgp/kernel_set.hpp>
 #include <dcgp/problems/symbolic_regression.hpp>
